@@ -205,3 +205,5 @@ Norsk kvalitets-\\register for\\leppe-kjeve-ganespalte
 % Kommando for å skriva prosentteiknet, med rett avstand før
 \RequirePackage{xspace}
 \newcommand{\prosent}{\:\%\xspace}
+
+\sloppy
