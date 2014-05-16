@@ -34,6 +34,7 @@
 
 \setmainfont[Ligatures=TeX, Numbers={Proportional,Lowercase}]{Cambria} % Problem med Fractions=On
 \setsansfont[Ligatures=TeX, Numbers={Proportional,Lowercase}]{Calibri}
+\setmonofont[Scale=MatchLowercase]{Consolas}
 \setmathfont{Cambria Math}
 
 % Bruk proporsjonale tabelltal for overskrifter, då det ser best ut
