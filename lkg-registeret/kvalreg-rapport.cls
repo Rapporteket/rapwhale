@@ -218,6 +218,6 @@ Norsk kvalitets-\\register for\\leppe-kjeve-ganespalte
 \newcommand{\prosent}{\:\%\xspace}
 
 
-\renewcommand{\checkmark}{{\uniskrift ✓}}
+\newcommand{\sjekk}{{\uniskrift ✓}}
 
 \sloppy
