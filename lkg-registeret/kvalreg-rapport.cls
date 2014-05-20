@@ -42,6 +42,9 @@
 \newfontfamily\altskrift[Ligatures=TeX,Numbers={Proportional,Uppercase}]{Calibri}
 \newfontfamily\lettskrift[Ligatures=TeX,Numbers={Proportional,Uppercase}]{Calibri Light}
 
+% Skrift for teikn som ikkje finst i standardskriftene
+\newfontfamily\uniskrift[Scale=MatchLowercase]{Arial Unicode MS}
+
 % For overskrifter
 \chapterstyle{section}
 \newcommand{\overskrift}{\color{PrimCol}\altskrift}
@@ -213,5 +216,8 @@ Norsk kvalitets-\\register for\\leppe-kjeve-ganespalte
 % Kommando for å skriva prosentteiknet, med rett avstand før
 \RequirePackage{xspace}
 \newcommand{\prosent}{\:\%\xspace}
+
+
+\renewcommand{\checkmark}{{\uniskrift ✓}}
 
 \sloppy
