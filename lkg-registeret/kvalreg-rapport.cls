@@ -101,8 +101,15 @@
 % på same format likevel, altså med ikkje reflekterte margar på par-
 % og oddetalssider.
 \newlength\margjuster
-\setlength{\margjuster}{-\oddsidemargin+\evensidemargin}
-\setlength{\evensidemargin}{\oddsidemargin}
+\newlength\smalmarg
+\newlength\breimarg
+\setlength{\smalmarg}{\evensidemargin}
+\setlength{\breimarg}{\oddsidemargin}
+\setlength{\margjuster}{-\breimarg+\smalmarg}
+\newcommand{\bruksmalmarg}{\setlength{\evensidemargin}{\smalmarg}\setlength{\oddsidemargin}{\smalmarg}}
+\newcommand{\brukbreimarg}{\setlength{\evensidemargin}{\breimarg}\setlength{\evensidemargin}{\breimarg}}
+\brukbreimarg
+
 
 %\setlength{\parindent}{0pt}
 %\nonzeroparskip % Problem med punktlister
