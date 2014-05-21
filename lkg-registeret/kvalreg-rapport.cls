@@ -220,4 +220,8 @@ Norsk kvalitets-\\register for\\leppe-kjeve-ganespalte
 
 \newcommand{\sjekk}{{\uniskrift ✓}}
 
+\let\oldurl\url
+\renewrobustcmd{\url}[1]{\textcolor{PrimCol}{\oldurl{#1}}}
+
+
 \sloppy
