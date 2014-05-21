@@ -61,6 +61,9 @@
 \hangsecnum
 \setlength{\aftersubsecskip}{.02ex plus 0.01ex minus -0.1ex}
 
+% Rekkjefølgja må visstnok vera varioref, hyperref, cleveref
+\RequirePackage[norsk]{varioref}
+
 % Lenkjestøtte
 \RequirePackage[linkcolor=AltCol,linktoc=all,hidelinks,%
                     citecolor=PrimCol,%
@@ -69,6 +72,8 @@
                     colorlinks=false,%
     pdfescapeform=true]{hyperref}
 \hypersetup{pdfencoding=auto, pdfpagemode=UseOutlines, bookmarksopen=true, pdfpagelayout=OneColumn, linktoc=all, pdfview=FitH, pdfstartview=Fit}
+
+\RequirePackage[nameinlink]{cleveref}
 
 % For kapittel i innhaldslista
 \renewcommand{\cftpartfont}{\overskrift\bfseries} 
@@ -222,6 +227,8 @@ Norsk kvalitets-\\register for\\leppe-kjeve-ganespalte
 
 \let\oldurl\url
 \renewrobustcmd{\url}[1]{\textcolor{PrimCol}{\oldurl{#1}}}
+
+
 
 
 \sloppy
