@@ -65,11 +65,12 @@
 \RequirePackage[norsk]{varioref}
 
 % Lenkjestøtte
-\RequirePackage[linkcolor=AltCol,linktoc=all,hidelinks,%
+\RequirePackage[linktoc=all,%
+                    linkcolor=PrimCol,%
                     citecolor=PrimCol,%
                     urlcolor=PrimCol,%
                     filecolor=PrimCol,%
-                    colorlinks=false,%
+                    colorlinks=true,%
     pdfescapeform=true]{hyperref}
 \hypersetup{pdfencoding=auto, pdfpagemode=UseOutlines, bookmarksopen=true, pdfpagelayout=OneColumn, linktoc=all, pdfview=FitH, pdfstartview=Fit}
 
@@ -227,8 +228,6 @@ Norsk kvalitets-\\register for\\leppe-kjeve-ganespalte
 
 \let\oldurl\url
 \renewrobustcmd{\url}[1]{\textcolor{PrimCol}{\oldurl{#1}}}
-
-
 
 
 \sloppy
