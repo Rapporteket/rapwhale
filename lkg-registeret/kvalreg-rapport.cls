@@ -74,6 +74,9 @@
     pdfescapeform=true]{hyperref}
 \hypersetup{pdfencoding=auto, pdfpagemode=UseOutlines, bookmarksopen=true, pdfpagelayout=OneColumn, linktoc=all, pdfview=FitH, pdfstartview=Fit}
 
+% Støtte for e-postadresser
+\newcommand{\epost}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
+
 \RequirePackage[nameinlink]{cleveref}
 
 % For kapittel i innhaldslista
