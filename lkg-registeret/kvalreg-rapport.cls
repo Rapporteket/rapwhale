@@ -115,13 +115,19 @@
 \newlength\margjuster
 \newlength\smalmarg
 \newlength\breimarg
-\setlength{\smalmarg}{\evensidemargin}
-\setlength{\breimarg}{\oddsidemargin}
-\setlength{\margjuster}{-\breimarg+\smalmarg}
-\newcommand{\bruksmalmarg}{\setlength{\evensidemargin}{\smalmarg}\setlength{\oddsidemargin}{\smalmarg}}
-\newcommand{\brukbreimarg}{\setlength{\evensidemargin}{\breimarg}\setlength{\evensidemargin}{\breimarg}}
+\newlength\breitekst
+\setlength{\smalmarg}{\evensidemargin}             % Breidd på høgremarg minus 1in
+\setlength{\breimarg}{\oddsidemargin}              % Breidd på venstremarg minus 1in
+\setlength{\margjuster}{-\breimarg+\smalmarg}      % Det som må justerast på brei venstremarg for å få smal venstremarg
+\setlength{\breitekst}{\stockwidth-2\smalmarg-2in} % Tekstbreidda viss me har smal marg på begge sider
+\newcommand{\brukbreimarg}{% Bruk brei marg som standard
+  \setlength{\evensidemargin}{\breimarg}%
+  \setlength{\evensidemargin}{\breimarg}%
+}
 \brukbreimarg
 
+\usepackage{printlen}
+\uselengthunit{cm}
 
 %\setlength{\parindent}{0pt}
 %\nonzeroparskip % Problem med punktlister
@@ -231,6 +237,15 @@ Norsk kvalitets-\\register for\\leppe-kjeve-ganespalte
 
 \let\oldurl\url
 \renewrobustcmd{\url}[1]{\textcolor{PrimCol}{\oldurl{#1}}}
+
+% La kjeldekode (og utdata frå denne) dekka heile sidebreidda
+\AtBeginEnvironment{knitrout}{%
+\begin{adjustwidth}{\margjuster}{0pt}%
+  \setlength\columnwidth{\breitekst}%
+  \setlength\linewidth{\breitekst}%
+  \setlength\hsize{\breitekst}%
+}
+\AtEndEnvironment{knitrout}{\end{adjustwidth}}
 
 
 \sloppy
