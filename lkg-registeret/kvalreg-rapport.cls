@@ -87,6 +87,8 @@
 % (ville elles blitt formatert som andre kapitteloverskrifter)
 %\renewcommand{\printtoctitle}[1]{\strut}
 
+% Ikkje blokkjuster tekst i innhaldslista
+\setrmarg{3.55em plus 1fil}
 
 % På norsk brukar me strekpunkt, ikkje kulepunkt, i lister
 \renewcommand{\labelitemi}{\normalfont–}
