@@ -234,11 +234,13 @@ Norsk kvalitets-\\register for\\leppe-kjeve-ganespalte
 
 
 \newcommand{\sjekk}{{\uniskrift ✓}}
+\newcommand{\Square}{{\uniskrift ☐}}
 
 \let\oldurl\url
 \renewrobustcmd{\url}[1]{\textcolor{PrimCol}{\oldurl{#1}}}
 
 % La kjeldekode (og utdata frå denne) dekka heile sidebreidda
+\iffalse
 \AtBeginEnvironment{knitrout}{%
 \begin{adjustwidth}{\margjuster}{0pt}%
   \setlength\columnwidth{\breitekst}%
@@ -246,6 +248,9 @@ Norsk kvalitets-\\register for\\leppe-kjeve-ganespalte
   \setlength\hsize{\breitekst}%
 }
 \AtEndEnvironment{knitrout}{\end{adjustwidth}}
+\fi
+
+\usepackage{longtable}
 
 
 \sloppy
