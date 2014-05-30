@@ -62,7 +62,12 @@
 \setlength{\aftersubsecskip}{.02ex plus 0.01ex minus -0.1ex}
 
 % Begynn alle rapportdelar på høgreside (sjølv om me brukar 'openany')
-\renewcommand{\@setuppart}{\cleartorecto}
+\renewcommand{\@setuppart}{
+	\cleartorecto
+	\thispagestyle{part}%
+	\@tempswafalse
+	\beforepartskip
+}
 
 % Rekkjefølgja må visstnok vera varioref, hyperref, cleveref
 \RequirePackage[norsk]{varioref}
