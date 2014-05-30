@@ -64,25 +64,8 @@
 % Rekkjefølgja må visstnok vera varioref, hyperref, cleveref
 \RequirePackage[norsk]{varioref}
 
-% Lenkjestøtte
-\RequirePackage[linktoc=all,%
-                    linkcolor=PrimCol,%
-                    citecolor=PrimCol,%
-                    urlcolor=PrimCol,%
-                    filecolor=PrimCol,%
-                    colorlinks=true,%
-    pdfescapeform=true]{hyperref}
-%\hypersetup{%
-%	pdftitle={\@tittel \@undertittel},
-%	pdfauthor={\@forfattarsemikolonliste}
-%	pdfencoding=auto, pdfpagemode=UseOutlines, bookmarksopen=true,
-%	pdfpagelayout=OneColumn, linktoc=all, pdfview=FitH, pdfstartview=Fit
-%}
-
 % Støtte for e-postadresser
 \newcommand{\epost}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
-
-\RequirePackage[nameinlink]{cleveref}
 
 % For kapittel i innhaldslista
 \renewcommand{\cftpartfont}{\overskrift\bfseries} 
@@ -213,39 +196,18 @@
 }
 % Forfattarliste, til bruk både i sjølve rapporten
 % og som PDF-metadata
-\DeclareRobustCommand{\og}{\\} % Brukt til å binda saman ulike forfattarar
-\DeclareRobustCommand{\@forfattarar}{Kari Nordmann \og Ola Nordmann}%
 \DeclareRobustCommand{\forfattarar}[1]{%
-  \DeclareRobustCommand{\@forfattarar}{#1}%
+  \forcsvlist{\listadd\@forfattarar}{#1}%
 }
-\DeclareRobustCommand{\og}{\\}
-\DeclareRobustCommand{\forfattarliste}{{\medskip\raggedleft\itshape\@forfattarar\par}}
-
-% Skriv alle forfattarane som ei liste skild med semikolon
-% (der siste namn ikkje skal ha semikolon etter seg).
-% Løysing basert frå http://tex.stackexchange.com/questions/33832/special-handling-of-first-and-or-last-item-in-an-etoolbox-list/33836#33836
-\newcommand{\xcommaorandlist}[2]{%
-  \count255=0
-  \def\do##1{\advance\count255 1 \chardef\finalitem=\count255 }%
-  \dolistloop{#1}%
-  \count255=0
-  \toks0={}% 
-  \def\do##1{\advance\count255 1
-    \edef\next{%
-      \ifnum\count255=1
-      \else
-        ;\space
-      \fi
-    }
-    \toks2={##1}%
-
-    \edef\next{\the\toks0 \next \the\toks2}%
-    \toks0=\expandafter{\next}%
-  }%
-  \dolistloop{#1}%
-  \edef#2{\the\toks0 }%
+% I sjølve teksten, skriv kvar forfattar på ny linje
+\newcommand{\forfattarliste}{%
+    \begingroup
+	\medskip\raggedleft\itshape%
+	\def\prosesser{\def\prosesser{\\}}%
+    \def\do##1{\prosesser##1}%
+	\dolistloop{\@forfattarar}%
+	\par\endgroup%
 }
-\xcommaorandlist\@forfattarar\@forfattarsemikolonliste
 
 \newcommand{\lagforside}{%
 \begin{titlingpage}
@@ -283,6 +245,54 @@
 \endgroup
 \end{titlingpage}
 }
+
+% Skriv alle forfattarane som ei liste skild med semikolon
+% (der siste namn ikkje skal ha semikolon etter seg).
+% Løysing basert frå http://tex.stackexchange.com/questions/33832/special-handling-of-first-and-or-last-item-in-an-etoolbox-list/33836#33836
+\newcommand{\xcommaorandlist}[2]{%
+  \count255=0
+  \def\do##1{\advance\count255 1 \chardef\finalitem=\count255 }%
+  \dolistloop{#1}%
+  \count255=0
+  \toks0={}% 
+  \def\do##1{\advance\count255 1
+    \edef\next{%
+      \ifnum\count255=1
+      \else
+        ;\space
+      \fi
+    }
+    \toks2={##1}%
+
+    \edef\next{\the\toks0 \next \the\toks2}%
+    \toks0=\expandafter{\next}%
+  }%
+  \dolistloop{#1}%
+  \edef#2{\the\toks0 }%
+}
+
+% Lenkjestøtte
+\RequirePackage[linktoc=all,%
+                    linkcolor=PrimCol,%
+                    citecolor=PrimCol,%
+                    urlcolor=PrimCol,%
+                    filecolor=PrimCol,%
+                    colorlinks=true,%
+					unicode=true,
+					linktoc=all,
+					pdfpagemode=UseOutlines, bookmarksopen=true,
+					pdfpagelayout=OneColumn, pdfview=FitH, pdfstartview=Fit,
+    pdfescapeform=true]{hyperref}
+\AtBeginDocument{%
+	\xcommaorandlist\@forfattarar\@forfattarsemikolonliste
+	\hypersetup{%
+		pdftitle={\@tittel{} \@undertittel},
+		pdfauthor={\@forfattarsemikolonliste}
+	}
+}
+
+\RequirePackage[nameinlink]{cleveref}
+
 
 % Kommando for å skriva prosentteiknet, med rett avstand før
 \RequirePackage{xspace}
