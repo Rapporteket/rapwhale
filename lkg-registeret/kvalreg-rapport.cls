@@ -61,6 +61,9 @@
 \hangsecnum
 \setlength{\aftersubsecskip}{.02ex plus 0.01ex minus -0.1ex}
 
+% Begynn alle rapportdelar på høgreside (sjølv om me brukar 'openany')
+\renewcommand{\@setuppart}{\cleartorecto}
+
 % Rekkjefølgja må visstnok vera varioref, hyperref, cleveref
 \RequirePackage[norsk]{varioref}
 
@@ -210,6 +213,9 @@
 }
 
 \newcommand{\lagforside}{%
+
+\pagenumbering{Alph}
+
 \begin{titlingpage}
 \begingroup
 \null % For å unngå at tekst på neste side kjem med her.
@@ -244,6 +250,16 @@
 \end{textblock}
 \endgroup
 \end{titlingpage}
+
+\frontmatter
+\cleartorecto
+
+{\hypersetup{hidelinks}
+\tableofcontents*
+}
+
+\mainmatter
+
 }
 
 % Skriv alle forfattarane som ei liste skild med semikolon
