@@ -72,7 +72,12 @@
                     filecolor=PrimCol,%
                     colorlinks=true,%
     pdfescapeform=true]{hyperref}
-\hypersetup{pdfencoding=auto, pdfpagemode=UseOutlines, bookmarksopen=true, pdfpagelayout=OneColumn, linktoc=all, pdfview=FitH, pdfstartview=Fit}
+%\hypersetup{%
+%	pdftitle={\@tittel \@undertittel},
+%	pdfauthor={\@forfattarsemikolonliste}
+%	pdfencoding=auto, pdfpagemode=UseOutlines, bookmarksopen=true,
+%	pdfpagelayout=OneColumn, linktoc=all, pdfview=FitH, pdfstartview=Fit
+%}
 
 % Støtte for e-postadresser
 \newcommand{\epost}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
@@ -184,15 +189,68 @@
 
 \RequirePackage{tikz}
 
-\makeatletter
-\newcommand{\makenewtitle}{%
+
+% Definer nokre metadatakommandoar for rapporten.
+% Vert blant anna brukt på forsida.
+% Namn på registeret
+\DeclareRobustCommand{\@registernamn}{Namn på kvalitetsregisteret}%
+\DeclareRobustCommand{\registernamn}[1]{%
+  \DeclareRobustCommand{\@registernamn}{#1}%
+}
+% Året rapporten er frå
+\DeclareRobustCommand{\@rapportaar}{\the\year}%
+\DeclareRobustCommand{\rapportaar}[1]{%
+  \DeclareRobustCommand{\@rapportaar}{#1}%
+}
+% Tittel og undertittel, for forsida
+\DeclareRobustCommand{\@tittel}{Årsrapport for \@rapportaar}%
+\DeclareRobustCommand{\tittel}[1]{%
+  \DeclareRobustCommand{\@tittel}{#1}%
+}
+\DeclareRobustCommand{\@undertittel}{med plan for forbedringstiltak}%
+\DeclareRobustCommand{\undertittel}[1]{%
+  \DeclareRobustCommand{\@undertittel}{#1}%
+}
+% Forfattarliste, til bruk både i sjølve rapporten
+% og som PDF-metadata
+\DeclareRobustCommand{\og}{\\} % Brukt til å binda saman ulike forfattarar
+\DeclareRobustCommand{\@forfattarar}{Kari Nordmann \og Ola Nordmann}%
+\DeclareRobustCommand{\forfattarar}[1]{%
+  \DeclareRobustCommand{\@forfattarar}{#1}%
+}
+\DeclareRobustCommand{\og}{\\}
+\DeclareRobustCommand{\forfattarliste}{{\medskip\raggedleft\itshape\@forfattarar\par}}
+
+% Skriv alle forfattarane som ei liste skild med semikolon
+% (der siste namn ikkje skal ha semikolon etter seg).
+% Løysing basert frå http://tex.stackexchange.com/questions/33832/special-handling-of-first-and-or-last-item-in-an-etoolbox-list/33836#33836
+\newcommand{\xcommaorandlist}[2]{%
+  \count255=0
+  \def\do##1{\advance\count255 1 \chardef\finalitem=\count255 }%
+  \dolistloop{#1}%
+  \count255=0
+  \toks0={}% 
+  \def\do##1{\advance\count255 1
+    \edef\next{%
+      \ifnum\count255=1
+      \else
+        ;\space
+      \fi
+    }
+    \toks2={##1}%
+
+    \edef\next{\the\toks0 \next \the\toks2}%
+    \toks0=\expandafter{\next}%
+  }%
+  \dolistloop{#1}%
+  \edef#2{\the\toks0 }%
+}
+\xcommaorandlist\@forfattarar\@forfattarsemikolonliste
+
+\newcommand{\lagforside}{%
 \begin{titlingpage}
 \begingroup
 \null % For å unngå at tekst på neste side kjem med her.
-
-\begin{textblock}{16}[1,1](15,15.293) % Logo nede til høgre.
-logo% \raggedleft\includegraphics{uib-emblem-kvit}
-\end{textblock}
 
 \begin{textblock}{14}[0,0](1,10)%
 \noindent\begin{tikzpicture}
@@ -209,17 +267,14 @@ logo% \raggedleft\includegraphics{uib-emblem-kvit}
 \begin{textblock}{13}[0,0](1.7,10.5)
 \sffamily
 \lettskrift\fontsize{50}{53}\selectfont
-\raggedright\textcolor{white}{Årsrapport 2014}
+\raggedright\textcolor{white}{\@tittel\\\@undertittel}
 \end{textblock}
-
 
 \begin{textblock}{11}[1,1](14,7.5) % Tittel
 \fontsize{40}{43}\selectfont
 \raggedleft
-%\@title
-Norsk kvalitets-\\register for\\leppe-kjeve-ganespalte
+\@registernamn
 \end{textblock}
-
 
 \begin{textblock}{10}[1,0](14,7.8) % Dato
 \raggedleft\Large\itshape%
@@ -228,7 +283,6 @@ Norsk kvalitets-\\register for\\leppe-kjeve-ganespalte
 \endgroup
 \end{titlingpage}
 }
-\makeatother
 
 % Kommando for å skriva prosentteiknet, med rett avstand før
 \RequirePackage{xspace}
