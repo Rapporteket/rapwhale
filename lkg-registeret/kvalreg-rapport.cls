@@ -41,6 +41,9 @@
 \setmonofont[Scale=MatchLowercase]{Consolas}
 \setmathfont{Cambria Math}
 
+% Bruk ikkje-proporsjonale tal, for eksempel for bruk til sidetal i innhaldslista
+\newfontfamily\mainupropskrift[Ligatures=TeX,Numbers={Monospaced,Lowercase}]{Cambria}
+
 % Bruk proporsjonale tabelltal for overskrifter, då det ser best ut
 % (sjå for eksempel botnen på 1-tal)
 \newfontfamily\altskrift[Ligatures=TeX,Numbers={Proportional,Uppercase}]{Calibri}
@@ -81,7 +84,14 @@
 
 % For kapittel i innhaldslista
 \renewcommand{\cftpartfont}{\overskrift\bfseries} 
-\renewcommand{\cftchapterfont}{\overskrift\bfseries} 
+\renewcommand{\cftchapterfont}{\overskrift\bfseries}
+
+% Bruk ikkjeproporsjonale tal i innhaldslista
+% (elles vert for eksempel 11 med 12 under
+% sjåande veldig rart ut)
+\renewcommand*{\cftpartpagefont}{\mainupropskrift\bfseries}
+\renewcommand*{\cftchapterpagefont}{\mainupropskrift\bfseries}
+\renewcommand*{\cftsectionpagefont}{\mainupropskrift}
 
 % Ikkje vis namnet på innhaldslista på forsida
 % (ville elles blitt formatert som andre kapitteloverskrifter)
