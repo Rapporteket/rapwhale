@@ -25,8 +25,12 @@
 \definecolor{AltColAlt}{cmyk}{.45,.23,0,.13} % PMS 284
 \definecolor{PrimColAlt}{cmyk}{1,.63,0,.41}  % PMS 287
 
-
-\RequirePackage{unicode-math}
+% Mattestøtte
+\RequirePackage[all]{onlyamsmath} % Ikkje godta Plain TeX-kommandoar
+\RequirePackage{amsmath}          % Utvida mattestøtte
+\RequirePackage{mathtools}        % Rett nokre mattegreier
+\mathtoolsset{mathic}             % Ditto
+\RequirePackage{unicode-math}     % Unicode-matte for LuaLaTeX
 
 \RequirePackage{hyphenat}
 \newcommand{\kort}[1]{\nohyphens{\addfontfeatures{Letters=UppercaseSmallCaps}#1}}
