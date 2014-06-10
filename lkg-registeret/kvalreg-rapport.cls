@@ -351,6 +351,15 @@
 \AtEndEnvironment{knitrout}{\end{adjustwidth}}
 \fi
 
+\newenvironment{widefigure}[1][htbp]{
+  \begin{figure}[#1]
+  \begin{adjustwidth}{\margjuster}{0pt}
+  \centerfloat
+  }{%
+  \end{adjustwidth}
+  \end{figure}
+}
+
 \usepackage{longtable}
 
 
