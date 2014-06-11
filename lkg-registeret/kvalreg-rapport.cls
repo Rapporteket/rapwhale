@@ -173,7 +173,10 @@
 \AtBeginEnvironment{tabular}{\tablefont}%
 \hangcaption
 
-\AtBeginEnvironment{itemize}{\raggedyright[1.5cm]}
+% Ikkje blokkjuster punktlister
+% (\RaggedyRight[1.5cm] er litt freistande, men sjå
+% http://tex.stackexchange.com/questions/134303/does-combining-microtype-with-ragged-right-make-any-sense )
+\AtBeginEnvironment{itemize}{\raggedright}
 
 % Mykje betre avsnittsformatering, ved å strekka bitte litt på bokstavane
 \RequirePackage[stretch=20,final]{microtype}
