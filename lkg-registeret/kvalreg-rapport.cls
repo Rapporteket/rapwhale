@@ -338,7 +338,8 @@
 
 
 \newcommand{\sjekk}{{\uniskrift ✓}}
-\newcommand{\Square}{{\uniskrift ☐}}
+\newcommand{\sjekknei}{{\uniskrift\Large ☐}}
+\newcommand{\sjekkja}{{\uniskrift\Large ☑}}
 
 \let\oldurl\url
 \renewrobustcmd{\url}[1]{\textcolor{PrimCol}{\oldurl{#1}}}
