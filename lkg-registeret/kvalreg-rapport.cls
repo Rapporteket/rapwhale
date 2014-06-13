@@ -180,7 +180,7 @@
 \AtBeginEnvironment{itemize}{\raggedright}
 
 % Mykje betre avsnittsformatering, ved å strekka bitte litt på bokstavane
-\RequirePackage[stretch=20,final]{microtype}
+\RequirePackage[stretch=30,final]{microtype}
 
 % Plassering av sidetal
 \makeevenfoot{plain}{\hspace*{\margjuster}\thepage}{}{}
