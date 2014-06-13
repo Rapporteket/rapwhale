@@ -163,7 +163,7 @@
 	}
 
 % For rett orddeling av ord som buss\_sjåfør
-\def\_#1{\discretionary{-}{#1}{}}
+\newcommand{\dbind}[1]{\discretionary{-}{#1}{}}
 
 
 \newfontfamily\tablefont[Numbers={Monospaced,Lowercase}]{Calibri}
