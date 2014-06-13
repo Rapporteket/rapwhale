@@ -174,6 +174,11 @@
 \AtBeginEnvironment{tabular}{\tablefont}%
 \hangcaption
 
+% Fiks sentrering av tabellar (slik latex() har definert
+% \centering fungerer det dessverre ikkje
+\BeforeBeginEnvironment{tabular}{\hfill}
+\AfterEndEnvironment{tabular}{\hfill\null}
+
 % Ikkje blokkjuster punktlister
 % (\RaggedyRight[1.5cm] er litt freistande, men sjå
 % http://tex.stackexchange.com/questions/134303/does-combining-microtype-with-ragged-right-make-any-sense )
