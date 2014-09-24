@@ -169,7 +169,7 @@
 \newfontfamily\tablefont[Numbers={Monospaced,Lowercase}]{Calibri}
 \RequirePackage{etoolbox}
 \captionnamefont{\sffamily\color{PrimCol}\scshape}%
-\captiontitlefont{\sffamily\color{PrimCol}}%
+\captiontitlefont{\linespread{1}\sffamily\color{PrimCol}}%
 \captionstyle{\raggedright}
 \AtBeginEnvironment{tabular}{\tablefont}%
 \hangcaption
