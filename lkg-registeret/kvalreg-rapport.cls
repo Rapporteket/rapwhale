@@ -9,7 +9,10 @@
 
 \RequirePackage{polyglossia}
 \setdefaultlanguage{norsk}
-\AtBeginDocument{\lefthyphenmin=3} % Minimum tre bokstavar til venstre for bindestrek ved orddeling
+\AtBeginDocument{%
+  \lefthyphenmin=3
+  \righthyphenmin=3
+} % Minimum tre bokstavar til venstre eller høgre for bindestrek ved orddeling
 
 
 \RequirePackage[cmyk]{xcolor}
