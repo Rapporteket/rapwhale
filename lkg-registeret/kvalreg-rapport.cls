@@ -321,6 +321,7 @@
 }
 
 % Lenkjestøtte
+\PassOptionsToPackage{hyphens}{url}
 \RequirePackage[linktoc=all,%
                     linkcolor=PrimCol,%
                     citecolor=PrimCol,%
