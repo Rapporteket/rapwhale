@@ -21,14 +21,43 @@
 
 % Fargar frå profilmanualen her:
 % http://www.regjeringen.no/pages/16744078/4804-Designmanual2011-WEB.pdf
-\definecolor{PrimCol}{cmyk}{1,.69,0,.11} % PMS 287
-\definecolor{AltCol}{cmyk}{.44,.19,0,0}  % PMS 287
+\definecolor{MorkBlaCol}{cmyk}{1,.69,0,.11} % PMS 287 (mørk blå)
+\definecolor{LysBlaCol}{cmyk}{.44,.19,0,0}  % PMS 287 (lys blå)
 
-% Alternative CMYK-fargar på (ser betre ut konvertert til RGB?)
-% http://encycolorpedia.com/003896
-% http://encycolorpedia.com/7aabde
-\definecolor{AltColAlt}{cmyk}{.45,.23,0,.13} % PMS 284
-\definecolor{PrimColAlt}{cmyk}{1,.63,0,.41}  % PMS 287
+% Tilleggsfargar, som er halvoffisielle, henta frå
+% http://www.unn.no/profilhandbok/fargepalett.html
+\definecolor{LysBrunCol}{cmyk}{.18,.35,.47,.05}      % PMS 4665 (lys raudbrun)
+\definecolor{MiddelsBrunCol}{cmyk}{.30,.54,.57,.26}  % PMS 4715 (middels raudbrun)
+\definecolor{MorkBrunCol}{cmyk}{.36,.80,.75,.53}     % PMS 483 (mørk raudbrun)
+\definecolor{SkarpRaudCol}{cmyk}{0,1,.81,.04}        % PMS 1795 (skarp raud)
+\definecolor{BleikGulCol}{cmyk}{.16,.14,.71,.01}     % PMS 459 (bleik gul)
+\definecolor{OransjeCol}{cmyk}{0,.39,1,0}            % PMS 130 (oransje / skarp gul)
+\definecolor{LysSjoGronCol}{cmyk}{.57,.24,.44,.06}   % PMS 624 (lys sjøgrøn)
+\definecolor{SkarpGronCol}{cmyk}{.73,.13,1,.01}      % PMS 362 (skarp grøn (skogsgrøn?))
+\definecolor{LysSkifergraCol}{cmyk}{.44,.28,.25,.06} % PMS 7543 (lys skifergrå)
+\definecolor{MorkSjoGron}{cmyk}{.95,.32,.79,.26}     % PMS 342 (mørk sjøgrøn)
+
+% Bruk ulike type fargar på ulike typar dokument
+\newcommand{\doktypeverdi}{arsrapport}%
+\newcommand{\doktype}[1]{%
+  \renewcommand{\doktypeverdi}{#1}%
+}
+% Standardfargar
+\RequirePackage{etoolbox} % For samanlikningar/if-setningar + patching
+\AtBeginDocument{
+\expandafter\ifstrequal\expandafter{\doktypeverdi}{arsrapport}{
+  \colorlet{PrimCol}{MorkBlaCol}
+  \colorlet{AltCol}{LysBlaCol}
+}{}
+\expandafter\ifstrequal\expandafter{\doktypeverdi}{kvalitetsrapport}{
+  \colorlet{PrimCol}{MorkBrunCol}
+  \colorlet{AltCol}{LysBrunCol}
+}{}
+\expandafter\ifstrequal\expandafter{\doktypeverdi}{dokumentasjon}{
+  \colorlet{PrimCol}{MorkSjoGron}
+  \colorlet{AltCol}{LysSjoGronCol}
+}{}
+}
 
 % Mattestøtte
 \RequirePackage[all]{onlyamsmath} % Ikkje godta Plain TeX-kommandoar
@@ -172,7 +201,6 @@
 
 
 \newfontfamily\tablefont[Numbers={Monospaced,Lowercase}]{Calibri}
-\RequirePackage{etoolbox}
 \captionnamefont{\sffamily\color{PrimCol}\scshape}%
 \captiontitlefont{\linespread{1}\sffamily\color{PrimCol}}%
 \captionstyle{\raggedright}
