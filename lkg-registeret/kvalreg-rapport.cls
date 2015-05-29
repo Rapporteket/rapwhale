@@ -1,14 +1,29 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{kvalreg-rapport}[2014/05/15 Rapportar for kvalitetsregister]
 
+% Språkstøtte:
+\newif\kvalreg@bokmal         \kvalreg@bokmaltrue     % Bokmål er standard
+\newif\kvalreg@nynorsk        \kvalreg@nynorskfalse   % Nynorsk er ikkje standard
+
+% Aktiver språkstøtta:
+\DeclareOption{nynorsk}{\kvalreg@nynorsktrue\kvalreg@bokmalfalse}
+
 % Me baserer oss på memoir-klassen
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{memoir}}
-   \PassOptionsToClass{a4paper,11pt,twoside,openany,norsk}{memoir}
+   \ifkvalreg@nynorsk
+     \PassOptionsToClass{a4paper,11pt,twoside,openany,nynorsk}{memoir}
+   \else\ifkvalreg@bokmal
+     \PassOptionsToClass{a4paper,11pt,twoside,openany,norsk}{memoir}
+   \fi\fi
    \ProcessOptions\relax
 \LoadClass{memoir}
 
 \RequirePackage{polyglossia}
-\setdefaultlanguage{norsk}
+\ifkvalreg@nynorsk
+  \setdefaultlanguage{nynorsk}
+\else\ifkvalreg@bokmal
+  \setdefaultlanguage{norsk}
+\fi\fi
 \AtBeginDocument{%
   \lefthyphenmin=3
   \righthyphenmin=3
@@ -111,7 +126,11 @@
 }
 
 % Rekkjefølgja må visstnok vera varioref, hyperref, cleveref
-\RequirePackage[norsk]{varioref}
+\ifkvalreg@nynorsk
+  \RequirePackage[nynorsk]{varioref}
+\elseifkvalreg@bokmal
+  \RequirePackage[norsk]{varioref}
+\fi\fi
 
 % Støtte for e-postadresser
 \newcommand{\epost}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
