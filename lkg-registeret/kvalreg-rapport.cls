@@ -2,11 +2,13 @@
 \ProvidesClass{kvalreg-rapport}[2014/05/15 Rapportar for kvalitetsregister]
 
 % Språkstøtte:
-\newif\kvalreg@bokmal         \kvalreg@bokmaltrue     % Bokmål er standard
-\newif\kvalreg@nynorsk        \kvalreg@nynorskfalse   % Nynorsk er ikkje standard
+\newif\ifkvalreg@bokmal         \kvalreg@bokmaltrue     % Bokmål er standard
+\newif\ifkvalreg@nynorsk        \kvalreg@nynorskfalse   % Nynorsk er ikkje standard
 
 % Aktiver språkstøtta:
 \DeclareOption{nynorsk}{\kvalreg@nynorsktrue\kvalreg@bokmalfalse}
+\DeclareOption{bokmal}{\kvalreg@nynorskfalse\kvalreg@bokmaltrue}
+\ProcessOptions\relax
 
 % Me baserer oss på memoir-klassen
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{memoir}}
@@ -128,7 +130,7 @@
 % Rekkjefølgja må visstnok vera varioref, hyperref, cleveref
 \ifkvalreg@nynorsk
   \RequirePackage[nynorsk]{varioref}
-\elseifkvalreg@bokmal
+\else\ifkvalreg@bokmal
   \RequirePackage[norsk]{varioref}
 \fi\fi
 
@@ -388,7 +390,8 @@
 	}
 }
 
-\RequirePackage[nameinlink]{cleveref}
+% cleverref finst ikkje på nynorsk enno, så bruk bokmål mellombels (fixme)
+\RequirePackage[nameinlink,norsk]{cleveref}
 
 
 % Kommando for å skriva prosentteiknet, med rett avstand før
