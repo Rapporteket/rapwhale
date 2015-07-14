@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{kvalreg-rapport}[2014/05/15 Rapportar for kvalitetsregister]
+\ProvidesClass{kvalreg-rapport}[2015/07/14 Rapportar for kvalitetsregister]
 
 % Språkstøtte:
 \newif\ifkvalreg@bokmal         \kvalreg@bokmaltrue     % Bokmål er standard
@@ -20,6 +20,8 @@
    \ProcessOptions\relax
 \LoadClass{memoir}
 
+% Brukar LuaLaTeX, så for språkstøtte må me lasta
+% polyglossia-pakken, ikkje babel
 \RequirePackage{polyglossia}
 \ifkvalreg@nynorsk
   \setdefaultlanguage{nynorsk}
@@ -32,12 +34,12 @@
 } % Minimum tre bokstavar til venstre eller høgre for bindestrek ved orddeling
 
 
-\RequirePackage[cmyk]{xcolor}
-
-%\addtokomafont{disposition}{\overskrift}
+% Støtte for fargar
+\RequirePackage{xcolor}
 
 % Fargar frå profilmanualen her:
-% http://www.regjeringen.no/pages/16744078/4804-Designmanual2011-WEB.pdf
+% https://www.regjeringen.no/no/tema/helse-og-omsorg/sykehus/styringsdokumenter1/nasjonalt-profilprogram-for-helseforetak/id650208/
+% https://www.regjeringen.no/contentassets/575f7de1edeb42fca6a952d3ca5f3260/4804-designmanual2011-web.pdf
 \definecolor{MorkBlaCol}{cmyk}{1,.69,0,.11} % PMS 287 (mørk blå)
 \definecolor{LysBlaCol}{cmyk}{.44,.19,0,0}  % PMS 287 (lys blå)
 
@@ -52,7 +54,7 @@
 \definecolor{LysSjoGronCol}{cmyk}{.57,.24,.44,.06}   % PMS 624 (lys sjøgrøn)
 \definecolor{SkarpGronCol}{cmyk}{.73,.13,1,.01}      % PMS 362 (skarp grøn (skogsgrøn?))
 \definecolor{LysSkifergraCol}{cmyk}{.44,.28,.25,.06} % PMS 7543 (lys skifergrå)
-\definecolor{MorkSjoGron}{cmyk}{.95,.32,.79,.26}     % PMS 342 (mørk sjøgrøn)
+\definecolor{MorkSjoGronCol}{cmyk}{.95,.32,.79,.26}     % PMS 342 (mørk sjøgrøn)
 
 % Bruk ulike type fargar på ulike typar dokument
 \newcommand{\doktypeverdi}{arsrapport}%
@@ -71,7 +73,7 @@
   \colorlet{AltCol}{LysBrunCol}
 }{}
 \expandafter\ifstrequal\expandafter{\doktypeverdi}{dokumentasjon}{
-  \colorlet{PrimCol}{MorkSjoGron}
+  \colorlet{PrimCol}{MorkSjoGronCol}
   \colorlet{AltCol}{LysSjoGronCol}
 }{}
 }
@@ -83,16 +85,30 @@
 \mathtoolsset{mathic}             % Ditto
 \RequirePackage{unicode-math}     % Unicode-matte for LuaLaTeX
 
+
+% Viser akronyom med kapitélar
 \RequirePackage{hyphenat}
 \newcommand{\kort}[1]{\nohyphens{\addfontfeatures{Letters=UppercaseSmallCaps}#1}}
 
+% Vis programkode, pakkenamn o.l. med fastbreiddskrift, fin farge,
+% og ikkje del teksten over fleire linjer
+\newcommand{\kode}[1]{\nohyphens{\texttt{\textcolor{PrimCol}{#1}}}} % \codefontsize?
 
+% Støtte for e-postadresser
+\newcommand{\epost}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
+
+% Bruk Cambria, Calibri og Consolas som standardskrift:
+%   Brødtekst og matte: Cambria
+%   Overskrifter: Calibri
+%   Programkode: Consolas
+% I brødtekst og vanlege overskrifter brukar me *proporsjonale* renessansetal
 \setmainfont[Ligatures=TeX, Numbers={Proportional,Lowercase}]{Cambria} % Problem med Fractions=On
 \setsansfont[Ligatures=TeX, Numbers={Proportional,Lowercase}]{Calibri}
 \setmonofont[Scale=MatchLowercase]{Consolas}
 \setmathfont{Cambria Math}
 
-% Bruk ikkje-proporsjonale tal, for eksempel for bruk til sidetal i innhaldslista
+% Skriftstil med ikkje-proporsjonale tal, for brødtekst,
+% for eksempel for bruk til sidetal i innhaldslista
 \newfontfamily\mainupropskrift[Ligatures=TeX,Numbers={Monospaced,Lowercase}]{Cambria}
 
 % Bruk proporsjonale tabelltal for overskrifter, då det ser best ut
@@ -103,7 +119,7 @@
 % Skrift for teikn som ikkje finst i standardskriftene
 \newfontfamily\uniskrift[Scale=MatchLowercase]{Arial Unicode MS}
 
-% For overskrifter
+% Definer formatering for overskrifter på ulike nivå
 \chapterstyle{section}
 \newcommand{\overskrift}{\color{PrimCol}\altskrift}
 \renewcommand*{\partnamefont}{\overskrift\Huge\bfseries}
@@ -127,16 +143,6 @@
 	\beforepartskip
 }
 
-% Rekkjefølgja må visstnok vera varioref, hyperref, cleveref
-\ifkvalreg@nynorsk
-  \RequirePackage[nynorsk]{varioref}
-\else\ifkvalreg@bokmal
-  \RequirePackage[norsk]{varioref}
-\fi\fi
-
-% Støtte for e-postadresser
-\newcommand{\epost}[1]{\href{mailto:#1}{\nolinkurl{#1}}}
-
 % For kapittel i innhaldslista
 \renewcommand{\cftpartfont}{\overskrift\bfseries} 
 \renewcommand{\cftchapterfont}{\overskrift\bfseries}
@@ -148,10 +154,6 @@
 \renewcommand*{\cftchapterpagefont}{\mainupropskrift\bfseries}
 \renewcommand*{\cftsectionpagefont}{\mainupropskrift}
 
-% Ikkje vis namnet på innhaldslista på forsida
-% (ville elles blitt formatert som andre kapitteloverskrifter)
-%\renewcommand{\printtoctitle}[1]{\strut}
-
 % Ikkje blokkjuster tekst i innhaldslista
 \setrmarg{3.55em plus 1fil}
 
@@ -159,16 +161,33 @@
 \renewcommand{\labelitemi}{\normalfont–}
 \renewcommand{\labelitemii}{\normalfont–}
 
+% Ikkje blokkjuster punktlister
+% (\RaggedyRight[1.5cm] er litt freistande, men sjå
+% http://tex.stackexchange.com/questions/134303/does-combining-microtype-with-ragged-right-make-any-sense )
+\AtBeginEnvironment{itemize}{\raggedright}
+
 % Støtt kompakte lister, og ikkje bruk punktum etter
 % talet i nummererte lister (det skal ikkje vera det på norsk)
 \RequirePackage[pointlessenum]{paralist}
 \tightlists
 
+% Støtte for fancy kryssreferansar.
+% Rekkjefølgja for pakkelisting må visstnok vera varioref, hyperref, cleveref
+\ifkvalreg@nynorsk
+  \RequirePackage[nynorsk]{varioref}
+\else\ifkvalreg@bokmal
+  \RequirePackage[norsk]{varioref}
+\fi\fi
 
-% Godta komma desimalskiljeteikn i matte
+% Godta komma som desimalskiljeteikn i matte
 \RequirePackage{ncccomma}
 
+% Støtte for elementære utrekningar
 \RequirePackage{calc}
+
+% Støtte for å skriva ut verdiar til lengder
+\usepackage{printlen}
+\uselengthunit{cm}
 
 
 % Margar
@@ -176,9 +195,8 @@
 \setulmarginsandblock{1.8cm}{2.8cm}{*} % Toppmarg, botnmarg
 %\setmarginnotes{1.5em}{5.5cm}{11pt} % Avstand til sidestolpe, breidd av sidesolpe, min. vertikal avstand
 \checkandfixthelayout[nearest]
-% Me brukar «twoside», for tosidig utskrift, men me vil ha alle sidene
-% på same format likevel, altså med ikkje reflekterte margar på par-
-% og oddetalssider.
+% Me brukar «twoside», for tosidig utskrift, men me vil ha alle sidene på same format likevel,
+% altså med *ikkje-reflekterte* margar på par- og oddetalssider.
 \newlength\margjuster
 \newlength\smalmarg
 \newlength\breimarg
@@ -193,9 +211,6 @@
 }
 \brukbreimarg
 
-\usepackage{printlen}
-\uselengthunit{cm}
-
 %\setlength{\parindent}{0pt}
 %\nonzeroparskip % Problem med punktlister
 %\raggedyright[1.2cm]
@@ -208,35 +223,40 @@
 \RequirePackage{fixltx2e}
 
 % Lag minst mulig PDF-fil
-%\pdfcompresslevel=9
-%\pdfminorversion=5
-%\pdfobjcompresslevel=3
+\pdfcompresslevel=9
+\pdfminorversion=5
+\pdfobjcompresslevel=3
 
-
+% Støtte for kommando brukt i LaTeX-malen til SKDE
 \newcommand{\guide}[1] {
 	\textit{\textcolor{darkgray}{[#1]}}
 	}
 
 % For rett orddeling av ord som buss\_sjåfør
+% (anten bussjåfør eller buss-sjåfør)
 \newcommand{\dbind}[1]{\discretionary{-}{#1}{}}
 
 
+% Bruk *ikkje-proporsjonale* renessansetal i alle tabellar
 \newfontfamily\tablefont[Numbers={Monospaced,Lowercase}]{Calibri}
+\AtBeginEnvironment{tabular}{\tablefont}%
+
+% La tabelloverskrifter ha farga tekst, med mindre linjeavstand
+% og ikkje blokkjustert. Og la linje to og nedover ha innrykk.
 \captionnamefont{\sffamily\color{PrimCol}\scshape}%
 \captiontitlefont{\linespread{1}\sffamily\color{PrimCol}}%
 \captionstyle{\raggedright}
-\AtBeginEnvironment{tabular}{\tablefont}%
 \hangcaption
 
-% Fiks sentrering av tabellar (slik latex() har definert
-% \centering fungerer det dessverre ikkje
+% Fiks sentrering av tabellar (slik latex()-kommandoen
+% i R-pakken Hmisc har definert \centering fungerer det 
+% dessverre ikkje)
 \BeforeBeginEnvironment{tabular}{\hfill}
 \AfterEndEnvironment{tabular}{\hfill\null}
 
-% Ikkje blokkjuster punktlister
-% (\RaggedyRight[1.5cm] er litt freistande, men sjå
-% http://tex.stackexchange.com/questions/134303/does-combining-microtype-with-ragged-right-make-any-sense )
-\AtBeginEnvironment{itemize}{\raggedright}
+% Støtte for tabellar som går over fleire sider
+\usepackage{longtable}
+
 
 % Mykje betre avsnittsformatering, ved å strekka bitte litt på bokstavane
 \RequirePackage[stretch=30,final]{microtype}
@@ -249,14 +269,15 @@
 \title{Norsk kvalitetsregister for leppe-kjeve-ganespalte}
 \author{Karl Ove Hufthammer}
 
+% Bruk tomme sider for alle Part-sider
 \pagestyle{plain}
 \aliaspagestyle{part}{empty}
 
-% For absolute positioning (for making the title page).
+% For absolutt posisjonering, for forsida
 \RequirePackage[absolute,overlay]{textpos}
 
+% For teikningar, diagram og liknande
 \RequirePackage{tikz}
-
 
 % Definer nokre metadatakommandoar for rapporten.
 % Vert blant anna brukt på forsida.
@@ -294,14 +315,19 @@
 	\par\endgroup%
 }
 
+% Kommando for å laga forsida, innhaldslista osv.
 \newcommand{\lagforside}{%
 
+% Anna sidenummerering for alt som kjem før innhaldsbolken i dokumentet
+% Vert òg vist i enkelte PDF-lesarar
 \pagenumbering{Alph}
 
+% Start forsida
 \begin{titlingpage}
 \begingroup
 \null % For å unngå at tekst på neste side kjem med her.
 
+% Farga boks nede på forsida
 \begin{textblock}{14}[0,0](1,10)%
 \noindent\begin{tikzpicture}
 \node[fill=AltCol,outer sep=0pt,inner sep=0pt] (bcbox)%
@@ -314,18 +340,21 @@
 \end{tikzpicture}
 \end{textblock}
 
+% Tittel og undertittel i farga boks
 \begin{textblock}{13}[0,0](1.7,10.5)
 \sffamily
 \lettskrift\fontsize{50}{53}\selectfont
 \raggedright\textcolor{white}{\@tittel\\\@undertittel}
 \end{textblock}
 
+% Namn på register oppe til høgre
 \begin{textblock}{11}[1,1](14,7.5) % Tittel
 \fontsize{40}{43}\selectfont
 \raggedleft
 \@registernamn
 \end{textblock}
 
+% Dagens dato rett etter registernamnet
 \begin{textblock}{10}[1,0](14,7.8) % Dato
 \raggedleft\Large\itshape%
 \today
@@ -334,19 +363,22 @@
 \end{titlingpage}
 
 \frontmatter
-\cleartorecto
+\cleartorecto % Hopp til ny høgreside
 
+% Vis innhadsliste
 {\hypersetup{hidelinks}
 \tableofcontents*
 }
 
+% Hovudbolk (med annan sidenummerering, og anna
 \mainmatter
+} % Ferdig med definisjon av \lagforside
 
-}
 
 % Skriv alle forfattarane som ei liste skild med semikolon
 % (der siste namn ikkje skal ha semikolon etter seg).
-% Løysing basert frå http://tex.stackexchange.com/questions/33832/special-handling-of-first-and-or-last-item-in-an-etoolbox-list/33836#33836
+% Grusom men velfungerande kode, basert på
+% http://tex.stackexchange.com/questions/33832/special-handling-of-first-and-or-last-item-in-an-etoolbox-list/33836#33836
 \newcommand{\xcommaorandlist}[2]{%
   \count255=0
   \def\do##1{\advance\count255 1 \chardef\finalitem=\count255 }%
@@ -390,23 +422,23 @@
 	}
 }
 
+% Fargelegg alle lenkjer/nettadresser
+\let\oldurl\url
+\renewrobustcmd{\url}[1]{\textcolor{PrimCol}{\oldurl{#1}}}
+
 % cleverref finst ikkje på nynorsk enno, så bruk bokmål mellombels (fixme)
 \RequirePackage[nameinlink,norsk]{cleveref}
-
 
 % Kommando for å skriva prosentteiknet, med rett avstand før
 \RequirePackage{xspace}
 \newcommand{\prosent}{\:\%\xspace}
 
-
+% Kommandoar for å skriva avkryssingsteikn og avkryssingsboksar
 \newcommand{\sjekk}{{\uniskrift ✓}}
 \newcommand{\sjekknei}{{\uniskrift\Large ☐}}
 \newcommand{\sjekkja}{{\uniskrift\Large ☑}}
 
-\let\oldurl\url
-\renewrobustcmd{\url}[1]{\textcolor{PrimCol}{\oldurl{#1}}}
-
-% La kjeldekode (og utdata frå denne) dekka heile sidebreidda
+% La R-kjeldekode (og utdata frå køyring av denne) dekka heile sidebreidda
 \iffalse
 \AtBeginEnvironment{knitrout}{%
 \begin{adjustwidth}{\margjuster}{0pt}%
@@ -417,6 +449,7 @@
 \AtEndEnvironment{knitrout}{\end{adjustwidth}}
 \fi
 
+% Ein figur som dekker heile breidda
 \newenvironment{widefigure}[1][htbp]{
   \begin{figure}[#1]
   \begin{adjustwidth}{\margjuster}{0pt}
@@ -426,9 +459,15 @@
   \end{figure}
 }
 
-\usepackage{longtable}
-
-
+% Godta (til nød) dårleg avsnittsformatering. Merk at dette ikkje
+% *fører* til dårleg avsnittsformatering; formateringa er framleis optimal.
+% Men ein slepp å få ein stygg strek i margen (bokstavleg talt)
+% viss ei avsnittsformatering er for dårleg.
 \sloppy
 
+% Støtte for autogenerert eksempeltekst (nyttig ved testing)
 \usepackage{lipsum}
+
+% Rett feilmelding frå tikz (fixme: finn ut korfor ein får denne)
+% http://tex.stackexchange.com/questions/165929/semiverbatim-with-tikz-in-beamer
+\global\let\tikz@ensure@dollar@catcode=\relax
