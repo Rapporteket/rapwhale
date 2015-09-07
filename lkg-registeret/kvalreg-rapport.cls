@@ -220,7 +220,7 @@
 \SingleSpacing
 
 % Rett ymse ting.
-\RequirePackage{fixltx2e}
+% \RequirePackage{fixltx2e} % Ikkje lenger nødvendig i TeXLive 2015 og seinare
 
 % Lag minst mulig PDF-fil
 \pdfcompresslevel=9
