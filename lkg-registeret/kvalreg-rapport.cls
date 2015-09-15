@@ -222,10 +222,13 @@
 % Rett ymse ting.
 % \RequirePackage{fixltx2e} % Ikkje lenger nødvendig i TeXLive 2015 og seinare
 
-% Lag minst mulig PDF-fil
-\pdfcompresslevel=9
-\pdfminorversion=5
-\pdfobjcompresslevel=3
+% Lag minst mulig PDF-fil (berre mogleg med LuaLaTex)
+\RequirePackage{ifluatex}
+\ifluatex
+  \pdfcompresslevel=9
+  \pdfminorversion=5
+  \pdfobjcompresslevel=3
+\fi
 
 % Støtte for kommando brukt i LaTeX-malen til SKDE
 \newcommand{\guide}[1] {
