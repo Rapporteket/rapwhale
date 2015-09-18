@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{kvalreg-rapport}[2015/07/14 Rapportar for kvalitetsregister]
+\ProvidesClass{kvalreg-rapport}[2015/09/18 Rapportar for kvalitetsregister]
 
 % Språkstøtte:
 \newif\ifkvalreg@bokmal         \kvalreg@bokmaltrue     % Bokmål er standard
@@ -9,6 +9,12 @@
 \DeclareOption{nynorsk}{\kvalreg@nynorsktrue\kvalreg@bokmalfalse}
 \DeclareOption{bokmal}{\kvalreg@nynorskfalse\kvalreg@bokmaltrue}
 \ProcessOptions\relax
+
+% Støtte for utkast (raskare kompilering + UTKAST-vassmerke)
+\newif\iffinal \finalfalse
+\newif\ifdraft \drafttrue
+\DeclareOption{final}{\finaltrue\draftfalse}
+\DeclareOption{draft}{\finalfalse\drafttrue}
 
 % Me baserer oss på memoir-klassen
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{memoir}}
@@ -225,9 +231,11 @@
 % Lag minst mulig PDF-fil (berre mogleg med LuaLaTex)
 \RequirePackage{ifluatex}
 \ifluatex
+  \iffinal
   \pdfcompresslevel=9
   \pdfminorversion=5
   \pdfobjcompresslevel=3
+  \fi
 \fi
 
 % Støtte for kommando brukt i LaTeX-malen til SKDE
@@ -262,11 +270,25 @@
 
 
 % Mykje betre avsnittsformatering, ved å strekka bitte litt på bokstavane
-\RequirePackage[stretch=30,final]{microtype}
+\iffinal % Ikkje bruk det ved utkast, då kompilering går mykje tregare
+  \RequirePackage[stretch=30,final]{microtype}
+\fi
 
 % Plassering av sidetal
 \makeevenfoot{plain}{\hspace*{\margjuster}\thepage}{}{}
 \makeoddfoot{plain}{}{}{\thepage}
+
+% I utkastmodus, vis tid for kompilering i toppmargen
+\ifdraft
+  \RequirePackage{clock}
+  \makeevenhead{plain}{\hspace*{\margjuster}\today~-- \texttime}{}{}
+  \makeoddhead{plain}{}{}{\today~-- \texttime}
+\fi
+
+% I utkastmodus, vis strek viss ting kjem utanfor margen
+\ifdraft
+  \setlength\overfullrule{5pt}
+\fi
 
 \RequirePackage{layout}
 \title{Norsk kvalitetsregister for leppe-kjeve-ganespalte}
@@ -461,6 +483,14 @@
   \end{adjustwidth}
   \end{figure}
 }
+
+% Legg ev. til UTKAST-vassmerke
+\ifdraft
+  \usepackage{draftwatermark}
+  \SetWatermarkText{UTKAST}
+  \SetWatermarkLightness{.95}
+\fi
+
 
 % Godta (til nød) dårleg avsnittsformatering. Merk at dette ikkje
 % *fører* til dårleg avsnittsformatering; formateringa er framleis optimal.
