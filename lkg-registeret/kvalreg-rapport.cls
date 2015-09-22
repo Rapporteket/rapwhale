@@ -325,6 +325,10 @@
 \DeclareRobustCommand{\undertittel}[1]{%
   \DeclareRobustCommand{\@undertittel}{#1}%
 }
+% Logo for forsida
+\DeclareRobustCommand{\logo}[1]{%
+  \newcommand{\@logo}{#1}%
+}
 % Forfattarliste, til bruk både i sjølve rapporten
 % og som PDF-metadata
 \DeclareRobustCommand{\forfattarar}[1]{%
@@ -351,6 +355,13 @@
 \begin{titlingpage}
 \begingroup
 \null % For å unngå at tekst på neste side kjem med her.
+
+% Logo oppe til høgre
+\ifdefined\@logo
+  \begin{textblock}{14}[0,0](1,.5)%
+  \noindent\hfill\includegraphics[height=5em]{\@logo}
+  \end{textblock}
+\fi
 
 % Farga boks nede på forsida
 \begin{textblock}{14}[0,0](1,10)%
