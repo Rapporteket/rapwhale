@@ -453,7 +453,7 @@
 \AtBeginDocument{%
 	\xcommaorandlist\@forfattarar\@forfattarsemikolonliste
 	\hypersetup{%
-		pdftitle={\@tittel{} \@undertittel},
+		pdftitle={\@registernamn{}: \@tittel{} \@undertittel},
 		pdfauthor={\@forfattarsemikolonliste}
 	}
 }
