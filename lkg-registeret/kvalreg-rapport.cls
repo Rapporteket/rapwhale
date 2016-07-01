@@ -34,6 +34,7 @@
 \else\ifkvalreg@bokmal
   \setdefaultlanguage{norsk}
 \fi\fi
+\setotherlanguages{english}
 \AtBeginDocument{%
   \lefthyphenmin=3
   \righthyphenmin=3
