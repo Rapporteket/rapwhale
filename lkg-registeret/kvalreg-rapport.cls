@@ -269,11 +269,11 @@
 % Støtte for tabellar som går over fleire sider
 \usepackage{longtable}
 
-
 % Mykje betre avsnittsformatering, ved å strekka bitte litt på bokstavane
-\iffinal % Ikkje bruk det ved utkast, då kompilering går mykje tregare
-  \RequirePackage[stretch=30,final]{microtype}
-\fi
+% (Før tok dette veldig lang tid, og vart berre brukt \iffinal,
+% men i TeX Live 2016 tar det knapt lengre tid, og vert brukt som standard.)
+\RequirePackage[stretch=30,final]{microtype}
+
 
 % Plassering av sidetal
 \makeevenfoot{plain}{\hspace*{\margjuster}\thepage}{}{}
