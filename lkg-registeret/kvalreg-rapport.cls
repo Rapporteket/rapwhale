@@ -1,6 +1,19 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{kvalreg-rapport}[2015/09/18 Rapportar for kvalitetsregister]
 
+% Krev bruk av LuaLaTeX
+\RequirePackage{ifluatex}
+\ifluatex
+  \else
+  \ClassError{kvalreg-rapport}{%
+  Dokument ikkje kompilert med lualatex.\MessageBreak%
+  Vurder Sys.setenv('RSTUDIO_PDFLATEX'='lualatex')}{%
+  Dokumentet må kompilerast med kommandoen lualatex,\MessageBreak%
+  ikkje pdflatex eller xelatex.\MessageBreak%
+  Bruk Sys.setenv('RSTUDIO_PDFLATEX'='lualatex')\MessageBreak%
+  i RStudio for å setta dette som standard.}
+\fi
+
 % Språkstøtte:
 \newif\ifkvalreg@bokmal         \kvalreg@bokmaltrue     % Bokmål er standard
 \newif\ifkvalreg@nynorsk        \kvalreg@nynorskfalse   % Nynorsk er ikkje standard
@@ -230,13 +243,10 @@
 % \RequirePackage{fixltx2e} % Ikkje lenger nødvendig i TeXLive 2015 og seinare
 
 % Lag minst mulig PDF-fil (berre mogleg med LuaLaTex)
-\RequirePackage{ifluatex}
-\ifluatex
-  \iffinal
+\iffinal
   \pdfcompresslevel=9
   \pdfminorversion=5
   \pdfobjcompresslevel=3
-  \fi
 \fi
 
 % Støtte for kommando brukt i LaTeX-malen til SKDE
