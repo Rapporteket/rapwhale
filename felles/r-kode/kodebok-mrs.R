@@ -18,7 +18,7 @@ library(magrittr) # Funksjonar som kan brukast med røyr-operatoren
 
 # Les inn eksempeldata
 mappe = "***FJERNA-ADRESSE***"
-filnamn = "Kodebok NorArtritt-fiksa.xlsx"
+filnamn = "20160801_Kodebok_NorArtritt.xlsx"
 adresse = paste0(mappe, filnamn)
 
 # Les inn (ei fane i) Excel-kodeboka
