@@ -270,6 +270,12 @@
 \captionstyle{\raggedright}
 \hangcaption
 
+% Støtte for delfigurar slik knitr lagar dei
+% (kan òg bruka den innebygde støtta i memoir,
+% men denne støttar knitr ikkje, så då må ein
+% fikla ting manuelt)
+\usepackage{subfig}
+
 % Fiks sentrering av tabellar (slik latex()-kommandoen
 % i R-pakken Hmisc har definert \centering fungerer det 
 % dessverre ikkje)
