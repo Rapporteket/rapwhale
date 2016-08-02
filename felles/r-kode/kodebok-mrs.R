@@ -24,8 +24,6 @@ adresse = paste0(mappe, filnamn)
 # Les inn (ei fane i) Excel-kodeboka
 d = read_excel(adresse, sheet = 5)
 
-
-
 # Lag ny kodebok ----------------------------------------------------------
 
 # Indeks til rader som startar ein ny variabel
