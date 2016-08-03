@@ -22,7 +22,7 @@ filnamn = "20160801_Kodebok_NorArtritt.xlsx"
 adresse = paste0(mappe, filnamn)
 
 # Les inn (ei fane i) Excel-kodeboka
-d = read_excel(adresse, sheet = 5)
+d = read_excel(adresse, sheet = 11)
 
 # Lag ny kodebok ----------------------------------------------------------
 
@@ -39,7 +39,8 @@ var_nverd[nvars] = nrow(d) - ind_nyvar[nvars]
 
 # Lag dataramme med i utgangspunktet éi rad for kvar variabel
 kodebok_utg = data_frame(
-  var_id = d$Variabelnavn[ind_nyvar],
+  dd_id = d$DataDumpnavn[ind_nyvar], # Datadumpnamn (teit)
+  var_id = d$Variabelnavn[ind_nyvar], # Variabel-ID (OK)
   var_type = d$Felttype[ind_nyvar],
   kode = NA_integer_,
   kode_tekst = NA_character_,
