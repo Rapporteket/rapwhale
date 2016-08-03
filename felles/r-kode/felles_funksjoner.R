@@ -2,9 +2,11 @@
 # (og noen, uunnværlige) i registersammenheng og i andre sammenheng.
 
 
-###### Graffunksjoner
+# Graffunksjoner ----------------------------------------------------------
 
-### Funksjon som lager funksjon som tar inn to tall
+### Funksjonal for breaks-argument i ggplot2
+
+# Funksjon som lager funksjon som tar inn to tall
 # og lager aritmetisk tallfølge med valgfri
 # intervallbredde slik at alle tall i følgen er
 # multiplum av intervallbredden og de to tallene
@@ -26,8 +28,13 @@ breaks_bredde = function(bredde = 5, min = NULL, maks = NULL) {
 }
 
 
+### Funksjon som flytter opp labels inni grafer hvis de kolliderer
 
-### Funksjon som flytter opp labels inni grafer hvis de kolliderer.
+# Innargument:
+#   y:     y-koordinat til (midten av) tekstane
+#   tekst: teksten i tekstane (berre brukt til å telja kor mange linjer det er)
+#   hoyde: høgda kvar linje tekst tar opp (i grafkoordinatar)
+# Ut: Ny y-koordinat, der tekstane forhåpentlegvis ikkje overlappar (elles: auk hoyde-argumentet)
 flytt_opp = function(y, tekst, hoyde = .015) {
   tekst_ny = tekst[order(y)]
   y = y[order(y)]
@@ -48,10 +55,10 @@ flytt_opp = function(y, tekst, hoyde = .015) {
 
 
 
-###### Innlesingsfunskjoner
+# Innlesingsfunskjoner ----------------------------------------------------
 
+### Les inn CSV-fil (norsk Excel-format) og fjern BOM-teikn om det finst
 
-### Les inn CSV-fil (norsk Excel-format), og fjern BOM-teikn om det finst
 # (fixme: ikkje lenger nødvendig i neste versjon
 # av readr, men nødvendig 2016-08-01)
 les_csv2 = function(x, ...) {
@@ -67,8 +74,12 @@ les_csv2 = function(x, ...) {
 
 
 ### Normaliser variabelnamn til å ha _ som skiljeteikn og berre små bokstavar
-# Eksempel:
-# c("hopp og.SprettTest", "SykdomsAktivitet.PasientGlobalSykdomsaktivitet") %>% normaliser_varnamn
+
+# Eksempel på bruk:
+#   c("hopp og.SprettTest", "SykdomsAktivitet.PasientGlobalSykdomsaktivitet") %>% normaliser_varnamn
+#   som gjev
+#   c("hopp_og_sprett_test", "sykdoms_aktivitet_pasient_global_sykdomsaktivitet")
+library(purrr)
 normaliser_varnamn = function(x) {
   teikn = x %>%
     str_split("") # Splitt i enkeltteikn
@@ -86,20 +97,20 @@ normaliser_varnamn = function(x) {
 
 
 
+# LaTeX-/rapportskrivingsfunksjoner ---------------------------------------
 
-###### Latex/rapportskrivingsfunksjoner
+### Funksjon for å legge inn tall i en rapport som bruker LaTeX
 
-
-### Funksjon for å legge inn tall i en rapport som bruker latex
-# Skriv talet x som \num{x}, for finformatering av tal
-# med LaTeX (berre nødvendig for x > 999 og x < 0)
+# Tar inn eit tal x og viser det som \num{x}, som (om nødvendig)
+# legg inn fine mellomrom som tusenskiljeteikn og endrar
+# desimalpunktum til desimalkomma.
 num = function(x) {
   paste0("\\num{", format(x, scientific = FALSE), "}")
 }
 
 
+### Prosent med norsk stavemåte i aksenotasjoner
 
-### Prosent med norsk stavemåte i aksenotasjoner.
 # Tar inn eit desimaltal og viser det som prosent,
 # med mellomrom før prosentteiknet (slik det skal vera
 # på norsk), eks. 0.5 <U+2192> "50 %".
@@ -108,10 +119,10 @@ prosent = function(x) {
 }
 
 
-###### Andre funksjoner
 
+# Andre funksjoner --------------------------------------------------------
 
-### Funksjon som legger inn "NA" i tabeller hvis det er noen "NA".
+### Variant av table()-funksjonen som tar med NA-verdiar om dei finst
 
 # Lag tabell som også viser NA-verdiar om dei finst
 tab = function(...) {
@@ -128,12 +139,11 @@ round_any = function(x, accuracy, f = round) {
 }
 
 
-### Konfidensintervall for binomisk fordeling
+#### Konfidensintervall for binomisk fordeling
 
 # Brukar Wilson-intervallet, som anbefalt i
-# "Binomial confidence intervals and contingency tests:
-# mathematical fundamentals and the evaluation of alternative methods", av Sean Wallis, University College London
-
+# «Binomial confidence intervals and contingency tests:
+# mathematical fundamentals and the evaluation of alternative methods», av Sean Wallis, University College London
 ki_bin = function(x, n) {
   ki = binom.wilson(x, n)
   tibble(
