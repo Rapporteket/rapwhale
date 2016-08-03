@@ -144,6 +144,7 @@ round_any = function(x, accuracy, f = round) {
 # Brukar Wilson-intervallet, som anbefalt i
 # «Binomial confidence intervals and contingency tests:
 # mathematical fundamentals and the evaluation of alternative methods», av Sean Wallis, University College London
+library(binom)
 ki_bin = function(x, n) {
   ki = binom.wilson(x, n)
   tibble(
