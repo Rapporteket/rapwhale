@@ -60,15 +60,26 @@ flytt_opp = function(y, tekst, hoyde = .015) {
 ### Les inn CSV-fil (norsk Excel-format) og fjern BOM-teikn om det finst
 
 # (fixme: ikkje lenger nødvendig i neste versjon
-# av readr, men nødvendig 2016-08-01)
+# av readr, > 1.0.0, men nødvendig 2016-08-08)
+library(readr)
+library(magrittr)
+library(stringr)
 les_csv2 = function(x, ...) {
   df = read_csv2(x, ...)
-  forste_kol = charToRaw(names(df)[1])
-  har_bom = identical(forste_kol[1:3], as.raw(c(0xef, 0xbb, 0xbf)))
-  names(df)[1] = ifelse(har_bom,
-    rawToChar(forste_kol[-(1:3)]),
-    rawToBits(forste_kol)
+  namn1 = charToRaw(names(df)[1]) # Gjer første kolonnenamn om til råverdiar (byte-verdiar)
+  har_bom = identical(namn1[1:3], as.raw(c(0xef, 0xbb, 0xbf)))
+
+  # Fjern dei tre første bytane (BOM-teiknet) viss fila har BOM-teikn
+  nytt_namn1 = ifelse(har_bom,
+    rawToChar(namn1[-(1:3)]),
+    rawToBits(namn1)
   )
+
+  # Fjern eventuelle hermeteikn (feil i read_csv*() gjer at ev. hermeteikn
+  # i *første* kolonnenamn ikkje vert fjerna dersom fila har BOM)
+  nytt_namn1 = nytt_namn1 %>%
+    str_replace_all('"', "")
+  names(df)[1] = nytt_namn1
   df
 }
 
