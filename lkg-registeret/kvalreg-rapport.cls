@@ -265,16 +265,24 @@
 
 % La tabelloverskrifter ha farga tekst, med mindre linjeavstand
 % og ikkje blokkjustert. Og la linje to og nedover ha innrykk.
+% Vert ikkje brukt, sidan me lastar caption-pakken etterpå,
+% men lar det stå i tilfelle me vil gå vekk frå caption/subfig
+% på eit seinare tidspunkt.
 \captionnamefont{\sffamily\color{PrimCol}\scshape}%
 \captiontitlefont{\linespread{1}\sffamily\color{PrimCol}}%
 \captionstyle{\raggedright}
 \hangcaption
 
-% Støtte for delfigurar slik knitr lagar dei
-% (kan òg bruka den innebygde støtta i memoir,
-% men denne støttar knitr ikkje, så då må ein
-% fikla ting manuelt)
+% Støtte for delfigurar slik knitr lagar dei, då knitr
+% dessverre ikkje støttar memoir-metoden (over).
+\usepackage[format=hang,justification=raggedright,%
+            font={sf,color=PrimCol},labelfont={sc}]{caption}
 \usepackage{subfig}
+\setFloatSpacing{1}
+% Avsnittet «10.13 The class versus the caption package (and its friends)»
+% i memoir-manualen
+\setlength{\abovecaptionskip}{0.5\onelineskip}
+\setlength{\belowcaptionskip}{0.5\onelineskip}
 
 % Fiks sentrering av tabellar (slik latex()-kommandoen
 % i R-pakken Hmisc har definert \centering fungerer det 
