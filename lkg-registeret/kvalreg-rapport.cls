@@ -276,8 +276,8 @@
 % Støtte for delfigurar slik knitr lagar dei, då knitr
 % dessverre ikkje støttar memoir-metoden (over).
 \usepackage[format=hang,justification=raggedright,%
-            font={sf,color=PrimCol},labelfont={sc}]{caption}
-\usepackage{subfig}
+            font={sf,color=PrimCol},labelfont=sc]{caption}
+\usepackage[font={sf,color=PrimCol},labelfont=sf]{subfig}
 \setFloatSpacing{1}
 % Avsnittet «10.13 The class versus the caption package (and its friends)»
 % i memoir-manualen
