@@ -115,8 +115,32 @@ normaliser_varnamn = function(x) {
 # Tar inn eit tal x og viser det som \num{x}, som (om nødvendig)
 # legg inn fine mellomrom som tusenskiljeteikn og endrar
 # desimalpunktum til desimalkomma.
-num = function(x) {
-  paste0("\\num{", format(x, scientific = FALSE), "}")
+
+# Innargument:
+#   desimalar: talet på desimalar etter komma (rund av og vis så mange desimalar)
+num = function(x, desimalar) {
+  # Argument til \num-kommandoen
+  argtekst = ""
+
+  # Spesialtilpass kommandoen etter talet på desimalar
+  if (!missing(desimalar)) {
+    # \num kan runda av for oss, men rundar av i R
+    # for å sikra avrundinga vert identisk som ved
+    # andre plassar der me ikkje brukar \num.
+    x = round(x, desimalar)
+
+    # Viss me vil ha desimalar, vis alle desimalane
+    # (eks. vert både 3.1 og 3.123 vist som 3,1),
+    # også for heiltal (eks. vert 3 vist som 3.0).
+    if (desimalar > 0) {
+      argtekst = paste0(
+        argtekst,
+        "round-precision=", desimalar,
+        ",round-integer-to-decimal=true"
+      )
+    }
+  }
+  paste0("\\num[", argtekst, "]{", format(x, scientific = FALSE), "}")
 }
 
 
