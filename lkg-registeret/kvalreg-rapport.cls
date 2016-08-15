@@ -496,7 +496,7 @@
 
 % Formater tal på fin måte, med tusenskiljeteikn, rett minusteikn og sånt
 \RequirePackage{siunitx}
-\sisetup{detect-all, group-four-digits=true, output-decimal-marker = {,}}
+\sisetup{detect-all, group-four-digits=true, round-mode=places, output-decimal-marker = {,}}
 
 % Kommandoar for å skriva avkryssingsteikn og avkryssingsboksar
 \newcommand{\sjekk}{{\uniskrift ✓}}
