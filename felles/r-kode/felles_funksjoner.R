@@ -69,7 +69,7 @@ flytt_opp = function(y, tekst, hoyde = .015) {
 # skal gjerast (so bruk negative verdiar for
 # å gjera han lysare).
 library(colorspace)
-farge_morkare = function(fargar, grad = 10) {
+farge_morkare = function(fargar, grad = 5) {
   farge_lab = as(hex2RGB(fargar), "LAB")
   farge_lab@coords[, 1] = pmax(farge_lab@coords[, 1] - grad, 0)
   farge_rgb = as(farge_lab, "RGB")
