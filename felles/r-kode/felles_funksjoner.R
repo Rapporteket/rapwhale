@@ -55,6 +55,31 @@ flytt_opp = function(y, tekst, hoyde = .015) {
 
 
 
+# Fargefunksjonar ---------------------------------------------------------
+
+### Lag mørkare/lysare fargar
+
+# Gjer ein vektor med fargar mørkare.
+# Brukar CIELAB-fargerommet til utrekningar
+# (i staden for RGB-fargerommet), for
+# betre resultat (meir tilpassa korleis
+# synet vårt fungerer).
+#
+# «grad» seier kor mykje mørkare fargen
+# skal gjerast (so bruk negative verdiar for
+# å gjera han lysare).
+library(colorspace)
+farge_morkare = function(fargar, grad = 10) {
+  farge_lab = as(hex2RGB(fargar), "LAB")
+  farge_lab@coords[, 1] = pmax(farge_lab@coords[, 1] - grad, 0)
+  farge_rgb = as(farge_lab, "RGB")
+  farge_rgb@coords[] = pmax(farge_rgb@coords, 0)
+  farge_rgb@coords[] = pmin(farge_rgb@coords, 1)
+  hex(farge_rgb)
+}
+
+
+
 # Innlesingsfunskjoner ----------------------------------------------------
 
 ### Les inn CSV-fil (norsk Excel-format) og fjern BOM-teikn om det finst
