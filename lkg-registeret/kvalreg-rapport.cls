@@ -524,6 +524,16 @@
   \end{figure}
 }
 
+% Ein tabell som dekker heile breidda
+\newenvironment{widetable}[1][htbp]{
+  \begin{table}[#1]
+  \begin{adjustwidth}{\margjuster}{0pt}
+  \centerfloat
+  }{%
+  \end{adjustwidth}
+  \end{table}
+}
+
 % Legg ev. til UTKAST-vassmerke
 \ifdraft
   \usepackage{draftwatermark}
