@@ -19,10 +19,16 @@ library(magrittr) # Funksjonar som kan brukast med røyr-operatoren
 # Les inn eksempeldata
 mappe = "***FJERNA-ADRESSE***"
 filnamn = "20160801_Kodebok_NorArtritt.xlsx"
+
+
+
+# mappe = "***FJERNA-ADRESSE***"
+# filnamn = "20160801_Kodebok_NorArtritt.xlsx"
+
 adresse = paste0(mappe, filnamn)
 
 # Les inn (ei fane i) Excel-kodeboka
-d = read_excel(adresse, sheet = 11)
+d = read_excel(adresse, sheet = 2)
 
 # Lag ny kodebok ----------------------------------------------------------
 
@@ -42,6 +48,7 @@ kodebok_utg = data_frame(
   dd_id = d$DataDumpnavn[ind_nyvar], # Datadumpnamn (teit)
   var_id = d$Variabelnavn[ind_nyvar], # Variabel-ID (OK)
   var_type = d$Felttype[ind_nyvar],
+  # skjema = d$Skjema[ind_nyvar], #skjematype
   kode = NA_integer_,
   kode_tekst = NA_character_,
   forklaring = d$Feltnavn[ind_nyvar] # Berre forklaring for *enkelte* variablar, men …
@@ -69,4 +76,4 @@ kodebok$kode[enum_ind] = enums[, 1] %>%
 kodebok$kode_tekst[enum_ind] = enums[, 2] # Tilhøyrande tekst
 
 # Sjå på den nye, flotte kodeboka
-View(kodebok)
+# View(kodebok)
