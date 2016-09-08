@@ -216,7 +216,7 @@ ki_bin = function(x, n) {
 
 # For å lage pene LaTeX-tabeller i et standardisert format for alle årsrapporter,
 # med mulighet for å gjøre den stor nok til hele siden (wide = TRUE).
-# optional arguments inkluderer colname=c() og caption = paste0("").
+# optional arguments inkluderer colheads=c() og caption = paste0("").
 library(Hmisc)
 library(stringr)
 library(magrittr)
