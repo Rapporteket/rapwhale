@@ -154,7 +154,7 @@ num = function(x, desimalar) {
     # andre plassar der me ikkje brukar \num.
     x = round(x, desimalar)
 
-    # Viss me vil ha desimalar, vis alle desimalane
+    # Viss me vil ha desimalar, vis *alle* desimalane
     # (eks. vert både 3.1 og 3.123 vist som 3,1),
     # også for heiltal (eks. vert 3 vist som 3.0).
     if (desimalar > 0) {
