@@ -214,17 +214,18 @@ ki_bin = function(x, n) {
 }
 
 
-
-# For å lage pene tabeller i et standardisert format for alle årsrapporter, med
-# mulighet for å gjøre den stor nok til hele siden (wide = TRUE).
-# optional arguments inkluderer colname=c() og caption = past0("").
-
-create_table = function(dataframe, label, wide, ...) {
-  table = latex(dataframe,
+# For å lage pene LaTeX-tabeller i et standardisert format for alle årsrapporter,
+# med mulighet for å gjøre den stor nok til hele siden (wide = TRUE).
+# optional arguments inkluderer colname=c() og caption = paste0("").
+library(Hmisc)
+create_ltable = function(dataframe, label, wide = FALSE, ...) {
+  table = capture.output(latex(dataframe,
     file = "", center = "centering",
-    label = label,
-    rowname = NULL,
+    label = label, rowname = NULL,
     where = "htbp", booktabs = TRUE, numeric.dollar = FALSE, ...
-  )
-  table
+  ))
+  if (wide) {
+    table %<>% str_replace("^\\\\(begin|end)\\{table\\}", "\\\\\\1\\{widetable\\}") # Superrobust ... ;)
+  }
+  cat(table, sep = "\n")
 }
