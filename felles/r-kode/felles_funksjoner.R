@@ -218,6 +218,8 @@ ki_bin = function(x, n) {
 # med mulighet for å gjøre den stor nok til hele siden (wide = TRUE).
 # optional arguments inkluderer colname=c() og caption = paste0("").
 library(Hmisc)
+library(stringr)
+library(magrittr)
 create_ltable = function(dataframe, label, wide = FALSE, ...) {
   table = capture.output(latex(dataframe,
     file = "", center = "centering",
