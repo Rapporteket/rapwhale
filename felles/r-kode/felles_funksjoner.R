@@ -212,3 +212,19 @@ ki_bin = function(x, n) {
     high = pmin(1, ki$upper)
   )
 }
+
+
+
+# For å lage pene tabeller i et standardisert format for alle årsrapporter, med
+# mulighet for å gjøre den stor nok til hele siden (wide = TRUE).
+# optional arguments inkluderer colname=c() og caption = past0("").
+
+create_table = function(dataframe, label, wide, ...) {
+  table = latex(dataframe,
+    file = "", center = "centering",
+    label = label,
+    rowname = NULL,
+    where = "htbp", booktabs = TRUE, numeric.dollar = FALSE, ...
+  )
+  table
+}
