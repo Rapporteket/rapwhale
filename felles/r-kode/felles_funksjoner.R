@@ -213,6 +213,17 @@ ki_bin = function(x, n) {
   )
 }
 
+### Konfidenstinervall basert på gjennomsnittet til en  kontinuerlig variabel
+
+ki_univar = function(variabel) {
+  mod = t.test(variabel)
+  tibble(
+    low = mod$conf.int[1],
+    high = mod$conf.int[2]
+  )
+}
+
+
 
 # For å lage pene LaTeX-tabeller i et standardisert format for alle årsrapporter,
 # med mulighet for å gjøre den stor nok til hele siden (wide = TRUE).
