@@ -212,9 +212,11 @@
 
 % Margar
 \setlrmarginsandblock{8.5cm}{2cm}{*} % Venstremarg, høgremarg
-\setulmarginsandblock{1.8cm}{2.8cm}{*} % Toppmarg, botnmarg
+\setulmarginsandblock{1.7cm}{2.8cm}{*} % Toppmarg, botnmarg
+\setlength{\topskip}{1.6\topskip} % For \sloppybottom, jf. memoir-manualen
 %\setmarginnotes{1.5em}{5.5cm}{11pt} % Avstand til sidestolpe, breidd av sidesolpe, min. vertikal avstand
 \checkandfixthelayout[nearest]
+\sloppybottom % For å unngå «horungar» øvst og nedst på sidene
 % Me brukar «twoside», for tosidig utskrift, men me vil ha alle sidene på same format likevel,
 % altså med *ikkje-reflekterte* margar på par- og oddetalssider.
 \newlength\margjuster
