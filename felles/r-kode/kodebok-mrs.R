@@ -28,7 +28,7 @@ filnamn = "20160801_Kodebok_NorArtritt.xlsx"
 adresse = paste0(mappe, filnamn)
 
 # Les inn (ei fane i) Excel-kodeboka
-d = read_excel(adresse, sheet = 2)
+d = read_excel(adresse, sheet = 8)
 
 # Lag ny kodebok ----------------------------------------------------------
 
