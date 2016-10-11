@@ -89,8 +89,8 @@ farge_morkare = function(fargar, grad = 5) {
 library(readr)
 library(magrittr)
 library(stringr)
-les_csv2 = function(x, ...) {
-  df = read_csv2(x, ...)
+les_csv = function(x, ..., lesefunksjon = read_csv) {
+  df = lesefunksjon(x, ...)
   namn1 = charToRaw(names(df)[1]) # Gjer første kolonnenamn om til råverdiar (byte-verdiar)
   har_bom = identical(namn1[1:3], as.raw(c(0xef, 0xbb, 0xbf)))
 
@@ -106,6 +106,9 @@ les_csv2 = function(x, ...) {
     str_replace_all('"', "")
   names(df)[1] = nytt_namn1
   df
+}
+les_csv2 = function(x) {
+  les_csv(x, ..., lesefunksjon = read_csv2)
 }
 
 
