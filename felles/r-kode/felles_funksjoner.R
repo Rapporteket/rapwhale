@@ -53,6 +53,55 @@ flytt_opp = function(y, tekst, hoyde = .015) {
   y[match(tekst, tekst_ny)]
 }
 
+### Lag linjegraf med 95 % konfidensintervall
+
+# Krev følgjande aes-verdiar: x, y, ymin, ymax (dei to siste berre viss konfint = TRUE)
+# Argument:
+#   refline:    y-koordinaten til vassrett referanselinje
+#   refline_df: ev. dataramme med éi rad for kvart panel refline skal gjelda for
+#   xlab:       tekst på x-aksen (standardverdi: "År")
+#   ylab:       tekst på y-aksen (standardverdi: NULL (tom))
+#   angle:      viss sann, vis verdiane på x-aksen på skrå (for å få plass til fleire)
+#   konfint:    Legg til konfidensintervall på kvar pnutk
+graf_linje = function(refline = NULL, refline_df = NULL, xlab = "År", ylab = NULL,
+                      angle = TRUE, konfint = TRUE) {
+  grafdel = list()
+  # Legg ev. til referanselinje(r)
+  if (!is.null(refline)) {
+    if (is.null(refline_df)) {
+      grafdel = append(grafdel, list(geom_hline(yintercept = refline, col = colPrim[6], size = 2)))
+    } else {
+      grafdel = append(grafdel, list(geom_hline(
+        data = refline_df,
+        mapping = aes_string(yintercept = refline),
+        col = colPrim[6], size = 2
+      )))
+    }
+  }
+  # Legg ev. til konfidensintervall (bak alt anna)
+  if (konfint) {
+    grafdel = append(grafdel, geom_linerange(size = .5, colour = colPrim[5]))
+  }
+  # Legg til resten
+  grafdel = append(
+    grafdel,
+    list(
+      geom_line(colour = colPrim[3], size = 1), # Linjer over tid
+      geom_point(size = 2, colour = colPrim[2]), # Punkt
+      xlab(xlab),
+      ylab(ylab),
+      tema,
+      fjern_x
+    )
+  )
+  if (angle) {
+    grafdel = append(grafdel, list(theme(
+      axis.text.x =
+        element_text(angle = 45, vjust = 0.5)
+    )))
+  }
+  grafdel
+}
 
 
 # Fargefunksjonar ---------------------------------------------------------
