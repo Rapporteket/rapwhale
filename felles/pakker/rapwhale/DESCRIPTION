@@ -14,6 +14,7 @@ Description: An ensemble of functions that are necessary or potentially useful
     formats, Norwegian grammar, and the standard format for medical reports, in addition
     to commands usable in LaTex.
 License: Do not distribute outside of Helse Norge.
+Encoding: UTF-8
 LazyData: TRUE
 Imports:
     colorspace,

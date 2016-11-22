@@ -17,7 +17,6 @@
 #' @param min Laveste mulige verdi å vise på aksen. Standardverdi er NULL.
 #' @param maks Høyeste mulige ver+di å vise på aksen. Standardverdi er NULL.
 #' @export
-#' breaks_bredde()
 
 breaks_bredde = function(bredde = 5, min = NULL, maks = NULL) {
   function(lims) {
@@ -38,7 +37,6 @@ breaks_bredde = function(bredde = 5, min = NULL, maks = NULL) {
 #'  @param hoyde Høgda kvar linje tekst tar opp (i grafkoordinatar). Viss teksten framleis
 #'  overlappar, auk hoyde-argumentet.
 #'  @export
-#'  flytt_opp()
 
 flytt_opp = function(y, tekst, hoyde = .015) {
   tekst_ny = tekst[order(y)]
@@ -68,7 +66,6 @@ flytt_opp = function(y, tekst, hoyde = .015) {
 #' @param angle Viss TRUE, vis verdiane på x-aksen på skrå (for å få plass til fleire)
 #' @param konfint Legg til konfidensintervall på kvar punkt
 #' @export
-#' graf_linje()
 
 graf_linje = function(refline = NULL, refline_df = NULL, xlab = "År", ylab = NULL,
                       angle = TRUE, konfint = TRUE) {
@@ -131,7 +128,6 @@ graf_linje = function(refline = NULL, refline_df = NULL, xlab = "År", ylab = NU
 #' )
 #' farge_morkare(fargar = colPrim, grad = 5)
 #' @export
-#' farge_morkare()
 
 farge_morkare = function(fargar, grad = 5) {
   farge_lab = as(hex2RGB(fargar), "LAB")
@@ -157,7 +153,6 @@ farge_morkare = function(fargar, grad = 5) {
 #' @param x Dataramme for innlesing
 #' @param na Et argument for kva slags celler som regnes for å være manglande verdiar.
 #' @export
-#' les_csv()
 
 # (fixme: ikkje lenger nødvendig i neste versjon
 # av readr, > 1.0.0, men nødvendig 2016-08-08)
@@ -192,7 +187,6 @@ les_csv = function(x, ..., lesefunksjon = read_csv) {
 #' @param x Dataramme for innlesing
 #' @param na Et argument for kva slags celler som regnes for å være manglande verdiar.
 #' @export
-#' les_csv2()
 
 les_csv2 = function(x, ...) {
   les_csv(x, ..., lesefunksjon = read_csv2)
@@ -207,7 +201,6 @@ les_csv2 = function(x, ...) {
 #' # som gjev
 #' c("hopp_og_sprett_test", "sykdoms_aktivitet_pasient_global_sykdomsaktivitet")
 #' @export
-#' normaliser_varnamn()
 
 normaliser_varnamn = function(x) {
   teikn = x %>%
@@ -236,7 +229,6 @@ normaliser_varnamn = function(x) {
 #'
 #' @param desimalar Talet på desimalar etter komma (rund av og vis så mange desimalar)
 #' @export
-#' num()
 
 num = function(x, desimalar) {
   # Argument til \num-kommandoen
@@ -272,7 +264,6 @@ num = function(x, desimalar) {
 #'
 #' @param x Ein vektor med desimaltal
 #' @export
-#' prosent()
 
 prosent = function(x) {
   stringr::str_replace(scales::percent(x), "%$", " %")
@@ -287,7 +278,6 @@ prosent = function(x) {
 #' Lag tabell som også viser NA-verdiar om dei finst
 #' Brukar same argument som table()
 #' @export
-#' tab()
 
 tab = function(...) {
   table(..., useNA = "ifany")
@@ -300,7 +290,6 @@ tab = function(...) {
 #'
 #' @param f round, floor eller ceiling.
 #' @export
-#' round_any()
 
 round_any = function(x, accuracy, f = round) {
   f(x / accuracy) * accuracy
@@ -315,7 +304,6 @@ round_any = function(x, accuracy, f = round) {
 #' av Sean Wallis, University College London
 #'
 #' @export
-#' ki_bin()
 
 ki_bin = function(x, n) {
   ki = binom.wilson(x, n)
@@ -334,7 +322,6 @@ ki_bin = function(x, n) {
 #'
 #' @param x numerisk vektor
 #' @export
-#' ki_univar()
 
 ki_univar = function(x) {
   # Hvis det er for få eller for lite varierende
@@ -371,7 +358,6 @@ ki_univar = function(x) {
 #' @param colheads En vektor med tekst som skal være kolonnenavnene til variabelene i tabellen.
 #' @param caption En tekstreng med hva som skal stå i beskrivelsen til tabellen.
 #' @export
-#' create_ltable()
 
 create_ltable = function(dataframe, label, wide = FALSE, ...) {
   table = capture.output(latex(dataframe,
