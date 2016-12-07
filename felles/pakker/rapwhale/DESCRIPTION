@@ -25,5 +25,6 @@ Imports:
     magrittr,
     ggplot2,
     readr,
-    dplyr
+    dplyr,
+    lubridate
 RoxygenNote: 5.0.1
