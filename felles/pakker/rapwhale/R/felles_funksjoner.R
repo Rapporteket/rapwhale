@@ -168,7 +168,7 @@ les_csv = function(x, ..., lesefunksjon = read.csv) {
     rawToBits(namn1)
   )
 
-  # Fjern eventuelle hermeteikn (feil i read_csv*() gjer at ev. hermeteikn
+  # Fjern eventuelle hermeteikn (feil i read.csv*() gjer at ev. hermeteikn
   # i *første* kolonnenamn ikkje vert fjerna dersom fila har BOM)
   nytt_namn1 = nytt_namn1 %>%
     str_replace_all('"', "")
@@ -178,11 +178,11 @@ les_csv = function(x, ..., lesefunksjon = read.csv) {
 
 #' Les inn CSV-fil (norsk Excel-format) og fjern BOM-teikn om det finst.
 #'
-#' Fjern eventuelle hermeteikn (feil i read_csv*() gjer at ev. hermeteikn
+#' Fjern eventuelle hermeteikn (feil i read.csv*() gjer at ev. hermeteikn
 #' i *første* kolonnenamn ikkje vert fjerna dersom fila har BOM)
-#' les_csv er basert på read_csv, og skal dermed brukes for datasett med komma-separatorer.
-#' les_csv2 har tatt utgangspunkt i read_csv2 og skal brukes i situasjoner med semikolondelte .csv filer.
-#' Alle argumenter fra read_csv og read_csv2 kan brukes i les_csv og les_csv2.
+#' les_csv er basert på read.csv, og skal dermed brukes for datasett med komma-separatorer.
+#' les_csv2 har tatt utgangspunkt i read.csv2 og skal brukes i situasjoner med semikolondelte .csv filer.
+#' Alle argumenter fra read.csv og read.csv2 kan brukes i les_csv og les_csv2.
 #'
 #' @param x Dataramme for innlesing
 #' @param na Et argument for kva slags celler som regnes for å være manglande verdiar.
