@@ -81,6 +81,9 @@ ind_vars = c(
 data_vars = names(d) %>%
   setdiff(ind_vars)
 
+# Definer hvor mange variabler som skal hentes for hver pasient.
+# Deretter lag to datasett hvor hele datadumpen er filtrert på indeksvariabler i det ene og
+# alle andre variabler i det andre.
 nvars = 3
 d_ind = d[, ind_vars]
 d_data = d[, data_vars]
@@ -94,14 +97,16 @@ nulltab = tibble(
 class(nulltab$reg_dato) = "Date"
 class(nulltab$epj_dato) = "Date"
 
+# Hente tilfeldige verdier per pasient, for n antall variabler
 
 res_liste = list()
 for (i in 1:nrow(d_ind)) {
-  aktvars = sample(data_vars, 3)
-  innfylling = nulltab
+  aktvars = sample(data_vars, 3) # 3 er antall variabler
+  innfylling = nulltab # den tomme tabellen som ble laget ovenfor skal fylles inn i
   for (j in seq_along(aktvars)) {
     aktvar = aktvars[j]
 
+    # Hvor verdier skal fylles inn avhenger av klassen på variabelen
     reskol = switch(class(d_data[[aktvar]]),
       integer = "reg_tal",
       numeric = "reg_tal",
@@ -111,6 +116,7 @@ for (i in 1:nrow(d_ind)) {
     innfylling[j, "varnamn"] = aktvar
     innfylling[j, reskol] = d_data[i, aktvar]
   }
+  # De individuelle tibbles som kommer for hver i skal settes sammen til ett datasett
   res_liste[[length(res_liste) + 1]] =
     rep(list(d_ind[i, ]), length(aktvars)) %>%
     bind_rows() %>%
@@ -118,11 +124,17 @@ for (i in 1:nrow(d_ind)) {
 }
 res = bind_rows(res_liste)
 
+# Resultatene skal ryddes slik at det er tilfeldig rekkefølge på pasientene,
+# men rader med samme pasientnummer skal komme etter hverandre, og variablene skal
+# stå i en rekkefølge som er lett å bruke.
+# !fixme spør om rekkefølgen bør være det samme som slik datasettet kommer. Bør det
+# også arrangeres etter opererende sykehus for å gjøre det lettere for plotter?
 res = res %>%
   mutate(rekkefolge = factor(PasientID, levels = sample(unique(PasientID)))) %>%
   arrange(rekkefolge, match(varnamn, data_vars)) %>%
   select(-rekkefolge)
 res
 
+# Eksporter data til kvalitetsserveren som en SPSS fil (.sav)
 res_adresse = paste0(grunnmappe, "..\\valideringsdata\\valideringsdatasett.sav")
 write_sav(res, res_adresse)
