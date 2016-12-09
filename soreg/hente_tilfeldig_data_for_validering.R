@@ -122,17 +122,21 @@ res = res %>%
 res = res[!(names(res) %in% data_vars)] %>%
   select(-.row, -res_kol)
 
-# Resultatene skal ryddes slik at det er tilfeldig rekkefølge på pasientene,
+# Resultatene skal ryddes slik at det er sortert etter sykehus, tilfeldig rekkefølge på pasientene,
 # men rader med samme pasientnummer skal komme etter hverandre, og variablene skal
 # stå i en rekkefølge som er lett å bruke.
-# !fixme spør om rekkefølgen bør være det samme som slik datasettet kommer. Bør det
-# også arrangeres etter opererende sykehus for å gjøre det lettere for plotter?
 res = res %>%
   mutate(rekkefolge = factor(PasientID, levels = sample(unique(PasientID)))) %>%
-  arrange(rekkefolge, match(varnamn, data_vars)) %>%
+  arrange(OperererendeSykehus, rekkefolge, match(varnamn, data_vars)) %>%
   select(-rekkefolge)
 res
 
 # Eksporter data til kvalitetsserveren som en SPSS fil (.sav)
-res_adresse = paste0(grunnmappe, "..\\valideringsdata\\valideringsdatasett.sav")
-write_sav(res, res_adresse)
+# for hvert sykehus
+res %>%
+  group_by(OperererendeSykehus) %>%
+  do({
+    res_adresse = paste0(grunnmappe, "..\\valideringsdata\\", .$OperererendeSykehus[1], ".sav")
+    write_sav(., res_adresse)
+    tibble()
+  })
