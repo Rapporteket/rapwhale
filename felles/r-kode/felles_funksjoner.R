@@ -268,7 +268,10 @@ ki_bin = function(x, n) {
 }
 
 ### Konfidenstinervall basert på gjennomsnittet til en  kontinuerlig variabel
-ki_univar = function(x) {
+# med mulighet for bootstrap lagt inn i funksjonen
+library(dplyr)
+
+ki_univar = function(x, bootstrap = FALSE, antall, ...) {
   # Hvis det er for få eller for lite varierende
   # observasjoner til å regne ut konfidensintervall,
   # returner NA for konfidensintervallene
@@ -279,15 +282,28 @@ ki_univar = function(x) {
       high = NA
     )
   } else {
-    mod = t.test(x)
-    tibble(
-      low = mod$conf.int[1],
-      mean = mod$estimate,
-      high = mod$conf.int[2]
-    )
+
+    # Hvis man ønsker boostrap kjøres denne koden,
+    # antall ganger beskrives med argumentet "antall"
+    if (bootstrap == TRUE) {
+      utvalg = sample(x, antall, replace = TRUE)
+      mod = t.test(utvalg)
+
+      tibble(
+        low = mod$conf.int[1],
+        mean = mod$estimate,
+        high = mod$conf.int[2]
+      )
+    } else {
+      mod = t.test(x)
+      tibble(
+        low = mod$conf.int[1],
+        mean = mod$estimate,
+        high = mod$conf.int[2]
+      )
+    }
   }
 }
-
 
 # For å lage pene LaTeX-tabeller i et standardisert format for alle årsrapporter,
 # med mulighet for å gjøre den stor nok til hele siden (wide = TRUE).
