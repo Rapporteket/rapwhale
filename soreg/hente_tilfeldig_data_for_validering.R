@@ -74,7 +74,7 @@ data_vars = names(d) %>%
   setdiff(ind_vars)
 
 # Definer hvor mange variabler som skal hentes for hver pasient.
-nvars = 3
+nvars = 10
 
 # Plukk ut tilfeldige datakolonnar for kvar rad og lagra
 # namnet på kolonnane i ein eigen variabel.
@@ -87,6 +87,19 @@ res = by_row(d, function(x) {
   sample(data_vars, nvars)
 }, .collate = "rows", .to = "varnamn")
 
+# Legg til info om kva kolonne resultatet skal lagrast i
+vartypar = sapply(res[data_vars], class)
+if (!all(vartypar %in% c("integer", "numeric", "Date"))) {
+  stop("Finst variabel som ikkje er verken tal eller dato.")
+}
+vartypar = vartypar %>%
+  recode(integer = "reg_tal", numeric = "reg_tal", Date = "reg_dato")
+res$res_kol = vartypar[match(res$varnamn, names(res[data_vars]))]
+
+# Behold en variabel som indikerer hvilken type variabel hver variabel er
+res = res %>%
+  mutate(vartype = recode(res_kol, "reg_tal" = "tal", "reg_dato" = "dato"))
+
 # Legg til aktuelle resultatkolonnar,
 # med rett variabelklasse (tal, dato &c.)
 res = res %>%
@@ -97,14 +110,6 @@ res = res %>%
 class(res$reg_dato) = "Date"
 class(res$epj_dato) = "Date"
 
-# Legg til info om kva kolonne resultatet skal lagrast i
-vartypar = sapply(res[data_vars], class)
-if (!all(vartypar %in% c("integer", "numeric", "Date"))) {
-  stop("Finst variabel som ikkje er verken tal eller dato.")
-}
-vartypar = vartypar %>%
-  recode(integer = "reg_tal", numeric = "reg_tal", Date = "reg_dato")
-res$res_kol = vartypar[match(res$varnamn, names(res[data_vars]))]
 
 # Funksjon for å flytta dataverdiane til rett kolonne
 # (er laga for å funka på datarammer med éin unik verdi for res_kol)
