@@ -315,15 +315,21 @@ ki_bin = function(x, n) {
 
 #' Konfidenstinervall basert på gjennomsnittet til en  kontinuerlig variabel
 #'
-#' Gir ut low, mean og high basert på verdiene til en kontinuerlig variabel
+#' Gir ut low, mean og high basert på verdiene til en kontinuerlig variabel.
 #' Hvis det er for få eller for lite varierende
 #' observasjoner til å regne ut konfidensintervall,
-#' returner NA for konfidensintervallene
+#' returner NA for konfidensintervallene. Inkluderer mulgihet
+#' for bootstrap hvis ønskelig.
 #'
 #' @param x numerisk vektor
+#' @param bootstrap Argument for om man ønsker å kjøre en bootstrap
+#' på datasettet før utregning av konfidensintervall med (TRUE) eller ikke
+#' (FALSE). FALSE er default.
+#' @param antall Hvis man skal utføre bootstrap, bestemmer man antall
+#' iterasjoner med antall-argumentet.
 #' @export
 
-ki_univar = function(x) {
+ki_univar = function(x, bootstrap = FALSE, antall, ...) {
   # Hvis det er for få eller for lite varierende
   # observasjoner til å regne ut konfidensintervall,
   # returner NA for konfidensintervallene
@@ -334,12 +340,26 @@ ki_univar = function(x) {
       high = NA
     )
   } else {
-    mod = t.test(x)
-    tibble(
-      low = mod$conf.int[1],
-      mean = mod$estimate,
-      high = mod$conf.int[2]
-    )
+
+    # Hvis man ønsker boostrap kjøres denne koden,
+    # antall ganger beskrives med argumentet "antall"
+    if (bootstrap == TRUE) {
+      utvalg = sample(x, antall, replace = TRUE)
+      mod = t.test(utvalg)
+
+      tibble(
+        low = mod$conf.int[1],
+        mean = mod$estimate,
+        high = mod$conf.int[2]
+      )
+    } else {
+      mod = t.test(x)
+      tibble(
+        low = mod$conf.int[1],
+        mean = mod$estimate,
+        high = mod$conf.int[2]
+      )
+    }
   }
 }
 
