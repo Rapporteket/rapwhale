@@ -20,7 +20,7 @@ dato_sistreg = dato_uttrekk - 1
 
 # Adressa til den siste datafila
 mappe = paste0(grunnmappe, dato_uttrekk)
-filnamn = "SoReg_2_Datadump_arsrapport.csv"
+filnamn = "SoReg_02_Datadump_arsrapport.csv"
 adresse = paste0(mappe, "\\", filnamn)
 
 # Les inn data
@@ -45,7 +45,7 @@ d_full = read_delim(
     OperasjonVekt = col_integer(),
     TidlFedmeOp = col_integer(),
     Operasjonsmetode = col_integer(),
-    UtskrivelsesDato = col_date(format = "%d.%m.%y 00:00"),
+    UtskrivelsesDato = col_date(format = "%d.%m.%Y 00:00"),
     LiggeDogn = col_integer(),
     Behandling30Dager = col_integer(),
     KomplAlvorGrad = col_integer(),
@@ -60,6 +60,8 @@ d_full = read_delim(
     EttAarBMI = col_double()
   )
 )
+
+View(d_full)
 
 # Fjern utrekna variablar og RESH-ID i oppfølgingar
 d = d_full %>%
