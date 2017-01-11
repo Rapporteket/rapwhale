@@ -63,6 +63,11 @@ d_full = read_delim(
   )
 )
 
+# alle mangler verdi for OP_GSAvstPylorus?
+nrow(d_full)
+
+sum(is.na(d_full$OP_GSAvstPylorus))
+
 # Fjern utrekna variablar og RESH-ID i oppfølgingar
 d = d_full %>%
   select(-contains("BMI"), -contains("_RESH"), -OP_GSAvstPylorus)
