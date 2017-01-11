@@ -45,8 +45,10 @@ d_full = read_delim(
     OperasjonVekt = col_integer(),
     TidlFedmeOp = col_integer(),
     Operasjonsmetode = col_integer(),
-    UtskrivelsesDato = col_date(format = "%d.%m.%Y 00:00"),
+    UtskrivelsesDato = col_date(format = "%d.%m.%y 00:00"),
+    BR_BesoksDato = col_date(format = "%d.%m.%y 00:00"),
     LiggeDogn = col_integer(),
+    OP_GSAvstPylorus = col_integer(),
     Behandling30Dager = col_integer(),
     KomplAlvorGrad = col_integer(),
     `6U_Vekt` = col_integer(),
@@ -61,11 +63,9 @@ d_full = read_delim(
   )
 )
 
-View(d_full)
-
 # Fjern utrekna variablar og RESH-ID i oppfølgingar
 d = d_full %>%
-  select(-contains("BMI"), -contains("_RESH"))
+  select(-contains("BMI"), -contains("_RESH"), -OP_GSAvstPylorus)
 
 # Oversikt over namn på indeksvariablar og datavariablar
 ind_vars = c(
