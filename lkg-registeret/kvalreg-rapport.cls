@@ -211,7 +211,7 @@
 
 
 % Margar
-\setlrmarginsandblock{8.5cm}{2cm}{*} % Venstremarg, høgremarg
+\setlrmarginsandblock{8cm}{2cm}{*} % Venstremarg, høgremarg
 \setulmarginsandblock{1.7cm}{2.8cm}{*} % Toppmarg, botnmarg
 \setlength{\topskip}{1.6\topskip} % For \sloppybottom, jf. memoir-manualen
 %\setmarginnotes{1.5em}{5.5cm}{11pt} % Avstand til sidestolpe, breidd av sidesolpe, min. vertikal avstand
@@ -298,7 +298,7 @@
 % Mykje betre avsnittsformatering, ved å strekka bitte litt på bokstavane
 % (Før tok dette veldig lang tid, og vart berre brukt \iffinal,
 % men i TeX Live 2016 tar det knapt lengre tid, og vert brukt som standard.)
-\RequirePackage[stretch=30,final]{microtype}
+\RequirePackage[stretch=25,final]{microtype}
 
 
 % Plassering av sidetal
