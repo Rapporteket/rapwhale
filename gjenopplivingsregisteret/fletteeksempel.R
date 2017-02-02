@@ -123,32 +123,33 @@ fnr_gyldig = function(x) {
   # Me sjekkar kontrollsiffera, dei to siste siffera.
 
   # Del opp i siffer
-  x2 = x[ok]
-  siffer = str_split_fixed(x2, "", n = 11) %>%
-    t()
+  if (any(ok)) {
+    x2 = x[ok]
+    siffer = str_split_fixed(x2, "", n = 11) %>%
+      t()
 
-  # Sidan as.numeric() mistar matrisedimensjonane,
-  # lat oss ta vare på dei manuelt
-  di = dim(siffer)
-  siffer = as.numeric(siffer)
-  dim(siffer) = di
+    # Sidan as.numeric() mistar matrisedimensjonane,
+    # lat oss ta vare på dei manuelt
+    di = dim(siffer)
+    siffer = as.numeric(siffer)
+    dim(siffer) = di
 
-  # Koeffisientar for utrekning
-  koef1 = c(3, 7, 6, 1, 8, 9, 4, 5, 2)
-  koef2 = c(5, 4, 3, 2, 7, 6, 5, 4, 3, 2)
+    # Koeffisientar for utrekning
+    koef1 = c(3, 7, 6, 1, 8, 9, 4, 5, 2)
+    koef2 = c(5, 4, 3, 2, 7, 6, 5, 4, 3, 2)
 
-  # Rekn ut kva kontrollsiffera *skulle* vera
-  # Første kontrollsiffer
-  k1 = 11 - (colSums(koef1 * siffer[1:9, ]) %% 11)
-  k1 = ifelse(k1 == 11, 0, k1)
+    # Rekn ut kva kontrollsiffera *skulle* vera
+    # Første kontrollsiffer
+    k1 = 11 - (colSums(koef1 * siffer[1:9, , drop = FALSE]) %% 11)
+    k1 = ifelse(k1 == 11, 0, k1)
 
-  # Andre kontrollsiffer
-  k2 = 11 - (colSums(koef2 * rbind(siffer[1:9, ], k1)) %% 11)
-  k2 = ifelse(k2 == 11, 0, k2)
+    # Andre kontrollsiffer
+    k2 = 11 - (colSums(koef2 * rbind(siffer[1:9, , drop = FALSE], k1)) %% 11)
+    k2 = ifelse(k2 == 11, 0, k2)
 
-  # Er dei utrekna kontrollsiffera lik dei oppgjevne?
-  ok[ok] = (k1 == siffer[10, ]) & (k2 == siffer[11, ])
-
+    # Er dei utrekna kontrollsiffera lik dei oppgjevne?
+    ok[ok] = (k1 == siffer[10, ]) & (k2 == siffer[11, ])
+  }
 
   # Alle testane er utførte. Returner info om fødselsnummeret
   # er gyldig.
