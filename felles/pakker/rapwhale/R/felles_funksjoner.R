@@ -1,6 +1,18 @@
 
 # Graffunksjoner ----------------------------------------------------------
 
+library(colorspace)
+library(purrr)
+library(binom)
+library(Hmisc)
+library(stringr)
+library(magrittr)
+library(ggplot2)
+library(readr)
+library(dplyr)
+library(lubridate)
+library(simpleboot)
+
 #' Funksjonal for breaks-argument i ggplot2
 #'
 #' Funksjon som lager funksjon som tar inn to tall
@@ -362,6 +374,7 @@ ki_univar = function(x, bootstrap = FALSE, antall, ...) {
     }
   }
 }
+
 
 #' LaTex tabell
 #'
