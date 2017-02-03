@@ -26,5 +26,6 @@ Imports:
     ggplot2,
     readr,
     dplyr,
-    lubridate
+    lubridate,
+    simpleboot
 RoxygenNote: 5.0.1
