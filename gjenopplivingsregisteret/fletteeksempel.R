@@ -11,56 +11,32 @@ library(stringr)
 library(readxl)
 
 # Aktuell dato me skal sjå på filer frå
-dato = "2016-09-06"
+kjeldefil = "2016-12-31\\Rapport_Utstein_2016.xlsx"
 
 # Mapper for datafilene
-mappe_nokkel = paste0("***FJERNA-ADRESSE***", dato)
-mappe_lev = paste0("***FJERNA-ADRESSE***", dato)
+mappe_nokkel = "***FJERNA-ADRESSE***"
+adresse_kjelde = str_c(mappe_nokkel, kjeldefil)
+# mappe_lev = str_c("***FJERNA-ADRESSE***", dato)
+adresse_vaskefil = str_c(mappe_nokkel, "vaskefil\\prehosp-kopling.csv")
 
 
 
-# Innlesing av filer ------------------------------------------------------
+# Funksjon for test av fødselsnummer --------------------------------------
 
-# Les inn basisfila
-# read_excel() klarer ikkje heilt gjetta seg til variabeltypane sjølv,
-# so me må oppgje dei manuelt
-filnamn_basisfil = "Rapport_Utstein_Jan-Aug.xlsx"
-d_basis = read_excel(paste0(mappe_nokkel, "\\", filnamn_basisfil),
-  col_types = c(
-    "numeric", "numeric", "text", "numeric", "text",
-    "text", "date", "date", "text", "text",
-    "text", "date", "text", "text", "text",
-    "text", "text", "text", "text", "text",
-    "date", "text", "text", "text", "numeric",
-    "text", "text", "text", "text", "text",
-    "text", "text", "date", "text", "text",
-    "date", "text", "date", "text", "date", "text",
-    "text", "text", "text", "date", "text",
-    "text", "text", "text", "text"
-  )
-)
-
-# Les inn nøkkelfila for prehospitale data
-# Denne brukar me berre for å få tak i variabelen «PERSONID_FIKTIV»
-filnamn_ph_nokkel = "PREHOSP_NOEKKEL_HBE.xls"
-d_ph_nokkel = read_excel(paste0(mappe_nokkel, "\\", filnamn_ph_nokkel))
-
-
-
-# Test på om fødselsnummer (inkludert D-nummer og H-nummer) er gyldige ------------------------------
-
-# Basert på skildringa på Wikipedia:
+# Testar om fødselsnummer (inkludert D-nummer og H-nummer) er gyldige
+#
+# Basert på skildringane på Wikipedia
 # https://no.wikipedia.org/wiki/F%C3%B8dselsnummer
 # og
 # https://lovas.info/2013/12/01/identitetsnummer-i-norge/
-fnr_gyldig = function(x) {
+fnr_er_gyldig = function(x) {
   # Sjekk først at det er snakk om tekststreng,
-  # ikkje tal (som vil mista førstesifferet om dette er 0)
+  # ikkje tal (som ville mista førstesifferet om dette er 0)
   if (!is.character(x)) {
     stop("Fødselsnummer må vera ein tekstvektor")
   }
 
-  # Talet på fødselsnummer
+  # Talet på fødselsnummer me sjekkar
   n = length(x)
 
   # Rekn først alle fødselsnummera som gyldige
@@ -116,7 +92,7 @@ fnr_gyldig = function(x) {
   # eit D-nummer. Då trekker me 4 frå sifferet for å laga fødselsdato.
   # Viss tredje siffer er 4 eller 5, kan det vera
   # eit H-nummer. Då trekker me 4 frå sifferet for å laga fødselsdato.
-  dato_tekst = paste0(str_sub(x[ok], 1, 4), "20", str_sub(x[ok], 5, 6)) # Legg til hundreårsinfo
+  dato_tekst = str_c(str_sub(x[ok], 1, 4), "20", str_sub(x[ok], 5, 6)) # Legg til hundreårsinfo
   fs_dag = as.numeric(str_sub(dato_tekst, 1, 1)) # Første siffer i dagverdien
   dnummer = fs_dag %in% 4:7 # Er det snakk om D-nummer?
   fs_mnd = as.numeric(str_sub(dato_tekst, 3, 3)) # Første siffer i månadsverdien
@@ -125,8 +101,8 @@ fnr_gyldig = function(x) {
   # det er snakk om D-nummer eller H-nummer
   # (ved å trekka 4 frå høvesvis første dag-
   # eller månadssiffer)
-  dato_dmod = paste0(fs_dag - 4, str_sub(dato_tekst, 2, 8))
-  dato_hmod = paste0(str_sub(dato_tekst, 1, 2), fs_mnd - 4, str_sub(dato_tekst, 4, 8))
+  dato_dmod = str_c(fs_dag - 4, str_sub(dato_tekst, 2, 8))
+  dato_hmod = str_c(str_sub(dato_tekst, 1, 2), fs_mnd - 4, str_sub(dato_tekst, 4, 8))
   # Eit nummer kan berre anten vera fødselsnummer,
   # D-nummer eller H-nummer, ikkje fleire samtidig
   # Bruk den utrekna datoen basert på kva type nummer det er.
@@ -141,9 +117,8 @@ fnr_gyldig = function(x) {
   # Til slutt den viktige, store og kraftige testen
   # basert på korleis fødselsnummer er designa:
   # Me sjekkar kontrollsiffera, dei to siste siffera.
-
-  # Del opp i siffer
   if (any(ok)) {
+    # Del fødselsnummera opp i siffer
     x2 = x[ok]
     siffer = str_split_fixed(x2, "", n = 11) %>%
       t()
@@ -177,19 +152,15 @@ fnr_gyldig = function(x) {
 }
 
 
-# Kor mange fødselsnummer er ugyldige totalt sett
-sum(!fnr_gyldig(d_basis$F.nr))
-
-# Sjå dei ugyldige fødselsnummera
-x = d_basis$F.nr
-x[!fnr_gyldig(x)]
-
-
 # Viss eit fødselsnummer er ugyldig, føreslå
-# liknande gyldige fødselsnummer der berre
-# eitt av dei 11 siffera er endra.
-# (Funkar òg for gyldige fødselsnummer!)
-# Fixme: Handter òg ombytting av to etterfølgjande siffer.
+# liknande fødselsnummer som *er* gyldige.
+# Basert på at me byter ut eitt (vilkårleg) siffer
+# eller byter om to nabosiffer.
+#
+# OBS! *Ikkje* bruk resultata av funksjonen direkte.
+# Sjekk dei oppgjevne fødselsnummera i DIPS eller
+# andre kjelder for å kontrollera at dei viser
+# til rett person.
 fnr_foresla = function(x) {
   stopifnot(length(x) == 1 && is.character(x) && nchar(x) == 11)
 
@@ -215,18 +186,96 @@ fnr_foresla = function(x) {
 
 
 
-# Fletting av filer -------------------------------------------------------
+# Innlesing av filer ------------------------------------------------------
 
-# Legg til prehospitale data *for* dei pasientane som har det
-fnr_ok = (d_ph_nokkel$FOEDSELSNR %in% d_basis$F.nr)
-if (!all(fnr_ok)) {
-  stop("Manglar oppføring i basisfil for pasient(ar) i prehospital nøkkelfil.")
-} else {
-  d = d_basis %>%
-    left_join(d_ph_nokkel, by = c("F.nr" = "FOEDSELSNR"))
+# Les inn fil med prehospitale data
+d_amis = read_excel(adresse_kjelde)
+d_amis$kjeldefil = kjeldefil
+
+# Les inn den eksisterande vaskefila
+d_vask = read_csv2(str_c(adresse_vaskefil),
+  col_types = cols(
+    kjeldefil = col_character(),
+    amisnr = col_character(),
+    dato_stans = col_character(),
+    fnr_orig = col_character(),
+    fnr_vaska = col_character()
+  )
+)
+
+
+
+
+# Hent ut prehospitale data -----------------------------------------------
+
+# Fixme: Køyr gjennom fleire datafiler (førebels nøyer me oss med den siste,
+#        for eksempelets skuld)
+
+# Mange datovariablar å velja mellom (og ingen av dei er alltid fylde ut)
+# Startar med å sjå på denne (fixme)
+d_amis$`Dato / tid henv. AMK `
+
+# Hent ut dei aktuelle variablane og gjev dei meir fornuftige namn
+d_amis2 = d_amis %>%
+  select(
+    kjeldefil,
+    `Amisnummer `,
+    `Dato / tid henv. AMK `,
+    `F.nr`
+  ) %>%
+  rename(
+    amisnr = `Amisnummer `,
+    dato_stans = `Dato / tid henv. AMK `,
+    fnr_orig = `F.nr`
+  )
+
+# Sjekk at det ikkje finst dupliserte/manglande/tomme AMIS-nummer
+if (anyDuplicated(d_amis2$amisnr) || any(is.na(d_amis2$amisnr)) || any(d_amis2$amisnr == "")) {
+  stop("Oppdaga dupliserte eller manglande AMIS-nummer")
 }
 
-# OBS/fixme: Men er dette så lurt, då? Kva med personar med fleire omsorgsepisode-ID-ar?
+# Formater tidspunkt som tekst, på ønskt format
+d_amis2 = d_amis2 %>%
+  mutate(dato_stans = format(dato_stans, tz = "UTC"))
 
-# Sjå på datafila slik ho ser ut no
-d
+
+
+# Legg nye data til vaskefila ---------------------------------------------
+
+# Kopier over fødselsnummer om dei er gyldige.
+# Legg dei ugyldige fødselsnummera på slutten av fila,
+# sortert på ein oversiktleg måte
+d_amis2 = d_amis2 %>%
+  mutate(fnr_vaska = ifelse(fnr_er_gyldig(d_amis2$fnr_orig), fnr_orig, NA_character_)) %>%
+  arrange(desc(fnr_vaska), desc(nchar(fnr_orig)))
+# Formaterer strengar som "" i staden for NA sidan
+# det vert finast / lettast å redigera i utfila
+
+# Sjå berre på dei hjertestansane som er *nye*,
+# dvs. dei der me ikkje har AMIS-nummeret frå før
+d_amis2_nye = d_amis2 %>%
+  filter(!(amisnr %in% d_vask$amisnr))
+
+# Legg til dei nye AMIS-nummera
+d_vask_oppdatert = d_vask %>%
+  bind_rows(d_amis2_nye)
+
+# Ta reservekopi av den gamle vaskefila
+filnamn_reskopi = str_c("reskopi-", format(Sys.time(), format = "%Y-%m-%d-%H-%M-%S"), ".csv")
+mappe_reskopi = str_c(mappe_nokkel, "vaskefil\\reskopi\\")
+adresse_reskopi = str_c(mappe_reskopi, filnamn_reskopi)
+file.copy(adresse_vaskefil, adresse_reskopi)
+
+# Lagra den nye vaskefila
+# (Brukar write_csv2() i staden for write_*() for å
+# få hermeteikn rundt alle verdiane. Ser finast ut når
+# ein redigerer fila manuelt.)
+# Gjer om manglande verdiar (NA) til tomme tekststrengar,
+# sidan det vert lettare å redigera manuelt
+d_vask_oppdatert = d_vask_oppdatert %>%
+  replace_na(replace = list(dato_stans = "", fnr_orig = "", fnr_vaska = ""))
+write.csv2(d_vask_oppdatert, adresse_vaskefil, na = "", row.names = FALSE)
+
+# Fixme: Les vaskefila og lagra dei aktuelle variablane som Load-fil,
+# med dei namna og det formatet Elisabeth vil ha (hugs å filtrera ut
+# ev. oppføringar som manglar stansdato, fødselsnummer eller anna)
