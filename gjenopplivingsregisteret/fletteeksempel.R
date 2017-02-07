@@ -185,6 +185,35 @@ x = d_basis$F.nr
 x[!fnr_gyldig(x)]
 
 
+# Viss eit fødselsnummer er ugyldig, føreslå
+# liknande gyldige fødselsnummer der berre
+# eitt av dei 11 siffera er endra.
+# (Funkar òg for gyldige fødselsnummer!)
+# Fixme: Handter òg ombytting av to etterfølgjande siffer.
+fnr_foresla = function(x) {
+  stopifnot(length(x) == 1 && is.character(x) && nchar(x) == 11)
+
+  # Bytt ut einskildsiffer med eit (vilkårleg) anna
+  moglege_fnr_1 = str_c(
+    str_sub(x, 1, 0:10),
+    rep(0:9, each = 11),
+    str_sub(x, 2:12, 11)
+  )
+
+  # Byt om på to etterfølgjande siffer
+  x_mat = str_split_fixed(x, "", 11) %>%
+    matrix(ncol = 11, nrow = 10, byrow = TRUE)
+  for (nr in 1:10) {
+    x_mat[nr, nr:(nr + 1)] = x_mat[nr, (nr + 1):nr]
+  }
+  moglege_fnr_2 = apply(x_mat, 1, str_c, collapse = "")
+
+  # Returner dei kandidatnummera som er gyldige
+  moglege_fnr = unique(c(moglege_fnr_1, moglege_fnr_2))
+  moglege_fnr[fnr_gyldig(moglege_fnr)]
+}
+
+
 
 # Fletting av filer -------------------------------------------------------
 
