@@ -47,11 +47,19 @@ d_ph_nokkel = read_excel(paste0(mappe_nokkel, "\\", filnamn_ph_nokkel))
 
 
 
-# Test på om fødselsnummer er gyldige ----------------------------------------------------
+# Test på om fødselsnummer (inkludert D-nummer og H-nummer) er gyldige ------------------------------
 
 # Basert på skildringa på Wikipedia:
 # https://no.wikipedia.org/wiki/F%C3%B8dselsnummer
+# og
+# https://lovas.info/2013/12/01/identitetsnummer-i-norge/
 fnr_gyldig = function(x) {
+  # Sjekk først at det er snakk om tekststreng,
+  # ikkje tal (som vil mista førstesifferet om dette er 0)
+  if (!is.character(x)) {
+    stop("Fødselsnummer må vera ein tekstvektor")
+  }
+
   # Talet på fødselsnummer
   n = length(x)
 
@@ -76,14 +84,14 @@ fnr_gyldig = function(x) {
   #   DDMMÅÅIIIKK (dag, månad, år, individnummer, kontrollsiffer)
   #
   # DD er 01-31 (ekte fødselsnummer) eller 41-61 (D-nummer)
-  # MM er 01-12
+  # MM er 01-12 (ekte fødselsnummer) eller 41-52 (H-nummer)
   # ÅÅ er 00-99
   # III = 000-999
   # KK = 00-99
 
   # Regulært uttrykk som lukar ut dei grovaste feila
-  re_siffer = "^[0-6][0-9][0-1][0-9][0-9]{7}$"
-  ok[ok] = str_detect(x[ok], "^[0-9]{11}$")
+  re_siffer = "^[0-6][0-9][0145][0-9][0-9]{7}$"
+  ok[ok] = str_detect(x[ok], regex(re_siffer))
 
 
   ##### TEST 3: Ser dei først seks siffera ut som datoar? #####
@@ -104,13 +112,25 @@ fnr_gyldig = function(x) {
   # til å gjetta hundreår, men reglane her endrar seg
   # etter kvart som me går tom for fødselsnummer ... :(
   #
-  # Viss første siffer er 4, 5 eller 6, kan det vera
-  # eit D-nummer. Då trekker me frå 3.
+  # Viss første siffer er 4, 5, 6 eller 7, kan det vera
+  # eit D-nummer. Då trekker me 4 frå sifferet for å laga fødselsdato.
+  # Viss tredje siffer er 4 eller 5, kan det vera
+  # eit H-nummer. Då trekker me 4 frå sifferet for å laga fødselsdato.
   dato_tekst = paste0(str_sub(x[ok], 1, 4), "20", str_sub(x[ok], 5, 6)) # Legg til hundreårsinfo
-  fsiffer = as.numeric(str_sub(dato_tekst, 1, 1)) # Første siffer
-  dnummer = fsiffer %in% 4:6 # Er det snakk om D-nummer?
-  fsiffer = ifelse(dnummer, fsiffer - 3, fsiffer) # Trekk ev. frå 3 (for D-nummer)
-  dato_tekst = paste0(fsiffer, str_sub(dato_tekst, 2, 8)) # Byt ut første siffer med modifsert førstesiffer
+  fs_dag = as.numeric(str_sub(dato_tekst, 1, 1)) # Første siffer i dagverdien
+  dnummer = fs_dag %in% 4:7 # Er det snakk om D-nummer?
+  fs_mnd = as.numeric(str_sub(dato_tekst, 3, 3)) # Første siffer i månadsverdien
+  hnummer = fs_mnd %in% 4:5 # Er det snakk om H-nummer?
+  # Rekn ut den faktiske fødselsdatoen dersom
+  # det er snakk om D-nummer eller H-nummer
+  # (ved å trekka 4 frå høvesvis første dag-
+  # eller månadssiffer)
+  dato_dmod = paste0(fs_dag - 4, str_sub(dato_tekst, 2, 8))
+  dato_hmod = paste0(str_sub(dato_tekst, 1, 2), fs_mnd - 4, str_sub(dato_tekst, 4, 8))
+  # Eit nummer kan berre anten vera fødselsnummer,
+  # D-nummer eller H-nummer, ikkje fleire samtidig
+  # Bruk den utrekna datoen basert på kva type nummer det er.
+  dato_tekst = ifelse(dnummer, dato_dmod, ifelse(hnummer, dato_hmod, dato_tekst))
 
   # Sjekk om det kan vera ein gyldig dato
   dato = as.Date(dato_tekst, format = "%d%m%Y")
