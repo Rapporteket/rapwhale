@@ -300,6 +300,24 @@ write.csv2(d_vask_oppdatert, adresse_vaskefil, na = "", row.names = FALSE)
 # fødselsnummer sidan sist)
 d_vask = les_vaskefil(adresse_vaskefil)
 
+# Manglande AMIS-nummer *skal* ikkje skje,
+# men tar ein sjekk på det likevel. Sjekkar
+# i same slengen at ingen AMIS-nummer er
+# for lange (maks 32 teikn).
+if (any(is.na(d_vask$amisnr) | nchar(d_vask$amisnr) > 32)) {
+  stop("Finst oppføring utan AMIS-nummer eller med AMIS nummer > 32 teikn langt.")
+}
+
+# Sjekk at det ikkje finst dupliserte AMIS-nummer
+# (skal heller ikkje kunna skje)
+amis_dup = duplicated(d_vask$amisnr)
+if (any(amis_dup)) {
+  stop(
+    "Finst dupliserte AMIS-nummer:\n",
+    str_c(str_c('"', d_vask$amisnr[amis_dup], '"'), collapse = "\n")
+  )
+}
+
 # Stopp viss det manglar stansdatoar
 dato_feil = is.na(d_vask$dato_stans)
 if (any(dato_feil)) {
@@ -309,11 +327,11 @@ if (any(dato_feil)) {
   )
 }
 
-# Sjå berre på oppføringar som har *både* stansdato og fødselsnummer
+# Sjå berre på oppføringar som har vaska fødselsnummer
 d_load = d_vask %>%
-  filter((!is.na(dato_stans)) & (!is.na(fnr_vaska)))
+  filter(!is.na(fnr_vaska))
 
-# Sjekk at alle fødselsnummera er gyldige
+# Sjekk at alle dei vaska, ikkje-tomme fødselsnummera er gyldige
 fnr_ok = fnr_er_gyldig(d_load$fnr_vaska)
 if (any(!fnr_ok)) {
   stop(
