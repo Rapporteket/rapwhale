@@ -60,14 +60,14 @@ fnr_er_gyldig = function(x) {
   #
   #   DDMMÅÅIIIKK (dag, månad, år, individnummer, kontrollsiffer)
   #
-  # DD er 01-31 (ekte fødselsnummer) eller 41-61 (D-nummer)
+  # DD er 01-31 (ekte fødselsnummer) eller 41-71 (D-nummer)
   # MM er 01-12 (ekte fødselsnummer) eller 41-52 (H-nummer)
   # ÅÅ er 00-99
   # III = 000-999
   # KK = 00-99
 
   # Regulært uttrykk som lukar ut dei grovaste feila
-  re_siffer = "^[0-6][0-9][0145][0-9][0-9]{7}$"
+  re_siffer = "^[0-7][0-9][0145][0-9][0-9]{7}$"
   ok[ok] = str_detect(x[ok], regex(re_siffer))
 
 
