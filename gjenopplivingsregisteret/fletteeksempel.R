@@ -243,10 +243,20 @@ d_amis2 = d_amis2 %>%
 # Legg nye data til vaskefila ---------------------------------------------
 
 # Kopier over fødselsnummer om dei er gyldige.
+#
+# Gjer først eit enkelt forsøk på reparasjon av fødselsnummer
+# ved å fjerna alt som ikkje er tal (fjernar spesielt
+# mellomrom på starten/slutten av verdien, noko som er ein
+# typisk feil).
+#
 # Legg dei ugyldige fødselsnummera på slutten av fila,
-# sortert på ein oversiktleg måte
+# sortert på ein oversiktleg måte.
 d_amis2 = d_amis2 %>%
-  mutate(fnr_vaska = ifelse(fnr_er_gyldig(d_amis2$fnr_orig), fnr_orig, NA_character_)) %>%
+  mutate(
+    fnr_rep = str_replace_all(fnr_orig, "[^0-9]", ""),
+    fnr_vaska = ifelse(fnr_er_gyldig(fnr_rep), fnr_rep, NA_character_)
+  ) %>%
+  select(-fnr_rep) %>%
   arrange(desc(fnr_vaska), desc(nchar(fnr_orig)))
 # Formaterer strengar som "" i staden for NA sidan
 # det vert finast / lettast å redigera i utfila
