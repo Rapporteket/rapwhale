@@ -17,7 +17,8 @@ kjeldefil = "2016-12-31\\Rapport_Utstein_2016.xlsx"
 mappe_nokkel = "***FJERNA-ADRESSE***"
 adresse_kjelde = str_c(mappe_nokkel, kjeldefil)
 # mappe_lev = str_c("***FJERNA-ADRESSE***", dato)
-adresse_vaskefil = str_c(mappe_nokkel, "vaskefil\\prehosp-kopling.csv")
+adresse_vaskefil = str_c(mappe_nokkel, "vaskefil\\prehosp-koplingsfil.csv")
+adresse_loadfil = str_c(mappe_nokkel, "vaskefil\\load.csv")
 
 
 
@@ -193,16 +194,20 @@ d_amis = read_excel(adresse_kjelde)
 d_amis$kjeldefil = kjeldefil
 
 # Les inn den eksisterande vaskefila
-d_vask = read_csv2(str_c(adresse_vaskefil),
-  col_types = cols(
-    kjeldefil = col_character(),
-    amisnr = col_character(),
-    dato_stans = col_character(),
-    fnr_orig = col_character(),
-    fnr_vaska = col_character()
+# (Lagar funksjon sidan me skal gjera
+# dette fleire gongar)
+les_vaskefil = function(adresse) {
+  read_csv2(adresse,
+    col_types = cols(
+      kjeldefil = col_character(),
+      amisnr = col_character(),
+      dato_stans = col_character(),
+      fnr_orig = col_character(),
+      fnr_vaska = col_character()
+    )
   )
-)
-
+}
+d_vask = les_vaskefil(adresse_vaskefil)
 
 
 
@@ -286,6 +291,46 @@ d_vask_oppdatert = d_vask_oppdatert %>%
   replace_na(replace = list(dato_stans = "", fnr_orig = "", fnr_vaska = ""))
 write.csv2(d_vask_oppdatert, adresse_vaskefil, na = "", row.names = FALSE)
 
-# Fixme: Les vaskefila og lagra dei aktuelle variablane som Load-fil,
-# med dei namna og det formatet Elisabeth vil ha (hugs å filtrera ut
-# ev. oppføringar som manglar stansdato, fødselsnummer eller anna)
+
+
+# Lag Load-fil ------------------------------------------------------------
+
+# Les inn vaskefila på nytt
+# (sidan ho kan vera manuelt oppdatert med nye
+# fødselsnummer sidan sist)
+d_vask = les_vaskefil(adresse_vaskefil)
+
+# Stopp viss det manglar stansdatoar
+dato_feil = is.na(d_vask$dato_stans)
+if (any(dato_feil)) {
+  stop(
+    "Finst oppføringar utan stansdato. Gjeld desse AMIS-nummera:\n",
+    str_c(d_vask$amisnr[dato_feil], collapse = "\n")
+  )
+}
+
+# Sjå berre på oppføringar som har *både* stansdato og fødselsnummer
+d_load = d_vask %>%
+  filter((!is.na(dato_stans)) & (!is.na(fnr_vaska)))
+
+# Sjekk at alle fødselsnummera er gyldige
+fnr_ok = fnr_er_gyldig(d_load$fnr_vaska)
+if (any(!fnr_ok)) {
+  stop(
+    "Finst ugyldige fødselsnummer i «fnr_vaska»-feltet:\n",
+    str_c(str_c('"', d_load$fnr_vaska[!fnr_ok], '"'), collapse = "\n")
+  )
+}
+
+# Lagra resultatet som CSV-fil på nøyaktig det formatet IKT vil ha
+# (Brukar UTC som tidssone for å unngå potensielle problem med
+# klokkeslett som ikkje i eksisterer i norsk tid på grunn av
+# overgang til sommartid (som sjølvsagt impliserer feil i
+# kjeldedata …).)
+d_load = d_load %>%
+  select(dato_stans, fnr_vaska, amisnr) %>%
+  mutate(dato_stans = format(as.POSIXct(dato_stans, tz = "UTC"),
+    format = "%d.%m.%Y %H:%M", tz = "UTC"
+  )) %>%
+  rename(dato = dato_stans, Fnr = fnr_vaska)
+write_delim(d_load, adresse_loadfil, delim = ";", na = "")
