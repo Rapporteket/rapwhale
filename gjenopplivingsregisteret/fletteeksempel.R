@@ -201,10 +201,10 @@ les_vaskefil = function(adresse) {
     col_types = cols(
       kjeldefil = col_character(),
       amisnr = col_character(),
-      dato_stans = col_character(),
+      dato_stans = col_datetime(),
       fnr_orig = col_character(),
       fnr_vaska = col_character()
-    )
+    ), trim_ws = FALSE
   )
 }
 d_vask = les_vaskefil(adresse_vaskefil)
@@ -238,10 +238,6 @@ d_amis2 = d_amis %>%
 if (anyDuplicated(d_amis2$amisnr) || any(is.na(d_amis2$amisnr)) || any(d_amis2$amisnr == "")) {
   stop("Oppdaga dupliserte eller manglande AMIS-nummer")
 }
-
-# Formater tidspunkt som tekst, på ønskt format
-d_amis2 = d_amis2 %>%
-  mutate(dato_stans = format(dato_stans, tz = "UTC"))
 
 
 
@@ -347,7 +343,7 @@ if (any(!fnr_ok)) {
 # kjeldedata …).)
 d_load = d_load %>%
   select(dato_stans, fnr_vaska, amisnr) %>%
-  mutate(dato_stans = format(as.POSIXct(dato_stans, tz = "UTC"),
+  mutate(dato_stans = format(dato_stans,
     format = "%d.%m.%Y %H:%M", tz = "UTC"
   ))
 # Må ha semikolon *etter* siste felt i kvar rad,
