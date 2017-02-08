@@ -18,7 +18,7 @@ mappe_nokkel = "***FJERNA-ADRESSE***"
 adresse_kjelde = str_c(mappe_nokkel, kjeldefil)
 # mappe_lev = str_c("***FJERNA-ADRESSE***", dato)
 adresse_vaskefil = str_c(mappe_nokkel, "vaskefil\\prehosp-koplingsfil.csv")
-adresse_loadfil = str_c(mappe_nokkel, "vaskefil\\load.csv")
+adresse_loadfil = str_c(mappe_nokkel, "vaskefil\\load.txt")
 
 
 
@@ -331,6 +331,9 @@ d_load = d_load %>%
   select(dato_stans, fnr_vaska, amisnr) %>%
   mutate(dato_stans = format(as.POSIXct(dato_stans, tz = "UTC"),
     format = "%d.%m.%Y %H:%M", tz = "UTC"
-  )) %>%
-  rename(dato = dato_stans, Fnr = fnr_vaska)
-write_delim(d_load, adresse_loadfil, delim = ";", na = "")
+  ))
+# Må ha semikolon *etter* siste felt i kvar rad,
+# og det ordnar me ved å legga til ei ekstra
+# (tom) kolonne til slutt
+d_load$ekstra = ""
+write_delim(d_load, adresse_loadfil, delim = ";", col_names = FALSE)
