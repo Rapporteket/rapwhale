@@ -182,7 +182,7 @@ fnr_foresla = function(x) {
 
   # Returner dei kandidatnummera som er gyldige
   moglege_fnr = unique(c(moglege_fnr_1, moglege_fnr_2))
-  moglege_fnr[fnr_gyldig(moglege_fnr)]
+  moglege_fnr[fnr_er_gyldig(moglege_fnr)]
 }
 
 
@@ -279,12 +279,12 @@ file.copy(adresse_vaskefil, adresse_reskopi)
 
 # Lagra den nye vaskefila
 # (Brukar write_csv2() i staden for write_*() for å
-# få hermeteikn rundt alle verdiane. Ser finast ut når
+# få hermeteikn rundt alle tekstverdiane. Ser finast ut når
 # ein redigerer fila manuelt.)
 # Gjer om manglande verdiar (NA) til tomme tekststrengar,
 # sidan det vert lettare å redigera manuelt
 d_vask_oppdatert = d_vask_oppdatert %>%
-  replace_na(replace = list(dato_stans = "", fnr_orig = "", fnr_vaska = ""))
+  replace_na(replace = list(fnr_orig = "", fnr_vaska = ""))
 write.csv2(d_vask_oppdatert, adresse_vaskefil, na = "", row.names = FALSE)
 
 
