@@ -1,6 +1,7 @@
 # Funksjon for å hekta variabeltekstar på kategoriske variablar basert på kodebok
 #
-#
+# Sjå fila kodebok-fyll-kravspek.pdf for detaljert kravspek for implementasjon
+
 # Nødvendige pakkar
 library(tidyverse)
 library(testthat)
