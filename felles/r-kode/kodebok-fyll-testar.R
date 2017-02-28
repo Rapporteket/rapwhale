@@ -137,3 +137,20 @@ test_that("Overskriving av variablar ved ikkje-tomt suffiks gjev også åtvaring
   expect_warning(d2 %>% kb_fyll(kb, suffiks = "test"), "Overskriv variabel: 'kjonn'")
   expect_identical(d2 %>% kb_fyll(kb, suffiks = "test"), d2_fylt)
 })
+
+
+
+# Grensetilfelle og småplukk
+context("Grensetilfelle og småplukk")
+
+test_that("Variabelkolonnar som står heilt først eller sist i datasettet fungerer òg", {
+  d2 = d %>%
+    select(kjonn, med)
+  d_fylt = tribble(
+    ~kjonn, ~med,
+    "kvinne", "Ibux",
+    "mann", "Globoid",
+    "mann", "Antibac"
+  )
+  expect_identical(d2 %>% kb_fyll(kb, suffiks = ""), d2_fylt)
+})
