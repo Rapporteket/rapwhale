@@ -45,33 +45,48 @@ df = d
 
 # Definisjon av funksjon
 kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
-  vnamn_d = c("kjonn", "med")
-  vnamn_kb = c("kjonn", "med") # hva skulle denne brukes til?
 
+  # Namn på variablar som skal fyllast ut,
+  vnamn_d = c("kjonn", "med") # Namn i datasettet
+  vnamn_kb = c("kjonn", "med") # Tilsvarande namn i kodeboka
+
+  # Gå gjennom kvar variabel og legg til verditekstar
   for (i in seq_along(vnamn_d)) {
 
-    # * Gjer noko med i ... * /* magi */ *
+    #   */* magi */*
 
+    # Namn på variabelen (i datasettet)
+    vnamn = vnamn_d[i]
+
+    # Delen av kodeboka som gjeld den aktuelle variabelen
     koder = kb %>%
-      filter(var_id %in% vnamn_d[i])
+      filter(var_id %in% vnamn)
 
+    # Det nye namnet på variabelen
     nytt_namn = str_c(vnamn_d[i], .suffiks)
 
-    df[[nytt_namn]] = factor(df[[vnamn_d[i]]],
+    # Hent verditekster fra kodebok og legg til i datasettet
+    df[[nytt_namn]] = factor(df[[vnamn]],
       levels = koder$verdi,
       labels = koder$verditekst
     ) %>%
       as.character()
 
-    # fixme: *Fiks rekkefølge*
-    df
+    # Plasser den nye variabelen på rett sted i datasettet
+    ind_opp = which(names(df) == vnamn)
+    ind_nye = which(names(df) == nytt_namn)
+    ind_venstre = c(1:ind_opp, ind_nye) # fixme: legg på unique()
+    df = df[c(ind_venstre, setdiff(seq_along(df), ind_venstre))]
   }
 
+  # Returner oppdatert datasett
   df
 }
 
 d %>%
   kb_fyll(kb)
+
+
 
 
 # Test at funksjonen fungerer
