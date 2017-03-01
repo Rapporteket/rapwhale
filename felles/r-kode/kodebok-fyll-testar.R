@@ -90,10 +90,45 @@ test_that("Åtvaring (men NA-verdi) viss datasettet inneheld verdiar som aktuell
 })
 
 test_that("Feilmelding viss kodeboka ikkje inneheld dei nødvendige kolonnane (side 10)", {
-  expect_error(d %>% kb_fyll(iris), "Ugyldig kodebok. Må ha kolonnane 'var_id', 'verdi' og 'verditekst'")
+  expect_error(d %>% kb_fyll(iris), "Ugyldig kodebok. Må ha kolonnane 'var_id', 'verdi' og 'verditekst'.")
   expect_error(d %>% kb_fyll(kb[3:1]), NA) # Godta forskjellig rekkjefølgje
   expect_error(d %>% kb_fyll(cbind(x = 1:nrow(kb), kb[3:1], y = 1:nrow(kb))), NA) # Godta ekstrakolonnar
 })
+
+test_that("NA-verdiar i kodeboka vert oppdaga", {
+  kb2 = kb
+  kb2$var_id[2] = NA
+
+  kb3 = kb
+  kb3$verdi[2] = NA
+
+  kb4 = kb
+  kb4$verditekst[2] = NA
+
+  expect_error(d %>% kb_fyll(kb2), "Ugyldig kodebok. Kolonnen 'var_id' har NA-verdi(ar).")
+  expect_error(d %>% kb_fyll(kb3), "Ugyldig kodebok. Kolonnen 'verdi' har NA-verdi(ar).")
+  expect_error(d %>% kb_fyll(kb4), "Ugyldig kodebok. Kolonnen 'verditekst' har NA-verdi(ar).")
+})
+
+test_that("Dupliserte verdiar i kodeboka vert oppdaga", {
+  kb2 = kb
+  kb2$verdi[5] = kb2$verdi[4] # Duplisert verdi
+
+  kb3 = kb
+  kb3$verditekst[5] = kb3$verditekst[4] # Duplisert verditekst
+
+  kb4 = kb
+  kb4$verditekst[9] = kb4$verditekst[1] # *Ikkje* duplisert verditekst (er frå annan variabel)
+
+  kb5 = kb
+  kb5$foo = 3 # *Ikkje* duplisert verdi (er frå kolonne som ikkje er 'verdi' eller 'verditekst')
+
+  expect_error(d %>% kb_fyll(kb2), "Ugyldig kodebok. Variabelen 'med' har dupliserte verdiar i kolonnen 'verdi'.")
+  expect_error(d %>% kb_fyll(kb3), "Ugyldig kodebok. Variabelen 'med' har dupliserte verdiar i kolonnen 'verditekst'.")
+  expect_error(d %>% kb_fyll(kb4), NA)
+  expect_error(d %>% kb_fyll(kb5), NA)
+})
+
 
 
 # Handter suffiks
@@ -121,7 +156,7 @@ test_that("Tomt suffiks fungerer (og gjev åtvaring) (side 12)", {
   expect_warning(d %>% kb_fyll(kb, suffiks = ""), "Overskriv variabel: 'med'")
 })
 
-test_that("Overskriving av variablar ved ikkje-tomt suffiks gjev også åtvaring (men fungerer)", {
+test_that("Overskriving av variablar ved *ikkje-tomt* suffiks gjev også åtvaring (men fungerer)", {
   d2 = tribble(
     ~pasid, ~kjonn, ~kjonntest,
     101, 2, "Vellykka",
@@ -145,12 +180,12 @@ context("Grensetilfelle og småplukk")
 
 test_that("Variabelkolonnar som står heilt først eller sist i datasettet fungerer òg", {
   d2 = d %>%
-    select(kjonn, med)
+    dplyr::select(kjonn, med)
   d_fylt = tribble(
     ~kjonn, ~med,
     "kvinne", "Ibux",
     "mann", "Globoid",
     "mann", "Antibac"
   )
-  expect_identical(d2 %>% kb_fyll(kb, suffiks = ""), d2_fylt)
+  expect_identical(d2 %>% kb_fyll(kb, suffiks = ""), d_fylt)
 })
