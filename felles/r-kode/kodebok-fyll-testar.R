@@ -87,6 +87,14 @@ test_that("Åtvaring (men NA-verdi) viss datasettet inneheld verdiar som aktuell
   expect_warning(d %>% kb_fyll(kb[-6, ]), "Variabelen 'med' har ugyldig verdi (vart gjort om til NA): '4'")
   expect_warning(d %>% kb_fyll(kb[-c(3, 6), ]), "Variabelen 'med' har ugyldige verdiar (vart gjort om til NA): '1', '4'")
   expect_warning(d %>% kb_fyll(kb[-1, ]), "Variabelen 'kjonn' har ugyldig verdi (vart gjort om til NA): '1'")
+
+  # Sjekk at ein får NA-verdiar der det manglar i kodeboka
+  # (men ikkje NA-verdiar der det ikkje manglar, sjølv om det
+  # er snakk om same variabel)
+  d_fylt = d %>%
+    kb_fyll(kb[-6, ])
+  expect_true(is.na(d_fylt$med_tekst[2]))
+  expect_equal(d_fylt$med_tekst[3], "Antibac")
 })
 
 test_that("Feilmelding viss kodeboka ikkje inneheld dei nødvendige kolonnane (side 10)", {
