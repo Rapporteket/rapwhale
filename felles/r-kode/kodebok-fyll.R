@@ -12,6 +12,7 @@ library(tidyverse)
 library(testthat)
 library(dplyr)
 library(magrittr)
+library(stringr)
 
 
 # Eksempel:
@@ -39,21 +40,38 @@ kb = tribble(
   "gensp", 3, "fornøgd"
 )
 
+# for å teste funksjonen bruker jeg df
+df = d
 
 # Definisjon av funksjon
 kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
-  if (class(df[[, 1]]) == "character") {
-    vars = colnames(df)
+  vnamn_d = c("kjonn", "med")
+  vnamn_kb = c("kjonn", "med") # hva skulle denne brukes til?
 
+  for (i in seq_along(vnamn_d)) {
 
-    df = df %>%
-      mutate(var_tekst = factor(vars,
-        levels = kb$verdi,
-        labels = kb$verditekst
-      ))
+    # * Gjer noko med i ... * /* magi */ *
+
+    koder = kb %>%
+      filter(var_id %in% vnamn_d[i])
+
+    nytt_namn = str_c(vnamn_d[i], .suffiks)
+
+    df[[nytt_namn]] = factor(df[[vnamn_d[i]]],
+      levels = koder$verdi,
+      labels = koder$verditekst
+    ) %>%
+      as.character()
+
+    # fixme: *Fiks rekkefølge*
+    df
   }
+
+  df
 }
 
+d %>%
+  kb_fyll(kb)
 
 
 # Test at funksjonen fungerer
