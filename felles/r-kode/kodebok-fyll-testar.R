@@ -40,9 +40,9 @@ context("Grunnleggjande funksjonalitet")
 test_that("Enkel bruk utan nokon argument fungerer (side 4)", {
   d_fylt = tribble(
     ~pasid, ~kjonn, ~kjonn_tekst, ~alder, ~med, ~med_tekst, ~prem,
-    101, 1, "kvinne", 18, 3, "Ibux", 2,
-    102, 2, "mann", 37, 4, "Globoid", 2,
-    103, 3, "mann", 17, 1, "Antibac", 3
+    101, 2, "kvinne", 18, 3, "Ibux", 2,
+    102, 1, "mann", 37, 4, "Globoid", 2,
+    103, 1, "mann", 17, 1, "Antibac", 3
   )
   expect_identical(d %>% kb_fyll(kb), d_fylt)
 })
@@ -51,9 +51,9 @@ test_that("Enkel bruk utan nokon argument fungerer (side 4)", {
 test_that("Val av variabel å fylla ut fungerer (side 5)", {
   d_fylt = tribble(
     ~pasid, ~kjonn, ~kjonn_tekst, ~alder, ~med, ~prem,
-    101, 1, "kvinne", 18, 3, 2,
-    102, 2, "mann", 37, 4, 2,
-    103, 3, "mann", 17, 1, 3
+    101, 2, "kvinne", 18, 3, 2,
+    102, 1, "mann", 37, 4, 2,
+    103, 1, "mann", 17, 1, 3
   )
   expect_identical(d %>% kb_fyll(kb, kjonn), d_fylt)
 })
@@ -62,9 +62,9 @@ test_that("Val av variabel å fylla ut fungerer (side 5)", {
 test_that("Val av variabel som har anna namn i kodeboka fungerer (side 6)", {
   d_fylt = tribble(
     ~pasid, ~kjonn, ~kjonn_tekst, ~alder, ~med, ~prem, ~prem_tekst,
-    101, 1, "kvinne", 18, 3, 2, "både og",
-    102, 2, "mann", 37, 4, 2, "både og",
-    103, 3, "mann", 17, 1, 3, "fornøgd"
+    101, 2, "kvinne", 18, 3, 2, "både og",
+    102, 1, "mann", 37, 4, 2, "både og",
+    103, 1, "mann", 17, 1, 3, "fornøgd"
   )
   expect_identical(d %>% kb_fyll(kb, kjonn, prem = "gensp"), d_fylt)
 })
@@ -145,9 +145,9 @@ context("Støtte for sjølvvalt suffiks")
 test_that("Val av suffiks fungerer (side 11)", {
   d_fylt = tribble(
     ~pasid, ~kjonn, ~alder, ~med, ~med_hei, ~prem,
-    101, 1, 18, 3, "Ibux", 2,
-    102, 2, 37, 4, "Globoid", 2,
-    103, 3, 17, 1, "Antibac", 3
+    101, 2, 18, 3, "Ibux", 2,
+    102, 1, 37, 4, "Globoid", 2,
+    103, 1, 17, 1, "Antibac", 3
   )
   expect_identical(d %>% kb_fyll(kb, med, .suffiks = "_hei"), d_fylt)
 })
