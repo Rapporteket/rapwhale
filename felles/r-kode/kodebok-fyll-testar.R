@@ -197,3 +197,14 @@ test_that("Variabelkolonnar som står heilt først eller sist i datasettet funge
   )
   expect_identical(d2 %>% kb_fyll(kb, suffiks = ""), d_fylt)
 })
+
+test_that("Lause variablar som heiter det same som variablar i datasettet fører ikkje til problem", {
+  d_fylt = tribble(
+    ~pasid, ~kjonn, ~kjonn_tekst, ~alder, ~med, ~prem,
+    101, 2, "kvinne", 18, 3, 2,
+    102, 1, "mann", 37, 4, 2,
+    103, 1, "mann", 17, 1, 3
+  )
+  kjonn = "med"
+  expect_identical(d %>% kb_fyll(kb, kjonn), d_fylt)
+})
