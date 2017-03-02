@@ -13,6 +13,7 @@ library(testthat)
 library(dplyr)
 library(magrittr)
 library(stringr)
+library(pryr)
 
 
 # Eksempel:
@@ -46,9 +47,13 @@ df = d
 # Definisjon av funksjon
 kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
 
-  # Namn på variablar som skal fyllast ut,
-  vnamn_d = c("kjonn", "med") # Namn i datasettet
-  vnamn_kb = c("kjonn", "med") # Tilsvarande namn i kodeboka
+  # Namn på variablar som skal fyllast ut
+  vnamn_d = names(named_dots(...)) # Namn i datasettet
+  # Viss ein ikkje har valt variablar, bruk alle som finst i kodeboka
+  if (length(vnamn_d) == 0) {
+    vnamn_d = intersect(names(df), kb$var_id)
+  }
+  vnamn_kb = c(vnamn_d) # Tilsvarande namn i kodeboka
 
   # Gå gjennom kvar variabel og legg til verditekstar
   for (i in seq_along(vnamn_d)) {
@@ -85,7 +90,6 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
 
 d %>%
   kb_fyll(kb)
-
 
 
 
