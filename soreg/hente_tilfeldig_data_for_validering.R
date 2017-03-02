@@ -20,7 +20,7 @@ dato_sistreg = dato_uttrekk - 1
 
 # Adressa til den siste datafila
 mappe = paste0(grunnmappe, dato_uttrekk)
-filnamn = "SoReg_02_Datadump_arsrapport.csv"
+filnamn = "SoReg_08_Datadump_arsrapport.csv"
 adresse = paste0(mappe, "\\", filnamn)
 
 # Les inn data
