@@ -78,8 +78,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
     df[[nytt_namn]] = factor(df[[vnamn]],
       levels = koder$verdi,
       labels = koder$verditekst
-    ) %>%
-      as.character()
+    )
 
     # Plasser den nye variabelen på rett sted i datasettet
     ind_opp = which(names(df) == vnamn)
