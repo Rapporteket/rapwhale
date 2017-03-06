@@ -14,6 +14,7 @@ library(dplyr)
 library(magrittr)
 library(stringr)
 library(pryr)
+library(purrr)
 
 
 # Eksempel:
@@ -48,15 +49,15 @@ df = d
 kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
 
   # Namn på variablar som skal fyllast ut
-  vnamn_d = names(named_dots(...)) # Namn i datasettet
+  arg = named_dots(...)
+  vnamn_d = names(arg) # Namn i datasettet
   # Viss ein ikkje har valt variablar, bruk alle som finst i kodeboka
   if (length(vnamn_d) == 0) {
     vnamn_d = intersect(names(df), kb$var_id)
+    vnamn_kb = vnamn_d
+  } else {
+    vnamn_kb = map_chr(arg, as.character) # Tilsvarande namn i kodeboka
   }
-
-  felles_namn = paste0(intersect(c(dots(...)), vnamn_d)) # Namna som er like i kodeboka som i datasettet
-  kb_namn = paste0(setdiff(c(dots(...)), vnamn_d)) # For å legge til namn som har anna namn i kodebok
-  vnamn_kb = c(felles_namn, kb_namn) # Namna slik dei er i kodeboka
 
   # Gå gjennom kvar variabel og legg til verditekstar
   for (i in seq_along(vnamn_d)) {
@@ -68,7 +69,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
 
     # Delen av kodeboka som gjeld den aktuelle variabelen
     koder = kb %>%
-      filter(var_id %in% vnamn)
+      filter(var_id %in% vnamn_kb[i])
 
     # Det nye namnet på variabelen
     nytt_namn = str_c(vnamn_d[i], .suffiks)
@@ -92,8 +93,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
 }
 
 d %>%
-  kb_fyll(kb)
-
+  kb_fyll(kb, med, kjonn, prem = "gensp")
 
 
 # Test at funksjonen fungerer
