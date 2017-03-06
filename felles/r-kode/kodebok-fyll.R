@@ -54,10 +54,27 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
   # Viss ein ikkje har valt variablar, bruk alle som finst i kodeboka
   if (length(vnamn_d) == 0) {
     vnamn_d = intersect(names(df), kb$var_id)
-    vnamn_kb = vnamn_d
+    vnamn_kb = vnamn_d # Tilsvarande namn i kodeboka
   } else {
     vnamn_kb = map_chr(arg, as.character) # Tilsvarande namn i kodeboka
   }
+
+  # Feilmeldingar eller åtvaringar dersom datasettet og/eller
+  # kodeboka og/eller funksjonskallet inneheld feil
+
+  # Viss ein ber om variablar som ikkje finst i kodeboka
+  lag_liste = function(x) {
+    str_c("'", x, "'", collapse = ", ")
+  } # Kjed saman tekststrengar
+  berre_kb = setdiff(vnamn_kb, kb$var_id)
+  n_feil = length(berre_kb)
+  if (n_feil > 0) {
+    stop(str_c(
+      ifelse(n_feil > 1, "Variablar", "Variabel"),
+      " finst ikkje i kodeboka: ", lag_liste(berre_kb)
+    ))
+  }
+
 
   # Gå gjennom kvar variabel og legg til verditekstar
   for (i in seq_along(vnamn_d)) {
