@@ -53,7 +53,10 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
   if (length(vnamn_d) == 0) {
     vnamn_d = intersect(names(df), kb$var_id)
   }
-  vnamn_kb = c(vnamn_d) # Tilsvarande namn i kodeboka
+
+  felles_namn = paste0(intersect(c(dots(...)), vnamn_d)) # Namna som er like i kodeboka som i datasettet
+  kb_namn = paste0(setdiff(c(dots(...)), vnamn_d)) # For å legge til namn som har anna namn i kodebok
+  vnamn_kb = c(felles_namn, kb_namn) # Namna slik dei er i kodeboka
 
   # Gå gjennom kvar variabel og legg til verditekstar
   for (i in seq_along(vnamn_d)) {
