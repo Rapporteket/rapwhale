@@ -89,6 +89,30 @@ test_that("Val av variabel som har anna namn i kodeboka fungerer (side 6)", {
   expect_identical(d %>% kb_fyll(kb, kjonn, prem = "gensp"), d_fylt)
 })
 
+test_that("Variablar med faktornivå i spesiell rekkjefølgje fungerer", {
+  # Ser på kva som skjer viss kodeboka har nivå i ei rekkjefølgje
+  # som ikkje er lik rekkjefølgja ein får når ein sorterer
+  # (enten som tal eller som tekst). Det er rekkjefølgja i kodeboka
+  # som skal brukast.
+  d2 = tibble(pasid = 1:5, hei = c(12, 1, 100, 12, 1), alder = seq(10, 50, 10))
+  kb2 = tribble(
+    ~var_id, ~verdi, ~verditekst,
+    "hei", 100, "foo",
+    "hei", 1, "bar",
+    "hei", 12, "baz"
+  )
+  kb3 = kb2 %>%
+    mutate(verdi = as.character(verdi))
+  # Merk at kb2$verdi er ulik sort(kb2$verdi) og at begge er ulik sort(kb3$verdi)
+
+  # Dette skal bli resultatet, uavhengig av kva kodebokvariant ein brukar
+  d_fylt = d2 %>%
+    mutate(hei_tekst = factor(hei, levels = kb2$verdi, labels = kb2$verditekst)) %>%
+    dplyr::select(pasid, hei, hei_tekst, alder)
+  expect_identical(d2 %>% kb_fyll(kb2), d_fylt)
+  expect_identical(d2 %>% kb_fyll(kb3), d_fylt)
+})
+
 
 
 # Gje feilmelding og åtvaringar der det trengst
