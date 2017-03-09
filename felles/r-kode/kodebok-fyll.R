@@ -109,7 +109,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
 }
 
 d %>%
-  kb_fyll(kb, med, kjonn, prem = "gensp")
+  kb_fyll(kb, med, kjonn, prem = gensp)
 
 
 # Test at funksjonen fungerer
