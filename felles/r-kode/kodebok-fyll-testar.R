@@ -285,3 +285,10 @@ test_that("Lause variablar som heiter det same som variablar i datasettet fører
   kjonn = "med"
   expect_identical(d %>% kb_fyll(kb, kjonn), d_fylt)
 })
+
+test_that("Funksjonen er idempotent", {
+  # Kan ikkje testa alt, men nokre få eksempel sikrar det viktigaste
+  expect_identical(d %>% kb_fyll(kb), d %>% kb_fyll(kb) %>% kb_fyll(kb))
+  expect_identical(d %>% kb_fyll(kb, med), d %>% kb_fyll(kb, med) %>% kb_fyll(kb, med))
+  expect_identical(d %>% kb_fyll(kb, med, prem = "gensp"), d %>% kb_fyll(kb, med, prem = "gensp") %>% kb_fyll(kb, med, prem = "gensp"))
+})
