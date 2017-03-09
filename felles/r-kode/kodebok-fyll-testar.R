@@ -26,7 +26,7 @@ kb = tribble(
   "med", 2, "Insulin",
   "med", 3, "Ibux",
   "med", 4, "Globoid",
-  "gensp", 1, "misfornogd",
+  "gensp", 1, "misfornøgd",
   "gensp", 2, "både og",
   "gensp", 3, "fornøgd"
 )
@@ -87,6 +87,7 @@ test_that("Val av variabel som har anna namn i kodeboka fungerer (side 6)", {
     prem_tekst = factor(prem_tekst, levels = niv_gensp)
   )
   expect_identical(d %>% kb_fyll(kb, kjonn, prem = "gensp"), d_fylt)
+  expect_identical(d %>% kb_fyll(kb, kjonn, prem = gensp), d_fylt)
 })
 
 test_that("Variablar med faktornivå i spesiell rekkjefølgje fungerer", {
@@ -292,8 +293,13 @@ test_that("Lause variablar som heiter det same som variablar i datasettet fører
     103, 1, "mann", 17, 1, 3
   )
   d_fylt %<>% mutate(kjonn_tekst = factor(kjonn_tekst, levels = niv_kjonn))
+  d2_fylt = d_fylt %>%
+    mutate(prem_tekst = factor(c("både og", "både og", "fornøgd"), levels = niv_gensp))
   kjonn = "med"
+  gensp = "med"
   expect_identical(d %>% kb_fyll(kb, kjonn), d_fylt)
+  expect_identical(d %>% kb_fyll(kb, prem = "gensp", kjonn), d2_fylt)
+  expect_identical(d %>% kb_fyll(kb, prem = "gensp", kjonn), d %>% kb_fyll(kb, prem = gensp, kjonn))
 })
 
 test_that("Funksjonen er idempotent", {
