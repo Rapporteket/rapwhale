@@ -2,23 +2,16 @@
 #
 # Sjå fila kodebok-fyll-kravspek.pdf for detaljert kravspek for implementasjon
 
-
-# Ikke gjjør om streng-variabler til faktorer automatisk
-options(stringsAsFactors = FALSE)
-
-
 # Nødvendige pakkar
 library(tidyverse)
 library(testthat)
-library(dplyr)
-library(magrittr)
-library(stringr)
 library(pryr)
+library(stringr)
 library(purrr)
 
 
-# Eksempel:
 
+# Eksempeldata (for testing – fixme: fjern når ein er ferdig med testing) --------
 
 # Eksempeldatasett
 d = tribble(
@@ -44,6 +37,7 @@ kb = tribble(
 
 # for å teste funksjonen bruker jeg df
 df = d
+
 
 # Definisjon av funksjon
 kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
@@ -78,9 +72,6 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
 
   # Gå gjennom kvar variabel og legg til verditekstar
   for (i in seq_along(vnamn_d)) {
-
-    #   */* magi */*
-
     # Namn på variabelen (i datasettet)
     vnamn = vnamn_d[i]
 
@@ -108,6 +99,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
   df
 }
 
+# Kjapt eksempel på bruk
 d %>%
   kb_fyll(kb, med, kjonn, prem = gensp)
 
