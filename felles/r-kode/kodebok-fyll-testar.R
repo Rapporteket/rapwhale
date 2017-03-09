@@ -128,6 +128,15 @@ test_that("Feilmelding ved bruk av variabel med eksplisitt namn som ikkje finst 
   expect_error(d %>% kb_fyll(kb, kjonn, prem = "gen"), "Variabel finst ikkje i kodeboka: 'gen'")
 })
 
+test_that("Feilmelding ved bruk av variabel med eksplisitt namn som ikkje finst i datasettet (men i kodeboka)", {
+  d2 = d %>%
+    dplyr::select(-med)
+  d3 = d %>%
+    dplyr::select(-med, -kjonn)
+  expect_error(d2 %>% kb_fyll(kb, med), "Variabel finst ikkje i datasettet: 'med'")
+  expect_error(d3 %>% kb_fyll(kb, med, kjonn), "Variablar finst ikkje i datasettet: 'med', 'kjonn'")
+})
+
 test_that("Åtvaring (men NA-verdi) viss datasettet inneheld verdiar som aktuell variabel ikkje har i kodeboka (side 9)", {
   expect_warning(d %>% kb_fyll(kb[-6, ]), "Variabelen 'med' har ugyldig verdi (vart gjort om til NA): '4'")
   expect_warning(d %>% kb_fyll(kb[-c(3, 6), ]), "Variabelen 'med' har ugyldige verdiar (vart gjort om til NA): '1', '4'")
