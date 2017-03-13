@@ -20,6 +20,12 @@ adresse_kjelde = str_c(mappe_nokkel, kjeldefil)
 adresse_vaskefil = str_c(mappe_nokkel, "vaskefil\\prehosp-koplingsfil.csv")
 adresse_loadfil = str_c(mappe_nokkel, "vaskefil\\load.txt")
 
+# vektorer med alle ulike navn for datovariabler, fødselsnummervariabler, AMIS-nummer variabler
+
+namn_amis = c(
+  "amis", "Amisnummer.", "AMIS eller AMK nummer",
+  "AMIS", "AMISNUMMER", "Amisnummer"
+)
 
 
 # Funksjon for test av fødselsnummer --------------------------------------
