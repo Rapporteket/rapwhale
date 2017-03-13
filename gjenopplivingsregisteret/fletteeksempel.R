@@ -9,6 +9,7 @@
 library(tidyverse)
 library(stringr)
 library(readxl)
+library(lubridate)
 
 # Aktuell dato me skal sjå på filer frå
 kjeldefil = "2016-12-31\\Rapport_Utstein_2016.xlsx"
@@ -20,14 +21,46 @@ adresse_kjelde = str_c(mappe_nokkel, kjeldefil)
 adresse_vaskefil = str_c(mappe_nokkel, "vaskefil\\prehosp-koplingsfil.csv")
 adresse_loadfil = str_c(mappe_nokkel, "vaskefil\\load.txt")
 
+
+# Jeg lar denne være til hederlig bruk i fremtiden
+dput(names(which(sapply(d, is.POSIXct))))
+
+
 # vektorer med alle ulike navn for datovariabler, fødselsnummervariabler, AMIS-nummer variabler
 
 namn_amis = c(
   "amis", "Amisnummer.", "AMIS eller AMK nummer",
-  "AMIS", "AMISNUMMER", "Amisnummer"
+  "AMIS", "AMISNUMMER", "Amisnummer", "AMISNUMMER ", "AMIS "
 )
 
 namn_fnr = c("Fødselsnummer", "fødselsnummer", "F.nr")
+
+namn_dato = c(
+  "DATO/KLOKKEN ", "HENVENDELSE MOTTATT AMK ",
+  "AMBULANSEPERSONELL FREMME PÅ BESTEMMELSESSTED ", "DATO ",
+  "DATO/KLOKKEN HVIS JA ", "DATO/KLOKKEN ", "DATO/KLOKKEN ",
+  "DATO ", "DATO/KLOKKEN ", "DATO/KLOKKEN ",
+  "DATO ", "DATO/KLOKKEN ", "DATO/KLOKKEN HVIS JA ", "DATO/KLOKKEN ", "DATO/KLOKKEN ",
+  "DATO/KLOKKEN ", "DATO/KLOKKEN ",
+  "DATO ", "DATO/KLOKKEN ", "HENVENDELSE MOTTATT AMK ", "AMBULANSEPERSONELL FREMME PÅ BESTEMMELSESSTED ",
+  "DATO/KLOKKEN HVIS JA ", "DATO/KLOKKEN ", "DATO/KLOKKEN ",
+  "DATO ", "DATO/KLOKKEN ", "DATO/KLOKKEN ", "DATO/KLOKKEN ",
+  "HENVENDELSE MOTTATT AMK ", "AMBULANSEPERSONELL FREMME PÅ BESTEMMELSESSTED ",
+  "DATO/KLOKKEN HVIS JA ", "DATO/KLOKKEN ",
+  "DATO ", "DATO/KLOKKEN ", "HENVENDELSE MOTTATT AMK ", "AMBULANSEPERSONELL FREMME PÅ BESTEMMELSESSTED ",
+  "DATO/KLOKKEN HVIS JA ", "DATO/KLOKKEN ", "DATO/KLOKKEN ", "DATO/KLOKKEN ",
+  "DATO ", "DATO/KLOKKEN ", "HENVENDELSE MOTTATT AMK ", "AMBULANSEPERSONELL FREMME PÅ BESTEMMELSESSTED ",
+  "DATO/KLOKKEN HVIS JA ", "DATO/KLOKKEN ", "DATO/KLOKKEN ", "DATO/KLOKKEN ",
+  "DATO ", "DATO/KLOKKEN ", "HENVENDELSE MOTTATT AMK ", "AMBULANSEPERSONELL FREMME PÅ BESTEMMELSESSTED ",
+  "DATO/KLOKKEN HVIS JA ", "DATO/KLOKKEN ", "DATO/KLOKKEN ", "DATO/KLOKKEN ",
+  "Dato / tid for hendelse ", "Amb. alarmert om stans ", "Dato / tid henv. AMK ", "Dato/tid HLR startet ",
+  "Tidspunkt HLR avsluttet ", "Dato/tid ankomst sykehus ", "Dato/tid vedvarende ROSC ",
+  "Dato / tid for hendelse ", "Dato / tid henv. AMK ", "Dato / tid amb. fremme på bestemmelsessted ",
+  "Dato/tid HLR startet ", "Tidspunkt HLR avsluttet ",
+  "Dato/tid vedvarende ROSC ", "Dato/tid aktiv nedkjøling ", "Dato/tid ankomst sykehus ",
+  "Dato / tid for hendelse ", "Dato / tid amb. fremme på bestemmelsessted ",
+  "Dato/tid HLR startet ", "Dato/tid startet ", "Tidspunkt HLR avsluttet ", "Dato/tid ankomst sykehus "
+)
 
 
 # Funksjon for test av fødselsnummer --------------------------------------
