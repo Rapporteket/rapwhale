@@ -27,6 +27,8 @@ namn_amis = c(
   "AMIS", "AMISNUMMER", "Amisnummer"
 )
 
+namn_fnr = c("Fødselsnummer", "fødselsnummer", "F.nr")
+
 
 # Funksjon for test av fødselsnummer --------------------------------------
 
