@@ -10,6 +10,7 @@ library(tidyverse)
 library(stringr)
 library(readxl)
 library(lubridate)
+library(purrr)
 
 # Aktuell dato me skal sjå på filer frå
 kjeldefil = "2016-12-31\\Rapport_Utstein_2016.xlsx"
@@ -30,38 +31,20 @@ dput(names(which(sapply(d, is.POSIXct))))
 
 namn_amis = c(
   "amis", "Amisnummer.", "AMIS eller AMK nummer",
-  "AMIS", "AMISNUMMER", "Amisnummer", "AMISNUMMER ", "AMIS "
+  "AMIS", "AMISNUMMER", "Amisnummer", "AMISNUMMER ", "AMIS ",
+  "Amisnummer "
 )
 
 namn_fnr = c("Fødselsnummer", "fødselsnummer", "F.nr")
 
 namn_dato = c(
-  "DATO/KLOKKEN ", "HENVENDELSE MOTTATT AMK ",
-  "AMBULANSEPERSONELL FREMME PÅ BESTEMMELSESSTED ", "DATO ",
-  "DATO/KLOKKEN HVIS JA ", "DATO/KLOKKEN ", "DATO/KLOKKEN ",
-  "DATO ", "DATO/KLOKKEN ", "DATO/KLOKKEN ",
-  "DATO ", "DATO/KLOKKEN ", "DATO/KLOKKEN HVIS JA ", "DATO/KLOKKEN ", "DATO/KLOKKEN ",
-  "DATO/KLOKKEN ", "DATO/KLOKKEN ",
-  "DATO ", "DATO/KLOKKEN ", "HENVENDELSE MOTTATT AMK ", "AMBULANSEPERSONELL FREMME PÅ BESTEMMELSESSTED ",
-  "DATO/KLOKKEN HVIS JA ", "DATO/KLOKKEN ", "DATO/KLOKKEN ",
-  "DATO ", "DATO/KLOKKEN ", "DATO/KLOKKEN ", "DATO/KLOKKEN ",
-  "HENVENDELSE MOTTATT AMK ", "AMBULANSEPERSONELL FREMME PÅ BESTEMMELSESSTED ",
-  "DATO/KLOKKEN HVIS JA ", "DATO/KLOKKEN ",
-  "DATO ", "DATO/KLOKKEN ", "HENVENDELSE MOTTATT AMK ", "AMBULANSEPERSONELL FREMME PÅ BESTEMMELSESSTED ",
-  "DATO/KLOKKEN HVIS JA ", "DATO/KLOKKEN ", "DATO/KLOKKEN ", "DATO/KLOKKEN ",
-  "DATO ", "DATO/KLOKKEN ", "HENVENDELSE MOTTATT AMK ", "AMBULANSEPERSONELL FREMME PÅ BESTEMMELSESSTED ",
-  "DATO/KLOKKEN HVIS JA ", "DATO/KLOKKEN ", "DATO/KLOKKEN ", "DATO/KLOKKEN ",
-  "DATO ", "DATO/KLOKKEN ", "HENVENDELSE MOTTATT AMK ", "AMBULANSEPERSONELL FREMME PÅ BESTEMMELSESSTED ",
-  "DATO/KLOKKEN HVIS JA ", "DATO/KLOKKEN ", "DATO/KLOKKEN ", "DATO/KLOKKEN ",
-  "Dato / tid for hendelse ", "Amb. alarmert om stans ", "Dato / tid henv. AMK ", "Dato/tid HLR startet ",
+  "DATO/KLOKKEN ", "HENVENDELSE MOTTATT AMK ", "AMBULANSEPERSONELL FREMME PÅ BESTEMMELSESSTED ",
+  "DATO ", "DATO/KLOKKEN HVIS JA ", "Dato / tid for hendelse ",
+  "Amb. alarmert om stans ", "Dato / tid henv. AMK ", "Dato/tid HLR startet ",
   "Tidspunkt HLR avsluttet ", "Dato/tid ankomst sykehus ", "Dato/tid vedvarende ROSC ",
-  "Dato / tid for hendelse ", "Dato / tid henv. AMK ", "Dato / tid amb. fremme på bestemmelsessted ",
-  "Dato/tid HLR startet ", "Tidspunkt HLR avsluttet ",
-  "Dato/tid vedvarende ROSC ", "Dato/tid aktiv nedkjøling ", "Dato/tid ankomst sykehus ",
-  "Dato / tid for hendelse ", "Dato / tid amb. fremme på bestemmelsessted ",
-  "Dato/tid HLR startet ", "Dato/tid startet ", "Tidspunkt HLR avsluttet ", "Dato/tid ankomst sykehus "
+  "Dato / tid amb. fremme på bestemmelsessted ", "Dato/tid aktiv nedkjøling ",
+  "Dato/tid startet "
 )
-
 
 # Funksjon for test av fødselsnummer --------------------------------------
 
@@ -232,7 +215,6 @@ fnr_foresla = function(x) {
 
 # Les inn fil med prehospitale data
 d_amis = read_excel(adresse_kjelde)
-d_amis$kjeldefil = kjeldefil
 
 # Les inn den eksisterande vaskefila
 # (Lagar funksjon sidan me skal gjera
@@ -258,28 +240,41 @@ d_vask = les_vaskefil(adresse_vaskefil)
 #        for eksempelets skuld)
 
 # Mange datovariablar å velja mellom (og ingen av dei er alltid fylde ut)
-# Startar med å sjå på denne (fixme)
-d_amis$`Dato / tid henv. AMK `
+# Me ser på alle og vel den nyaste datoen. Hentar først ut alle datovariablar
+# (merk at me kan ha fleire kolonnar med same namn).
+d_amis_dato = d_amis[which(names(d_amis) %in% namn_dato)]
 
-# Hent ut dei aktuelle variablane og gjev dei meir fornuftige namn
-d_amis2 = d_amis %>%
-  select(
-    kjeldefil,
-    `Amisnummer `,
-    `Dato / tid henv. AMK `,
-    `F.nr`
-  ) %>%
-  rename(
-    amisnr = `Amisnummer `,
-    dato_stans = `Dato / tid henv. AMK `,
-    fnr_orig = `F.nr`
-  )
+# Antar vidare at alle datovariablane er ekte tidspunktvariablar
+stopifnot(all(d_amis_dato %>% map_lgl(is.POSIXct)))
+res_dato = d_amis_dato %>%
+  apply(1, max, na.rm = TRUE) %>%
+  as.POSIXct(tz = "UTC")
+
+# Ser so på AMIS-nummer
+d_amis_amisnr = d_amis[which(names(d_amis) %in% namn_amis)]
+stopifnot(ncol(d_amis_amisnr) > 0)
+res_amisnr = d_amis_amisnr[[1]] # Bruk første kolonne (i tilfelle det er fleire)
+
+# Ser so på fødselsnummer
+d_amis_fnr = d_amis[which(names(d_amis) %in% namn_fnr)]
+stopifnot(ncol(d_amis_fnr) > 0)
+res_fnr = d_amis_fnr[[1]] # Bruk første kolonne (i tilfelle det er fleire)
+
+# Lagar dataramme med dei relevante variablane
+res = tibble(
+  kjeldefil = kjeldefil,
+  amisnr = res_amisnr,
+  dato = res_dato,
+  fnr = res_fnr
+)
 
 # Sjekk at det ikkje finst dupliserte/manglande/tomme AMIS-nummer
-if (anyDuplicated(d_amis2$amisnr) || any(is.na(d_amis2$amisnr)) || any(d_amis2$amisnr == "")) {
+if (anyDuplicated(res$amisnr) || any(is.na(res$amisnr)) || any(res$amisnr == "")) {
   stop("Oppdaga dupliserte eller manglande AMIS-nummer")
 }
 
+# Returner resultatet
+res
 
 
 # Legg nye data til vaskefila ---------------------------------------------
