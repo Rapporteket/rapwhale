@@ -17,26 +17,19 @@ kjeldefil = "2016-12-31\\Rapport_Utstein_2016.xlsx"
 
 # Mapper for datafilene
 mappe_nokkel = "***FJERNA-ADRESSE***"
-adresse_kjelde = str_c(mappe_nokkel, kjeldefil)
+mappe_prehosp = str_c(mappe_nokkel, "Prehospitalt\\")
 # mappe_lev = str_c("***FJERNA-ADRESSE***", dato)
-adresse_vaskefil = str_c(mappe_nokkel, "vaskefil\\prehosp-koplingsfil.csv")
-adresse_loadfil = str_c(mappe_nokkel, "vaskefil\\load.txt")
+adresse_vaskefil = str_c(mappe_nokkel, "Prehospitalt\\vaskefil\\prehosp-koplingsfil.csv")
+adresse_loadfil = str_c(mappe_nokkel, "Prehospitalt\\vaskefil\\load.txt")
 
-
-# Jeg lar denne være til hederlig bruk i fremtiden
-dput(names(which(sapply(d, is.POSIXct))))
-
-
-# vektorer med alle ulike navn for datovariabler, fødselsnummervariabler, AMIS-nummer variabler
-
+# Dei ulike namna som har blitt brukt på dei aktulle variablane
+# (AMIS-nummer, fødselsnummer og dato) i ulike utgåver av AMIS-eksporten
 namn_amis = c(
   "amis", "Amisnummer.", "AMIS eller AMK nummer",
   "AMIS", "AMISNUMMER", "Amisnummer", "AMISNUMMER ", "AMIS ",
   "Amisnummer "
 )
-
 namn_fnr = c("Fødselsnummer", "fødselsnummer", "F.nr")
-
 namn_dato = c(
   "DATO/KLOKKEN ", "HENVENDELSE MOTTATT AMK ", "AMBULANSEPERSONELL FREMME PÅ BESTEMMELSESSTED ",
   "DATO ", "DATO/KLOKKEN HVIS JA ", "Dato / tid for hendelse ",
@@ -45,6 +38,8 @@ namn_dato = c(
   "Dato / tid amb. fremme på bestemmelsessted ", "Dato/tid aktiv nedkjøling ",
   "Dato/tid startet "
 )
+
+
 
 # Funksjon for test av fødselsnummer --------------------------------------
 
@@ -213,8 +208,7 @@ fnr_foresla = function(x) {
 
 # Innlesing av filer ------------------------------------------------------
 
-# Les inn fil med prehospitale data
-d_amis = read_excel(adresse_kjelde)
+
 
 # Les inn den eksisterande vaskefila
 # (Lagar funksjon sidan me skal gjera
@@ -236,45 +230,93 @@ d_vask = les_vaskefil(adresse_vaskefil)
 
 # Hent ut prehospitale data -----------------------------------------------
 
-# Fixme: Køyr gjennom fleire datafiler (førebels nøyer me oss med den siste,
-#        for eksempelets skuld)
+# Mapper og adresser å eksportera
+eksport_mapper = dir(mappe_prehosp, pattern = "[0-9]{4}-[0-9]{2}-[0-9]{2}", full.names = TRUE)
+eksport_filadresser = list.files(eksport_mapper, ".*\\.xlsx?", recursive = FALSE, full.names = TRUE)
 
-# Mange datovariablar å velja mellom (og ingen av dei er alltid fylde ut)
-# Me ser på alle og vel den nyaste datoen. Hentar først ut alle datovariablar
-# (merk at me kan ha fleire kolonnar med same namn).
-d_amis_dato = d_amis[which(names(d_amis) %in% namn_dato)]
+# Les inn AMIS-datafil frå valt adresse og
+# gje ut dataramme med dei aktuelle variablane
+les_amisdata = function(adresse_kjelde) {
+  # Filnamn pluss mappa fila ligg i, men utan heile filstien
+  filnamn_kjelde = adresse_kjelde %>%
+    str_replace(fixed(mappe_prehosp), "")
 
-# Antar vidare at alle datovariablane er ekte tidspunktvariablar
-stopifnot(all(d_amis_dato %>% map_lgl(is.POSIXct)))
-res_dato = d_amis_dato %>%
-  apply(1, max, na.rm = TRUE) %>%
-  as.POSIXct(tz = "UTC")
+  # Les inn fil med prehospitale data
+  d_amis = read_excel(adresse_kjelde)
 
-# Ser so på AMIS-nummer
-d_amis_amisnr = d_amis[which(names(d_amis) %in% namn_amis)]
-stopifnot(ncol(d_amis_amisnr) > 0)
-res_amisnr = d_amis_amisnr[[1]] # Bruk første kolonne (i tilfelle det er fleire)
+  # Excel lagrar datoar som tal på ein horologisk svært rar måte (sjå ?as.Date)
+  # Denne konvererer tala til ekte datoar
+  tolk_excel_datotal = function(x) {
+    as_datetime(as.Date(as.numeric(x), origin = as.Date("1899-12-30")), tz = "UTC")
+  }
 
-# Ser so på fødselsnummer
-d_amis_fnr = d_amis[which(names(d_amis) %in% namn_fnr)]
-stopifnot(ncol(d_amis_fnr) > 0)
-res_fnr = d_amis_fnr[[1]] # Bruk første kolonne (i tilfelle det er fleire)
+  # Ein del av AMIS-datasetta har *veldig* rare tidsformat,
+  # på forma «2015-01-04 2015-01-04 03:10:00». Tolk desse òg.
+  tolk_amis_rartid = function(x) {
+    as.POSIXct(str_extract(x, "[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}"), tz = "UTC")
+  } # Merk at as_datetime() ikkje gjev rett svar her; sjå https://github.com/hadley/lubridate/issues/527
 
-# Lagar dataramme med dei relevante variablane
-res = tibble(
-  kjeldefil = kjeldefil,
-  amisnr = res_amisnr,
-  dato = res_dato,
-  fnr = res_fnr
-)
+  # Funksjon for å tolka ei tekstkolonne som inneheld ein kombinasjon
+  # av tal (som tyder dagar frå 30. desember 1899 og) og dobbeltdatotidformat
+  tolk_tid_tekstkol = function(x) {
+    # Er naiv og tenker at viss teksten ser ut som eit tal (dvs. har berre siffer),
+    # er det eit tal som representerer ein dato, og elles er det eit tekstfelt
+    # som inneheld eit tidspunkt (dato + klokkeslett) ein eller annan plass
+    er_datotal = function(x) {
+      str_detect(x, "^[0-9]+$")
+    }
+    datotid = suppressWarnings(if_else(er_datotal(x), tolk_excel_datotal(x), tolk_amis_rartid(x)))
+    datotid
+  }
 
-# Sjekk at det ikkje finst dupliserte/manglande/tomme AMIS-nummer
-if (anyDuplicated(res$amisnr) || any(is.na(res$amisnr)) || any(res$amisnr == "")) {
-  stop("Oppdaga dupliserte eller manglande AMIS-nummer")
+  # Mange datovariablar å velja mellom (og ingen av dei er alltid fylde ut)
+  # Me ser på alle og vel den nyaste datoen. Hentar først ut alle datovariablar
+  # (merk at me kan ha fleire kolonnar med same namn).
+  d_amis_dato = d_amis[which(names(d_amis) %in% namn_dato)]
+  er_tekst = d_amis_dato %>%
+    map_lgl(is.character)
+  er_tal = d_amis_dato %>%
+    map_lgl(is.numeric)
+  d_amis_dato[er_tekst] = lapply(d_amis_dato[er_tekst], tolk_tid_tekstkol)
+  d_amis_dato[er_tal] = lapply(d_amis_dato[er_tal], tolk_excel_datotal)
+
+  # Antar vidare at alle datovariablane er ekte tidspunktvariablar
+  stopifnot(all(d_amis_dato %>% map_lgl(is.POSIXct)))
+  res_dato = d_amis_dato %>%
+    apply(1, max, na.rm = TRUE) %>%
+    as.POSIXct(tz = "UTC")
+
+  # Ser so på AMIS-nummer
+  d_amis_amisnr = d_amis[which(names(d_amis) %in% namn_amis)]
+  stopifnot(ncol(d_amis_amisnr) > 0)
+  res_amisnr = d_amis_amisnr[[1]] # Bruk første kolonne (i tilfelle det er fleire)
+
+  # Ser so på fødselsnummer
+  d_amis_fnr = d_amis[which(names(d_amis) %in% namn_fnr)]
+  stopifnot(ncol(d_amis_fnr) > 0)
+  res_fnr = d_amis_fnr[[1]] # Bruk første kolonne (i tilfelle det er fleire)
+
+  # Lagar dataramme med dei relevante variablane
+  res = tibble(
+    kjeldefil = kjeldefil,
+    amisnr = res_amisnr,
+    dato = res_dato,
+    fnr = res_fnr
+  )
+
+  # Sjekk at det ikkje finst dupliserte/manglande/tomme AMIS-nummer
+  if (anyDuplicated(res$amisnr) || any(is.na(res$amisnr)) || any(res$amisnr == "")) {
+    stop("Oppdaga dupliserte eller manglande AMIS-nummer")
+  }
+
+  # Returner resultatet
+  res
 }
 
-# Returner resultatet
-res
+# Les AMIS-data frå alle Excel-filene
+d_amis = eksport_filadresser %>%
+  map_df(les_amisdata)
+# adresse_kjelde=eksport_filadresser[2]
 
 
 # Legg nye data til vaskefila ---------------------------------------------
@@ -288,7 +330,7 @@ res
 #
 # Legg dei ugyldige fødselsnummera på slutten av fila,
 # sortert på ein oversiktleg måte.
-d_amis2 = d_amis2 %>%
+d_amis = d_amis %>%
   mutate(
     fnr_rep = str_replace_all(fnr_orig, "[^0-9]", ""),
     fnr_vaska = ifelse(fnr_er_gyldig(fnr_rep), fnr_rep, NA_character_)
@@ -300,12 +342,12 @@ d_amis2 = d_amis2 %>%
 
 # Sjå berre på dei hjertestansane som er *nye*,
 # dvs. dei der me ikkje har AMIS-nummeret frå før
-d_amis2_nye = d_amis2 %>%
+d_amis_nye = d_amis %>%
   filter(!(amisnr %in% d_vask$amisnr))
 
 # Legg til dei nye AMIS-nummera
 d_vask_oppdatert = d_vask %>%
-  bind_rows(d_amis2_nye)
+  bind_rows(d_amis_nye)
 
 # Ta reservekopi av den gamle vaskefila
 filnamn_reskopi = str_c("reskopi-", format(Sys.time(), format = "%Y-%m-%d-%H-%M-%S"), ".csv")
