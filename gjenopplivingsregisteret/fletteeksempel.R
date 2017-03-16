@@ -1,6 +1,6 @@
 # Fletting av ymse uttrekksfiler frå Gjenopplivingsregisteret
 #
-# Laga 2016-11-18 av Karl Ove Hufthammer <karl.ove.hufthammer@helse-bergen.no>
+# Laga av Karl Ove Hufthammer <karl.ove.hufthammer@helse-bergen.no>
 
 
 # Oppsett -----------------------------------------------------------------
@@ -257,7 +257,7 @@ les_amisdata = function(adresse_kjelde) {
   } # Merk at as_datetime() ikkje gjev rett svar her; sjå https://github.com/hadley/lubridate/issues/527
 
   # Funksjon for å tolka ei tekstkolonne som inneheld ein kombinasjon
-  # av tal (som tyder dagar frå 30. desember 1899 og) og dobbeltdatotidformat
+  # av tal (som tyder dagar frå 30. desember 1899) og dobbeltdatotidformat
   tolk_tid_tekstkol = function(x) {
     # Er naiv og tenker at viss teksten ser ut som eit tal (dvs. har berre siffer),
     # er det eit tal som representerer ein dato, og elles er det eit tekstfelt
