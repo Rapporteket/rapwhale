@@ -19,7 +19,7 @@ d = tribble(
 
 # Eksempelkodebok
 kb = tribble(
-  ~var_id, ~verdi, ~verditekst,
+  ~variabel_id, ~verdi, ~verditekst,
   "kjonn", 1, "mann",
   "kjonn", 2, "kvinne",
   "med", 1, "Antibac",
@@ -33,13 +33,13 @@ kb = tribble(
 
 # Nivåa til dei ulike faktorane (i rett rekkjefølgje)
 niv_kjonn = kb %>%
-  filter(var_id == "kjonn") %>%
+  filter(variabel_id == "kjonn") %>%
   extract2("verditekst")
 niv_med = kb %>%
-  filter(var_id == "med") %>%
+  filter(variabel_id == "med") %>%
   extract2("verditekst")
 niv_gensp = kb %>%
-  filter(var_id == "gensp") %>%
+  filter(variabel_id == "gensp") %>%
   extract2("verditekst")
 
 # Ymse testar basert på kravspek ------------------------------------------
@@ -97,7 +97,7 @@ test_that("Variablar med faktornivå i spesiell rekkjefølgje fungerer", {
   # som skal brukast.
   d2 = tibble(pasid = 1:5, hei = c(12, 1, 100, 12, 1), alder = seq(10, 50, 10))
   kb2 = tribble(
-    ~var_id, ~verdi, ~verditekst,
+    ~variabel_id, ~verdi, ~verditekst,
     "hei", 100, "foo",
     "hei", 1, "bar",
     "hei", 12, "baz"
@@ -155,21 +155,21 @@ test_that("Åtvaring (men NA-verdi) viss datasettet inneheld verdiar som aktuell
 
 test_that("Åtvaring (men resultat) viss kodeboka ikkje inneheld *nokon* variablar som finst i datasettet", {
   kb2 = kb
-  kb2$var_id = paste0("x_", kb2$var_id)
+  kb2$variabel_id = paste0("x_", kb2$variabel_id)
 
   expect_identical(d %>% kb_fyll(kb2, kjonn), d)
   expect_warning(d %>% kb_fyll(kb2), "Kodeboka inneheld ingen variablar som finst i datasettet.")
 })
 
 test_that("Feilmelding viss kodeboka ikkje inneheld dei nødvendige kolonnane (side 10)", {
-  expect_error(d %>% kb_fyll(iris), "Ugyldig kodebok. Må ha kolonnane 'var_id', 'verdi' og 'verditekst'.")
+  expect_error(d %>% kb_fyll(iris), "Ugyldig kodebok. Må ha kolonnane 'variabel_id', 'verdi' og 'verditekst'.")
   expect_error(d %>% kb_fyll(kb[3:1]), NA) # Godta forskjellig rekkjefølgje
   expect_error(d %>% kb_fyll(cbind(x = 1:nrow(kb), kb[3:1], y = 1:nrow(kb))), NA) # Godta ekstrakolonnar
 })
 
 test_that("NA-verdiar i kodeboka vert oppdaga", {
   kb2 = kb
-  kb2$var_id[2] = NA
+  kb2$variabel_id[2] = NA
 
   kb3 = kb
   kb3$verdi[2] = NA
@@ -177,7 +177,7 @@ test_that("NA-verdiar i kodeboka vert oppdaga", {
   kb4 = kb
   kb4$verditekst[2] = NA
 
-  expect_error(d %>% kb_fyll(kb2), "Ugyldig kodebok. Kolonnen 'var_id' har NA-verdi(ar).")
+  expect_error(d %>% kb_fyll(kb2), "Ugyldig kodebok. Kolonnen 'variabel_id' har NA-verdi(ar).")
   expect_error(d %>% kb_fyll(kb3), "Ugyldig kodebok. Kolonnen 'verdi' har NA-verdi(ar).")
   expect_error(d %>% kb_fyll(kb4), "Ugyldig kodebok. Kolonnen 'verditekst' har NA-verdi(ar).")
 })
@@ -203,12 +203,12 @@ test_that("Dupliserte verdiar i kodeboka vert oppdaga", {
 
 test_that("Kodebokkolonnar lagra som faktorar vert oppdaga (og straffa!)", {
   kb2 = kb3 = kb4 = kb5 = kb
-  kb2$var_id = factor(kb2$var_id)
+  kb2$variabel_id = factor(kb2$variabel_id)
   kb3$verdi = factor(kb3$verdi)
   kb4$verditekst = factor(kb4$verditekst)
   kb5$foo = factor("test") # Ekstrakolonne, som det er uproblematisk at er faktor
 
-  expect_error(d %>% kb_fyll(kb2), "Ugyldig kodebok. Kolonnen 'var_id' er faktor.")
+  expect_error(d %>% kb_fyll(kb2), "Ugyldig kodebok. Kolonnen 'variabel_id' er faktor.")
   expect_error(d %>% kb_fyll(kb3), "Ugyldig kodebok. Kolonnen 'verdi' er faktor.")
   expect_error(d %>% kb_fyll(kb4), "Ugyldig kodebok. Kolonnen 'verditekst' er faktor.")
   expect_error(d %>% kb_fyll(kb5), NA) # Skal ikkje gje åtvaring

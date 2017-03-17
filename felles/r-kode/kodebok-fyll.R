@@ -23,7 +23,7 @@ d = tribble(
 
 # Eksempelkodebok
 kb = tribble(
-  ~var_id, ~verdi, ~verditekst,
+  ~variabel_id, ~verdi, ~verditekst,
   "kjonn", 1, "mann",
   "kjonn", 2, "kvinne",
   "med", 1, "Antibac",
@@ -47,7 +47,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
   vnamn_d = names(arg) # Namn i datasettet
   # Viss ein ikkje har valt variablar, bruk alle som finst i kodeboka
   if (length(vnamn_d) == 0) {
-    vnamn_d = intersect(names(df), kb$var_id)
+    vnamn_d = intersect(names(df), kb$variabel_id)
     vnamn_kb = vnamn_d # Tilsvarande namn i kodeboka
   } else {
     vnamn_kb = map_chr(arg, as.character) # Tilsvarande namn i kodeboka
@@ -60,7 +60,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
   lag_liste = function(x) {
     str_c("'", x, "'", collapse = ", ")
   } # Kjed saman tekststrengar
-  berre_kb = setdiff(vnamn_kb, kb$var_id)
+  berre_kb = setdiff(vnamn_kb, kb$variabel_id)
   n_feil = length(berre_kb)
   if (n_feil > 0) {
     stop(str_c(
@@ -77,7 +77,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
 
     # Delen av kodeboka som gjeld den aktuelle variabelen
     koder = kb %>%
-      filter(var_id %in% vnamn_kb[i])
+      filter(variabel_id %in% vnamn_kb[i])
 
     # Det nye namnet på variabelen
     nytt_namn = str_c(vnamn_d[i], .suffiks)
