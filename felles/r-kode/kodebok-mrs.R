@@ -12,6 +12,7 @@ library(dplyr) # Datamassering
 library(tibble) # Fornuftig datarammestruktur
 library(stringr) # Tekstmassering
 library(magrittr) # Funksjonar som kan brukast med røyr-operatoren
+library(readr) # For innlesing av CSV-filer
 
 
 
@@ -50,15 +51,26 @@ kb_mrs_til_standard = function(d) {
   }
 
   # Lag dataramme med i utgangspunktet éi rad for kvar variabel
+  # Variabelnamna brukt i datadumpen finn me:
+  #   – Ikkje i kolonnen Datadumpnavn (det hadde vore for enkelt og logisk)
+  #   – Ikkje i kolonnen Feltnavn (ditto)
+  #   – Ikkje direkte i kolonnen Variabelnavn (ditto)
+  # Men:
+  #   Etter det *siste* punktumet (om dette eksisterer) i kolonnen Variabelnavn
+  #   i den første rada i eit sett med rader som omhandlar ein variabel, og der
+  #   settet begynner med ein ikkje-tom verdi i kolonnen som heiter Feltnavn.
+  #
+  # Å finna dei andre verdiane (for eksempel kodar og kodetekst) gjer ein på
+  # tilsvarande vanskelege måtar
   kodebok_utg = tibble(
-    # dd_id = d$DataDumpnavn[ind_nyvar],     # Datadumpnamn (teit)
-    variabel_id = d$Variabelnavn[ind_nyvar], # Variabel-ID (OK)
-    variabeletikett = d$Feltnavn[ind_nyvar], # Berre forklaring for *enkelte* variablar, men …
+    # dd_id = d$DataDumpnavn[ind_nyvar],     # Datadumpnamn (vert ikkje brukt til noko)
+    variabel_id = d$Variabelnavn[ind_nyvar] %>% str_replace(".*\\.", ""),
+    variabeletikett = d$Feltnavn[ind_nyvar], # Berre forklaring for *enkelte* variablar, men er det beste me har …
     variabeltype = vartype_mrs_standard$type_standard[
       match(d$Felttype[ind_nyvar], vartype_mrs_standard$type_mrs)
     ],
     obligatorisk = str_to_lower(d$Obligatorisk[ind_nyvar]),
-    # skjema = d$Skjema[ind_nyvar], #skjematype
+    # skjema_id = d$Skjema[ind_nyvar], # Ventar spent på at denne skal dukka opp (førespurnad er send)
     verdi = NA_integer_, # Føreset førbels at MRS-kodane alltid er tal (gjer om til tekst om dette ikkje stemmer)
     verdi_tekst = NA_character_
   )
@@ -95,14 +107,105 @@ kb_mrs_til_standard = function(d) {
 
 
 
+# Les datadump frå MRS-register -------------------------------------------
+
+# Bruk oppgitt kodebok til å henta inn data frå
+# MRS-fil slik at variablane får rett format
+# (tal, tekst, dato osv.)
+# Argument:
+#   adresse: adressa til datafila (med norske/teite variabelnamn)
+#        kb: standardisert kodebok
+les_dd_mrs = function(adresse, kb) {
+  # Les inn variabelnamna i datafila
+  varnamn_fil = scan(adresse,
+    fileEncoding = "UTF-8-BOM", what = "character",
+    sep = ";", nlines = 1, quiet = TRUE
+  ) %>%
+    str_replace("^\"", "") %>%
+    str_replace("\"$", "")
+
+  # Hent ut første linje frå kodeboka, dvs. den linja som
+  # inneheld aktuell informasjon
+  kb_info = kb %>%
+    distinct(variabel_id, .keep_all = TRUE)
+
+  # Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
+  spek_csv_mrs = tribble(
+    ~variabeltype, ~csv_bokstav,
+    "kategorisk", "n",
+    "tekst", "c",
+    "boolsk", "c", # Sjå konvertering nedanfor
+    "dato_kl", "c", # Mellombels, jf. https://github.com/tidyverse/readr/issues/642 (fixme til "T" når denne er fiksa)
+    "numerisk", "d"
+  )
+  spek_innlesing = tibble(variabel_id = varnamn_fil) %>%
+    left_join(kb_info, by = "variabel_id") %>%
+    left_join(spek_csv_mrs, by = "variabeltype")
+
+  # Er det nokon variablar me manglar metadata for?
+  manglar_metadata = is.na(spek_innlesing$csv_bokstav)
+  if (any(manglar_metadata)) {
+    warning(
+      "Manglar metadata for desse variablane (dei vert derfor handterte som tekst):\n",
+      str_c(spek_innlesing$variabel_id[manglar_metadata], collapse = "\n")
+    )
+    spek_innlesing$csv_bokstav[is.na(spek_innlesing$csv_bokstav)] = "c"
+  }
+
+  # Les inn datasettet
+  kol_typar = str_c(spek_innlesing$csv_bokstav, collapse = "")
+  d = read_delim(adresse,
+    delim = ";", quote = "\"", trim_ws = FALSE,
+    na = "", col_types = kol_typar,
+    locale = locale(
+      decimal_mark = ",", grouping_mark = "",
+      date_format = "%d.%m.%Y", time_format = "%H:%M:%S"
+    )
+  )
+  # Fila har (ved ein feil) ekstra semikolon på slutten, som fører
+  # til ekstra kolonne. Fjern denne
+  spek_innlesing$variabel_id
+  if (tail(varnamn_fil, 1) == "") {
+    d = d[, -ncol(d)]
+  }
+  # På grunn av UTF-8-BOM-problem, bruk dei tidlegare innehenta variabelnamna
+  # Fixme: Skal ikkje vera nødvendig i neste versjon av readr (dvs. versjon > 1.0.0):
+  # https://github.com/tidyverse/readr/issues/500
+  names(d) = varnamn_fil[seq_along(names(d))]
+
+  # Gjer om boolske variablar til ekte boolske variablar
+  mrs_boolsk_til_boolsk = function(x) {
+    ifelse(x == "True", TRUE, ifelse(x == "False", FALSE, NA))
+  }
+  boolsk_ind = which(spek_innlesing$variabeltype == "boolsk")
+  d[, boolsk_ind] = lapply(d[, boolsk_ind], mrs_boolsk_til_boolsk)
+
+  # Gjer om tidsvariablar til ekte tidsvariablar
+  # Fixme: Nødvendig pga. https://github.com/tidyverse/readr/issues/642
+  #        Fjern når denne feilen er fiksa (rett då òg fixme-en
+  #        lenger oppe som også handlar om dette)
+  dt_ind = which(spek_innlesing$variabeltype == "dato_kl")
+  d[, dt_ind] = lapply(d[, dt_ind], parse_datetime, format = "%d.%m.%Y %H:%M:%S")
+
+  # Returner datasettet
+  d
+}
+
+
+
 # Eksempel  -----------------------------------------------------------
 
 # # Les inn eksempeldata
-# mappe = "***FJERNA-ADRESSE***"
-# filnamn = "Kodebok NIR.xlsx"
-# adresse = paste0(mappe, filnamn)
-#
-# # Les inn (ei fane i) Excel-kodeboka
-# kb_mrs = read_excel(adresse, sheet = 1)
-# kb = kb_mrs_til_standard(kb_mrs)
-# View(kb)
+mappe = "***FJERNA-ADRESSE***"
+filnamn_kb = "Kodebok NorArtritt-fiksa.xlsx"
+ark_kb = "Inklusjonskjema. Skjemaversjon "
+filnamn_dd = "datadumper\\Jan 2017\\DataDump_Inklusjonskjema_2017-01-10.csv"
+adresse_kb = paste0(mappe, filnamn_kb)
+adresse_dd = paste0(mappe, filnamn_dd)
+
+# Les inn (ei fane i) Excel-kodeboka
+kb_mrs = read_excel(adresse_kb, sheet = ark_kb)
+kb_standard = kb_mrs_til_standard(kb_mrs)
+
+# Les inn datadump
+d = les_dd_mrs(adresse_dd, kb_standard)
