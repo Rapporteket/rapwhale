@@ -155,23 +155,19 @@ les_dd_mrs = function(adresse, kb) {
   # Les inn datasettet
   kol_typar = str_c(spek_innlesing$csv_bokstav, collapse = "")
   d = read_delim(adresse,
-    delim = ";", quote = "\"", trim_ws = FALSE,
-    na = "", col_types = kol_typar,
+    delim = ";", quote = "\"", trim_ws = FALSE, na = "",
+    col_names = varnamn_fil, col_types = kol_typar, skip = 1, # Hopp over overskriftsrada
     locale = locale(
       decimal_mark = ",", grouping_mark = "",
       date_format = "%d.%m.%Y", time_format = "%H:%M:%S"
     )
   )
-  # Fila har (ved ein feil) ekstra semikolon på slutten, som fører
-  # til ekstra kolonne. Fjern denne
-  spek_innlesing$variabel_id
-  if (tail(varnamn_fil, 1) == "") {
-    d = d[, -ncol(d)]
-  }
+
   # På grunn av UTF-8-BOM-problem, bruk dei tidlegare innehenta variabelnamna
+  # (Endrar i praksis berre namn på den første variabelen.)
   # Fixme: Skal ikkje vera nødvendig i neste versjon av readr (dvs. versjon > 1.0.0):
   # https://github.com/tidyverse/readr/issues/500
-  names(d) = varnamn_fil[seq_along(names(d))]
+  names(d) = varnamn_fil
 
   # Gjer om boolske variablar til ekte boolske variablar
   mrs_boolsk_til_boolsk = function(x) {
@@ -187,6 +183,11 @@ les_dd_mrs = function(adresse, kb) {
   dt_ind = which(spek_innlesing$variabeltype == "dato_kl")
   d[, dt_ind] = lapply(d[, dt_ind], parse_datetime, format = "%d.%m.%Y %H:%M:%S")
 
+  # Fila har (ved ein feil) ekstra semikolon på slutten, som fører
+  # til ekstra kolonne som har tomt namn. Fjern denne kolonnen.
+  # Fixme: Få HEMIT til å fiksa problemet i fila
+  d[names(d) == ""] = NULL # Må gjerast slik (d$`` og d[[""]] funkar ikkje)
+
   # Returner datasettet
   d
 }
@@ -196,16 +197,16 @@ les_dd_mrs = function(adresse, kb) {
 # Eksempel  -----------------------------------------------------------
 
 # # Les inn eksempeldata
-mappe = "***FJERNA-ADRESSE***"
-filnamn_kb = "Kodebok NorArtritt-fiksa.xlsx"
-ark_kb = "Inklusjonskjema. Skjemaversjon "
-filnamn_dd = "datadumper\\Jan 2017\\DataDump_Inklusjonskjema_2017-01-10.csv"
-adresse_kb = paste0(mappe, filnamn_kb)
-adresse_dd = paste0(mappe, filnamn_dd)
-
-# Les inn (ei fane i) Excel-kodeboka
-kb_mrs = read_excel(adresse_kb, sheet = ark_kb)
-kb_standard = kb_mrs_til_standard(kb_mrs)
-
-# Les inn datadump
-d = les_dd_mrs(adresse_dd, kb_standard)
+# mappe = "***FJERNA-ADRESSE***"
+# filnamn_kb = "Kodebok NorArtritt-fiksa.xlsx"
+# ark_kb = "Inklusjonskjema. Skjemaversjon "
+# filnamn_dd = "datadumper\\Jan 2017\\DataDump_Inklusjonskjema_2017-01-10.csv"
+# adresse_kb = paste0(mappe, filnamn_kb)
+# adresse_dd = paste0(mappe, filnamn_dd)
+#
+# # Les inn (ei fane i) Excel-kodeboka
+# kb_mrs = read_excel(adresse_kb, sheet = ark_kb)
+# kb_standard = kb_mrs_til_standard(kb_mrs)
+#
+# # Les inn datadump
+# d = les_dd_mrs(adresse_dd, kb_standard)
