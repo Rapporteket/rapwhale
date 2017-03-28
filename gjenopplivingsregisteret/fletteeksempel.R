@@ -12,9 +12,6 @@ library(readxl)
 library(lubridate)
 library(purrr)
 
-# Aktuell dato me skal sjå på filer frå
-kjeldefil = "2016-12-31\\Rapport_Utstein_2016.xlsx"
-
 # Mapper for datafilene
 mappe_nokkel = "***FJERNA-ADRESSE***"
 mappe_prehosp = str_c(mappe_nokkel, "Prehospitalt\\")
@@ -29,14 +26,16 @@ namn_amis = c(
   "AMIS", "AMISNUMMER", "Amisnummer", "AMISNUMMER ", "AMIS ",
   "Amisnummer "
 )
-namn_fnr = c("Fødselsnummer", "fødselsnummer", "F.nr")
+namn_fnr = c("Fødselsnummer", "fødselsnummer", "F.nr", "foedselsnr")
 namn_dato = c(
   "DATO/KLOKKEN ", "HENVENDELSE MOTTATT AMK ", "AMBULANSEPERSONELL FREMME PÅ BESTEMMELSESSTED ",
   "DATO ", "DATO/KLOKKEN HVIS JA ", "Dato / tid for hendelse ",
   "Amb. alarmert om stans ", "Dato / tid henv. AMK ", "Dato/tid HLR startet ",
   "Tidspunkt HLR avsluttet ", "Dato/tid ankomst sykehus ", "Dato/tid vedvarende ROSC ",
   "Dato / tid amb. fremme på bestemmelsessted ", "Dato/tid aktiv nedkjøling ",
-  "Dato/tid startet "
+  "Dato/tid startet ", "dato", "datoklokken", "henvendelsemottattamk", "ambulansepersonellfremmepÅbes",
+  "datoklokkenhvisja", "ag", "ak", "aq", "stansdato", "stansdato_d",
+  "morstid", "utskrevet_dato", "sign_dato", "prosedyredato"
 )
 
 
@@ -208,8 +207,6 @@ fnr_foresla = function(x) {
 
 # Innlesing av filer ------------------------------------------------------
 
-
-
 # Les inn den eksisterande vaskefila
 # (Lagar funksjon sidan me skal gjera
 # dette fleire gongar)
@@ -218,7 +215,7 @@ les_vaskefil = function(adresse) {
     col_types = cols(
       kjeldefil = col_character(),
       amisnr = col_character(),
-      dato_stans = col_datetime(),
+      dato = col_datetime(),
       fnr_orig = col_character(),
       fnr_vaska = col_character()
     ), trim_ws = FALSE
@@ -289,7 +286,7 @@ les_amisdata = function(adresse_kjelde) {
   # Ser so på AMIS-nummer
   d_amis_amisnr = d_amis[which(names(d_amis) %in% namn_amis)]
   stopifnot(ncol(d_amis_amisnr) > 0)
-  res_amisnr = d_amis_amisnr[[1]] # Bruk første kolonne (i tilfelle det er fleire)
+  res_amisnr = as.character(d_amis_amisnr[[1]]) # Bruk første kolonne (i tilfelle det er fleire)
 
   # Ser so på fødselsnummer
   d_amis_fnr = d_amis[which(names(d_amis) %in% namn_fnr)]
@@ -298,11 +295,15 @@ les_amisdata = function(adresse_kjelde) {
 
   # Lagar dataramme med dei relevante variablane
   res = tibble(
-    kjeldefil = kjeldefil,
+    kjeldefil = filnamn_kjelde,
     amisnr = res_amisnr,
     dato = res_dato,
-    fnr = res_fnr
+    fnr_orig = res_fnr
   )
+
+  # Sorter etter dato
+  res = res %>%
+    arrange(dato)
 
   # Sjekk at det ikkje finst dupliserte/manglande/tomme AMIS-nummer
   if (anyDuplicated(res$amisnr) || any(is.na(res$amisnr)) || any(res$amisnr == "")) {
@@ -316,7 +317,18 @@ les_amisdata = function(adresse_kjelde) {
 # Les AMIS-data frå alle Excel-filene
 d_amis = eksport_filadresser %>%
   map_df(les_amisdata)
-# adresse_kjelde=eksport_filadresser[2]
+
+# Fjern eventuelle pasientar som er med i fleire nummer
+d_amis = d_amis %>%
+  distinct(amisnr, .keep_all = TRUE)
+
+# Nokre pasientar går igjen fleire gongar
+# (pluss at ein periode ser ut til å mangla pasientar heilt)
+plot(d_amis$dato)
+d_amis2 = d_amis %>%
+  filter(!is.na(fnr_orig))
+d_amis2[duplicated(d_amis2$fnr_orig), ]
+
 
 
 # Legg nye data til vaskefila ---------------------------------------------
@@ -336,7 +348,7 @@ d_amis = d_amis %>%
     fnr_vaska = ifelse(fnr_er_gyldig(fnr_rep), fnr_rep, NA_character_)
   ) %>%
   select(-fnr_rep) %>%
-  arrange(desc(fnr_vaska), desc(nchar(fnr_orig)))
+  arrange(kjeldefil, desc(fnr_vaska), desc(nchar(fnr_orig)))
 # Formaterer strengar som "" i staden for NA sidan
 # det vert finast / lettast å redigera i utfila
 
@@ -351,7 +363,7 @@ d_vask_oppdatert = d_vask %>%
 
 # Ta reservekopi av den gamle vaskefila
 filnamn_reskopi = str_c("reskopi-", format(Sys.time(), format = "%Y-%m-%d-%H-%M-%S"), ".csv")
-mappe_reskopi = str_c(mappe_nokkel, "vaskefil\\reskopi\\")
+mappe_reskopi = str_c(mappe_prehosp, "vaskefil\\reskopi\\")
 adresse_reskopi = str_c(mappe_reskopi, filnamn_reskopi)
 file.copy(adresse_vaskefil, adresse_reskopi)
 
@@ -420,8 +432,8 @@ if (any(!fnr_ok)) {
 # overgang til sommartid (som sjølvsagt impliserer feil i
 # kjeldedata …).)
 d_load = d_load %>%
-  select(dato_stans, fnr_vaska, amisnr) %>%
-  mutate(dato_stans = format(dato_stans,
+  select(dato, fnr_vaska, amisnr) %>%
+  mutate(dato = format(dato,
     format = "%d.%m.%Y %H:%M", tz = "UTC"
   ))
 # Må ha semikolon *etter* siste felt i kvar rad,
