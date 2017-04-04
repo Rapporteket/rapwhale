@@ -15,9 +15,11 @@ library(purrr)
 # Mapper for datafilene
 mappe_nokkel = "***FJERNA-ADRESSE***"
 mappe_prehosp = str_c(mappe_nokkel, "Prehospitalt\\")
+mappe_reskopi = str_c(mappe_nokkel, "Leveranse\\koplingsfil\\reskopi\\")
 # mappe_lev = str_c("***FJERNA-ADRESSE***", dato)
-adresse_vaskefil = str_c(mappe_nokkel, "Prehospitalt\\vaskefil\\prehosp-koplingsfil.csv")
-adresse_loadfil = str_c(mappe_nokkel, "Prehospitalt\\vaskefil\\load.txt")
+adresse_vaskefil = str_c(mappe_nokkel, "Leveranse\\koplingsfil\\prehosp-koplingsfil.csv")
+adresse_loadfil = str_c(mappe_nokkel, "Leveranse\\koplingsfil\\load.txt")
+
 
 # Dei ulike namna som har blitt brukt på dei aktulle variablane
 # (AMIS-nummer, fødselsnummer og dato) i ulike utgåver av AMIS-eksporten
@@ -363,7 +365,6 @@ d_vask_oppdatert = d_vask %>%
 
 # Ta reservekopi av den gamle vaskefila
 filnamn_reskopi = str_c("reskopi-", format(Sys.time(), format = "%Y-%m-%d-%H-%M-%S"), ".csv")
-mappe_reskopi = str_c(mappe_prehosp, "vaskefil\\reskopi\\")
 adresse_reskopi = str_c(mappe_reskopi, filnamn_reskopi)
 file.copy(adresse_vaskefil, adresse_reskopi)
 
@@ -405,7 +406,7 @@ if (any(amis_dup)) {
 }
 
 # Stopp viss det manglar stansdatoar
-dato_feil = is.na(d_vask$dato_stans)
+dato_feil = is.na(d_vask$dato)
 if (any(dato_feil)) {
   stop(
     "Finst oppføringar utan stansdato. Gjeld desse AMIS-nummera:\n",
@@ -415,7 +416,7 @@ if (any(dato_feil)) {
 
 # Sjå berre på oppføringar som har vaska fødselsnummer
 d_load = d_vask %>%
-  filter(!is.na(fnr_vaska))
+  filter((fnr_vaska != "") & (!is.na(fnr_vaska)))
 
 # Sjekk at alle dei vaska, ikkje-tomme fødselsnummera er gyldige
 fnr_ok = fnr_er_gyldig(d_load$fnr_vaska)
