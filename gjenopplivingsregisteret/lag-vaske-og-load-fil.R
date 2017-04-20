@@ -241,7 +241,7 @@ les_amisdata = function(adresse_kjelde) {
     str_replace(fixed(mappe_prehosp), "")
 
   # Les inn fil med prehospitale data
-  d_amis = read_excel(adresse_kjelde)
+  d_amis = read_excel(adresse_kjelde, guess_max = 10^6, trim_ws = FALSE)
 
   # Excel lagrar datoar som tal på ein horologisk svært rar måte (sjå ?as.Date)
   # Denne konvererer tala til ekte datoar
@@ -281,8 +281,15 @@ les_amisdata = function(adresse_kjelde) {
 
   # Antar vidare at alle datovariablane er ekte tidspunktvariablar
   stopifnot(all(d_amis_dato %>% map_lgl(is.POSIXct)))
+  max_na_ok = function(x) {
+    if (all(is.na(x))) {
+      NA
+    } else {
+      max(x, na.rm = TRUE)
+    }
+  } # Som max(), men unngå åtvaring viss alle verdiane er NA
   res_dato = d_amis_dato %>%
-    apply(1, max, na.rm = TRUE) %>%
+    apply(1, max_na_ok) %>%
     as.POSIXct(tz = "UTC")
 
   # Ser so på AMIS-nummer
