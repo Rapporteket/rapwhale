@@ -73,29 +73,29 @@ kb_oqr_til_standard = function(d) {
   
 
   kodebok = d %>% 
-    mutate(skjema_id=tabell,
+    rename(skjema_id=tabell,
            skjemanamn = skjemanavn,
-           kategori=NA,
-           innleiing=NA,
            variabel_id = variabel_id,
            variabeletikett = ledetekst,
            forklaring = hjelpetekst,
            variabeltype = type,
-           eining = NA,
-           unik = NA,
-           obligatorisk = str_to_lower(obligatorisk),
            verdi = listeverdier,
            verditekst = listetekst,
-           manglande = NA,
            desimalar = desimaler,
            min = maksintervall_start_numerisk,
            maks = maksintervall_slutt_numerisk,
            min_rimeleg = normalintervall_start_numerisk,
            maks_rimeleg = normalintervall_slutt_numerisk,
-           kommentar_rimeleg = NA,
+           kommentar = kommentar) %>% 
+    mutate(kategori=NA, 
+           innleiing=NA, 
+           eining = NA, 
+           unik = NA, 
+           manglande = NA, 
+           kommentar_rimeleg = NA, 
            utrekningsformel = NA,
-           logikk = NA,
-           kommentar = kommentar)
+           logikk = NA, 
+           obligatorisk = str_to_lower(obligatorisk))
   
   # Oversikt over variabeltypar i OQR og tilhøyrande standardnamn som me brukar
   vartype_oqr_standard = tribble(
@@ -114,7 +114,10 @@ kb_oqr_til_standard = function(d) {
     "TIMESTAMP", "dato_kl"
     )
   
-
+  nye_vartypar = na.omit(setdiff(kodebok$variabeltype, vartype_oqr_standard$type_oqr))
+  if(length(nye_vartypar) > 0) {
+    stop("Kodeboka har variabeltypar me ikkje har standardnamn på: ", str_c(nye_vartypar, collapse=", "))
+  }
  kodebok 
 }
   
