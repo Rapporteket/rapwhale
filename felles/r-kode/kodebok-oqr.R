@@ -72,9 +72,8 @@ kb_oqr_til_standard = function(d) {
                "min", "maks", "min_rimeleg", "maks_rimeleg", "kommentar_rimeleg", 
                "utrekningsformel", "logikk", "kommentar")
   
-
   kodebok = d %>% 
-    rename(skjema_id=tabell,
+    mutate(skjema_id=tabell,
            skjemanamn = skjemanavn,
            variabel_id = variabel_id,
            variabeletikett = ledetekst,
@@ -87,8 +86,8 @@ kb_oqr_til_standard = function(d) {
            maks = maksintervall_slutt_numerisk,
            min_rimeleg = normalintervall_start_numerisk,
            maks_rimeleg = normalintervall_slutt_numerisk,
-           kommentar = kommentar) %>% 
-    mutate(kategori=NA, 
+           kommentar = kommentar,
+           kategori=NA, 
            innleiing=NA, 
            eining = NA, 
            unik = NA, 
@@ -96,7 +95,7 @@ kb_oqr_til_standard = function(d) {
            kommentar_rimeleg = NA, 
            utrekningsformel = NA,
            logikk = NA, 
-           obligatorisk = str_to_lower(obligatorisk))
+           obligatorisk = str_to_lower(obligatorisk)) 
   
   # Oversikt over variabeltypar i OQR og tilhøyrande standardnamn som me brukar
   vartype_oqr_standard = tribble(
@@ -130,9 +129,8 @@ kb_oqr_til_standard = function(d) {
  kodebok 
 }
   
-
-
 kb_oqr_til_standard(kb)
+
 
 
     
