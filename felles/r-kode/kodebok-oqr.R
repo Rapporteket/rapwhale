@@ -58,6 +58,7 @@ les_oqr_kb = function(kb_adresse) {
 
 kb = les_oqr_kb(kb_adresse)
 
+
 # Gjer om OQR-kodebok til kodebok på normalform
 #
 # Inndata:
@@ -118,6 +119,14 @@ kb_oqr_til_standard = function(d) {
   if(length(nye_vartypar) > 0) {
     stop("Kodeboka har variabeltypar me ikkje har standardnamn på: ", str_c(nye_vartypar, collapse=", "))
   }
+  
+  # Indeks til rader som startar ein ny variabel
+  ind_nyvar = which(!is.na(d$variabel_id))
+  
+  #Sleng de standardiserte navnene til variabeltyper på OQR-kodeboka
+  kodebok$variabeltype = vartype_oqr_standard$type_standard[
+    match(kodebok$variabeltype[ind_nyvar], vartype_oqr_standard$type_oqr)]
+  
  kodebok 
 }
   
