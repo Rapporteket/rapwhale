@@ -163,17 +163,19 @@ les_dd_oqr = function(adresse, kb) {
   kb_info = kb %>% distinct(variabel_id, .keep_all = TRUE)
   
   # Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
-  spek_csv_mrs = tribble(
+  spek_csv_oqr = tribble(
     ~variabeltype, ~csv_bokstav,
     "kategorisk", "n",
     "tekst", "c",
     "boolsk", "c",  # Sjå konvertering nedanfor
     "dato_kl", "c", # Mellombels, jf. https://github.com/tidyverse/readr/issues/642 (fixme til "T" når denne er fiksa)
-    "numerisk", "d"
+    "numerisk", "d",
+    "dato", "D",
+    "kl", "t"
   )
   spek_innlesing = tibble(variabel_id=varnamn_fil) %>% 
     left_join(kb_info, by="variabel_id") %>% 
-    left_join(spek_csv_mrs, by="variabeltype")
+    left_join(spek_csv_oqr, by="variabeltype")
   
   # Er det nokon variablar me manglar metadata for?
   manglar_metadata = is.na(spek_innlesing$csv_bokstav)
