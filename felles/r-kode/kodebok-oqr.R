@@ -65,7 +65,7 @@ kb = les_oqr_kb(kb_adresse)
 #   d: Dataramme med OQR-kodebok
 kb_oqr_til_standard = function(d) {
   
-  
+
   std_namn = c("skjema_id", "skjemanamn", "kategori", "innleiing", "variabel_id", 
                "variabeletikett", "forklaring", "variabeltype", "eining", "unik", 
                "obligatorisk", "verdi", "verditekst", "manglande", "desimalar", 
@@ -129,11 +129,94 @@ kb_oqr_til_standard = function(d) {
   
  kodebok 
 }
-  
+
+# sjekk at koden virker  
 kb_oqr_til_standard(kb)
 
 
 
+# Les datadump frå OQR-register -------------------------------------------
+
+# henter eksempel data fra smertereg
+
+dd_adresse = "***FJERNA-ADRESSE***"
+
+# skal vi ta med kolonnespecen til denne?
+d = read_delim(dd_adresse, delim = ";", quote="\"")
+
+
+# Bruk oppgitt kodebok til å henta inn data frå
+# OQR-fil slik at variablane får rett format
+# (tal, tekst, dato osv.)
+# Argument:
+#   adresse: adressa til datafila (med norske/teite variabelnamn)
+#        kb: standardisert kodebok
+
+les_dd_oqr = function(adresse, kb) {
+  # Les inn variabelnamna i datafila
+  varnamn_fil = scan(adresse, fileEncoding="UTF-8-BOM", what = "character",
+                     sep=";", nlines = 1, quiet=TRUE) %>% 
+    str_replace("^\"", "") %>% str_replace("\"$", "")
+  
+  # Hent ut første linje frå kodeboka, dvs. den linja som
+  # inneheld aktuell informasjon
+  kb_info = kb %>% distinct(variabel_id, .keep_all = TRUE)
+  
+  # Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
+  spek_csv_mrs = tribble(
+    ~variabeltype, ~csv_bokstav,
+    "kategorisk", "n",
+    "tekst", "c",
+    "boolsk", "c",  # Sjå konvertering nedanfor
+    "dato_kl", "c", # Mellombels, jf. https://github.com/tidyverse/readr/issues/642 (fixme til "T" når denne er fiksa)
+    "numerisk", "d"
+  )
+  spek_innlesing = tibble(variabel_id=varnamn_fil) %>% 
+    left_join(kb_info, by="variabel_id") %>% 
+    left_join(spek_csv_mrs, by="variabeltype")
+  
+  # Er det nokon variablar me manglar metadata for?
+  manglar_metadata = is.na(spek_innlesing$csv_bokstav)
+  if(any(manglar_metadata)) {
+    warning("Manglar metadata for desse variablane (dei vert derfor handterte som tekst):\n",
+            str_c(spek_innlesing$variabel_id[manglar_metadata], collapse="\n"))
+    spek_innlesing$csv_bokstav[is.na(spek_innlesing$csv_bokstav)]="c"
+  }
+  
+  # Les inn datasettet
+  kol_typar = str_c(spek_innlesing$csv_bokstav, collapse="")
+  d = read_delim(adresse,
+                 delim=";", quote="\"", trim_ws = FALSE, na="",
+                 col_names=varnamn_fil, col_types = kol_typar, skip=1, # Hopp over overskriftsrada
+                 locale = locale(decimal_mark = ",", grouping_mark="",
+                                 date_format="%d.%m.%Y", time_format="%H:%M:%S"))
+  
+  # På grunn av UTF-8-BOM-problem, bruk dei tidlegare innehenta variabelnamna
+  # (Endrar i praksis berre namn på den første variabelen.)
+  # Fixme: Skal ikkje vera nødvendig i neste versjon av readr (dvs. versjon > 1.0.0):
+  # https://github.com/tidyverse/readr/issues/500
+  names(d) = varnamn_fil
+  
+  # Gjer om boolske variablar til ekte boolske variablar
+  mrs_boolsk_til_boolsk = function(x) ifelse(x=="True", TRUE, ifelse(x=="False", FALSE, NA))
+  boolsk_ind = which(spek_innlesing$variabeltype == "boolsk")
+  d[, boolsk_ind] = lapply(d[, boolsk_ind], mrs_boolsk_til_boolsk)
+  
+  # Gjer om tidsvariablar til ekte tidsvariablar
+  # Fixme: Nødvendig pga. https://github.com/tidyverse/readr/issues/642
+  #        Fjern når denne feilen er fiksa (rett då òg fixme-en
+  #        lenger oppe som også handlar om dette)
+  dt_ind = which(spek_innlesing$variabeltype == "dato_kl")
+  d[, dt_ind] = lapply(d[, dt_ind], parse_datetime, format = "%d.%m.%Y %H:%M:%S")
+  
+  # Fila har (ved ein feil) ekstra semikolon på slutten, som fører
+  # til ekstra kolonne som har tomt namn. Fjern denne kolonnen.
+  # Fixme: Få HEMIT til å fiksa problemet i fila
+  d[names(d) == ""] = NULL # Må gjerast slik (d$`` og d[[""]] funkar ikkje)
+  
+  # Returner datasettet
+  d
+}
     
   skjema_id	skjemanamn	kategori	innleiing	variabel_id	variabeletikett	forklaring	variabeltype	eining	unik	obligatorisk	verdi	verditekst	manglande	desimalar	min	maks	min_rimeleg	maks_rimeleg	kommentar_rimeleg	utrekningsformel	logikk	kommentar
   
