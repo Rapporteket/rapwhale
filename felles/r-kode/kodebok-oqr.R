@@ -75,7 +75,7 @@ kb_oqr_til_standard = function(d) {
   kodebok = d %>% 
     mutate(skjema_id=tabell,
            skjemanamn = skjemanavn,
-           variabel_id = variabel_id,
+           engelsk_oqr_variabel_id = variabel_id,
            variabeletikett = ledetekst,
            forklaring = hjelpetekst,
            variabeltype = type,
@@ -95,8 +95,9 @@ kb_oqr_til_standard = function(d) {
            kommentar_rimeleg = NA, 
            utrekningsformel = NA,
            logikk = NA, 
-           obligatorisk = str_to_lower(obligatorisk)) 
-  
+           obligatorisk = str_to_lower(obligatorisk),
+           variabel_id = str_to_lower(engelsk_oqr_variabel_id))
+
   # Oversikt over variabeltypar i OQR og tilhøyrande standardnamn som me brukar
   vartype_oqr_standard = tribble(
     ~type_oqr, ~type_standard,
