@@ -7,56 +7,57 @@
 options(stringsAsFactors = FALSE)
 
 # Nødvendige pakkar
-library(dplyr)    # Datamassering
-library(tibble)   # Fornuftig datarammestruktur
-library(stringr)  # Tekstmassering
+library(dplyr) # Datamassering
+library(tibble) # Fornuftig datarammestruktur
+library(stringr) # Tekstmassering
 library(magrittr) # Funksjonar som kan brukast med røyr-operatoren
-library(readr)    # For innlesing av CSV-filer
+library(readr) # For innlesing av CSV-filer
 
 # Lag standardisert kodebok -----------------------------------------------
 
 
-#Hent inn OQR fil som eksempel
+# Hent inn OQR fil som eksempel
 
-#Adressen til kodeboka
+# Adressen til kodeboka
 kb_adresse = "***FJERNA-ADRESSE***"
 
 les_oqr_kb = function(kb_adresse) {
-  kb = read_delim(kb_adresse, 
-                  delim = ";", quote="\"",
-    col_types=cols(
-    skjemanavn = col_character(),
-    navn_i_rapporteket = col_character(),
-    ledetekst = col_character(),
-    obligatorisk = col_character(),
-    type = col_character(),
-    listeverdier = col_character(),
-    listetekst = col_character(),
-    normalintervall_start_numerisk = col_integer(),
-    normalintervall_slutt_numerisk = col_integer(),
-    maksintervall_start_numerisk = col_integer(),
-    maksintervall_slutt_numerisk = col_integer(),
-    normalintervall_start_dato = col_character(),
-    normalintervall_slutt_dato = col_character(),
-    maksintervall_start_dato = col_character(),
-    maksintervall_slutt_dato = col_character(),
-    antall_tegn = col_integer(),
-    lovlige_tegn = col_character(),
-    desimaler = col_integer(),
-    aktiveringsspoersmaal = col_character(),
-    underspoersmaal = col_character(),
-    innfoert_dato = col_character(),
-    utfaset_dato = col_character(),
-    tabell = col_character(),
-    fysisk_feltnavn = col_character(),
-    kommentar = col_character(),
-    variabel_id = col_character(),
-    hjelpetekst = col_character()
-  ))
+  kb = read_delim(kb_adresse,
+    delim = ";", quote = "\"",
+    col_types = cols(
+      skjemanavn = col_character(),
+      navn_i_rapporteket = col_character(),
+      ledetekst = col_character(),
+      obligatorisk = col_character(),
+      type = col_character(),
+      listeverdier = col_character(),
+      listetekst = col_character(),
+      normalintervall_start_numerisk = col_integer(),
+      normalintervall_slutt_numerisk = col_integer(),
+      maksintervall_start_numerisk = col_integer(),
+      maksintervall_slutt_numerisk = col_integer(),
+      normalintervall_start_dato = col_character(),
+      normalintervall_slutt_dato = col_character(),
+      maksintervall_start_dato = col_character(),
+      maksintervall_slutt_dato = col_character(),
+      antall_tegn = col_integer(),
+      lovlige_tegn = col_character(),
+      desimaler = col_integer(),
+      aktiveringsspoersmaal = col_character(),
+      underspoersmaal = col_character(),
+      innfoert_dato = col_character(),
+      utfaset_dato = col_character(),
+      tabell = col_character(),
+      fysisk_feltnavn = col_character(),
+      kommentar = col_character(),
+      variabel_id = col_character(),
+      hjelpetekst = col_character()
+    )
+  )
   kb
 }
 
-kb = les_oqr_kb(kb_adresse)
+kb_orig = les_oqr_kb(kb_adresse)
 
 
 # Gjer om OQR-kodebok til kodebok på normalform
@@ -64,34 +65,37 @@ kb = les_oqr_kb(kb_adresse)
 # Inndata:
 #   d: Dataramme med OQR-kodebok
 kb_oqr_til_standard = function(d) {
-  
-# legg inn de standardiserte navnene på variablene
-  
-  kodebok = d %>% 
-    mutate(skjema_id=tabell,
-           skjemanamn = skjemanavn,
-           engelsk_oqr_variabel_id = variabel_id,
-           variabeletikett = ledetekst,
-           forklaring = hjelpetekst,
-           variabeltype = type,
-           verdi = listeverdier,
-           verditekst = listetekst,
-           desimalar = desimaler,
-           min = maksintervall_start_numerisk,
-           maks = maksintervall_slutt_numerisk,
-           min_rimeleg = normalintervall_start_numerisk,
-           maks_rimeleg = normalintervall_slutt_numerisk,
-           kommentar = kommentar,
-           kategori=NA, 
-           innleiing=NA, 
-           eining = NA, 
-           unik = NA, 
-           manglande = NA, 
-           kommentar_rimeleg = NA, 
-           utrekningsformel = NA,
-           logikk = NA, 
-           obligatorisk = str_to_lower(obligatorisk),
-           variabel_id = str_to_lower(engelsk_oqr_variabel_id))
+
+  # legg inn de standardiserte navnene på variablene
+
+  kodebok = d %>%
+    mutate(
+      skjema_id = tabell,
+      skjemanamn = skjemanavn,
+      oqr_variabel_id_norsk = navn_i_rapporteket,
+      oqr_variabel_id_engelsk = variabel_id,
+      variabeletikett = ledetekst,
+      forklaring = hjelpetekst,
+      variabeltype = type,
+      verdi = listeverdier,
+      verditekst = listetekst,
+      desimalar = desimaler,
+      min = maksintervall_start_numerisk,
+      maks = maksintervall_slutt_numerisk,
+      min_rimeleg = normalintervall_start_numerisk,
+      maks_rimeleg = normalintervall_slutt_numerisk,
+      kommentar = kommentar,
+      kategori = NA,
+      innleiing = NA,
+      eining = NA,
+      unik = NA,
+      manglande = NA,
+      kommentar_rimeleg = NA,
+      utrekningsformel = NA,
+      logikk = NA,
+      obligatorisk = str_to_lower(obligatorisk),
+      variabel_id = str_to_lower(variabel_id)
+    )
 
   # Oversikt over variabeltypar i OQR og tilhøyrande standardnamn som me brukar
   vartype_oqr_standard = tribble(
@@ -108,38 +112,38 @@ kb_oqr_til_standard = function(d) {
     "Tidsvariabel", "kl",
     "TidsvariabelMangler", "kl",
     "TIMESTAMP", "dato_kl"
-    )
-  
+  )
+
   # test som stopper om kodeboka har en variabeltype vi ikke har tatt høyde for
   nye_vartypar = na.omit(setdiff(kodebok$variabeltype, vartype_oqr_standard$type_oqr))
-  if(length(nye_vartypar) > 0) {
-    stop("Kodeboka har variabeltypar me ikkje har standardnamn på: ", str_c(nye_vartypar, collapse=", "))
+  if (length(nye_vartypar) > 0) {
+    stop("Kodeboka har variabeltypar me ikkje har standardnamn på: ", str_c(nye_vartypar, collapse = ", "))
   }
-  
+
   # Indeks til rader som startar ein ny variabel
   ind_nyvar = which(!is.na(d$variabel_id))
-  
-  #Sleng de standardiserte navnene til variabeltyper på OQR-kodeboka
+
+  # Sleng de standardiserte navnene til variabeltyper på OQR-kodeboka
   kodebok$variabeltype = vartype_oqr_standard$type_standard[
-    match(kodebok$variabeltype[ind_nyvar], vartype_oqr_standard$type_oqr)]
-  
-  #ta bare med de variablene som vi bruker
-  
-  std_namn = c("skjema_id", "skjemanamn", "kategori", "innleiing", "variabel_id", 
-               "variabeletikett", "forklaring", "variabeltype", "eining", "unik", 
-               "obligatorisk", "verdi", "verditekst", "manglande", "desimalar", 
-               "min", "maks", "min_rimeleg", "maks_rimeleg", "kommentar_rimeleg", 
-               "utrekningsformel", "logikk", "kommentar")
-  
-  #kodebok = kodebok %>% select_(.dots=std_namn)
-  
-  
- kodebok 
+    match(kodebok$variabeltype[ind_nyvar], vartype_oqr_standard$type_oqr)
+  ]
+
+  # ta bare med de variablene som vi bruker
+
+  std_namn = c(
+    "skjema_id", "skjemanamn", "kategori", "innleiing", "variabel_id",
+    "variabeletikett", "forklaring", "variabeltype", "eining", "unik",
+    "obligatorisk", "verdi", "verditekst", "manglande", "desimalar",
+    "min", "maks", "min_rimeleg", "maks_rimeleg", "kommentar_rimeleg",
+    "utrekningsformel", "logikk", "kommentar"
+  )
+  ekstra_namn = c("oqr_variabel_id_engelsk", "oqr_variabel_id_norsk")
+
+  kodebok = kodebok %>%
+    select_(.dots = c(std_namn, ekstra_namn))
+
+  kodebok
 }
-
-# sjekk at koden virker  
-kb_oqr_til_standard(kb)
-
 
 
 # Les datadump frå OQR-register -------------------------------------------
@@ -148,12 +152,10 @@ kb_oqr_til_standard(kb)
 
 dd_adresse = "***FJERNA-ADRESSE***"
 
-# skal vi ta med kolonnespecen til denne?
-d = read_delim(dd_adresse, delim = ";", quote="\"")
+# standardiser kodebok til bruk som eksempel
 
-#standardiser kodebok til bruk som eksempel
+kb = kb_oqr_til_standard(kb_orig)
 
-kb = kb_oqr_til_standard(kb)
 
 # Bruk oppgitt kodebok til å henta inn data frå
 # OQR-fil slik at variablane får rett format
@@ -164,251 +166,105 @@ kb = kb_oqr_til_standard(kb)
 
 les_dd_oqr = function(adresse, kb) {
   # Les inn variabelnamna i datafila
-  varnamn_fil = scan(adresse, fileEncoding="UTF-8-BOM", what = "character",
-                     sep=";", nlines = 1, quiet=TRUE) %>% 
-    str_replace("^\"", "") %>% str_replace("\"$", "")
-  
-  # disse variabelnamna er ikkje dei vi brukar. 
-  # henter inn namna som vi faktisk brukar og byttar ut namna med desse
-  varnamn = kb$variabel_id[match(varnamn_fil, kb$navn_i_rapporteket)] %>%
-    coalesce(varnamn_fil) %>%
-    str_to_lower
- 
-  #fixme: variabler som finnes i datadump som ikke finnes i kodeboka
-  #varnamn_fil %in% kb$navn_i_rapporteket
- 
+  varnamn_fil = scan(adresse,
+    fileEncoding = "UTF-8", what = "character",
+    sep = ";", nlines = 1, quiet = TRUE
+  )
+
+  # disse variabelnamna er ikkje dei vi brukar.
+  # henter inn namna som vi faktisk brukar
+  varnamn = kb$variabel_id[match(varnamn_fil, kb$oqr_variabel_id_norsk)] %>%
+    coalesce(varnamn_fil)
+
+  # fixme: variabler som finnes i datadump som ikke finnes i kodeboka
+  varnamn_fil[!(varnamn_fil %in% kb$oqr_variabel_id_norsk)]
+
   # Hent ut første linje frå kodeboka, dvs. den linja som
   # inneheld aktuell informasjon
-  kb_info = kb %>% distinct(variabel_id, .keep_all = TRUE)
-  
+  kb_info = kb %>%
+    distinct(variabel_id, .keep_all = TRUE)
+
   # Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
   spek_csv_oqr = tribble(
     ~variabeltype, ~csv_bokstav,
     "kategorisk", "n",
     "tekst", "c",
-    "boolsk", "c",  # Sjå konvertering nedanfor
+    "boolsk", "c", # Sjå konvertering nedanfor
     "dato_kl", "c", # Mellombels, jf. https://github.com/tidyverse/readr/issues/642 (fixme til "T" når denne er fiksa)
     "numerisk", "d",
     "dato", "D",
     "kl", "t"
   )
-  spek_innlesing = tibble(variabel_id=varnamn) %>% 
-    left_join(kb_info, by="variabel_id") %>% 
-    left_join(spek_csv_oqr, by="variabeltype")
-  
+  spek_innlesing = tibble(variabel_id = varnamn) %>%
+    left_join(kb_info, by = "variabel_id") %>%
+    left_join(spek_csv_oqr, by = "variabeltype")
+
   # Er det nokon variablar me manglar metadata for?
   manglar_metadata = is.na(spek_innlesing$csv_bokstav)
-  if(any(manglar_metadata)) {
-    warning("Manglar metadata for desse variablane (dei vert derfor handterte som tekst):\n",
-            str_c(spek_innlesing$variabel_id[manglar_metadata], collapse="\n"))
-    spek_innlesing$csv_bokstav[is.na(spek_innlesing$csv_bokstav)]="c"
+  if (any(manglar_metadata)) {
+    warning(
+      "Manglar metadata for desse variablane (dei vert derfor handterte som tekst):\n",
+      str_c(spek_innlesing$variabel_id[manglar_metadata], collapse = "\n")
+    )
+    spek_innlesing$csv_bokstav[is.na(spek_innlesing$csv_bokstav)] = "c"
   }
-  
+
   # Les inn datasettet
-  kol_typar = str_c(spek_innlesing$csv_bokstav, collapse="")
+  kol_typar = str_c(spek_innlesing$csv_bokstav, collapse = "")
   d = read_delim(adresse,
-                 delim=";", quote="\"", trim_ws = FALSE, na="",
-                 col_names=varnamn_fil, col_types = kol_typar, skip=1, # Hopp over overskriftsrada
-                 locale = locale(decimal_mark = ",", grouping_mark="",
-                                 date_format="%d.%m.%Y", time_format="%H:%M:%S"))
-  
+    delim = ";", quote = "\"", trim_ws = FALSE, na = "null",
+    col_names = varnamn_fil, col_types = kol_typar, skip = 1, # Hopp over overskriftsrada
+    locale = locale(
+      decimal_mark = ",", grouping_mark = "",
+      date_format = "%Y-%m-%d", time_format = "%H:%M:%S"
+    )
+  )
+
   # På grunn av UTF-8-BOM-problem, bruk dei tidlegare innehenta variabelnamna
   # (Endrar i praksis berre namn på den første variabelen.)
   # Fixme: Skal ikkje vera nødvendig i neste versjon av readr (dvs. versjon > 1.0.0):
   # https://github.com/tidyverse/readr/issues/500
-  names(d) = varnamn_fil
-  
+
+  # byttar ut namna med dei med ønskje fra kodeboka
+  names(d) = varnamn
+
   # Gjer om boolske variablar til ekte boolske variablar
-  mrs_boolsk_til_boolsk = function(x) ifelse(x=="True", TRUE, ifelse(x=="False", FALSE, NA))
+  oqr_boolsk_til_boolsk = function(x) {
+    ifelse(x == "True", TRUE, ifelse(x == "False", FALSE, NA))
+  }
   boolsk_ind = which(spek_innlesing$variabeltype == "boolsk")
-  d[, boolsk_ind] = lapply(d[, boolsk_ind], mrs_boolsk_til_boolsk)
-  
+  d[, boolsk_ind] = lapply(d[, boolsk_ind], oqr_boolsk_til_boolsk)
+
   # Gjer om tidsvariablar til ekte tidsvariablar
   # Fixme: Nødvendig pga. https://github.com/tidyverse/readr/issues/642
   #        Fjern når denne feilen er fiksa (rett då òg fixme-en
   #        lenger oppe som også handlar om dette)
   dt_ind = which(spek_innlesing$variabeltype == "dato_kl")
-  d[, dt_ind] = lapply(d[, dt_ind], parse_datetime, format = "%d.%m.%Y %H:%M:%S")
-  
-  # Fila har (ved ein feil) ekstra semikolon på slutten, som fører
-  # til ekstra kolonne som har tomt namn. Fjern denne kolonnen.
-  # Fixme: Få HEMIT til å fiksa problemet i fila
-  d[names(d) == ""] = NULL # Må gjerast slik (d$`` og d[[""]] funkar ikkje)
-  
-  # Returner datasettet
-  d
-}
-    
-  skjema_id	skjemanamn	kategori	innleiing	variabel_id	variabeletikett	forklaring	variabeltype	eining	unik	obligatorisk	verdi	verditekst	manglande	desimalar	min	maks	min_rimeleg	maks_rimeleg	kommentar_rimeleg	utrekningsformel	logikk	kommentar
-  
-  
-  
-  # Kor mange kodar kvar variabel har
-  # (Merk at siste variabel ikkje vert
-  #  avløyst av ein ny variabel, og må
-  #  derfor handterast spesielt.)
-  var_nverd = diff(ind_nyvar) - 1
-  var_nverd[nvars] = nrow(d) - ind_nyvar[nvars] # Sistevariabel
-  
-  # Oversikt over variabeltypar i OQR og tilhøyrande standardnamn som me brukar
-  vartype_mrs_standard = tribble(
-    ~type_mrs, ~type_standard,
-    "Enum", "kategorisk",
-    "Text", "tekst",
-    "Avkrysning", "boolsk",
-    "Dato/Tid", "dato_kl",
-    "Id (Guid)", "tekst",
-    "Numerisk (heltall)", "numerisk",
-    "Numerisk (flyttall)", "numerisk"
-  )
-  nye_vartypar = na.omit(setdiff(d$Felttype, vartype_mrs_standard$type_mrs))
-  if(length(nye_vartypar) > 0) {
-    stop("Kodeboka har variabeltypar me ikkje har standardnamn på: ", str_c(nye_vartypar, collapse=", "))
-  }
-  
-  # Lag dataramme med i utgangspunktet éi rad for kvar variabel
-  # Variabelnamna brukt i datadumpen finn me:
-  #   – Ikkje i kolonnen Datadumpnavn (det hadde vore for enkelt og logisk)
-  #   – Ikkje i kolonnen Feltnavn (ditto)
-  #   – Ikkje direkte i kolonnen Variabelnavn (ditto)
-  # Men:
-  #   Etter det *siste* punktumet (om dette eksisterer) i kolonnen Variabelnavn
-  #   i den første rada i eit sett med rader som omhandlar ein variabel, og der
-  #   settet begynner med ein ikkje-tom verdi i kolonnen som heiter Feltnavn.
-  #
-  # Å finna dei andre verdiane (for eksempel kodar og kodetekst) gjer ein på
-  # tilsvarande vanskelege måtar
-  kodebok_utg = tibble(
-    # dd_id = d$DataDumpnavn[ind_nyvar],     # Datadumpnamn (vert ikkje brukt til noko)
-    variabel_id = d$Variabelnavn[ind_nyvar] %>% str_replace(".*\\.", ""),
-    variabeletikett = d$Feltnavn[ind_nyvar], # Berre forklaring for *enkelte* variablar, men er det beste me har …
-    variabeltype = vartype_mrs_standard$type_standard[
-      match(d$Felttype[ind_nyvar], vartype_mrs_standard$type_mrs)],
-    obligatorisk = str_to_lower(d$Obligatorisk[ind_nyvar]),
-    #skjema_id = d$Skjema[ind_nyvar], # Ventar spent på at denne skal dukka opp (førespurnad er send)
-    verdi = NA_integer_, # Føreset førbels at OQR-kodane alltid er tal (gjer om til tekst om dette ikkje stemmer)
-    verdi_tekst = NA_character_
-  )
-  
-  # Kor mange gongar kvar variabel skal gjentakast i
-  # den nye kodeboka, dvs. kor mange rader han skal oppta
-  reps = pmax(var_nverd, 1)
-  
-  # Utvid kodeboka slik at enum-variablane får fleire rader
-  kodebok = kodebok_utg[rep(1:nvars, times = reps), ]
-  
-  # Hent ut kodane og tilhøyrande tekst til alle Enum-variablane
-  enums = d %>% filter(is.na(Felttype)) %>% 
-    extract2("Variabelnavn") %>%
-    str_split_fixed(" = ", n=2)
-    
-  # Legg kodane inn i den nye kodeboka,
-  # med rett format (heiltal for kodar
-  # og tekst for kodetekst), og på rett plass
-  enum_ind = (kodebok$variabeltype=="kategorisk")
-  kodebok$verdi[enum_ind] = enums[, 1] %>% as.numeric # Kodar
-  kodebok$verdi_tekst[enum_ind] = enums[, 2]          # Tilhøyrande tekst
-  
-  # Nokre verditekstar tyder at verdien ikkje er registrert,
-  # og me markerer det i kodeboka
-  kodebok = kodebok %>% 
-    mutate(manglande = ifelse(verdi_tekst %in% c("---", "Velg verdi"), "ja", "nei"))
-  
-  # Returner standardisert kodebok
-  kodebok
-}
-
-
-
-# Les datadump frå OQR-register -------------------------------------------
-
-# Bruk oppgitt kodebok til å henta inn data frå
-# OQR-fil slik at variablane får rett format
-# (tal, tekst, dato osv.)
-# Argument:
-#   adresse: adressa til datafila (med norske/teite variabelnamn)
-#        kb: standardisert kodebok
-les_dd_mrs = function(adresse, kb) {
-  # Les inn variabelnamna i datafila
-  varnamn_fil = scan(adresse, fileEncoding="UTF-8-BOM", what = "character",
-                      sep=";", nlines = 1, quiet=TRUE) %>% 
-    str_replace("^\"", "") %>% str_replace("\"$", "")
-
-  # Hent ut første linje frå kodeboka, dvs. den linja som
-  # inneheld aktuell informasjon
-  kb_info = kb %>% distinct(variabel_id, .keep_all = TRUE)
-  
-  # Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
-  spek_csv_mrs = tribble(
-    ~variabeltype, ~csv_bokstav,
-    "kategorisk", "n",
-    "tekst", "c",
-    "boolsk", "c",  # Sjå konvertering nedanfor
-    "dato_kl", "c", # Mellombels, jf. https://github.com/tidyverse/readr/issues/642 (fixme til "T" når denne er fiksa)
-    "numerisk", "d"
-  )
-  spek_innlesing = tibble(variabel_id=varnamn_fil) %>% 
-    left_join(kb_info, by="variabel_id") %>% 
-    left_join(spek_csv_mrs, by="variabeltype")
-  
-  # Er det nokon variablar me manglar metadata for?
-  manglar_metadata = is.na(spek_innlesing$csv_bokstav)
-  if(any(manglar_metadata)) {
-    warning("Manglar metadata for desse variablane (dei vert derfor handterte som tekst):\n",
-            str_c(spek_innlesing$variabel_id[manglar_metadata], collapse="\n"))
-    spek_innlesing$csv_bokstav[is.na(spek_innlesing$csv_bokstav)]="c"
-  }
-
-  # Les inn datasettet
-  kol_typar = str_c(spek_innlesing$csv_bokstav, collapse="")
-  d = read_delim(adresse,
-                 delim=";", quote="\"", trim_ws = FALSE, na="",
-                 col_names=varnamn_fil, col_types = kol_typar, skip=1, # Hopp over overskriftsrada
-                 locale = locale(decimal_mark = ",", grouping_mark="",
-                                 date_format="%d.%m.%Y", time_format="%H:%M:%S"))
-  
-  # På grunn av UTF-8-BOM-problem, bruk dei tidlegare innehenta variabelnamna
-  # (Endrar i praksis berre namn på den første variabelen.)
-  # Fixme: Skal ikkje vera nødvendig i neste versjon av readr (dvs. versjon > 1.0.0):
-  # https://github.com/tidyverse/readr/issues/500
-  names(d) = varnamn_fil
-  
-  # Gjer om boolske variablar til ekte boolske variablar
-  mrs_boolsk_til_boolsk = function(x) ifelse(x=="True", TRUE, ifelse(x=="False", FALSE, NA))
-  boolsk_ind = which(spek_innlesing$variabeltype == "boolsk")
-  d[, boolsk_ind] = lapply(d[, boolsk_ind], mrs_boolsk_til_boolsk)
-  
-  # Gjer om tidsvariablar til ekte tidsvariablar
-  # Fixme: Nødvendig pga. https://github.com/tidyverse/readr/issues/642
-  #        Fjern når denne feilen er fiksa (rett då òg fixme-en
-  #        lenger oppe som også handlar om dette)
-  dt_ind = which(spek_innlesing$variabeltype == "dato_kl")
-  d[, dt_ind] = lapply(d[, dt_ind], parse_datetime, format = "%d.%m.%Y %H:%M:%S")
-  
-  # Fila har (ved ein feil) ekstra semikolon på slutten, som fører
-  # til ekstra kolonne som har tomt namn. Fjern denne kolonnen.
-  # Fixme: Få HEMIT til å fiksa problemet i fila
-  d[names(d) == ""] = NULL # Må gjerast slik (d$`` og d[[""]] funkar ikkje)
+  d[, dt_ind] = lapply(d[, dt_ind], parse_datetime, format = "%Y-%m-%d %H:%M:%S")
 
   # Returner datasettet
   d
 }
+
+## Les inn datadump
+dd = les_dd_oqr(dd_adresse, kb)
 
 
 
 # Eksempel  -----------------------------------------------------------
 
+dd_adresse = "***FJERNA-ADRESSE***"
+
+kb_adresse = "***FJERNA-ADRESSE***"
+
 # # Les inn eksempeldata
-# mappe = "***FJERNA-ADRESSE***"
-# filnamn_kb = "Kodebok NorArtritt-fiksa.xlsx"
-# ark_kb = "Inklusjonskjema. Skjemaversjon "
-# filnamn_dd = "datadumper\\Jan 2017\\DataDump_Inklusjonskjema_2017-01-10.csv"
-# adresse_kb = paste0(mappe, filnamn_kb)
-# adresse_dd = paste0(mappe, filnamn_dd)
-# 
-# # Les inn (ei fane i) Excel-kodeboka
-# kb_mrs = read_excel(adresse_kb, sheet = ark_kb)
-# kb_standard = kb_mrs_til_standard(kb_mrs)
-# 
+mappe_dd = "***FJERNA-ADRESSE***"
+filnamn_dd = "Datadump_Alle_variabler_numerisk.csv"
+adresse_dd = paste0(mappe_dd, filnamn_dd)
+
+# # Les inn kodeboka
+kb_oqr = les_oqr_kb(kb_adresse)
+kb_standard = kb_oqr_til_standard(kb_oqr)
+
 # # Les inn datadump
-# d = les_dd_mrs(adresse_dd, kb_standard)
+d = les_dd_oqr(adresse_dd, kb_standard)
