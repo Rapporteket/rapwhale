@@ -148,15 +148,6 @@ kb_oqr_til_standard = function(d) {
 
 # Les datadump frå OQR-register -------------------------------------------
 
-# henter eksempel data fra smertereg
-
-dd_adresse = "***FJERNA-ADRESSE***"
-
-# standardiser kodebok til bruk som eksempel
-
-kb = kb_oqr_til_standard(kb_orig)
-
-
 # Bruk oppgitt kodebok til å henta inn data frå
 # OQR-fil slik at variablane får rett format
 # (tal, tekst, dato osv.)
@@ -246,25 +237,23 @@ les_dd_oqr = function(adresse, kb) {
   d
 }
 
-## Les inn datadump
-dd = les_dd_oqr(dd_adresse, kb)
 
 
 
 # Eksempel  -----------------------------------------------------------
 
-dd_adresse = "***FJERNA-ADRESSE***"
+# dd_adresse = "***FJERNA-ADRESSE***"
 
-kb_adresse = "***FJERNA-ADRESSE***"
+# kb_adresse = "***FJERNA-ADRESSE***"
 
 # # Les inn eksempeldata
-mappe_dd = "***FJERNA-ADRESSE***"
-filnamn_dd = "Datadump_Alle_variabler_numerisk.csv"
-adresse_dd = paste0(mappe_dd, filnamn_dd)
+# mappe_dd = "***FJERNA-ADRESSE***"
+# filnamn_dd = "Datadump_Alle_variabler_numerisk.csv"
+# adresse_dd = paste0(mappe_dd, filnamn_dd)
 
 # # Les inn kodeboka
-kb_oqr = les_oqr_kb(kb_adresse)
-kb_standard = kb_oqr_til_standard(kb_oqr)
+# kb_oqr = les_oqr_kb(kb_adresse)
+# kb_standard = kb_oqr_til_standard(kb_oqr)
 
 # # Les inn datadump
-d = les_dd_oqr(adresse_dd, kb_standard)
+# d = les_dd_oqr(adresse_dd, kb_standard)
