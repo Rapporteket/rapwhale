@@ -65,12 +65,7 @@ kb = les_oqr_kb(kb_adresse)
 #   d: Dataramme med OQR-kodebok
 kb_oqr_til_standard = function(d) {
   
-
-  std_namn = c("skjema_id", "skjemanamn", "kategori", "innleiing", "variabel_id", 
-               "variabeletikett", "forklaring", "variabeltype", "eining", "unik", 
-               "obligatorisk", "verdi", "verditekst", "manglande", "desimalar", 
-               "min", "maks", "min_rimeleg", "maks_rimeleg", "kommentar_rimeleg", 
-               "utrekningsformel", "logikk", "kommentar")
+# legg inn de standardiserte navnene på variablene
   
   kodebok = d %>% 
     mutate(skjema_id=tabell,
@@ -115,6 +110,7 @@ kb_oqr_til_standard = function(d) {
     "TIMESTAMP", "dato_kl"
     )
   
+  # test som stopper om kodeboka har en variabeltype vi ikke har tatt høyde for
   nye_vartypar = na.omit(setdiff(kodebok$variabeltype, vartype_oqr_standard$type_oqr))
   if(length(nye_vartypar) > 0) {
     stop("Kodeboka har variabeltypar me ikkje har standardnamn på: ", str_c(nye_vartypar, collapse=", "))
@@ -126,6 +122,17 @@ kb_oqr_til_standard = function(d) {
   #Sleng de standardiserte navnene til variabeltyper på OQR-kodeboka
   kodebok$variabeltype = vartype_oqr_standard$type_standard[
     match(kodebok$variabeltype[ind_nyvar], vartype_oqr_standard$type_oqr)]
+  
+  #ta bare med de variablene som vi bruker
+  
+  std_namn = c("skjema_id", "skjemanamn", "kategori", "innleiing", "variabel_id", 
+               "variabeletikett", "forklaring", "variabeltype", "eining", "unik", 
+               "obligatorisk", "verdi", "verditekst", "manglande", "desimalar", 
+               "min", "maks", "min_rimeleg", "maks_rimeleg", "kommentar_rimeleg", 
+               "utrekningsformel", "logikk", "kommentar")
+  
+  kodebok = kodebok %>% select_(.dots=std_namn)
+  
   
  kodebok 
 }
