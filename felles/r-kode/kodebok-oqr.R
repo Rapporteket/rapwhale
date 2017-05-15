@@ -16,50 +16,6 @@ library(readr) # For innlesing av CSV-filer
 # Lag standardisert kodebok -----------------------------------------------
 
 
-# Hent inn OQR fil som eksempel
-
-# Adressen til kodeboka
-kb_adresse = "***FJERNA-ADRESSE***"
-
-les_oqr_kb = function(kb_adresse) {
-  kb = read_delim(kb_adresse,
-    delim = ";", quote = "\"",
-    col_types = cols(
-      skjemanavn = col_character(),
-      navn_i_rapporteket = col_character(),
-      ledetekst = col_character(),
-      obligatorisk = col_character(),
-      type = col_character(),
-      listeverdier = col_character(),
-      listetekst = col_character(),
-      normalintervall_start_numerisk = col_integer(),
-      normalintervall_slutt_numerisk = col_integer(),
-      maksintervall_start_numerisk = col_integer(),
-      maksintervall_slutt_numerisk = col_integer(),
-      normalintervall_start_dato = col_character(),
-      normalintervall_slutt_dato = col_character(),
-      maksintervall_start_dato = col_character(),
-      maksintervall_slutt_dato = col_character(),
-      antall_tegn = col_integer(),
-      lovlige_tegn = col_character(),
-      desimaler = col_integer(),
-      aktiveringsspoersmaal = col_character(),
-      underspoersmaal = col_character(),
-      innfoert_dato = col_character(),
-      utfaset_dato = col_character(),
-      tabell = col_character(),
-      fysisk_feltnavn = col_character(),
-      kommentar = col_character(),
-      variabel_id = col_character(),
-      hjelpetekst = col_character()
-    )
-  )
-  kb
-}
-
-kb_orig = les_oqr_kb(kb_adresse)
-
-
 # Gjer om OQR-kodebok til kodebok på normalform
 #
 # Inndata:
