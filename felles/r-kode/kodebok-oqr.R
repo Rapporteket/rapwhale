@@ -131,7 +131,7 @@ kb_oqr_til_standard = function(d) {
                "min", "maks", "min_rimeleg", "maks_rimeleg", "kommentar_rimeleg", 
                "utrekningsformel", "logikk", "kommentar")
   
-  kodebok = kodebok %>% select_(.dots=std_namn)
+  #kodebok = kodebok %>% select_(.dots=std_namn)
   
   
  kodebok 
@@ -151,6 +151,9 @@ dd_adresse = "***FJERNA-ADRESSE***"
 # skal vi ta med kolonnespecen til denne?
 d = read_delim(dd_adresse, delim = ";", quote="\"")
 
+#standardiser kodebok til bruk som eksempel
+
+kb = kb_oqr_til_standard(kb)
 
 # Bruk oppgitt kodebok til å henta inn data frå
 # OQR-fil slik at variablane får rett format
@@ -165,6 +168,15 @@ les_dd_oqr = function(adresse, kb) {
                      sep=";", nlines = 1, quiet=TRUE) %>% 
     str_replace("^\"", "") %>% str_replace("\"$", "")
   
+  # disse variabelnamna er ikkje dei vi brukar. 
+  # henter inn namna som vi faktisk brukar og byttar ut namna med desse
+  varnamn = kb$variabel_id[match(varnamn_fil, kb$navn_i_rapporteket)] %>%
+    coalesce(varnamn_fil) %>%
+    str_to_lower
+ 
+  #fixme: variabler som finnes i datadump som ikke finnes i kodeboka
+  #varnamn_fil %in% kb$navn_i_rapporteket
+ 
   # Hent ut første linje frå kodeboka, dvs. den linja som
   # inneheld aktuell informasjon
   kb_info = kb %>% distinct(variabel_id, .keep_all = TRUE)
@@ -180,7 +192,7 @@ les_dd_oqr = function(adresse, kb) {
     "dato", "D",
     "kl", "t"
   )
-  spek_innlesing = tibble(variabel_id=varnamn_fil) %>% 
+  spek_innlesing = tibble(variabel_id=varnamn) %>% 
     left_join(kb_info, by="variabel_id") %>% 
     left_join(spek_csv_oqr, by="variabeltype")
   
