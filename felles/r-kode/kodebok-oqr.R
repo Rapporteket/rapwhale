@@ -169,9 +169,6 @@ les_dd_oqr = function(adresse, kb) {
   varnamn = kb$variabel_id[match(varnamn_fil, kb$oqr_variabel_id_norsk)] %>%
     coalesce(varnamn_fil)
 
-  # fixme: variabler som finnes i datadump som ikke finnes i kodeboka
-  varnamn_fil[!(varnamn_fil %in% kb$oqr_variabel_id_norsk)]
-
   # Hent ut første linje frå kodeboka, dvs. den linja som
   # inneheld aktuell informasjon
   kb_info = kb %>%
@@ -217,6 +214,15 @@ les_dd_oqr = function(adresse, kb) {
   # (Endrar i praksis berre namn på den første variabelen.)
   # Fixme: Skal ikkje vera nødvendig i neste versjon av readr (dvs. versjon > 1.0.0):
   # https://github.com/tidyverse/readr/issues/500
+
+  # variabler som finnes i datadump som ikke finnes i kodeboka får prefix "oqr"
+  # var som ikke er i kodeboka:
+  mangler_i_kb = varnamn[!(varnamn_fil %in% kb$oqr_variabel_id_norsk)]
+
+  # setter på prefix
+  # fixme! denne funker bare halvveis
+  varnamn = varnamn %>%
+    str_replace_all(mangler_i_kb, paste0("oqr_", mangler_i_kb))
 
   # byttar ut namna med dei med ønskje fra kodeboka
   names(d) = str_to_lower(varnamn)
