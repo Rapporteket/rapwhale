@@ -219,7 +219,7 @@ les_dd_oqr = function(adresse, kb) {
   # https://github.com/tidyverse/readr/issues/500
 
   # byttar ut namna med dei med ønskje fra kodeboka
-  names(d) = varnamn
+  names(d) = str_to_lower(varnamn)
 
   # Gjer om boolske variablar til ekte boolske variablar
   oqr_boolsk_til_boolsk = function(x) {
