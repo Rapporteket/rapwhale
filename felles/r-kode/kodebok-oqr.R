@@ -7,22 +7,15 @@
 options(stringsAsFactors = FALSE)
 
 # Nødvendige pakkar
-library(dplyr) # Datamassering
-library(tibble) # Fornuftig datarammestruktur
+library(tidyverse) # Ymse standardpakkar
 library(stringr) # Tekstmassering
 library(magrittr) # Funksjonar som kan brukast med røyr-operatoren
 library(readr) # For innlesing av CSV-filer
 
+
 # Lag standardisert kodebok -----------------------------------------------
 
-
-# Hent inn OQR fil som eksempel
-
-# Adressen til kodeboka
-kb_adresse = "***FJERNA-ADRESSE***"
-
-# Lag funksjon for å lese inn oqr-kb.
-
+# Lag funksjon for å lese inn OQR-kodebok
 les_oqr_kb = function(kb_adresse) {
   kb = read_delim(kb_adresse,
     delim = ";", quote = "\"",
@@ -189,47 +182,55 @@ les_dd_oqr = function(adresse, kb) {
     left_join(kb_info, by = "variabel_id") %>%
     left_join(spek_csv_oqr, by = "variabeltype")
 
-  # Er det nokon variablar me manglar metadata for?
+  # Har kodeboka variablar av ein type me ikkje har lagt inn støtte for?
+  # Dette skal ikkje skje, så avbryt om så er tilfelle.
+  nye_typar = setdiff(kb_info$variabeltype, spek_csv_oqr$variabeltype)
+  if (length(nye_typar) > 0) {
+    stop(
+      "Kodeboka har variablar av ein type me ikkje støttar (legg inn støtte!):\n",
+      str_c(nye_typar, collapse = "\n")
+    )
+  }
+
+  # Er det nokon variablar me manglar metadata for (dvs. variablar
+  # som finst i datafila men *ikkje* i kodeboka)?
+  # Fixme: Vurder å legga til eit argument i funksjonen
+  #        for å gøyma åtvaringar for standardvariablar
+  #        (dvs. dei som finst i alle OQR-datadumpar)
   manglar_metadata = is.na(spek_innlesing$csv_bokstav)
+  ukjende_var = spek_innlesing$variabel_id[manglar_metadata]
   if (any(manglar_metadata)) {
     warning(
-      "Manglar metadata for desse variablane (dei vert derfor handterte som tekst):\n",
-      str_c(spek_innlesing$variabel_id[manglar_metadata], collapse = "\n")
+      "Manglar metadata for nokre variablar. Dei vert derfor\n",
+      "handterte som tekst og variabelnamna vert gjorde om til\n",
+      "små bokstavar og får prefikset «oqr_».\n",
+      "Problematiske variablar:\n",
+      str_c(ukjende_var, collapse = "\n")
     )
-    spek_innlesing$csv_bokstav[is.na(spek_innlesing$csv_bokstav)] = "c"
+    spek_innlesing$csv_bokstav[manglar_metadata] = "c"
+    spek_innlesing$variabel_id[manglar_metadata] = str_to_lower(str_c("oqr_", spek_innlesing$variabel_id[manglar_metadata]))
   }
 
   # Les inn datasettet
   kol_typar = str_c(spek_innlesing$csv_bokstav, collapse = "")
   d = read_delim(adresse,
     delim = ";", quote = "\"", trim_ws = FALSE, na = "null",
-    col_names = varnamn_fil, col_types = kol_typar, skip = 1, # Hopp over overskriftsrada
+    col_names = spek_innlesing$variabel_id, col_types = kol_typar, skip = 1, # Hopp over overskriftsrada
     locale = locale(
       decimal_mark = ",", grouping_mark = "",
       date_format = "%Y-%m-%d", time_format = "%H:%M:%S"
     )
   )
 
-  # På grunn av UTF-8-BOM-problem, bruk dei tidlegare innehenta variabelnamna
-  # (Endrar i praksis berre namn på den første variabelen.)
-  # Fixme: Skal ikkje vera nødvendig i neste versjon av readr (dvs. versjon > 1.0.0):
-  # https://github.com/tidyverse/readr/issues/500
-
-  # variabler som finnes i datadump som ikke finnes i kodeboka får prefix "oqr"
-  # var som ikke er i kodeboka:
-  mangler_i_kb = varnamn[!(varnamn_fil %in% kb$oqr_variabel_id_norsk)]
-
-  # setter på prefix
-  # fixme! denne funker bare halvveis
-  varnamn = varnamn %>%
-    str_replace_all(mangler_i_kb, paste0("oqr_", mangler_i_kb))
-
-  # byttar ut namna med dei med ønskje fra kodeboka
-  names(d) = str_to_lower(varnamn)
-
   # Gjer om boolske variablar til ekte boolske variablar
   oqr_boolsk_til_boolsk = function(x) {
-    ifelse(x == "True", TRUE, ifelse(x == "False", FALSE, NA))
+    # Sjekk først at det berre er gyldige verdiar
+    er_gyldig = (x %in% 0:1) | is.na(x)
+    if (!all(er_gyldig)) {
+      stop("Finst ugyldige verdiar i boolsk variablar (skal vera 0, 1 eller NA)")
+    } else {
+      x == 1 # Gjer om til boolsk variabel
+    }
   }
   boolsk_ind = which(spek_innlesing$variabeltype == "boolsk")
   d[, boolsk_ind] = lapply(d[, boolsk_ind], oqr_boolsk_til_boolsk)
