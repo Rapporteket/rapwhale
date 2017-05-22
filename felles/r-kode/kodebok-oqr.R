@@ -13,11 +13,12 @@ library(magrittr) # Funksjonar som kan brukast med røyr-operatoren
 library(readr) # For innlesing av CSV-filer
 
 
-# Lag standardisert kodebok -----------------------------------------------
+# Les inn kodebok og gjer om til standardformat ---------------------------
 
-# Lag funksjon for å lese inn OQR-kodebok
-les_oqr_kb = function(kb_adresse) {
-  kb = read_delim(kb_adresse,
+# Les inn kodebok
+les_oqr_kb = function(adresse) {
+  kodebok_oqr_format = read_delim(
+    adresse,
     delim = ";", quote = "\"",
     col_types = cols(
       skjemanavn = col_character(),
@@ -49,21 +50,12 @@ les_oqr_kb = function(kb_adresse) {
       hjelpetekst = col_character()
     )
   )
-  kb
-}
 
-# kb_orig = les_oqr_kb(kb_adresse)
-
-
-# Gjer om OQR-kodebok til kodebok på normalform
-#
-# Inndata:
-#   d: Dataramme med OQR-kodebok
-kb_oqr_til_standard = function(d) {
-
-  # legg inn de standardiserte navnene på variablene
-
-  kodebok = d %>%
+  # Gjer om kodeboka til vårt *standardiserte* format
+  # (Det finst ikkje heilt ei 1-til-1-kopling, men me
+  #  gjer so godt me kan, og set verdiar til NA der
+  #  det ikkje finst nokon tilsvarande.)
+  kodebok = kodebok_oqr_format %>%
     mutate(
       skjema_id = tabell,
       skjemanamn = skjemanavn,
@@ -109,22 +101,21 @@ kb_oqr_til_standard = function(d) {
     "TIMESTAMP", "dato_kl"
   )
 
-  # test som stopper om kodeboka har en variabeltype vi ikke har tatt høyde for
+  # Stopp viss det dukkar opp variabeltypar me ikkje kjenner til
   nye_vartypar = na.omit(setdiff(kodebok$variabeltype, vartype_oqr_standard$type_oqr))
   if (length(nye_vartypar) > 0) {
-    stop("Kodeboka har variabeltypar me ikkje har standardnamn på: ", str_c(nye_vartypar, collapse = ", "))
+    stop(
+      "Kodeboka har variabeltypar me ikkje har standardnamn på: ",
+      str_c(nye_vartypar, collapse = ", ")
+    )
   }
 
-  # Indeks til rader som startar ein ny variabel
-  ind_nyvar = which(!is.na(d$variabel_id))
-
-  # Sleng de standardiserte navnene til variabeltyper på OQR-kodeboka
+  # Byt ut variabeltype-verdiane med våre standardiserte namn
   kodebok$variabeltype = vartype_oqr_standard$type_standard[
-    match(kodebok$variabeltype[ind_nyvar], vartype_oqr_standard$type_oqr)
+    match(kodebok$variabeltype, vartype_oqr_standard$type_oqr)
   ]
 
-  # ta bare med de variablene som vi bruker
-
+  # Dei variabelnamna me brukar, og i ei fornuftig rekkjefølgje
   std_namn = c(
     "skjema_id", "skjemanamn", "kategori", "innleiing", "variabel_id",
     "variabeletikett", "forklaring", "variabeltype", "eining", "unik",
@@ -132,11 +123,15 @@ kb_oqr_til_standard = function(d) {
     "min", "maks", "min_rimeleg", "maks_rimeleg", "kommentar_rimeleg",
     "utrekningsformel", "logikk", "kommentar"
   )
+
+  # Treng òg nokre ekstranamn som me brukar (berre) for å lesa inn datafiler
   ekstra_namn = c("oqr_variabel_id_engelsk", "oqr_variabel_id_norsk")
 
+  # Ta med dei namna me brukar, i fornuftig rekkjefølgje
   kodebok = kodebok %>%
     select_(.dots = c(std_namn, ekstra_namn))
 
+  # Returner kodeboka
   kodebok
 }
 
@@ -149,9 +144,8 @@ kb_oqr_til_standard = function(d) {
 # Argument:
 #   adresse: adressa til datafila (med norske/teite variabelnamn)
 #        kb: standardisert kodebok
-
 les_dd_oqr = function(adresse, kb) {
-  # Les inn variabelnamna i datafila
+  # Les inn variabelnamna som vert brukt i datafila
   varnamn_fil = scan(adresse,
     fileEncoding = "UTF-8", what = "character",
     sep = ";", nlines = 1, quiet = TRUE
@@ -247,22 +241,19 @@ les_dd_oqr = function(adresse, kb) {
 }
 
 
-
-
 # Eksempel  -----------------------------------------------------------
-
-# dd_adresse = "***FJERNA-ADRESSE***"
-
-# kb_adresse = "***FJERNA-ADRESSE***"
 
 # # Les inn eksempeldata
 # mappe_dd = "***FJERNA-ADRESSE***"
 # filnamn_dd = "Datadump_Alle_variabler_numerisk.csv"
 # adresse_dd = paste0(mappe_dd, filnamn_dd)
-
+#
 # # Les inn kodeboka
-# kb_oqr = les_oqr_kb(kb_adresse)
-# kb_standard = kb_oqr_til_standard(kb_oqr)
-
+# adresse_kb = "***FJERNA-ADRESSE***"
+# kb = les_oqr_kb(adresse_kb)
+#
 # # Les inn datadump
-# d = les_dd_oqr(adresse_dd, kb_standard)
+# d = les_dd_oqr(adresse_dd, kb)
+#
+# # Sjå nøyare på eventuelle importproblem
+# problems(d)
