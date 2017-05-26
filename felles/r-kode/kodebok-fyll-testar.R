@@ -139,9 +139,9 @@ test_that("Feilmelding ved bruk av variabel med eksplisitt namn som ikkje finst 
 })
 
 test_that("Åtvaring (men NA-verdi) viss datasettet inneheld verdiar som aktuell variabel ikkje har i kodeboka (side 9)", {
-  expect_warning(d %>% kb_fyll(kb[-6, ]), "Variabelen 'med' har ugyldig verdi (vart gjort om til NA): '4'")
-  expect_warning(d %>% kb_fyll(kb[-c(3, 6), ]), "Variabelen 'med' har ugyldige verdiar (vart gjort om til NA): '1', '4'")
-  expect_warning(d %>% kb_fyll(kb[-1, ]), "Variabelen 'kjonn' har ugyldig verdi (vart gjort om til NA): '1'") # Eintal og berre vist éin gong, sjølv om feilen er i fleire rader
+  expect_warning(d %>% kb_fyll(kb[-6, ]), "Variabelen 'med' har ugyldig verdi (vart gjort om til NA): '4'", fixed = TRUE)
+  expect_warning(d %>% kb_fyll(kb[-c(3, 6), ]), "Variabelen 'med' har ugyldige verdiar (vart gjort om til NA): '1', '4'", fixed = "TRUE") # Sorter dei ugyldige verdiane
+  expect_warning(d %>% kb_fyll(kb[-1, ]), "Variabelen 'kjonn' har ugyldig verdi (vart gjort om til NA): '1'", fixed = "TRUE") # Eintal og berre vist éin gong, sjølv om feilen er i fleire rader
 
   # Sjekk at ein får NA-verdiar der det manglar i kodeboka
   # (men ikkje NA-verdiar der det ikkje manglar, sjølv om det

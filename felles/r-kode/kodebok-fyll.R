@@ -90,7 +90,19 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
       filter(variabel_id %in% vnamn_kb[i])
 
     # Det nye namnet på variabelen
-    nytt_namn = str_c(vnamn_d[i], .suffiks)
+    nytt_namn = str_c(vnamn, .suffiks)
+
+    # Åtvaring og NA-verdi viss datasettet inneheld verdiar
+    # som aktuell variabel ikkje har i kodeboka
+    # (fixme: Vurderingssak: Bør dette heller gje feilmelding enn åtvaring?)
+    manglar_i_kb = setdiff(df[[vnamn]], koder$verdi)
+    if (length(manglar_i_kb) > 0) {
+      warning(str_c(
+        "Variabelen ", lag_liste(vnamn), " har ",
+        ifelse(length(manglar_i_kb) == 1, "ugyldig verdi", "ugyldige verdiar"),
+        " (vart gjort om til NA): ", lag_liste(sort(manglar_i_kb))
+      ))
+    }
 
     # Hent verditekster fra kodebok og legg til i datasettet
     df[[nytt_namn]] = factor(df[[vnamn]],
