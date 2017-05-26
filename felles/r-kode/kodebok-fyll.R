@@ -69,6 +69,16 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
     ))
   }
 
+  # Viss ein ber om variablar som ikkje finst i datasettet
+  berre_d = setdiff(vnamn_d, names(df))
+  n_feil = length(berre_d)
+  if (n_feil > 0) {
+    stop(str_c(
+      ifelse(n_feil > 1, "Variablar", "Variabel"),
+      " finst ikkje i datasettet: ", lag_liste(berre_d)
+    ))
+  }
+
 
   # Gå gjennom kvar variabel og legg til verditekstar
   for (i in seq_along(vnamn_d)) {
