@@ -157,7 +157,7 @@ test_that("Åtvaring (men resultat) viss kodeboka ikkje inneheld *nokon* variabl
   kb2 = kb
   kb2$variabel_id = paste0("x_", kb2$variabel_id)
 
-  expect_identical(d %>% kb_fyll(kb2, kjonn), d)
+  expect_identical(d %>% kb_fyll(kb2), d)
   expect_warning(d %>% kb_fyll(kb2), "Kodeboka inneheld ingen variablar som finst i datasettet.")
 })
 

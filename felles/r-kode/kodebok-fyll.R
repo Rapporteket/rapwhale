@@ -49,6 +49,9 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
   if (length(vnamn_d) == 0) {
     vnamn_d = intersect(names(df), kb$variabel_id)
     vnamn_kb = vnamn_d # Tilsvarande namn i kodeboka
+    if (length(vnamn_d) == 0) {
+      warning("Kodeboka inneheld ingen variablar som finst i datasettet.")
+    }
   } else {
     vnamn_kb = map_chr(arg, as.character) # Tilsvarande namn i kodeboka
   }
