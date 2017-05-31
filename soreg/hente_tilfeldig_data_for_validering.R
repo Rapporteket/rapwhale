@@ -23,12 +23,13 @@ mappe = paste0(grunnmappe, dato_uttrekk)
 filnamn = "SoReg_08_Datadump_arsrapport.csv"
 adresse = paste0(mappe, "\\", filnamn)
 
+
 # Les inn data
 d_full = read_delim(
   adresse,
   delim = ";",
   na = "null",
-  locale = locale(date_format = "%d.%m.%Y", decimal_mark = "."),
+  locale = locale(date_format = "%Y-%m-%d", decimal_mark = "."),
   col_types = cols(
     PasientID = col_integer(),
     Fodselsdato = col_date(format = ""),
@@ -45,8 +46,8 @@ d_full = read_delim(
     OperasjonVekt = col_integer(),
     TidlFedmeOp = col_integer(),
     Operasjonsmetode = col_integer(),
-    UtskrivelsesDato = col_date(format = "%d.%m.%y 00:00"),
-    BR_BesoksDato = col_date(format = "%d.%m.%y 00:00"),
+    UtskrivelsesDato = col_date(format = "%Y-%m-%d"),
+    BR_BesoksDato = col_date(format = "%Y-%m-%d"),
     LiggeDogn = col_integer(),
     OP_GSAvstPylorus = col_integer(),
     Behandling30Dager = col_integer(),
