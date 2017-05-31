@@ -23,46 +23,59 @@ mappe = paste0(grunnmappe, dato_uttrekk)
 filnamn = "SoReg_08_Datadump_arsrapport.csv"
 adresse = paste0(mappe, "\\", filnamn)
 
-
 # Les inn data
+# Manuell (æsj!) spesifikasjon av kolonnetypar
+# (fordi me manglar kodebok for denne datadumpen)
+kol_typar = cols(
+  PasientID = col_integer(),
+  Fodselsdato = col_date(format = ""),
+  PasientAlder = col_number(),
+  PasientKjonn = col_character(),
+  OpererendeRESH = col_integer(),
+  OperererendeSykehus = col_character(),
+  BR_Vekt = col_integer(),
+  BR_Hoyde = col_integer(),
+  BR_BMI = col_double(),
+  ForlopsID = col_integer(),
+  OperasjonsID = col_integer(),
+  Operasjonsdato = col_date(format = ""),
+  OperasjonVekt = col_integer(),
+  TidlFedmeOp = col_integer(),
+  Operasjonsmetode = col_integer(),
+  UtskrivelsesDato = col_date(format = "%Y-%m-%d"),
+  BR_BesoksDato = col_date(format = "%Y-%m-%d"),
+  LiggeDogn = col_integer(),
+  OP_GSAvstPylorus = col_integer(),
+  Behandling30Dager = col_integer(),
+  KomplAlvorGrad = col_integer(),
+  `6U_Vekt` = col_integer(),
+  `6U_Hoyde` = col_integer(),
+  `6U_RESH` = col_integer(),
+  `6U_KontrollType` = col_integer(),
+  `1Aar_Vekt` = col_integer(),
+  `1Aar_Hoyde` = col_integer(),
+  `1Aar_RESH` = col_integer(),
+  `1Aar_OppfolgingsType` = col_integer(),
+  EttAarBMI = col_double()
+)
 d_full = read_delim(
   adresse,
   delim = ";",
   na = "null",
   locale = locale(date_format = "%Y-%m-%d", decimal_mark = "."),
-  col_types = cols(
-    PasientID = col_integer(),
-    Fodselsdato = col_date(format = ""),
-    PasientAlder = col_number(),
-    PasientKjonn = col_character(),
-    OpererendeRESH = col_integer(),
-    OperererendeSykehus = col_character(),
-    BR_Vekt = col_integer(),
-    BR_Hoyde = col_integer(),
-    BR_BMI = col_double(),
-    ForlopsID = col_integer(),
-    OperasjonsID = col_integer(),
-    Operasjonsdato = col_date(format = ""),
-    OperasjonVekt = col_integer(),
-    TidlFedmeOp = col_integer(),
-    Operasjonsmetode = col_integer(),
-    UtskrivelsesDato = col_date(format = "%Y-%m-%d"),
-    BR_BesoksDato = col_date(format = "%Y-%m-%d"),
-    LiggeDogn = col_integer(),
-    OP_GSAvstPylorus = col_integer(),
-    Behandling30Dager = col_integer(),
-    KomplAlvorGrad = col_integer(),
-    `6U_Vekt` = col_integer(),
-    `6U_Hoyde` = col_integer(),
-    `6U_RESH` = col_integer(),
-    `6U_KontrollType` = col_integer(),
-    `1Aar_Vekt` = col_integer(),
-    `1Aar_Hoyde` = col_integer(),
-    `1Aar_RESH` = col_integer(),
-    `1Aar_OppfolgingsType` = col_integer(),
-    EttAarBMI = col_double()
-  )
+  col_types = kol_typar
 )
+
+# Feilmelding viss datafila inneheld variablar som me
+# ikkje har kolonnespesifikasjon for
+manglar_spek = setdiff(names(d_full), names(kol_typar$cols))
+if (length(manglar_spek) > 0) {
+  stop(
+    "Manglar kolonnespesifikasjon for følgjande variablar (rediger kol_typar):\n",
+    paste0(manglar_spek, sep = "\n")
+  )
+}
+
 
 # alle mangler verdi for OP_GSAvstPylorus?
 nrow(d_full)
