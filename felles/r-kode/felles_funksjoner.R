@@ -161,38 +161,7 @@ farge_morkare = function(fargar, grad = 5) {
 
 
 
-# Innlesingsfunskjoner ----------------------------------------------------
-
-### Les inn CSV-fil (norsk Excel-format) og fjern BOM-teikn om det finst
-# les_csv er basert på read_csv, og skal dermed brukes for datasett med komma-separatorer.
-# les_csv2 har tatt utgangspunkt i read_csv2 og skal brukes i situasjoner med semikolondelte .csv filer.
-
-# (fixme: ikkje lenger nødvendig i neste versjon
-# av readr, > 1.0.0, men nødvendig 2016-08-08)
-library(readr)
-library(magrittr)
-library(stringr)
-les_csv = function(x, ..., lesefunksjon = read_csv) {
-  df = lesefunksjon(x, ...)
-  namn1 = charToRaw(names(df)[1]) # Gjer første kolonnenamn om til råverdiar (byte-verdiar)
-  har_bom = identical(namn1[1:3], as.raw(c(0xef, 0xbb, 0xbf)))
-
-  # Fjern dei tre første bytane (BOM-teiknet) viss fila har BOM-teikn
-  nytt_namn1 = ifelse(har_bom,
-    rawToChar(namn1[-(1:3)]),
-    rawToBits(namn1)
-  )
-
-  # Fjern eventuelle hermeteikn (feil i read_csv*() gjer at ev. hermeteikn
-  # i *første* kolonnenamn ikkje vert fjerna dersom fila har BOM)
-  nytt_namn1 = nytt_namn1 %>%
-    str_replace_all('"', "")
-  names(df)[1] = nytt_namn1
-  df
-}
-les_csv2 = function(x, ...) {
-  les_csv(x, ..., lesefunksjon = read_csv2)
-}
+# Variabelnamnfunksjonar ----------------------------------------------------
 
 
 ### Normaliser variabelnamn til å ha _ som skiljeteikn og berre små bokstavar
