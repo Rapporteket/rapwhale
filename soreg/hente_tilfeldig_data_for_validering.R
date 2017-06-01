@@ -157,10 +157,12 @@ res
 
 # Eksporter data til kvalitetsserveren som en SPSS fil (.sav)
 # for hvert sykehus
+vdatamappe = paste0(grunnmappe, "..\\valideringsdata\\", dato_uttrekk, "\\")
+dir.create(vdatamappe, showWarnings = FALSE)
 res %>%
   group_by(OperererendeSykehus) %>%
   do({
-    res_adresse = paste0(grunnmappe, "..\\valideringsdata\\", .$OperererendeSykehus[1], ".sav")
+    res_adresse = paste0(vdatamappe, .$OperererendeSykehus[1], ".sav")
     write_sav(., res_adresse)
     tibble()
   })
