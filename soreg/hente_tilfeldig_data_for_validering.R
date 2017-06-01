@@ -20,7 +20,7 @@ dato_sistreg = dato_uttrekk - 1
 
 # Adressa til den siste datafila
 mappe = paste0(grunnmappe, dato_uttrekk)
-filnamn = "SoReg_08_Datadump_arsrapport.csv"
+filnamn = "SoReg_09_Datadump_validering.csv"
 adresse = paste0(mappe, "\\", filnamn)
 
 # Les inn data
@@ -28,7 +28,7 @@ adresse = paste0(mappe, "\\", filnamn)
 # (fordi me manglar kodebok for denne datadumpen)
 kol_typar = cols(
   PasientID = col_integer(),
-  Fodselsdato = col_date(format = ""),
+  Fodselsdato = col_date(),
   PasientAlder = col_number(),
   PasientKjonn = col_character(),
   OpererendeRESH = col_integer(),
@@ -38,12 +38,12 @@ kol_typar = cols(
   BR_BMI = col_double(),
   ForlopsID = col_integer(),
   OperasjonsID = col_integer(),
-  Operasjonsdato = col_date(format = ""),
+  Operasjonsdato = col_date(),
   OperasjonVekt = col_integer(),
   TidlFedmeOp = col_integer(),
   Operasjonsmetode = col_integer(),
-  UtskrivelsesDato = col_date(format = "%Y-%m-%d"),
-  BR_BesoksDato = col_date(format = "%Y-%m-%d"),
+  UtskrivelsesDato = col_date(),
+  BR_BesoksDato = col_date(),
   LiggeDogn = col_integer(),
   OP_GSAvstPylorus = col_integer(),
   Behandling30Dager = col_integer(),
@@ -76,15 +76,13 @@ if (length(manglar_spek) > 0) {
   )
 }
 
-
-# alle mangler verdi for OP_GSAvstPylorus?
-nrow(d_full)
-
-sum(is.na(d_full$OP_GSAvstPylorus))
+# Viss ein likevel vel å halda fram, kutt ut variablar me manglar
+# kolonnespesifikasjon på, sidan me ikkje kan stola på verdiane der
+d_full = d_full[names(kol_typar$cols)]
 
 # Fjern utrekna variablar og RESH-ID i oppfølgingar
 d = d_full %>%
-  select(-contains("BMI"), -contains("_RESH"), -OP_GSAvstPylorus)
+  select(-contains("BMI"), -contains("_RESH"))
 
 # Oversikt over namn på indeksvariablar og datavariablar
 ind_vars = c(
