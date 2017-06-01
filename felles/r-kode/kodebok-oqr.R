@@ -144,7 +144,7 @@ les_oqr_kb = function(adresse) {
 # Argument:
 #   adresse: adressa til datafila (med norske/teite variabelnamn)
 #        kb: standardisert kodebok
-les_dd_oqr = function(adresse, kb) {
+les_dd_oqr = function(adresse, kb, datoformat = "%Y-%m-%d") {
   # Les inn variabelnamna som vert brukt i datafila
   varnamn_fil = scan(adresse,
     fileEncoding = "UTF-8", what = "character",
@@ -212,7 +212,7 @@ les_dd_oqr = function(adresse, kb) {
     col_names = spek_innlesing$variabel_id, col_types = kol_typar, skip = 1, # Hopp over overskriftsrada
     locale = locale(
       decimal_mark = ",", grouping_mark = "",
-      date_format = "%Y-%m-%d", time_format = "%H:%M:%S"
+      date_format = datoformat, time_format = "%H:%M:%S"
     )
   )
 
