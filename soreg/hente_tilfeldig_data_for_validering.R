@@ -56,7 +56,14 @@ kol_typar = cols(
   `1Aar_Hoyde` = col_integer(),
   `1Aar_RESH` = col_integer(),
   `1Aar_OppfolgingsType` = col_integer(),
-  EttAarBMI = col_double()
+  EttAarBMI = col_double(),
+  BR_fsglukose = col_double(),
+  BR_B_HbA1c = col_double(),
+  BR_S_LDL = col_double(),
+  `1Aar_fP_Glukose` = col_double(),
+  `1Aar_BHbA1c` = col_double(),
+  `1Aar_Dyslipidemi` = col_double(),
+  .default = col_integer()
 )
 d_full = read_delim(
   adresse,
@@ -66,19 +73,19 @@ d_full = read_delim(
   col_types = kol_typar
 )
 
-# Feilmelding viss datafila inneheld variablar som me
-# ikkje har kolonnespesifikasjon for
-manglar_spek = setdiff(names(d_full), names(kol_typar$cols))
-if (length(manglar_spek) > 0) {
-  stop(
-    "Manglar kolonnespesifikasjon for følgjande variablar (rediger kol_typar):\n",
-    paste0(manglar_spek, sep = "\n")
-  )
-}
-
-# Viss ein likevel vel å halda fram, kutt ut variablar me manglar
-# kolonnespesifikasjon på, sidan me ikkje kan stola på verdiane der
-d_full = d_full[names(kol_typar$cols)]
+# # Feilmelding viss datafila inneheld variablar som me
+# # ikkje har kolonnespesifikasjon for
+# # (Tatt ut 2017-06-02, sidan me har fått tilbakemelding
+# #  om at alle ukjende variablar er heiltal)
+# manglar_spek = setdiff(names(d_full), names(kol_typar$cols))
+# if(length(manglar_spek) > 0) {
+#   stop("Manglar kolonnespesifikasjon for følgjande variablar (rediger kol_typar):\n",
+#        paste0(manglar_spek, sep="\n"))
+# }
+#
+# # Viss ein likevel vel å halda fram, kutt ut variablar me manglar
+# # kolonnespesifikasjon på, sidan me ikkje kan stola på verdiane der
+# d_full = d_full[names(kol_typar$cols)]
 
 # Fjern utrekna variablar og RESH-ID i oppfølgingar
 d = d_full %>%
@@ -92,7 +99,7 @@ ind_vars = c(
 data_vars = names(d) %>%
   setdiff(ind_vars)
 
-# Definer hvor mange variabler som skal hentes for hver pasient.
+# Definer hvor mange variabler som skal hentes for hver rad (= operasjon, ikke pasient).
 nvars = 10
 
 # Plukk ut tilfeldige datakolonnar for kvar rad og lagra
