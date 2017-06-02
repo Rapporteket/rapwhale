@@ -33,37 +33,75 @@ kol_typar = cols(
   PasientKjonn = col_character(),
   OpererendeRESH = col_integer(),
   OperererendeSykehus = col_character(),
+  BR_BesoksDato = col_date(),
   BR_Vekt = col_integer(),
   BR_Hoyde = col_integer(),
   BR_BMI = col_double(),
+  BR_Systolisk = col_integer(),
+  BR_Diastolisk = col_integer(),
+  BR_PaagaaendeBeh = col_integer(),
+  BR_SovnApne = col_integer(),
+  BR_Hypertoni = col_integer(),
+  BR_Diabetes = col_integer(),
+  BR_DiabetesSidenAar = col_integer(),
+  BR_Typediabetesbeh = col_integer(),
+  BR_Dyslipidemi = col_integer(),
+  BR_Dyspepsi = col_integer(),
+  BR_Diare = col_integer(),
+  BR_Depresjon = col_integer(),
+  BR_MuskelSkjelettsmerter = col_integer(),
+  BR_AnnenSykdom = col_integer(),
+  BR_fsglukose = col_double(),
+  BR_B_HbA1c = col_double(),
+  BR_S_LDL = col_double(),
   ForlopsID = col_integer(),
   OperasjonsID = col_integer(),
   Operasjonsdato = col_date(),
   OperasjonVekt = col_integer(),
   TidlFedmeOp = col_integer(),
   Operasjonsmetode = col_integer(),
-  UtskrivelsesDato = col_date(),
-  BR_BesoksDato = col_date(),
-  LiggeDogn = col_integer(),
+  IdenHiatusernie = col_integer(),
+  OP_PeropKompl = col_integer(),
+  OP_AnnenSamtidigOp = col_integer(),
+  OP_GETeknikk = col_integer(),
+  OP_AvstTreitzGE = col_integer(),
+  OP_CommonChannel = col_integer(),
+  OP_CommonChannelCm = col_integer(),
+  OP_GSBougiediameter = col_integer(),
   OP_GSAvstPylorus = col_integer(),
+  OP_GSForsterket = col_integer(),
+  OP_GSPexiAvCardia = col_integer(),
+  OP_BDPBougiediam = col_integer(),
+  OP_BDPAvstPylorus = col_integer(),
+  OP_BPDForsterket = col_integer(),
+  OP_BDPPexiAvCardia = col_integer(),
+  OP_BDPCommonChannel = col_integer(),
+  OP_BDPAlimentaryLimb = col_integer(),
+  OP_BDPBiliaryLimb = col_integer(),
+  OP_BPDUPEATeknikk = col_integer(),
+  UtskrivelsesDato = col_date(),
+  LiggeDogn = col_integer(),
+  F_Substitusjon = col_integer(),
   Behandling30Dager = col_integer(),
   KomplAlvorGrad = col_integer(),
   `6U_Vekt` = col_integer(),
   `6U_Hoyde` = col_integer(),
   `6U_RESH` = col_integer(),
   `6U_KontrollType` = col_integer(),
+  `1Aar_BehAnnetSykehus` = col_integer(),
+  `1Aar_Substitusjon` = col_integer(),
+  `1Aar_OpSidenSist` = col_integer(),
+  `1Aar_Komplikasjoner` = col_integer(),
   `1Aar_Vekt` = col_integer(),
   `1Aar_Hoyde` = col_integer(),
-  `1Aar_RESH` = col_integer(),
-  `1Aar_OppfolgingsType` = col_integer(),
-  EttAarBMI = col_double(),
-  BR_fsglukose = col_double(),
-  BR_B_HbA1c = col_double(),
-  BR_S_LDL = col_double(),
+  `1Aar_Systolisk` = col_integer(),
+  `1Aar_Diastolisk` = col_integer(),
   `1Aar_fP_Glukose` = col_double(),
   `1Aar_BHbA1c` = col_double(),
   `1Aar_Dyslipidemi` = col_double(),
-  .default = col_integer()
+  `1Aar_RESH` = col_integer(),
+  `1Aar_OppfolgingsType` = col_integer(),
+  EttAarBMI = col_double()
 )
 d_full = read_delim(
   adresse,
@@ -73,16 +111,16 @@ d_full = read_delim(
   col_types = kol_typar
 )
 
-# # Feilmelding viss datafila inneheld variablar som me
-# # ikkje har kolonnespesifikasjon for
-# # (Tatt ut 2017-06-02, sidan me har fått tilbakemelding
-# #  om at alle ukjende variablar er heiltal)
-# manglar_spek = setdiff(names(d_full), names(kol_typar$cols))
-# if(length(manglar_spek) > 0) {
-#   stop("Manglar kolonnespesifikasjon for følgjande variablar (rediger kol_typar):\n",
-#        paste0(manglar_spek, sep="\n"))
-# }
-#
+# Feilmelding viss datafila inneheld variablar som me
+# ikkje har kolonnespesifikasjon for
+manglar_spek = setdiff(names(d_full), names(kol_typar$cols))
+if (length(manglar_spek) > 0) {
+  stop(
+    "Manglar kolonnespesifikasjon for følgjande variablar (rediger kol_typar):\n",
+    paste0(manglar_spek, sep = "\n")
+  )
+}
+
 # # Viss ein likevel vel å halda fram, kutt ut variablar me manglar
 # # kolonnespesifikasjon på, sidan me ikkje kan stola på verdiane der
 # d_full = d_full[names(kol_typar$cols)]
