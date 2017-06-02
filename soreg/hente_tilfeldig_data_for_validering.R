@@ -158,7 +158,7 @@ res = res[!(names(res) %in% data_vars)] %>%
 # stå i en rekkefølge som er lett å bruke.
 res = res %>%
   mutate(rekkefolge = factor(PasientID, levels = sample(unique(PasientID)))) %>%
-  arrange(OperererendeSykehus, rekkefolge, match(varnamn, data_vars)) %>%
+  arrange(OperererendeSykehus, rekkefolge, PasientAlder, match(varnamn, data_vars)) %>%
   select(-rekkefolge)
 res
 
