@@ -162,7 +162,11 @@ test_that("Åtvaring (men resultat) viss kodeboka ikkje inneheld *nokon* variabl
 })
 
 test_that("Feilmelding viss kodeboka ikkje inneheld dei nødvendige kolonnane (side 10)", {
-  expect_error(d %>% kb_fyll(iris), "Ugyldig kodebok. Må ha kolonnane 'variabel_id', 'verdi' og 'verditekst'.")
+  feilmelding = "Ugyldig kodebok. Obligatoriske kolonnar er 'variabel_id', 'verdi' og 'verditekst'."
+  expect_error(d %>% kb_fyll(iris), feilmelding)
+  expect_error(d %>% kb_fyll(kb[-1]), feilmelding)
+  expect_error(d %>% kb_fyll(kb[-2]), feilmelding)
+  expect_error(d %>% kb_fyll(kb[-3]), feilmelding)
   expect_error(d %>% kb_fyll(kb[3:1]), NA) # Godta forskjellig rekkjefølgje
   expect_error(d %>% kb_fyll(cbind(x = 1:nrow(kb), kb[3:1], y = 1:nrow(kb))), NA) # Godta ekstrakolonnar
 })

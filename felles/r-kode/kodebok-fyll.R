@@ -42,6 +42,11 @@ df = d
 # Definisjon av funksjon
 kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
 
+  # Viss kodeboka ikkje inneheld dei tre nødvendige kolonnane
+  if (!all(c("variabel_id", "verdi", "verditekst") %in% names(kb))) {
+    stop("Ugyldig kodebok. Obligatoriske kolonnar er 'variabel_id', 'verdi' og 'verditekst'.")
+  }
+
   # Namn på variablar som skal fyllast ut
   arg = named_dots(...)
   vnamn_d = names(arg) # Namn i datasettet
