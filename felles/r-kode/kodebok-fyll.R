@@ -42,9 +42,16 @@ df = d
 # Definisjon av funksjon
 kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
 
-  # Viss kodeboka ikkje inneheld dei tre nødvendige kolonnane
+  # Stopp viss kodeboka ikkje inneheld dei tre nødvendige kolonnane
   if (!all(c("variabel_id", "verdi", "verditekst") %in% names(kb))) {
     stop("Ugyldig kodebok. Obligatoriske kolonnar er 'variabel_id', 'verdi' og 'verditekst'.")
+  }
+
+  # Stopp viss nokre av dei tren nødvendige kolonnane har ugyldige verdiar
+  for (kol in c("variabel_id", "verdi", "verditekst")) {
+    if (any(is.na(kb[[kol]]))) {
+      stop(paste0("Ugyldig kodebok. Kolonnen '", kol, "' har NA-verdi(ar)."))
+    }
   }
 
   # Namn på variablar som skal fyllast ut

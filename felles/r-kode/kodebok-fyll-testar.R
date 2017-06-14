@@ -181,9 +181,9 @@ test_that("NA-verdiar i kodeboka vert oppdaga", {
   kb4 = kb
   kb4$verditekst[2] = NA
 
-  expect_error(d %>% kb_fyll(kb2), "Ugyldig kodebok. Kolonnen 'variabel_id' har NA-verdi(ar).")
-  expect_error(d %>% kb_fyll(kb3), "Ugyldig kodebok. Kolonnen 'verdi' har NA-verdi(ar).")
-  expect_error(d %>% kb_fyll(kb4), "Ugyldig kodebok. Kolonnen 'verditekst' har NA-verdi(ar).")
+  expect_error(d %>% kb_fyll(kb2), "Ugyldig kodebok. Kolonnen 'variabel_id' har NA-verdi(ar).", fixed = TRUE)
+  expect_error(d %>% kb_fyll(kb3), "Ugyldig kodebok. Kolonnen 'verdi' har NA-verdi(ar).", fixed = TRUE)
+  expect_error(d %>% kb_fyll(kb4), "Ugyldig kodebok. Kolonnen 'verditekst' har NA-verdi(ar).", fixed = TRUE)
 })
 
 test_that("Dupliserte verdiar i kodeboka vert oppdaga", {
