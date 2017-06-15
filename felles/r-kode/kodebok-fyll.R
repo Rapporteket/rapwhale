@@ -47,7 +47,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
     stop("Ugyldig kodebok. Obligatoriske kolonnar er 'variabel_id', 'verdi' og 'verditekst'.")
   }
 
-  # Stopp viss nokre av dei tren nødvendige kolonnane har ugyldige verdiar
+  # Stopp viss nokre av dei tre nødvendige kolonnane har ugyldige verdiar
   for (kol in c("variabel_id", "verdi", "verditekst")) {
     if (any(is.na(kb[[kol]]))) {
       stop(paste0("Ugyldig kodebok. Kolonnen '", kol, "' har NA-verdi(ar)."))
@@ -117,6 +117,13 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
         ifelse(length(manglar_i_kb) == 1, "ugyldig verdi", "ugyldige verdiar"),
         " (vart gjort om til NA): ", lag_liste(sort(manglar_i_kb))
       ))
+    }
+
+    # Stopp viss verdi- eller verditekst-variablane har dupliserte verdiar
+    for (kol in c("verdi", "verditekst")) {
+      if (any(duplicated(koder[[kol]]))) {
+        stop(paste0("Ugyldig kodebok. Variabelen '", vnamn, "' har dupliserte verdiar i kolonnen '", kol, "'."))
+      }
     }
 
     # Hent verditekster fra kodebok og legg til i datasettet
