@@ -143,13 +143,12 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
   df
 }
 
-# Kjapt eksempel på bruk
-d %>%
-  kb_fyll(kb, med, kjonn, prem = gensp)
-
-
-# Test at funksjonen fungerer
-test_adr = "h:/kvalreg/felles/r-kode/kodebok-fyll-testar.R"
-test_file(test_adr, reporter = "minimal") # *Veldig* kort og konsist samandrag
-test_file(test_adr, reporter = "check") # 13-linjes samandrag
-test_file(test_adr, reporter = "summary") # Alt (tar stor plass viss det er mange mislykka testar)
+# # Kjapt eksempel på bruk
+# d %>% kb_fyll(kb, med, kjonn, prem=gensp)
+#
+#
+# # Test at funksjonen fungerer
+# test_adr = "h:/kvalreg/felles/r-kode/kodebok-fyll-testar.R"
+# test_file(test_adr, reporter="minimal") # *Veldig* kort og konsist samandrag
+# test_file(test_adr, reporter="check")   # 13-linjes samandrag
+# test_file(test_adr, reporter="summary") # Alt (tar stor plass viss det er mange mislykka testar)
