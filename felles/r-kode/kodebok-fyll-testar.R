@@ -146,8 +146,7 @@ test_that("Åtvaring (men NA-verdi) viss datasettet inneheld verdiar som aktuell
   # Sjekk at ein får NA-verdiar der det manglar i kodeboka
   # (men ikkje NA-verdiar der det ikkje manglar, sjølv om det
   # er snakk om same variabel)
-  d_fylt = d %>%
-    kb_fyll(kb[-6, ])
+  d_fylt = suppressWarnings(d %>% kb_fyll(kb[-6, ]))
   expect_true(is.na(d_fylt$med_tekst[2]))
   expect_equal(as.character(d_fylt$med_tekst[1]), "Ibux")
   expect_equal(as.character(d_fylt$med_tekst[3]), "Antibac")
@@ -157,7 +156,8 @@ test_that("Åtvaring (men resultat) viss kodeboka ikkje inneheld *nokon* variabl
   kb2 = kb
   kb2$variabel_id = paste0("x_", kb2$variabel_id)
 
-  expect_identical(d %>% kb_fyll(kb2), d)
+  d2 = suppressWarnings(d %>% kb_fyll(kb2))
+  expect_identical(d2, d)
   expect_warning(d %>% kb_fyll(kb2), "Kodeboka inneheld ingen variablar som finst i datasettet.")
 })
 
