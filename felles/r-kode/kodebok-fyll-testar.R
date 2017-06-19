@@ -189,6 +189,7 @@ test_that("NA-verdiar i kodeboka vert oppdaga", {
 test_that("Dupliserte verdiar i kodeboka vert oppdaga", {
   kb2 = kb
   kb2$verdi[5] = kb2$verdi[4] # Duplisert verdi
+  d2 = filter(d, med != 3)
 
   kb3 = kb
   kb3$verditekst[5] = kb3$verditekst[4] # Duplisert verditekst
@@ -199,7 +200,7 @@ test_that("Dupliserte verdiar i kodeboka vert oppdaga", {
   kb5 = kb
   kb5$foo = 3 # *Ikkje* duplisert verdi (er frå kolonne som ikkje er 'verdi' eller 'verditekst')
 
-  expect_error(d %>% kb_fyll(kb2), "Ugyldig kodebok. Variabelen 'med' har dupliserte verdiar i kolonnen 'verdi'.")
+  expect_error(d2 %>% kb_fyll(kb2), "Ugyldig kodebok. Variabelen 'med' har dupliserte verdiar i kolonnen 'verdi'.")
   expect_error(d %>% kb_fyll(kb3), "Ugyldig kodebok. Variabelen 'med' har dupliserte verdiar i kolonnen 'verditekst'.")
   expect_error(d %>% kb_fyll(kb4), NA)
   expect_error(d %>% kb_fyll(kb5), NA)
