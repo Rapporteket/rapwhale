@@ -245,9 +245,9 @@ test_that("Tomt suffiks fungerer (og gjev åtvaring) (side 12)", {
     kjonn = factor(kjonn, levels = niv_kjonn),
     med = factor(med, levels = niv_med)
   )
-  expect_identical(d %>% kb_fyll(kb, suffiks = ""), d_fylt)
-  expect_warning(d %>% kb_fyll(kb, suffiks = ""), "Overskriv variabel: 'kjonn'")
-  expect_warning(d %>% kb_fyll(kb, suffiks = ""), "Overskriv variabel: 'med'")
+  expect_identical(d %>% kb_fyll(kb, .suffiks = ""), d_fylt)
+  expect_warning(d %>% kb_fyll(kb, .suffiks = ""), "Overskriv variabel: 'kjonn'")
+  expect_warning(d %>% kb_fyll(kb, .suffiks = ""), "Overskriv variabel: 'med'")
 })
 
 test_that("Overskriving av variablar ved *ikkje-tomt* suffiks gjev også åtvaring (men fungerer)", {
@@ -264,8 +264,8 @@ test_that("Overskriving av variablar ved *ikkje-tomt* suffiks gjev også åtvari
     103, 1, "mann"
   )
   d2_fylt %<>% mutate(kjonntest = factor(kjonntest, levels = niv_kjonn))
-  expect_warning(d2 %>% kb_fyll(kb, suffiks = "test"), "Overskriv variabel: 'kjonn'")
-  expect_identical(d2 %>% kb_fyll(kb, suffiks = "test"), d2_fylt)
+  expect_warning(d2 %>% kb_fyll(kb, .suffiks = "test"), "Overskriv variabel: 'kjonn'")
+  expect_identical(d2 %>% kb_fyll(kb, .suffiks = "test"), d2_fylt)
 })
 
 
@@ -286,7 +286,7 @@ test_that("Variabelkolonnar som står heilt først eller sist i datasettet funge
     kjonn = factor(kjonn, levels = niv_kjonn),
     med = factor(med, levels = niv_med)
   )
-  expect_identical(d2 %>% kb_fyll(kb, suffiks = ""), d_fylt)
+  expect_identical(d2 %>% kb_fyll(kb, .suffiks = ""), d_fylt)
 })
 
 test_that("Lause variablar som heiter det same som variablar i datasettet fører ikkje til problem", {
