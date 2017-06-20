@@ -11,7 +11,10 @@ colNoyt = c("#4D4D4D", "#737373", "#A6A6A6", "#DADADA") # Nøytralfarge
 colKontr = "#FF7260" # Kontrastfarge
 
 # ggplot2-tema for figurar
-tema = theme_light(base_size = 13)
+if (!exists("skriftstorleik")) { # Skriftstorleik bør vera definert i kvar årsrapportfil
+  skriftstorleik = 13
+}
+tema = theme_light(base_size = skriftstorleik)
 tema$panel.grid.minor$colour = "white"
 tema$strip.background$fill = "#f3f1ee"
 tema$strip.background$colour = "#e4e0da"
