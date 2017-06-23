@@ -231,9 +231,20 @@ num = function(x, desimalar) {
 
 # Tar inn eit desimaltal og viser det som prosent,
 # med mellomrom før prosentteiknet (slik det skal vera
-# på norsk), eks. 0.5 --> "50 %".
-prosent = function(x) {
+# på norsk), eks. 0.5 --> "50 %". Har intelligent
+# val av talet på desimalar, noko som ikkje alltid
+# er ønskjeleg.
+akse_prosent = function(x) {
   stringr::str_replace(scales::percent(x), "%$", " %")
+}
+# Tilsvarande funksjon, men der ein vel talet på
+# desimalar manuelt
+prosent = function(x, desimalar = 0) {
+  prosent_tekst = x %>%
+    map_chr(~ round(100 * .x, desimalar) %>%
+      format(nsmall = desimalar) %>%
+      str_c("\\prosent"))
+  ifelse(is.na(x), "\\endash{}", prosent_tekst)
 }
 
 
