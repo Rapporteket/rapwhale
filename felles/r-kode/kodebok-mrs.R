@@ -11,8 +11,7 @@ library(tidyverse) # Ymse nyttige pakkar
 library(readxl) # Lesing av Excel-filer
 library(stringr) # Tekstmassering
 library(magrittr) # Funksjonar som kan brukast med røyr-operatoren
-
-
+library(rlang) #
 
 # Lag standardisert kodebok -----------------------------------------------
 
@@ -177,18 +176,27 @@ les_dd_mrs = function(adresse, kb) {
     )
   )
 
+
   # Gjer om boolske variablar til ekte boolske variablar
   mrs_boolsk_til_boolsk = function(x) {
     # Sjekk først at det berre er gyldige verdiar
-    er_gyldig = (x %in% c("True", "False")) | is.na(x)
+    er_gyldig = (x %in% c(-1, 0, 1)) | is.na(x)
     if (!all(er_gyldig)) {
       stop("Finst ugyldige verdiar i boolske variablar (skal vera 0, 1 eller NA)")
     } else {
-      x == "True" # Gjer om til boolsk variabel
+      # boolske variabler skal ha 0 og ikke -1 for å inidikere "nei". -1 indikerer NA.
+      x[x == -1] = NA
+      x == 1
     }
   }
-  boolsk_ind = which(spek_innlesing$variabeltype == "boolsk")
-  d[, boolsk_ind] = lapply(d[, boolsk_ind], mrs_boolsk_til_boolsk)
+
+  # datadumpen har ikke alle variablene som er nevnt i kodeboka, så vi filtrerer dem bort
+  # fixme! disse må være med når vi får dem i datadumpen
+  boolske_var = spek_innlesing %>%
+    filter(variabeltype == "boolsk") %>%
+    pull(variabel_id)
+  d = d %>%
+    mutate_at(boolske_var, mrs_boolsk_til_boolsk)
 
   # Gjer om tidsvariablar til ekte tidsvariablar
   # Fixme: Nødvendig pga. https://github.com/tidyverse/readr/issues/642
