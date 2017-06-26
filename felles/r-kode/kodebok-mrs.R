@@ -182,7 +182,7 @@ les_dd_mrs = function(adresse, kb) {
     # Sjekk først at det berre er gyldige verdiar
     er_gyldig = (x %in% c(-1, 0, 1)) | is.na(x)
     if (!all(er_gyldig)) {
-      stop("Finst ugyldige verdiar i boolske variablar (skal vera 0, 1 eller NA)")
+      stop("Finst ugyldige verdiar i boolske variablar (skal vera -1, 1 eller NA)")
     } else {
       # boolske variabler skal ha 0 og ikke -1 for å inidikere "nei". -1 indikerer NA.
       x[x == -1] = NA
@@ -202,8 +202,11 @@ les_dd_mrs = function(adresse, kb) {
   # Fixme: Nødvendig pga. https://github.com/tidyverse/readr/issues/642
   #        Fjern når denne feilen er fiksa (rett då òg fixme-en
   #        lenger oppe som også handlar om dette)
-  dt_ind = which(spek_innlesing$variabeltype == "dato_kl")
-  d[, dt_ind] = lapply(d[, dt_ind], parse_datetime, format = "%d.%m.%Y %H:%M:%S")
+  tid_var = spek_innlesing %>%
+    filter(variabeltype == "dato_kl") %>%
+    pull(variabel_id)
+  d = d %>%
+    mutate_at(tid_var, parse_datetime, format = "%d.%m.%Y %H:%M:%S")
 
   # Fila har (ved ein feil) ekstra semikolon på slutten, som fører
   # til ekstra kolonne som har tomt namn (men får prefikset mrs_).
@@ -214,8 +217,6 @@ les_dd_mrs = function(adresse, kb) {
   # Returner datasettet
   d
 }
-
-
 
 # Eksempel  -----------------------------------------------------------
 
