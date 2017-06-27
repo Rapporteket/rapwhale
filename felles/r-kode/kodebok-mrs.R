@@ -180,13 +180,20 @@ les_dd_mrs = function(adresse, kb) {
   # Gjer om boolske variablar til ekte boolske variablar
   mrs_boolsk_til_boolsk = function(x) {
     # Sjekk først at det berre er gyldige verdiar
-    er_gyldig = (x %in% c(-1, 0, 1)) | is.na(x)
+
+    # Nokre datadumpar har verdiane -1, 0 og 1
+    # og nokre har "False" og "True"
+    # (og me ventar på at nye artar skal dukka opp ...)
+    er_gyldig = (x %in% c("-1", "0", "1", "False", "True")) | is.na(x)
     if (!all(er_gyldig)) {
-      stop("Finst ugyldige verdiar i boolske variablar (skal vera -1, 1 eller NA)")
+      stop("Finst ugyldige verdiar i boolske variablar (skal vera '-1', 'False', '1' eller 'True' eller mangla)")
     } else {
-      # boolske variabler skal ha 0 og ikke -1 for å inidikere "nei". -1 indikerer NA.
-      x[x == -1] = NA
-      x == 1
+      # Usann er koda som "0" eller som "False",
+      # mens sann er koda som "1" eller "True",
+      # mens manglande verdi er koda som
+      # "-1" eller tom verdi.
+      x[(x == "-1") | (x == "")] = NA
+      (x == "1") | (x == "True") # Testen i er_gyldig() sikrar at alt som ikkje er sant, er usant
     }
   }
 
