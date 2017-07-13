@@ -88,6 +88,28 @@ flytt_opp = function(y, tekst, hoyde = .015) {
   y[match(tekst, tekst_ny)]
 }
 
+### Funksjon for å lage shewhart charts
+# Denne følger samme input som qic i qicharts-pakken
+# Den skal utivkles til ggplot format etterhvert.
+# res = responsvariabel (y-aksen)
+# antall = nevneren i en prosent-chart
+# gruppe = forklaringsvariabel/tisdvariabel/gruppe (x-aksen)
+# figtype = figurtypen, basert på typer i kallet til qic
+# d = data, gjerne på long format
+# tittel = Hvis du vil mot all formening ha en tittel til "Figuren".
+
+lag_shewhart = function(res, antall = NULL, gruppe, figtype, data, tittel = NULL, ...) {
+  res = quo_name(enquo(res))
+  gruppe = quo_name(enquo(gruppe))
+
+  if (figtype == "p") {
+    antall = quo_name(enquo(antall))
+    tcc(data[[res]], d = data[[antall]], x = data[[gruppe]], chart = figtype, main = tittel, ...)
+  } else {
+    tcc(data[[res]], x = data[[gruppe]], chart = figtype, main = tittel, ...)
+  }
+}
+
 ### Lag linjegraf med 95 % konfidensintervall
 
 # Krev følgjande aes-verdiar: x, y, ymin, ymax (dei to siste berre viss konfint = TRUE)
