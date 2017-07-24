@@ -6,6 +6,7 @@
 
 # Kopier klassefila me brukar til ein plass LaTeX finn ho,
 # slik at me slepp å ha ein kopi overalt.
+# Sjå https://tex.stackexchange.com/a/1138 for meir informasjon.
 texmappe_rot = system2("kpsewhich", "-var-value=TEXMFHOME", stdout = TRUE)
 texmappe = paste0(texmappe_rot, "/tex/latex/kvalreg/")
 dir.create(texmappe, showWarnings = FALSE, recursive = TRUE)
