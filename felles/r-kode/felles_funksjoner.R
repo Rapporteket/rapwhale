@@ -1,6 +1,21 @@
 # Dette skriptet inneholder en rekke funksjoner som er potensielt nyttige
 # (og noen, uunnværlige) i registersammenheng og i andre sammenheng.
 
+
+# LaTeX-ting --------------------------------------------------------------
+
+# Kopier klassefila me brukar til ein plass LaTeX finn ho,
+# slik at me slepp å ha ein kopi overalt.
+texmappe_rot = system2("kpsewhich", "-var-value=TEXMFHOME", stdout = TRUE)
+texmappe = paste0(texmappe_rot, "/tex/latex/kvalreg/")
+dir.create(texmappe, showWarnings = FALSE, recursive = TRUE)
+invisible(file.copy(
+  from = "h:/kvalreg/felles/latex-klassar/kvalreg-rapport.cls",
+  to = texmappe, overwrite = TRUE, copy.date = TRUE
+))
+
+
+
 # grafobjekter ----------------------------------------------------------
 # de offisielle fargene (som eg ikkje er så glad i)
 # du mener, som INGEN liker.
