@@ -28,10 +28,10 @@ les_oqr_kb = function(adresse) {
       type = col_character(),
       listeverdier = col_character(),
       listetekst = col_character(),
-      normalintervall_start_numerisk = col_integer(),
-      normalintervall_slutt_numerisk = col_integer(),
-      maksintervall_start_numerisk = col_integer(),
-      maksintervall_slutt_numerisk = col_integer(),
+      normalintervall_start_numerisk = col_character(), # Sjå merknad nedanfor om årsaka til denne må vera tekst
+      normalintervall_slutt_numerisk = col_character(),
+      maksintervall_start_numerisk = col_character(),
+      maksintervall_slutt_numerisk = col_character(),
       normalintervall_start_dato = col_character(),
       normalintervall_slutt_dato = col_character(),
       maksintervall_start_dato = col_character(),
@@ -51,6 +51,17 @@ les_oqr_kb = function(adresse) {
     )
   )
 
+  # Dei numeriske min- og maksverdiane kan ifølgje dokumentasjonen
+  # http://helseregister.no/confluence/display/KG/Klokeboken
+  # òg vera tekst som referer til andre felt, eks. «birthYear»
+  # eller «todayYear». Dei kan me ikkje bruka, så me fjernar
+  # dei rett og slett. Dette gjer me lettast ved å prøva
+  # å gjera tekst om til tal med as.numeric(), som gjev ut
+  # NA for alt som ikkje ser ut som tal.
+  tekst_til_tal = function(x) {
+    suppressWarnings(as.numeric(x))
+  }
+
   # Gjer om kodeboka til vårt *standardiserte* format
   # (Det finst ikkje heilt ei 1-til-1-kopling, men me
   #  gjer so godt me kan, og set verdiar til NA der
@@ -67,10 +78,10 @@ les_oqr_kb = function(adresse) {
       verdi = listeverdier,
       verditekst = listetekst,
       desimalar = desimaler,
-      min = maksintervall_start_numerisk,
-      maks = maksintervall_slutt_numerisk,
-      min_rimeleg = normalintervall_start_numerisk,
-      maks_rimeleg = normalintervall_slutt_numerisk,
+      min = tekst_til_tal(maksintervall_start_numerisk),
+      maks = tekst_til_tal(maksintervall_slutt_numerisk),
+      min_rimeleg = tekst_til_tal(normalintervall_start_numerisk),
+      maks_rimeleg = tekst_til_tal(normalintervall_slutt_numerisk),
       kommentar = kommentar,
       kategori = NA,
       innleiing = NA,
