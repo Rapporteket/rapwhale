@@ -215,21 +215,22 @@ if (any(!verdi_ok)) {
 }
 
 
-#     idkol = quo_name(enquo(idkol))
-#   ids = rle(kb[[idkol]])$values
-#
-#
-# inkos_vartype = kb_varid$data %>%
-#   map_lgl(~length(unique(.x$variabeltype)) > 1)
-# if(any(inkos_vartype)) {
-#   warning("Inkonsistente variabeltypar for:\n",
-#           lag_liste(d_varid$variabel_id[inkos_vartype]))
-# }
+# Forslag til fleire testar:
+# - variabeltype kan berre ta eit gitt sett verdiar
+# - eining kan ikkje vera tom ("") (men kan vera NA)
+# - unik må vera ja/nei (og ikkje NA)
+# - obligatorisk må vera ja/nei (og ikkje NA)
+# - manglande må vera ja/nei (og ikkje NA)
+# - desimalar må vera eit heiltal (ikkje som datatype, men som at det ikkje har nokon brøkdel, dvs. x %% 1 == 0)
+# - desimalar må vera >= 0
+# - min må vera < maks (dersom begge finst)
+# - min_rimeleg må vera < maks_rimeleg (dersom begge finst)
+# - min må vera <= min_rimeleg (dersom begge finst)
+# - maks må vera >= maks_rimeleg (dersom begge finst)
+# - viss kommentar_rimeleg er fylt ut, må min_rimeleg *eller* maks_rimeleg vera fylt ut
+# ... sikker mange andre testar me kan laga
 
 
-# Sjekk at skjemanamn og kategori er unik innanfor skjema (skjema_id)
-kb_skjema = kb %>%
-  nest(-skjema_id)
 
 
 
