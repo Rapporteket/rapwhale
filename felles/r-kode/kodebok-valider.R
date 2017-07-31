@@ -2,13 +2,57 @@
 
 # Les inn nødvendige pakkar
 library(tidyverse)
+library(stringr)
 library(readxl)
 library(rlang)
 library(purrr)
 
+# Gjer kodeboka om til kanonisk form, dvs. slik at
+# implisitte verdiar er fylde ut.
+kb_til_kanonisk_form = function(kb) {
+  # Avgrupper (i tilfelle dataramma alt er gruppert,
+  # noko som kan føra til problem nedanfor
+  kb = ungroup(kb)
+
+  # Gjer kodeboka om til ikkje-glissen form,
+  # dvs. at skjema_id, variabel_id og sånt er gjentatt nedover.
+  mogleg_glisne_kol = quos(skjema_id, skjemanamn, kategori, variabel_id, variabeltype)
+  kb = kb %>%
+    fill(!!!mogleg_glisne_kol)
+
+  # Nokre andre kolonnar må òg gjerast om til ikkje-glissen form,
+  # men no berre innanfor variabel-ID. For eksempel skal «forklaring»
+  # gjentakast nedanfor, men skal ikkje kryssa variabelgrenser
+  # (noko som kunne skje viss me brukte metoden over, sidan «forklaring»
+  # òg skal kunna stå tom).
+  mogleg_glisne_kol = quos(variabeletikett, forklaring, variabeltype, unik, obligatorisk)
+  kb = kb %>%
+    mutate(radnr = 1:n()) %>%
+    group_by(variabel_id) %>% # Endrar rekkjefølgja på radene
+    fill(!!!mogleg_glisne_kol) %>%
+    ungroup() %>%
+    arrange(radnr) %>% # Gjenopprett radrekkefølgja
+    select(-radnr)
+
+  # Fyll ut implisitte obligatoriskverdiar og unikverdiar
+  # til «nei». «ja*» tyder obligatorisk berre under visse
+  # vilkår, så det skal òg reknast som «nei».
+  kb$obligatorisk[is.na(kb$obligatorisk) | kb$obligatorisk == "ja*"] = "nei"
+  kb$unik[is.na(kb$unik) | kb$unik == "ja*"] = "nei"
+
+  # Fyll ut implisitte verdiar for «manglande»
+  kb$manglande[is.na(kb$manglande)] = "nei"
+
+  # Returner kodeboka på kanonisk form
+  kb
+}
+
+#
+
 # Eksempeldata for testing
 mappe = "h:/kvalreg/ablasjonsregisteret/"
 kb = read_excel(paste0(mappe, "kodebok-utkast.xlsx"), sheet = 1)
+# write.csv2("h:/kvalreg/ablasjonsregisteret/abla-kanonisk.csv")
 
 # fixme:
 #  - Legg til mange nye testar
@@ -61,15 +105,55 @@ if (!is.na(forste_feil)) {
   ))
 }
 
+# Ser vidare berre på standardkolonnane
+kb = kb[std_namn]
+
+# Sjekk at variabelformatet (tal, tekst, dato osv.) er rett
+format_std = tribble(
+  ~kol_namn, ~kol_klasse_std,
+  "skjema_id", "character",
+  "skjemanamn", "character",
+  "kategori", "character",
+  "innleiing", "character",
+  "variabel_id", "character",
+  "variabeletikett", "character",
+  "forklaring", "character",
+  "variabeltype", "character",
+  "eining", "character",
+  "unik", "character",
+  "obligatorisk", "character",
+  "verdi", "numeric",
+  "verditekst", "character",
+  "manglande", "character",
+  "desimalar", "numeric",
+  "min", "numeric",
+  "maks", "numeric",
+  "min_rimeleg", "numeric",
+  "maks_rimeleg", "numeric",
+  "kommentar_rimeleg", "character",
+  "utrekningsformel", "character",
+  "logikk", "character",
+  "kommentar", "character"
+)
+format_kb = tibble(kol_namn = names(kb), kol_klasse = map_chr(kb, ~ class(.x)[1]))
+format = left_join(format_std, format_kb, by = "kol_namn")
+format_feil = format %>%
+  filter(kol_klasse_std != kol_klasse)
+if (nrow(format_feil) > 0) {
+  warning(
+    "Feil format på kolonnar:\n",
+    format_feil %>% as.data.frame() %>% capture.output() %>% paste0(sep = "\n")
+  )
+}
+
 # I vidare testar føreset me at kodeboka er på ikkje-glissen form,
 # dvs. at skjema_id, variabel_id og sånt er gjentatt nedover.
 # Viss ho er ikkje på den forma, ordnar me det sjølv. :)
-mogleg_glisne_kol = quos(skjema_id, skjemanamn, kategori, variabel_id, variabeltype)
-kb = fill(kb, !!!mogleg_glisne_kol)
+kb = kb_til_kanonisk_form(kb)
 
-
-# Sjekk at me ikkje har duplikate skjema-ID-ar, skjemanamn eller variabel-ID-ar
-# (duplikate kategoriar:
+# Sjekk at me ikkje har duplikate skjema-ID-ar, skjemanamn eller variabel-ID-ar,
+# dvs. at alle unike verdiar kjem samanhengande nedover, utan nokre hòl
+# (eks. «xxxyy» er OK, men «xxyyx» er det ikkje).
 sjekk_dup = function(kb, idkol) {
   idkol = quo_name(enquo(idkol))
   ids = rle(kb[[idkol]])$values
@@ -85,17 +169,57 @@ sjekk_dup(kb, skjema_id)
 sjekk_dup(kb, skjemanamn)
 sjekk_dup(kb, variabel_id) # Skal vera unik, ikkje berre innan skjema
 
-# Sjekk at kvar variabel berre har éin (dvs. unik) variabeltype
-d_varid = kb %>%
-  nest(-variabel_id)
-inkos_vartype = d_varid$data %>%
-  map_lgl(~ length(unique(.x$variabeltype)) > 1)
-if (any(inkos_vartype)) {
-  warning(
-    "Inkonsistente variabeltypar for:\n",
-    lag_liste(d_varid$variabel_id[inkos_vartype])
-  )
+# Sjekk at valt variabel berre har éin verdi innanfor kvar gruppe
+sjekk_ikkjevar = function(df, gruppe, varid) {
+  gruppe_tekst = quo_name(enquo(gruppe))
+  varid_tekst = quo_name(enquo(varid))
+  nest_cols = setdiff(names(df), gruppe_tekst)
+  df_grupper = df %>%
+    nest_(key_col = "data", nest_cols = nest_cols) # fixme: Byt til quasi-quotation, dvs. «-!!gruppe» når det er støtta i dplyr
+
+  ikkjeunike = df_grupper$data %>%
+    map_lgl(~ length(unique(.x[[varid_tekst]])) > 1)
+
+  if (any(ikkjeunike)) {
+    warning(
+      "Varierande/inkonsistente '", varid_tekst, "'-verdiar for desse '", gruppe_tekst, "'-verdiane:\n",
+      lag_liste(df_grupper[[gruppe_tekst]][ikkjeunike])
+    )
+  }
 }
+
+
+# Sjekk at innanfor skjema er skjemanamn unikt
+sjekk_ikkjevar(kb, skjema_id, skjemanamn)
+
+# Sjekk at kvar variabel berre har éin (dvs. unik)
+# variabeltype, variabeletikett osv.
+sjekk_ikkjevar(kb, variabel_id, variabeltype)
+sjekk_ikkjevar(kb, variabel_id, variabeletikett)
+sjekk_ikkjevar(kb, variabel_id, forklaring)
+sjekk_ikkjevar(kb, variabel_id, unik)
+sjekk_ikkjevar(kb, variabel_id, obligatorisk)
+
+
+
+
+
+#     idkol = quo_name(enquo(idkol))
+#   ids = rle(kb[[idkol]])$values
+#
+#
+# inkos_vartype = kb_varid$data %>%
+#   map_lgl(~length(unique(.x$variabeltype)) > 1)
+# if(any(inkos_vartype)) {
+#   warning("Inkonsistente variabeltypar for:\n",
+#           lag_liste(d_varid$variabel_id[inkos_vartype]))
+# }
+
+
+# Sjekk at skjemanamn og kategori er unik innanfor skjema (skjema_id)
+kb_skjema = kb %>%
+  nest(-skjema_id)
+
 
 
 # Viss kodeboka brukar kategoriar, sjekk at alle skjema
