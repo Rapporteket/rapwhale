@@ -142,6 +142,12 @@ les_oqr_kb = function(adresse) {
   kodebok = kodebok %>%
     select_(.dots = c(std_namn, ekstra_namn))
 
+  # Nokre kategoriske variablar har undergruppering, markert med at «verdi»
+  # er sett til «optgroup» (og «verditekst» til namnet på gruppa).
+  # Desse er ikkje ein del av dei gyldige verdiane, så me fjernar dei.
+  kodebok = kodebok %>%
+    filter((verdi != "optgroup") | is.na(verdi)) # Tar med ev. NA-verdiar, slik at kb_er_gyldig() kan oppdaga dei
+
   # Returner kodeboka
   kodebok
 }
