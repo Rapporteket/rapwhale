@@ -130,10 +130,10 @@ format_std = tribble(
   "eining", "character",
   "unik", "character",
   "obligatorisk", "character",
-  "verdi", "numeric",
+  "verdi", "character", # Oftast numerisk, men av og til ikkje, eks. ICD-kodar, så må vera tekst
   "verditekst", "character",
   "manglande", "character",
-  "desimalar", "numeric",
+  "desimalar", "integer",
   "min", "numeric",
   "maks", "numeric",
   "min_rimeleg", "numeric",
@@ -254,7 +254,6 @@ if (any(!is.na(kb$kategori))) {
 # - unik må vera ja/nei (og ikkje NA)
 # - obligatorisk må vera ja/nei (og ikkje NA)
 # - manglande må vera ja/nei (og ikkje NA)
-# - desimalar må vera eit heiltal (ikkje som datatype, men som at det ikkje har nokon brøkdel, dvs. x %% 1 == 0)
 # - desimalar må vera >= 0
 # - min må vera < maks (dersom begge finst)
 # - min_rimeleg må vera < maks_rimeleg (dersom begge finst)
