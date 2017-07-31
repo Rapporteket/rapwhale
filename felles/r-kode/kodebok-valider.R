@@ -57,12 +57,10 @@ kb_til_kanonisk_form = function(kb) {
   kb
 }
 
-#
 
 # Eksempeldata for testing
-mappe = "h:/kvalreg/ablasjonsregisteret/"
-kb = read_excel(paste0(mappe, "kodebok-utkast.xlsx"), sheet = 1)
-# write.csv2("h:/kvalreg/ablasjonsregisteret/abla-kanonisk.csv")
+# mappe = "h:/kvalreg/ablasjonsregisteret/"
+# kb = read_excel(paste0(mappe,"kodebok-utkast.xlsx"), sheet = 1)
 
 # fixme:
 #  - Legg til mange nye testar
