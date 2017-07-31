@@ -16,7 +16,7 @@ kb_til_kanonisk_form = function(kb) {
 
   # Gjer kodeboka om til ikkje-glissen form,
   # dvs. at skjema_id, variabel_id og sånt er gjentatt nedover.
-  mogleg_glisne_kol = quos(skjema_id, skjemanamn, kategori, variabel_id, variabeltype)
+  mogleg_glisne_kol = quos(skjema_id, variabel_id)
   kb = kb %>%
     fill(!!!mogleg_glisne_kol)
 
@@ -29,6 +29,16 @@ kb_til_kanonisk_form = function(kb) {
   kb = kb %>%
     mutate(radnr = 1:n()) %>%
     group_by(variabel_id) %>% # Endrar rekkjefølgja på radene
+    fill(!!!mogleg_glisne_kol) %>%
+    ungroup() %>%
+    arrange(radnr) %>% # Gjenopprett radrekkefølgja
+    select(-radnr)
+
+  # Tilsvarande men no innanfor skjema_id
+  mogleg_glisne_kol = quos(skjemanamn, kategori)
+  kb = kb %>%
+    mutate(radnr = 1:n()) %>%
+    group_by(skjema_id) %>% # Endrar rekkjefølgja på radene
     fill(!!!mogleg_glisne_kol) %>%
     ungroup() %>%
     arrange(radnr) %>% # Gjenopprett radrekkefølgja
@@ -199,6 +209,8 @@ sjekk_ikkjevar(kb, variabel_id, variabeletikett)
 sjekk_ikkjevar(kb, variabel_id, forklaring)
 sjekk_ikkjevar(kb, variabel_id, unik)
 sjekk_ikkjevar(kb, variabel_id, obligatorisk)
+sjekk_ikkjevar(kb, variabel_id, kategori) # Variablar kan ikkje kryssa kategori- eller skjemagrenser
+sjekk_ikkjevar(kb, variabel_id, skjema_id)
 
 # Sjekk at alle verdiar for kategoriske variablar er unike og ingen er NA
 kb_kat = kb %>%
@@ -214,9 +226,25 @@ if (any(!verdi_ok)) {
   )
 }
 
+# *Viss* kodeboka brukar kategoriar (det er frivillig å bruka,
+# men viss ein brukar det, skal alle skjema ha minst éin kategori),
+# sjekk at alle skjema startar med ei kategorioverskrift
+# (me sjekkar tidlegare oppe at desse er unike innanfor variabel_id)
+if (any(!is.na(kb$kategori))) {
+  kb_skjema = kb %>%
+    nest(-skjema_id)
+  har_kat = kb_skjema$data %>%
+    map_lgl(~ (!is.na(.x$kategori[1])) & (.x$kategori[1] != ""))
+  if (any(!har_kat)) {
+    warning(
+      "Nokre skjema manglar kategorioverskrift (i førsterader):\n",
+      lag_liste(kb_skjema$skjema_id[!har_kat])
+    )
+  }
+}
 
 # Forslag til fleire testar:
-# - variabeltype kan berre ta eit gitt sett verdiar
+# - variabeltype kan berre ta eit gitt sett verdiar (som ikkje inkluderer NA)
 # - eining kan ikkje vera tom ("") (men kan vera NA)
 # - unik må vera ja/nei (og ikkje NA)
 # - obligatorisk må vera ja/nei (og ikkje NA)
@@ -229,22 +257,3 @@ if (any(!verdi_ok)) {
 # - maks må vera >= maks_rimeleg (dersom begge finst)
 # - viss kommentar_rimeleg er fylt ut, må min_rimeleg *eller* maks_rimeleg vera fylt ut
 # ... sikker mange andre testar me kan laga
-
-
-
-
-
-# Viss kodeboka brukar kategoriar, sjekk at alle skjema
-# startar med ei kategorioverskrift
-#
-# # Sjekk at alle skjema startar me ei kategorioverskrift
-# forsterader = kb %>% filter((!is.na(skjema_id)) & is.na(kategori))
-# if(not(nrow(forsterader)==0) {
-#   warning()
-# }
-#
-# # # Les inn kodeboka
-# # adresse_kb = "h:/kvalreg/ablasjonsregisteret/AblaNor_klokeboken.csv_27.07.2017.csv"
-# # kb = les_oqr_kb(adresse_kb)
-# kb
-#
