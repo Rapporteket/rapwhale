@@ -246,6 +246,13 @@ if (any(!is.na(kb$kategori))) {
 # Forslag til fleire testar:
 # - variabeltype kan berre ta eit gitt sett verdiar (som ikkje inkluderer NA)
 # - eining kan ikkje vera tom ("") (men kan vera NA)
+# - viss ein har eining, må variabeltypen vera numerisk
+# - viss ein har desimalar, må variabeltypen vera numerisk
+# - viss ein har min- eller maksverdi, må variabeltypen vera numerisk
+# - viss ein har min_rimeleg- eller maks_rimeleg-verdi, må variabeltypen vera numerisk (me bør forresten vurdera å laga tilsvarande variablar for datoar)
+# - viss ein har verdi, må variabeltypen vera kategorisk
+# - viss ein har verditekst, må variabeltypen vera kategorisk
+# - viss manglande == ja, må variabeltypen vera kategorisk
 # - unik må vera ja/nei (og ikkje NA)
 # - obligatorisk må vera ja/nei (og ikkje NA)
 # - manglande må vera ja/nei (og ikkje NA)
@@ -256,4 +263,9 @@ if (any(!is.na(kb$kategori))) {
 # - min må vera <= min_rimeleg (dersom begge finst)
 # - maks må vera >= maks_rimeleg (dersom begge finst)
 # - viss kommentar_rimeleg er fylt ut, må min_rimeleg *eller* maks_rimeleg vera fylt ut
-# ... sikker mange andre testar me kan laga
+# - sjekk at variabel_id er på anbefalt format, dvs. små bokstavar, understrek eller tal, ikkje tal først osv.
+#   (sjå testfunksjon for dette i ei anna fil, som me kanskje kan flytta hit).
+#   Bør kunne velja om akkurat denne testen skal køyrast (standard ja), sidan me
+#   kan få kodebøker frå MRS, OQR og liknande der me *ikkje* kan krevja at
+#   variabelnamna er fornuftige, men er nyttig å testa dette når me utviklar kodebøker ...
+# ... sikkert mange andre testar me kan laga
