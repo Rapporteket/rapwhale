@@ -200,8 +200,19 @@ sjekk_ikkjevar(kb, variabel_id, forklaring)
 sjekk_ikkjevar(kb, variabel_id, unik)
 sjekk_ikkjevar(kb, variabel_id, obligatorisk)
 
-
-
+# Sjekk at alle verdiar for kategoriske variablar er unike og ingen er NA
+kb_kat = kb %>%
+  filter(variabeltype == "kategorisk")
+kb_kat_nest = kb_kat %>%
+  nest(-variabel_id)
+verdi_ok = kb_kat_nest$data %>%
+  map_lgl(~ (!any(duplicated(.x$verdi) | is.na(.x$verdi))))
+if (any(!verdi_ok)) {
+  warning(
+    "Variablar har dupliserte 'verdi'-ar eller NA som 'verdi':\n",
+    lag_liste(kb_kat_nest$variabel_id[!verdi_ok])
+  )
+}
 
 
 #     idkol = quo_name(enquo(idkol))
