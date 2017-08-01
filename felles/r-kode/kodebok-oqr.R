@@ -95,6 +95,34 @@ les_oqr_kb = function(adresse) {
       variabel_id = str_to_lower(variabel_id)
     )
 
+  # Ein «Statusvariabel» er eigentleg ein kategorisk variabel
+  # som kan ta tre verdiar, -1, 0 og 1 (oppretta, lagra og ferdigstilt).
+  # Me gjer derfor kvar statusvariabel om til ein kategorisk variabel.
+  # Kodeboka må utvidast med nye rader, og me gjer det iterativt,
+  # éin gong for kvar statusvariabel (i teorien litt tregt/suboptimalt,
+  # men i praksis kjemperaskt, sidan me ikkje har kodebøker med tusenvis
+  # av statusvariablar, berre maks éin per skjema).
+  while (any(kodebok$variabeltype == "Statusvariabel")) {
+    # Radnummeret til første (ubehandla) statusvariabel
+    ind = which(kodebok$variabeltype == "Statusvariabel")[1]
+
+    # Rada må bytast ut med tre rader, éi for kvar moglege verdi.
+    # Dette gjer me først ved å utvida kodeboka med to ekstra,
+    # identiske rader rett etter rada. Så set me inn rette verdiar.
+    #
+    # Gjenta aktuell rad tre gongar (når me gjer det slik,
+    # funkar det òg viss rada er første eller siste rad).
+    kodebok = kodebok[append(seq_len(nrow(kodebok)),
+      values = c(ind, ind), after = ind
+    ), ]
+
+    # Legg rette verdiar inn i dei tre nye radene
+    nyind = c(ind, ind + 1, ind + 2)
+    kodebok$verdi[nyind] = -1:1
+    kodebok$verditekst[nyind] = c("Opprettet", "Lagret", "Ferdigstilt")
+    kodebok$variabeltype[nyind] = "Listevariabel"
+  }
+
   # Oversikt over variabeltypar i OQR og tilhøyrande standardnamn som me brukar
   vartype_oqr_standard = tribble(
     ~type_oqr, ~type_standard,
