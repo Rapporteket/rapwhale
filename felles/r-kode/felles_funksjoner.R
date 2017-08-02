@@ -239,9 +239,23 @@ normaliser_varnamn = function(x) {
 
 # Innargument:
 #   desimalar: talet på desimalar etter komma (rund av og vis så mange desimalar)
-num = function(x, desimalar) {
+#      tabell: talet vert brukt i ein tabell og skal derfor ha tabelltekst
+#
+# Argumentet «tabell» burde vore unødvendig, men siunitx *insisterer*
+# på å endra skrifta til \textrm, sjølv om eg har slått på alle moglege
+# detect-argument (og prøvd mykje anna, og søkt på nettet etter løysingar
+# (bruk søkeorda «siunitx» og «fontspec»)). Alle andre løysingar eg har
+# funne gjer at anten vert ikkje rett skrift brukt i brødteksten eller så vert
+# ikkje rett tekst brukt i tabellforklaringa eller så vert ikkje rett tekst
+# brukt i sjølve tabellen. (Merk at me brukar ulik skrift i tabell-/
+# figurforklaringa, sjølv om dei begge er Calibri. Ein ser lettast forskjellen
+# ved å studera 1-tala.)
+#
+# Som ei nødløysing har me ordna det slik at me kan manuelt velja at
+# tabellskrifta skal brukast når me kallar num()-funksjonen.
+num = function(x, desimalar, tabell = FALSE) {
   # Argument til \num-kommandoen
-  argtekst = ""
+  argtekst = ifelse(tabell, "text-rm=\\tablefont", "")
 
   # Spesialtilpass kommandoen etter talet på desimalar
   if (!missing(desimalar)) {
