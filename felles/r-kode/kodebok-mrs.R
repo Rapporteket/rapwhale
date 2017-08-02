@@ -119,6 +119,17 @@ les_dd_mrs = function(adresse, kb) {
     sep = ";", nlines = 1, quiet = TRUE
   )
 
+  # Datafila *kan* ikkje innehalda duplikate kolonnenamn,
+  # sidan me då ikkje kan veta kva kolonne eit namn svarar til.
+  # Stopp derfor viss me finn duplikate namn.
+  dupnamn = duplicated(varnamn_fil)
+  if (any(dupnamn)) {
+    stop(
+      "Datafila har duplikate variabelnamn:\n",
+      str_c(varnamn_fil[dupnamn], collapse = "\n")
+    )
+  }
+
   # Hent ut første linje frå kodeboka, dvs. den linja som
   # inneheld aktuell informasjon
   kb_info = kb %>%

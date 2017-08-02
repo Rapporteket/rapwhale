@@ -196,6 +196,17 @@ les_dd_oqr = function(adresse, kb, datoformat = "%Y-%m-%d") {
     sep = ";", nlines = 1, quiet = TRUE
   )
 
+  # Datafila *kan* ikkje innehalda duplikate kolonnenamn,
+  # sidan me då ikkje kan veta kva kolonne eit namn svarar til.
+  # Stopp derfor viss me finn duplikate namn.
+  dupnamn = duplicated(varnamn_fil)
+  if (any(dupnamn)) {
+    stop(
+      "Datafila har duplikate variabelnamn:\n",
+      str_c(varnamn_fil[dupnamn], collapse = "\n")
+    )
+  }
+
   # disse variabelnamna er ikkje dei vi brukar.
   # henter inn namna som vi faktisk brukar
   varnamn = kb$variabel_id[match(varnamn_fil, kb$oqr_variabel_id_norsk)] %>%
