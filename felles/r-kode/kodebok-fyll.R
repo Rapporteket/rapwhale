@@ -47,6 +47,13 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
     stop("Ugyldig kodebok. Obligatoriske kolonnar er 'variabel_id', 'verdi' og 'verditekst'.")
   }
 
+  # Sjå vidare berre på kategoriske variablar (dersom kodeboka
+  # har informasjon om kva som er kategoriske variablar)
+  if (has_name(kb, "variabeltype")) {
+    kb = kb %>%
+      filter(variabeltype == "kategorisk")
+  }
+
   # Stopp viss nokre av dei tre nødvendige kolonnane har ugyldige verdiar
   # eller viss dei er faktorar
   for (kol in c("variabel_id", "verdi", "verditekst")) {
