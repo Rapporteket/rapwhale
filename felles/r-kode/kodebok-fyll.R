@@ -121,7 +121,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
     # Åtvaring og NA-verdi viss datasettet inneheld verdiar
     # som aktuell variabel ikkje har i kodeboka
     # (fixme: Vurderingssak: Bør dette heller gje feilmelding enn åtvaring?)
-    manglar_i_kb = setdiff(df[[vnamn]], koder$verdi)
+    manglar_i_kb = na.omit(setdiff(df[[vnamn]], koder$verdi))
     if (length(manglar_i_kb) > 0) {
       warning(str_c(
         "Variabelen ", lag_liste(vnamn), " har ",
