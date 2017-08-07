@@ -152,6 +152,14 @@ test_that("Åtvaring (men NA-verdi) viss datasettet inneheld verdiar som aktuell
   expect_equal(as.character(d_fylt$med_tekst[3]), "Antibac")
 })
 
+test_that("Ikkje åtvaring eller feilmelding viss datasettet inneheld NA-verdiar", {
+  d2 = d
+  d2$kjonn[3] = NA
+
+  expect_warning(d2 %>% kb_fyll(kb), NA)
+  expect_error(d2 %>% kb_fyll(kb), NA)
+})
+
 test_that("Åtvaring (men resultat) viss kodeboka ikkje inneheld *nokon* variablar som finst i datasettet", {
   kb2 = kb
   kb2$variabel_id = paste0("x_", kb2$variabel_id)
