@@ -206,6 +206,22 @@ test_that("Dupliserte verdiar i kodeboka vert oppdaga", {
   expect_error(d %>% kb_fyll(kb5), NA)
 })
 
+test_that("NA-verdiar i 'verdi' vert godtekne så lenge dei berre er blant ikkje-kategoriske variablar", {
+  # Legg til eit par ikkje-kategoriske variablar først i kodeboka
+  kb2 = bind_rows(kb[1:2, ], kb)
+  kb2$variabel_id[1:2] = c("pasient_fnr", "alder")
+  kb2$verdi[1:2] = NA
+  kb2$verditekst[1:2] = NA
+
+  kb2$variabeltype = "kategorisk"
+  kb2$variabeltype[1:2] = c("tekst", "numerisk")
+
+  # Skal ikkje gje åtvaring eller feilmelding, sidan
+  # NA-verdiane ikkje er blant dei kategoriske variablane
+  expect_error(d %>% kb_fyll(kb2), NA)
+  expect_warning(d %>% kb_fyll(kb2), NA)
+})
+
 test_that("Kodebokkolonnar lagra som faktorar vert oppdaga (og straffa!)", {
   kb2 = kb3 = kb4 = kb5 = kb
   kb2$variabel_id = factor(kb2$variabel_id)
