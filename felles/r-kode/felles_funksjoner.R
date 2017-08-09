@@ -119,7 +119,7 @@ lag_shewhart = function(y, x, antall = NULL, figtype, skriftstorleik = 0.8,
                         data, tittel = NULL, gruppe = NULL, ...) {
 
   # argumenter som gjelder ALLE shewhart diagram
-  tcc_args = list(data[[y]], x = data[[x]], chart = figtype, cex = skriftstorleik, main = tittel, ...)
+  tcc_args = list(n = data[[y]], x = data[[x]], chart = figtype, cex = skriftstorleik, main = tittel, ...)
 
   # argumentet "antall" brukes bare av noen figurtyper. deriblandt figurtype = "p", prosent, som trenger en nevner
   if (!is.null(antall)) {
