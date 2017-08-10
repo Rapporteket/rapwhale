@@ -65,12 +65,6 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
     }
   }
 
-  # Åtvaring hvis suffiks er ""
-  if (.suffiks == "") {
-    warning(paste0("Suffiks er ei tom tekststreng og variablar med tekstverdiar heiter akkurat
-                     det same som korresponederende variablar med talverdiar."))
-  }
-
   # Namn på variablar som skal fyllast ut
   arg = named_dots(...)
   vnamn_d = names(arg) # Namn i datasettet
@@ -124,6 +118,12 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
     # Det nye namnet på variabelen
     nytt_namn = str_c(vnamn, .suffiks)
 
+    # Åtvaring hvis variablene med tallverdier blir overskrevet av
+    # variabler med tekstverdier
+    if (nytt_namn == vnamn) {
+      warning(paste0("Overskriv variabel: '", vnamn, "'"))
+    }
+
     # Åtvaring og NA-verdi viss datasettet inneheld verdiar
     # som aktuell variabel ikkje har i kodeboka
     # (fixme: Vurderingssak: Bør dette heller gje feilmelding enn åtvaring?)
@@ -159,6 +159,10 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
   # Returner oppdatert datasett
   df
 }
+
+
+
+
 
 # # Kjapt eksempel på bruk
 # d %>% kb_fyll(kb, med, kjonn, prem=gensp, .suffiks = "")
