@@ -270,7 +270,7 @@ test_that("Tomt suffiks fungerer (og gjev åtvaring) (side 12)", {
     kjonn = factor(kjonn, levels = niv_kjonn),
     med = factor(med, levels = niv_med)
   )
-  expect_identical(d %>% kb_fyll(kb, .suffiks = ""), d_fylt)
+  suppressWarnings(expect_identical(d %>% kb_fyll(kb, .suffiks = ""), d_fylt))
   expect_warning(d %>% kb_fyll(kb, .suffiks = ""), "Overskriv variabel: 'kjonn'")
   expect_warning(d %>% kb_fyll(kb, .suffiks = ""), "Overskriv variabel: 'med'")
 })
@@ -279,7 +279,7 @@ test_that("Overskriving av variablar ved *ikkje-tomt* suffiks gjev også åtvari
   d2 = tribble(
     ~pasid, ~kjonn, ~kjonntest,
     101, 2, "Vellykka",
-    102, 1, "Vellyka",
+    102, 1, "Vellykka",
     103, 1, "Mislykka (er kvinne)"
   )
   d2_fylt = tribble(
@@ -289,8 +289,8 @@ test_that("Overskriving av variablar ved *ikkje-tomt* suffiks gjev også åtvari
     103, 1, "mann"
   )
   d2_fylt %<>% mutate(kjonntest = factor(kjonntest, levels = niv_kjonn))
-  expect_warning(d2 %>% kb_fyll(kb, .suffiks = "test"), "Overskriv variabel: 'kjonn'")
-  expect_identical(d2 %>% kb_fyll(kb, .suffiks = "test"), d2_fylt)
+  expect_warning(d2 %>% kb_fyll(kb, .suffiks = "test"), "Overskriv variabel: 'kjonntest'")
+  suppressWarnings(expect_identical(d2 %>% kb_fyll(kb, .suffiks = "test"), d2_fylt))
 })
 
 
@@ -311,7 +311,7 @@ test_that("Variabelkolonnar som står heilt først eller sist i datasettet funge
     kjonn = factor(kjonn, levels = niv_kjonn),
     med = factor(med, levels = niv_med)
   )
-  expect_identical(d2 %>% kb_fyll(kb, .suffiks = ""), d_fylt)
+  suppressWarnings(expect_identical(d2 %>% kb_fyll(kb, .suffiks = ""), d_fylt))
 })
 
 test_that("Lause variablar som heiter det same som variablar i datasettet fører ikkje til problem", {
@@ -333,7 +333,7 @@ test_that("Lause variablar som heiter det same som variablar i datasettet fører
 
 test_that("Funksjonen er idempotent", {
   # Kan ikkje testa alt, men nokre få eksempel sikrar det viktigaste
-  expect_identical(d %>% kb_fyll(kb), d %>% kb_fyll(kb) %>% kb_fyll(kb))
-  expect_identical(d %>% kb_fyll(kb, med), d %>% kb_fyll(kb, med) %>% kb_fyll(kb, med))
-  expect_identical(d %>% kb_fyll(kb, med, prem = "gensp"), d %>% kb_fyll(kb, med, prem = "gensp") %>% kb_fyll(kb, med, prem = "gensp"))
+  suppressWarnings(expect_identical(d %>% kb_fyll(kb), d %>% kb_fyll(kb) %>% kb_fyll(kb)))
+  suppressWarnings(expect_identical(d %>% kb_fyll(kb, med), d %>% kb_fyll(kb, med) %>% kb_fyll(kb, med)))
+  suppressWarnings(expect_identical(d %>% kb_fyll(kb, med, prem = "gensp"), d %>% kb_fyll(kb, med, prem = "gensp") %>% kb_fyll(kb, med, prem = "gensp")))
 })
