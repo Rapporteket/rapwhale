@@ -65,6 +65,12 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
     }
   }
 
+  # Åtvaring hvis suffiks er ""
+  if (.suffiks == "") {
+    warning(paste0("Suffiks er ei tom tekststreng og variablar med tekstverdiar heiter akkurat
+                     det same som korresponederende variablar med talverdiar."))
+  }
+
   # Namn på variablar som skal fyllast ut
   arg = named_dots(...)
   vnamn_d = names(arg) # Namn i datasettet
@@ -155,7 +161,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
 }
 
 # # Kjapt eksempel på bruk
-# d %>% kb_fyll(kb, med, kjonn, prem=gensp)
+# d %>% kb_fyll(kb, med, kjonn, prem=gensp, .suffiks = "")
 #
 #
 # # Test at funksjonen fungerer
