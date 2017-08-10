@@ -120,8 +120,8 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
 
     # Åtvaring hvis variablene med tallverdier blir overskrevet av
     # variabler med tekstverdier
-    if (nytt_namn == vnamn) {
-      warning(paste0("Overskriv variabel: '", vnamn, "'"))
+    if (nytt_namn %in% names(df)) {
+      warning(paste0("Overskriv variabel: '", nytt_namn, "'"))
     }
 
     # Åtvaring og NA-verdi viss datasettet inneheld verdiar
