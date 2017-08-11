@@ -150,7 +150,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
     # Plasser den nye variabelen på rett sted i datasettet
     ind_opp = which(names(df) == vnamn)
     ind_nye = which(names(df) == nytt_namn)
-    ind_venstre = c(1:ind_opp, ind_nye) # fixme: legg på unique()
+    ind_venstre = unique(c(1:ind_opp, ind_nye))
     df = df[c(ind_venstre, setdiff(seq_along(df), ind_venstre))]
   }
 
