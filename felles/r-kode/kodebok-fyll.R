@@ -5,7 +5,6 @@
 # Nødvendige pakkar
 library(tidyverse)
 library(testthat)
-library(pryr)
 library(stringr)
 library(purrr)
 
@@ -36,8 +35,9 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
   }
 
   # Namn på variablar som skal fyllast ut
-  arg = named_dots(...)
-  vnamn_d = names(arg) # Namn i datasettet
+  arg = quos(...)
+  vnamn_d = rlang::quos_auto_name(arg) %>%
+    names() # Namn i datasettet
   # Viss ein ikkje har valt variablar, bruk alle som finst i kodeboka
   if (length(vnamn_d) == 0) {
     vnamn_d = intersect(names(df), kb$variabel_id)
@@ -46,7 +46,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
       warning("Kodeboka inneheld ingen variablar som finst i datasettet.")
     }
   } else {
-    vnamn_kb = map_chr(arg, as.character) # Tilsvarande namn i kodeboka
+    vnamn_kb = map_chr(arg, quo_name) # Tilsvarande namn i kodeboka
   }
 
   # Feilmeldingar eller åtvaringar dersom datasettet og/eller
