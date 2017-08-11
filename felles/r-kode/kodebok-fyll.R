@@ -9,8 +9,6 @@ library(pryr)
 library(stringr)
 library(purrr)
 
-
-
 # Eksempeldata (for testing – fixme: fjern når ein er ferdig med testing) --------
 
 # Eksempeldatasett
