@@ -9,34 +9,6 @@ library(pryr)
 library(stringr)
 library(purrr)
 
-# Eksempeldata (for testing – fixme: fjern når ein er ferdig med testing) --------
-
-# Eksempeldatasett
-d = tribble(
-  ~pasid, ~kjonn, ~alder, ~med, ~prem,
-  101, 2, 18, 3, 2,
-  102, 1, 37, 4, 2,
-  103, 1, 17, 1, 3
-)
-
-# Eksempelkodebok
-kb = tribble(
-  ~variabel_id, ~verdi, ~verditekst,
-  "kjonn", 1, "mann",
-  "kjonn", 2, "kvinne",
-  "med", 1, "Antibac",
-  "med", 2, "Insulin",
-  "med", 3, "Ibux",
-  "med", 4, "Globoid",
-  "gensp", 1, "misfornogd",
-  "gensp", 2, "både og",
-  "gensp", 3, "fornøgd"
-)
-
-# for å teste funksjonen bruker jeg df
-df = d
-
-
 # Definisjon av funksjon
 kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
 
@@ -158,14 +130,6 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
   df
 }
 
-
-
-
-
-# # Kjapt eksempel på bruk
-# d %>% kb_fyll(kb, med, kjonn, prem=gensp, .suffiks = "")
-#
-#
 # # Test at funksjonen fungerer
 # test_adr = "h:/kvalreg/felles/r-kode/kodebok-fyll-testar.R"
 # test_file(test_adr, reporter="minimal") # *Veldig* kort og konsist samandrag
