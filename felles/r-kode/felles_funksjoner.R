@@ -307,7 +307,7 @@ prosent = function(x, desimalar = 0) {
     map_chr(~ round(100 * .x, desimalar) %>%
       format(nsmall = desimalar) %>%
       str_c("\\prosent"))
-  ifelse(is.na(x), "\\endash{}", prosent_tekst)
+  ifelse(is.na(x), "\\textendash{}", prosent_tekst)
 }
 
 
