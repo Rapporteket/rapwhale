@@ -398,5 +398,6 @@ create_ltable = function(dataframe, label, wide = FALSE, ...) {
   if (wide) {
     table %<>% str_replace("^\\\\(begin|end)\\{table\\}", "\\\\\\1\\{widetable\\}") # Superrobust ... ;)
   }
-  cat(table, sep = "\n")
+  table = paste0(table, sep = "\n")
+  table
 }
