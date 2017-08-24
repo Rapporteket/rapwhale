@@ -149,8 +149,8 @@
 \renewcommand*{\chapnumfont}{\overskrift\huge\bfseries\raggedright}
 \renewcommand{\printchapternum}{\chapnumfont \thechapter\space\space}
 \renewcommand*{\chaptitlefont}{\overskrift\huge\bfseries}
-\setsecheadstyle{\overskrift\Large\bfseries\raggedright}
-\setsubsecheadstyle{\overskrift\large\bfseries\raggedright}
+\setsecheadstyle{\overskrift\LARGE\bfseries\raggedright}
+\setsubsecheadstyle{\overskrift\Large\bfseries\raggedright}
 \setsubsubsecheadstyle{\overskrift\large\bfseries\raggedright}
 \hangsecnum
 \setlength{\aftersubsecskip}{.02ex plus 0.01ex minus -0.1ex}
