@@ -149,11 +149,18 @@
 \renewcommand*{\chapnumfont}{\overskrift\huge\bfseries\raggedright}
 \renewcommand{\printchapternum}{\chapnumfont \thechapter\space\space}
 \renewcommand*{\chaptitlefont}{\overskrift\huge\bfseries}
-\setsecheadstyle{\overskrift\LARGE\bfseries\raggedright}
-\setsubsecheadstyle{\overskrift\Large\bfseries\raggedright}
+\setsecheadstyle{\overskrift\Large\bfseries\raggedright}
+\setsubsecheadstyle{\overskrift\large\bfseries\raggedright}
 \setsubsubsecheadstyle{\overskrift\large\bfseries\raggedright}
 \hangsecnum
 \setlength{\aftersubsecskip}{.02ex plus 0.01ex minus -0.1ex}
+
+% Nummerer òg \subsection-overskrifter og ta dei med i innhaldslista.
+% Merk at skrifta for \subsection og \subsubsection er lik / like stor,
+% så det einaste som skil dei to nivåa er nummereringa (\subsubsection
+% har ikkje nummerering, mens \subsection har det).
+\setsecnumdepth{subsection}
+\settocdepth{subsection}
 
 % Begynn alle rapportdelar på høgreside (sjølv om me brukar 'openany')
 \renewcommand{\@setuppart}{
