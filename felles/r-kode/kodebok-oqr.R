@@ -189,7 +189,7 @@ les_oqr_kb = function(adresse) {
 # Argument:
 #   adresse: adressa til datafila (med norske/teite variabelnamn)
 #        kb: standardisert kodebok
-les_dd_oqr = function(adresse, kb, datoformat = "%Y-%m-%d") {
+les_dd_oqr = function(adresse, kb, datoformat = "%Y-%m-%d", dd_kolnamn_er_norsk = TRUE) {
   # Les inn variabelnamna som vert brukt i datafila
   varnamn_fil = scan(adresse,
     fileEncoding = "UTF-8", what = "character",
@@ -209,7 +209,15 @@ les_dd_oqr = function(adresse, kb, datoformat = "%Y-%m-%d") {
 
   # disse variabelnamna er ikkje dei vi brukar.
   # henter inn namna som vi faktisk brukar
-  varnamn = kb$variabel_id[match(varnamn_fil, kb$oqr_variabel_id_norsk)] %>%
+  # avhengig om variabelnavnene er norske eller engelske
+  # i de ulike kodebøkene velger vi å matche mot norske
+  # eller engelske navn for å få inn de vi vil ha
+  if (dd_kolnamn_er_norsk) {
+    dd_kolid = "oqr_variabel_id_norsk"
+  } else {
+    dd_kolid = "oqr_variabel_id_engelsk"
+  }
+  varnamn = kb$variabel_id[match(varnamn_fil, kb[[dd_kolid]])] %>%
     coalesce(varnamn_fil)
 
   # Hent ut første linje frå kodeboka, dvs. den linja som
