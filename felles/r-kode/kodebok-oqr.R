@@ -131,12 +131,9 @@ les_oqr_kb = function(adresse) {
     "Stor tekstvariabel", "tekst",
     "Avkrysningsboks", "boolsk",
     "Datovariabel", "dato",
-    "DatovariabelMangler", "dato",
     "Skjult variabel", "tekst",
     "Tallvariabel", "numerisk",
-    "TallvariabelMangler", "numerisk",
     "Tidsvariabel", "kl",
-    "TidsvariabelMangler", "kl",
     "TIMESTAMP", "dato_kl"
   )
 
