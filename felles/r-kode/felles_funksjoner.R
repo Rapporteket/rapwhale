@@ -286,7 +286,15 @@ num = function(x, desimalar, tabell = FALSE) {
       )
     }
   }
-  paste0("\\num[", argtekst, "]{", format(x, scientific = FALSE), "}")
+
+  # Eks. \num[]{42} fører til problem viss brukt i første argument til \caption
+  # (dvs. shortcap i \caption[shortcap]{longcap}). Ser ut til at ]-teiknet
+  # vert tolka som lukking av argumentet. Legg derfor til argumentliste berre
+  # viss me *har* nokon argument å melda.
+  if (argtekst != "") {
+    argtekst = paste0("[", argtekst, "]")
+  }
+  paste0("\\num", argtekst, "{", format(x, scientific = FALSE), "}")
 }
 
 
