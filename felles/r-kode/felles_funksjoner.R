@@ -286,15 +286,16 @@ num = function(x, desimalar, tabell = FALSE) {
       )
     }
   }
-
-  # Eks. \num[]{42} fører til problem viss brukt i første argument til \caption
-  # (dvs. shortcap i \caption[shortcap]{longcap}). Ser ut til at ]-teiknet
-  # vert tolka som lukking av argumentet. Legg derfor til argumentliste berre
-  # viss me *har* nokon argument å melda.
+  # Legg til argumentliste viss me *har* nokon argument å melda.
   if (argtekst != "") {
     argtekst = paste0("[", argtekst, "]")
   }
-  paste0("\\num", argtekst, "{", format(x, scientific = FALSE), "}")
+
+  # Returner LaTeX-kode for talformatering. Me legg *heile* kommandoen
+  # mellom {} for å hindra problem ved bruk for eksempel inni shortcap-delen
+  # av \caption[shortcap]{longcap} (eventuelle ]-teikn vert elles tolka
+  # til å avslutta shortcap-argumentet, jf. https://tex.stackexchange.com/a/78416)
+  paste0("{\\num", argtekst, "{", format(x, scientific = FALSE), "}}")
 }
 
 
