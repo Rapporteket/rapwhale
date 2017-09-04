@@ -28,7 +28,7 @@ les_oqr_kb = function(adresse) {
       type = col_character(),
       listeverdier = col_character(),
       listetekst = col_character(),
-      normalintervall_start_numerisk = col_character(), # Sjå merknad nedanfor om årsaka til denne må vera tekst
+      normalintervall_start_numerisk = col_character(), # Sjå merknad nedanfor om årsaka til denne og dei tre neste må vera tekst
       normalintervall_slutt_numerisk = col_character(),
       maksintervall_start_numerisk = col_character(),
       maksintervall_slutt_numerisk = col_character(),
@@ -66,6 +66,9 @@ les_oqr_kb = function(adresse) {
   # (Det finst ikkje heilt ei 1-til-1-kopling, men me
   #  gjer so godt me kan, og set verdiar til NA der
   #  det ikkje finst nokon tilsvarande.)
+  #
+  # fixme: Vårt kodebokformat bør nok oppdaterast til
+  #        å støtta min- og maks-verdiar for datoar òg.
   kodebok = kodebok_oqr_format %>%
     mutate(
       skjema_id = tabell,
