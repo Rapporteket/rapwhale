@@ -266,7 +266,10 @@ normaliser_varnamn = function(x) {
 # tabellskrifta skal brukast når me kallar num()-funksjonen.
 num = function(x, desimalar, tabell = FALSE) {
   # Argument til \num-kommandoen
-  argtekst = ifelse(tabell, "text-rm=\\tablefont", "")
+  arg = NULL
+  if (tabell) {
+    arg = "text-rm=\\tablefont"
+  }
 
   # Spesialtilpass kommandoen etter talet på desimalar
   if (!missing(desimalar)) {
@@ -279,17 +282,15 @@ num = function(x, desimalar, tabell = FALSE) {
     # (eks. vert både 3.1 og 3.123 vist som 3,1),
     # også for heiltal (eks. vert 3 vist som 3.0).
     if (desimalar > 0) {
-      argtekst = paste0(
-        argtekst,
-        "round-precision=", desimalar,
-        ",round-integer-to-decimal=true"
-      )
+      arg = arg %>%
+        append(c(
+          paste0("round-precision=", desimalar),
+          "round-integer-to-decimal=true"
+        ))
     }
   }
-  # Legg til argumentliste viss me *har* nokon argument å melda.
-  if (argtekst != "") {
-    argtekst = paste0("[", argtekst, "]")
-  }
+  # Legg til argumentliste
+  argtekst = paste0("[", paste0(arg, collapse = ", "), "]")
 
   # Returner LaTeX-kode for talformatering. Me legg *heile* kommandoen
   # mellom {} for å hindra problem ved bruk for eksempel inni shortcap-delen
