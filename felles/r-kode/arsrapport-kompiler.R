@@ -41,7 +41,7 @@ for (fil_rnw in filinfo$adresse) {
 kompiler = function(rnw_fil, maksiter = 5) {
   # Køyr først .Rnw-fila gjennom R for å få ut ei .tex-fil
   cat(paste0(basename(rnw_fil), " (knitr)\n"))
-  knit_res = try(knit(rnw_fil, encoding = "utf-8", quiet = TRUE, envir = new.env()), silent = TRUE)
+  knit_res = try(knit(rnw_fil, encoding = "utf-8", quiet = TRUE, envir = globalenv()), silent = TRUE)
   knit_ok = !inherits(knit_res, "try-error")
 
   # Kompiler .tex-fila, men berre viss knitr-operasjonen gjekk greitt
