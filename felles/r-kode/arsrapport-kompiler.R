@@ -81,7 +81,8 @@ repeat {
     if (endra != filinfo$endra[i]) {
       filinfo$endra[i] = endra
       kompiler(rnw_fil)
+      cat(paste0(basename(rnw_fil), ": ferdig\n"))
     }
-    Sys.sleep(1) # Vent litt mellom kvar gjennomgang, for ikkje å overbelasta filsystemet når det *ikkje* er noko endringar
   }
+  Sys.sleep(1) # Vent litt mellom kvar gjennomgang, for ikkje å overbelasta filsystemet når det *ikkje* er noko endringar
 }
