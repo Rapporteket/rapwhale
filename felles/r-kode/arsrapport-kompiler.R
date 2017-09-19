@@ -7,6 +7,7 @@
 # Nødvendige pakkar
 library(knitr)
 library(tibble)
+library(stringr)
 
 
 
@@ -23,6 +24,14 @@ adresser = setdiff(adresser, "h:/kvalreg//lkg-registeret/arsrapport-lkg.Rnw")
 
 # Oversikt over alle årsrapportfiler med tilhøyrande endringsdato
 filinfo = tibble(adresse = adresser, endra = file.info(adresser)$mtime)
+
+# Opna alle filene i ein PDF-lesar som ikkje blokkerer for skriving
+for (fil_rnw in filinfo$adresse) {
+  fil_pdf = str_replace(fil_rnw, ".Rnw$", ".pdf")
+  if (file.exists(fil_pdf)) {
+    shell(paste("C:\\Programfiler\\RStudio\\bin\\sumatra\\SumatraPDF.exe", fil_pdf), wait = FALSE)
+  }
+}
 
 
 
