@@ -15,7 +15,7 @@ library(stringr)
 
 # Filer me skal kompilera
 adresser = list.files("h:/kvalreg/",
-  pattern = "arsrapport.*\\.Rnw",
+  pattern = "arsrapport.*\\.Rnw$",
   recursive = TRUE, full.names = TRUE
 )
 
