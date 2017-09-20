@@ -18,6 +18,11 @@ dato_uttrekk = list.dirs(grunnmappe, recursive = FALSE, full.names = FALSE) %>%
 # siste uttrekk, sidan dataa vert oppdaterte kvar natt
 dato_sistreg = dato_uttrekk - 1
 
+# Adressa til den siste datafila
+mappe = paste0(grunnmappe, dato_uttrekk)
+filnamn = "SoReg_09_Datadump_validering.csv"
+adresse = paste0(mappe, "\\", filnamn)
+
 # Les inn data
 # Manuell (æsj!) spesifikasjon av kolonnetypar
 # (fordi me manglar kodebok for denne datadumpen)
