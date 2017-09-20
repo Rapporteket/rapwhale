@@ -18,11 +18,6 @@ dato_uttrekk = list.dirs(grunnmappe, recursive = FALSE, full.names = FALSE) %>%
 # siste uttrekk, sidan dataa vert oppdaterte kvar natt
 dato_sistreg = dato_uttrekk - 1
 
-# Adressa til den siste datafila
-mappe = paste0(grunnmappe, dato_uttrekk)
-filnamn = "SoReg_09_Datadump_validering.csv"
-adresse = paste0(mappe, "\\", filnamn)
-
 # Les inn data
 # Manuell (æsj!) spesifikasjon av kolonnetypar
 # (fordi me manglar kodebok for denne datadumpen)
@@ -72,18 +67,10 @@ kol_typar = cols(
   OP_GSForsterket = col_integer(),
   OP_GSPexiAvCardia = col_integer(),
   OP_BDPBougiediam = col_integer(),
-  OP_BDPAvstPylorus = col_integer(),
-  OP_BPDForsterket = col_integer(),
-  OP_BDPPexiAvCardia = col_integer(),
   OP_BDPCommonChannel = col_integer(),
   OP_BDPAlimentaryLimb = col_integer(),
-  OP_BDPBiliaryLimb = col_integer(),
-  OP_BPDUPEATeknikk = col_integer(),
   UtskrivelsesDato = col_date(),
   LiggeDogn = col_integer(),
-  F_Substitusjon = col_integer(),
-  Behandling30Dager = col_integer(),
-  KomplAlvorGrad = col_integer(),
   `6U_Vekt` = col_integer(),
   `6U_Hoyde` = col_integer(),
   `6U_RESH` = col_integer(),
@@ -101,7 +88,15 @@ kol_typar = cols(
   `1Aar_Dyslipidemi` = col_double(),
   `1Aar_RESH` = col_integer(),
   `1Aar_OppfolgingsType` = col_integer(),
-  EttAarBMI = col_double()
+  EttAarBMI = col_double(),
+  o_sg_gkl_sut = col_integer(),
+  o_rygbp_pet_luk = col_integer(),
+  o_samt_crurapl = col_integer(),
+  o_samt_adhl = col_integer(),
+  o_samt_adhl = col_integer(),
+  `6U_Substitusjon` = col_integer(),
+  `6U_KomplAlvorGrad` = col_integer(),
+  `6U_Behandling30Dager` = col_integer()
 )
 d_full = read_delim(
   adresse,
