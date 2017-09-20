@@ -14,10 +14,6 @@ dato_uttrekk = list.dirs(grunnmappe, recursive = FALSE, full.names = FALSE) %>%
   last() %>%
   as.Date()
 
-# Dato for siste registrering er dagen før datoen for
-# siste uttrekk, sidan dataa vert oppdaterte kvar natt
-dato_sistreg = dato_uttrekk - 1
-
 # Adressa til den siste datafila
 mappe = paste0(grunnmappe, dato_uttrekk)
 filnamn = "SoReg_09_Datadump_validering.csv"
@@ -147,12 +143,13 @@ nvars = 10
 # berre at me får éi rad for kvar tilfeldig valde celle, rada inneheld
 # alle tilhøyrande indeks- og datavariablar og at namnet på
 # cella vert lagra i kolonnen «varnamn».
-res = by_row(d, function(x) {
-  sample(data_vars, nvars)
-}, .collate = "rows", .to = "varnamn")
+d$varnamn = map(1:nrow(d), ~ sample(data_vars, nvars))
+res = d %>%
+  unnest(varnamn)
 
 # Legg til info om kva kolonne resultatet skal lagrast i
-vartypar = sapply(res[data_vars], class)
+vartypar = res[data_vars] %>%
+  map_chr(class)
 if (!all(vartypar %in% c("integer", "numeric", "Date"))) {
   stop("Finst variabel som ikkje er verken tal eller dato.")
 }
@@ -189,12 +186,13 @@ res = res %>%
 
 # Fjern dei gamle datakolonnane
 res = res[!(names(res) %in% data_vars)] %>%
-  select(-.row, -res_kol)
+  select(-res_kol)
 
 # Resultatene skal ryddes slik at det er sortert etter sykehus, tilfeldig rekkefølge på pasientene,
 # men rader med samme pasientnummer skal komme etter hverandre, og variablene skal
 # stå i en rekkefølge som er lett å bruke.
 res = res %>%
+  ungroup() %>%
   mutate(rekkefolge = factor(PasientID, levels = sample(unique(PasientID)))) %>%
   arrange(OperererendeSykehus, rekkefolge, PasientAlder, match(varnamn, data_vars)) %>%
   select(-rekkefolge)
@@ -204,10 +202,13 @@ res
 # for hvert sykehus
 vdatamappe = paste0(grunnmappe, "..\\valideringsdata\\", dato_uttrekk, "\\")
 dir.create(vdatamappe, showWarnings = FALSE)
-res %>%
-  group_by(OperererendeSykehus) %>%
-  do({
-    res_adresse = paste0(vdatamappe, .$OperererendeSykehus[1], ".sav")
-    write_sav(., res_adresse)
-    tibble()
-  })
+
+# Del datasettet etter sjukehus
+res_sjukehus = res %>%
+  mutate(filnamn = paste0(vdatamappe, OperererendeSykehus, ".sav")) %>%
+  nest(-filnamn)
+
+# Eksporter data for sjukehus til kvar si fil
+for (i in 1:nrow(res_sjukehus)) {
+  write_sav(res_sjukehus$data[[i]], res_sjukehus$filnamn[[i]])
+}
