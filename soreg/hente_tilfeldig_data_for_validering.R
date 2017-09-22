@@ -130,6 +130,7 @@ ind_vars = c(
   "PasientID", "Fodselsdato", "PasientAlder", "PasientKjonn",
   "OpererendeRESH", "OperererendeSykehus", "ForlopsID", "OperasjonsID"
 )
+stopifnot(all(ind_vars %in% names(d))) # Sjekk at alle indeksvariablane faktisk finst i datasettet
 data_vars = names(d) %>%
   setdiff(ind_vars)
 
