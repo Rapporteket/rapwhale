@@ -53,11 +53,13 @@ kompiler = function(rnw_fil, maksiter = 5) {
     repeat {
       iter = iter + 1
       cat(paste0(basename(tex_fil), " (TeX): ", iter, "\n")) # Vis statusmelding
+      old_opts = options(warn = 1) # Vis åtvaringar når dei skjer (for eksempel viss PDF-fila er låst for skriving)
       logg = system2(
         "lualatex",
         args = paste("--interaction=errorstopmode", tex_fil),
         stdout = TRUE
       )
+      options(old_opts)
       ferdig = !any(str_detect(logg, "run LaTeX again|Rerun to get cross-references right"))
       if (ferdig | (iter >= maksiter)) {
         break
