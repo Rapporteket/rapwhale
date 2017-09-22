@@ -79,7 +79,7 @@ repeat {
   for (i in 1:nrow(filinfo)) {
     rnw_fil = filinfo$adresse[i]
     setwd(dirname(rnw_fil)) # Slik at utfiler vert plasserte rett plass
-    endra = file.info(rnw_fil)$mtime
+    endra = file.mtime(rnw_fil)
     if (endra != filinfo$endra[i]) {
       filinfo$endra[i] = endra
       kompiler(rnw_fil)
