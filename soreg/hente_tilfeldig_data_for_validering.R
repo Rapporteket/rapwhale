@@ -205,10 +205,14 @@ dir.create(vdatamappe, showWarnings = FALSE)
 
 # Del datasettet etter sjukehus
 res_sjukehus = res %>%
-  mutate(filnamn = paste0(vdatamappe, OperererendeSykehus, ".sav")) %>%
-  nest(-filnamn)
+  mutate(filadresse = paste0(vdatamappe, OperererendeSykehus, ".sav")) %>%
+  nest(-filadresse)
 
 # Eksporter data for sjukehus til kvar si fil
-for (i in 1:nrow(res_sjukehus)) {
-  write_sav(res_sjukehus$data[[i]], res_sjukehus$filnamn[[i]])
-}
+pwalk(
+  list(
+    data = res_sjukehus$data,
+    path = res_sjukehus$filadresse
+  ),
+  write_sav
+)
