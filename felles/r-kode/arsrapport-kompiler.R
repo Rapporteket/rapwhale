@@ -23,7 +23,7 @@ adresser = list.files("h:/kvalreg/",
 adresser = setdiff(adresser, "h:/kvalreg//lkg-registeret/arsrapport-lkg.Rnw")
 
 # Oversikt over alle årsrapportfiler med tilhøyrande endringsdato
-filinfo = tibble(adresse = adresser, endra = file.info(adresser)$mtime)
+filinfo = tibble(adresse = adresser, endra = file.mtime(adresser))
 
 # Opna alle filene i ein PDF-lesar som ikkje blokkerer for skriving
 for (fil_rnw in filinfo$adresse) {
