@@ -284,6 +284,13 @@
 
 % Støtte for delfigurar slik knitr lagar dei, då knitr
 % dessverre ikkje støttar memoir-metoden (over).
+%
+% Når me lastar caption-pakken, gjev memoir-pakken 
+% ei åtvaring (men seier i grunnen at alt vil gå bra).
+% Å sjå denne åvaringa i loggen og andre plassar
+% er irriterande, so me gøymer ho.
+\RequirePackage{silence}
+\WarningFilter*{memoir}{You are using the caption package with the memoir class}
 \usepackage[format=hang,justification=raggedright,%
             font={sf,color=PrimCol},labelfont=sc]{caption}
 \usepackage[font={sf,color=PrimCol},labelfont=sf]{subfig}
