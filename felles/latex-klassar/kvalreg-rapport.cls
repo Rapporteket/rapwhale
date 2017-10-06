@@ -107,8 +107,9 @@
 
 
 % Viser akronyom med kapitélar
+% (Brukar \texorpdfstring for å hindra problem med bruk av kommandoen i PDF-innhaldslista)
 \RequirePackage{hyphenat}
-\newcommand{\kort}[1]{\nohyphens{\addfontfeatures{Letters=UppercaseSmallCaps}#1}}
+\newcommand{\kort}[1]{\texorpdfstring{\nohyphens{\addfontfeatures{Letters=UppercaseSmallCaps}#1}}{#1}}
 
 % Vis programkode, pakkenamn o.l. med fastbreiddskrift, fin farge,
 % og ikkje del teksten over fleire linjer
