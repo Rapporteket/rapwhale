@@ -23,68 +23,103 @@ adresser = list.files("h:/kvalreg/",
 adresser = setdiff(adresser, "h:/kvalreg//lkg-registeret/arsrapport-lkg.Rnw")
 
 # Oversikt over alle årsrapportfiler med tilhøyrande endringsdato
-filinfo = tibble(adresse = adresser, endra = file.mtime(adresser))
+filinfo = tibble(
+  adresse_rnw = adresser,
+  adresse_tex = str_replace(adresser, ".Rnw", ".tex"),
+  adresse_pdf = str_replace(adresser, ".Rnw", ".pdf")
+)
 
-# Opna alle filene i ein PDF-lesar som ikkje blokkerer for skriving
-for (fil_rnw in filinfo$adresse) {
-  fil_pdf = str_replace(fil_rnw, ".Rnw$", ".pdf")
-  if (file.exists(fil_pdf)) {
-    shell(paste("C:\\Programfiler\\RStudio\\bin\\sumatra\\SumatraPDF.exe", fil_pdf), wait = FALSE)
-  }
+# Opna alle PDF-filene (som eksisterer) i ein PDF-lesar som ikkje blokkerer for skriving
+filinfo$adresse_pdf %>%
+  keep(file.exists) %>%
+  walk(~ shell(
+    paste("C:\\Programfiler\\RStudio\\bin\\sumatra\\SumatraPDF.exe", .),
+    wait = FALSE
+  ))
+
+
+
+# Kompileringsfunksjonar --------------------------------------------------
+
+# Kompiler ei .Rnw-fil til .tex-fil
+kompiler_rnw = function(adresse) {
+  # Køyr først .Rnw-fila gjennom R for å få ut ei .tex-fil
+  cat(paste0(basename(adresse), " (knitr): "))
+  knit_res = try(knit(adresse, encoding = "utf-8", quiet = TRUE, envir = globalenv()), silent = TRUE)
+  knit_ok = !inherits(knit_res, "try-error")
+  cat(ifelse(knit_ok, "OK\n", "FEIL!\n"))
 }
 
+# Kompiler ei .tex-fil til PDF-fil (med maks «maksiter» LuaLaTeX-køyringar)
+kompiler_tex = function(adresse, maksiter = 5) {
+  # Gjenta kompilering til alle kryssreferansar og
+  # slikt er i orden, men maks «maksiter» gongar.
+  iter = 0
+  repeat {
+    iter = iter + 1
+    filnamn = basename(adresse)
+    cat(paste0(filnamn, " (LuaLaTex): ", iter, ": ")) # Vis statusmelding
+    old_opts = options(warn = 1) # Vis åtvaringar når dei skjer (for eksempel viss PDF-fila er låst for skriving)
+    logg = suppressWarnings(system2(
+      "lualatex",
+      args = paste("--interaction=errorstopmode", filnamn),
+      stdout = TRUE
+    ))
+    options(old_opts)
+    feil = any(str_detect(logg, "no output PDF file produced"))
+    ferdig = !any(str_detect(logg, "run LaTeX again|Rerun to get cross-references right"))
 
-
-# Kompileringsfunksjon ----------------------------------------------------
-
-# Kompiler ei .Rnw-fil (med maks «maksiter» LuaLaTeX-køyringar)
-kompiler = function(rnw_fil, maksiter = 5) {
-  # Køyr først .Rnw-fila gjennom R for å få ut ei .tex-fil
-  cat(paste0(basename(rnw_fil), " (knitr)\n"))
-  knit_res = try(knit(rnw_fil, encoding = "utf-8", quiet = TRUE, envir = globalenv()), silent = TRUE)
-  knit_ok = !inherits(knit_res, "try-error")
-
-  # Kompiler .tex-fila, men berre viss knitr-operasjonen gjekk greitt
-  if (knit_ok) {
-    tex_fil = str_replace(rnw_fil, ".Rnw$", ".tex")
-    iter = 0
-    # Gjenta kompilering til alle kryssreferansar og
-    # slikt er i orden, men maks «maksiter» gongar.
-    repeat {
-      iter = iter + 1
-      cat(paste0(basename(tex_fil), " (TeX): ", iter, "\n")) # Vis statusmelding
-      old_opts = options(warn = 1) # Vis åtvaringar når dei skjer (for eksempel viss PDF-fila er låst for skriving)
-      logg = system2(
-        "lualatex",
-        args = paste("--interaction=errorstopmode", tex_fil),
-        stdout = TRUE
-      )
-      options(old_opts)
-      ferdig = !any(str_detect(logg, "run LaTeX again|Rerun to get cross-references right"))
-      if (ferdig | (iter >= maksiter)) {
-        break
-      }
+    if (feil) {
+      cat("FEIL (klarte ikkje laga PDF)\n")
+      break
+    } else if (ferdig) {
+      cat("OK\n")
+      break
+    } else if (iter >= maksiter) {
+      cat("GJEV OPP (for mange rekomileringar)\n")
+      break
+    } else {
+      cat("Treng rekompilering ...\n")
     }
   }
 }
 
 
 
-
-# Sjølve kompileringsfunksjonen -------------------------------------------
+# Kompiler filer som treng det -------------------------------------------
 
 # Gå gjennom alle filene og kompiler
 # viss dei er endra frå førre gjennomgang
 repeat {
+  # Merk me gjer berre *éin* type operasjon (eks. Rnw --> .tex eller .tex --> PDF)
+  # for kvar fil ved kvar gjennomgang av lista. Då unngår me å kompilera
+  # PDF-fila for ei .Rnw-fil som alt er oppdatert når me er ferdig med
+  # første kompilering til .tex. Me unngår òg kompileringsfunksjonane
+  # «går seg fast» i arbeid med ein årsrapport (der for eksempel kompilering
+  # av .Rnw-fila aldri er vellykka).
+
+  # Sjekk om ei fil x er nyare enn ei anna fil y.
+  # Viss y-fila ikkje eksisterer, er x-fila per def. nyare.
+  er_nyare_enn = function(x, y) {
+    x_tid = file.mtime(x)
+    y_tid = file.mtime(y)
+    (x_tid >= y_tid) | is_na(y_tid)
+  }
   for (i in 1:nrow(filinfo)) {
-    rnw_fil = filinfo$adresse[i]
-    setwd(dirname(rnw_fil)) # Slik at utfiler vert plasserte rett plass
-    endra = file.mtime(rnw_fil)
-    if (endra != filinfo$endra[i]) {
-      filinfo$endra[i] = endra
-      kompiler(rnw_fil)
-      cat(paste0(basename(rnw_fil), ": ferdig\n"))
+    # Kortnamn til adressene til dei ulike filene
+    rnw = filinfo$adresse_rnw[i]
+    tex = filinfo$adresse_tex[i]
+    pdf = filinfo$adresse_pdf[i]
+
+    # Må vera i årsrapportmappa for at rekompileringa skal fungera
+    setwd(dirname(rnw))
+
+    # Kompiler om nødvendig
+    if (rnw %>% er_nyare_enn(tex)) {
+      kompiler_rnw(rnw)
+    } else if (tex %>% er_nyare_enn(pdf)) {
+      kompiler_tex(tex)
     }
   }
-  Sys.sleep(1) # Vent litt mellom kvar gjennomgang, for ikkje å overbelasta filsystemet når det *ikkje* er noko endringar
+  Sys.sleep(.5) # Vent litt mellom kvar gjennomgang, for ikkje å overbelasta filsystemet når det *ikkje* er nokon endringar
 }
