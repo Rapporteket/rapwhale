@@ -46,7 +46,15 @@ filinfo$adresse_pdf %>%
 kompiler_rnw = function(adresse) {
   # Køyr først .Rnw-fila gjennom R for å få ut ei .tex-fil
   cat(paste0(basename(adresse), " (knitr): "))
-  knit_res = try(knit(adresse, encoding = "utf-8", quiet = TRUE, envir = globalenv()), silent = TRUE)
+  knit_res = try(
+    suppressPackageStartupMessages(
+      knit(
+        adresse,
+        encoding = "utf-8", quiet = TRUE, envir = globalenv()
+      )
+    ),
+    silent = TRUE
+  )
   knit_ok = !inherits(knit_res, "try-error")
   if (knit_ok) {
     cat("OK\n")
@@ -85,8 +93,11 @@ kompiler_tex = function(adresse, maksiter = 5) {
     # Vis eventuelle feilmeldingar/åtvaringar i loggen
     vis_loggfeil = function() {
       if (length(logg_akt) > 0) {
-        cat("Åtvaringar/feil: ", str_c("  ", logg_akt), sep = "\n")
-      }
+        cat("Åtvaringar/feil: ",
+          str_c("  ", str_replace_all(logg_akt, "\n", "\n  ")),
+          sep = "\n"
+        )
+      } # Innrykk på alle linjer
     }
 
     if (feil) {
