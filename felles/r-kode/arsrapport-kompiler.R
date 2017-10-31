@@ -7,6 +7,7 @@
 # Nødvendige pakkar
 library(knitr)
 library(tibble)
+library(purrr)
 library(stringr)
 
 
@@ -126,7 +127,7 @@ repeat {
   er_nyare_enn = function(x, y) {
     x_tid = file.mtime(x)
     y_tid = file.mtime(y)
-    (x_tid >= y_tid) | is_na(y_tid)
+    (x_tid >= y_tid) | is.na(y_tid)
   }
   for (i in 1:nrow(filinfo)) {
     # Kortnamn til adressene til dei ulike filene
