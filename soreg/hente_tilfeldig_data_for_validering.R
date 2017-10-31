@@ -202,7 +202,7 @@ res
 # Eksporter data til kvalitetsserveren som en SPSS fil (.sav)
 # for hvert sykehus
 vdatamappe = paste0(grunnmappe, "..\\valideringsdata\\", dato_uttrekk, "\\")
-dir.create(vdatamappe, showWarnings = FALSE)
+dir.create(vdatamappe, showWarnings = FALSE, recursive = TRUE)
 
 # Del datasettet etter sjukehus
 res_sjukehus = res %>%
@@ -217,3 +217,6 @@ pwalk(
   ),
   write_sav
 )
+
+# Opna valideringsdatamappa (for å sjekka at alt ser OK ut)
+shell.exec(vdatamappe)
