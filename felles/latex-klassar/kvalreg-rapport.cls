@@ -103,8 +103,7 @@
 \RequirePackage{amsmath}          % Utvida mattestøtte
 \RequirePackage{mathtools}        % Rett nokre mattegreier
 \mathtoolsset{mathic}             % Ditto
-\RequirePackage{unicode-math}     % Unicode-matte for LuaLaTeX
-
+\RequirePackage[warnings-off={mathtools-colon}]{unicode-math}     % Unicode-matte for LuaLaTeX
 
 % Viser akronyom med kapitélar
 % (Brukar \texorpdfstring for å hindra problem med bruk av kommandoen i PDF-innhaldslista)
