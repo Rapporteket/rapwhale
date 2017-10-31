@@ -7,6 +7,7 @@
 # Nødvendige pakkar
 library(knitr)
 library(tibble)
+library(readr)
 library(purrr)
 library(stringr)
 
@@ -79,9 +80,16 @@ kompiler_tex = function(adresse, maksiter = 5) {
       args = paste("--interaction=errorstopmode --file-line-error", filnamn),
       stdout = TRUE
     ))
+
+    # Loggen me får ut på kommandolinja har ikkje eit format me lett kan bruka.
+    # Les derfor heller inn den *lagra* loggfila (som har fint format på grunn
+    # av bruken av «--file-line-error»-argumentet).
+    loggfil = str_replace(adresse, ".tex$", ".log")
+    logg = read_lines(loggfil)
+
     options(old_opts)
     feil = any(str_detect(logg, "no output PDF file produced"))
-    ferdig = !any(str_detect(logg, "run LaTeX again|Rerun"))
+    ferdig = !any(str_detect(logg, "run LaTeX again|Rerun to|Rerun LaTeX"))
 
     # Loggteksten har linjelengd på 80 teikn, med automatiske linjeskift
     # Me fjernar desse og definerer ei loggmelding til å vera tekst etterfølgt av ei tom linje
