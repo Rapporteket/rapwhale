@@ -47,7 +47,12 @@ kompiler_rnw = function(adresse) {
   cat(paste0(basename(adresse), " (knitr): "))
   knit_res = try(knit(adresse, encoding = "utf-8", quiet = TRUE, envir = globalenv()), silent = TRUE)
   knit_ok = !inherits(knit_res, "try-error")
-  cat(ifelse(knit_ok, "OK\n", "FEIL!\n"))
+  if (knit_ok) {
+    cat("OK\n")
+  } else {
+    cat("FEIL!\n")
+    suppressWarnings(file.remove(str_replace(adresse, ".Rnw", ".tex"))) # Fjern .tex-fila, for å unngå forsøk på kompilering
+  }
 }
 
 # Kompiler ei .tex-fil til PDF-fil (med maks «maksiter» LuaLaTeX-køyringar)
@@ -62,24 +67,42 @@ kompiler_tex = function(adresse, maksiter = 5) {
     old_opts = options(warn = 1) # Vis åtvaringar når dei skjer (for eksempel viss PDF-fila er låst for skriving)
     logg = suppressWarnings(system2(
       "lualatex",
-      args = paste("--interaction=errorstopmode", filnamn),
+      args = paste("--interaction=errorstopmode --file-line-error", filnamn),
       stdout = TRUE
     ))
     options(old_opts)
     feil = any(str_detect(logg, "no output PDF file produced"))
-    ferdig = !any(str_detect(logg, "run LaTeX again|Rerun to get cross-references right"))
+    ferdig = !any(str_detect(logg, "run LaTeX again|Rerun"))
+
+    # Loggteksten har linjelengd på 80 teikn, med automatiske linjeskift
+    # Me fjernar desse og definerer ei loggmelding til å vera tekst etterfølgt av ei tom linje
+    loggmeldingar = str_c(logg, collapse = "\n") %>% # Gjer loggteksten om til éin stor streng
+      str_split("\n\n+") %>%
+      pluck(1) # Del opp i loggmeldingar
+    logg_akt = str_subset(loggmeldingar, "([Ww]arning|[Ee]rror):") # Hent ut aktuelle loggmeldingar
+
+    # Vis eventuelle feilmeldingar/åtvaringar i loggen
+    vis_loggfeil = function() {
+      if (length(logg_akt) > 0) {
+        cat("Åtvaringar/feil: ", str_c("  ", logg_akt), sep = "\n")
+      }
+    }
 
     if (feil) {
       cat("FEIL (klarte ikkje laga PDF)\n")
+      vis_loggfeil()
       break
     } else if (ferdig) {
       cat("OK\n")
+      vis_loggfeil() # Det kan vera åtvaringar sjølv om kompileringa fungerte ...
       break
     } else if (iter >= maksiter) {
-      cat("GJEV OPP (for mange rekomileringar)\n")
+      cat("GJEV OPP (for mange rekompileringar)\n")
+      vis_loggfeil()
       break
     } else {
       cat("Treng rekompilering ...\n")
+      # vis_loggfeil() # Er typisk så mange åtvaringar viss me treng rekompilering at det er betre å ikkje visa dei
     }
   }
 }
