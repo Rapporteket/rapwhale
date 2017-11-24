@@ -64,7 +64,7 @@
 \definecolor{LysBlaCol}{cmyk}{.44,.19,0,0}  % PMS 287 (lys blå)
 
 % Tilleggsfargar, som er halvoffisielle, henta frå
-% http://www.unn.no/profilhandbok/fargepalett.html
+% https://unn.no/om-oss/profilhandboka#fargepalett
 \definecolor{LysBrunCol}{cmyk}{.18,.35,.47,.05}      % PMS 4665 (lys raudbrun)
 \definecolor{MiddelsBrunCol}{cmyk}{.30,.54,.57,.26}  % PMS 4715 (middels raudbrun)
 \definecolor{MorkBrunCol}{cmyk}{.36,.80,.75,.53}     % PMS 483 (mørk raudbrun)
