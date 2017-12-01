@@ -47,6 +47,9 @@ kb_mrs_til_standard = function(d) {
     stop("Kodeboka har variabeltypar me ikkje har standardnamn på: ", str_c(nye_vartypar, collapse = ", "))
   }
 
+  # Dette var sant fram til hausten 2017:
+  #
+  # -----
   # Lag dataramme med i utgangspunktet éi rad for kvar variabel
   # Variabelnamna brukt i datadumpen finn me:
   #   – Ikkje i kolonnen Datadumpnavn (det hadde vore for enkelt og logisk)
@@ -56,11 +59,15 @@ kb_mrs_til_standard = function(d) {
   #   Etter det *siste* punktumet (om dette eksisterer) i kolonnen Variabelnavn
   #   i den første rada i eit sett med rader som omhandlar ein variabel, og der
   #   settet begynner med ein ikkje-tom verdi i kolonnen som heiter Feltnavn.
+  # -----
+  #
+  # Etter hausten 2017 ser de ut til at variabelnamna brukt i datadumpen
+  # faktisk *finn* me i variabelen «Datadumpnavn»! *mind blown*
   #
   # Å finna dei andre verdiane (for eksempel kodar og kodetekst) gjer ein på
   # tilsvarande vanskelege måtar
   kodebok_utg = tibble(
-    # dd_id = d$DataDumpnavn[ind_nyvar],     # Datadumpnamn (vert ikkje brukt til noko)
+    datadump_var_id = d$Datadumpnavn[ind_nyvar], # Datadumpnamn (vert ikkje brukt til noko)
     variabel_id = d$Variabelnavn[ind_nyvar] %>% str_replace(".*\\.", ""),
     variabeletikett = d$Feltnavn[ind_nyvar], # Berre forklaring for *enkelte* variablar, men er det beste me har …
     variabeltype = vartype_mrs_standard$type_standard[
@@ -159,8 +166,8 @@ les_dd_mrs = function(adresse, kb) {
     "numerisk", "d",
     "numerisk_heiltal", "i"
   )
-  spek_innlesing = tibble(variabel_id = varnamn_fil) %>%
-    left_join(kb_info, by = "variabel_id") %>%
+  spek_innlesing = tibble(datadump_var_id = varnamn_fil) %>%
+    left_join(kb_info, by = "datadump_var_id") %>%
     left_join(spek_csv_mrs, by = "variabeltype")
 
   # Har kodeboka variablar av ein type me ikkje har lagt inn støtte for?
@@ -175,20 +182,20 @@ les_dd_mrs = function(adresse, kb) {
 
   # Er det nokon variablar me manglar metadata for (dvs. variablar
   # som finst i datafila men *ikkje* i kodeboka)?
-  # Fixme: Vurder å legga til eit argument i funksjonen
-  #        for å gøyma åtvaringar for standardvariablar
-  #        (dvs. dei som finst i alle OQR-datadumpar)
   manglar_metadata = is.na(spek_innlesing$csv_bokstav)
-  ukjende_var = spek_innlesing$variabel_id[manglar_metadata]
+  ukjende_var = spek_innlesing$datadump_var_id[manglar_metadata]
   if (any(manglar_metadata)) {
-    warning(
-      "Manglar metadata for nokre variablar. Dei vert derfor\n",
-      "handterte som tekst og variabelnamna får prefikset «mrs_».\n",
-      "Problematiske variablar:\n",
-      str_c(ukjende_var, collapse = "\n")
-    )
+    # Vis ikkje åtvaringa viss det berre er snakk om den siste, namnlause, tomme kolonnen som MRS automatisk legg til alle datadumpar
+    if (!all(ukjende_var == "")) {
+      warning(
+        "Manglar metadata for nokre variablar. Dei vert derfor\n",
+        "handterte som tekst og variabelnamna får prefikset «mrs_».\n",
+        "Problematiske variablar:\n",
+        str_c(ukjende_var, collapse = "\n")
+      )
+    }
     spek_innlesing$csv_bokstav[manglar_metadata] = "c"
-    spek_innlesing$variabel_id[manglar_metadata] = str_c("mrs_", spek_innlesing$variabel_id[manglar_metadata])
+    spek_innlesing$variabel_id[manglar_metadata] = str_c("mrs_", spek_innlesing$datadump_var_id[manglar_metadata])
   }
 
   # Les inn datasettet
