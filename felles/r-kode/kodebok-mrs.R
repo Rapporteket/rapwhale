@@ -39,7 +39,7 @@ kb_mrs_til_standard = function(d) {
     "Avkrysning", "boolsk",
     "Dato/Tid", "dato_kl",
     "Id (Guid)", "tekst",
-    "Numerisk (heltall)", "numerisk",
+    "Numerisk (heltall)", "numerisk", # Men sjå bruk «desimalar» lenger nede
     "Numerisk (flyttall)", "numerisk"
   )
   nye_vartypar = na.omit(setdiff(d$Felttype, vartype_mrs_standard$type_mrs))
@@ -69,7 +69,8 @@ kb_mrs_til_standard = function(d) {
     obligatorisk = str_to_lower(d$Obligatorisk[ind_nyvar]),
     # skjema_id = d$Skjema[ind_nyvar], # Ventar spent på at denne skal dukka opp (førespurnad er send)
     verdi = NA_integer_, # Føreset førbels at MRS-kodane alltid er tal (gjer om til tekst om dette ikkje stemmer)
-    verdi_tekst = NA_character_
+    verdi_tekst = NA_character_,
+    desimalar = ifelse(d$Felttype[ind_nyvar] == "Numerisk (heltall)", 0L, NA_integer_)
   )
 
   # Kor mange gongar kvar variabel skal gjentakast i
@@ -135,14 +136,28 @@ les_dd_mrs = function(adresse, kb) {
   kb_info = kb %>%
     distinct(variabel_id, .keep_all = TRUE)
 
+  # Me skil berre mellom heiltals- og flyttalsvariablar
+  # i vår kodebok ved hjelp av «desimalar»-feltet (begge
+  # talvariantane har variabeltypen «numerisk»). For å
+  # kunna handtera dette riktig (les: strengt) ved
+  # innlesing av data, legg me derfor til ein kunstig
+  # «numerisk_heiltal»-variabeltype.
+  kb_info = kb_info %>%
+    mutate(variabeltype = replace(
+      variabeltype,
+      (variabeltype == "numerisk") & (desimalar == 0),
+      "numerisk_heiltal"
+    ))
+
   # Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
   spek_csv_mrs = tribble(
     ~variabeltype, ~csv_bokstav,
-    "kategorisk", "n",
+    "kategorisk", "i",
     "tekst", "c",
     "boolsk", "c", # Sjå konvertering nedanfor
     "dato_kl", "c", # Mellombels, jf. https://github.com/tidyverse/readr/issues/642 (fixme til "T" når denne er fiksa)
-    "numerisk", "d"
+    "numerisk", "d",
+    "numerisk_heiltal", "i"
   )
   spek_innlesing = tibble(variabel_id = varnamn_fil) %>%
     left_join(kb_info, by = "variabel_id") %>%
@@ -186,7 +201,6 @@ les_dd_mrs = function(adresse, kb) {
       date_format = "%d.%m.%Y", time_format = "%H:%M:%S"
     )
   )
-
 
   # Gjer om boolske variablar til ekte boolske variablar
   mrs_boolsk_til_boolsk = function(x) {
