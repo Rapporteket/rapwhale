@@ -254,7 +254,8 @@ if (any(!is.na(kb$kategori))) {
 # - unik må vera ja/nei (og ikkje NA)
 # - obligatorisk må vera ja/nei (og ikkje NA)
 # - manglande må vera ja/nei (og ikkje NA)
-# - desimalar må vera >= 0
+# - desimalar må vera >= 0 (eller NA)
+# - desimalar må vera heiltallige
 # - min må vera < maks (dersom begge finst)
 # - min_rimeleg må vera < maks_rimeleg (dersom begge finst)
 # - min må vera <= min_rimeleg (dersom begge finst)
