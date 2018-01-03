@@ -222,6 +222,12 @@ les_dd_mrs = function(adresse, kb) {
   #        Det er stor risiko for feil dersom me må godta 5 ulike verdiar
   #        (og plutseleg tyder gjerne -1 ja i staden for NA for eit register ...).
   #        Oppdater koden til å berre støtta dette.
+  #
+  #        Eventuelt (viss MRS som vanleg brukar åresvis på å få ting retta
+  #        opp for alle registera), gjer det mogleg å spesifisera ved
+  #        funksjonskallet kva verdiar som skal tolkast til kva boolske verdiar.
+  #        Eks: boolske_verdiar = list(`FALSE` = "0", `TRUE` = "1", `NA` = c("", "-1", NA))
+  #
   mrs_boolsk_til_boolsk = function(x) {
     # Sjekk først at det berre er gyldige verdiar
 
