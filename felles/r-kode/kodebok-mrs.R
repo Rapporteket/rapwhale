@@ -209,7 +209,19 @@ les_dd_mrs = function(adresse, kb) {
     )
   )
 
+  # Fixme: For kategoriske variablar er det ei spesiell koding av manglande
+  #        verdiar (typisk tyder -1 manglande verdi). Gjer om desse verdiane
+  #        til ekte NA-verdiar. Bruk det som er markert som «manglande = ja»
+  #        i kodeboka (på kanonisk form) for å finna ut kva verdiar som
+  #        skal tolkast som NA.
+
   # Gjer om boolske variablar til ekte boolske variablar
+  #
+  # Fixme: Her må MRS retta opp, slik at me berre treng forhalda oss til
+  #        eitt sett verdiar, eks. "False" og "True" (og tom verdi for NA).
+  #        Det er stor risiko for feil dersom me må godta 5 ulike verdiar
+  #        (og plutseleg tyder gjerne -1 ja i staden for NA for eit register ...).
+  #        Oppdater koden til å berre støtta dette.
   mrs_boolsk_til_boolsk = function(x) {
     # Sjekk først at det berre er gyldige verdiar
 
