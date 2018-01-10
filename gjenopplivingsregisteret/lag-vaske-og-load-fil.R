@@ -28,7 +28,7 @@ namn_amis = c(
   "AMIS", "AMISNUMMER", "Amisnummer", "AMISNUMMER ", "AMIS ",
   "Amisnummer "
 )
-namn_fnr = c("Fødselsnummer", "fødselsnummer", "F.nr", "foedselsnr")
+namn_fnr = c("Fødselsnummer", "fødselsnummer", "F.nr", "foedselsnr", "F.nr.")
 namn_dato = c(
   "DATO/KLOKKEN ", "HENVENDELSE MOTTATT AMK ", "AMBULANSEPERSONELL FREMME PÅ BESTEMMELSESSTED ",
   "DATO ", "DATO/KLOKKEN HVIS JA ", "Dato / tid for hendelse ",
