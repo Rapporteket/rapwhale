@@ -241,8 +241,49 @@ if (any(!is.na(kb$kategori))) {
   }
 }
 
+
+kb_kat
+
+if (any(!is.na(y$kategori))) {
+  kb_skjema = y %>%
+    nest(-skjema_id)
+  har_kat = kb_skjema$data %>%
+    map_lgl(~ (!is.na(.x$kategori[1])) & (.x$kategori[1] != ""))
+  if (any(!har_kat)) {
+    warning(
+      "Nokre skjema manglar kategorioverskrift (i førsterader):\n",
+      lag_liste(kb_skjema$skjema_id[!har_kat])
+    )
+  }
+}
+
+
+kat_var = c("variabel_id", "variabeltype", "verdi", "verditekst")
+#------------------------------------- Tester for kategoriske variabler------------------------------
+# tar i bruk kb_kat som er et objekt laget tidligere,
+# hvor kb er filtrert på bare kategoriske variabler
+
+# Variabeltype og verdi kan berre ta eit gitt sett verdiar (som ikkje inkluderer NA)
+if (any(is.na(kb_kat$verditekst))) {
+  manglar_tekst = kb_kat %>%
+    filter(is.na(verditekst)) %>%
+    select(variabel_id)
+  warning(
+    "Nokre kategoriske variablane manglar ein eller fleire verditekstar:\n",
+    lag_liste(manglar_tekst)
+  )
+}
+if (any(is.na(kb_kat$verdi))) {
+  manglar_tekst = kb_kat %>%
+    filter(is.na(verdi)) %>%
+    select(variabel_id)
+  warning(
+    "Nokre kategoriske variablane manglar ein eller fleire verdiar:\n",
+    lag_liste(manglar_tekst)
+  )
+}
+
 # Forslag til fleire testar:
-# - variabeltype kan berre ta eit gitt sett verdiar (som ikkje inkluderer NA)
 # - eining kan ikkje vera tom ("") (men kan vera NA)
 # - viss ein har eining, må variabeltypen vera numerisk
 # - viss ein har desimalar, må variabeltypen vera numerisk
@@ -267,3 +308,5 @@ if (any(!is.na(kb$kategori))) {
 #   kan få kodebøker frå MRS, OQR og liknande der me *ikkje* kan krevja at
 #   variabelnamna er fornuftige, men er nyttig å testa dette når me utviklar kodebøker ...
 # ... sikkert mange andre testar me kan laga
+# ja! jeg har et forslag:
+# - avkrysningsvariabler kan ikke ha obligatorisk == "ja", manglande verdi == "ja" eller unik == "ja"
