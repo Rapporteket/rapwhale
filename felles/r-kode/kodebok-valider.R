@@ -257,15 +257,23 @@ if (any(!is.na(y$kategori))) {
   }
 }
 
+# Tester at bare gyldige variabeltyper er med i kodeboka
+# Objekt med gyldige variabeltyper til kanonisk standardform av kodebok,
+# hentet fra dokumentasjon om standardformen. Kan utvides.
+gyldige_vartyper = c("numerisk", "kategorisk", "boolsk", "dato", "utrekna", "tekst", "tekst*", "fritekst")
 
-kat_var = c("variabel_id", "variabeltype", "verdi", "verditekst")
-#------------------------------------- Tester for kategoriske variabler------------------------------
-# tar i bruk kb_kat som er et objekt laget tidligere,
-# hvor kb er filtrert på bare kategoriske variabler
-
+if (any(!kb$variabeltype %in% gyldige_vartyper)) {
+  ugyldig_vartyp = kb %>%
+    filter(!variabeltype %in% gyldige_vartyper) %>%
+    select(variabel_id)
+  warning(
+    "Nokre variablar har ugyldige variabeltypar:\n",
+    lag_liste(ugyldig_vartyp)
+  )
+}
 
 # Forslag til fleire testar:
-# - Variabeltype og verdi kan berre ta eit gitt sett verdiar (som ikkje inkluderer NA)
+# - Variabeltype kan berre ta eit gitt sett verdiar (som ikkje inkluderer NA)
 # - eining kan ikkje vera tom ("") (men kan vera NA)
 # - viss ein har eining, må variabeltypen vera numerisk
 # - viss ein har desimalar, må variabeltypen vera numerisk
@@ -291,4 +299,4 @@ kat_var = c("variabel_id", "variabeltype", "verdi", "verditekst")
 #   variabelnamna er fornuftige, men er nyttig å testa dette når me utviklar kodebøker ...
 # ... sikkert mange andre testar me kan laga
 # ja! jeg har et forslag:
-# - avkrysningsvariabler kan ikke ha obligatorisk == "ja", manglande verdi == "ja" eller unik == "ja"
+# - boolske variabler kan ikke ha obligatorisk == "nei" eller unik == "ja"
