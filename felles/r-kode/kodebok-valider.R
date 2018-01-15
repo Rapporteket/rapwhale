@@ -263,27 +263,9 @@ kat_var = c("variabel_id", "variabeltype", "verdi", "verditekst")
 # tar i bruk kb_kat som er et objekt laget tidligere,
 # hvor kb er filtrert på bare kategoriske variabler
 
-# Variabeltype og verdi kan berre ta eit gitt sett verdiar (som ikkje inkluderer NA)
-if (any(is.na(kb_kat$verditekst))) {
-  manglar_tekst = kb_kat %>%
-    filter(is.na(verditekst)) %>%
-    select(variabel_id)
-  warning(
-    "Nokre kategoriske variablane manglar ein eller fleire verditekstar:\n",
-    lag_liste(manglar_tekst)
-  )
-}
-if (any(is.na(kb_kat$verdi))) {
-  manglar_tekst = kb_kat %>%
-    filter(is.na(verdi)) %>%
-    select(variabel_id)
-  warning(
-    "Nokre kategoriske variablane manglar ein eller fleire verdiar:\n",
-    lag_liste(manglar_tekst)
-  )
-}
 
 # Forslag til fleire testar:
+# - Variabeltype og verdi kan berre ta eit gitt sett verdiar (som ikkje inkluderer NA)
 # - eining kan ikkje vera tom ("") (men kan vera NA)
 # - viss ein har eining, må variabeltypen vera numerisk
 # - viss ein har desimalar, må variabeltypen vera numerisk
