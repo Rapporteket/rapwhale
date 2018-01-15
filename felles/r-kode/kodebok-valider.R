@@ -257,24 +257,39 @@ if (any(!is.na(y$kategori))) {
   }
 }
 
+
+#----------------------------------------------------midlertidig skille, takk
+
+# mange av advarselene starter med samme teksten
+# er nynorsken helt på tryne kan den rettes her
+advar_tekst = paste0("Nokre variablar har ugyldig")
+
 # Tester at bare gyldige variabeltyper er med i kodeboka
 # Objekt med gyldige variabeltyper til kanonisk standardform av kodebok,
 # hentet fra dokumentasjon om standardformen. Kan utvides.
 gyldige_vartyper = c("numerisk", "kategorisk", "boolsk", "dato", "utrekna", "tekst", "tekst*", "fritekst")
-
 if (any(!kb$variabeltype %in% gyldige_vartyper)) {
   ugyldig_vartyp = kb %>%
     filter(!variabeltype %in% gyldige_vartyper) %>%
     select(variabel_id)
   warning(
-    "Nokre variablar har ugyldige variabeltypar:\n",
+    "", advar_tekst, "e variabeltypar:\n",
     lag_liste(ugyldig_vartyp)
   )
 }
 
+# Test på eining. Eining kan ikkje vera tom ("") (men kan vera NA)
+if (any(kb$eining %in% "")) {
+  ugyldig_eining = kb %>%
+    filter(eining == "") %>%
+    select(variabel_id)
+  warning(
+    "", advar_tekst, " eining, kor ein eller fleire har tomme tekststrengar:\n",
+    lag_liste(ugyldig_eining)
+  )
+}
+
 # Forslag til fleire testar:
-# - Variabeltype kan berre ta eit gitt sett verdiar (som ikkje inkluderer NA)
-# - eining kan ikkje vera tom ("") (men kan vera NA)
 # - viss ein har eining, må variabeltypen vera numerisk
 # - viss ein har desimalar, må variabeltypen vera numerisk
 # - viss ein har min- eller maksverdi, må variabeltypen vera numerisk
