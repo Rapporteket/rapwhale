@@ -286,18 +286,22 @@ if (any(kb$eining %in% "")) {
   )
 }
 
-# Viss ein har eining, desimal, min- eller maksverdi
-# og/eller min_rimeleg- eller maks_rimeleg-verdi,
-# må variabeltypen vera numerisk
+#-----------------------------------------------------Sjekk Gyldig Vartype-----------------------------------------
+# Funksjon som sjekker om en eller flere variabler i kodeboka
+# har en variabeltype som er ugyldig gitt
+# at variabelen har en verdi for en kolonne som kun gjelder andre variabeltyper
 
-# Funksjon som sjekker om variabelen ikke er numerisk/utrekna men
-# likevel har en viss kolonnetype som ikke skal være mulig for ikke numerisk/utrekna variabler
+# Funksjonen tester for kolonnetyper som gjelder ikke-numeriske, ikke-utrekna variabler
+# - disse kan ikke ha eining, desimalar, min- eller maksverdi og/eller min_rimeleg- eller maks_rimeleg-verdi
+
+# Funksjonen tester tester for kolonnetyper som gjeder ikke-kategoriske variabler
+# - disse kan ikke ha verdi, verditekst eller manlande == "ja"
 
 sjekk_gyldig_vartype = function(kb, kolonnetype, vartype) {
 
   # alle tester for om variabeltypen er gyldig mht. kolonnetypen
   # har omtrent den samme teksten. lager en funksjon
-  # for funksjon for tekst til numerisk og kategoriske tester
+  # for tekst til numerisk og kategoriske tester
   lag_tekst = function(vartype, kolonnetype) {
     if (vartype == "numerisk") {
       num_tekst = paste0("", advar_tekst, " ", kolonnetype, ", men er verken numerisk eller utrekna:\n")
@@ -307,11 +311,23 @@ sjekk_gyldig_vartype = function(kb, kolonnetype, vartype) {
     num_tekst
   }
 
+  # lager en if-statement med 3 ulike tester.
+  # 1 tester for kolonnetyper som gjelder ikke-numeriske variabler
+  # 2 tester for kolonnetyper som gjeder ikke-kategoriske variabler
+  # 3 tester spesifikt for ikke-kategoriske variabler og om manglande == "ja" (som ikke skal være mulig)
+
+  # objekt for vartyper som ikke er numerisk eller utrekna
+  ikke_num = (kb$variabeltype != "numerisk") & (kb$variabeltype != "utrekna")
+
+  # fyller kategoriske variabler nedover, slik
+  # at de blir tatt ut av objektet
+  # hvor vi ønsker alle andre variabeltyper
+  kb_fylt = fill(kb, variabel_id, variabeltype)
+
+  # objekt for vartyper som ikke er kategorisk
+  ikke_kat = (kb_fylt$variabeltype != "kategorisk")
+
   if (vartype == "numerisk") {
-
-    # objekt for vartyper som ikke er numerisk eller utrekna
-    ikke_num = (kb$variabeltype != "numerisk") & (kb$variabeltype != "utrekna")
-
     # ikke ok kolonnetype, gitt variabeltypen
     ikke_ok_num = ikke_num & (!is.na(kb[[kolonnetype]]))
 
@@ -325,14 +341,6 @@ sjekk_gyldig_vartype = function(kb, kolonnetype, vartype) {
       )
     }
   } else if (vartype == "kategorisk") {
-    # fyller kategoriske variabler nedover, slik
-    # at de blir tatt ut av objektet
-    # hvor vi ønsker alle andre variabeltyper
-    kb_fylt = fill(kb, variabel_id, variabeltype)
-
-    # objekt for vartyper som ikke er kategorisk
-    ikke_kat = (kb_fylt$variabeltype != "kategorisk")
-
     # ikke ok kolonnetype, gitt variabeltypen
     ikke_ok_kat = ikke_kat & (!is.na(kb_fylt[[kolonnetype]]))
 
@@ -345,8 +353,24 @@ sjekk_gyldig_vartype = function(kb, kolonnetype, vartype) {
         lag_liste(ugyldig_var)
       )
     }
+  } else if (vartype == "kategorisk" & kolonnetype == "manglande") {
+    # ikke ok kolonnetype, gitt variabeltypen
+    ikke_ok_mangl = ikke_kat & (!is.na(kb_fylt[[kolonnetype]]) & kb_fylt[[kolonnetype]] == "ja")
+
+    if (any(ikke_ok_mangl)) {
+      ugyldig_var = kb_fylt %>%
+        filter(ikke_ok_mangl) %>%
+        select(variabel_id)
+      warning(
+        lag_tekst(vartype = "kategorisk", kolonnetype),
+        lag_liste(ugyldig_var)
+      )
+    }
   }
 }
+
+
+# ikke ok kolonnetype, gitt variabeltypen
 
 sjekk_gyldig_vartype(kb, "eining", "numerisk")
 sjekk_gyldig_vartype(kb, "desimalar", "numerisk")
@@ -356,9 +380,9 @@ sjekk_gyldig_vartype(kb, "min_rimeleg", "numerisk")
 sjekk_gyldig_vartype(kb, "maks_rimeleg", "numerisk")
 sjekk_gyldig_vartype(kb, "verdi", "kategorisk")
 sjekk_gyldig_vartype(kb, "verditekst", "kategorisk")
+sjekk_gyldig_vartype(kb, "manglande", "kategorisk")
 
 # Forslag til fleire testar:
-# - viss manglande == ja, må variabeltypen vera kategorisk
 # - unik må vera ja/nei (og ikkje NA)
 # - obligatorisk må vera ja/nei (og ikkje NA)
 # - manglande må vera ja/nei (og ikkje NA)
