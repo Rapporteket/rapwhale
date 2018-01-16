@@ -334,10 +334,10 @@ sjekk_gyldig_vartype = function(kb, kolonnetype, vartype) {
     ikke_kat = (kb_fylt$variabeltype != "kategorisk")
 
     # ikke ok kolonnetype, gitt variabeltypen
-    ikke_ok_kat = ikke_kat & (!is.na(kb[[kolonnetype]]))
+    ikke_ok_kat = ikke_kat & (!is.na(kb_fylt[[kolonnetype]]))
 
     if (any(ikke_ok_kat)) {
-      ugyldig_var = kb %>%
+      ugyldig_var = kb_fylt %>%
         filter(ikke_ok_kat) %>%
         select(variabel_id)
       warning(
