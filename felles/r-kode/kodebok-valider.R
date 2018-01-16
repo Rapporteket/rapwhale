@@ -325,8 +325,13 @@ sjekk_gyldig_vartype = function(kb, kolonnetype, vartype) {
       )
     }
   } else if (vartype == "kategorisk") {
-    # objekt for vartyper som ikke er numerisk eller utrekna
-    ikke_kat = (kb$variabeltype != "kategorisk" & !is.na(kb$variabeltype))
+    # fyller kategoriske variabler nedover, slik
+    # at de blir tatt ut av objektet
+    # hvor vi ønsker alle andre variabeltyper
+    kb_fylt = fill(kb, variabel_id, variabeltype)
+
+    # objekt for vartyper som ikke er kategorisk
+    ikke_kat = (kb_fylt$variabeltype != "kategorisk")
 
     # ikke ok kolonnetype, gitt variabeltypen
     ikke_ok_kat = ikke_kat & (!is.na(kb[[kolonnetype]]))
@@ -351,7 +356,6 @@ sjekk_gyldig_vartype(kb, "min_rimeleg", "numerisk")
 sjekk_gyldig_vartype(kb, "maks_rimeleg", "numerisk")
 sjekk_gyldig_vartype(kb, "verdi", "kategorisk")
 sjekk_gyldig_vartype(kb, "verditekst", "kategorisk")
-
 
 # Forslag til fleire testar:
 # - viss manglande == ja, må variabeltypen vera kategorisk
