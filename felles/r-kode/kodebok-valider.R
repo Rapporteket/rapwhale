@@ -241,9 +241,6 @@ if (any(!is.na(kb$kategori))) {
   }
 }
 
-
-kb_kat
-
 if (any(!is.na(y$kategori))) {
   kb_skjema = y %>%
     nest(-skjema_id)
@@ -262,7 +259,7 @@ if (any(!is.na(y$kategori))) {
 
 # mange av advarselene starter med samme teksten
 # er nynorsken helt på tryne kan den rettes her
-advar_tekst = paste0("Nokre variablar har")
+advar_tekst = paste0("Ein eller fleire variablar har")
 
 # Tester at bare gyldige variabeltyper er med i kodeboka
 # Objekt med gyldige variabeltyper til kanonisk standardform av kodebok,
@@ -289,25 +286,74 @@ if (any(kb$eining %in% "")) {
   )
 }
 
-# Viss ein har eining, må variabeltypen vera numerisk
-ikke_ok_eining = (kb$variabeltype != "numerisk") & (kb$variabeltype != "utrekna") & (!is.na(kb$eining))
+# Viss ein har eining, desimal, min- eller maksverdi
+# og/eller min_rimeleg- eller maks_rimeleg-verdi,
+# må variabeltypen vera numerisk
 
-if (any(ikke_ok_eining)) {
-  ugyldig_eining = kb %>%
-    filter(ikke_ok_eining) %>%
-    select(variabel_id)
-  warning(
-    "", advar_tekst, " eining men er verken numerisk eller utrekna:\n",
-    lag_liste(ugyldig_eining)
-  )
+# Funksjon som sjekker om variabelen ikke er numerisk/utrekna men
+# likevel har en viss kolonnetype som ikke skal være mulig for ikke numerisk/utrekna variabler
+
+sjekk_gyldig_vartype = function(kb, kolonnetype, vartype) {
+
+  # alle tester for om variabeltypen er gyldig mht. kolonnetypen
+  # har omtrent den samme teksten. lager en funksjon
+  # for funksjon for tekst til numerisk og kategoriske tester
+  lag_tekst = function(vartype, kolonnetype) {
+    if (vartype == "numerisk") {
+      num_tekst = paste0("", advar_tekst, " ", kolonnetype, ", men er verken numerisk eller utrekna:\n")
+    } else if (vartype == "kategorisk") {
+      num_tekst = paste0("", advar_tekst, " ", kolonnetype, ", men er ikke kategorisk:\n")
+    }
+    num_tekst
+  }
+
+  if (vartype == "numerisk") {
+
+    # objekt for vartyper som ikke er numerisk eller utrekna
+    ikke_num = (kb$variabeltype != "numerisk") & (kb$variabeltype != "utrekna")
+
+    # ikke ok kolonnetype, gitt variabeltypen
+    ikke_ok_num = ikke_num & (!is.na(kb[[kolonnetype]]))
+
+    if (any(ikke_ok_num)) {
+      ugyldig_var = kb %>%
+        filter(ikke_ok_num) %>%
+        select(variabel_id)
+      warning(
+        lag_tekst(vartype = "numerisk", kolonnetype),
+        lag_liste(ugyldig_var)
+      )
+    }
+  } else if (vartype == "kategorisk") {
+    # objekt for vartyper som ikke er numerisk eller utrekna
+    ikke_kat = (kb$variabeltype != "kategorisk" & !is.na(kb$variabeltype))
+
+    # ikke ok kolonnetype, gitt variabeltypen
+    ikke_ok_kat = ikke_kat & (!is.na(kb[[kolonnetype]]))
+
+    if (any(ikke_ok_kat)) {
+      ugyldig_var = kb %>%
+        filter(ikke_ok_kat) %>%
+        select(variabel_id)
+      warning(
+        lag_tekst(vartype = "kategorisk", kolonnetype),
+        lag_liste(ugyldig_var)
+      )
+    }
+  }
 }
 
+sjekk_gyldig_vartype(kb, "eining", "numerisk")
+sjekk_gyldig_vartype(kb, "desimalar", "numerisk")
+sjekk_gyldig_vartype(kb, "min", "numerisk")
+sjekk_gyldig_vartype(kb, "maks", "numerisk")
+sjekk_gyldig_vartype(kb, "min_rimeleg", "numerisk")
+sjekk_gyldig_vartype(kb, "maks_rimeleg", "numerisk")
+sjekk_gyldig_vartype(kb, "verdi", "kategorisk")
+sjekk_gyldig_vartype(kb, "verditekst", "kategorisk")
+
+
 # Forslag til fleire testar:
-# - viss ein har desimalar, må variabeltypen vera numerisk
-# - viss ein har min- eller maksverdi, må variabeltypen vera numerisk
-# - viss ein har min_rimeleg- eller maks_rimeleg-verdi, må variabeltypen vera numerisk (me bør forresten vurdera å laga tilsvarande variablar for datoar)
-# - viss ein har verdi, må variabeltypen vera kategorisk
-# - viss ein har verditekst, må variabeltypen vera kategorisk
 # - viss manglande == ja, må variabeltypen vera kategorisk
 # - unik må vera ja/nei (og ikkje NA)
 # - obligatorisk må vera ja/nei (og ikkje NA)
