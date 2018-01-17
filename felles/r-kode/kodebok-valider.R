@@ -297,6 +297,11 @@ if (any(kb$eining %in% "")) {
 # Funksjonen tester tester for kolonnetyper som gjeder ikke-kategoriske variabler
 # - disse kan ikke ha verdi, verditekst eller manlande == "ja"
 
+# Funksjonen krever argument for dataramme (kb),
+# kolonnetype, som er hvilken kolonne
+# man ønsker å sjekke at har gyldig tilhørende variabeltype (f.eks verditekst),
+# og hvilken variabeltype som er den gyldige - "numerisk" eller "kategorisk".
+
 sjekk_gyldig_vartype = function(kb, kolonnetype, vartype) {
 
   # alle tester for om variabeltypen er gyldig mht. kolonnetypen
@@ -368,9 +373,6 @@ sjekk_gyldig_vartype = function(kb, kolonnetype, vartype) {
     }
   }
 }
-
-
-# ikke ok kolonnetype, gitt variabeltypen
 
 sjekk_gyldig_vartype(kb, "eining", "numerisk")
 sjekk_gyldig_vartype(kb, "desimalar", "numerisk")
