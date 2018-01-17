@@ -393,6 +393,8 @@ sjekk_gyldig_vartype(kb, "manglande", "kategorisk")
 # - min må vera <= min_rimeleg (dersom begge finst)
 # - maks må vera >= maks_rimeleg (dersom begge finst)
 # - viss kommentar_rimeleg er fylt ut, må min_rimeleg *eller* maks_rimeleg vera fylt ut
+# - viss 'obligatorisk' = ja for ein kategorisk variabel,
+#   kan ikkje 'manglande' vera ja for nokon av verdiane til variabelen
 # - sjekk at variabel_id er på anbefalt format, dvs. små bokstavar, understrek eller tal, ikkje tal først osv.
 #   (sjå testfunksjon for dette i ei anna fil, som me kanskje kan flytta hit).
 #   Bør kunne velja om akkurat denne testen skal køyrast (standard ja), sidan me
