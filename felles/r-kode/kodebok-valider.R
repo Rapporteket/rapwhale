@@ -384,10 +384,36 @@ sjekk_gyldig_vartype(kb, "verdi", "kategorisk")
 sjekk_gyldig_vartype(kb, "verditekst", "kategorisk")
 sjekk_gyldig_vartype(kb, "manglande", "kategorisk")
 
+# Funksjon som tester om kodeboka har noe annet enn verdiene
+# "ja" og "nei" for kolonnetyper
+# som kan bare ha "ja" og "nei".
+# Funksjonen tar et argument for objektet (kodeboka)
+# som skal testes, og en for kolonnetypen
+# som ikke kan ha noen andre verdier enn "ja" og "nei".
+
+sjekk_ja_nei = function(kb, kolonnetype) {
+
+  # objekt som tester at kolonnetypen er innenfor ja og nei
+  er_ja_nei = kb[[kolonnetype]] %in% c("ja", "nei")
+
+  # Tester at observasjoner fra objektet over er "False".
+  # Gir advarsel hvis testen ikke oppfyller dette.
+  if (any(!er_ja_nei)) {
+    ugyldig_ja_nei = kb %>%
+      filter(!er_ja_nei) %>%
+      select(variabel_id)
+    warning("", advar_tekst, " har ein verdi for ", kolonnetype, " som ikkje er ja eller nei.")
+  }
+}
+
+# tester om unik, obligatorisk og manglande bare har "ja" og "nei".
+sjekk_ja_nei(kb, "unik")
+sjekk_ja_nei(kb, "obligatorisk")
+sjekk_ja_nei(kb, "manglande")
+
+
+
 # Forslag til fleire testar:
-# - unik må vera ja/nei (og ikkje NA)
-# - obligatorisk må vera ja/nei (og ikkje NA)
-# - manglande må vera ja/nei (og ikkje NA)
 # - desimalar må vera >= 0 (eller NA)
 # - desimalar må vera heiltallige
 # - min må vera < maks (dersom begge finst)
