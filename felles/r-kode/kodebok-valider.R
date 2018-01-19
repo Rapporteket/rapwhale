@@ -421,7 +421,7 @@ sjekk_ja_nei(kb, "unik")
 sjekk_ja_nei(kb, "obligatorisk")
 sjekk_ja_nei(kb, "manglande")
 
-# tester om desimalar kun er 0, positibe eller missing.
+# tester om desimalar kun er 0, positive eller missing.
 des_ok = (kb$desimalar >= 0) | is.na(kb_num$desimalar)
 if (!all(des_ok)) {
   ugyldig_des = kb %>%
@@ -434,12 +434,33 @@ if (!all(des_ok)) {
   )
 }
 
+# tester størrelsen på relasjon til en annen kolonne
+# her kan man velge om man ønsker å teste om
+# kolonnen er >, =>,<, <= osv. men funksjonen er laget
+# for å teste om min, maks, min_rimleg og maks_rimeleg er større
+# eller mindre enn hverandre.
+# Trenger kb, op for operasjon, x som er første kolonnen man tester,
+# og y, for andre kolonne man tester
+sjekk_op = function(kb, op, x, y) {
+  op_ok = op(kb[[x]], kb[[y]]) | (is.na(kb[[x]]) & is.na(kb[[y]]))
+  if (!all(op_ok)) {
+    ugyldig_op = kb %>%
+      filter(!op_ok) %>%
+      pull(variabel_id) %>%
+      unique()
+    warning(
+      advar_tekst, " ", x, " verdi som er større enn ", y, " verdi:\n",
+      lag_liste(ugyldig_op)
+    )
+  }
+}
+
+sjekk_op(kb, op = "<", x = "min", y = "maks")
+sjekk_op(kb, op = "<", x = "min_rimeleg", y = "maks_rimeleg")
+sjekk_op(kb, op = "=<", x = "min", y = "min_rimeleg")
+sjekk_op(kb, op = "=<", x = "maks_rimeleg", y = "maks")
+
 # Forslag til fleire testar:
-# - desimalar må vera heiltallige
-# - min må vera < maks (dersom begge finst)
-# - min_rimeleg må vera < maks_rimeleg (dersom begge finst)
-# - min må vera <= min_rimeleg (dersom begge finst)
-# - maks må vera >= maks_rimeleg (dersom begge finst)
 # - viss kommentar_rimeleg er fylt ut, må min_rimeleg *eller* maks_rimeleg vera fylt ut
 # - viss 'obligatorisk' = ja for ein kategorisk variabel,
 #   kan ikkje 'manglande' vera ja for nokon av verdiane til variabelen
