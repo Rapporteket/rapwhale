@@ -274,9 +274,10 @@ gyldige_vartyper = c("numerisk", "kategorisk", "boolsk", "dato", "utrekna", "tek
 if (any(!kb$variabeltype %in% gyldige_vartyper)) {
   ugyldig_vartyp = kb %>%
     filter(!variabeltype %in% gyldige_vartyper) %>%
-    select(variabel_id)
+    pull(variabel_id) %>%
+    unique()
   warning(
-    "", advar_tekst, " ugyldige variabeltypar:\n",
+    advar_tekst, " ugyldige variabeltypar:\n",
     lag_liste(ugyldig_vartyp)
   )
 }
@@ -285,9 +286,10 @@ if (any(!kb$variabeltype %in% gyldige_vartyper)) {
 if (any(kb$eining %in% "")) {
   tom_eining = kb %>%
     filter(eining == "") %>%
-    select(variabel_id)
+    pull(variabel_id) %>%
+    unique()
   warning(
-    "", advar_tekst, " ugyldig eining, kor ein eller fleire har tomme tekststrengar:\n",
+    advar_tekst, " ugyldig eining, kor ein eller fleire har tomme tekststrengar:\n",
     lag_liste(tom_eining)
   )
 }
@@ -340,7 +342,8 @@ sjekk_gyldig_vartype = function(kb, kolonnetype, vartype) {
     if (any(ikke_ok_num)) {
       ugyldig_var = kb %>%
         filter(ikke_ok_num) %>%
-        select(variabel_id)
+        pull(variabel_id) %>%
+        unique()
       warning(
         lag_tekst(vartype = "numerisk", kolonnetype),
         lag_liste(ugyldig_var)
@@ -353,7 +356,8 @@ sjekk_gyldig_vartype = function(kb, kolonnetype, vartype) {
     if (any(ikke_ok_kat)) {
       ugyldig_var = kb_fylt %>%
         filter(ikke_ok_kat) %>%
-        select(variabel_id)
+        pull(variabel_id) %>%
+        unique()
       warning(
         lag_tekst(vartype = "kategorisk", kolonnetype),
         lag_liste(ugyldig_var)
@@ -366,7 +370,8 @@ sjekk_gyldig_vartype = function(kb, kolonnetype, vartype) {
     if (any(ikke_ok_mangl)) {
       ugyldig_var = kb_fylt %>%
         filter(ikke_ok_mangl) %>%
-        select(variabel_id)
+        pull(variabel_id) %>%
+        unique()
       warning(
         lag_tekst(vartype = "kategorisk", kolonnetype),
         lag_liste(ugyldig_var)
@@ -402,8 +407,12 @@ sjekk_ja_nei = function(kb, kolonnetype) {
   if (any(!er_ja_nei)) {
     ugyldig_ja_nei = kb %>%
       filter(!er_ja_nei) %>%
-      select(variabel_id)
-    warning("", advar_tekst, " har ein verdi for ", kolonnetype, " som ikkje er ja eller nei.")
+      pull(variabel_id) %>%
+      unique()
+    warning(
+      advar_tekst, " har ein verdi for ", kolonnetype, " som ikkje er ja eller nei:\n",
+      lag_liste(ugyldig_ja_nei)
+    )
   }
 }
 
@@ -412,10 +421,20 @@ sjekk_ja_nei(kb, "unik")
 sjekk_ja_nei(kb, "obligatorisk")
 sjekk_ja_nei(kb, "manglande")
 
-
+# tester om desimalar kun er 0, positibe eller missing.
+des_ok = (kb$desimalar >= 0) | is.na(kb_num$desimalar)
+if (!all(des_ok)) {
+  ugyldig_des = kb %>%
+    filter(!des_ok) %>%
+    pull(variabel_id) %>%
+    unique()
+  warning(
+    advar_tekst, "har ein desimal som ikke er 0 eller positiv:\n",
+    lag_liste(ugyldig_ja_nei)
+  )
+}
 
 # Forslag til fleire testar:
-# - desimalar må vera >= 0 (eller NA)
 # - desimalar må vera heiltallige
 # - min må vera < maks (dersom begge finst)
 # - min_rimeleg må vera < maks_rimeleg (dersom begge finst)
