@@ -159,6 +159,14 @@ if (nrow(format_feil) > 0) {
 # Viss ho er ikkje på den forma, ordnar me det sjølv. :)
 kb = kb_til_kanonisk_form(kb)
 
+# lager objekt for numeriske/utrekna variabler
+kb_num = kb %>%
+  filter(variabeltype == "numerisk" | variabeltype == "utrekna")
+
+# lager objekt for kategoriske variabler
+kb_kat = kb %>%
+  filter(variabeltype == "kategorisk")
+
 # Sjekk at me ikkje har duplikate skjema-ID-ar, skjemanamn eller variabel-ID-ar,
 # dvs. at alle unike verdiar kjem samanhengande nedover, utan nokre hòl
 # (eks. «xxxyy» er OK, men «xxyyx» er det ikkje).
@@ -211,8 +219,6 @@ sjekk_ikkjevar(kb, variabel_id, kategori) # Variablar kan ikkje kryssa kategori-
 sjekk_ikkjevar(kb, variabel_id, skjema_id)
 
 # Sjekk at alle verdiar for kategoriske variablar er unike og ingen er NA
-kb_kat = kb %>%
-  filter(variabeltype == "kategorisk")
 kb_kat_nest = kb_kat %>%
   nest(-variabel_id)
 verdi_ok = kb_kat_nest$data %>%
@@ -324,13 +330,8 @@ sjekk_gyldig_vartype = function(kb, kolonnetype, vartype) {
   # objekt for vartyper som ikke er numerisk eller utrekna
   ikke_num = (kb$variabeltype != "numerisk") & (kb$variabeltype != "utrekna")
 
-  # fyller kategoriske variabler nedover, slik
-  # at de blir tatt ut av objektet
-  # hvor vi ønsker alle andre variabeltyper
-  kb_fylt = fill(kb, variabel_id, variabeltype)
-
   # objekt for vartyper som ikke er kategorisk
-  ikke_kat = (kb_fylt$variabeltype != "kategorisk")
+  ikke_kat = (kb$variabeltype != "kategorisk")
 
   if (vartype == "numerisk") {
     # ikke ok kolonnetype, gitt variabeltypen
