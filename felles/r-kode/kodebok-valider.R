@@ -460,8 +460,29 @@ sjekk_op(kb, op = `<`, x = "min_rimeleg", y = "maks_rimeleg")
 sjekk_op(kb, op = `<=`, x = "min", y = "min_rimeleg")
 sjekk_op(kb, op = `<=`, x = "maks_rimeleg", y = "maks")
 
+# Tester at variabler som har en verdi for kommentar_rimeleg
+# har enten min_rimeleg eller maks_rimeleg
+
+# filtrerer ut de som har kommentar_rimeleg
+kb_kom_rimeleg = kb %>%
+  filter(!is.na(kommentar_rimeleg))
+
+# kontrollerer at de enter ha min_rimeleg eller maks_rimeleg
+ok_kom_rimeleg = (!is.na(kb_kom_rimeleg$min_rimeleg) | !is.na(kb_kom_rimeleg$maks_rimeleg))
+
+# gir advarsel hvis testen ikke er oppfylt
+if (!all(ok_kom_rimeleg)) {
+  ugyldig_kom_rimeleg = kb_kom_rimeleg %>%
+    filter(!ok_kom_rimeleg) %>%
+    pull(variabel_id) %>%
+    unique()
+  warning(
+    advar_tekst, " verdi for kommentar_rimeleg, men ingen verdi for min- eller maks_rimeleg:\n",
+    lag_liste(ugyldig_kom_rimeleg)
+  )
+}
+
 # Forslag til fleire testar:
-# - viss kommentar_rimeleg er fylt ut, må min_rimeleg *eller* maks_rimeleg vera fylt ut
 # - viss 'obligatorisk' = ja for ein kategorisk variabel,
 #   kan ikkje 'manglande' vera ja for nokon av verdiane til variabelen
 # - sjekk at variabel_id er på anbefalt format, dvs. små bokstavar, understrek eller tal, ikkje tal først osv.
