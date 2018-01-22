@@ -442,23 +442,23 @@ if (!all(des_ok)) {
 # Trenger kb, op for operasjon, x som er første kolonnen man tester,
 # og y, for andre kolonne man tester
 sjekk_op = function(kb, op, x, y) {
-  op_ok = op(kb[[x]], kb[[y]]) | (is.na(kb[[x]]) & is.na(kb[[y]]))
+  op_ok = op(kb[[x]], kb[[y]]) | is.na(kb[[x]]) | is.na(kb[[y]])
   if (!all(op_ok)) {
     ugyldig_op = kb %>%
       filter(!op_ok) %>%
       pull(variabel_id) %>%
       unique()
     warning(
-      advar_tekst, " ", x, " verdi som er større enn ", y, " verdi:\n",
+      advar_tekst, " ", x, "-verdi som er større enn ", y, "-verdi:\n",
       lag_liste(ugyldig_op)
     )
   }
 }
 
-sjekk_op(kb, op = "<", x = "min", y = "maks")
-sjekk_op(kb, op = "<", x = "min_rimeleg", y = "maks_rimeleg")
-sjekk_op(kb, op = "=<", x = "min", y = "min_rimeleg")
-sjekk_op(kb, op = "=<", x = "maks_rimeleg", y = "maks")
+sjekk_op(kb, op = `<`, x = "min", y = "maks")
+sjekk_op(kb, op = `<`, x = "min_rimeleg", y = "maks_rimeleg")
+sjekk_op(kb, op = `<=`, x = "min", y = "min_rimeleg")
+sjekk_op(kb, op = `<=`, x = "maks_rimeleg", y = "maks")
 
 # Forslag til fleire testar:
 # - viss kommentar_rimeleg er fylt ut, må min_rimeleg *eller* maks_rimeleg vera fylt ut
