@@ -157,6 +157,27 @@ les_dd_mrs = function(adresse, kb) {
     ))
 
   # Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
+  # fixme: Kategorisk er ein litt vrien variant. *Oftast* er han
+  #        tal, men me kan risikera at han er tekst òg. Ei løysing er å
+  #        alltid lesa han inn som tekst, men det er ikkje ei *god* løysing.
+  #        Når han er koda som tal, er det ofte betre å handsama han som tal.
+  #        Det ser betre ut, og det mogleggjer å bruka operatorar som < og >=
+  #        (eks. komplikasjonsgrad < 5) (men "10" er som kjent < "2"!).
+  #        Og for spørjeskjema er gjerne skåringskodane lagt inn som talkodar,
+  #        slik at det er fint om me kan skriva for eksempel sp1 + sp2 + ...
+  #        for å få ein sumskår).
+  #
+  #        Så den *rette* måten å handtera dette på er å lesa inn kategoriske
+  #        verdiar som tal dersom dei moglege *verdiane* i kodeboka alle er tal
+  #        og som tekst elles.
+  #
+  #        Det kunne vera aktuelt å dela opp i kategorisk_numerisk og
+  #        kategorisk_tekst i vår kanoniske kodebok, men det ville komplisera
+  #        annan kode som brukar kodebøkene (eks.kb_fyll()), så det bør me nok
+  #        helst ikkje gjera.
+  #
+  #        Programmeringsmessig blir anbefalt løysing litt komplisert,
+  #        men det skal me få til!
   spek_csv_mrs = tribble(
     ~variabeltype, ~csv_bokstav,
     "kategorisk", "i",
