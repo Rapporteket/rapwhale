@@ -50,8 +50,8 @@ kb_til_kanonisk_form = function(kb) {
   kb$obligatorisk[is.na(kb$obligatorisk) | kb$obligatorisk == "ja*"] = "nei"
   kb$unik[is.na(kb$unik) | kb$unik == "ja*"] = "nei"
 
-  # Fyll ut implisitte verdiar for «manglande»
-  kb$manglande[is.na(kb$manglande)] = "nei"
+  # Fyll ut implisitte verdiar for «manglande» (gjeld berre kategoriske variablar)
+  kb$manglande[is.na(kb$manglande) & kb$variabeltype == "kategorisk"] = "nei"
 
   # Returner kodeboka på kanonisk form
   kb
