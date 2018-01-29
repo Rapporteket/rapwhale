@@ -74,6 +74,8 @@ lag_liste = function(x) {
   str_c("'", x, "'", collapse = ", ")
 }
 
+#------------------------------------------------Tester på glissen KB-------------------------------------------
+
 # Standard kolonnenamn som alle kodebøker skal ha
 std_namn = c(
   "skjema_id", "skjemanamn", "kategori", "innleiing", "variabel_id",
@@ -154,6 +156,7 @@ if (nrow(format_feil) > 0) {
   )
 }
 
+#------------------------------------------------Objekter---------------------------------
 # I vidare testar føreset me at kodeboka er på ikkje-glissen form,
 # dvs. at skjema_id, variabel_id og sånt er gjentatt nedover.
 # Viss ho er ikkje på den forma, ordnar me det sjølv. :)
@@ -166,6 +169,16 @@ kb_num = kb %>%
 # lager objekt for kategoriske variabler
 kb_kat = kb %>%
   filter(variabeltype == "kategorisk")
+
+# filtrerer ut de som har kommentar_rimeleg
+kb_kom_rimeleg = kb %>%
+  filter(!is.na(kommentar_rimeleg))
+
+# mange av advarselene starter med samme teksten
+# er nynorsken helt på tryne kan den rettes her
+advar_tekst = paste0("Ein eller fleire variablar har")
+
+#------------------------------------------------Tester på ikkje-glissen KB-------------------------------------------
 
 # Sjekk at me ikkje har duplikate skjema-ID-ar, skjemanamn eller variabel-ID-ar,
 # dvs. at alle unike verdiar kjem samanhengande nedover, utan nokre hòl
@@ -259,13 +272,6 @@ if (any(!is.na(y$kategori))) {
     )
   }
 }
-
-
-#----------------------------------------------------midlertidig skille, takk
-
-# mange av advarselene starter med samme teksten
-# er nynorsken helt på tryne kan den rettes her
-advar_tekst = paste0("Ein eller fleire variablar har")
 
 # Tester at bare gyldige variabeltyper er med i kodeboka
 # Objekt med gyldige variabeltyper til kanonisk standardform av kodebok,
@@ -390,6 +396,8 @@ sjekk_gyldig_vartype(kb, "verdi", "kategorisk")
 sjekk_gyldig_vartype(kb, "verditekst", "kategorisk")
 sjekk_gyldig_vartype(kb, "manglande", "kategorisk")
 
+
+
 # Funksjon som tester om kodeboka har noe annet enn verdiene
 # "ja" og "nei" for kolonnetyper
 # som kan bare ha "ja" og "nei".
@@ -462,12 +470,6 @@ sjekk_op(kb, op = `<=`, x = "maks_rimeleg", y = "maks")
 
 # Tester at variabler som har en verdi for kommentar_rimeleg
 # har enten min_rimeleg eller maks_rimeleg
-
-# filtrerer ut de som har kommentar_rimeleg
-kb_kom_rimeleg = kb %>%
-  filter(!is.na(kommentar_rimeleg))
-
-# kontrollerer at de enter ha min_rimeleg eller maks_rimeleg
 ok_kom_rimeleg = (!is.na(kb_kom_rimeleg$min_rimeleg) | !is.na(kb_kom_rimeleg$maks_rimeleg))
 
 # gir advarsel hvis testen ikke er oppfylt
@@ -482,9 +484,24 @@ if (!all(ok_kom_rimeleg)) {
   )
 }
 
+
+# Tester at kategoriske variabler som har obligatorisk = ja ikke
+# har manglande "ja" for noen av verdiene
+ikke_ok_oblig_kat = (kb_kat$obligatorisk == "ja" & kb_kat$manglande == "ja")
+
+# gir advarsel hvis testen ikke er oppfylt
+if (any(ikke_ok_oblig_kat)) {
+  ugyldig_oblig_kat = kb_kat %>%
+    filter(kb_kat$obligatorisk == "ja" & kb_kat$manglande == "ja") %>%
+    pull(variabel_id) %>%
+    unique()
+  warning(
+    advar_tekst, " verdien ja på obligatorisk, men har likevel en verdi for manglande:\n",
+    lag_liste(ugyldig_oblig_kat)
+  )
+}
+
 # Forslag til fleire testar:
-# - viss 'obligatorisk' = ja for ein kategorisk variabel,
-#   kan ikkje 'manglande' vera ja for nokon av verdiane til variabelen
 # - sjekk at variabel_id er på anbefalt format, dvs. små bokstavar, understrek eller tal, ikkje tal først osv.
 #   (sjå testfunksjon for dette i ei anna fil, som me kanskje kan flytta hit).
 #   Bør kunne velja om akkurat denne testen skal køyrast (standard ja), sidan me
