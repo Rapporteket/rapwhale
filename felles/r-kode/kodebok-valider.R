@@ -60,7 +60,7 @@ kb_til_kanonisk_form = function(kb) {
 
 # Eksempeldata for testing
 # mappe = "h:/kvalreg/ablasjonsregisteret/"
-# kb = read_excel(paste0(mappe,"kodebok-utkast.xlsx"), sheet = 1)
+# kb_test = read_excel(paste0(mappe,"kodebok-utkast.xlsx"), sheet = 1)
 
 # fixme:
 #  - Legg til mange nye testar
@@ -69,456 +69,471 @@ kb_til_kanonisk_form = function(kb) {
 #    (Gjerne ein god idé med kortslutning av funksjonen, slik at han returnerer
 #    etter første åtvaring.)
 
-# Kjed saman tekststrengar og formater enkeltelement med '-teikn rundt seg
-lag_liste = function(x) {
-  str_c("'", x, "'", collapse = ", ")
-}
+kb_er_gyldig = function(kb_glissen) {
 
-#------------------------------------------------Tester på glissen KB-------------------------------------------
+  # Antar i utgangspunktet at kodeboken er gyldig
+  gyldig = TRUE
 
-# Standard kolonnenamn som alle kodebøker skal ha
-std_namn = c(
-  "skjema_id", "skjemanamn", "kategori", "innleiing", "variabel_id",
-  "variabeletikett", "forklaring", "variabeltype", "eining", "unik",
-  "obligatorisk", "verdi", "verditekst", "manglande", "desimalar",
-  "min", "maks", "min_rimeleg", "maks_rimeleg", "kommentar_rimeleg",
-  "utrekningsformel", "logikk", "kommentar"
-)
+  #------------------------------------------------Tester på glissen KB-------------------------------------------
 
-# Sjekk først at alle standardkolonnane er med
-# (kodeboka kan ha andre kolonnar òg, men iallfall desse)
-kol_manglar = setdiff(std_namn, names(kb))
-if (length(kol_manglar) > 0) {
-  warning(
-    "Kodeboka manglar kolonnar:\n",
-    paste0(kol_manglar, sep = "\n")
+  # Kjed saman tekststrengar og formater enkeltelement med '-teikn rundt seg
+  lag_liste = function(x) {
+    str_c("'", x, "'", collapse = ", ")
+  }
+
+  # Standard kolonnenamn som alle kodebøker skal ha
+  std_namn = c(
+    "skjema_id", "skjemanamn", "kategori", "innleiing", "variabel_id",
+    "variabeletikett", "forklaring", "variabeltype", "eining", "unik",
+    "obligatorisk", "verdi", "verditekst", "manglande", "desimalar",
+    "min", "maks", "min_rimeleg", "maks_rimeleg", "kommentar_rimeleg",
+    "utrekningsformel", "logikk", "kommentar"
   )
-}
 
-
-# Sjå på standardkolonnane, men i rekkefølgja dei finst på i kodeboka
-kb_namn = names(kb[names(kb) %in% std_namn])
-
-# Sjekk at kolonnane kjem i standard rekkefølgje
-# (men merk at me i *denne* testen godtek at
-# enkelte kolonnar manglar, sidan me testar det tidlegare).
-ind = match(kb_namn, std_namn)
-forste_feil = which(diff(ind) < 0)[1]
-if (!is.na(forste_feil)) {
-  warning(paste0(
-    "Feil rekkefølgje på kolonnar. Første feil:\n",
-    "Kolonnen ",
-    lag_liste(kb_namn[forste_feil]),
-    " står *før* ",
-    lag_liste(kb_namn[forste_feil + 1]),
-    " men skal stå (ein eller annan plass) etter."
-  ))
-}
-
-# Ser vidare berre på standardkolonnane
-kb = kb[std_namn]
-
-# Sjekk at variabelformatet (tal, tekst, dato osv.) er rett
-format_std = tribble(
-  ~kol_namn, ~kol_klasse_std,
-  "skjema_id", "character",
-  "skjemanamn", "character",
-  "kategori", "character",
-  "innleiing", "character",
-  "variabel_id", "character",
-  "variabeletikett", "character",
-  "forklaring", "character",
-  "variabeltype", "character",
-  "eining", "character",
-  "unik", "character",
-  "obligatorisk", "character",
-  "verdi", "character", # Oftast numerisk, men av og til ikkje, eks. ICD-kodar, så må vera tekst
-  "verditekst", "character",
-  "manglande", "character",
-  "desimalar", "integer",
-  "min", "numeric",
-  "maks", "numeric",
-  "min_rimeleg", "numeric",
-  "maks_rimeleg", "numeric",
-  "kommentar_rimeleg", "character",
-  "utrekningsformel", "character",
-  "logikk", "character",
-  "kommentar", "character"
-)
-format_kb = tibble(kol_namn = names(kb), kol_klasse = map_chr(kb, ~ class(.x)[1]))
-format = left_join(format_std, format_kb, by = "kol_namn")
-format_feil = format %>%
-  filter(kol_klasse_std != kol_klasse)
-if (nrow(format_feil) > 0) {
-  warning(
-    "Feil format på kolonnar:\n",
-    format_feil %>% as.data.frame() %>% capture.output() %>% paste0(sep = "\n")
-  )
-}
-
-#------------------------------------------------Objekter---------------------------------
-# I vidare testar føreset me at kodeboka er på ikkje-glissen form,
-# dvs. at skjema_id, variabel_id og sånt er gjentatt nedover.
-# Viss ho er ikkje på den forma, ordnar me det sjølv. :)
-kb = kb_til_kanonisk_form(kb)
-
-# lager objekt for numeriske/utrekna variabler
-kb_num = kb %>%
-  filter(variabeltype == "numerisk" | variabeltype == "utrekna")
-
-# lager objekt for kategoriske variabler
-kb_kat = kb %>%
-  filter(variabeltype == "kategorisk")
-
-# lager objekt for boolske variabler
-kb_bool = kb %>%
-  filter(variabeltype == "boolsk")
-
-# filtrerer ut de som har kommentar_rimeleg
-kb_kom_rimeleg = kb %>%
-  filter(!is.na(kommentar_rimeleg))
-
-# mange av advarselene starter med samme teksten
-# er nynorsken helt på tryne kan den rettes her
-advar_tekst = paste0("Ein eller fleire variablar har")
-
-#------------------------------------------------Tester på ikkje-glissen KB-------------------------------------------
-
-# Sjekk at me ikkje har duplikate skjema-ID-ar, skjemanamn eller variabel-ID-ar,
-# dvs. at alle unike verdiar kjem samanhengande nedover, utan nokre hòl
-# (eks. «xxxyy» er OK, men «xxyyx» er det ikkje).
-sjekk_dup = function(kb, idkol) {
-  idkol = quo_name(enquo(idkol))
-  ids = rle(kb[[idkol]])$values
-  if (any(duplicated(ids))) {
+  # Sjekk først at alle standardkolonnane er med
+  # (kodeboka kan ha andre kolonnar òg, men iallfall desse)
+  kol_manglar = setdiff(std_namn, names(kb_glissen))
+  if (length(kol_manglar) > 0) {
     warning(
-      "Duplikate verdiar i ", lag_liste(idkol), ":\n",
-      lag_liste(unique(ids[duplicated(ids)])),
-      "\n(Men merk at seinare duplikatar kan vera følgjefeil av første.)"
+      "Kodeboka manglar kolonnar:\n",
+      paste0(kol_manglar, sep = "\n")
     )
+    gyldig = FALSE
   }
-}
-sjekk_dup(kb, skjema_id)
-sjekk_dup(kb, skjemanamn)
-sjekk_dup(kb, variabel_id) # Skal vera unik, ikkje berre innan skjema
 
-# Sjekk at valt variabel berre har éin verdi innanfor kvar gruppe
-sjekk_ikkjevar = function(df, gruppe, varid) {
-  gruppe_tekst = quo_name(enquo(gruppe))
-  varid_tekst = quo_name(enquo(varid))
-  nest_cols = setdiff(names(df), gruppe_tekst)
-  df_grupper = df %>%
-    nest_(key_col = "data", nest_cols = nest_cols) # fixme: Byt til quasi-quotation, dvs. «-!!gruppe» når det er støtta i dplyr
 
-  ikkjeunike = df_grupper$data %>%
-    map_lgl(~ length(unique(.x[[varid_tekst]])) > 1)
+  # Sjå på standardkolonnane, men i rekkefølgja dei finst på i kodeboka
+  kb_namn = names(kb_glissen[names(kb_glissen) %in% std_namn])
 
-  if (any(ikkjeunike)) {
-    warning(
-      "Varierande/inkonsistente '", varid_tekst, "'-verdiar for desse '", gruppe_tekst, "'-verdiane:\n",
-      lag_liste(df_grupper[[gruppe_tekst]][ikkjeunike])
-    )
+  # Sjekk at kolonnane kjem i standard rekkefølgje
+  # (men merk at me i *denne* testen godtek at
+  # enkelte kolonnar manglar, sidan me testar det tidlegare).
+  ind = match(kb_namn, std_namn)
+  forste_feil = which(diff(ind) < 0)[1]
+  if (!is.na(forste_feil)) {
+    warning(paste0(
+      "Feil rekkefølgje på kolonnar. Første feil:\n",
+      "Kolonnen ",
+      lag_liste(kb_namn[forste_feil]),
+      " står *før* ",
+      lag_liste(kb_namn[forste_feil + 1]),
+      " men skal stå (ein eller annan plass) etter."
+    ))
+    gyldig = FALSE
   }
-}
 
+  # Ser vidare berre på standardkolonnane
+  kb_stdkols = kb_glissen[std_namn]
 
-# Sjekk at innanfor skjema er skjemanamn unikt
-sjekk_ikkjevar(kb, skjema_id, skjemanamn)
-
-# Sjekk at kvar variabel berre har éin (dvs. unik)
-# variabeltype, variabeletikett osv.
-sjekk_ikkjevar(kb, variabel_id, variabeltype)
-sjekk_ikkjevar(kb, variabel_id, variabeletikett)
-sjekk_ikkjevar(kb, variabel_id, forklaring)
-sjekk_ikkjevar(kb, variabel_id, unik)
-sjekk_ikkjevar(kb, variabel_id, obligatorisk)
-sjekk_ikkjevar(kb, variabel_id, kategori) # Variablar kan ikkje kryssa kategori- eller skjemagrenser
-sjekk_ikkjevar(kb, variabel_id, skjema_id)
-
-# Sjekk at alle verdiar for kategoriske variablar er unike og ingen er NA
-kb_kat_nest = kb_kat %>%
-  nest(-variabel_id)
-verdi_ok = kb_kat_nest$data %>%
-  map_lgl(~ (!any(duplicated(.x$verdi) | is.na(.x$verdi))))
-if (any(!verdi_ok)) {
-  warning(
-    "Variablar har dupliserte 'verdi'-ar eller NA som 'verdi':\n",
-    lag_liste(kb_kat_nest$variabel_id[!verdi_ok])
+  # Sjekk at variabelformatet (tal, tekst, dato osv.) er rett
+  format_std = tribble(
+    ~kol_namn, ~kol_klasse_std,
+    "skjema_id", "character",
+    "skjemanamn", "character",
+    "kategori", "character",
+    "innleiing", "character",
+    "variabel_id", "character",
+    "variabeletikett", "character",
+    "forklaring", "character",
+    "variabeltype", "character",
+    "eining", "character",
+    "unik", "character",
+    "obligatorisk", "character",
+    "verdi", "character", # Oftast numerisk, men av og til ikkje, eks. ICD-kodar, så må vera tekst
+    "verditekst", "character",
+    "manglande", "character",
+    "desimalar", "integer",
+    "min", "numeric",
+    "maks", "numeric",
+    "min_rimeleg", "numeric",
+    "maks_rimeleg", "numeric",
+    "kommentar_rimeleg", "character",
+    "utrekningsformel", "character",
+    "logikk", "character",
+    "kommentar", "character"
   )
-}
-
-# *Viss* kodeboka brukar kategoriar (det er frivillig å bruka,
-# men viss ein brukar det, skal alle skjema ha minst éin kategori),
-# sjekk at alle skjema startar med ei kategorioverskrift
-# (me sjekkar tidlegare oppe at desse er unike innanfor variabel_id)
-if (any(!is.na(kb$kategori))) {
-  kb_skjema = kb %>%
-    nest(-skjema_id)
-  har_kat = kb_skjema$data %>%
-    map_lgl(~ (!is.na(.x$kategori[1])) & (.x$kategori[1] != ""))
-  if (any(!har_kat)) {
+  format_kb = tibble(kol_namn = names(kb_stdkols), kol_klasse = map_chr(kb_stdkols, ~ class(.x)[1]))
+  format = left_join(format_std, format_kb, by = "kol_namn")
+  format_feil = format %>%
+    filter(kol_klasse_std != kol_klasse)
+  if (nrow(format_feil) > 0) {
     warning(
-      "Nokre skjema manglar kategorioverskrift (i førsterader):\n",
-      lag_liste(kb_skjema$skjema_id[!har_kat])
+      "Feil format på kolonnar:\n",
+      format_feil %>% as.data.frame() %>% capture.output() %>% paste0(sep = "\n")
     )
-  }
-}
-
-if (any(!is.na(y$kategori))) {
-  kb_skjema = y %>%
-    nest(-skjema_id)
-  har_kat = kb_skjema$data %>%
-    map_lgl(~ (!is.na(.x$kategori[1])) & (.x$kategori[1] != ""))
-  if (any(!har_kat)) {
-    warning(
-      "Nokre skjema manglar kategorioverskrift (i førsterader):\n",
-      lag_liste(kb_skjema$skjema_id[!har_kat])
-    )
-  }
-}
-
-# Tester at bare gyldige variabeltyper er med i kodeboka
-# Objekt med gyldige variabeltyper til kanonisk standardform av kodebok,
-# hentet fra dokumentasjon om standardformen. Kan utvides.
-gyldige_vartyper = c("numerisk", "kategorisk", "boolsk", "dato", "utrekna", "tekst", "tekst*", "fritekst")
-if (any(!kb$variabeltype %in% gyldige_vartyper)) {
-  ugyldig_vartyp = kb %>%
-    filter(!variabeltype %in% gyldige_vartyper) %>%
-    pull(variabel_id) %>%
-    unique()
-  warning(
-    advar_tekst, " ugyldige variabeltypar:\n",
-    lag_liste(ugyldig_vartyp)
-  )
-}
-
-# Test på eining. Eining kan ikkje vera tom ("") (men kan vera NA)
-if (any(kb$eining %in% "")) {
-  tom_eining = kb %>%
-    filter(eining == "") %>%
-    pull(variabel_id) %>%
-    unique()
-  warning(
-    advar_tekst, " ugyldig eining, kor ein eller fleire har tomme tekststrengar:\n",
-    lag_liste(tom_eining)
-  )
-}
-
-#-----------------------------------------------------Sjekk Gyldig Vartype-----------------------------------------
-# Funksjon som sjekker om en eller flere variabler i kodeboka
-# har en variabeltype som er ugyldig gitt
-# at variabelen har en verdi for en kolonne som kun gjelder andre variabeltyper
-
-# Funksjonen tester for kolonnetyper som gjelder ikke-numeriske, ikke-utrekna variabler
-# - disse kan ikke ha eining, desimalar, min- eller maksverdi og/eller min_rimeleg- eller maks_rimeleg-verdi
-
-# Funksjonen tester tester for kolonnetyper som gjeder ikke-kategoriske variabler
-# - disse kan ikke ha verdi, verditekst eller manlande == "ja"
-
-# Funksjonen krever argument for dataramme (kb),
-# kolonnetype, som er hvilken kolonne
-# man ønsker å sjekke at har gyldig tilhørende variabeltype (f.eks verditekst),
-# og hvilken variabeltype som er den gyldige - "numerisk" eller "kategorisk".
-
-sjekk_gyldig_vartype = function(kb, kolonnetype, vartype) {
-
-  # alle tester for om variabeltypen er gyldig mht. kolonnetypen
-  # har omtrent den samme teksten. lager en funksjon
-  # for tekst til numerisk og kategoriske tester
-  lag_tekst = function(vartype, kolonnetype) {
-    if (vartype == "numerisk") {
-      num_tekst = paste0("", advar_tekst, " ", kolonnetype, ", men er verken numerisk eller utrekna:\n")
-    } else if (vartype == "kategorisk") {
-      num_tekst = paste0("", advar_tekst, " ", kolonnetype, ", men er ikke kategorisk:\n")
-    }
-    num_tekst
+    gyldig = FALSE
   }
 
-  # lager en if-statement med 3 ulike tester.
-  # 1 tester for kolonnetyper som gjelder ikke-numeriske variabler
-  # 2 tester for kolonnetyper som gjeder ikke-kategoriske variabler
-  # 3 tester spesifikt for ikke-kategoriske variabler og om manglande == "ja" (som ikke skal være mulig)
+  #------------------------------------------------Objekter---------------------------------
+  # I vidare testar føreset me at kodeboka er på ikkje-glissen form,
+  # dvs. at skjema_id, variabel_id og sånt er gjentatt nedover.
+  # Viss ho er ikkje på den forma, ordnar me det sjølv. :)
+  kb = kb_til_kanonisk_form(kb_glissen)
 
-  # objekt for vartyper som ikke er numerisk eller utrekna
-  ikke_num = (kb$variabeltype != "numerisk") & (kb$variabeltype != "utrekna")
+  # lager objekt for numeriske/utrekna variabler
+  kb_num = kb %>%
+    filter(variabeltype == "numerisk" | variabeltype == "utrekna")
 
-  # objekt for vartyper som ikke er kategorisk
-  ikke_kat = (kb$variabeltype != "kategorisk")
+  # lager objekt for kategoriske variabler
+  kb_kat = kb %>%
+    filter(variabeltype == "kategorisk")
 
-  if (vartype == "numerisk") {
-    # ikke ok kolonnetype, gitt variabeltypen
-    ikke_ok_num = ikke_num & (!is.na(kb[[kolonnetype]]))
+  # lager objekt for boolske variabler
+  kb_bool = kb %>%
+    filter(variabeltype == "boolsk")
 
-    if (any(ikke_ok_num)) {
-      ugyldig_var = kb %>%
-        filter(ikke_ok_num) %>%
-        pull(variabel_id) %>%
-        unique()
+  # lager objekt for de som har kommentar_rimeleg
+  kb_kom_rimeleg = kb %>%
+    filter(!is.na(kommentar_rimeleg))
+
+  # mange av advarselene starter med samme teksten
+  # er nynorsken helt på tryne kan den rettes her
+  advar_tekst = paste0("Ein eller fleire variablar har")
+
+
+  #------------------------------------------------Tester på ikkje-glissen KB-------------------------------------------
+
+  # Sjekk at me ikkje har duplikate skjema-ID-ar, skjemanamn eller variabel-ID-ar,
+  # dvs. at alle unike verdiar kjem samanhengande nedover, utan nokre hòl
+  # (eks. «xxxyy» er OK, men «xxyyx» er det ikkje).
+  sjekk_dup = function(kb, idkol) {
+    idkol = quo_name(enquo(idkol))
+    ids = rle(kb[[idkol]])$values
+    if (any(duplicated(ids))) {
       warning(
-        lag_tekst(vartype = "numerisk", kolonnetype),
-        lag_liste(ugyldig_var)
+        "Duplikate verdiar i ", lag_liste(idkol), ":\n",
+        lag_liste(unique(ids[duplicated(ids)])),
+        "\n(Men merk at seinare duplikatar kan vera følgjefeil av første.)"
       )
-    }
-  } else if (vartype == "kategorisk") {
-    # ikke ok kolonnetype, gitt variabeltypen
-    ikke_ok_kat = ikke_kat & (!is.na(kb_fylt[[kolonnetype]]))
-
-    if (any(ikke_ok_kat)) {
-      ugyldig_var = kb_fylt %>%
-        filter(ikke_ok_kat) %>%
-        pull(variabel_id) %>%
-        unique()
-      warning(
-        lag_tekst(vartype = "kategorisk", kolonnetype),
-        lag_liste(ugyldig_var)
-      )
-    }
-  } else if (vartype == "kategorisk" & kolonnetype == "manglande") {
-    # ikke ok kolonnetype, gitt variabeltypen
-    ikke_ok_mangl = ikke_kat & (!is.na(kb_fylt[[kolonnetype]]) & kb_fylt[[kolonnetype]] == "ja")
-
-    if (any(ikke_ok_mangl)) {
-      ugyldig_var = kb_fylt %>%
-        filter(ikke_ok_mangl) %>%
-        pull(variabel_id) %>%
-        unique()
-      warning(
-        lag_tekst(vartype = "kategorisk", kolonnetype),
-        lag_liste(ugyldig_var)
-      )
+      gyldig = FALSE
     }
   }
-}
+  sjekk_dup(kb, skjema_id)
+  sjekk_dup(kb, skjemanamn)
+  sjekk_dup(kb, variabel_id) # Skal vera unik, ikkje berre innan skjema
 
-sjekk_gyldig_vartype(kb, "eining", "numerisk")
-sjekk_gyldig_vartype(kb, "desimalar", "numerisk")
-sjekk_gyldig_vartype(kb, "min", "numerisk")
-sjekk_gyldig_vartype(kb, "maks", "numerisk")
-sjekk_gyldig_vartype(kb, "min_rimeleg", "numerisk")
-sjekk_gyldig_vartype(kb, "maks_rimeleg", "numerisk")
-sjekk_gyldig_vartype(kb, "verdi", "kategorisk")
-sjekk_gyldig_vartype(kb, "verditekst", "kategorisk")
-sjekk_gyldig_vartype(kb, "manglande", "kategorisk")
+  # Sjekk at valt variabel berre har éin verdi innanfor kvar gruppe
+  sjekk_ikkjevar = function(df, gruppe, varid) {
+    gruppe_tekst = quo_name(enquo(gruppe))
+    varid_tekst = quo_name(enquo(varid))
+    nest_cols = setdiff(names(df), gruppe_tekst)
+    df_grupper = df %>%
+      nest_(key_col = "data", nest_cols = nest_cols) # fixme: Byt til quasi-quotation, dvs. «-!!gruppe» når det er støtta i dplyr
 
+    ikkjeunike = df_grupper$data %>%
+      map_lgl(~ length(unique(.x[[varid_tekst]])) > 1)
 
+    if (any(ikkjeunike)) {
+      warning(
+        "Varierande/inkonsistente '", varid_tekst, "'-verdiar for desse '", gruppe_tekst, "'-verdiane:\n",
+        lag_liste(df_grupper[[gruppe_tekst]][ikkjeunike])
+      )
+      gyldig = FALSE
+    }
+  }
 
-# Funksjon som tester om kodeboka har noe annet enn verdiene
-# "ja" og "nei" for kolonnetyper
-# som kan bare ha "ja" og "nei".
-# Funksjonen tar et argument for objektet (kodeboka)
-# som skal testes, og en for kolonnetypen
-# som ikke kan ha noen andre verdier enn "ja" og "nei".
+  # Sjekk at innanfor skjema er skjemanamn unikt
+  sjekk_ikkjevar(kb, skjema_id, skjemanamn)
 
-sjekk_ja_nei = function(kb, kolonnetype) {
+  # Sjekk at kvar variabel berre har éin (dvs. unik)
+  # variabeltype, variabeletikett osv.
+  sjekk_ikkjevar(kb, variabel_id, variabeltype)
+  sjekk_ikkjevar(kb, variabel_id, variabeletikett)
+  sjekk_ikkjevar(kb, variabel_id, forklaring)
+  sjekk_ikkjevar(kb, variabel_id, unik)
+  sjekk_ikkjevar(kb, variabel_id, obligatorisk)
+  sjekk_ikkjevar(kb, variabel_id, kategori) # Variablar kan ikkje kryssa kategori- eller skjemagrenser
+  sjekk_ikkjevar(kb, variabel_id, skjema_id)
 
-  # objekt som tester at kolonnetypen er innenfor ja og nei
-  er_ja_nei = kb[[kolonnetype]] %in% c("ja", "nei")
+  # Sjekk at alle verdiar for kategoriske variablar er unike og ingen er NA
+  kb_kat_nest = kb_kat %>%
+    nest(-variabel_id)
+  verdi_ok = kb_kat_nest$data %>%
+    map_lgl(~ (!any(duplicated(.x$verdi) | is.na(.x$verdi))))
+  if (any(!verdi_ok)) {
+    warning(
+      advar_tekst, " dupliserte 'verdi'-ar eller NA som 'verdi':\n",
+      lag_liste(kb_kat_nest$variabel_id[!verdi_ok])
+    )
+    gyldig = FALSE
+  }
 
-  # Tester at observasjoner fra objektet over er "False".
-  # Gir advarsel hvis testen ikke oppfyller dette.
-  if (any(!er_ja_nei)) {
-    ugyldig_ja_nei = kb %>%
-      filter(!er_ja_nei) %>%
+  # *Viss* kodeboka brukar kategoriar (det er frivillig å bruka,
+  # men viss ein brukar det, skal alle skjema ha minst éin kategori),
+  # sjekk at alle skjema startar med ei kategorioverskrift
+  # (me sjekkar tidlegare oppe at desse er unike innanfor variabel_id)
+  if (any(!is.na(kb$kategori))) {
+    kb_skjema = kb %>%
+      nest(-skjema_id)
+    har_kat = kb_skjema$data %>%
+      map_lgl(~ (!is.na(.x$kategori[1])) & (.x$kategori[1] != ""))
+    if (any(!har_kat)) {
+      warning(
+        "Nokre skjema manglar kategorioverskrift (i førsterader):\n",
+        lag_liste(kb_skjema$skjema_id[!har_kat])
+      )
+      gyldig = FALSE
+    }
+  }
+
+  # Tester at bare gyldige variabeltyper er med i kodeboka
+  # Objekt med gyldige variabeltyper til kanonisk standardform av kodebok,
+  # hentet fra dokumentasjon om standardformen. Kan utvides.
+  gyldige_vartyper = c("numerisk", "kategorisk", "boolsk", "dato", "utrekna", "tekst", "tekst*", "fritekst")
+  if (any(!kb$variabeltype %in% gyldige_vartyper)) {
+    ugyldig_vartyp = kb %>%
+      filter(!variabeltype %in% gyldige_vartyper) %>%
       pull(variabel_id) %>%
       unique()
     warning(
-      advar_tekst, " har ein verdi for ", kolonnetype, " som ikkje er ja eller nei:\n",
+      advar_tekst, " ugyldige variabeltypar:\n",
+      lag_liste(ugyldig_vartyp)
+    )
+    gyldig = FALSE
+  }
+
+  # Test på eining. Eining kan ikkje vera tom ("") (men kan vera NA)
+  if (any(kb$eining %in% "")) {
+    tom_eining = kb %>%
+      filter(eining == "") %>%
+      pull(variabel_id) %>%
+      unique()
+    warning(
+      advar_tekst, " ugyldig eining, kor ein eller fleire har tomme tekststrengar:\n",
+      lag_liste(tom_eining)
+    )
+    gyldig = FALSE
+  }
+
+  #-----------------------------------------------------Sjekk Gyldig Vartype-----------------------------------------
+  # Funksjon som sjekker om en eller flere variabler i kodeboka
+  # har en variabeltype som er ugyldig gitt
+  # at variabelen har en verdi for en kolonne som kun gjelder andre variabeltyper
+
+  # Funksjonen tester for kolonnetyper som gjelder ikke-numeriske, ikke-utrekna variabler
+  # - disse kan ikke ha eining, desimalar, min- eller maksverdi og/eller min_rimeleg- eller maks_rimeleg-verdi
+
+  # Funksjonen tester tester for kolonnetyper som gjeder ikke-kategoriske variabler
+  # - disse kan ikke ha verdi, verditekst eller manlande == "ja"
+
+  # Funksjonen krever argument for dataramme (kb),
+  # kolonnetype, som er hvilken kolonne
+  # man ønsker å sjekke at har gyldig tilhørende variabeltype (f.eks verditekst),
+  # og hvilken variabeltype som er den gyldige - "numerisk" eller "kategorisk".
+
+  sjekk_gyldig_vartype = function(kb, kolonnetype, vartype) {
+
+    # alle tester for om variabeltypen er gyldig mht. kolonnetypen
+    # har omtrent den samme teksten. lager en funksjon
+    # for tekst til numerisk og kategoriske tester
+    lag_tekst = function(vartype, kolonnetype) {
+      if (vartype == "numerisk") {
+        num_tekst = paste0("", advar_tekst, " ", kolonnetype, ", men er verken numerisk eller utrekna:\n")
+      } else if (vartype == "kategorisk") {
+        num_tekst = paste0("", advar_tekst, " ", kolonnetype, ", men er ikke kategorisk:\n")
+      }
+      num_tekst
+    }
+
+    # lager en if-statement med 3 ulike tester.
+    # 1 tester for kolonnetyper som gjelder ikke-numeriske variabler
+    # 2 tester for kolonnetyper som gjeder ikke-kategoriske variabler
+    # 3 tester spesifikt for ikke-kategoriske variabler og om manglande == "ja" (som ikke skal være mulig)
+
+    # objekt for vartyper som ikke er numerisk eller utrekna
+    ikke_num = (kb$variabeltype != "numerisk") & (kb$variabeltype != "utrekna")
+
+    # objekt for vartyper som ikke er kategorisk
+    ikke_kat = (kb$variabeltype != "kategorisk")
+
+    if (vartype == "numerisk") {
+      # ikke ok kolonnetype, gitt variabeltypen
+      ikke_ok_num = ikke_num & (!is.na(kb[[kolonnetype]]))
+
+      if (any(ikke_ok_num)) {
+        ugyldig_var = kb %>%
+          filter(ikke_ok_num) %>%
+          pull(variabel_id) %>%
+          unique()
+        warning(
+          lag_tekst(vartype = "numerisk", kolonnetype),
+          lag_liste(ugyldig_var)
+        )
+        gyldig = FALSE
+      }
+    } else if (vartype == "kategorisk") {
+      # ikke ok kolonnetype, gitt variabeltypen
+      ikke_ok_kat = ikke_kat & (!is.na(kb[[kolonnetype]]))
+
+      if (any(ikke_ok_kat)) {
+        ugyldig_var = kb %>%
+          filter(ikke_ok_kat) %>%
+          pull(variabel_id) %>%
+          unique()
+        warning(
+          lag_tekst(vartype = "kategorisk", kolonnetype),
+          lag_liste(ugyldig_var)
+        )
+        gyldig = FALSE
+      }
+    } else if (vartype == "kategorisk" & kolonnetype == "manglande") {
+      # ikke ok kolonnetype, gitt variabeltypen
+      ikke_ok_mangl = ikke_kat & (!is.na(kb[[kolonnetype]]) & kb[[kolonnetype]] == "ja")
+
+      if (any(ikke_ok_mangl)) {
+        ugyldig_var = kb %>%
+          filter(ikke_ok_mangl) %>%
+          pull(variabel_id) %>%
+          unique()
+        warning(
+          lag_tekst(vartype = "kategorisk", kolonnetype),
+          lag_liste(ugyldig_var)
+        )
+        gyldig = FALSE
+      }
+    }
+  }
+
+  sjekk_gyldig_vartype(kb, "eining", "numerisk")
+  sjekk_gyldig_vartype(kb, "desimalar", "numerisk")
+  sjekk_gyldig_vartype(kb, "min", "numerisk")
+  sjekk_gyldig_vartype(kb, "maks", "numerisk")
+  sjekk_gyldig_vartype(kb, "min_rimeleg", "numerisk")
+  sjekk_gyldig_vartype(kb, "maks_rimeleg", "numerisk")
+  sjekk_gyldig_vartype(kb, "verdi", "kategorisk")
+  sjekk_gyldig_vartype(kb, "verditekst", "kategorisk")
+  sjekk_gyldig_vartype(kb, "manglande", "kategorisk")
+
+
+  # Funksjon som tester om kodeboka har noe annet enn verdiene
+  # "ja" og "nei" for kolonnetyper
+  # som kan bare ha "ja" og "nei".
+  # Funksjonen tar et argument for objektet (kodeboka)
+  # som skal testes, og en for kolonnetypen
+  # som ikke kan ha noen andre verdier enn "ja" og "nei".
+
+  sjekk_ja_nei = function(kb, kolonnetype) {
+
+    # objekt som tester at kolonnetypen er innenfor ja og nei
+    er_ja_nei = kb[[kolonnetype]] %in% c("ja", "nei")
+
+    # Tester at observasjoner fra objektet over er "False".
+    # Gir advarsel hvis testen ikke oppfyller dette.
+    if (any(!er_ja_nei)) {
+      ugyldig_ja_nei = kb %>%
+        filter(!er_ja_nei) %>%
+        pull(variabel_id) %>%
+        unique()
+      warning(
+        advar_tekst, " har ein verdi for ", kolonnetype, " som ikkje er ja eller nei:\n",
+        lag_liste(ugyldig_ja_nei)
+      )
+      gyldig = FALSE
+    }
+  }
+
+  # tester om unik, obligatorisk og manglande bare har "ja" og "nei".
+  sjekk_ja_nei(kb, "unik")
+  sjekk_ja_nei(kb, "obligatorisk")
+  sjekk_ja_nei(kb, "manglande")
+
+  # tester om desimalar kun er 0, positive eller missing.
+  kb_num = kb_num %>%
+    mutate(des_ok = (desimalar >= 0) | is.na(desimalar))
+  if (!all(kb_num$des_ok)) {
+    ugyldig_des = kb_num %>%
+      filter(!des_ok) %>%
+      pull(variabel_id) %>%
+      unique()
+    warning(
+      advar_tekst, "har ein desimal som ikke er 0 eller positiv:\n",
       lag_liste(ugyldig_ja_nei)
     )
+    gyldig = FALSE
   }
-}
 
-# tester om unik, obligatorisk og manglande bare har "ja" og "nei".
-sjekk_ja_nei(kb, "unik")
-sjekk_ja_nei(kb, "obligatorisk")
-sjekk_ja_nei(kb, "manglande")
+  # tester størrelsen på relasjon til en annen kolonne
+  # her kan man velge om man ønsker å teste om
+  # kolonnen er >, =>,<, <= osv. men funksjonen er laget
+  # for å teste om min, maks, min_rimleg og maks_rimeleg er større
+  # eller mindre enn hverandre.
+  # Trenger kb, op for operasjon, x som er første kolonnen man tester,
+  # og y, for andre kolonne man tester
+  sjekk_op = function(kb, op, x, y) {
+    op_ok = op(kb[[x]], kb[[y]]) | is.na(kb[[x]]) | is.na(kb[[y]])
+    if (!all(op_ok)) {
+      ugyldig_op = kb %>%
+        filter(!op_ok) %>%
+        pull(variabel_id) %>%
+        unique()
+      warning(
+        advar_tekst, " ", x, "-verdi som er større enn ", y, "-verdi:\n",
+        lag_liste(ugyldig_op)
+      )
+      gyldig = FALSE
+    }
+  }
 
-# tester om desimalar kun er 0, positive eller missing.
-des_ok = (kb$desimalar >= 0) | is.na(kb_num$desimalar)
-if (!all(des_ok)) {
-  ugyldig_des = kb %>%
-    filter(!des_ok) %>%
-    pull(variabel_id) %>%
-    unique()
-  warning(
-    advar_tekst, "har ein desimal som ikke er 0 eller positiv:\n",
-    lag_liste(ugyldig_ja_nei)
-  )
-}
+  sjekk_op(kb, op = `<`, x = "min", y = "maks")
+  sjekk_op(kb, op = `<`, x = "min_rimeleg", y = "maks_rimeleg")
+  sjekk_op(kb, op = `<=`, x = "min", y = "min_rimeleg")
+  sjekk_op(kb, op = `<=`, x = "maks_rimeleg", y = "maks")
 
-# tester størrelsen på relasjon til en annen kolonne
-# her kan man velge om man ønsker å teste om
-# kolonnen er >, =>,<, <= osv. men funksjonen er laget
-# for å teste om min, maks, min_rimleg og maks_rimeleg er større
-# eller mindre enn hverandre.
-# Trenger kb, op for operasjon, x som er første kolonnen man tester,
-# og y, for andre kolonne man tester
-sjekk_op = function(kb, op, x, y) {
-  op_ok = op(kb[[x]], kb[[y]]) | is.na(kb[[x]]) | is.na(kb[[y]])
-  if (!all(op_ok)) {
-    ugyldig_op = kb %>%
-      filter(!op_ok) %>%
+  # Tester at variabler som har en verdi for kommentar_rimeleg
+  # har enten min_rimeleg eller maks_rimeleg
+  ok_kom_rimeleg = (!is.na(kb_kom_rimeleg$min_rimeleg) | !is.na(kb_kom_rimeleg$maks_rimeleg))
+
+  # gir advarsel hvis testen ikke er oppfylt
+  if (!all(ok_kom_rimeleg)) {
+    ugyldig_kom_rimeleg = kb_kom_rimeleg %>%
+      filter(!ok_kom_rimeleg) %>%
       pull(variabel_id) %>%
       unique()
     warning(
-      advar_tekst, " ", x, "-verdi som er større enn ", y, "-verdi:\n",
-      lag_liste(ugyldig_op)
+      advar_tekst, " verdi for kommentar_rimeleg, men ingen verdi for min- eller maks_rimeleg:\n",
+      lag_liste(ugyldig_kom_rimeleg)
     )
+    gyldig = FALSE
   }
+
+
+  # Tester at kategoriske variabler som har obligatorisk = ja ikke
+  # har manglande "ja" for noen av verdiene
+  ikke_ok_oblig_kat = (kb_kat$obligatorisk == "ja" & kb_kat$manglande == "ja")
+
+  # gir advarsel hvis testen ikke er oppfylt
+  if (any(ikke_ok_oblig_kat)) {
+    ugyldig_oblig_kat = kb_kat %>%
+      filter(kb_kat$obligatorisk == "ja" & kb_kat$manglande == "ja") %>%
+      pull(variabel_id) %>%
+      unique()
+    warning(
+      advar_tekst, " verdien ja på obligatorisk, men har likevel en verdi for manglande:\n",
+      lag_liste(ugyldig_oblig_kat)
+    )
+    gyldig = FALSE
+  }
+
+  # Tester at boolske variabler ikke har obligatorisk == "nei" eller unik == "ja"
+  ok_boolsk = (kb_bool$obligatorisk != "nei" & kb_bool$unik != "ja")
+
+  # gir advarsel hvis testen ikke er oppfylt
+  if (!all(ok_boolsk)) {
+    ugyldig_bool = kb_bool %>%
+      filter(!ok_boolsk) %>%
+      pull(variabel_id) %>%
+      unique()
+    warning(
+      advar_tekst, " obligatorisk = nei eller unik = ja selv om variabelen er boolsk:\n",
+      lag_liste(ugyldig_bool)
+    )
+    gyldig = FALSE
+  }
+
+  gyldig
 }
 
-sjekk_op(kb, op = `<`, x = "min", y = "maks")
-sjekk_op(kb, op = `<`, x = "min_rimeleg", y = "maks_rimeleg")
-sjekk_op(kb, op = `<=`, x = "min", y = "min_rimeleg")
-sjekk_op(kb, op = `<=`, x = "maks_rimeleg", y = "maks")
-
-# Tester at variabler som har en verdi for kommentar_rimeleg
-# har enten min_rimeleg eller maks_rimeleg
-ok_kom_rimeleg = (!is.na(kb_kom_rimeleg$min_rimeleg) | !is.na(kb_kom_rimeleg$maks_rimeleg))
-
-# gir advarsel hvis testen ikke er oppfylt
-if (!all(ok_kom_rimeleg)) {
-  ugyldig_kom_rimeleg = kb_kom_rimeleg %>%
-    filter(!ok_kom_rimeleg) %>%
-    pull(variabel_id) %>%
-    unique()
-  warning(
-    advar_tekst, " verdi for kommentar_rimeleg, men ingen verdi for min- eller maks_rimeleg:\n",
-    lag_liste(ugyldig_kom_rimeleg)
-  )
-}
-
-
-# Tester at kategoriske variabler som har obligatorisk = ja ikke
-# har manglande "ja" for noen av verdiene
-ikke_ok_oblig_kat = (kb_kat$obligatorisk == "ja" & kb_kat$manglande == "ja")
-
-# gir advarsel hvis testen ikke er oppfylt
-if (any(ikke_ok_oblig_kat)) {
-  ugyldig_oblig_kat = kb_kat %>%
-    filter(kb_kat$obligatorisk == "ja" & kb_kat$manglande == "ja") %>%
-    pull(variabel_id) %>%
-    unique()
-  warning(
-    advar_tekst, " verdien ja på obligatorisk, men har likevel en verdi for manglande:\n",
-    lag_liste(ugyldig_oblig_kat)
-  )
-}
-
-# Tester at boolske variabler ikke har obligatorisk == "nei" eller unik == "ja"
-ok_boolsk = (kb_bool$obligatorisk != "nei" & kb_bool$unik != "ja")
-
-# gir advarsel hvis testen ikke er oppfylt
-if (!all(ok_boolsk)) {
-  ugyldig_bool = kb_bool %>%
-    filter(!ok_boolsk) %>%
-    pull(variabel_id) %>%
-    unique()
-  warning(
-    advar_tekst, " obligatorisk = nei eller unik = ja selv om variabelen er boolsk:\n",
-    lag_liste(ugyldig_bool)
-  )
-}
+kb_er_gyldig(kb_test)
 
 # Forslag til fleire testar:
 # - sjekk at variabel_id er på anbefalt format, dvs. små bokstavar, understrek eller tal, ikkje tal først osv.
