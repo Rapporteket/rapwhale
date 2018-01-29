@@ -533,7 +533,8 @@ kb_er_gyldig = function(kb_glissen) {
   gyldig
 }
 
-kb_er_gyldig(kb_test)
+# test at funksjonen virker
+# kb_er_gyldig(kb_test)
 
 # Forslag til fleire testar:
 # - sjekk at variabel_id er på anbefalt format, dvs. små bokstavar, understrek eller tal, ikkje tal først osv.
