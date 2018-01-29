@@ -46,7 +46,9 @@ kb_til_kanonisk_form = function(kb) {
 
   # Fyll ut implisitte obligatoriskverdiar og unikverdiar
   # til «nei». «ja*» tyder obligatorisk berre under visse
-  # vilkår, så det skal òg reknast som «nei».
+  # vilkår, så det skal òg reknast som «nei», med mindre det
+  # er snakk om boolske variablar.
+  kb$obligatorisk[kb$variabeltype == "boolsk" & kb$obligatorisk == "ja*"] = "ja"
   kb$obligatorisk[is.na(kb$obligatorisk) | kb$obligatorisk == "ja*"] = "nei"
   kb$unik[is.na(kb$unik) | kb$unik == "ja*"] = "nei"
 
@@ -58,17 +60,6 @@ kb_til_kanonisk_form = function(kb) {
 }
 
 
-# Eksempeldata for testing
-# mappe = "h:/kvalreg/ablasjonsregisteret/"
-# kb_test = read_excel(paste0(mappe,"kodebok-utkast.xlsx"), sheet = 1)
-
-# fixme:
-#  - Legg til mange nye testar
-#  - Gjer om til ein funksjon, kb_er_gyldig()
-#  - Pass på at funksjonen returnerer TRUE/FALSE avhengig av om kodeboka er gyldig eller ei
-#    (Gjerne ein god idé med kortslutning av funksjonen, slik at han returnerer
-#    etter første åtvaring.)
-#
 # Argument:
 #   sjekk_varnamn: Skal variabelnavn også sjekkes for gyldighet (bare små bokstaver, _ og siffer)
 #             ...: Andre argument som skal videresendes til intern funksjon varnamn_er_gyldig()
@@ -575,5 +566,17 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   gyldig
 }
 
-# test at funksjonen virker
+
+
+# Eksempel på bruk --------------------------------------------------------
+
+# # Eksempeldata for testing
+# mappe = "h:/kvalreg/ablasjonsregisteret/"
+# kb_test = read_excel(paste0(mappe,"kodebok-utkast.xlsx"), sheet = 1)
+#
+# # Lesing frå Excel gjev ikkje automatisk rett variabeltype
+# # til alle kolonnar, så fiks dette manuelt
+# kb_test$verdi = as.character(kb_test$verdi)
+# kb_test$desimalar = as.integer(kb_test$desimalar)
+#
 # kb_er_gyldig(kb_test)
