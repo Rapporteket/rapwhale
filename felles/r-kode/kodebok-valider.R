@@ -438,7 +438,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   # tester om unik, obligatorisk og manglande bare har "ja" og "nei".
   sjekk_ja_nei(kb, "unik")
   sjekk_ja_nei(kb, "obligatorisk")
-  sjekk_ja_nei(kb, "manglande")
+  sjekk_ja_nei(kb_kat, "manglande")
 
   # tester om desimalar kun er 0, positive eller missing.
   kb_num = kb_num %>%
@@ -495,24 +495,6 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
     warning(
       advar_tekst, " verdi for kommentar_rimeleg, men ingen verdi for min- eller maks_rimeleg:\n",
       lag_liste(ugyldig_kom_rimeleg)
-    )
-    gyldig = FALSE
-  }
-
-
-  # Tester at kategoriske variabler som har obligatorisk = ja ikke
-  # har manglande "ja" for noen av verdiene
-  ikke_ok_oblig_kat = (kb_kat$obligatorisk == "ja" & kb_kat$manglande == "ja")
-
-  # gir advarsel hvis testen ikke er oppfylt
-  if (any(ikke_ok_oblig_kat)) {
-    ugyldig_oblig_kat = kb_kat %>%
-      filter(kb_kat$obligatorisk == "ja" & kb_kat$manglande == "ja") %>%
-      pull(variabel_id) %>%
-      unique()
-    warning(
-      advar_tekst, " verdien ja på obligatorisk, men har likevel en verdi for manglande:\n",
-      lag_liste(ugyldig_oblig_kat)
     )
     gyldig = FALSE
   }
