@@ -9,7 +9,7 @@ library(purrr)
 
 # Gjer kodeboka om til kanonisk form, dvs. slik at
 # implisitte verdiar er fylde ut.
-kb_til_kanonisk_form = function(kb) {
+kb_til_kanonisk_form = function(kb, ...) {
   # Avgrupper (i tilfelle dataramma alt er gruppert,
   # noko som kan føra til problem nedanfor
   kb = ungroup(kb)
@@ -527,6 +527,60 @@ kb_er_gyldig = function(kb_glissen) {
       advar_tekst, " obligatorisk = nei eller unik = ja selv om variabelen er boolsk:\n",
       lag_liste(ugyldig_bool)
     )
+    gyldig = FALSE
+  }
+
+  #--------------------------------------- valider variabelnamn-------------------------------------------------
+
+  # Viser og returnerer dei ugyldige variabelnamna
+  # Viss «skjemaprefiks» er sann, må òg namna vera
+  # gyldige dersom me fjernar teksten fram til
+  # og med første «_»-teikn.
+  # Viss «fald_bokstavar» er sann, vert namna gjort
+  # om til små bokstavar før testing, dvs. store bokstavar
+  # og ei blanding av små og store bokstavar vert godtatt.
+  varnamn_er_gyldig = function(varnamn, skjemaprefiks = FALSE, fald_bokstavar = FALSE) {
+    # Reglar:
+    #   Må starta med a-z (ikkje siffer)
+    #   Kan elles innhalda bokstavane a-z, siffera 0-9 og
+    #   teiknet _, men kan ikkje avsluttast med _.
+    reg_ok = "^[a-z]([0-9a-z_]*[0-9a-z])?$"
+    varnamn = varnamn[varnamn != ""] # Sjå vekk frå tomme namn ...
+
+    # Gjer ev. om til små bokstavar (dersom ein
+    # ikkje vil testa at dei alt er det)
+    if (fald_bokstavar) {
+      varnamn = str_to_lower(varnamn)
+    }
+
+    # Finn indeks til ugyldige variabelnamn
+    ugyldig = !str_detect(varnamn, reg_ok)
+
+    # Nokre variabelnamn har skjemaprefiks, og i dei
+    # tilfelle må variabelnamna vera gyldige sjølv om
+    # me strippar vekk skjemaprefiksa
+    if (skjemaprefiks) {
+      varnamn_slutt = str_split_fixed(varnamn, "_", n = 2)[, 2] # Delen av variabelnamnet etter første _ (dvs. utan skjemaprefiks)
+      ugyldig = (ugyldig | !str_detect(varnamn_slutt, reg_ok))
+    }
+
+    # Hent ut dei ugyldige variabelnamna
+    varnamn_ugyldig = varnamn[ugyldig]
+
+    if (any(ugyldig)) {
+      # Vis alle dei ugyldige namna, eitt per linje.
+      warning(
+        advar_tekst, " ugyldige varnamn:\n",
+        lag_liste(varnamn_ugyldig)
+      )
+    }
+
+    # Returner info om alle variabelnavnene er gyldige
+    all(!ugyldig)
+  }
+
+  varnamn_ok = varnamn_er_gyldig(kb$variabel_id, ...)
+  if (!varnamn_ok) {
     gyldig = FALSE
   }
 
