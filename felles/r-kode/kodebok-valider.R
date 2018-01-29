@@ -170,6 +170,10 @@ kb_num = kb %>%
 kb_kat = kb %>%
   filter(variabeltype == "kategorisk")
 
+# lager objekt for boolske variabler
+kb_bool = kb %>%
+  filter(variabeltype == "boolsk")
+
 # filtrerer ut de som har kommentar_rimeleg
 kb_kom_rimeleg = kb %>%
   filter(!is.na(kommentar_rimeleg))
@@ -501,6 +505,21 @@ if (any(ikke_ok_oblig_kat)) {
   )
 }
 
+# Tester at boolske variabler ikke har obligatorisk == "nei" eller unik == "ja"
+ok_boolsk = (kb_bool$obligatorisk != "nei" & kb_bool$unik != "ja")
+
+# gir advarsel hvis testen ikke er oppfylt
+if (!all(ok_boolsk)) {
+  ugyldig_bool = kb_bool %>%
+    filter(!ok_boolsk) %>%
+    pull(variabel_id) %>%
+    unique()
+  warning(
+    advar_tekst, " obligatorisk = nei eller unik = ja selv om variabelen er boolsk:\n",
+    lag_liste(ugyldig_bool)
+  )
+}
+
 # Forslag til fleire testar:
 # - sjekk at variabel_id er på anbefalt format, dvs. små bokstavar, understrek eller tal, ikkje tal først osv.
 #   (sjå testfunksjon for dette i ei anna fil, som me kanskje kan flytta hit).
@@ -508,5 +527,3 @@ if (any(ikke_ok_oblig_kat)) {
 #   kan få kodebøker frå MRS, OQR og liknande der me *ikkje* kan krevja at
 #   variabelnamna er fornuftige, men er nyttig å testa dette når me utviklar kodebøker ...
 # ... sikkert mange andre testar me kan laga
-# ja! jeg har et forslag:
-# - boolske variabler kan ikke ha obligatorisk == "nei" eller unik == "ja"
