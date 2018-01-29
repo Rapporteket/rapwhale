@@ -9,7 +9,7 @@ library(purrr)
 
 # Gjer kodeboka om til kanonisk form, dvs. slik at
 # implisitte verdiar er fylde ut.
-kb_til_kanonisk_form = function(kb, ...) {
+kb_til_kanonisk_form = function(kb) {
   # Avgrupper (i tilfelle dataramma alt er gruppert,
   # noko som kan føra til problem nedanfor
   kb = ungroup(kb)
@@ -68,8 +68,11 @@ kb_til_kanonisk_form = function(kb, ...) {
 #  - Pass på at funksjonen returnerer TRUE/FALSE avhengig av om kodeboka er gyldig eller ei
 #    (Gjerne ein god idé med kortslutning av funksjonen, slik at han returnerer
 #    etter første åtvaring.)
-
-kb_er_gyldig = function(kb_glissen) {
+#
+# Argument:
+#   sjekk_varnamn: Skal variabelnavn også sjekkes for gyldighet (bare små bokstaver, _ og siffer)
+#             ...: Andre argument som skal videresendes til intern funksjon varnamn_er_gyldig()
+kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
 
   # Antar i utgangspunktet at kodeboken er gyldig
   gyldig = TRUE
@@ -579,9 +582,12 @@ kb_er_gyldig = function(kb_glissen) {
     all(!ugyldig)
   }
 
-  varnamn_ok = varnamn_er_gyldig(kb$variabel_id, ...)
-  if (!varnamn_ok) {
-    gyldig = FALSE
+  # Sjekk at alle variabelnavn er gyldig (dersom brukeren vil sjekke dette)
+  if (sjekk_varnamn) {
+    varnamn_ok = varnamn_er_gyldig(kb$variabel_id, ...)
+    if (!varnamn_ok) {
+      gyldig = FALSE
+    }
   }
 
   gyldig
@@ -589,11 +595,3 @@ kb_er_gyldig = function(kb_glissen) {
 
 # test at funksjonen virker
 # kb_er_gyldig(kb_test)
-
-# Forslag til fleire testar:
-# - sjekk at variabel_id er på anbefalt format, dvs. små bokstavar, understrek eller tal, ikkje tal først osv.
-#   (sjå testfunksjon for dette i ei anna fil, som me kanskje kan flytta hit).
-#   Bør kunne velja om akkurat denne testen skal køyrast (standard ja), sidan me
-#   kan få kodebøker frå MRS, OQR og liknande der me *ikkje* kan krevja at
-#   variabelnamna er fornuftige, men er nyttig å testa dette når me utviklar kodebøker ...
-# ... sikkert mange andre testar me kan laga
