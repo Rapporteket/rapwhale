@@ -59,7 +59,8 @@ kb_til_kanonisk_form = function(kb) {
   kb
 }
 
-
+# Funksjon som går gjennom en rekke tester for om en kodebok er gyldig
+# Tar imot en kodebok på glissen form, som er på fagsenterets standardform.
 # Argument:
 #   sjekk_varnamn: Skal variabelnavn også sjekkes for gyldighet (bare små bokstaver, _ og siffer)
 #             ...: Andre argument som skal videresendes til intern funksjon varnamn_er_gyldig()
