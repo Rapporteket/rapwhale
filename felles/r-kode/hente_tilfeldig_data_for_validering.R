@@ -4,6 +4,15 @@
 library(tidyverse)
 library(haven)
 
+# bruker fedmeregisteret som eksempel datasett
+# fixme! kanskje dette er litt tungvint, siden
+# de ikke har kodebok og det krever en hau med cols()
+# og krever en del ryddings.
+# må uansett teste funksjonen med en annen datadump
+# for å sikre at den er generell.
+
+#-----------------------------------------Innhenting av data-------------------------------------------------
+
 # Mappe på kvalitetstenaren
 # Husk at mappen er slik at man har valgt directory fra source file location
 grunnmappe = "***FJERNA-ADRESSE***"
@@ -124,6 +133,8 @@ if (length(manglar_spek) > 0) {
 # Fjern utrekna variablar og RESH-ID i oppfølgingar
 d = d_full %>%
   select(-contains("BMI"), -contains("_RESH"))
+
+#---------------------------------------------funksjon for henting av valideringsdata---------------------------
 
 # Oversikt over namn på indeksvariablar og datavariablar
 ind_vars = c(
