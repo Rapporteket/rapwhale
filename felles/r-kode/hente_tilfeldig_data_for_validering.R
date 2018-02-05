@@ -136,98 +136,120 @@ d = d_full %>%
 
 #---------------------------------------------funksjon for henting av valideringsdata---------------------------
 
+# Argumenter:
+# d = Datasett man ønsker å foreta randomiseringen til.
+# nvars = Hvor mange variabler som skal hentes for hver rad
+# ind_vars = Indeks-variabler som en ønsker å ha med i det endelige datasettet.
+#            Disse skal være til hjelp med å identifisere riktig måling i pasientjournalen
+#            og skal ikke randomiseres slik som de andre variablene i registeret.
+# sjukehusvar = Variabelen som gir sykehusnavn, som skal være en del av filnavnet til output-fila.
+# datamappe = Plassering for hvor man ønsker valideringsdataene (mest trolig egen mappe på kvalitetsserver).
+
+hent_validering_data = function(d, nvars, ind_vars, vdatamappe) {
+
+  # Sjekk at alle indeksvariablane faktisk finst i datasettet
+  stopifnot(all(ind_vars %in% names(d)))
+  data_vars = names(d) %>%
+    setdiff(ind_vars)
+
+  # Plukk ut tilfeldige datakolonnar for kvar rad og lagra
+  # namnet på kolonnane i ein eigen variabel.
+  #
+  # Dette kan gjerast på mange måtar (slå deg laus). Det viktige er
+  # berre at me får éi rad for kvar tilfeldig valde celle, rada inneheld
+  # alle tilhøyrande indeks- og datavariablar og at namnet på
+  # cella vert lagra i kolonnen «varnamn».
+  d$varnamn = map(1:nrow(d), ~ sample(data_vars, nvars))
+  res = d %>%
+    unnest(varnamn)
+
+  # Legg til info om kva kolonne resultatet skal lagrast i
+  vartypar = res[data_vars] %>%
+    map_chr(class)
+  if (!all(vartypar %in% c("integer", "numeric", "Date"))) {
+    stop("Finst variabel som ikkje er verken tal eller dato.")
+  }
+  vartypar = vartypar %>%
+    recode(integer = "reg_tal", numeric = "reg_tal", Date = "reg_dato")
+  res$res_kol = vartypar[match(res$varnamn, names(res[data_vars]))]
+
+  # Behold en variabel som indikerer hvilken type variabel hver variabel er
+  res = res %>%
+    mutate(vartype = recode(res_kol, "reg_tal" = "tal", "reg_dato" = "dato"))
+
+  # Legg til aktuelle resultatkolonnar,
+  # med rett variabelklasse (tal, dato &c.)
+  res = res %>%
+    mutate(
+      reg_tal = NA_real_, epj_tal = NA_real_,
+      reg_dato = NA_real_, epj_dato = NA_real_
+    )
+  class(res$reg_dato) = "Date"
+  class(res$epj_dato) = "Date"
+
+
+  # Funksjon for å flytta dataverdiane til rett kolonne
+  # (er laga for å funka på datarammer med éin unik verdi for res_kol)
+  flytt_resultat = function(df) {
+    df[[df$res_kol[1]]] = df[[df$varnamn[1]]]
+    df
+  }
+
+  # For kvar variabel, flytt verdiane til rett kolonne
+  res = res %>%
+    group_by(varnamn) %>%
+    do(flytt_resultat(.))
+
+  # Fjern dei gamle datakolonnane
+  res = res[!(names(res) %in% data_vars)] %>%
+    select(-res_kol)
+
+  # sjukehusvar = enquo(sjukehusvar)
+
+  # Resultatene skal ryddes slik at det er sortert etter sykehus, tilfeldig rekkefølge på pasientene,
+  # men rader med samme pasientnummer skal komme etter hverandre, og variablene skal
+  # stå i en rekkefølge som er lett å bruke.
+  res = res %>%
+    ungroup() %>%
+    mutate(rekkefolge = factor(PasientID, levels = sample(unique(PasientID)))) %>%
+    arrange(OperererendeSykehus, rekkefolge, PasientAlder, match(varnamn, data_vars)) %>%
+    select(-rekkefolge)
+  res
+
+  # Eksporter data til kvalitetsserveren som en SPSS fil (.sav)
+  # for hvert sykehus
+  dir.create(vdatamappe, showWarnings = FALSE, recursive = TRUE)
+
+  # Del datasettet etter sjukehus
+  res_sjukehus = res %>%
+    mutate(filadresse = paste0(vdatamappe, OperererendeSykehus, ".sav")) %>%
+    nest(-filadresse)
+
+  # Eksporter data for sjukehus til kvar si fil
+  pwalk(
+    list(
+      data = res_sjukehus$data,
+      path = res_sjukehus$filadresse
+    ),
+    write_sav
+  )
+
+  # Opna valideringsdatamappa (for å sjekka at alt ser OK ut)
+  shell.exec(vdatamappe)
+}
+
+# tester funksjonen under
+
 # Oversikt over namn på indeksvariablar og datavariablar
-ind_vars = c(
+ind_vars_soreg = c(
   "PasientID", "Fodselsdato", "PasientAlder", "PasientKjonn",
   "OpererendeRESH", "OperererendeSykehus", "ForlopsID", "OperasjonsID"
 )
-stopifnot(all(ind_vars %in% names(d))) # Sjekk at alle indeksvariablane faktisk finst i datasettet
-data_vars = names(d) %>%
-  setdiff(ind_vars)
+# mappe for valideringsdata
+vmappe = paste0(grunnmappe, "..\\valideringsdata\\", Sys.Date(), "\\")
 
-# Definer hvor mange variabler som skal hentes for hver rad (= operasjon, ikke pasient).
-nvars = 10
-
-# Plukk ut tilfeldige datakolonnar for kvar rad og lagra
-# namnet på kolonnane i ein eigen variabel.
-#
-# Dette kan gjerast på mange måtar (slå deg laus). Det viktige er
-# berre at me får éi rad for kvar tilfeldig valde celle, rada inneheld
-# alle tilhøyrande indeks- og datavariablar og at namnet på
-# cella vert lagra i kolonnen «varnamn».
-d$varnamn = map(1:nrow(d), ~ sample(data_vars, nvars))
-res = d %>%
-  unnest(varnamn)
-
-# Legg til info om kva kolonne resultatet skal lagrast i
-vartypar = res[data_vars] %>%
-  map_chr(class)
-if (!all(vartypar %in% c("integer", "numeric", "Date"))) {
-  stop("Finst variabel som ikkje er verken tal eller dato.")
-}
-vartypar = vartypar %>%
-  recode(integer = "reg_tal", numeric = "reg_tal", Date = "reg_dato")
-res$res_kol = vartypar[match(res$varnamn, names(res[data_vars]))]
-
-# Behold en variabel som indikerer hvilken type variabel hver variabel er
-res = res %>%
-  mutate(vartype = recode(res_kol, "reg_tal" = "tal", "reg_dato" = "dato"))
-
-# Legg til aktuelle resultatkolonnar,
-# med rett variabelklasse (tal, dato &c.)
-res = res %>%
-  mutate(
-    reg_tal = NA_real_, epj_tal = NA_real_,
-    reg_dato = NA_real_, epj_dato = NA_real_
-  )
-class(res$reg_dato) = "Date"
-class(res$epj_dato) = "Date"
-
-
-# Funksjon for å flytta dataverdiane til rett kolonne
-# (er laga for å funka på datarammer med éin unik verdi for res_kol)
-flytt_resultat = function(df) {
-  df[[df$res_kol[1]]] = df[[df$varnamn[1]]]
-  df
-}
-
-# For kvar variabel, flytt verdiane til rett kolonne
-res = res %>%
-  group_by(varnamn) %>%
-  do(flytt_resultat(.))
-
-# Fjern dei gamle datakolonnane
-res = res[!(names(res) %in% data_vars)] %>%
-  select(-res_kol)
-
-# Resultatene skal ryddes slik at det er sortert etter sykehus, tilfeldig rekkefølge på pasientene,
-# men rader med samme pasientnummer skal komme etter hverandre, og variablene skal
-# stå i en rekkefølge som er lett å bruke.
-res = res %>%
-  ungroup() %>%
-  mutate(rekkefolge = factor(PasientID, levels = sample(unique(PasientID)))) %>%
-  arrange(OperererendeSykehus, rekkefolge, PasientAlder, match(varnamn, data_vars)) %>%
-  select(-rekkefolge)
-res
-
-# Eksporter data til kvalitetsserveren som en SPSS fil (.sav)
-# for hvert sykehus
-vdatamappe = paste0(grunnmappe, "..\\valideringsdata\\", dato_uttrekk, "\\")
-dir.create(vdatamappe, showWarnings = FALSE, recursive = TRUE)
-
-# Del datasettet etter sjukehus
-res_sjukehus = res %>%
-  mutate(filadresse = paste0(vdatamappe, OperererendeSykehus, ".sav")) %>%
-  nest(-filadresse)
-
-# Eksporter data for sjukehus til kvar si fil
-pwalk(
-  list(
-    data = res_sjukehus$data,
-    path = res_sjukehus$filadresse
-  ),
-  write_sav
+hent_validering_data(d,
+  nvars = 10,
+  ind_vars = ind_vars_soreg,
+  vdatamappe = vmappe
 )
-
-# Opna valideringsdatamappa (for å sjekka at alt ser OK ut)
-shell.exec(vdatamappe)
