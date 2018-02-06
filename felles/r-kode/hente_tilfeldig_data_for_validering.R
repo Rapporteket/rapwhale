@@ -142,15 +142,22 @@ d = d_full %>%
 # ind_vars = Indeks-variabler som en ønsker å ha med i det endelige datasettet.
 #            Disse skal være til hjelp med å identifisere riktig måling i pasientjournalen
 #            og skal ikke randomiseres slik som de andre variablene i registeret.
+# valid_vars = variabler man ønsker å validere. Ofte kan dette være names(d), men i mange tilfeller
+#              vil det være utvalgt et sett med sentrale variabler, eller ekskludere variabler
+#              man ikke kan validere (typisk utregna var, registreringsdato og PROM)
 # sjukehusvar = Variabelen som gir sykehusnavn, som skal være en del av filnavnet til output-fila.
 # datamappe = Plassering for hvor man ønsker valideringsdataene (mest trolig egen mappe på kvalitetsserver).
 
-hent_validering_data = function(d, nvars, ind_vars, vdatamappe) {
+hent_validering_data = function(d, nvars, ind_vars, valid_vars, vdatamappe) {
 
   # Sjekk at alle indeksvariablane faktisk finst i datasettet
   stopifnot(all(ind_vars %in% names(d)))
-  data_vars = names(d) %>%
+  data_vars = valid_vars %>%
     setdiff(ind_vars)
+
+  # henter ut aktuelle kolonner
+  d = d %>%
+    select(ind_vars, valid_vars)
 
   # Plukk ut tilfeldige datakolonnar for kvar rad og lagra
   # namnet på kolonnane i ein eigen variabel.
@@ -248,8 +255,13 @@ ind_vars_soreg = c(
 # mappe for valideringsdata
 vmappe = paste0(grunnmappe, "..\\valideringsdata\\", Sys.Date(), "\\")
 
+# variabler man ønsker å validere
+# husk at nvars må være >= antall valideringsvariabler (kolonner)
+soreg_vars = names(d)
+
 hent_validering_data(d,
-  nvars = 10,
+  nvars = 2,
   ind_vars = ind_vars_soreg,
+  valid_vars = soreg_vars,
   vdatamappe = vmappe
 )
