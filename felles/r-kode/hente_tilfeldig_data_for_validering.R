@@ -3,6 +3,7 @@
 # Nødvendige pakkar
 library(tidyverse)
 library(haven)
+library(rlang)
 
 # bruker fedmeregisteret som eksempel datasett
 # fixme! kanskje dette er litt tungvint, siden
@@ -148,12 +149,15 @@ d = d_full %>%
 # sjukehusvar = Variabelen som gir sykehusnavn, som skal være en del av filnavnet til output-fila.
 # datamappe = Plassering for hvor man ønsker valideringsdataene (mest trolig egen mappe på kvalitetsserver).
 
-hent_validering_data = function(d, nvars, ind_vars, valid_vars, vdatamappe) {
+hent_validering_data = function(d, nvars, ind_vars, valid_vars, sjukehusvar, vdatamappe) {
 
   # Sjekk at alle indeksvariablane faktisk finst i datasettet
   stopifnot(all(ind_vars %in% names(d)))
   data_vars = valid_vars %>%
     setdiff(ind_vars)
+
+  # quote-sjukehusvariabel
+  sjukehusvar = sym(sjukehusvar)
 
   # henter ut aktuelle kolonner
   d = d %>%
@@ -211,15 +215,13 @@ hent_validering_data = function(d, nvars, ind_vars, valid_vars, vdatamappe) {
   res = res[!(names(res) %in% data_vars)] %>%
     select(-res_kol)
 
-  # sjukehusvar = enquo(sjukehusvar)
-
   # Resultatene skal ryddes slik at det er sortert etter sykehus, tilfeldig rekkefølge på pasientene,
   # men rader med samme pasientnummer skal komme etter hverandre, og variablene skal
   # stå i en rekkefølge som er lett å bruke.
   res = res %>%
     ungroup() %>%
     mutate(rekkefolge = factor(PasientID, levels = sample(unique(PasientID)))) %>%
-    arrange(OperererendeSykehus, rekkefolge, PasientAlder, match(varnamn, data_vars)) %>%
+    arrange(!!sjukehusvar, rekkefolge, PasientAlder, match(varnamn, data_vars)) %>%
     select(-rekkefolge)
   res
 
@@ -229,7 +231,7 @@ hent_validering_data = function(d, nvars, ind_vars, valid_vars, vdatamappe) {
 
   # Del datasettet etter sjukehus
   res_sjukehus = res %>%
-    mutate(filadresse = paste0(vdatamappe, OperererendeSykehus, ".sav")) %>%
+    mutate(filadresse = paste0(vdatamappe, !!sjukehusvar, ".sav")) %>%
     nest(-filadresse)
 
   # Eksporter data for sjukehus til kvar si fil
@@ -250,7 +252,7 @@ hent_validering_data = function(d, nvars, ind_vars, valid_vars, vdatamappe) {
 # Oversikt over namn på indeksvariablar og datavariablar
 ind_vars_soreg = c(
   "PasientID", "Fodselsdato", "PasientAlder", "PasientKjonn",
-  "OpererendeRESH", "OperererendeSykehus", "ForlopsID", "OperasjonsID"
+  "OpererendeRESH", "ForlopsID", "OperasjonsID", "OperererendeSykehus"
 )
 # mappe for valideringsdata
 vmappe = paste0(grunnmappe, "..\\valideringsdata\\", Sys.Date(), "\\")
@@ -259,9 +261,11 @@ vmappe = paste0(grunnmappe, "..\\valideringsdata\\", Sys.Date(), "\\")
 # husk at nvars må være >= antall valideringsvariabler (kolonner)
 soreg_vars = names(d)
 
+# kjør funksjonen
 hent_validering_data(d,
-  nvars = 2,
+  nvars = 10,
   ind_vars = ind_vars_soreg,
   valid_vars = soreg_vars,
+  sjukehusvar = "OperererendeSykehus",
   vdatamappe = vmappe
 )
