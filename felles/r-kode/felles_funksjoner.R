@@ -15,16 +15,20 @@ invisible(file.copy(
   to = texmappe, overwrite = TRUE, copy.date = TRUE
 ))
 
-# grafobjekter ----------------------------------------------------------
-# de offisielle fargene (som eg ikkje er så glad i)
-# du mener, som INGEN liker.
-library(ggplot2)
 
+
+
+
+# Fargar og grafinnstillingar/-objekt -------------------------------------
+
+# Dei offisielle fargene (som eg ikkje er så glad i)
+# du mener, som INGEN liker.
 colPrim = c("#000059", "#084594", "#2171b5", "#4292c6", "#6baed6", "#c6dbef") # Primærfarge (mørk til lys)
 colNoyt = c("#4D4D4D", "#737373", "#A6A6A6", "#DADADA") # Nøytralfarge
 colKontr = "#FF7260" # Kontrastfarge
 
 # ggplot2-tema for figurar
+library(ggplot2)
 if (!exists("skriftstorleik")) { # Skriftstorleik bør vera definert i kvar årsrapportfil
   skriftstorleik = 13
 }
@@ -50,6 +54,8 @@ fjern_y = theme(
   panel.grid.major.y = element_blank(),
   panel.grid.minor.y = element_blank()
 )
+
+
 
 # Graffunksjoner ----------------------------------------------------------
 
@@ -186,6 +192,7 @@ graf_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab = 
 }
 
 
+
 # Fargefunksjonar ---------------------------------------------------------
 
 ### Lag mørkare/lysare fargar
@@ -212,7 +219,6 @@ farge_morkare = function(fargar, grad = 5) {
 
 
 # Variabelnamnfunksjonar ----------------------------------------------------
-
 
 ### Normaliser variabelnamn til å ha _ som skiljeteikn og berre små bokstavar
 
