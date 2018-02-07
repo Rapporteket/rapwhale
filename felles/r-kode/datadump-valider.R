@@ -8,12 +8,12 @@ library(ruler) # pakke for validering
 # en del feil som skal oppdages i valider_datadump-funksjonen
 
 d = tribble(
-  ~pasid, ~kjonn, ~alder, ~vekt, ~frisk, ~op_dato,
-  11, 0, 16.23, 30, TRUE, 1907 - 01 - 01,
-  12, 1, 22, 50, FALSE, 2016 - 01 - 14,
-  13, 1, -14, 60, FALSE, 2014 - 04 - 07,
-  14, NA, 80, 70.7, TRUE, 2013 - 06 - 08,
-  15, 3, 900, 1000, NA, 2018 - 03 - 04
+  ~pasid, ~kjonn, ~alder, ~vekt, ~frisk,
+  11, 0, 16.23, 30, TRUE,
+  12, 1, 22, 50, FALSE,
+  13, 1, -14, 60, FALSE,
+  14, NA, 80, 70.7, TRUE,
+  15, 3, 900, 1000, NA
 )
 
 # lager en fiktiv kodebok som hører til det fiktive datasettet
