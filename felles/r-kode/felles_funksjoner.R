@@ -15,8 +15,6 @@ invisible(file.copy(
   to = texmappe, overwrite = TRUE, copy.date = TRUE
 ))
 
-
-
 # grafobjekter ----------------------------------------------------------
 # de offisielle fargene (som eg ikkje er så glad i)
 # du mener, som INGEN liker.
