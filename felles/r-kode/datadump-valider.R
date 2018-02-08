@@ -28,12 +28,14 @@ kb = tribble(
   "frisk", "boolsk", NA, NA, TRUE, NA, NA, NA
 )
 
+#---------------------------------------------------------Tester--------------------------------------------------------------
+
 # sjekker at variabler er innfor min verdier
 er_innfor_min = row_packs(
   sjekk_min = . %>% transmute(min_alder = alder >= 18, min_vekt = vekt >= 45)
 )
 
-# ønsket linjekode: :'(
+# Finner feil og rapporterer hvilken pasient og variabel som gjelder
 d %>%
   expose(er_innfor_min) %>%
   get_report() %>%
