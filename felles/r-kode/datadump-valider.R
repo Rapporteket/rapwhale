@@ -57,3 +57,18 @@ d %>%
   get_report() %>%
   left_join((d %>% transmute(id = 1:n(), pasid, vekt)), by = "id") %>%
   print(.validate = FALSE)
+
+# sjekker at antall desimaler er ok
+har_riktig_ant_desimaler = row_packs(
+  sjekk_desimal = . %>% transmute(
+    des_alder = round(alder, 0) == alder,
+    des_vekt = round(vekt, 0) == vekt
+  )
+)
+# Finner feil og rapporterer hvilken pasient og variabel som gjelder
+# for desimal-verdier
+d %>%
+  expose(har_riktig_ant_desimaler) %>%
+  get_report() %>%
+  left_join((d %>% transmute(id = 1:n(), pasid, alder, vekt)), by = "id") %>%
+  print(.validate = FALSE)
