@@ -88,3 +88,16 @@ d %>%
   get_report() %>%
   left_join(d %>% mutate(id = 1:n()), by = "id") %>%
   print(.validate = FALSE)
+
+# sjekker at kategoriske variabler bare har gyldige verdier
+har_gyldig_verdi = row_packs(
+  . %>% transmute(gyl_kjonn = kjonn %in% 0:1 | is.na(kjonn)) # kategoriske variabler trenger ikke nødvendigvis å være obligatoriske
+)
+
+# Finner feil og rapporterer hvilken pasient og variabel som gjelder
+# for kategoriske variabler og ugyldige verdier
+d %>%
+  expose(har_gyldig_verdi) %>%
+  get_report() %>%
+  left_join((d %>% transmute(id = 1:n(), pasid, kjonn)), by = "id") %>%
+  print(.validate = FALSE)
