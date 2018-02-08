@@ -36,8 +36,24 @@ er_innfor_min = row_packs(
 )
 
 # Finner feil og rapporterer hvilken pasient og variabel som gjelder
+# for min-verider
 d %>%
   expose(er_innfor_min) %>%
   get_report() %>%
   left_join((d %>% transmute(id = 1:n(), pasid, alder, vekt)), by = "id") %>%
+  print(.validate = FALSE)
+
+
+
+# sjekker at variabler er innfor maks-verdier
+er_innfor_maks = row_packs(
+  sjekk_min = . %>% transmute(maks_vekt = vekt <= 200)
+)
+
+# Finner feil og rapporterer hvilken pasient og variabel som gjelder
+# for maks-verider
+d %>%
+  expose(er_innfor_maks) %>%
+  get_report() %>%
+  left_join((d %>% transmute(id = 1:n(), pasid, vekt)), by = "id") %>%
   print(.validate = FALSE)
