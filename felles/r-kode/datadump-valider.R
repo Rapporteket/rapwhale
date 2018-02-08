@@ -27,3 +27,13 @@ kb = tribble(
   "kjonn", "kategorisk", NA, NA, TRUE, NA, 1, "mann",
   "frisk", "boolsk", NA, NA, TRUE, NA, NA, NA
 )
+
+# sjekker at variabler er innfor min verdier
+er_innfor_min = row_packs(
+  sjekk_min = . %>% transmute(min_alder = alder >= 18, min_vekt = vekt >= 45)
+)
+
+# ønsket linjekode: :'(
+d %>%
+  expose(er_innfor_min) %>%
+  get_report()
