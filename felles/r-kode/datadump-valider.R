@@ -43,11 +43,9 @@ d %>%
   left_join((d %>% transmute(id = 1:n(), pasid, alder, vekt)), by = "id") %>%
   print(.validate = FALSE)
 
-
-
 # sjekker at variabler er innfor maks-verdier
 er_innfor_maks = row_packs(
-  sjekk_min = . %>% transmute(maks_vekt = vekt <= 200)
+  sjekk_maks = . %>% transmute(maks_vekt = vekt <= 200)
 )
 
 # Finner feil og rapporterer hvilken pasient og variabel som gjelder
