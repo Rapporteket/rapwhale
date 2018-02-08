@@ -36,4 +36,6 @@ er_innfor_min = row_packs(
 # ønsket linjekode: :'(
 d %>%
   expose(er_innfor_min) %>%
-  get_report()
+  get_report() %>%
+  left_join((d %>% transmute(id = 1:n(), pasid, alder, vekt)), by = "id") %>%
+  print(.validate = FALSE)
