@@ -70,3 +70,21 @@ d %>%
   get_report() %>%
   left_join((d %>% transmute(id = 1:n(), pasid, alder, vekt)), by = "id") %>%
   print(.validate = FALSE)
+
+# sjekker at obligatoriske felt er fylt ut
+har_ingen_missing = row_packs(
+  sjekk_oblig = . %>% transmute(
+    oblig_pasid = !is.na(pasid),
+    oblig_vekt = !is.na(vekt),
+    oblig_alder = !is.na(alder),
+    oblig_kjonn = !is.na(kjonn),
+    oblig_frisk = !is.na(frisk)
+  )
+)
+# Finner feil og rapporterer hvilken pasient og variabel som gjelder
+# for obligatoriske variabler med missing-verdier
+d %>%
+  expose(har_ingen_missing) %>%
+  get_report() %>%
+  left_join(d %>% mutate(id = 1:n()), by = "id") %>%
+  print(.validate = FALSE)
