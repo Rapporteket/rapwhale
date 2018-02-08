@@ -53,13 +53,16 @@ test_min = function(n){
 
 
 
-f = function(aktvar, grenseverdi) {
+f = function(aktvar, kb) {
   regelnamn = paste0("min_", aktvar)
   aktvar = sym(aktvar)
+  
+  grenseverdi = min_verdier %>% filter(varid == aktvar) %>% pull(min)
+  
   sjekk_funk = . %>% transmute( !!regelnamn := (!!aktvar) >= grenseverdi)
   sjekk_funk
 }
-f("alder", 18)(d)
+f("alder", min_verdier)(d)
 
 
 f = function(aktvars, grenseverdiar) {
@@ -74,21 +77,23 @@ f = function(aktvars, grenseverdiar) {
 }
 
 
-f = function(aktvars, grenseverdiar) {
+f = function(aktvars) {
   regelnamns = paste0("min_", aktvars)
   aktvars = syms(aktvars)
+  grenseverdiar = min_verdier %>% filter(varid == aktvar) %>% pull(min)
   sjekk_funks = pmap(list(aktvars, grenseverdiar, regelnamns),
                      function(aktvar, grenseverdi, regelnamn) {
-                       list( !!regelnamn := (!!aktvar) >= grenseverdi)
+                       . %>% transmute( !!regelnamn := (!!aktvar) >= grenseverdi)
                      }
   )
   sjekk_funks
 }
 
+f(c("alder", "vekt"))[[1]](d)
+f(c("alder", "vekt"))[[2]](d)
 
+f(names(teste_var))[[2]](d)
 
-f(c("alder", "vekt"), c(18,45))[[1]](d)
-f(c("alder", "vekt"), c(18,45))[[2]](d)
 
 x=c(1,2,3)
 y=(c("A","B","C"))
@@ -102,6 +107,7 @@ f(3, "C")
 er_innfor_min = row_packs(
   sjekk_min = . %>% transmute(min_alder = alder >= 18, min_vekt = vekt >= 45)
 )
+
 
 # Finner feil og rapporterer hvilken pasient og variabel som gjelder
 # for min-verdier
