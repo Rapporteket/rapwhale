@@ -31,38 +31,70 @@ kb = tribble(
 
 #---------------------------------------------------------Tester--------------------------------------------------------------
 
-# sjekker at variabler er innfor min verdier
 
-# finner variabler i d som skal testes
-# de som har minimumsverdier
-teste_var = d %>% select(which(names(d) %in% (kb %>% filter(!is.na(min)))$varid)) 
-
-# finne korresponderende minimumsverdier
-min_verdier = kb %>% filter(varid %in% names(teste_var)) %>% select(varid, min)
-
-test_min = function(n){
-
-  varnamn = names(teste_var[n])
-  var = teste_var[varnamn]
-  min_verdi = min_verdier %>% filter(varid == varnamn) %>% select(min)
-  
-  # finne ut om variabelen er større eller lik min_verdi
-  var >= min_verdi$min
-  
-}
-
-
-
-f = function(aktvar, kb) {
+f = function(aktvar, grenseverdi) {
   regelnamn = paste0("min_", aktvar)
   aktvar = sym(aktvar)
   
-  grenseverdi = min_verdier %>% filter(varid == aktvar) %>% pull(min)
+  l=exprs(UQ(regelnamn) := UQ(aktvar) >= UQ(grenseverdi))
+  sjekk_funk = . %>% transmute(UQS(l))
+  sjekk_funk
+}
+f("alder", 18)(d)
+
+
+
+# Dette funker ------------------------------------------------------------
+
+# Kode for regelsett for minimumsverdiar
+kb_min = kb %>% 
+  filter(!is.na(min)) %>% 
+  select(varid, min) %>% 
+  rename(varnamn = "varid", gverdi ="min")
+
+eks = kb_min %>%
+  pmap(function(varnamn, gverdi) {
+    . %>% transmute_at(vars(foo = varnamn), rules(min_ok = . >= gverdi))
+  }) %>%
+  setNames(paste0("min_", kb_min$varnamn))
+
+#eks=list(min_alder = . %>% transmute_at(vars(foo="alder"), rules(min_ok = . >= 18)),
+#      min_vekt = . %>% transmute_at(vars(foo="vekt"), rules(min_ok = . >= 45)))
+er_innfor_min = cell_packs(eks)
+d %>%
+  expose(er_innfor_min) %>% 
+  get_report()
+
+#  ------------------------------------------------------------------------
+
+
+
+
+
+
+f = function(aktvars_orig, grenseverdiar) {
+  regelnamns = paste0("min_", aktvars)
+  aktvars = syms(aktvars_orig)
   
-  sjekk_funk = . %>% transmute( !!regelnamn := (!!aktvar) >= grenseverdi)
+  l = pmap(list(regelnamns, aktvars, grenseverdiar), 
+           function(regelnamn, aktvar, grenseverdi) {
+             expr(UQ(regelnamn) := UQ(aktvar) >= UQ(grenseverdi))
+             })
+  sjekk_funk = . %>% transmute(UQS(l))
   sjekk_funk
 }
 f("alder", min_verdier)(d)
+
+
+
+f(c("alder", "vekt"),c(16,18))(d)
+
+f("alder", min_verdier)
+
+quo <- quo(foo(bar))
+quo <- quo(inner(!! quo, arg1))
+quo <- quo(outer(!! quo, !!! syms(letters[1:3])))
+quo
 
 
 f = function(aktvars, grenseverdiar) {
@@ -75,6 +107,9 @@ f = function(aktvars, grenseverdiar) {
   )
   sjekk_funks
 }
+
+
+f(c("alder", "vekt"))
 
 
 f = function(aktvars) {
