@@ -21,7 +21,7 @@ d = tribble(
 
 kb = tribble(
   ~varid, ~vartype, ~min, ~maks, ~oblig, ~des, ~verdi, ~verditekst,
-  "pasid", "numerisk", NA, NA, TRUE, NA, NA, NA,
+  "pasid", "tekst", NA, NA, TRUE, NA, NA, NA,
   "alder", "numerisk", 18, NA, TRUE, 0, NA, NA,
   "vekt", "numerisk", 45, 200, TRUE, 0, NA, NA,
   "kjonn", "kategorisk", NA, NA, TRUE, NA, 0, "kvinne",
@@ -118,3 +118,17 @@ d %>%
   get_report() %>%
   left_join((d %>% transmute(id = 1:n(), pasid, kjonn)), by = "id") %>%
   print(.validate = FALSE)
+
+
+# sjekker at variabeltype er i tråd med kodeboka
+er_riktig_variabeltype = col_packs(
+  sjekk_pasid = . %>% summarise_at(vars(patient_id = pasid), rules(vartype_pasid = is.character(pasid))),
+  sjekk_alder = . %>% summarise_at(vars(age = alder), rules(vartype_alder = is.numeric(alder))),
+  sjekk_frisk = . %>% summarise_at(vars(well = frisk), rules(vartype_frisk = is.logical(frisk)))
+)
+
+# Finner feil og rapporterer hvilken pasient og variabel som gjelder
+# for feil i variabeltype
+d %>%
+  expose(er_riktig_variabeltype) %>%
+  get_report()
