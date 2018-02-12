@@ -132,3 +132,15 @@ er_riktig_variabeltype = col_packs(
 d %>%
   expose(er_riktig_variabeltype) %>%
   get_report()
+
+# sjekker at variabelnavna er de samme som i kodeboka
+er_samme_navn = data_packs(
+  sjekk_pasid = . %>% summarise(navn_pasid = names(d)[1] %in% (kb$varid)),
+  sjekk_kjonn = . %>% summarise(navn_kjonn = names(d)[2] %in% (kb$varid))
+)
+
+# Finner feil og rapporterer hvilken pasient og variabel som gjelder
+# for feil i variabeltype
+d %>%
+  expose(er_samme_navn) %>%
+  get_report()
