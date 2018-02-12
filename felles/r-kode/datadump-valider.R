@@ -95,26 +95,20 @@ d %>%
   print(.validate = FALSE)
 
 # sjekker at obligatoriske felt er fylt ut
-har_ingen_missing = row_packs(
-  sjekk_oblig = . %>% transmute(
-    oblig_pasid = !is.na(pasid),
-    oblig_vekt = !is.na(vekt),
-    oblig_alder = !is.na(alder),
-    oblig_kjonn = !is.na(kjonn),
-    oblig_frisk = !is.na(frisk)
-  )
+har_ingen_missing = cell_packs(
+  sjekk_oblig = . %>% transmute_at(vars(gender = kjonn), rules(oblig_kjonn = !is.na(kjonn)))
 )
 # Finner feil og rapporterer hvilken pasient og variabel som gjelder
 # for obligatoriske variabler med missing-verdier
 d %>%
   expose(har_ingen_missing) %>%
   get_report() %>%
-  left_join(d %>% mutate(id = 1:n()), by = "id") %>%
+  left_join(d %>% transmute(id = 1:n(), pasid, kjonn), by = "id") %>%
   print(.validate = FALSE)
 
 # sjekker at kategoriske variabler bare har gyldige verdier
-har_gyldig_verdi = row_packs(
-  . %>% transmute(gyl_kjonn = kjonn %in% 0:1 | is.na(kjonn)) # kategoriske variabler trenger ikke nødvendigvis å være obligatoriske
+har_gyldig_verdi = cell_packs(
+  . %>% transmute_at(vars(gender = kjonn), rules(gyl_kjonn = kjonn %in% 0:1 | is.na(kjonn))) # kategoriske variabler trenger ikke nødvendigvis å være obligatoriske
 )
 
 # Finner feil og rapporterer hvilken pasient og variabel som gjelder
