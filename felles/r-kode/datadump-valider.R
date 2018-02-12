@@ -140,7 +140,18 @@ er_samme_navn = data_packs(
 )
 
 # Finner feil og rapporterer hvilken pasient og variabel som gjelder
-# for feil i variabeltype
+# for feil i variabelnavn
 d %>%
   expose(er_samme_navn) %>%
+  get_report()
+
+# sjekk at rekkefølgen på kolonner er lik mellom data og kodebok
+er_lik_rekkefolge = data_packs(
+  sjekk_rekkefolge = . %>% summarise(rekkefolge_varnavn = identical(names(d), (kb %>% distinct(varid))$varid))
+)
+
+# Finner feil og rapporterer hvilken pasient og variabel som gjelder
+# for feil i rekkefølge på variabelnavn
+d %>%
+  expose(er_lik_rekkefolge) %>%
   get_report()
