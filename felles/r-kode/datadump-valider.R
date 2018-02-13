@@ -39,12 +39,22 @@ kb_min = kb %>%
   select(varid, min) %>%
   rename(varnamn = "varid", gverdi = "min")
 
+# # Gammal løysing, der gverdi og varnamn ikkje kom ut som konstantar
+# eks = kb_min %>%
+#   pmap(function(varnamn, gverdi) {
+#     . %>% transmute_at(vars(foo = varnamn), rules(min_ok = . >= gverdi))
+#   })
+
+# Ny, forbetra løysing
 eks = kb_min %>%
   pmap(function(varnamn, gverdi) {
-    . %>%
-      transmute_at(vars(foo = varnamn), rules(min_ok = . >= gverdi))
+    new_function(
+      alist(df = ),
+      expr(transmute_at(df, vars(foo = !!varnamn), rules(min_ok = . >= !!gverdi)))
+    )
   }) %>%
   setNames(paste0("min_", kb_min$varnamn))
+eks
 
 # eks=list(min_alder = . %>% transmute_at(vars(foo="alder"), rules(min_ok = . >= 18)),
 #      min_vekt = . %>% transmute_at(vars(foo="vekt"), rules(min_ok = . >= 45)))
