@@ -17,7 +17,7 @@ library(rlang)
 #'
 #' @param df Datasettet ein ønskjer å laga valideringsdatasett for
 #'   (ei \code{\link{data.frame}} eller ein \code{\link{tibble}}).
-#' @param indeks_var Ein tekstvektor med namna på indeksvariablane,
+#' @param indeks_var Tekstvektor med namna på indeksvariablane,
 #'   dvs. variablane som \emph{unikt} identifiserer ei rad
 #'   (typisk pasient-ID og/eller forløps-ID). Desse
 #'   vert tekne med i valideringsdatasettet som eigne kolonnar,
@@ -26,7 +26,7 @@ library(rlang)
 #'   for å verta trekte ut som valideringsvariablar. Rekkjefølgja
 #'   i valideringsdatasetta vert lik rekkjefølgja oppgitt her
 #'   (som kan vera forskjellig frå rekkjefølgja i \code{df}).
-#' @param ekstra_var Ein tekstvektor med namna på ekstra variablar
+#' @param ekstra_var Tekstvektor med namna på ekstra variablar
 #'   som òg skal takast med i alle rader i valideringsdatasettet,
 #'   men som typisk er avleidde av \code{indeks_var}, og som
 #'   potensielt òg \emph{kan} vera gjenstand for å plukkast ut som
@@ -35,14 +35,14 @@ library(rlang)
 #'   Typiske eksempel er fødselsdato, kjønn og operasjonsdato.
 #'   Rekkjefølgja i valideringsdatasetta vert lik rekkjefølgja oppgitt her
 #'   (som kan vera forskjellig frå rekkjefølgja i \code{df}).
-#' @param data_var Ein tekstvektor med namna på datavariablane
+#' @param data_var Tekstvektor med namna på datavariablane
 #'   i registeret som kan plukkast ut som tilfeldige variablar.
 #'   Viss denne er \code{NULL} (standard), vert alle variablar i \code{df}
 #'   som ikkje er med i \code{indeks_var} brukte.
 #'   I valideringsdatasettet vert kvar tilfeldig utplukka celle
 #'   til ei rad, og radene vert sorterte i rekkjefølgja som
 #'   variabelnamna er oppgitt i \code{data_var}.
-#' @param sjukehus_var Ein tekstvektor med namna på variablane
+#' @param sjukehus_var Tekstvektor med namna på variablane
 #'   som unikt identifiserer sjukehuset/avdelingen som rada tilhøyrer,
 #'   typisk sjukehusnamn og/eller RESH-ID. Verdiane vert brukte til
 #'   å namngje utdatafilene.
@@ -52,7 +52,7 @@ library(rlang)
 #'   kontrollera \emph{alle} datavariablane for kvar kjelderad.
 #' @param utmappe Mappa valideringsfilene skal lagrast i.
 #'   fixme: Skil ut som eigen funksjon.
-hent_validering_data = function(df, indeks_var, ekstra_var = NULL, valid_vars, sjukehusvar, vdatamappe, nvar = 5) {
+hent_validering_data = function(df, indeks_var, ekstra_var = NULL, data_var, sjukehusvar, vdatamappe, nvar = 5) {
 
   # fixme: sjekk at indeks_var unikt identifiserer rader
   # fixme: sjekk at indeks_var ikkje er med i data_var eller ekstra_var
