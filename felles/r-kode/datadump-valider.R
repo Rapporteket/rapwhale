@@ -143,10 +143,21 @@ d %>%
   expose(er_riktig_variabeltype) %>%
   get_report()
 
-# sjekker at variabelnavna er de samme som i kodeboka
+# Test sjekker at alle variablenavn i datadump er med i kodeboka (samtidig)
+alle_er_med = data_packs(
+  sjekk_alle_varnavn = . %>% summarise(all(alle_varnavn = names(.) %in% (kb %>% distinct(varid))$varid))
+)
+
+# Rapporterer noen variabelnavn ikke er med i kodeboka
+# er alle riktige kommer en tom tibble
+d %>%
+  expose(alle_er_med) %>%
+  get_report()
+
+# sjekker at hver enktelt av variabelnavna er de samme som i kodeboka
 er_samme_navn = data_packs(
-  sjekk_pasid = . %>% summarise(navn_pasid = names(d)[1] %in% (kb$varid)),
-  sjekk_kjonn = . %>% summarise(navn_kjonn = names(d)[2] %in% (kb$varid))
+  sjekk_pasid = . %>% summarise(navn_pasid = names(.)[1] %in% (kb$varid)),
+  sjekk_kjonn = . %>% summarise(navn_kjonn = names(.)[2] %in% (kb$varid))
 )
 
 # Finner feil og rapporterer hvilken pasient og variabel som gjelder
@@ -157,7 +168,7 @@ d %>%
 
 # sjekk at rekkefølgen på kolonner er lik mellom data og kodebok
 er_lik_rekkefolge = data_packs(
-  sjekk_rekkefolge = . %>% summarise(rekkefolge_varnavn = identical(names(d), (kb %>% distinct(varid))$varid))
+  sjekk_rekkefolge = . %>% summarise(rekkefolge_varnavn = identical(names(.), (kb %>% distinct(varid))$varid))
 )
 
 # Finner feil og rapporterer hvilken pasient og variabel som gjelder
