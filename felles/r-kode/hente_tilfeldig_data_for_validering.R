@@ -5,163 +5,78 @@ library(tidyverse)
 library(haven)
 library(rlang)
 
-# bruker fedmeregisteret som eksempel datasett
-# fixme! kanskje dette er litt tungvint, siden
-# de ikke har kodebok og det krever en hau med cols()
-# og krever en del ryddings.
-# må uansett teste funksjonen med en annen datadump
-# for å sikre at den er generell.
+#' Lag valideringsdatasett frå datarammer.
+#'
+#' Dette er eit sett funksjonar for å henta ut (tilfeldige) data
+#' frå eit registerdatasett og lagra desse som SPSS-filer ein kan
+#' bruka til ekstern validering av registeret.
+#'
+#' Kort sagt plukkar \code{lag_valideringsdatasett} ut tilfeldige
+#' celler i dataramma. Ein kan velja kor mange celler (variablar)
+#' som skal plukkast ut for kvar rad (pasient/forløp).
+#'
+#' @param df Datasettet ein ønskjer å laga valideringsdatasett for
+#'   (ei \code{\link{data.frame}} eller ein \code{\link{tibble}}).
+#' @param indeks_var Ein tekstvektor med namna på indeksvariablane,
+#'   dvs. variablane som \emph{unikt} identifiserer ei rad
+#'   (typisk pasient-ID og/eller forløps-ID). Desse
+#'   vert tekne med i valideringsdatasettet som eigne kolonnar,
+#'   for å identifisera rader i originaldatasettet. Dei svarar til
+#'   primærnøklar i databasetabellar og kan \emph{ikkje} vera gjenstand
+#'   for å verta trekte ut som valideringsvariablar. Rekkjefølgja
+#'   i valideringsdatasetta vert lik rekkjefølgja oppgitt her
+#'   (som kan vera forskjellig frå rekkjefølgja i \code{df}).
+#' @param ekstra_var Ein tekstvektor med namna på ekstra variablar
+#'   som òg skal takast med i alle rader i valideringsdatasettet,
+#'   men som typisk er avleidde av \code{indeks_var}, og som
+#'   potensielt òg \emph{kan} vera gjenstand for å plukkast ut som
+#'   valideringsvariablar. Dei er med fordi dei kan gjera det lettare
+#'   eller raskare å finna fram til rett pasient/forløp i pasientjournalen.
+#'   Typiske eksempel er fødselsdato, kjønn og operasjonsdato.
+#'   Rekkjefølgja i valideringsdatasetta vert lik rekkjefølgja oppgitt her
+#'   (som kan vera forskjellig frå rekkjefølgja i \code{df}).
+#' @param data_var Ein tekstvektor med namna på datavariablane
+#'   i registeret som kan plukkast ut som tilfeldige variablar.
+#'   Viss denne er \code{NULL} (standard), vert alle variablar i \code{df}
+#'   som ikkje er med i \code{indeks_var} brukte.
+#'   I valideringsdatasettet vert kvar tilfeldig utplukka celle
+#'   til ei rad, og radene vert sorterte i rekkjefølgja som
+#'   variabelnamna er oppgitt i \code{data_var}.
+#' @param sjukehus_var Ein tekstvektor med namna på variablane
+#'   som unikt identifiserer sjukehuset/avdelingen som rada tilhøyrer,
+#'   typisk sjukehusnamn og/eller RESH-ID. Verdiane vert brukte til
+#'   å namngje utdatafilene.
+#' @param nvar Talet på datavariablar som skal plukkast tilfeldig frå
+#'   kvar rad i \code{df}. Set denne til lengda av \code{data_var}
+#'   dersom du ikkje ønskjer tilfeldig utplukk men heller vil
+#'   kontrollera \emph{alle} datavariablane for kvar kjelderad.
+#' @param utmappe Mappa valideringsfilene skal lagrast i.
+#'   fixme: Skil ut som eigen funksjon.
+hent_validering_data = function(df, indeks_var, ekstra_var = NULL, valid_vars, sjukehusvar, vdatamappe, nvar = 5) {
 
-#-----------------------------------------Innhenting av data-------------------------------------------------
-
-# Mappe på kvalitetstenaren
-# Husk at mappen er slik at man har valgt directory fra source file location
-grunnmappe = "***FJERNA-ADRESSE***"
-
-# Hent datoen til siste tilgjengelege uttrekk
-dato_uttrekk = list.dirs(grunnmappe, recursive = FALSE, full.names = FALSE) %>%
-  sort() %>%
-  last() %>%
-  as.Date()
-
-# Adressa til den siste datafila
-mappe = paste0(grunnmappe, dato_uttrekk)
-filnamn = "SoReg_09_Datadump_validering.csv"
-adresse = paste0(mappe, "\\", filnamn)
-
-# Les inn data
-# Manuell (æsj!) spesifikasjon av kolonnetypar
-# (fordi me manglar kodebok for denne datadumpen)
-kol_typar = cols(
-  PasientID = col_integer(),
-  Fodselsdato = col_date(),
-  PasientAlder = col_number(),
-  PasientKjonn = col_character(),
-  OpererendeRESH = col_integer(),
-  OperererendeSykehus = col_character(),
-  BR_BesoksDato = col_date(),
-  BR_Vekt = col_integer(),
-  BR_Hoyde = col_integer(),
-  BR_BMI = col_double(),
-  BR_Systolisk = col_integer(),
-  BR_Diastolisk = col_integer(),
-  BR_PaagaaendeBeh = col_integer(),
-  BR_SovnApne = col_integer(),
-  BR_Hypertoni = col_integer(),
-  BR_Diabetes = col_integer(),
-  BR_DiabetesSidenAar = col_integer(),
-  BR_Typediabetesbeh = col_integer(),
-  BR_Dyslipidemi = col_integer(),
-  BR_Dyspepsi = col_integer(),
-  BR_Diare = col_integer(),
-  BR_Depresjon = col_integer(),
-  BR_MuskelSkjelettsmerter = col_integer(),
-  BR_AnnenSykdom = col_integer(),
-  BR_fsglukose = col_double(),
-  BR_B_HbA1c = col_double(),
-  BR_S_LDL = col_double(),
-  ForlopsID = col_integer(),
-  OperasjonsID = col_integer(),
-  Operasjonsdato = col_date(),
-  OperasjonVekt = col_integer(),
-  TidlFedmeOp = col_integer(),
-  Operasjonsmetode = col_integer(),
-  IdenHiatusernie = col_integer(),
-  OP_PeropKompl = col_integer(),
-  OP_AnnenSamtidigOp = col_integer(),
-  OP_GETeknikk = col_integer(),
-  OP_AvstTreitzGE = col_integer(),
-  OP_CommonChannel = col_integer(),
-  OP_CommonChannelCm = col_integer(),
-  OP_GSBougiediameter = col_integer(),
-  OP_GSAvstPylorus = col_integer(),
-  OP_GSForsterket = col_integer(),
-  OP_GSPexiAvCardia = col_integer(),
-  OP_BDPBougiediam = col_integer(),
-  OP_BDPCommonChannel = col_integer(),
-  OP_BDPAlimentaryLimb = col_integer(),
-  UtskrivelsesDato = col_date(),
-  LiggeDogn = col_integer(),
-  `6U_Vekt` = col_integer(),
-  `6U_Hoyde` = col_integer(),
-  `6U_RESH` = col_integer(),
-  `6U_KontrollType` = col_integer(),
-  `1Aar_BehAnnetSykehus` = col_integer(),
-  `1Aar_Substitusjon` = col_integer(),
-  `1Aar_OpSidenSist` = col_integer(),
-  `1Aar_Komplikasjoner` = col_integer(),
-  `1Aar_Vekt` = col_integer(),
-  `1Aar_Hoyde` = col_integer(),
-  `1Aar_Systolisk` = col_integer(),
-  `1Aar_Diastolisk` = col_integer(),
-  `1Aar_fP_Glukose` = col_double(),
-  `1Aar_BHbA1c` = col_double(),
-  `1Aar_Dyslipidemi` = col_double(),
-  `1Aar_RESH` = col_integer(),
-  `1Aar_OppfolgingsType` = col_integer(),
-  EttAarBMI = col_double(),
-  o_sg_gkl_sut = col_integer(),
-  o_rygbp_pet_luk = col_integer(),
-  o_samt_crurapl = col_integer(),
-  o_samt_adhl = col_integer(),
-  o_samt_adhl = col_integer(),
-  `6U_Substitusjon` = col_integer(),
-  `6U_KomplAlvorGrad` = col_integer(),
-  `6U_Behandling30Dager` = col_integer()
-)
-d_full = read_delim(
-  adresse,
-  delim = ";",
-  na = "null",
-  locale = locale(date_format = "%Y-%m-%d", decimal_mark = "."),
-  col_types = kol_typar
-)
-
-# Feilmelding viss datafila inneheld variablar som me
-# ikkje har kolonnespesifikasjon for
-manglar_spek = setdiff(names(d_full), names(kol_typar$cols))
-if (length(manglar_spek) > 0) {
-  stop(
-    "Manglar kolonnespesifikasjon for følgjande variablar (rediger kol_typar):\n",
-    paste0(manglar_spek, sep = "\n")
-  )
-}
-
-# # Viss ein likevel vel å halda fram, kutt ut variablar me manglar
-# # kolonnespesifikasjon på, sidan me ikkje kan stola på verdiane der
-# d_full = d_full[names(kol_typar$cols)]
-
-# Fjern utrekna variablar og RESH-ID i oppfølgingar
-d = d_full %>%
-  select(-contains("BMI"), -contains("_RESH"))
-
-#---------------------------------------------funksjon for henting av valideringsdata---------------------------
-
-# Argumenter:
-# d = Datasett man ønsker å foreta randomiseringen til.
-# nvars = Hvor mange variabler som skal hentes for hver rad
-# ind_vars = Indeks-variabler som en ønsker å ha med i det endelige datasettet.
-#            Disse skal være til hjelp med å identifisere riktig måling i pasientjournalen
-#            og skal ikke randomiseres slik som de andre variablene i registeret.
-# valid_vars = variabler man ønsker å validere. Ofte kan dette være names(d), men i mange tilfeller
-#              vil det være utvalgt et sett med sentrale variabler, eller ekskludere variabler
-#              man ikke kan validere (typisk utregna var, registreringsdato og PROM)
-# sjukehusvar = Variabelen som gir sykehusnavn, som skal være en del av filnavnet til output-fila.
-# datamappe = Plassering for hvor man ønsker valideringsdataene (mest trolig egen mappe på kvalitetsserver).
-
-hent_validering_data = function(d, nvars, ind_vars, valid_vars, sjukehusvar, vdatamappe) {
+  # fixme: sjekk at indeks_var unikt identifiserer rader
+  # fixme: sjekk at indeks_var ikkje er med i data_var eller ekstra_var
+  # fixme: ha med 'valideringsgruppenummer' i resultatdatasettet.
+  # fixme: sjekk at nvars <= length(data_vars).
+  # fixme: sjekk at indeks_var og ekstra_var ikkje har overlapp (ev. handtera dette).
+  # fixme: handtering av blinding
+  # fixme: gje ut berre maks_eitelleranna pasientar/opphald i utdatarammene.
+  # fixme: fungerer sjukehus_var med lengd > 1
+  # fixme: sjekk at alle obligatoriske variablar faktisk finst og handter dupliserte verdiar (via unique()).
+  # fixme: reformater kjeldekoden (innrykk og sånt)
+  # fixme: del funksjonen opp i éin funksjon for å laga valideringsdatasetta og éin funksjon for å lagra til SPSS-format.
 
   # Sjekk at alle indeksvariablane faktisk finst i datasettet
-  stopifnot(all(ind_vars %in% names(d)))
+  stopifnot(all(indeks_vars %in% names(d)))
   data_vars = valid_vars %>%
-    setdiff(ind_vars)
+    setdiff(indeks_vars)
 
   # quote-sjukehusvariabel
   sjukehusvar = sym(sjukehusvar)
 
   # henter ut aktuelle kolonner
   d = d %>%
-    select(ind_vars, valid_vars)
+    select(indeks_vars, valid_vars)
 
   # Plukk ut tilfeldige datakolonnar for kvar rad og lagra
   # namnet på kolonnane i ein eigen variabel.
@@ -250,7 +165,7 @@ hent_validering_data = function(d, nvars, ind_vars, valid_vars, sjukehusvar, vda
 # tester funksjonen under
 
 # Oversikt over namn på indeksvariablar og datavariablar
-ind_vars_soreg = c(
+indeks_vars_soreg = c(
   "PasientID", "Fodselsdato", "PasientAlder", "PasientKjonn",
   "OpererendeRESH", "ForlopsID", "OperasjonsID", "OperererendeSykehus"
 )
@@ -264,7 +179,7 @@ soreg_vars = names(d)
 # kjør funksjonen
 hent_validering_data(d,
   nvars = 10,
-  ind_vars = ind_vars_soreg,
+  indeks_vars = indeks_vars_soreg,
   valid_vars = soreg_vars,
   sjukehusvar = "OperererendeSykehus",
   vdatamappe = vmappe
