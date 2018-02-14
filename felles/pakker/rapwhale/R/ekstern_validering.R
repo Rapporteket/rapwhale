@@ -1,6 +1,6 @@
 # Skript for å hente ut tilfeldige celler fra datasett til validering.
 
-#' Lag valideringsdatasett frå datarammer.
+#' Lag valideringsdatasett frå datarammer
 #'
 #' Eit sett funksjonar for å henta ut (tilfeldige) data
 #' frå eit registerdatasett og lagra desse som SPSS-filer ein kan
@@ -11,7 +11,7 @@
 #' som skal plukkast ut for kvar rad (pasient/forløp).
 #'
 #' @param df Datasettet ein ønskjer å laga valideringsdatasett for
-#'   (ei \code{\link{data.frame}} eller ein \code{\link{tibble}}).
+#'   (ei \code{\link[base]{data.frame}} eller ein \code{\link[tibble]{tibble}}).
 #' @param indeks_var Tekstvektor med namna på indeksvariablane,
 #'   dvs. variablane som \emph{unikt} identifiserer ei rad
 #'   (typisk pasient-ID og/eller forløps-ID). Desse
@@ -264,7 +264,7 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
 # Fixme: Lag eit enkelt datasett manuelt, som me òg
 #        kan legga inn i eksempelblokka (og gjenbruka
 #        i test_that()-testar).
-df = as.tibble(mice::selfreport)
+df = tibble::as.tibble(mice::selfreport)
 indeks_var = c("id", "edu")
 ekstra_var = c("age", "sex")
 data_var = c("hr", "wr", "etn", "br")
