@@ -81,8 +81,13 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
     !anyDuplicated(data_var)
   )
 
-  # Sjekk at indeks_var utgjer ein ekte primærnøkkel
+  # Quoting av dei ulike variablane våre, for seinare bruk
   indeks_var_q = syms(indeks_var)
+  ekstra_var_q = syms(ekstra_var)
+  sjukehus_var_q = syms(sjukehus_var)
+  data_var_q = syms(data_var)
+
+  # Sjekk at indeks_var utgjer ein ekte primærnøkkel
   if (any(duplicated(select(df, !!!indeks_var_q)))) {
     stop("'indeks_var' identifiserer ikkje radene unikt")
   }
@@ -92,7 +97,7 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
   # fixme: flytta denne ut av funksjonen, til ein
   #        global, *ikkje-eksportert* funksjon?
   lag_liste = function(x) {
-    paste0(paste0("'", indeks_i_ekstra, "'"), collapse = ", ")
+    paste0(paste0("'", x, "'"), collapse = ", ")
   }
 
   # Sjekk at indeksvariablar ikkje blir brukt andre plassar
@@ -118,6 +123,7 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
     )
   }
 
+  # fixme: Sjekk at alle oppgitt variabellister har lenged >= 1 (men berre om det er nødvendig!)
   # fixme: Lag testar (test_that()) for alle feilmeldingane våre.
   # fixme: Lag testar for at ting fungerer *riktig*. :)
   # fixme: ha med 'valideringsgruppenummer' i resultatdatasettet.
@@ -126,40 +132,64 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
   # fixme: sjekk at sjukehus_var med lengd > 1 fungerer
   # fixme: reformater kjeldekoden (innrykk og sånt)
   # fixme: del funksjonen opp i éin funksjon for å laga valideringsdatasetta og éin funksjon for å lagra til SPSS-format.
+  # fixme: sjekk at det ikkje finst duplikatnamn i dataramma (er det mogleg?)
+  # fixme: avgrupper dataramma før vidare handtering
 
 
+  # Uthenting av valideringsdata --------------------------------------------
 
-  # quote-sjukehusvariabel
-  sjukehusvar = sym(sjukehusvar)
-
-  # henter ut aktuelle kolonner
-  d = d %>%
-    select(indeks_vars, valid_vars)
+  # Hentar berre ut aktuelle kolonnar, og i typisk rekkjefølgje,
+  # slik at datasettet vårt vert meir oversiktleg
+  # (og kanskje raskare å arbeida med?)
+  alle_var_q = unique(c(indeks_var_q, ekstra_var_q, sjukehus_var_q, data_var_q))
+  df = df %>%
+    select(!!!alle_var_q)
 
   # Plukk ut tilfeldige datakolonnar for kvar rad og lagra
   # namnet på kolonnane i ein eigen variabel.
   #
   # Dette kan gjerast på mange måtar (slå deg laus). Det viktige er
   # berre at me får éi rad for kvar tilfeldig valde celle, rada inneheld
-  # alle tilhøyrande indeks- og datavariablar og at namnet på
+  # alle tilhøyrande indeks-, ekstra- og datavariablar og at namnet på
   # cella vert lagra i kolonnen «varnamn».
-  d$varnamn = map(1:nrow(d), ~ sample(data_vars, nvars))
-  res = d %>%
+  # fixme: Korleis handtera det dersom 'varnamn' eller 'res_kol', 'reg_tal' osv. finst som kolonnar frå før?
+  #        Køyra ein kontroll på dette tidlegare oppe?
+  df$varnamn = map(1:nrow(df), ~ sample(data_var, nvar))
+  res = df %>%
     unnest(varnamn)
 
-  # Legg til info om kva kolonne resultatet skal lagrast i
-  vartypar = res[data_vars] %>%
-    map_chr(class)
-  if (!all(vartypar %in% c("integer", "numeric", "Date"))) {
-    stop("Finst variabel som ikkje er verken tal eller dato.")
-  }
-  vartypar = vartypar %>%
-    recode(integer = "reg_tal", numeric = "reg_tal", Date = "reg_dato")
-  res$res_kol = vartypar[match(res$varnamn, names(res[data_vars]))]
 
-  # Behold en variabel som indikerer hvilken type variabel hver variabel er
+  # Restrukturering av valideringsdata --------------------------------------
+
+  # Lag oversikt over kva variabeltypar me har blant datavariablane våre ...
+  res_data = res %>%
+    select(!!!data_var_q)
+  d_vartypar = tibble(
+    varnamn = names(res_data),
+    vartype = map(res_data, class) %>%
+      map_chr(first) # Nokre variablar kan fleire klassar, og me brukar då første
+  )
+  # ... og sjekk at alle støtta
+  d_vartypar_ikkjeok = d_vartypar %>%
+    filter(!(vartype %in% c("integer", "numeric", "Date")))
+  if (nrow(d_vartypar_ikkjeok) > 0) {
+    stop(
+      "Finst variablar som verken er tal eller dato (førebels ikkje støtta):\n",
+      lag_liste(d_vartypar_ikkjeok$varnamn)
+    )
+  }
+
+  # Kva kolonne kvar moglege variabel*type* skal lagrast i
+  d_vartypar = d_vartypar %>%
+    mutate(res_kol = recode(vartype,
+      "integer" = "reg_tal",
+      "numeric" = "reg_tal",
+      "Date" = "reg_dato"
+    ))
+  # For kvar uttrekte variabel, legg til info om kva kolonne
+  # resultatet skal lagrast i
   res = res %>%
-    mutate(vartype = recode(res_kol, "reg_tal" = "tal", "reg_dato" = "dato"))
+    left_join(d_vartypar, by = "varnamn")
 
   # Legg til aktuelle resultatkolonnar,
   # med rett variabelklasse (tal, dato &c.)
@@ -171,9 +201,11 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
   class(res$reg_dato) = "Date"
   class(res$epj_dato) = "Date"
 
-
   # Funksjon for å flytta dataverdiane til rett kolonne
-  # (er laga for å funka på datarammer med éin unik verdi for res_kol)
+  # (er laga for å køyrast på datarammer med *éin unik* verdi for res_kol)
+  #
+  # (Det går raskast å flytta alle numeriske kolonnane i éin jafs,
+  # alle datokolonnene i éin jafs, osv. Derfor gjer me det slik.)
   flytt_resultat = function(df) {
     df[[df$res_kol[1]]] = df[[df$varnamn[1]]]
     df
@@ -182,11 +214,20 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
   # For kvar variabel, flytt verdiane til rett kolonne
   res = res %>%
     group_by(varnamn) %>%
-    do(flytt_resultat(.))
+    do(flytt_resultat(.)) %>% # Ev. bruka purr-funksjonar til dette?
+    ungroup()
 
-  # Fjern dei gamle datakolonnane
-  res = res[!(names(res) %in% data_vars)] %>%
-    select(-res_kol)
+  # Fjern dei gamle datakolonnane og andre hjelpekolonnar.
+  # Men me kan ikkje fjerna datakolonnane direkte, sidan
+  # nokre av dei òg kan vera ekstrakolonnar. Me hentar
+  # derfor heller ut indekskolonnane, ekstrakolonnane,
+  # sjukehuskolonnane og dei innregistreringskolonnane som
+  # me treng
+  innreg_kol = unique(d_vartypar$res_kol)
+  innreg_kol = c(rbind(innreg_kol, str_replace(innreg_kol, "^reg_", "epj_"))) # Stygt triks for å fin rekkefølgje ...
+  innreg_kol_q = syms(innreg_kol)
+  res = res %>%
+    select(!!!indeks_var_q, !!!ekstra_var_q, !!!sjukehus_var_q, !!!innreg_kol_q)
 
   # Resultatene skal ryddes slik at det er sortert etter sykehus, tilfeldig rekkefølge på pasientene,
   # men rader med samme pasientnummer skal komme etter hverandre, og variablene skal
@@ -220,6 +261,9 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
   shell.exec(vdatamappe)
 }
 
+# Fixme: Lag eit enkelt datasett manuelt, som me òg
+#        kan legga inn i eksempelblokka (og gjenbruka
+#        i test_that()-testar).
 df = as.tibble(mice::selfreport)
 indeks_var = c("id", "edu")
 ekstra_var = c("age", "sex")
