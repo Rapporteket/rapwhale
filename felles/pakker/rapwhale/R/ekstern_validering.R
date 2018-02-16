@@ -2,16 +2,28 @@
 
 #' Lag valideringsdatasett frå datarammer
 #'
+#' @description
 #' Eit sett funksjonar for å henta ut (tilfeldige) data
 #' frå eit registerdatasett og lagra desse som SPSS-filer ein kan
 #' bruka til ekstern validering av registeret.
 #'
-#' Kort sagt plukkar \code{lag_valideringsdatasett} ut tilfeldige
+#' Kort sagt plukkar funksjonen ut tilfeldige
 #' celler i dataramma. Ein kan velja kor mange celler (variablar)
 #' som skal plukkast ut for kvar rad (pasient/forløp).
 #'
+#' @return
+#' Ei liste med valideringsdatasett, eitt for kvart sjukehus.
+#' Elementa i lista har namn etter sjukehus, laga ved
+#' å fletta saman variablane referert til i \code{sjukehus_var}
+#' med \code{_}-teikn. Desse namna kan òg brukast som
+#' filnamn ved lagring av valideringsdatasetta til disk.
+#'
 #' @param df Datasettet ein ønskjer å laga valideringsdatasett for
 #'   (ei \code{\link[base]{data.frame}} eller ein \code{\link[tibble]{tibble}}).
+#' @param sjukehus_var Tekstvektor med namna på variablane
+#'   som unikt identifiserer sjukehuset/avdelingen som rada tilhøyrer,
+#'   typisk sjukehusnamn og/eller RESH-ID. Verdiane vert brukte til
+#'   å gruppera valideringsdatasettet i fleire grupper.
 #' @param indeks_var Tekstvektor med namna på indeksvariablane,
 #'   dvs. variablane som \emph{unikt} identifiserer ei rad
 #'   (typisk pasient-ID og/eller forløps-ID). Desse
@@ -30,10 +42,6 @@
 #'   Typiske eksempel er fødselsdato, kjønn og operasjonsdato.
 #'   Rekkjefølgja i valideringsdatasetta vert lik rekkjefølgja oppgitt her
 #'   (som kan vera forskjellig frå rekkjefølgja i \code{df}).
-#' @param sjukehus_var Tekstvektor med namna på variablane
-#'   som unikt identifiserer sjukehuset/avdelingen som rada tilhøyrer,
-#'   typisk sjukehusnamn og/eller RESH-ID. Verdiane vert brukte til
-#'   å namngje utdatafilene.
 #' @param data_var Tekstvektor med namna på datavariablane
 #'   i registeret som kan plukkast ut som tilfeldige variablar.
 #'   Viss denne er \code{NULL} (standard), vert alle variablar i \code{df}
@@ -45,10 +53,8 @@
 #'   kvar rad i \code{df}. Set denne til lengda av \code{data_var}
 #'   dersom du ikkje ønskjer tilfeldig utplukk men heller vil
 #'   kontrollera \emph{alle} datavariablane for kvar kjelderad.
-#' @param utmappe Mappa valideringsfilene skal lagrast i.
-#'   fixme: Skil ut som eigen funksjon.
-hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
-                                data_var = NULL, nvar = 5) {
+lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
+                               data_var = NULL, nvar = 5) {
 
   # Elementær datasjekk -----------------------------------------------------
 
@@ -57,12 +63,15 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
   # gjerne opp feilmeldingar automatisk (for eksempel viss
   # 'nvar' har meir enn eitt element).
 
+  # Avgrupper dataramma, for å unngå potensielt mange problem ...
+  df = dplyr::ungroup(df)
+
   # Variablane som faktisk finst i datasettet
   df_var = names(df)
 
   # Viss ein ikkje har valt datavariablar,
   # bruk alle som ikkje er indeksvariablar
-  data_vars = setdiff(df_vars, indeks_var)
+  data_vars = setdiff(df_var, indeks_var)
 
   # Sjekk at alle variabelsetta faktisk finst i datasettet
   stopifnot(
@@ -88,7 +97,7 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
   data_var_q = syms(data_var)
 
   # Sjekk at indeks_var utgjer ein ekte primærnøkkel
-  if (any(duplicated(select(df, !!!indeks_var_q)))) {
+  if (any(duplicated(dplyr::select(df, !!!indeks_var_q)))) {
     stop("'indeks_var' identifiserer ikkje radene unikt")
   }
 
@@ -129,12 +138,9 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
   # fixme: ha med 'valideringsgruppenummer' i resultatdatasettet.
   # fixme: handtering av blinding (vising/gøyming av 'reg_*'-kolonnane)
   # fixme: gje ut berre maks_eitelleranna pasientar/opphald i utdatarammene.
-  # fixme: sjekk at sjukehus_var med lengd > 1 fungerer
-  # fixme: reformater kjeldekoden (innrykk og sånt)
   # fixme: sjekk at det funkar å ha same variablar i både ekstra_vars og data_vars
   # fixme: del funksjonen opp i éin funksjon for å laga valideringsdatasetta og éin funksjon for å lagra til SPSS-format.
   # fixme: sjekk at det ikkje finst duplikatnamn i dataramma (er det mogleg?)
-  # fixme: avgrupper dataramma før vidare handtering
 
 
   # Uthenting av valideringsdata --------------------------------------------
@@ -144,7 +150,17 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
   # (og kanskje raskare å arbeida med?)
   alle_var_q = unique(c(indeks_var_q, ekstra_var_q, sjukehus_var_q, data_var_q))
   df = df %>%
-    select(!!!alle_var_q)
+    dplyr::select(!!!alle_var_q)
+
+  # Me skal maks ha 'nvar' rader for kvart sjukehus, og det er
+  # greiast å gjera det alt no. Merk at nokre sjukehus kan
+  # ha mindre enn 'nvar' rader å plukka. Her er ein (litt
+  # uelegant) måte å løysa dette på.
+  df = df %>%
+    group_by(!!!sjukehus_var_q) %>%
+    mutate(n_rader = n()) %>%
+    do(sample_n(., min(nvar, .$n_rader[1]))) %>%
+    ungroup()
 
   # Plukk ut tilfeldige datakolonnar for kvar rad og lagra
   # namnet på kolonnane i ein eigen variabel.
@@ -176,7 +192,7 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
 
   # Lag oversikt over kva variabeltypar me faktisk har blant datavariablane våre
   res_data = res %>%
-    select(!!!data_var_q)
+    dplyr::select(!!!data_var_q)
   d_vartypar = tibble(
     varnamn = names(res_data),
     var_rklasse = map(res_data, class) %>%
@@ -206,7 +222,7 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
   # Legg til aktuelle resultatkolonnar, med rett variabelklasse (tal, dato &c.)
   # Merk at me berre gjer dette for dei variabeltypane som faktisk finst i datasettet
   d_vartypar_rformat = res %>%
-    select(vartype, var_rklasse_ut) %>%
+    dplyr::select(vartype, var_rklasse_ut) %>%
     distinct()
   for (i in 1:nrow(d_vartypar_rformat)) {
     vartype = d_vartypar_rformat %>%
@@ -250,7 +266,7 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
   innreg_kol = c(rbind(innreg_kol, str_replace(innreg_kol, "^reg_", "epj_"))) # Stygt triks for å fin rekkefølgje ...
   innreg_kol_q = syms(innreg_kol)
   res = res %>%
-    select(!!!indeks_var_q, !!!ekstra_var_q, !!!sjukehus_var_q, varnamn, !!!innreg_kol_q)
+    dplyr::select(!!!sjukehus_var_q, !!!indeks_var_q, !!!ekstra_var_q, varnamn, !!!innreg_kol_q)
 
 
   # Fornuftig sortering og gruppering ---------------------------------------
@@ -266,9 +282,10 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
       rekkefolge = factor(rekkefolge, levels = sample(unique(rekkefolge)))
     ) %>%
     arrange(sjukehus_indeks, rekkefolge, match(varnamn, !!data_var_q)) %>%
-    select(-rekkefolge)
+    dplyr::select(-rekkefolge)
 
   # Gjer om til ei liste med eitt element per sjukehus
+  # og med namn lik sjukehusindeksen (skal/kan brukast som filnamn)
   splitvar = res$sjukehus_indeks
   res$sjukehus_indeks = NULL
   res_l = res %>%
@@ -279,37 +296,47 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
   res_l
 }
 
-# fixme: Lag funksjon for eksportering til filer
-# # Eksporter data til kvalitetsserveren som en SPSS fil (.sav)
-# # for hvert sykehus
-# dir.create(vdatamappe, showWarnings = FALSE, recursive = TRUE)
-#
-# # Del datasettet etter sjukehus
-# res_sjukehus = res %>%
-#   mutate(filadresse = paste0(vdatamappe, !!sjukehusvar, ".sav")) %>%
-#   nest(-filadresse)
-#
-# # Eksporter data for sjukehus til kvar si fil
-# pwalk(list(data = res_sjukehus$data,
-#            path = res_sjukehus$filadresse),
-#       write_sav)
-#
-# # Opna valideringsdatamappa (for å sjekka at alt ser OK ut)
-# shell.exec(vdatamappe)
-# }
 
-# Fixme: Lag eit enkelt datasett manuelt, som me òg
-#        kan legga inn i eksempelblokka (og gjenbruka
-#        i test_that()-testar).
-df = tibble::as.tibble(mice::selfreport)
-indeks_var = c("id", "edu")
-ekstra_var = c("age", "sex")
-data_var = c("hr", "wr", "etn", "br")
-sjukehus_var = c("sex")
-utmappe = "h:/tmp/greier"
-args(hent_validering_data)
-df$etn = as.numeric(df$etn)
-hei = hent_validering_data(df, indeks_var, ekstra_var, sjukehus_var, data_var, nvar = 2)
+# Eksporter data til kvalitetsserveren som en SPSS fil (.sav)
+# for hvert sykehus
+d = tibble::tribble(
+  ~sjukehus, ~avdeling, ~pas_id, ~opphald_id, ~kjonn, ~alder, ~reg_dato, ~diag_kode, ~hogd, ~vekt,
+  "Haukeland", "Post A", 101, 34, 1, 23, as.Date("2011-12-18"), 3, 181, 82,
+  "Haukeland", "Post B", 101, 52, 1, 23, as.Date("2012-01-03"), 4, 181, 88,
+  "Haukeland", "Post A", 103, 76, 2, 47, as.Date("2017-02-28"), 3, 160, 56,
+  "St. Olavs", "Lungeavd.", 201, 88, 1, 52, as.Date("2014-03-10"), 11, 200, 104,
+  "St. Olavs", "Lungeavd.", 202, 104, 2, 33, as.Date("2014-03-11"), 8, 170, 80,
+  "St. Olavs", "Lungeavd.", 203, 105, 2, 45, as.Date("2016-03-11"), 3, 100, 150,
+  "Narvik", "Post A", 404, 2, 2, 78, as.Date("2018-02-04"), 7, 179, 61
+)
+d_valid = lag_valideringsdata(d,
+  sjukehus_var = c("sjukehus"),
+  indeks_var = c("pas_id", "opphald_id"),
+  ekstra_var = c("alder", "kjonn"),
+  data_var = c("reg_dato", "diag_kode", "hogd", "vekt"),
+  nvar = 2
+)
+
+
+eksporter_valideringsdata = function(df, utmappe) {
+  # Opprett mappe for utfilene
+  dir.create(utmappe, showWarnings = FALSE, recursive = TRUE)
+
+  # Eksporter data for sjukehus til kvar si fil
+  filadresser = paste0(utmappe, "/", names(df), ".sav")
+  pwalk(
+    list(
+      data = df,
+      path = filadresser
+    ),
+    write_sav
+  )
+
+  # Opna valideringsdatamappa (for å sjekka at alt ser OK ut)
+  shell.exec(utmappe)
+}
+
+eksporter_valideringsdata(d_valid, "h:/tmp/rtest/")
 
 # tester funksjonen under
 #
