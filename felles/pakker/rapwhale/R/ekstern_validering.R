@@ -200,7 +200,8 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
   # For kvar uttrekte variabel, legg til info om kva kolonne
   # resultatet skal lagrast i
   res = res %>%
-    left_join(d_vartypar, by = "varnamn")
+    left_join(d_vartypar, by = "varnamn") %>%
+    mutate(res_kol = paste0("reg_", vartype))
 
   # Legg til aktuelle resultatkolonnar, med rett variabelklasse (tal, dato &c.)
   # Merk at me berre gjer dette for dei variabeltypane som faktisk finst i datasettet
@@ -234,9 +235,6 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
   }
 
   # For kvar variabel, flytt verdiane til rett kolonne
-  # Lag først
-  res = res %>%
-    mutate(res_kol = paste0("reg_", vartype))
   res = res %>%
     group_by(varnamn) %>%
     do(flytt_resultat(.)) %>% # Ev. bruka purr-funksjonar til dette?
@@ -252,44 +250,51 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
   innreg_kol = c(rbind(innreg_kol, str_replace(innreg_kol, "^reg_", "epj_"))) # Stygt triks for å fin rekkefølgje ...
   innreg_kol_q = syms(innreg_kol)
   res = res %>%
-    select(!!!indeks_var_q, !!!ekstra_var_q, !!!sjukehus_var_q, !!!innreg_kol_q)
+    select(!!!indeks_var_q, !!!ekstra_var_q, !!!sjukehus_var_q, varnamn, !!!innreg_kol_q)
 
 
   # Fornuftig sortering og gruppering ---------------------------------------
 
-
-
-  # Resultatene skal ryddes slik at det er sortert etter sykehus, tilfeldig rekkefølge på pasientene,
-  # men rader med samme pasientnummer skal komme etter hverandre, og variablene skal
-  # stå i en rekkefølge som er lett å bruke.
+  # Resultata skal sorterast etter sjukehus, med tilfeldig rekkjefølgje
+  # på pasientane innan sjukehus, men rader med samme pasientnummer (e.l.) skal
+  # komme etter hverandre, og desse radene skal stå i same rekkefølgje
+  # som data_vars-variablane vart oppgitt i, slik at dei vert lett å bruka.
   res = res %>%
-    ungroup() %>%
-    mutate(rekkefolge = factor(PasientID, levels = sample(unique(PasientID)))) %>%
-    arrange(!!sjukehusvar, rekkefolge, PasientAlder, match(varnamn, data_vars)) %>%
+    mutate(
+      sjukehus_indeks = make.names(str_c(!!!sjukehus_var_q, sep = "_")),
+      rekkefolge = apply(res[indeks_var], 1, . %>% paste0(collapse = "___")),
+      rekkefolge = factor(rekkefolge, levels = sample(unique(rekkefolge)))
+    ) %>%
+    arrange(sjukehus_indeks, rekkefolge, match(varnamn, !!data_var_q)) %>%
     select(-rekkefolge)
-  res
 
-  # Eksporter data til kvalitetsserveren som en SPSS fil (.sav)
-  # for hvert sykehus
-  dir.create(vdatamappe, showWarnings = FALSE, recursive = TRUE)
+  # Gjer om til ei liste med eitt element per sjukehus
+  res_l = res %>%
+    split(.$sjukehus_indeks)
+  res_l
 
-  # Del datasettet etter sjukehus
-  res_sjukehus = res %>%
-    mutate(filadresse = paste0(vdatamappe, !!sjukehusvar, ".sav")) %>%
-    nest(-filadresse)
-
-  # Eksporter data for sjukehus til kvar si fil
-  pwalk(
-    list(
-      data = res_sjukehus$data,
-      path = res_sjukehus$filadresse
-    ),
-    write_sav
-  )
-
-  # Opna valideringsdatamappa (for å sjekka at alt ser OK ut)
-  shell.exec(vdatamappe)
+  # Returner resultatet
+  res_l
 }
+
+# fixme: Lag funksjon for eksportering til filer
+# # Eksporter data til kvalitetsserveren som en SPSS fil (.sav)
+# # for hvert sykehus
+# dir.create(vdatamappe, showWarnings = FALSE, recursive = TRUE)
+#
+# # Del datasettet etter sjukehus
+# res_sjukehus = res %>%
+#   mutate(filadresse = paste0(vdatamappe, !!sjukehusvar, ".sav")) %>%
+#   nest(-filadresse)
+#
+# # Eksporter data for sjukehus til kvar si fil
+# pwalk(list(data = res_sjukehus$data,
+#            path = res_sjukehus$filadresse),
+#       write_sav)
+#
+# # Opna valideringsdatamappa (for å sjekka at alt ser OK ut)
+# shell.exec(vdatamappe)
+# }
 
 # Fixme: Lag eit enkelt datasett manuelt, som me òg
 #        kan legga inn i eksempelblokka (og gjenbruka
@@ -298,9 +303,11 @@ df = tibble::as.tibble(mice::selfreport)
 indeks_var = c("id", "edu")
 ekstra_var = c("age", "sex")
 data_var = c("hr", "wr", "etn", "br")
-sjukehus_var = c("etn", "web")
+sjukehus_var = c("sex")
 utmappe = "h:/tmp/greier"
-
+args(hent_validering_data)
+df$etn = as.numeric(df$etn)
+hei = hent_validering_data(df, indeks_var, ekstra_var, sjukehus_var, data_var, nvar = 2)
 
 # tester funksjonen under
 #
