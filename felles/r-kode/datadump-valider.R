@@ -105,12 +105,12 @@ d %>%
 
 #-----------------------------------------desimaler-------------------------------------------------
 
-# Lager "rules" som tester maks-verdier i en funksjon
+# Lager "rules" som tester desverdier i en funksjon
 sjekk_des = kb_des %>%
   pmap(function(varnamn, gverdi) {
     new_function(
       alist(df = ),
-      expr(transmute_at(df, vars(foo = !!varnamn), rules(des_ok = round(., 0) == !!gverdi)))
+      expr(transmute_at(df, vars(foo = !!varnamn), rules(des_ok = round(., gverdi) == !!gverdi)))
     )
   }) %>%
   setNames(paste0("des_", kb_des$varnamn))
