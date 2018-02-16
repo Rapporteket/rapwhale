@@ -269,8 +269,10 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
     select(-rekkefolge)
 
   # Gjer om til ei liste med eitt element per sjukehus
+  splitvar = res$sjukehus_indeks
+  res$sjukehus_indeks = NULL
   res_l = res %>%
-    split(.$sjukehus_indeks)
+    split(splitvar)
   res_l
 
   # Returner resultatet
