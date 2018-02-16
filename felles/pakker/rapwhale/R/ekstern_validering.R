@@ -132,13 +132,13 @@ lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
     )
   }
 
-  # fixme: Sjekk at alle oppgitt variabellister har lenged >= 1 (men berre om det er nødvendig!)
+  # fixme: Sjekk at alle oppgitte variabellister har lengd >= 1 (men berre om det er nødvendig!)
   # fixme: Lag testar (test_that()) for alle feilmeldingane våre.
   # fixme: Lag testar for at ting fungerer *riktig*. :)
   # fixme: ha med 'valideringsgruppenummer' i resultatdatasettet.
   # fixme: handtering av blinding (vising/gøyming av 'reg_*'-kolonnane)
-  # fixme: gje ut berre maks_eitelleranna pasientar/opphald i utdatarammene.
   # fixme: sjekk at det funkar å ha same variablar i både ekstra_vars og data_vars
+  # fixme: feilmelding dersom det finst variablar som sluttar med _reg eller _epj i datasettet (og andre interne variabelnamn me brukar)
   # fixme: del funksjonen opp i éin funksjon for å laga valideringsdatasetta og éin funksjon for å lagra til SPSS-format.
   # fixme: sjekk at det ikkje finst duplikatnamn i dataramma (er det mogleg?)
 
@@ -217,7 +217,7 @@ lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
   # resultatet skal lagrast i
   res = res %>%
     left_join(d_vartypar, by = "varnamn") %>%
-    mutate(res_kol = paste0("reg_", vartype))
+    mutate(res_kol = paste0(vartype, "_reg"))
 
   # Legg til aktuelle resultatkolonnar, med rett variabelklasse (tal, dato &c.)
   # Merk at me berre gjer dette for dei variabeltypane som faktisk finst i datasettet
@@ -229,9 +229,9 @@ lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
       pluck("vartype", i)
     rklasse = d_vartypar_rformat %>%
       pluck("var_rklasse_ut", i)
-    prefiksverdiar = c("reg_", "epj_")
-    for (prefiks in prefiksverdiar) {
-      varnamn = paste0(prefiks, vartype)
+    suffiksverdiar = c("_reg", "_epj")
+    for (suffiks in suffiksverdiar) {
+      varnamn = paste0(vartype, suffiks)
       res[[varnamn]] = NA
       class(res[[varnamn]]) = rklasse
     }
@@ -263,7 +263,7 @@ lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
   # sjukehuskolonnane og dei innregistreringskolonnane som
   # me treng
   innreg_kol = unique(res$res_kol)
-  innreg_kol = c(rbind(innreg_kol, str_replace(innreg_kol, "^reg_", "epj_"))) # Stygt triks for å fin rekkefølgje ...
+  innreg_kol = c(rbind(innreg_kol, str_replace(innreg_kol, "_reg$", "_epj"))) # Stygt triks for å fin rekkefølgje ...
   innreg_kol_q = syms(innreg_kol)
   res = res %>%
     dplyr::select(!!!sjukehus_var_q, !!!indeks_var_q, !!!ekstra_var_q, varnamn, !!!innreg_kol_q)
@@ -277,7 +277,7 @@ lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
   # som data_vars-variablane vart oppgitt i, slik at dei vert lett å bruka.
   res = res %>%
     mutate(
-      sjukehus_indeks = make.names(str_c(!!!sjukehus_var_q, sep = "_")),
+      sjukehus_indeks = str_c(!!!sjukehus_var_q, sep = "_") %>% str_to_lower() %>% make.names(),
       rekkefolge = apply(res[indeks_var], 1, . %>% paste0(collapse = "___")),
       rekkefolge = factor(rekkefolge, levels = sample(unique(rekkefolge)))
     ) %>%
@@ -317,7 +317,7 @@ d_valid = lag_valideringsdata(d,
   nvar = 2
 )
 
-
+# fixme: Lag funksjons- og argumentskildring
 eksporter_valideringsdata = function(df, utmappe) {
   # Opprett mappe for utfilene
   dir.create(utmappe, showWarnings = FALSE, recursive = TRUE)
