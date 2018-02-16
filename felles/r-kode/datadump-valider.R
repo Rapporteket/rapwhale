@@ -105,17 +105,23 @@ d %>%
 
 #-----------------------------------------desimaler-------------------------------------------------
 
-# sjekker at antall desimaler er ok
-har_riktig_ant_desimaler = cell_packs(
-  sjekk_desimal = . %>% transmute_at(vars(age = alder), rules(des_alder = round(alder, 0) == alder))
-)
-# Finner feil og rapporterer hvilken pasient og variabel som gjelder
-# for desimal-verdier
+# Lager "rules" som tester maks-verdier i en funksjon
+sjekk_des = kb_des %>%
+  pmap(function(varnamn, gverdi) {
+    new_function(
+      alist(df = ),
+      expr(transmute_at(df, vars(foo = !!varnamn), rules(des_ok = round(., 0) == !!gverdi)))
+    )
+  }) %>%
+  setNames(paste0("des_", kb_des$varnamn))
+sjekk_des
+
+# lager en cell-pack med maks-sjekkene
+har_riktig_ant_des = cell_packs(sjekk_des)
+# tester dataene
 d %>%
-  expose(har_riktig_ant_desimaler) %>%
-  get_report() %>%
-  left_join((d %>% transmute(id = 1:n(), pasid, alder)), by = "id") %>%
-  print(.validate = FALSE)
+  expose(har_riktig_ant_des) %>%
+  get_report()
 
 #---------------------------------------obligatoriske felt----------------------------------------------
 
