@@ -31,11 +31,33 @@ kb = tribble(
 
 #---------------------------------------------------------Tester--------------------------------------------------------------
 
-# Kode for regelsett for minimumsverdiar
-kb_min = kb %>%
-  filter(!is.na(min)) %>%
-  select(varid, min) %>%
-  rename(varnamn = "varid", gverdi = "min")
+# funksjon for å hente ut ønsket område av kodeboka
+# som brukes i en gitt test. F.eks, om man ønsker å teste min-verdier
+# i en datadump, så trenger man bare informasjon om min-verider
+# for variabler som faktisk *har* min-verdier.
+kb_filter = function(kb, kolonne) {
+
+  # henter ut delen av kodeboka som
+  # har en verdi i en aktuelle kolonnen
+  kb_utsnitt = kb %>%
+    filter(!is.na(kb[kolonne])) %>%
+    select(varid, kolonne) %>%
+    rename(varnamn = "varid")
+  # rename funksjonen støtter ikke expressions.
+  # altså kan man ikke ha gverdi = past0(kolonne) i kallet til rename() ovenfor
+  # kjører koden under for å endre navn på kolonne til noe som brukes generelt i alle tester
+  kolonnenavn_plassering = which(names(kb_utsnitt) == kolonne)
+  names(kb_utsnitt)[kolonnenavn_plassering] = "gverdi"
+
+  # returner objektet
+  kb_utsnitt
+}
+
+kb_min = kb_filter(kb, kolonne = "min")
+kb_maks = kb_filter(kb, kolonne = "maks")
+kb_des = kb_filter(kb, kolonne = "des")
+
+#---------------------------------------------mihn-verdier------------------------------------------------------
 
 # # Gammal løysing, der gverdi og varnamn ikkje kom ut som konstantar
 # eks = kb_min %>%
@@ -62,13 +84,6 @@ d %>%
   get_report()
 
 #  -----------------------------maks-------------------------------------------
-
-
-# Kode for regelsett for maksverdiar
-kb_maks = kb %>%
-  filter(!is.na(maks)) %>%
-  select(varid, maks) %>%
-  rename(varnamn = "varid", gverdi = "maks")
 
 # Lager "rules" som tester maks-verdier i en funksjon
 sjekk_maks = kb_maks %>%
@@ -101,6 +116,8 @@ d %>%
   get_report() %>%
   left_join((d %>% transmute(id = 1:n(), pasid, alder)), by = "id") %>%
   print(.validate = FALSE)
+
+#---------------------------------------obligatoriske felt----------------------------------------------
 
 # sjekker at obligatoriske felt er fylt ut
 har_ingen_missing = cell_packs(
