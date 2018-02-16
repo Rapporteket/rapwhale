@@ -61,21 +61,34 @@ d %>%
   expose(er_innfor_min) %>%
   get_report()
 
-#  ------------------------------------------------------------------------
+#  -----------------------------maks-------------------------------------------
 
 
-# sjekker at variabler er innfor maks-verdier
-er_innfor_maks = cell_packs(
-  sjekk_maks = . %>% transmute_at(vars(weight = vekt), rules(maks_vekt = . <= 200))
-)
+# Kode for regelsett for maksverdiar
+kb_maks = kb %>%
+  filter(!is.na(maks)) %>%
+  select(varid, maks) %>%
+  rename(varnamn = "varid", gverdi = "maks")
 
-# Finner feil og rapporterer hvilken pasient og variabel som gjelder
-# for maks-verider
+# Lager "rules" som tester maks-verdier i en funksjon
+sjekk_maks = kb_maks %>%
+  pmap(function(varnamn, gverdi) {
+    new_function(
+      alist(df = ),
+      expr(transmute_at(df, vars(foo = !!varnamn), rules(maks_ok = . <= !!gverdi)))
+    )
+  }) %>%
+  setNames(paste0("maks_", kb_maks$varnamn))
+sjekk_maks
+
+# lager en cell-pack med maks-sjekkene
+er_innfor_maks = cell_packs(sjekk_maks)
+# tester dataene
 d %>%
   expose(er_innfor_maks) %>%
-  get_report() %>%
-  left_join((d %>% transmute(id = 1:n(), pasid, vekt)), by = "id") %>%
-  print(.validate = FALSE)
+  get_report()
+
+#-----------------------------------------desimaler-------------------------------------------------
 
 # sjekker at antall desimaler er ok
 har_riktig_ant_desimaler = cell_packs(
