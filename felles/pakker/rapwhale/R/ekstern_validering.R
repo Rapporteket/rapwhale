@@ -131,6 +131,7 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
   # fixme: gje ut berre maks_eitelleranna pasientar/opphald i utdatarammene.
   # fixme: sjekk at sjukehus_var med lengd > 1 fungerer
   # fixme: reformater kjeldekoden (innrykk og sånt)
+  # fixme: sjekk at det funkar å ha same variablar i både ekstra_vars og data_vars
   # fixme: del funksjonen opp i éin funksjon for å laga valideringsdatasetta og éin funksjon for å lagra til SPSS-format.
   # fixme: sjekk at det ikkje finst duplikatnamn i dataramma (er det mogleg?)
   # fixme: avgrupper dataramma før vidare handtering
@@ -159,19 +160,32 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
     unnest(varnamn)
 
 
-  # Restrukturering av valideringsdata --------------------------------------
+  # Sjekk dataformat og lag klar utvariablar --------------------------------
 
-  # Lag oversikt over kva variabeltypar me har blant datavariablane våre ...
+  # Oversikt over kva variabeltypar me handterer og
+  # kva norske variabelnamn dei skal få
+  # For å gjera ting lettare for brukaren, slår me
+  # òg saman nokre variabeltypar, for eksempel
+  # heiltal og desimaltal (fixme: vurder å endra dette?)
+  d_moglege_vartypar = tribble(
+    ~var_rklasse, ~vartype, ~var_rklasse_ut,
+    "integer", "tal", "numeric",
+    "numeric", "tal", "numeric",
+    "Date", "dato", "Date"
+  )
+
+  # Lag oversikt over kva variabeltypar me faktisk har blant datavariablane våre
   res_data = res %>%
     select(!!!data_var_q)
   d_vartypar = tibble(
     varnamn = names(res_data),
-    vartype = map(res_data, class) %>%
+    var_rklasse = map(res_data, class) %>%
       map_chr(first) # Nokre variablar kan fleire klassar, og me brukar då første
   )
-  # ... og sjekk at alle støtta
+
+  # Finn eventuelle variabeltypar (i datavariablane) som me *ikkje* støttar
   d_vartypar_ikkjeok = d_vartypar %>%
-    filter(!(vartype %in% c("integer", "numeric", "Date")))
+    anti_join(d_moglege_vartypar, by = "var_rklasse")
   if (nrow(d_vartypar_ikkjeok) > 0) {
     stop(
       "Finst variablar som verken er tal eller dato (førebels ikkje støtta):\n",
@@ -179,39 +193,50 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
     )
   }
 
-  # Kva kolonne kvar moglege variabel*type* skal lagrast i
+  # Legg til info om kva norske namn kvar variabeltype skal få
   d_vartypar = d_vartypar %>%
-    mutate(res_kol = recode(vartype,
-      "integer" = "reg_tal",
-      "numeric" = "reg_tal",
-      "Date" = "reg_dato"
-    ))
+    left_join(d_moglege_vartypar, by = "var_rklasse")
+
   # For kvar uttrekte variabel, legg til info om kva kolonne
   # resultatet skal lagrast i
   res = res %>%
     left_join(d_vartypar, by = "varnamn")
 
-  # Legg til aktuelle resultatkolonnar,
-  # med rett variabelklasse (tal, dato &c.)
-  res = res %>%
-    mutate(
-      reg_tal = NA_real_, epj_tal = NA_real_,
-      reg_dato = NA_real_, epj_dato = NA_real_
-    )
-  class(res$reg_dato) = "Date"
-  class(res$epj_dato) = "Date"
+  # Legg til aktuelle resultatkolonnar, med rett variabelklasse (tal, dato &c.)
+  # Merk at me berre gjer dette for dei variabeltypane som faktisk finst i datasettet
+  d_vartypar_rformat = res %>%
+    select(vartype, var_rklasse_ut) %>%
+    distinct()
+  for (i in 1:nrow(d_vartypar_rformat)) {
+    vartype = d_vartypar_rformat %>%
+      pluck("vartype", i)
+    rklasse = d_vartypar_rformat %>%
+      pluck("var_rklasse_ut", i)
+    prefiksverdiar = c("reg_", "epj_")
+    for (prefiks in prefiksverdiar) {
+      varnamn = paste0(prefiks, vartype)
+      res[[varnamn]] = NA
+      class(res[[varnamn]]) = rklasse
+    }
+  }
+
+
+  # Restrukturering av valideringsdataa --------------------------------------
 
   # Funksjon for å flytta dataverdiane til rett kolonne
   # (er laga for å køyrast på datarammer med *éin unik* verdi for res_kol)
   #
-  # (Det går raskast å flytta alle numeriske kolonnane i éin jafs,
-  # alle datokolonnene i éin jafs, osv. Derfor gjer me det slik.)
+  # (Det går raskast å flytta alle verdiane for kvar variabel i éin jafs.
+  # Derfor gjer me det slik.)
   flytt_resultat = function(df) {
     df[[df$res_kol[1]]] = df[[df$varnamn[1]]]
     df
   }
 
   # For kvar variabel, flytt verdiane til rett kolonne
+  # Lag først
+  res = res %>%
+    mutate(res_kol = paste0("reg_", vartype))
   res = res %>%
     group_by(varnamn) %>%
     do(flytt_resultat(.)) %>% # Ev. bruka purr-funksjonar til dette?
@@ -223,11 +248,16 @@ hent_validering_data = function(df, indeks_var, ekstra_var = NULL, sjukehus_var,
   # derfor heller ut indekskolonnane, ekstrakolonnane,
   # sjukehuskolonnane og dei innregistreringskolonnane som
   # me treng
-  innreg_kol = unique(d_vartypar$res_kol)
+  innreg_kol = unique(res$res_kol)
   innreg_kol = c(rbind(innreg_kol, str_replace(innreg_kol, "^reg_", "epj_"))) # Stygt triks for å fin rekkefølgje ...
   innreg_kol_q = syms(innreg_kol)
   res = res %>%
     select(!!!indeks_var_q, !!!ekstra_var_q, !!!sjukehus_var_q, !!!innreg_kol_q)
+
+
+  # Fornuftig sortering og gruppering ---------------------------------------
+
+
 
   # Resultatene skal ryddes slik at det er sortert etter sykehus, tilfeldig rekkefølge på pasientene,
   # men rader med samme pasientnummer skal komme etter hverandre, og variablene skal
