@@ -31,8 +31,6 @@ kb = tribble(
 
 #---------------------------------------------------------Tester--------------------------------------------------------------
 
-# Dette funker ------------------------------------------------------------
-
 # Kode for regelsett for minimumsverdiar
 kb_min = kb %>%
   filter(!is.na(min)) %>%
@@ -46,7 +44,7 @@ kb_min = kb %>%
 #   })
 
 # Ny, forbetra løysing
-eks = kb_min %>%
+sjekk_min = kb_min %>%
   pmap(function(varnamn, gverdi) {
     new_function(
       alist(df = ),
@@ -54,30 +52,17 @@ eks = kb_min %>%
     )
   }) %>%
   setNames(paste0("min_", kb_min$varnamn))
-eks
+sjekk_min
 
 # eks=list(min_alder = . %>% transmute_at(vars(foo="alder"), rules(min_ok = . >= 18)),
 #      min_vekt = . %>% transmute_at(vars(foo="vekt"), rules(min_ok = . >= 45)))
-er_innfor_min = cell_packs(eks)
+er_innfor_min = cell_packs(sjekk_min)
 d %>%
   expose(er_innfor_min) %>%
   get_report()
 
 #  ------------------------------------------------------------------------
 
-
-# sjekker at variabler er innfor min-verdier
-er_innfor_min = cell_packs(
-  sjekk_min = . %>% transmute_at(vars(age = alder), rules(min_alder = . >= 18))
-)
-
-# Finner feil og rapporterer hvilken pasient og variabel som gjelder
-# for min-verdier
-d %>%
-  expose(er_innfor_min) %>%
-  get_report() %>%
-  left_join((d %>% transmute(id = 1:n(), pasid, alder, vekt)), by = "id") %>%
-  print(.validate = FALSE)
 
 # sjekker at variabler er innfor maks-verdier
 er_innfor_maks = cell_packs(
