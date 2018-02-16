@@ -53,11 +53,13 @@ kb_filter = function(kb, kolonne) {
   kb_utsnitt
 }
 
-kb_min = kb_filter(kb, kolonne = "min")
-kb_maks = kb_filter(kb, kolonne = "maks")
-kb_des = kb_filter(kb, kolonne = "des")
+kb_min = kb_filter(kb, "min")
+kb_maks = kb_filter(kb, "maks")
+kb_des = kb_filter(kb, "des")
+kb_oblig = kb_filter(kb, "oblig")
+kb_kat = kb_filter(kb, "verdi")
 
-#---------------------------------------------mihn-verdier------------------------------------------------------
+#---------------------------------------------min-verdier------------------------------------------------------
 
 # # Gammal løysing, der gverdi og varnamn ikkje kom ut som konstantar
 # eks = kb_min %>%
@@ -74,7 +76,6 @@ sjekk_min = kb_min %>%
     )
   }) %>%
   setNames(paste0("min_", kb_min$varnamn))
-sjekk_min
 
 # eks=list(min_alder = . %>% transmute_at(vars(foo="alder"), rules(min_ok = . >= 18)),
 #      min_vekt = . %>% transmute_at(vars(foo="vekt"), rules(min_ok = . >= 45)))
@@ -94,7 +95,6 @@ sjekk_maks = kb_maks %>%
     )
   }) %>%
   setNames(paste0("maks_", kb_maks$varnamn))
-sjekk_maks
 
 # lager en cell-pack med maks-sjekkene
 er_innfor_maks = cell_packs(sjekk_maks)
@@ -114,7 +114,6 @@ sjekk_des = kb_des %>%
     )
   }) %>%
   setNames(paste0("des_", kb_des$varnamn))
-sjekk_des
 
 # lager en cell-pack med maks-sjekkene
 har_riktig_ant_des = cell_packs(sjekk_des)
@@ -125,32 +124,44 @@ d %>%
 
 #---------------------------------------obligatoriske felt----------------------------------------------
 
-# sjekker at obligatoriske felt er fylt ut
-har_ingen_missing = cell_packs(
-  sjekk_oblig = . %>% transmute_at(vars(gender = kjonn), rules(oblig_kjonn = !is.na(kjonn)))
-)
-# Finner feil og rapporterer hvilken pasient og variabel som gjelder
-# for obligatoriske variabler med missing-verdier
+# Lager "rules" som tester maks-verdier i en funksjon
+sjekk_oblig = kb_oblig %>%
+  pmap(function(varnamn, gverdi) {
+    new_function(
+      alist(df = ),
+      expr(transmute_at(df, vars(foo = !!varnamn), rules(gverdi = !is.na(.))))
+    )
+  }) %>%
+  setNames(paste0("oblig_", kb_oblig$varnamn))
+
+# lager en cell-pack med maks-sjekkene
+oblig_har_ingen_missing = cell_packs(sjekk_oblig)
+# tester dataene
 d %>%
-  expose(har_ingen_missing) %>%
-  get_report() %>%
-  left_join(d %>% transmute(id = 1:n(), pasid, kjonn), by = "id") %>%
-  print(.validate = FALSE)
+  expose(oblig_har_ingen_missing) %>%
+  get_report()
 
-# sjekker at kategoriske variabler bare har gyldige verdier
-har_gyldig_verdi = cell_packs(
-  . %>% transmute_at(vars(gender = kjonn), rules(gyl_kjonn = kjonn %in% 0:1 | is.na(kjonn))) # kategoriske variabler trenger ikke nødvendigvis å være obligatoriske
-)
+#------------------------------------------kategoriske verdier----------------------------------------
 
-# Finner feil og rapporterer hvilken pasient og variabel som gjelder
-# for kategoriske variabler og ugyldige verdier
+# Lager "rules" som tester maks-verdier i en funksjon
+sjekk_kat = kb_kat %>%
+  pmap(function(varnamn, gverdi) {
+    gverdi = kb_kat$gverdi
+    new_function(
+      alist(df = ),
+      expr(transmute_at(df, vars(foo = !!varnamn), rules(gyl_kat = . %in% gverdi | is.na(.))))
+    )
+  }) %>%
+  setNames(paste0("kat_", kb_kat$varnamn))
+
+# lager en cell-pack med maks-sjekkene
+kat_er_innfor_verdier = cell_packs(sjekk_kat)
+# tester dataene
 d %>%
-  expose(har_gyldig_verdi) %>%
-  get_report() %>%
-  left_join((d %>% transmute(id = 1:n(), pasid, kjonn)), by = "id") %>%
-  print(.validate = FALSE)
+  expose(kat_er_innfor_verdier) %>%
+  get_report()
 
-
+#-----------------------------------------variabeltype--------------------------------------------------------
 # sjekker at variabeltype er i tråd med kodeboka
 er_riktig_variabeltype = col_packs(
   sjekk_pasid = . %>% summarise_at(vars(patient_id = pasid), rules(vartype_pasid = is.character(pasid))),
