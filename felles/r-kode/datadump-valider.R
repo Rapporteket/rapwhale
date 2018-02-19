@@ -33,7 +33,7 @@ kb = tribble(
 
 # funksjon for å hente ut ønsket område av kodeboka
 # som brukes i en gitt test. F.eks, om man ønsker å teste min-verdier
-# i en datadump, så trenger man bare informasjon om min-verider
+# i en datadump, så trenger man bare informasjon om min-verdier
 # for variabler som faktisk *har* min-verdier.
 kb_filter = function(kb, kolonne) {
 
