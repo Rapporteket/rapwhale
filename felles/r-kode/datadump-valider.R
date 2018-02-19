@@ -20,7 +20,7 @@ d = tribble(
 # lager en fiktiv kodebok som hører til det fiktive datasettet
 
 kb = tribble(
-  ~varid, ~vartype, ~min, ~maks, ~oblig, ~des, ~verdi, ~verditekst,
+  ~varabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
   "pasid", "tekst", NA, NA, TRUE, NA, NA, NA,
   "alder", "numerisk", 18, NA, TRUE, 0, NA, NA,
   "vekt", "numerisk", 45, 200, TRUE, 0, NA, NA,
@@ -41,8 +41,8 @@ kb_filter = function(kb, kolonne) {
   # har en verdi i en aktuelle kolonnen
   kb_utsnitt = kb %>%
     filter(!is.na(kb[kolonne])) %>%
-    select(varid, kolonne) %>%
-    rename(varnamn = "varid")
+    select(varabel_id, kolonne) %>%
+    rename(varnamn = "varabel_id")
   # rename funksjonen støtter ikke expressions.
   # altså kan man ikke ha gverdi = past0(kolonne) i kallet til rename() ovenfor
   # kjører koden under for å endre navn på kolonne til noe som brukes generelt i alle tester
@@ -55,8 +55,8 @@ kb_filter = function(kb, kolonne) {
 
 kb_min = kb_filter(kb, "min")
 kb_maks = kb_filter(kb, "maks")
-kb_des = kb_filter(kb, "des")
-kb_oblig = kb_filter(kb, "oblig")
+kb_des = kb_filter(kb, "desimalar")
+kb_oblig = kb_filter(kb, "obligatorisk")
 kb_kat = kb_filter(kb, "verdi")
 
 #---------------------------------------------min-verdier------------------------------------------------------
@@ -165,17 +165,17 @@ d %>%
 
 # trenger 3 filter for kodeboka for hver type variabel
 kb_num = kb %>%
-  filter(vartype == "numerisk" | vartype == "kategorisk" | vartype == "utrekna") %>%
-  distinct(varid) %>%
-  rename(varnamn = "varid")
+  filter(variabeltype == "numerisk" | variabeltype == "kategorisk" | variabeltype == "utrekna") %>%
+  distinct(varabel_id) %>%
+  rename(varnamn = "varabel_id")
 kb_boolsk = kb %>%
-  filter(vartype == "boolsk") %>%
-  select(varid) %>%
-  rename(varnamn = "varid")
+  filter(variabeltype == "boolsk") %>%
+  select(varabel_id) %>%
+  rename(varnamn = "varabel_id")
 kb_tekst = kb %>%
-  filter(vartype == "tekst") %>%
-  select(varid) %>%
-  rename(varnamn = "varid")
+  filter(variabeltype == "tekst") %>%
+  select(varabel_id) %>%
+  rename(varnamn = "varabel_id")
 
 # Lager "rules" som tester om en kolonne i datasettet er samme som i kodeboka.
 # en sjekk for numeriske variabler
@@ -217,8 +217,8 @@ d %>%
 # Test sjekker at alle variablenavn i datadump er med i kodeboka (samtidig)
 # og at alle varibelnavn i kodebok er med i datadump
 alle_er_med = data_packs(
-  sjekk_alle_varnavn_dd = . %>% summarise(all(alle_varnavn = names(.) %in% (kb %>% distinct(varid))$varid)),
-  sjekk_alle_varnavn_kb = . %>% summarise(all(alle_varnavn = (kb %>% distinct(varid))$varid %in% names(.)))
+  sjekk_alle_varnavn_dd = . %>% summarise(all(alle_varnavn = names(.) %in% (kb %>% distinct(varabel_id))$varabel_id)),
+  sjekk_alle_varnavn_kb = . %>% summarise(all(alle_varnavn = (kb %>% distinct(varabel_id))$varabel_id %in% names(.)))
 )
 
 # Rapporterer noen variabelnavn ikke er med i kodeboka
@@ -231,8 +231,8 @@ d %>%
 
 # sjekker at hver enktelt av variabelnavna er de samme som i kodeboka
 er_samme_navn = data_packs(
-  sjekk_pasid = . %>% summarise(navn_pasid = names(.)[1] %in% (kb$varid)),
-  sjekk_kjonn = . %>% summarise(navn_kjonn = names(.)[2] %in% (kb$varid))
+  sjekk_pasid = . %>% summarise(navn_pasid = names(.)[1] %in% (kb$varabel_id)),
+  sjekk_kjonn = . %>% summarise(navn_kjonn = names(.)[2] %in% (kb$varabel_id))
 )
 
 # Finner feil og rapporterer hvilken pasient og variabel som gjelder
@@ -246,7 +246,7 @@ d %>%
 # det skal være en data_pack()
 # Lager "rules" som tester om en variabelnavn i datadumpen
 # ikke eksisterer i kodeboka
-# sjekk_navn = (kb %>% distinct(varid) %>% rename(varnamn = "varid")) %>%
+# sjekk_navn = (kb %>% distinct(varabel_id) %>% rename(varnamn = "varabel_id")) %>%
 #   pmap(function(varnamn) {
 #     new_function(alist(df=),
 #                  expr(summarise(df, navn_ok = names(.)[.] %in% varnamn))
@@ -265,7 +265,7 @@ d %>%
 
 # sjekk at rekkefølgen på kolonner er lik mellom data og kodebok
 er_lik_rekkefolge = data_packs(
-  sjekk_rekkefolge = . %>% summarise(rekkefolge_varnavn = identical(names(.), (kb %>% distinct(varid))$varid))
+  sjekk_rekkefolge = . %>% summarise(rekkefolge_varnavn = identical(names(.), (kb %>% distinct(varabel_id))$varabel_id))
 )
 
 # Finner feil og rapporterer hvilken pasient og variabel som gjelder
