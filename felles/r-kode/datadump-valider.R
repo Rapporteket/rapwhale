@@ -80,11 +80,8 @@ sjekk_min = kb_min %>%
   }) %>%
   setNames(paste0("min_", kb_min$varnamn))
 
-# tester minverdier
+# lager cellpack
 er_innfor_min = cell_packs(sjekk_min)
-d %>%
-  expose(er_innfor_min) %>%
-  get_report()
 
 #  -----------------------------maks-------------------------------------------
 
@@ -100,10 +97,6 @@ sjekk_maks = kb_maks %>%
 
 # lager en cell-pack med maks-sjekkene
 er_innfor_maks = cell_packs(sjekk_maks)
-# tester dataene
-d %>%
-  expose(er_innfor_maks) %>%
-  get_report()
 
 #-----------------------------------------desimaler-------------------------------------------------
 
@@ -119,13 +112,8 @@ sjekk_des = kb_des %>%
 
 # lager en cell-pack med des-sjekkene
 har_riktig_ant_des = cell_packs(sjekk_des)
-# tester dataene
-d %>%
-  expose(har_riktig_ant_des) %>%
-  get_report()
 
 #---------------------------------------obligatoriske felt----------------------------------------------
-
 # Lager "rules" på at obligatoriske variabler ikke skal ha noen missing.
 sjekk_oblig = kb_oblig %>%
   pmap(function(varnamn, gverdi) {
@@ -138,10 +126,6 @@ sjekk_oblig = kb_oblig %>%
 
 # lager en cell-pack med oblig-sjekkene
 oblig_har_ingen_missing = cell_packs(sjekk_oblig)
-# tester dataene
-d %>%
-  expose(oblig_har_ingen_missing) %>%
-  get_report()
 
 #------------------------------------------kategoriske verdier----------------------------------------
 
@@ -156,12 +140,8 @@ sjekk_kat = kb_kat %>%
   }) %>%
   setNames(paste0("kat_", kb_kat$varnamn))
 
-# lager en cell-pack med maks-sjekkene
+# lager en cell-pack med verdi-sjekkene
 kat_er_innfor_verdier = cell_packs(sjekk_kat)
-# tester dataene
-d %>%
-  expose(kat_er_innfor_verdier) %>%
-  get_report()
 
 #-----------------------------------------variabeltype--------------------------------------------------------
 
@@ -209,10 +189,6 @@ sjekk_tekst = kb_tekst %>%
 
 # lager en col-pack med variabeltype-sjekkene
 er_riktig_variabeltype = col_packs(sjekk_num, sjekk_boolsk, sjekk_tekst)
-# tester dataene
-d %>%
-  expose(er_riktig_variabeltype) %>%
-  get_report()
 
 #-----------------------------------------alle variabelnavn tilstede-------------------------------------------------------
 # Test sjekker at alle variablenavn i datadump er med i kodeboka (samtidig)
@@ -221,26 +197,18 @@ alle_er_med = data_packs(
   sjekk_alle_varnavn_dd = . %>% summarise(all(alle_varnavn = names(.) %in% (kb %>% distinct(varabel_id))$varabel_id)),
   sjekk_alle_varnavn_kb = . %>% summarise(all(alle_varnavn = (kb %>% distinct(varabel_id))$varabel_id %in% names(.)))
 )
-
-# Rapporterer noen variabelnavn ikke er med i kodeboka
-# er alle riktige kommer en tom tibble
-d %>%
-  expose(alle_er_med) %>%
-  get_report()
-
 #--------------------------------------er samme variabelnavn som i kodebok------------------------------------------
 
-# sjekker at hver enktelt av variabelnavna er de samme som i kodeboka
-er_samme_navn = data_packs(
-  sjekk_pasid = . %>% summarise(navn_pasid = names(.)[1] %in% (kb$varabel_id)),
-  sjekk_kjonn = . %>% summarise(navn_kjonn = names(.)[2] %in% (kb$varabel_id))
-)
-
-# Finner feil og rapporterer hvilken pasient og variabel som gjelder
-# for feil i variabelnavn
-d %>%
-  expose(er_samme_navn) %>%
-  get_report()
+# # sjekker at hver enktelt av variabelnavna er de samme som i kodeboka
+# er_samme_navn = data_packs(
+#   sjekk_pasid = . %>% summarise(navn_pasid = names(.)[1] %in% (kb$varabel_id)),
+#   sjekk_kjonn = . %>% summarise(navn_kjonn = names(.)[2] %in% (kb$varabel_id))
+# )
+#
+# # Finner feil og rapporterer hvilken pasient og variabel som gjelder
+# # for feil i variabelnavn
+# d %>% expose(er_samme_navn) %>%
+#   get_report()
 
 # fixme! testen over burde generelaiseres til å kjøre testen for hver variabel i datarammen.
 # et forsøk nedenfor er en start, men denne fungerer ikke.
@@ -268,9 +236,34 @@ d %>%
 er_lik_rekkefolge = data_packs(
   sjekk_rekkefolge = . %>% summarise(rekkefolge_varnavn = identical(names(.), (kb %>% distinct(varabel_id))$varabel_id))
 )
+#-------------------------------------kjører testene på datarammen-------------------------------------------------
 
-# Finner feil og rapporterer hvilken pasient og variabel som gjelder
-# for feil i rekkefølge på variabelnavn
+# Hvis ingen feil oppstår, skal man få en tom tibble til resultat.
+
+# Tester alle cellpacks
 d %>%
-  expose(er_lik_rekkefolge) %>%
+  expose(
+    er_innfor_min, # tester minverdier
+    er_innfor_maks, # tester maksverdier
+    oblig_har_ingen_missing, # tester missing i obligatoriske felt
+    kat_er_innfor_verdier
+  ) %>% # tester verdier i kategoriske ikke-tilstede i kodebok
+  get_report()
+
+# Tester desimaler for seg, ettersom hvis 1 rad har en feil, kan mange rader også ha samme feil
+d %>%
+  expose(har_riktig_ant_des) %>%
+  get_report()
+
+# Tester alle col-packs
+d %>%
+  expose(er_riktig_variabeltype) %>% # sjekker at kolonnene har riktig varibaeltype
+  get_report()
+
+# Tester alle data-packs
+d %>%
+  expose(
+    alle_er_med, # Rapporterer noen variabelnavn ikke er med i kodeboka
+    er_lik_rekkefolge
+  ) %>% # Rapporterer om variabelnavna er i feil rekkefølge i forhold til kodebok
   get_report()
