@@ -251,13 +251,14 @@ d %>%
   get_report()
 
 # Tester desimaler for seg, ettersom hvis 1 rad har en feil, kan mange rader også ha samme feil
+# (resultatet kan da være gigantisk og overskygge andre tester)
 d %>%
   expose(har_riktig_ant_des) %>%
   get_report()
 
 # Tester alle col-packs
 d %>%
-  expose(er_riktig_variabeltype) %>% # sjekker at kolonnene har riktig varibaeltype
+  expose(er_riktig_variabeltype) %>% # sjekker at kolonnene har riktig variabeltype
   get_report()
 
 # Tester alle data-packs
