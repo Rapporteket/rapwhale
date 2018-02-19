@@ -213,10 +213,12 @@ d %>%
   expose(er_riktig_variabeltype) %>%
   get_report()
 
-#-----------------------------------------variabelnavn-------------------------------------------------------
+#-----------------------------------------alle variabelnavn tilstede-------------------------------------------------------
 # Test sjekker at alle variablenavn i datadump er med i kodeboka (samtidig)
+# og at alle varibelnavn i kodebok er med i datadump
 alle_er_med = data_packs(
-  sjekk_alle_varnavn = . %>% summarise(all(alle_varnavn = names(.) %in% (kb %>% distinct(varid))$varid))
+  sjekk_alle_varnavn_dd = . %>% summarise(all(alle_varnavn = names(.) %in% (kb %>% distinct(varid))$varid)),
+  sjekk_alle_varnavn_kb = . %>% summarise(all(alle_varnavn = (kb %>% distinct(varid))$varid %in% names(.)))
 )
 
 # Rapporterer noen variabelnavn ikke er med i kodeboka
@@ -224,6 +226,8 @@ alle_er_med = data_packs(
 d %>%
   expose(alle_er_med) %>%
   get_report()
+
+#--------------------------------------er samme variabelnavn som i kodebok------------------------------------------
 
 # sjekker at hver enktelt av variabelnavna er de samme som i kodeboka
 er_samme_navn = data_packs(
@@ -236,6 +240,28 @@ er_samme_navn = data_packs(
 d %>%
   expose(er_samme_navn) %>%
   get_report()
+
+# fixme! testen over burde generelaiseres til å kjøre testen for hver variabel i datarammen.
+# et forsøk nedenfor er en start, men denne fungerer ikke.
+# det skal være en data_pack()
+# Lager "rules" som tester om en variabelnavn i datadumpen
+# ikke eksisterer i kodeboka
+# sjekk_navn = (kb %>% distinct(varid) %>% rename(varnamn = "varid")) %>%
+#   pmap(function(varnamn) {
+#     new_function(alist(df=),
+#                  expr(summarise(df, navn_ok = names(.)[.] %in% varnamn))
+#   )
+#   }) %>% setNames(paste0("namn_", names(.)[.]))
+#
+# er_samme_navn = data_packs(sjekk_navn)
+#
+#
+# # Finner feil og rapporterer hvilken pasient og variabel som gjelder
+# # for feil i variabelnavn
+# d %>% expose(er_samme_navn) %>%
+#   get_report()
+
+#-------------------------------------lik rekkefølge på variabelnavn som i kodebok----------------------------------
 
 # sjekk at rekkefølgen på kolonner er lik mellom data og kodebok
 er_lik_rekkefolge = data_packs(
