@@ -162,19 +162,58 @@ d %>%
   get_report()
 
 #-----------------------------------------variabeltype--------------------------------------------------------
-# sjekker at variabeltype er i tråd med kodeboka
-er_riktig_variabeltype = col_packs(
-  sjekk_pasid = . %>% summarise_at(vars(patient_id = pasid), rules(vartype_pasid = is.character(pasid))),
-  sjekk_alder = . %>% summarise_at(vars(age = alder), rules(vartype_alder = is.numeric(alder))),
-  sjekk_frisk = . %>% summarise_at(vars(well = frisk), rules(vartype_frisk = is.logical(frisk)))
-)
 
-# Finner feil og rapporterer hvilken pasient og variabel som gjelder
-# for feil i variabeltype
+# trenger 3 filter for kodeboka for hver type variabel
+kb_num = kb %>%
+  filter(vartype == "numerisk" | vartype == "kategorisk" | vartype == "utrekna") %>%
+  distinct(varid) %>%
+  rename(varnamn = "varid")
+kb_boolsk = kb %>%
+  filter(vartype == "boolsk") %>%
+  select(varid) %>%
+  rename(varnamn = "varid")
+kb_tekst = kb %>%
+  filter(vartype == "tekst") %>%
+  select(varid) %>%
+  rename(varnamn = "varid")
+
+# Lager "rules" som tester om en kolonne i datasettet er samme som i kodeboka.
+# en sjekk for numeriske variabler
+sjekk_num = kb_num %>%
+  pmap(function(varnamn) {
+    new_function(
+      alist(df = ),
+      expr(summarise_at(df, vars(foo = !!varnamn), rules(vartype_ok = is.numeric(.))))
+    )
+  }) %>%
+  setNames(paste0("num_", kb_num$varnamn))
+# boolske
+sjekk_boolsk = kb_boolsk %>%
+  pmap(function(varnamn) {
+    new_function(
+      alist(df = ),
+      expr(summarise_at(df, vars(foo = !!varnamn), rules(vartype_ok = is.logical(.))))
+    )
+  }) %>%
+  setNames(paste0("boolsk_", kb_boolsk$varnamn))
+# tekstvariabler
+sjekk_tekst = kb_tekst %>%
+  pmap(function(varnamn) {
+    new_function(
+      alist(df = ),
+      expr(summarise_at(df, vars(foo = !!varnamn), rules(vartype_ok = is.character(.))))
+    )
+  }) %>%
+  setNames(paste0("tekst_", kb_tekst$varnamn))
+
+# lager en col-pack med variabeltype-sjekkene
+er_riktig_variabeltype = col_packs(sjekk_num, sjekk_boolsk, sjekk_tekst)
+# tester dataene
 d %>%
   expose(er_riktig_variabeltype) %>%
   get_report()
 
+#-----------------------------------------variabelnavn-------------------------------------------------------
 # Test sjekker at alle variablenavn i datadump er med i kodeboka (samtidig)
 alle_er_med = data_packs(
   sjekk_alle_varnavn = . %>% summarise(all(alle_varnavn = names(.) %in% (kb %>% distinct(varid))$varid))
