@@ -67,7 +67,10 @@ kb_kat = kb_filter(kb, "verdi")
 #     . %>% transmute_at(vars(foo = varnamn), rules(min_ok = . >= gverdi))
 #   })
 
-# Ny, forbetra løysing
+# Lager regel for at verdier i data
+# skal være større eller lik min-verdi i kodebok.
+# Lager en egen regel for hver aktuelle rad i
+# datarammen.
 sjekk_min = kb_min %>%
   pmap(function(varnamn, gverdi) {
     new_function(
@@ -77,8 +80,7 @@ sjekk_min = kb_min %>%
   }) %>%
   setNames(paste0("min_", kb_min$varnamn))
 
-# eks=list(min_alder = . %>% transmute_at(vars(foo="alder"), rules(min_ok = . >= 18)),
-#      min_vekt = . %>% transmute_at(vars(foo="vekt"), rules(min_ok = . >= 45)))
+# tester minverdier
 er_innfor_min = cell_packs(sjekk_min)
 d %>%
   expose(er_innfor_min) %>%
@@ -86,7 +88,7 @@ d %>%
 
 #  -----------------------------maks-------------------------------------------
 
-# Lager "rules" som tester maks-verdier i en funksjon
+# Lager "rules" som tester maks-verdier
 sjekk_maks = kb_maks %>%
   pmap(function(varnamn, gverdi) {
     new_function(
@@ -105,7 +107,7 @@ d %>%
 
 #-----------------------------------------desimaler-------------------------------------------------
 
-# Lager "rules" som tester desverdier i en funksjon
+# Lager "rules" som tester at variablene har riktig antall desimaler
 sjekk_des = kb_des %>%
   pmap(function(varnamn, gverdi) {
     new_function(
@@ -115,7 +117,7 @@ sjekk_des = kb_des %>%
   }) %>%
   setNames(paste0("des_", kb_des$varnamn))
 
-# lager en cell-pack med maks-sjekkene
+# lager en cell-pack med des-sjekkene
 har_riktig_ant_des = cell_packs(sjekk_des)
 # tester dataene
 d %>%
@@ -124,7 +126,7 @@ d %>%
 
 #---------------------------------------obligatoriske felt----------------------------------------------
 
-# Lager "rules" som tester maks-verdier i en funksjon
+# Lager "rules" på at obligatoriske variabler ikke skal ha noen missing.
 sjekk_oblig = kb_oblig %>%
   pmap(function(varnamn, gverdi) {
     new_function(
@@ -134,7 +136,7 @@ sjekk_oblig = kb_oblig %>%
   }) %>%
   setNames(paste0("oblig_", kb_oblig$varnamn))
 
-# lager en cell-pack med maks-sjekkene
+# lager en cell-pack med oblig-sjekkene
 oblig_har_ingen_missing = cell_packs(sjekk_oblig)
 # tester dataene
 d %>%
@@ -143,7 +145,7 @@ d %>%
 
 #------------------------------------------kategoriske verdier----------------------------------------
 
-# Lager "rules" som tester maks-verdier i en funksjon
+# Lager "rules" som sier at verdiene til kategoriske variabler må være tilstede i kodeboka
 sjekk_kat = kb_kat %>%
   pmap(function(varnamn, gverdi) {
     gverdi = kb_kat$gverdi
@@ -164,18 +166,17 @@ d %>%
 #-----------------------------------------variabeltype--------------------------------------------------------
 
 # trenger 3 filter for kodeboka for hver type variabel
-kb_num = kb %>%
-  filter(variabeltype == "numerisk" | variabeltype == "kategorisk" | variabeltype == "utrekna") %>%
-  distinct(varabel_id) %>%
+kb_rename = kb %>%
   rename(varnamn = "varabel_id")
-kb_boolsk = kb %>%
-  filter(variabeltype == "boolsk") %>%
-  select(varabel_id) %>%
-  rename(varnamn = "varabel_id")
-kb_tekst = kb %>%
-  filter(variabeltype == "tekst") %>%
-  select(varabel_id) %>%
-  rename(varnamn = "varabel_id")
+kb_num = kb_rename %>%
+  filter(varnamn == "numerisk" | varnamn == "kategorisk" | varnamn == "utrekna") %>%
+  distinct(varnamn)
+kb_boolsk = kb_rename %>%
+  filter(varnamn == "boolsk") %>%
+  select(varnamn)
+kb_tekst = kb_rename %>%
+  filter(varnamn == "tekst") %>%
+  select(varnamn)
 
 # Lager "rules" som tester om en kolonne i datasettet er samme som i kodeboka.
 # en sjekk for numeriske variabler
