@@ -35,6 +35,7 @@ kb_mrs_til_standard = function(d) {
   vartype_mrs_standard = tribble(
     ~type_mrs, ~type_standard,
     "Enum", "kategorisk",
+    "Enkeltvalg", "kategorisk",
     "Text", "tekst",
     "Avkrysning", "boolsk",
     "Dato/Tid", "dato_kl",
@@ -87,7 +88,7 @@ kb_mrs_til_standard = function(d) {
   # Utvid kodeboka slik at enum-variablane får fleire rader
   kodebok = kodebok_utg[rep(1:nvars, times = reps), ]
 
-  # Hent ut kodane og tilhøyrande tekst til alle Enum-variablane
+  # Hent ut kodane og tilhøyrande tekst til alle Enum/Enkeltvalg-variablane
   enums = d %>%
     filter(is.na(Felttype)) %>%
     extract2("Variabelnavn") %>%
