@@ -204,6 +204,7 @@ lag_regelsett = function(kb) {
     sjekk_rekkefolge = . %>% summarise(rekkefolge_varnavn = identical(names(.), (kb %>% distinct(varabel_id))$varabel_id))
   )
 
+  # samler alle cell_packs, data_packs og col_packs i en liste
   regelsett = list(
     er_innfor_min_og_maks,
     har_riktig_ant_des,
@@ -213,6 +214,7 @@ lag_regelsett = function(kb) {
     alle_var_er_med,
     er_lik_rekkefolge
   )
+  # returnerer lista
   regelsett
 }
 
