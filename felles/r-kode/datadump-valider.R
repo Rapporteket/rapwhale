@@ -31,211 +31,199 @@ kb = tribble(
 
 #---------------------------------------------------------Tester--------------------------------------------------------------
 
-# funksjon for å hente ut ønsket område av kodeboka
-# som brukes i en gitt test. F.eks, om man ønsker å teste min-verdier
-# i en datadump, så trenger man bare informasjon om min-verdier
-# for variabler som faktisk *har* min-verdier.
-kb_filter = function(kb, kolonne) {
+lag_regelsett = function(kb) {
 
-  # henter ut delen av kodeboka som
-  # har en verdi i en aktuelle kolonnen
-  kb_utsnitt = kb %>%
-    filter(!is.na(kb[kolonne])) %>%
-    select(varabel_id, kolonne) %>%
+  # funksjon for å hente ut ønsket område av kodeboka
+  # som brukes i en gitt test. F.eks, om man ønsker å teste min-verdier
+  # i en datadump, så trenger man bare informasjon om min-verdier
+  # for variabler som faktisk *har* min-verdier.
+  kb_filter = function(kb, kolonne) {
+
+    # henter ut delen av kodeboka som
+    # har en verdi i en aktuelle kolonnen
+    kb_utsnitt = kb %>%
+      filter(!is.na(kb[kolonne])) %>%
+      select(varabel_id, kolonne) %>%
+      rename(varnamn = "varabel_id")
+    # rename funksjonen støtter ikke expressions.
+    # altså kan man ikke ha gverdi = past0(kolonne) i kallet til rename() ovenfor
+    # kjører koden under for å endre navn på kolonne til noe som brukes generelt i alle tester
+    kolonnenavn_plassering = which(names(kb_utsnitt) == kolonne)
+    names(kb_utsnitt)[kolonnenavn_plassering] = "gverdi"
+
+    # returner objektet
+    kb_utsnitt
+  }
+
+  kb_min = kb_filter(kb, "min")
+  kb_maks = kb_filter(kb, "maks")
+  kb_des = kb_filter(kb, "desimalar")
+  kb_oblig = kb_filter(kb, "obligatorisk")
+  kb_kat = kb_filter(kb, "verdi")
+
+  #---------------------------------------------min-verdier------------------------------------------------------
+
+  # # Gammal løysing, der gverdi og varnamn ikkje kom ut som konstantar
+  # eks = kb_min %>%
+  #   pmap(function(varnamn, gverdi) {
+  #     . %>% transmute_at(vars(foo = varnamn), rules(min_ok = . >= gverdi))
+  #   })
+
+  # Lager regel for at verdier i data
+  # skal være større eller lik min-verdi i kodebok.
+  # Lager en egen regel for hver aktuelle rad i
+  # datarammen.
+  sjekk_min = kb_min %>%
+    pmap(function(varnamn, gverdi) {
+      new_function(
+        alist(df = ),
+        expr(transmute_at(df, vars(foo = !!varnamn), rules(min_ok = . >= !!gverdi)))
+      )
+    }) %>%
+    setNames(paste0("min_", kb_min$varnamn))
+
+  #  -----------------------------maks-------------------------------------------
+
+  # Lager "rules" som tester maks-verdier
+  sjekk_maks = kb_maks %>%
+    pmap(function(varnamn, gverdi) {
+      new_function(
+        alist(df = ),
+        expr(transmute_at(df, vars(foo = !!varnamn), rules(maks_ok = . <= !!gverdi)))
+      )
+    }) %>%
+    setNames(paste0("maks_", kb_maks$varnamn))
+
+  # lager en cell-pack med maks-sjekkene
+  er_innfor_min_og_maks = cell_packs(sjekk_min, sjekk_maks)
+
+  #-----------------------------------------desimaler-------------------------------------------------
+
+  # Lager "rules" som tester at variablene har riktig antall desimaler
+  sjekk_des = kb_des %>%
+    pmap(function(varnamn, gverdi) {
+      new_function(
+        alist(df = ),
+        expr(transmute_at(df, vars(foo = !!varnamn), rules(des_ok = round(., gverdi) == !!gverdi)))
+      )
+    }) %>%
+    setNames(paste0("des_", kb_des$varnamn))
+
+  # lager en cell-pack med des-sjekkene
+  har_riktig_ant_des = cell_packs(sjekk_des)
+
+  #---------------------------------------obligatoriske felt----------------------------------------------
+  # Lager "rules" på at obligatoriske variabler ikke skal ha noen missing.
+  sjekk_oblig = kb_oblig %>%
+    pmap(function(varnamn, gverdi) {
+      new_function(
+        alist(df = ),
+        expr(transmute_at(df, vars(foo = !!varnamn), rules(gverdi = !is.na(.))))
+      )
+    }) %>%
+    setNames(paste0("oblig_", kb_oblig$varnamn))
+
+  # lager en cell-pack med oblig-sjekkene
+  oblig_har_ingen_missing = cell_packs(sjekk_oblig)
+
+  #------------------------------------------kategoriske verdier----------------------------------------
+
+  # Lager "rules" som sier at verdiene til kategoriske variabler må være tilstede i kodeboka
+  sjekk_kat = kb_kat %>%
+    pmap(function(varnamn, gverdi) {
+      gverdi = kb_kat$gverdi
+      new_function(
+        alist(df = ),
+        expr(transmute_at(df, vars(foo = !!varnamn), rules(gyl_kat = . %in% gverdi | is.na(.))))
+      )
+    }) %>%
+    setNames(paste0("kat_", kb_kat$varnamn))
+
+  # lager en cell-pack med verdi-sjekkene
+  kat_er_innfor_verdier = cell_packs(sjekk_kat)
+
+  #-----------------------------------------variabeltype--------------------------------------------------------
+
+  # trenger 3 filter for kodeboka for hver type variabel
+  kb_rename = kb %>%
     rename(varnamn = "varabel_id")
-  # rename funksjonen støtter ikke expressions.
-  # altså kan man ikke ha gverdi = past0(kolonne) i kallet til rename() ovenfor
-  # kjører koden under for å endre navn på kolonne til noe som brukes generelt i alle tester
-  kolonnenavn_plassering = which(names(kb_utsnitt) == kolonne)
-  names(kb_utsnitt)[kolonnenavn_plassering] = "gverdi"
+  kb_num = kb_rename %>%
+    filter(variabeltype == "numerisk" | variabeltype == "kategorisk" | variabeltype == "utrekna") %>%
+    distinct(varnamn)
+  kb_boolsk = kb_rename %>%
+    filter(variabeltype == "boolsk") %>%
+    select(varnamn)
+  kb_tekst = kb_rename %>%
+    filter(variabeltype == "tekst") %>%
+    select(varnamn)
 
-  # returner objektet
-  kb_utsnitt
+  # Lager "rules" som tester om en kolonne i datasettet er samme som i kodeboka.
+  # en sjekk for numeriske variabler
+  sjekk_num = kb_num %>%
+    pmap(function(varnamn) {
+      new_function(
+        alist(df = ),
+        expr(summarise_at(df, vars(foo = !!varnamn), rules(vartype_ok = is.numeric(.))))
+      )
+    }) %>%
+    setNames(paste0("num_", kb_num$varnamn))
+  # boolske
+  sjekk_boolsk = kb_boolsk %>%
+    pmap(function(varnamn) {
+      new_function(
+        alist(df = ),
+        expr(summarise_at(df, vars(foo = !!varnamn), rules(vartype_ok = is.logical(.))))
+      )
+    }) %>%
+    setNames(paste0("boolsk_", kb_boolsk$varnamn))
+  # tekstvariabler
+  sjekk_tekst = kb_tekst %>%
+    pmap(function(varnamn) {
+      new_function(
+        alist(df = ),
+        expr(summarise_at(df, vars(foo = !!varnamn), rules(vartype_ok = is.character(.))))
+      )
+    }) %>%
+    setNames(paste0("tekst_", kb_tekst$varnamn))
+
+  # lager en col-pack med variabeltype-sjekkene
+  er_riktig_variabeltype = col_packs(sjekk_num, sjekk_boolsk, sjekk_tekst)
+
+  #-----------------------------------------alle variabelnavn tilstede-------------------------------------------------------
+  # Test sjekker at alle variablenavn i datadump er med i kodeboka (samtidig)
+  # og at alle varibelnavn i kodebok er med i datadump
+  alle_var_er_med = data_packs(
+    sjekk_alle_varnavn_dd = . %>% summarise(all(alle_varnavn = names(.) %in% (kb %>% distinct(varabel_id))$varabel_id)),
+    sjekk_alle_varnavn_kb = . %>% summarise(all(alle_varnavn = (kb %>% distinct(varabel_id))$varabel_id %in% names(.)))
+  )
+
+  #-------------------------------------lik rekkefølge på variabelnavn som i kodebok----------------------------------
+
+  # sjekk at rekkefølgen på kolonner er lik mellom data og kodebok
+  er_lik_rekkefolge = data_packs(
+    sjekk_rekkefolge = . %>% summarise(rekkefolge_varnavn = identical(names(.), (kb %>% distinct(varabel_id))$varabel_id))
+  )
+
+  regelsett = list(
+    er_innfor_min_og_maks,
+    har_riktig_ant_des,
+    oblig_har_ingen_missing,
+    kat_er_innfor_verdier,
+    er_riktig_variabeltype,
+    alle_var_er_med,
+    er_lik_rekkefolge
+  )
+  regelsett
 }
 
-kb_min = kb_filter(kb, "min")
-kb_maks = kb_filter(kb, "maks")
-kb_des = kb_filter(kb, "desimalar")
-kb_oblig = kb_filter(kb, "obligatorisk")
-kb_kat = kb_filter(kb, "verdi")
+regelsett = lag_regelsett(kb)
 
-#---------------------------------------------min-verdier------------------------------------------------------
 
-# # Gammal løysing, der gverdi og varnamn ikkje kom ut som konstantar
-# eks = kb_min %>%
-#   pmap(function(varnamn, gverdi) {
-#     . %>% transmute_at(vars(foo = varnamn), rules(min_ok = . >= gverdi))
-#   })
+d_exposed = d %>%
+  expose(regelsett) %>%
+  get_exposure()
 
-# Lager regel for at verdier i data
-# skal være større eller lik min-verdi i kodebok.
-# Lager en egen regel for hver aktuelle rad i
-# datarammen.
-sjekk_min = kb_min %>%
-  pmap(function(varnamn, gverdi) {
-    new_function(
-      alist(df = ),
-      expr(transmute_at(df, vars(foo = !!varnamn), rules(min_ok = . >= !!gverdi)))
-    )
-  }) %>%
-  setNames(paste0("min_", kb_min$varnamn))
 
-# lager cellpack
-er_innfor_min = cell_packs(sjekk_min)
-
-#  -----------------------------maks-------------------------------------------
-
-# Lager "rules" som tester maks-verdier
-sjekk_maks = kb_maks %>%
-  pmap(function(varnamn, gverdi) {
-    new_function(
-      alist(df = ),
-      expr(transmute_at(df, vars(foo = !!varnamn), rules(maks_ok = . <= !!gverdi)))
-    )
-  }) %>%
-  setNames(paste0("maks_", kb_maks$varnamn))
-
-# lager en cell-pack med maks-sjekkene
-er_innfor_maks = cell_packs(sjekk_maks)
-
-#-----------------------------------------desimaler-------------------------------------------------
-
-# Lager "rules" som tester at variablene har riktig antall desimaler
-sjekk_des = kb_des %>%
-  pmap(function(varnamn, gverdi) {
-    new_function(
-      alist(df = ),
-      expr(transmute_at(df, vars(foo = !!varnamn), rules(des_ok = round(., gverdi) == !!gverdi)))
-    )
-  }) %>%
-  setNames(paste0("des_", kb_des$varnamn))
-
-# lager en cell-pack med des-sjekkene
-har_riktig_ant_des = cell_packs(sjekk_des)
-
-#---------------------------------------obligatoriske felt----------------------------------------------
-# Lager "rules" på at obligatoriske variabler ikke skal ha noen missing.
-sjekk_oblig = kb_oblig %>%
-  pmap(function(varnamn, gverdi) {
-    new_function(
-      alist(df = ),
-      expr(transmute_at(df, vars(foo = !!varnamn), rules(gverdi = !is.na(.))))
-    )
-  }) %>%
-  setNames(paste0("oblig_", kb_oblig$varnamn))
-
-# lager en cell-pack med oblig-sjekkene
-oblig_har_ingen_missing = cell_packs(sjekk_oblig)
-
-#------------------------------------------kategoriske verdier----------------------------------------
-
-# Lager "rules" som sier at verdiene til kategoriske variabler må være tilstede i kodeboka
-sjekk_kat = kb_kat %>%
-  pmap(function(varnamn, gverdi) {
-    gverdi = kb_kat$gverdi
-    new_function(
-      alist(df = ),
-      expr(transmute_at(df, vars(foo = !!varnamn), rules(gyl_kat = . %in% gverdi | is.na(.))))
-    )
-  }) %>%
-  setNames(paste0("kat_", kb_kat$varnamn))
-
-# lager en cell-pack med verdi-sjekkene
-kat_er_innfor_verdier = cell_packs(sjekk_kat)
-
-#-----------------------------------------variabeltype--------------------------------------------------------
-
-# trenger 3 filter for kodeboka for hver type variabel
-kb_rename = kb %>%
-  rename(varnamn = "varabel_id")
-kb_num = kb_rename %>%
-  filter(varnamn == "numerisk" | varnamn == "kategorisk" | varnamn == "utrekna") %>%
-  distinct(varnamn)
-kb_boolsk = kb_rename %>%
-  filter(varnamn == "boolsk") %>%
-  select(varnamn)
-kb_tekst = kb_rename %>%
-  filter(varnamn == "tekst") %>%
-  select(varnamn)
-
-# Lager "rules" som tester om en kolonne i datasettet er samme som i kodeboka.
-# en sjekk for numeriske variabler
-sjekk_num = kb_num %>%
-  pmap(function(varnamn) {
-    new_function(
-      alist(df = ),
-      expr(summarise_at(df, vars(foo = !!varnamn), rules(vartype_ok = is.numeric(.))))
-    )
-  }) %>%
-  setNames(paste0("num_", kb_num$varnamn))
-# boolske
-sjekk_boolsk = kb_boolsk %>%
-  pmap(function(varnamn) {
-    new_function(
-      alist(df = ),
-      expr(summarise_at(df, vars(foo = !!varnamn), rules(vartype_ok = is.logical(.))))
-    )
-  }) %>%
-  setNames(paste0("boolsk_", kb_boolsk$varnamn))
-# tekstvariabler
-sjekk_tekst = kb_tekst %>%
-  pmap(function(varnamn) {
-    new_function(
-      alist(df = ),
-      expr(summarise_at(df, vars(foo = !!varnamn), rules(vartype_ok = is.character(.))))
-    )
-  }) %>%
-  setNames(paste0("tekst_", kb_tekst$varnamn))
-
-# lager en col-pack med variabeltype-sjekkene
-er_riktig_variabeltype = col_packs(sjekk_num, sjekk_boolsk, sjekk_tekst)
-
-#-----------------------------------------alle variabelnavn tilstede-------------------------------------------------------
-# Test sjekker at alle variablenavn i datadump er med i kodeboka (samtidig)
-# og at alle varibelnavn i kodebok er med i datadump
-alle_er_med = data_packs(
-  sjekk_alle_varnavn_dd = . %>% summarise(all(alle_varnavn = names(.) %in% (kb %>% distinct(varabel_id))$varabel_id)),
-  sjekk_alle_varnavn_kb = . %>% summarise(all(alle_varnavn = (kb %>% distinct(varabel_id))$varabel_id %in% names(.)))
-)
-#--------------------------------------er samme variabelnavn som i kodebok------------------------------------------
-
-# # sjekker at hver enktelt av variabelnavna er de samme som i kodeboka
-# er_samme_navn = data_packs(
-#   sjekk_pasid = . %>% summarise(navn_pasid = names(.)[1] %in% (kb$varabel_id)),
-#   sjekk_kjonn = . %>% summarise(navn_kjonn = names(.)[2] %in% (kb$varabel_id))
-# )
-#
-# # Finner feil og rapporterer hvilken pasient og variabel som gjelder
-# # for feil i variabelnavn
-# d %>% expose(er_samme_navn) %>%
-#   get_report()
-
-# fixme! testen over burde generelaiseres til å kjøre testen for hver variabel i datarammen.
-# et forsøk nedenfor er en start, men denne fungerer ikke.
-# det skal være en data_pack()
-# Lager "rules" som tester om en variabelnavn i datadumpen
-# ikke eksisterer i kodeboka
-# sjekk_navn = (kb %>% distinct(varabel_id) %>% rename(varnamn = "varabel_id")) %>%
-#   pmap(function(varnamn) {
-#     new_function(alist(df=),
-#                  expr(summarise(df, navn_ok = names(.)[.] %in% varnamn))
-#   )
-#   }) %>% setNames(paste0("namn_", names(.)[.]))
-#
-# er_samme_navn = data_packs(sjekk_navn)
-#
-#
-# # Finner feil og rapporterer hvilken pasient og variabel som gjelder
-# # for feil i variabelnavn
-# d %>% expose(er_samme_navn) %>%
-#   get_report()
-
-#-------------------------------------lik rekkefølge på variabelnavn som i kodebok----------------------------------
-
-# sjekk at rekkefølgen på kolonner er lik mellom data og kodebok
-er_lik_rekkefolge = data_packs(
-  sjekk_rekkefolge = . %>% summarise(rekkefolge_varnavn = identical(names(.), (kb %>% distinct(varabel_id))$varabel_id))
-)
 #-------------------------------------kjører testene på datarammen-------------------------------------------------
 
 # Hvis ingen feil oppstår, skal man få en tom tibble til resultat.
@@ -268,3 +256,37 @@ d %>%
     er_lik_rekkefolge
   ) %>% # Rapporterer om variabelnavna er i feil rekkefølge i forhold til kodebok
   get_report()
+
+
+#--------------------------------------er samme variabelnavn som i kodebok------------------------------------------
+
+# # sjekker at hver enktelt av variabelnavna er de samme som i kodeboka
+# er_samme_navn = data_packs(
+#   sjekk_pasid = . %>% summarise(navn_pasid = names(.)[1] %in% (kb$varabel_id)),
+#   sjekk_kjonn = . %>% summarise(navn_kjonn = names(.)[2] %in% (kb$varabel_id))
+# )
+#
+# # Finner feil og rapporterer hvilken pasient og variabel som gjelder
+# # for feil i variabelnavn
+# d %>% expose(er_samme_navn) %>%
+#   get_report()
+
+# fixme! testen over burde generelaiseres til å kjøre testen for hver variabel i datarammen.
+# et forsøk nedenfor er en start, men denne fungerer ikke.
+# det skal være en data_pack()
+# Lager "rules" som tester om en variabelnavn i datadumpen
+# ikke eksisterer i kodeboka
+# sjekk_navn = (kb %>% distinct(varabel_id) %>% rename(varnamn = "varabel_id")) %>%
+#   pmap(function(varnamn) {
+#     new_function(alist(df=),
+#                  expr(summarise(df, navn_ok = names(.)[.] %in% varnamn))
+#   )
+#   }) %>% setNames(paste0("namn_", names(.)[.]))
+#
+# er_samme_navn = data_packs(sjekk_navn)
+#
+#
+# # Finner feil og rapporterer hvilken pasient og variabel som gjelder
+# # for feil i variabelnavn
+# d %>% expose(er_samme_navn) %>%
+#   get_report()
