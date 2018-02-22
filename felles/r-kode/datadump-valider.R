@@ -220,11 +220,14 @@ lag_regelsett = function(kb) {
 
 regelsett = lag_regelsett(kb)
 
+sjekk_dd = function(d, regelsett) {
+  rapport = d %>%
+    expose(regelsett) %>%
+    get_report()
+  rapport
+}
 
-d_exposed = d %>%
-  expose(regelsett) %>%
-  get_exposure()
-
+sjekk_dd(d, regelsett)
 
 #-------------------------------------kjører testene på datarammen-------------------------------------------------
 
