@@ -31,7 +31,13 @@ kb = tribble(
 
 #---------------------------------------------------------Tester--------------------------------------------------------------
 
-lag_regelsett = function(kb) {
+# Funksjon for å lage regler basert på informasjon
+# fra kodeboka. Krever en kodebok (kb)
+# Argumentet "oblig" gjør det mulig å velge om man ønsker å sjekke obligatoriske felt.
+# dette fordi MRS-kodebøker har feil i sin obligatorisk-koding,
+# og dermed er uaktuelt for testing. Defaulter er TRUE.
+
+lag_regelsett = function(kb, oblig = TRUE) {
 
   # funksjon for å hente ut ønsket område av kodeboka
   # som brukes i en gitt test. F.eks, om man ønsker å teste min-verdier
@@ -62,12 +68,6 @@ lag_regelsett = function(kb) {
   kb_kat = kb_filter(kb, "verdi")
 
   #---------------------------------------------min-verdier------------------------------------------------------
-
-  # # Gammal løysing, der gverdi og varnamn ikkje kom ut som konstantar
-  # eks = kb_min %>%
-  #   pmap(function(varnamn, gverdi) {
-  #     . %>% transmute_at(vars(foo = varnamn), rules(min_ok = . >= gverdi))
-  #   })
 
   # Lager regel for at verdier i data
   # skal være større eller lik min-verdi i kodebok.
@@ -113,19 +113,23 @@ lag_regelsett = function(kb) {
   har_riktig_ant_des = cell_packs(sjekk_des)
 
   #---------------------------------------obligatoriske felt----------------------------------------------
-  # Lager "rules" på at obligatoriske variabler ikke skal ha noen missing.
-  sjekk_oblig = kb_oblig %>%
-    pmap(function(varnamn, gverdi) {
-      new_function(
-        alist(df = ),
-        expr(transmute_at(df, vars(foo = !!varnamn), rules(gverdi = !is.na(.))))
-      )
-    }) %>%
-    setNames(paste0("oblig_", kb_oblig$varnamn))
 
-  # lager en cell-pack med oblig-sjekkene
-  oblig_har_ingen_missing = cell_packs(sjekk_oblig)
+  if (oblig) {
 
+    # Lager "rules" på at obligatoriske variabler ikke skal ha noen missing.
+    sjekk_oblig = kb_oblig %>%
+      pmap(function(varnamn, gverdi) {
+        new_function(
+          alist(df = ),
+          expr(transmute_at(df, vars(foo = !!varnamn), rules(gverdi = !is.na(.))))
+        )
+      }) %>%
+      setNames(paste0("oblig_", kb_oblig$varnamn))
+
+    # lager en cell-pack med oblig-sjekkene
+    oblig_har_ingen_missing = cell_packs(sjekk_oblig)
+    oblig_har_ingen_missing
+  }
   #------------------------------------------kategoriske verdier----------------------------------------
 
   # Lager "rules" som sier at verdiene til kategoriske variabler må være tilstede i kodeboka
@@ -204,22 +208,36 @@ lag_regelsett = function(kb) {
     sjekk_rekkefolge = . %>% summarise(rekkefolge_varnavn = identical(names(.), (kb %>% distinct(varabel_id))$varabel_id))
   )
 
-  # samler alle cell_packs, data_packs og col_packs i en liste
-  regelsett = list(
-    er_innfor_min_og_maks,
-    har_riktig_ant_des,
-    oblig_har_ingen_missing,
-    kat_er_innfor_verdier,
-    er_riktig_variabeltype,
-    alle_var_er_med,
-    er_lik_rekkefolge
-  )
+  if (oblig) {
+    # samler alle cell_packs, data_packs og col_packs i en liste
+    regelsett = list(
+      er_innfor_min_og_maks,
+      har_riktig_ant_des,
+      oblig_har_ingen_missing,
+      kat_er_innfor_verdier,
+      er_riktig_variabeltype,
+      alle_var_er_med,
+      er_lik_rekkefolge
+    )
+  } else {
+    # samler alle cell_packs, data_packs og col_packs i en liste
+    regelsett = list(
+      er_innfor_min_og_maks,
+      har_riktig_ant_des,
+      kat_er_innfor_verdier,
+      er_riktig_variabeltype,
+      alle_var_er_med,
+      er_lik_rekkefolge
+    )
+  }
+
   # returnerer lista
   regelsett
 }
 
-regelsett = lag_regelsett(kb)
+regelsett = lag_regelsett(kb, oblig = FALSE)
 
+# funksjon for å teste regelsettet på datadump
 sjekk_dd = function(d, regelsett) {
   rapport = d %>%
     expose(regelsett) %>%
@@ -227,6 +245,7 @@ sjekk_dd = function(d, regelsett) {
   rapport
 }
 
+# sjekk at funksjonen funker
 sjekk_dd(d, regelsett)
 
 #-------------------------------------kjører testene på datarammen-------------------------------------------------
