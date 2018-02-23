@@ -220,7 +220,7 @@ lag_regelsett = function(kb, oblig = TRUE) {
   )
   # legger kun til objekt for oblig hvis vi ønsker å teste det
   if (oblig) {
-    regelsett = c(regelsett, oblig_har_ingen_missing)
+    regelsett = c(regelsett, list(oblig_har_ingen_missing))
   }
 
   # returnerer lista
@@ -238,7 +238,7 @@ sjekk_dd = function(d, regelsett) {
 }
 
 # sjekk at funksjonen funker
-View(sjekk_dd(d, regelsett))
+sjekk_dd(d, regelsett)
 
 #-------------------------------------kjører testene på datarammen-------------------------------------------------
 
