@@ -274,7 +274,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   # Tester at bare gyldige variabeltyper er med i kodeboka
   # Objekt med gyldige variabeltyper til kanonisk standardform av kodebok,
   # hentet fra dokumentasjon om standardformen. Kan utvides.
-  gyldige_vartyper = c("numerisk", "kategorisk", "boolsk", "dato", "utrekna", "tekst", "tekst*", "fritekst")
+  gyldige_vartyper = c("numerisk", "kategorisk", "boolsk", "dato", "dato_kl", "utrekna", "tekst", "tekst*", "fritekst")
   if (any(!kb$variabeltype %in% gyldige_vartyper)) {
     ugyldig_vartyp = kb %>%
       filter(!variabeltype %in% gyldige_vartyper) %>%
