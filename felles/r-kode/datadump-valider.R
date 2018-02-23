@@ -220,14 +220,14 @@ lag_regelsett = function(kb, oblig = TRUE) {
   )
   # legger kun til objekt for oblig hvis vi ønsker å teste det
   if (oblig) {
-    regelsett = list(regelsett, list(oblig_har_ingen_missing))
+    regelsett = c(regelsett, oblig_har_ingen_missing)
   }
 
   # returnerer lista
   regelsett
 }
 
-regelsett = lag_regelsett(kb, oblig = FALSE)
+regelsett = lag_regelsett(kb, oblig = TRUE)
 
 # funksjon for å teste regelsettet på datadump
 sjekk_dd = function(d, regelsett) {
