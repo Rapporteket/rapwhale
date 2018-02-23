@@ -104,7 +104,7 @@ lag_regelsett = function(kb, oblig = TRUE) {
     pmap(function(varnamn, gverdi) {
       new_function(
         alist(df = ),
-        expr(transmute_at(df, vars(foo = !!varnamn), rules(des_ok = round(., gverdi) == !!gverdi)))
+        expr(transmute_at(df, vars(foo = !!varnamn), rules(des_ok = round(., gverdi) == .)))
       )
     }) %>%
     setNames(paste0("des_", kb_des$varnamn))
