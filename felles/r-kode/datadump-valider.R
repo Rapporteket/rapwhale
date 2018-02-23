@@ -133,15 +133,17 @@ lag_regelsett = function(kb, oblig = TRUE) {
   #------------------------------------------kategoriske verdier----------------------------------------
 
   # Lager "rules" som sier at verdiene til kategoriske variabler må være tilstede i kodeboka
-  sjekk_kat = kb_kat %>%
-    pmap(function(varnamn, gverdi) {
-      gverdi = kb_kat$gverdi
+  kb_kat_kompakt = kb_kat %>%
+    nest(gverdi)
+  sjekk_kat = kb_kat_kompakt %>%
+    pmap(function(varnamn, data) {
+      gverdi = data$gverdi
       new_function(
         alist(df = ),
-        expr(transmute_at(df, vars(foo = !!varnamn), rules(gyl_kat = . %in% gverdi | is.na(.))))
+        expr(transmute_at(df, vars(foo = !!varnamn), rules(gyl_kat = . %in% !!gverdi | is.na(.))))
       )
     }) %>%
-    setNames(paste0("kat_", kb_kat$varnamn))
+    setNames(paste0("kat_", kb_kat_kompakt$varnamn))
 
   # lager en cell-pack med verdi-sjekkene
   kat_er_innfor_verdier = cell_packs(sjekk_kat)
