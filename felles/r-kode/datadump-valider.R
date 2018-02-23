@@ -210,27 +210,17 @@ lag_regelsett = function(kb, oblig = TRUE) {
     sjekk_rekkefolge = . %>% summarise(rekkefolge_varnavn = identical(names(.), (kb %>% distinct(varabel_id))$varabel_id))
   )
 
+  regelsett = list(
+    er_innfor_min_og_maks,
+    har_riktig_ant_des,
+    kat_er_innfor_verdier,
+    er_riktig_variabeltype,
+    alle_var_er_med,
+    er_lik_rekkefolge
+  )
+  # legger kun til objekt for oblig hvis vi ønsker å teste det
   if (oblig) {
-    # samler alle cell_packs, data_packs og col_packs i en liste
-    regelsett = list(
-      er_innfor_min_og_maks,
-      har_riktig_ant_des,
-      oblig_har_ingen_missing,
-      kat_er_innfor_verdier,
-      er_riktig_variabeltype,
-      alle_var_er_med,
-      er_lik_rekkefolge
-    )
-  } else {
-    # samler alle cell_packs, data_packs og col_packs i en liste
-    regelsett = list(
-      er_innfor_min_og_maks,
-      har_riktig_ant_des,
-      kat_er_innfor_verdier,
-      er_riktig_variabeltype,
-      alle_var_er_med,
-      er_lik_rekkefolge
-    )
+    regelsett = list(regelsett, list(oblig_har_ingen_missing))
   }
 
   # returnerer lista
@@ -248,7 +238,7 @@ sjekk_dd = function(d, regelsett) {
 }
 
 # sjekk at funksjonen funker
-sjekk_dd(d, regelsett)
+View(sjekk_dd(d, regelsett))
 
 #-------------------------------------kjører testene på datarammen-------------------------------------------------
 
