@@ -46,7 +46,7 @@ lag_regelsett = function(kb, oblig = TRUE) {
   if (!all(nodvar %in% names(kb))) {
     manglende_nodvar = which(!nodvar %in% names(kb))
     kb_mangler = nodvar[manglende_nodvar]
-    stop(paste0("Kodeboka mangler nødvendige kolonner: ", str_c("'", kb_mangler, "'", collapse = ", "), "."))
+    stop(paste0("Kodeboka mangler obligatoriske kolonner: ", str_c("'", kb_mangler, "'", collapse = ", "), "."))
   }
 
 
