@@ -59,9 +59,9 @@ test_that("Funksjonen stopper og rapporterer en feilmelding hvis kategoriske var
   kb_kat_feil_verdi = tribble(
     ~variabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
     "kjonn", "kategorisk", NA, NA, TRUE, NA, 0, "kvinne",
-    "kjonn", "kategorisk", NA, NA, TRUE, NA, NA, "mann",
+    "kjonn", "kategorisk", NA, NA, TRUE, NA, NA, "mann"
   )
-  expect_error(lag_regelsett(kb_kat_feil), "Kategoriske variabler mangler verdier for verdi.")
+  expect_error(lag_regelsett(kb_kat_feil_verdi), "Kategoriske variabler mangler verdier for verdi.")
 })
 
 #  Skal være mulig å ha bruke KB på ikke vårt standardformat, med å si at f.eks "min" heter "min_verdi" eller andre.
