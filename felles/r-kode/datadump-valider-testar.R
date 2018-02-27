@@ -51,7 +51,7 @@ test_that("Funksjonen stopper og rapporterer en feilmelding hvis kodeboka mangle
     NA, "kategorisk", NA, NA, TRUE, NA, 1, "mann",
     "frisk", "boolsk", NA, NA, TRUE, NA, NA, NA
   )
-  expect_error(lag_regelsett(kb_feil), "Kodeboka mangler verdier for variabel_id eller variabeltype.")
+  expect_error(lag_regelsett(kb_feil), "Kodeboka har manglende verdier (NA) for variabel_id og/eller variabeltype.")
 })
 
 # Test 3 Feilmedling hvis KB mangler verdier for variabeltype eller variabel_id
