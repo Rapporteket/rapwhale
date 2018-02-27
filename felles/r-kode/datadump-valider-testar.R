@@ -28,12 +28,29 @@ kb = tribble(
   "frisk", "boolsk", NA, NA, TRUE, NA, NA, NA
 )
 
+# Tester for lag_regelsett()
+
 # Test 1 Feilmelding hvis testen ikke finner nødvendige kolonner i KB
 
 test_that("Feilmelding ved nødvendige variabler som ikke finnes i kodeboka.", {
-  d_mangler_varid = tribble(~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst)
-  d_mangler_desimalar_og_varid = tribble(~variabeltype, ~min, ~maks, ~obligatorisk, ~verdi, ~verditekst)
+  kb_mangler_varid = tribble(~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst)
+  kb_mangler_desimalar_og_varid = tribble(~variabeltype, ~min, ~maks, ~obligatorisk, ~verdi, ~verditekst)
 
-  expect_error(lag_regelsett(d_mangler_varid), "Kodeboka mangler nødvendige kolonner: 'variabel_id'.")
-  expect_error(lag_regelsett(d_mangler_desimalar_og_varid), "Kodeboka mangler nødvendige kolonner: 'variabel_id', 'desimalar'.")
+  expect_error(lag_regelsett(kb_mangler_varid), "Kodeboka mangler nødvendige kolonner: 'variabel_id'.")
+  expect_error(lag_regelsett(kb_mangler_desimalar_og_varid), "Kodeboka mangler nødvendige kolonner: 'variabel_id', 'desimalar'.")
+})
+
+# Test 2 Skal være mulig å ha bruke KB på ikke vårt standardformat, med å si at f.eks "min" heter "min_verdi" eller andre.
+
+test_that("Skal kunne navngi enkeltkolonner i KB.", {
+  kb_annet_navn = tribble(
+    ~varabel_id, ~variabeltype, ~min_verdi, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
+    "pasid", "tekst", NA, NA, TRUE, NA, NA, NA,
+    "alder", "numerisk", 18, NA, TRUE, 0, NA, NA,
+    "vekt", "numerisk", 45, 200, TRUE, 0, NA, NA,
+    "kjonn", "kategorisk", NA, NA, TRUE, NA, 0, "kvinne",
+    "kjonn", "kategorisk", NA, NA, TRUE, NA, 1, "mann",
+    "frisk", "boolsk", NA, NA, TRUE, NA, NA, NA
+  )
+  expect_identical(lag_regelsett(kb_annet_navn), lag_regelsett(kb))
 })
