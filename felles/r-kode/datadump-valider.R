@@ -20,7 +20,7 @@ d = tribble(
 # lager en fiktiv kodebok som hører til det fiktive datasettet
 
 kb = tribble(
-  ~varabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
+  ~variabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
   "pasid", "tekst", NA, NA, TRUE, NA, NA, NA,
   "alder", "numerisk", 18, NA, TRUE, 0, NA, NA,
   "vekt", "numerisk", 45, 200, TRUE, 0, NA, NA,
@@ -68,8 +68,8 @@ lag_regelsett = function(kb, oblig = TRUE) {
     # har en verdi i en aktuelle kolonnen
     kb_utsnitt = kb %>%
       filter(!is.na(kb[kolonne])) %>%
-      select(varabel_id, kolonne) %>%
-      rename(varnamn = "varabel_id")
+      select(variabel_id, kolonne) %>%
+      rename(varnamn = "variabel_id")
     # rename funksjonen støtter ikke expressions.
     # altså kan man ikke ha gverdi = past0(kolonne) i kallet til rename() ovenfor
     # kjører koden under for å endre navn på kolonne til noe som brukes generelt i alle tester
@@ -84,7 +84,28 @@ lag_regelsett = function(kb, oblig = TRUE) {
   kb_maks = kb_filter(kb, "maks")
   kb_des = kb_filter(kb, "desimalar")
   kb_oblig = kb_filter(kb, "obligatorisk")
-  kb_kat = kb_filter(kb, "verdi")
+
+  # trenger 4 filter for kodeboka for ulike typer variabel
+  kb_rename = kb %>%
+    rename(varnamn = "variabel_id") # bruker denne lenger nede også
+  kb_kat = kb_rename %>%
+    filter(variabeltype == "kategorisk") %>%
+    select(varnamn, verdi) %>%
+    rename(gverdi = "verdi")
+  kb_num = kb_rename %>%
+    filter(variabeltype == "numerisk" | variabeltype == "kategorisk" | variabeltype == "utrekna") %>%
+    distinct(varnamn)
+  kb_boolsk = kb_rename %>%
+    filter(variabeltype == "boolsk") %>%
+    select(varnamn)
+  kb_tekst = kb_rename %>%
+    filter(variabeltype == "tekst") %>%
+    select(varnamn)
+
+  # Stopp hvis kategoriske variabler mangler verdi eller verditekst
+  if (any(is.na(kb_kat$gverdi))) {
+    stop(paste0("Kategoriske variabler mangler verdier for verdi."))
+  }
 
   #---------------------------------------------min-verdier------------------------------------------------------
 
@@ -169,19 +190,6 @@ lag_regelsett = function(kb, oblig = TRUE) {
 
   #-----------------------------------------variabeltype--------------------------------------------------------
 
-  # trenger 3 filter for kodeboka for hver type variabel
-  kb_rename = kb %>%
-    rename(varnamn = "varabel_id")
-  kb_num = kb_rename %>%
-    filter(variabeltype == "numerisk" | variabeltype == "kategorisk" | variabeltype == "utrekna") %>%
-    distinct(varnamn)
-  kb_boolsk = kb_rename %>%
-    filter(variabeltype == "boolsk") %>%
-    select(varnamn)
-  kb_tekst = kb_rename %>%
-    filter(variabeltype == "tekst") %>%
-    select(varnamn)
-
   # Lager "rules" som tester om en kolonne i datasettet er samme som i kodeboka.
   # en sjekk for numeriske variabler
   sjekk_num = kb_num %>%
@@ -218,15 +226,15 @@ lag_regelsett = function(kb, oblig = TRUE) {
   # Test sjekker at alle variablenavn i datadump er med i kodeboka (samtidig)
   # og at alle varibelnavn i kodebok er med i datadump
   alle_var_er_med = data_packs(
-    sjekk_alle_varnavn_dd = . %>% summarise(all(alle_varnavn = names(.) %in% (kb %>% distinct(varabel_id))$varabel_id)),
-    sjekk_alle_varnavn_kb = . %>% summarise(all(alle_varnavn = (kb %>% distinct(varabel_id))$varabel_id %in% names(.)))
+    sjekk_alle_varnavn_dd = . %>% summarise(all(alle_varnavn = names(.) %in% (kb %>% distinct(variabel_id))$variabel_id)),
+    sjekk_alle_varnavn_kb = . %>% summarise(all(alle_varnavn = (kb %>% distinct(variabel_id))$variabel_id %in% names(.)))
   )
 
   #-------------------------------------lik rekkefølge på variabelnavn som i kodebok----------------------------------
 
   # sjekk at rekkefølgen på kolonner er lik mellom data og kodebok
   er_lik_rekkefolge = data_packs(
-    sjekk_rekkefolge = . %>% summarise(rekkefolge_varnavn = identical(names(.), (kb %>% distinct(varabel_id))$varabel_id))
+    sjekk_rekkefolge = . %>% summarise(rekkefolge_varnavn = identical(names(.), (kb %>% distinct(variabel_id))$variabel_id))
   )
 
   regelsett = list(
@@ -270,8 +278,8 @@ test_file(test_adr, reporter = "summary") # Alt (tar stor plass viss det er mang
 
 # # sjekker at hver enktelt av variabelnavna er de samme som i kodeboka
 # er_samme_navn = data_packs(
-#   sjekk_pasid = . %>% summarise(navn_pasid = names(.)[1] %in% (kb$varabel_id)),
-#   sjekk_kjonn = . %>% summarise(navn_kjonn = names(.)[2] %in% (kb$varabel_id))
+#   sjekk_pasid = . %>% summarise(navn_pasid = names(.)[1] %in% (kb$variabel_id)),
+#   sjekk_kjonn = . %>% summarise(navn_kjonn = names(.)[2] %in% (kb$variabel_id))
 # )
 #
 # # Finner feil og rapporterer hvilken pasient og variabel som gjelder
@@ -284,7 +292,7 @@ test_file(test_adr, reporter = "summary") # Alt (tar stor plass viss det er mang
 # det skal være en data_pack()
 # Lager "rules" som tester om en variabelnavn i datadumpen
 # ikke eksisterer i kodeboka
-# sjekk_navn = (kb %>% distinct(varabel_id) %>% rename(varnamn = "varabel_id")) %>%
+# sjekk_navn = (kb %>% distinct(variabel_id) %>% rename(varnamn = "variabel_id")) %>%
 #   pmap(function(varnamn) {
 #     new_function(alist(df=),
 #                  expr(summarise(df, navn_ok = names(.)[.] %in% varnamn))
