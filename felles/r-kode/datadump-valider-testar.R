@@ -55,20 +55,13 @@ test_that("Funksjonen stopper og rapporterer en feilmelding hvis kodeboka mangle
 })
 
 # Test 3 Feilmedling hvis KB mangler verdier for variabeltype eller variabel_id
-test_that("Funksjonen stopper og rapporterer en feilmelding hvis kategoriske variabler mangler verdi og verditekst.", {
+test_that("Funksjonen stopper og rapporterer en feilmelding hvis kategoriske variabler mangler verdi.", {
   kb_kat_feil_verdi = tribble(
     ~variabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
     "kjonn", "kategorisk", NA, NA, TRUE, NA, 0, "kvinne",
     "kjonn", "kategorisk", NA, NA, TRUE, NA, NA, "mann",
   )
-
-  kb_kat_feil_verditekst = tribble(
-    ~variabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
-    "kjonn", "kategorisk", NA, NA, TRUE, NA, 0, "kvinne",
-    "kjonn", "kategorisk", NA, NA, TRUE, NA, 1, NA,
-  )
-  expect_error(lag_regelsett(kb_kat_feil), "Kategoriske variabler mangler verdier for verdi eller verditekst")
-  expect_error(lag_regelsett(kb_kat_feil_verditekst), "Kategoriske variabler mangler verdier for verdi eller verditekst")
+  expect_error(lag_regelsett(kb_kat_feil), "Kategoriske variabler mangler verdier for verdi.")
 })
 
 #  Skal være mulig å ha bruke KB på ikke vårt standardformat, med å si at f.eks "min" heter "min_verdi" eller andre.
