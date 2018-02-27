@@ -27,3 +27,13 @@ kb = tribble(
   "kjonn", "kategorisk", NA, NA, TRUE, NA, 1, "mann",
   "frisk", "boolsk", NA, NA, TRUE, NA, NA, NA
 )
+
+# Test 1 Feilmelding hvis testen ikke finner nødvendige kolonner i KB
+
+test_that("Feilmelding ved nødvendige variabler som ikke finnes i kodeboka.", {
+  d_mangler_varid = tribble(~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst)
+  d_mangler_desimalar_og_varid = tribble(~variabeltype, ~min, ~maks, ~obligatorisk, ~verdi, ~verditekst)
+
+  expect_error(lag_regelsett(d_mangler_varid), "Kodeboka mangler nødvendige kolonner: 'variabel_id'.")
+  expect_error(lag_regelsett(d_mangler_desimalar_og_varid), "Kodeboka mangler nødvendige kolonner: 'variabel_id', 'desimalar'.")
+})
