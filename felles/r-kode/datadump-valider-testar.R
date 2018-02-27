@@ -36,8 +36,8 @@ test_that("Feilmelding ved nødvendige variabler som ikke finnes i kodeboka.", {
   kb_mangler_varid = tribble(~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst)
   kb_mangler_desimalar_og_varid = tribble(~variabeltype, ~min, ~maks, ~obligatorisk, ~verdi, ~verditekst)
 
-  expect_error(lag_regelsett(kb_mangler_varid), "Kodeboka mangler nødvendige kolonner: 'variabel_id'.")
-  expect_error(lag_regelsett(kb_mangler_desimalar_og_varid), "Kodeboka mangler nødvendige kolonner: 'variabel_id', 'desimalar'.")
+  expect_error(lag_regelsett(kb_mangler_varid), "Kodeboka mangler obligatoriske kolonner: 'variabel_id'.")
+  expect_error(lag_regelsett(kb_mangler_desimalar_og_varid), "Kodeboka mangler obligatoriske kolonner: 'variabel_id', 'desimalar'.")
 })
 
 # Test 2 Skal være mulig å ha bruke KB på ikke vårt standardformat, med å si at f.eks "min" heter "min_verdi" eller andre.
