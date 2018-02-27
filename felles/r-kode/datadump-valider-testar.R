@@ -40,7 +40,38 @@ test_that("Feilmelding ved nødvendige variabler som ikke finnes i kodeboka.", {
   expect_error(lag_regelsett(kb_mangler_desimalar_og_varid), "Kodeboka mangler obligatoriske kolonner: 'variabel_id', 'desimalar'.")
 })
 
-# Test 2 Skal være mulig å ha bruke KB på ikke vårt standardformat, med å si at f.eks "min" heter "min_verdi" eller andre.
+# Test 2 Feilmedling hvis KB mangler verdier for variabeltype eller variabel_id
+test_that("Funksjonen stopper og rapporterer en feilmelding hvis kodeboka mangler verdier for variabel_id eller variabel_type.", {
+  kb_feil = tribble(
+    ~varabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
+    "pasid", "tekst", NA, NA, TRUE, NA, NA, NA,
+    "alder", NA, 18, NA, TRUE, 0, NA, NA,
+    "vekt", "numerisk", 45, 200, TRUE, 0, NA, NA,
+    "kjonn", "kategorisk", NA, NA, TRUE, NA, 0, "kvinne",
+    NA, "kategorisk", NA, NA, TRUE, NA, 1, "mann",
+    "frisk", "boolsk", NA, NA, TRUE, NA, NA, NA
+  )
+  expect_error(lag_regelsett(kb_feil), "Kodeboka mangler verdier for variabel_id eller variabeltype.")
+})
+
+# Test 3 Feilmedling hvis KB mangler verdier for variabeltype eller variabel_id
+test_that("Funksjonen stopper og rapporterer en feilmelding hvis kategoriske variabler mangler verdi og verditekst.", {
+  kb_kat_feil_verdi = tribble(
+    ~varabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
+    "kjonn", "kategorisk", NA, NA, TRUE, NA, 0, "kvinne",
+    "kjonn", "kategorisk", NA, NA, TRUE, NA, NA, "mann",
+  )
+
+  kb_kat_feil_verditekst = tribble(
+    ~varabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
+    "kjonn", "kategorisk", NA, NA, TRUE, NA, 0, "kvinne",
+    "kjonn", "kategorisk", NA, NA, TRUE, NA, 1, NA,
+  )
+  expect_error(lag_regelsett(kb_kat_feil), "Kategoriske variabler mangler verdier for verdi eller verditekst")
+  expect_error(lag_regelsett(kb_kat_feil_verditekst), "Kategoriske variabler mangler verdier for verdi eller verditekst")
+})
+
+#  Skal være mulig å ha bruke KB på ikke vårt standardformat, med å si at f.eks "min" heter "min_verdi" eller andre.
 
 test_that("Skal kunne navngi enkeltkolonner i KB.", {
   kb_annet_navn = tribble(
