@@ -19,7 +19,7 @@ d = tribble(
 # lager en fiktiv kodebok som hører til det fiktive datasettet
 
 kb = tribble(
-  ~varabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
+  ~variabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
   "pasid", "tekst", NA, NA, TRUE, NA, NA, NA,
   "alder", "numerisk", 18, NA, TRUE, 0, NA, NA,
   "vekt", "numerisk", 45, 200, TRUE, 0, NA, NA,
@@ -43,7 +43,7 @@ test_that("Feilmelding ved nødvendige variabler som ikke finnes i kodeboka.", {
 # Test 2 Feilmedling hvis KB mangler verdier for variabeltype eller variabel_id
 test_that("Funksjonen stopper og rapporterer en feilmelding hvis kodeboka mangler verdier for variabel_id eller variabel_type.", {
   kb_feil = tribble(
-    ~varabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
+    ~variabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
     "pasid", "tekst", NA, NA, TRUE, NA, NA, NA,
     "alder", NA, 18, NA, TRUE, 0, NA, NA,
     "vekt", "numerisk", 45, 200, TRUE, 0, NA, NA,
@@ -51,19 +51,19 @@ test_that("Funksjonen stopper og rapporterer en feilmelding hvis kodeboka mangle
     NA, "kategorisk", NA, NA, TRUE, NA, 1, "mann",
     "frisk", "boolsk", NA, NA, TRUE, NA, NA, NA
   )
-  expect_error(lag_regelsett(kb_feil), "Kodeboka har manglende verdier (NA) for variabel_id og/eller variabeltype.")
+  expect_error(lag_regelsett(kb_feil), "Kodeboka har manglende verdier for variabel_id og/eller variabeltype.")
 })
 
 # Test 3 Feilmedling hvis KB mangler verdier for variabeltype eller variabel_id
 test_that("Funksjonen stopper og rapporterer en feilmelding hvis kategoriske variabler mangler verdi og verditekst.", {
   kb_kat_feil_verdi = tribble(
-    ~varabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
+    ~variabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
     "kjonn", "kategorisk", NA, NA, TRUE, NA, 0, "kvinne",
     "kjonn", "kategorisk", NA, NA, TRUE, NA, NA, "mann",
   )
 
   kb_kat_feil_verditekst = tribble(
-    ~varabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
+    ~variabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
     "kjonn", "kategorisk", NA, NA, TRUE, NA, 0, "kvinne",
     "kjonn", "kategorisk", NA, NA, TRUE, NA, 1, NA,
   )
@@ -75,7 +75,7 @@ test_that("Funksjonen stopper og rapporterer en feilmelding hvis kategoriske var
 
 test_that("Skal kunne navngi enkeltkolonner i KB.", {
   kb_annet_navn = tribble(
-    ~varabel_id, ~variabeltype, ~min_verdi, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
+    ~variabel_id, ~variabeltype, ~min_verdi, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
     "pasid", "tekst", NA, NA, TRUE, NA, NA, NA,
     "alder", "numerisk", 18, NA, TRUE, 0, NA, NA,
     "vekt", "numerisk", 45, 200, TRUE, 0, NA, NA,
