@@ -251,39 +251,12 @@ sjekk_dd = function(d, regelsett) {
 # sjekk at funksjonen funker
 sjekk_dd(d, regelsett)
 
-#-------------------------------------kjører testene på datarammen-------------------------------------------------
 
-# Hvis ingen feil oppstår, skal man få en tom tibble til resultat.
-
-# Tester alle cellpacks
-d %>%
-  expose(
-    er_innfor_min, # tester minverdier
-    er_innfor_maks, # tester maksverdier
-    oblig_har_ingen_missing, # tester missing i obligatoriske felt
-    kat_er_innfor_verdier
-  ) %>% # tester verdier i kategoriske ikke-tilstede i kodebok
-  get_report()
-
-# Tester desimaler for seg, ettersom hvis 1 rad har en feil, kan mange rader også ha samme feil
-# (resultatet kan da være gigantisk og overskygge andre tester)
-d %>%
-  expose(har_riktig_ant_des) %>%
-  get_report()
-
-# Tester alle col-packs
-d %>%
-  expose(er_riktig_variabeltype) %>% # sjekker at kolonnene har riktig variabeltype
-  get_report()
-
-# Tester alle data-packs
-d %>%
-  expose(
-    alle_er_med, # Rapporterer noen variabelnavn ikke er med i kodeboka
-    er_lik_rekkefolge
-  ) %>% # Rapporterer om variabelnavna er i feil rekkefølge i forhold til kodebok
-  get_report()
-
+# # Test at funksjonen fungerer
+test_adr = "h:/kvalreg/felles/r-kode/datadump-valider-testar.R"
+test_file(test_adr, reporter = "minimal") # *Veldig* kort og konsist samandrag
+test_file(test_adr, reporter = "check") # 13-linjes samandrag
+test_file(test_adr, reporter = "summary") # Alt (tar stor plass viss det er mange mislykka testar)
 
 #--------------------------------------er samme variabelnavn som i kodebok------------------------------------------
 
