@@ -39,6 +39,17 @@ kb = tribble(
 
 lag_regelsett = function(kb, oblig = TRUE) {
 
+  # for å lage regler må kodeboka ha følgende kolonner:
+  nodvar = c("variabel_id", "variabeltype", "min", "maks", "desimalar", "verdi", "verditekst")
+
+  # Stopp hvis kodeboka mangler helt nødvendige kolonner
+  if (!all(nodvar %in% names(kb))) {
+    manglende_nodvar = which(!nodvar %in% names(kb))
+    kb_mangler = nodvar[manglende_nodvar]
+    stop(paste0("Kodeboka mangler nødvendige kolonner: ", str_c("'", kb_mangler, "'", collapse = ", "), "."))
+  }
+
+
   # funksjon for å hente ut ønsket område av kodeboka
   # som brukes i en gitt test. F.eks, om man ønsker å teste min-verdier
   # i en datadump, så trenger man bare informasjon om min-verdier
