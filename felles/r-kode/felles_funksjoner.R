@@ -403,15 +403,39 @@ ki_univar = function(x, bootstrap = FALSE, antall, ...) {
 library(Hmisc)
 library(stringr)
 library(magrittr)
-create_ltable = function(dataframe, label, wide = FALSE, ...) {
-  table = capture.output(latex(dataframe,
-    file = "", center = "centering",
-    label = label, rowname = NULL,
-    where = "htbp", booktabs = TRUE, numeric.dollar = FALSE, ...
-  ))
-  if (wide) {
-    table %<>% str_replace("^\\\\(begin|end)\\{table\\}", "\\\\\\1\\{widetable\\}") # Superrobust ... ;)
+create_ltable = function(dataframe, label, caption, wide = FALSE, ...) {
+
+  # Viss dataramma ikkje har nokon radar, bryt latex()-funksjonen
+  # heilt saman dersom numeric.dollar er FALSE (og det er FALSE
+  # me *vil* ha, for å få rett formatering av tal).
+  #
+  # fixme: Feilen er meldt inn til forfattaren av Hmisc-pakken
+  #        i januar 2018, og er lovd retta. Fjern derfor følgjande
+  #        if()-test når dette er retta og Hmisc-pakken er oppdatert.
+  #
+  #        Kan bruka følgjande kodesnutt for å sjekka om feilen
+  #        er retta:
+  #          latex(head(iris, 0), file="", numeric.dollar=FALSE)
+  #        (skal gje tabell, ikkje feilmelding)
+  if (nrow(dataframe) == 0) {
+    tabell = paste0(
+      "\\begin{table}[htbp]\n",
+      "\\caption{", caption, "\\label{", label, "}}\n",
+      "{\\color{errorcolor}(Tabellen har 0 rader. Her må noko vera gale!)}\n",
+      "\\end{table}"
+    )
+  } else {
+    tabell = capture.output(latex(dataframe,
+      file = "", center = "centering",
+      label = label, caption = caption, rowname = NULL,
+      where = "htbp", booktabs = TRUE, numeric.dollar = FALSE, ...
+    ))
+    if (wide) {
+      tabell %<>% str_replace("^\\\\(begin|end)\\{table\\}", "\\\\\\1\\{widetable\\}") # Superrobust ... ;)
+    }
+    tabell = paste0(tabell, sep = "\n")
   }
-  table = paste0(table, sep = "\n")
-  table
+
+  # Returner tabellen (eller feilmelding)
+  tabell
 }
