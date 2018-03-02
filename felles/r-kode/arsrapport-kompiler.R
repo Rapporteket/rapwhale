@@ -10,7 +10,8 @@ library(tibble)
 library(readr)
 library(purrr)
 library(stringr)
-
+library(methods) # Nødvendig for å fungera skikkeleg med RScript,
+# jf. https://yihui.name/en/2017/12/library-methods/ :(
 
 
 # Årsrapportoversikt ------------------------------------------------------
@@ -114,7 +115,7 @@ kompiler_tex = function(adresse, maksiter = 5) {
       break
     } else if (ferdig) {
       cat("OK\n")
-      vis_loggfeil() # Det kan vera åtvaringar sjølv om kompileringa fungerte ...
+      # vis_loggfeil() # Det kan vera åtvaringar sjølv om kompileringa fungerte ...
       break
     } else if (iter >= maksiter) {
       cat("GJEV OPP (for mange rekompileringar)\n")
