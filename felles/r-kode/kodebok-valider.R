@@ -129,6 +129,13 @@ kb_til_kanonisk_form = function(kb) {
     "min", "maks", "min_rimeleg", "maks_rimeleg", "kommentar_rimeleg",
     "utrekningsformel", "logikk", "kommentar"
   )
+  ekstravars = setdiff(names(kb), std_namn)
+  if (length(ekstravars) > 0) {
+    warning(paste0(
+      "Fjernar kolonnar som ikkje skal vera med i kodeboka:\n",
+      paste0(ekstravars, collapse = ", ")
+    ))
+  }
   kb = kb %>%
     select(!!std_namn)
 
