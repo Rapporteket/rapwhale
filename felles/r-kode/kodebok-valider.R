@@ -14,6 +14,53 @@ kb_til_kanonisk_form = function(kb) {
   # noko som kan føra til problem nedanfor
   kb = ungroup(kb)
 
+  # Legg til standardverdiar for kolonnen 'kolnamn' dersom kolonnen manglar
+  leggtil_std = function(df, kolnamn, verdiar) {
+    kolnamn = quo_text(enquo(kolnamn))
+    if (!hasName(df, kolnamn)) {
+      df[[kolnamn]] = verdiar
+    }
+    df
+  }
+
+  # Det kan vera at nokre ikkje-essensielle kolonnar manglar.
+  # Då legg med dei til, med NA-verdiar eller eksempeldata,
+  # alt etter kva som trengst.
+  kb = kb %>%
+    leggtil_std(skjema_id, "fiktiv_skjema_id")
+  kb = kb %>%
+    leggtil_std(skjemanamn, paste0("Skjemanamn for ", kb$skjema_id))
+  kb = kb %>%
+    leggtil_std(kategori, NA_character_)
+  kb = kb %>%
+    leggtil_std(innleiing, NA_character_)
+  kb = kb %>%
+    leggtil_std(variabeletikett, NA_character_)
+  kb = kb %>%
+    leggtil_std(forklaring, NA_character_)
+  kb = kb %>%
+    leggtil_std(manglande, NA_character_)
+  kb = kb %>%
+    leggtil_std(eining, NA_character_)
+  kb = kb %>%
+    leggtil_std(unik, "nei")
+  kb = kb %>%
+    leggtil_std(min, NA_real_)
+  kb = kb %>%
+    leggtil_std(maks, NA_real_)
+  kb = kb %>%
+    leggtil_std(min_rimeleg, NA_real_)
+  kb = kb %>%
+    leggtil_std(maks_rimeleg, NA_real_)
+  kb = kb %>%
+    leggtil_std(kommentar_rimeleg, NA_character_)
+  kb = kb %>%
+    leggtil_std(utrekningsformel, NA_character_)
+  kb = kb %>%
+    leggtil_std(logikk, NA_character_)
+  kb = kb %>%
+    leggtil_std(kommentar, NA_character_)
+
   # Gjer kodeboka om til ikkje-glissen form,
   # dvs. at skjema_id, variabel_id og sånt er gjentatt nedover.
   mogleg_glisne_kol = quos(skjema_id, variabel_id)
@@ -54,6 +101,36 @@ kb_til_kanonisk_form = function(kb) {
 
   # Fyll ut implisitte verdiar for «manglande» (gjeld berre kategoriske variablar)
   kb$manglande[is.na(kb$manglande) & kb$variabeltype == "kategorisk"] = "nei"
+
+  # Verdikolonnen skal vera ein tekstkolonne
+  # (ofte er det tal, men det kan vera tekst,
+  # så det må det vera tekst)
+  kb$verdi = as.character(kb$verdi)
+
+  # Desimalkolonnen må vera ei heiltalskolonne
+  stopifnot(all(kb$desimalar == round(kb$desimalar), na.rm = TRUE))
+  kb$desimalar = as.integer(kb$desimalar)
+
+  # I vårt kanoniske kodebokformat er «obligatorisk» ein
+  # tekstvariabel med verdiane «ja» og «nei». Litt lite R-aktig,
+  # men det gjer iallall at kodeboka er lett å utveksla med andre.
+  # Viss me får kodebok som heller brukar boolske verdiar,
+  # gjer om til tekstverdiar.
+  if (is.logical(kb$obligatorisk)) {
+    kb$obligatorisk = ifelse(kb$obligatorisk, "ja", "nei")
+  }
+
+  # Sorter kolonnane i kodeboka etter vårt standardformat
+  # og fjern eventuelle ekstrakolonnar som ikkje skal vera med
+  std_namn = c(
+    "skjema_id", "skjemanamn", "kategori", "innleiing", "variabel_id",
+    "variabeletikett", "forklaring", "variabeltype", "eining", "unik",
+    "obligatorisk", "verdi", "verditekst", "manglande", "desimalar",
+    "min", "maks", "min_rimeleg", "maks_rimeleg", "kommentar_rimeleg",
+    "utrekningsformel", "logikk", "kommentar"
+  )
+  kb = kb %>%
+    select(!!std_namn)
 
   # Returner kodeboka på kanonisk form
   kb
