@@ -254,6 +254,16 @@ lag_regelsett = function(kb, oblig = TRUE) {
   regelsett
 }
 
+# Returner sann viss og berre viss datadumpen er gyldig
+# er reglane som følgjer frå kodeboka
+dd_er_gyldig = function(df, kb) {
+  regelsett = lag_regelsett(kb, oblig = TRUE)
+  har_feil = df %>%
+    expose(regelsett) %>%
+    any_breaker()
+  !har_feil
+}
+
 # regelsett = lag_regelsett(kb, oblig = TRUE)
 #
 # # funksjon for å teste regelsettet på datadump
