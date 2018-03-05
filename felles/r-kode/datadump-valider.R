@@ -254,25 +254,25 @@ lag_regelsett = function(kb, oblig = TRUE) {
   regelsett
 }
 
-regelsett = lag_regelsett(kb, oblig = TRUE)
-
-# funksjon for å teste regelsettet på datadump
-sjekk_dd = function(d, regelsett) {
-  rapport = d %>%
-    expose(regelsett) %>%
-    get_report()
-  rapport
-}
-
-# sjekk at funksjonen funker
-sjekk_dd(d, regelsett)
-
-
-# # Test at funksjonen fungerer
-test_adr = "h:/kvalreg/felles/r-kode/datadump-valider-testar.R"
-test_file(test_adr, reporter = "minimal") # *Veldig* kort og konsist samandrag
-test_file(test_adr, reporter = "check") # 13-linjes samandrag
-test_file(test_adr, reporter = "summary") # Alt (tar stor plass viss det er mange mislykka testar)
+# regelsett = lag_regelsett(kb, oblig = TRUE)
+#
+# # funksjon for å teste regelsettet på datadump
+# sjekk_dd = function(d, regelsett){
+#
+#   rapport = d %>% expose(regelsett) %>% get_report
+#   rapport
+# }
+#
+# #sjekk at funksjonen funker
+# sjekk_dd(d, regelsett)
+#
+#
+# # # Test at funksjonen fungerer
+# library(testthat)
+# test_adr = "h:/kvalreg/felles/r-kode/datadump-valider-testar.R"
+#  test_file(test_adr, reporter="minimal") # *Veldig* kort og konsist samandrag
+#  test_file(test_adr, reporter="check")   # 13-linjes samandrag
+#  test_file(test_adr, reporter="summary") # Alt (tar stor plass viss det er mange mislykka testar)
 
 #--------------------------------------er samme variabelnavn som i kodebok------------------------------------------
 
