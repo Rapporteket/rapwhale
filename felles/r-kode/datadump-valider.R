@@ -256,8 +256,8 @@ lag_regelsett = function(kb, oblig = TRUE) {
 
 # Returner sann viss og berre viss datadumpen er gyldig
 # er reglane som følgjer frå kodeboka
-dd_er_gyldig = function(df, kb) {
-  regelsett = lag_regelsett(kb, oblig = TRUE)
+dd_er_gyldig = function(df, kb, ...) {
+  regelsett = lag_regelsett(kb, ...)
   har_feil = df %>%
     expose(regelsett) %>%
     any_breaker()
