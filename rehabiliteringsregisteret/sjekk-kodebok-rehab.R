@@ -2,29 +2,16 @@
 
 library(tidyverse)
 library(readxl)
-kb = read_excel("h:/kvalreg/rehabiliteringsregisteret/kodebok-AFMR-register 0.5.xlsx")
+kb = read_excel("h:/kvalreg/rehabiliteringsregisteret/kodebok-AFMR-register 0.7.xlsx", sheet = 1)
 
-# Rett datatype og legg til manglade kolonnar
+# Rett datatype for nokre (tomme) variablar som vart feiltolka til feil datatype
 kb = kb %>%
   mutate(
-    desimaler = as.integer(desimaler),
+    desimalar = as.integer(desimalar),
+    eining = as.character(eining),
     kategori = skjemanamn,
-    maksverdi = as.double(maksverdi),
+    maks = as.double(maks),
   )
-
-# Rett namn på nokre kolonnar
-kb = kb %>%
-  rename(
-    desimalar = desimaler,
-    min = minverdi,
-    maks = maksverdi,
-    eining = enhet
-  )
-
-# Datovariablar har fått 'eining' UTC. Nyttig informasjon,
-# men datovariablar skal ikkje ha einingar (dei er berre datoar!).
-# Fjernar derfor dette:
-kb$eining[which(kb$eining == "UTC" & kb$variabeltype == "dato_kl")] = NA
 
 # Legg til standardkolonnar som manglar
 kb = kb %>%
@@ -50,12 +37,6 @@ std_namn = c(
 )
 kb = kb %>%
   select(!!std_namn)
-
-# Fiks namn på tidspunktvariabeltypar
-kb = kb %>%
-  mutate(
-    variabeltype = ifelse(variabeltype == "dato_klokkeslett", "dato_kl", variabeltype)
-  )
 
 # Sjekk kodeboka
 source("h:/kvalreg/felles/r-kode/kodebok-valider.R", encoding = "utf-8")
