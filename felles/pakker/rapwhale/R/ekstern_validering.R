@@ -12,10 +12,8 @@ NULL
 #' Lag valideringsdatasett
 #'
 #' @description
-#' Eit sett funksjonar for å henta ut (tilfeldige) data
-#' frå eit registerdatasett og lagra desse som SPSS-filer ein kan
-#' bruka til ekstern validering av registeret.
-#'
+#' Funksjon for å henta ut (tilfeldige) data frå eit registerdatasett
+#' for seinare bruk til ekstern validering av registeret.
 #' Kort sagt plukkar funksjonen ut tilfeldige
 #' celler i dataramma som ein oppgjev. Ein kan velja kor mange celler (variablar)
 #' som skal plukkast ut for kvar rad (pasient/forløp).
@@ -25,7 +23,8 @@ NULL
 #' Elementa i lista har namn etter sjukehus, laga ved
 #' å fletta saman variablane referert til i \code{sjukehus_var}
 #' med \code{_}-teikn. Desse namna kan òg brukast som
-#' filnamn ved lagring av valideringsdatasetta til disk.
+#' filnamn ved lagring av valideringsdatasetta til disk;
+#' sjå funksjonen `eksporter_valideringsdata}.
 #'
 #' @param df Datasettet ein ønskjer å laga valideringsdatasett for
 #'   (ei \code{\link[base]{data.frame}} eller ein \code{\link[tibble]{tibble}}).
@@ -54,7 +53,7 @@ NULL
 #' @param data_var Tekstvektor med namna på datavariablane
 #'   i registeret som kan plukkast ut som tilfeldige variablar.
 #'   Viss denne er \code{NULL} (standard), vert alle variablar i \code{df}
-#'   som ikkje er med i \code{indeks_var} brukte.
+#'   som ikkje er med i \code{sjukehus_var} eller \code{indeks_var} brukte.
 #'   I valideringsdatasettet vert kvar tilfeldig utplukka celle
 #'   til ei rad. Radene vert sorterte i rekkjefølgja som
 #'   variabelnamna er oppgitt i \code{data_var}, så dette bør
@@ -65,6 +64,37 @@ NULL
 #'   kontrollera \emph{alle} datavariablane for kvar kjelderad.
 #'
 #' @export
+#'
+#' @examples
+#' # Lag eksempeldata
+#' d_pasdata = tribble(
+#'   ~sjukehus, ~avdeling, ~pas_id, ~opphald_id, ~kjonn, ~alder, ~reg_dato, ~diag_kode, ~hogd, ~vekt,
+#'   "Haukeland", "Post A", 101, 34, 1, 23, as.Date("2011-12-18"), 3, 181, 82,
+#'   "Haukeland", "Post B", 101, 52, 1, 23, as.Date("2012-01-03"), 4, 181, 88,
+#'   "Haukeland", "Post A", 103, 76, 2, 47, as.Date("2017-02-28"), 3, 160, 56,
+#'   "St. Olavs", "Lungeavd.", 201, 88, 1, 52, as.Date("2014-03-10"), 11, 200, 104,
+#'   "St. Olavs", "Lungeavd.", 202, 104, 2, 33, as.Date("2014-03-11"), 8, 170, 80,
+#'   "St. Olavs", "Lungeavd.", 203, 105, 2, 45, as.Date("2016-03-11"), 3, 100, 150,
+#'   "Narvik", "Post A", 404, 2, 2, 78, as.Date("2018-02-04"), 7, 179, 61
+#' )
+#'
+#' # Lag valideringsdatasett
+#' d_val = lag_valideringsdata(d_pasdata,
+#'   sjukehus_var = c("sjukehus"),
+#'   indeks_var = c("pas_id", "opphald_id"),
+#'   ekstra_var = c("alder", "kjonn"),
+#'   data_var = c("reg_dato", "diag_kode", "hogd", "vekt"),
+#'   nvar = 2
+#' )
+#'
+#' # Elementa i resultatalista får namn basert på sjukehusvariablane
+#' names(d_val)
+#' d_val$haukeland
+#'
+#' # Kan òg henta ut sjukehus basert på nummer (men merk at
+#' # rekkjefølgja på sjukehusa ikkje nødvendigvis er lik
+#' # som i originaldatasettet)
+#' d_val[[2]]
 lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
                                data_var = NULL, nvar = 5) {
 
@@ -82,8 +112,8 @@ lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
   df_var = names(df)
 
   # Viss ein ikkje har valt datavariablar,
-  # bruk alle som ikkje er indeksvariablar
-  data_vars = setdiff(df_var, indeks_var)
+  # bruk alle som ikkje er sjukehus- eller indeksvariablar
+  data_vars = setdiff(df_var, c(sjukehus_var, indeks_var))
 
   # Sjekk at alle variabelsetta faktisk finst i datasettet
   stopifnot(
@@ -149,10 +179,12 @@ lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
   # fixme: Lag testar for at ting fungerer *riktig*. :)
   # fixme: ha med 'valideringsgruppenummer' i resultatdatasettet.
   # fixme: handtering av blinding (vising/gøyming av 'reg_*'-kolonnane)
+  # fixme: Legg til eksempel i dokumentasjonen
   # fixme: sjekk at det funkar å ha same variablar i både ekstra_vars og data_vars
   # fixme: feilmelding dersom det finst variablar som sluttar med _reg eller _epj i datasettet (og andre interne variabelnamn me brukar)
   # fixme: del funksjonen opp i éin funksjon for å laga valideringsdatasetta og éin funksjon for å lagra til SPSS-format.
   # fixme: sjekk at det ikkje finst duplikatnamn i dataramma (er det mogleg?)
+  # fixme: ei fin framvising av valideringsdatasettobjekt. Kan for eksempel visa talet på sjukehus, pasientar/oppføringar og uttrekte variablar per pasient.
 
 
   # Uthenting av valideringsdata --------------------------------------------
@@ -309,29 +341,22 @@ lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
 }
 
 
-# Eksporter data til kvalitetsserveren som en SPSS fil (.sav)
-# for hvert sykehus
-d = tribble(
-  ~sjukehus, ~avdeling, ~pas_id, ~opphald_id, ~kjonn, ~alder, ~reg_dato, ~diag_kode, ~hogd, ~vekt,
-  "Haukeland", "Post A", 101, 34, 1, 23, as.Date("2011-12-18"), 3, 181, 82,
-  "Haukeland", "Post B", 101, 52, 1, 23, as.Date("2012-01-03"), 4, 181, 88,
-  "Haukeland", "Post A", 103, 76, 2, 47, as.Date("2017-02-28"), 3, 160, 56,
-  "St. Olavs", "Lungeavd.", 201, 88, 1, 52, as.Date("2014-03-10"), 11, 200, 104,
-  "St. Olavs", "Lungeavd.", 202, 104, 2, 33, as.Date("2014-03-11"), 8, 170, 80,
-  "St. Olavs", "Lungeavd.", 203, 105, 2, 45, as.Date("2016-03-11"), 3, 100, 150,
-  "Narvik", "Post A", 404, 2, 2, 78, as.Date("2018-02-04"), 7, 179, 61
-)
-d_valid = lag_valideringsdata(d,
-  sjukehus_var = c("sjukehus"),
-  indeks_var = c("pas_id", "opphald_id"),
-  ekstra_var = c("alder", "kjonn"),
-  data_var = c("reg_dato", "diag_kode", "hogd", "vekt"),
-  nvar = 2
-)
 
-# fixme: Lag funksjons- og argumentskildring
+#' Eksporter valideringsdatasett til SPSS-format
+#'
+#' @description
+#' Eksportering av valideringsdatasett (genert med
+#' \link{lag_valideringsdata}) til SPSS-format.
+#' Kvar eining (eksempelvis sjukehus) i valideringsdatasettet
+#' vert eksportert til si eiga fil.
+#'
+#' @param df Eit valideringsdatasett, som laga av \link{lag_valideringsdata}.
+#' @param utmappe Mappa som valideringsfilene skal lagrast til.
+#' @param opna_utmappe Skal \code{utmappe} opnast i standard filhandsamar
+#'   etter eksportering av valideringsfilene? (Fungerer førbels berre på Windows.)
+#'
 #' @importFrom haven write_sav
-eksporter_valideringsdata = function(df, utmappe) {
+eksporter_valideringsdata = function(df, utmappe, opna_utmappe = FALSE) {
   # Opprett mappe for utfilene
   dir.create(utmappe, showWarnings = FALSE, recursive = TRUE)
 
@@ -346,27 +371,7 @@ eksporter_valideringsdata = function(df, utmappe) {
   )
 
   # Opna valideringsdatamappa (for å sjekka at alt ser OK ut)
-  shell.exec(utmappe)
+  if (opna_utmappe) {
+    shell.exec(utmappe)
+  }
 }
-
-eksporter_valideringsdata(d_valid, "h:/tmp/rtest/")
-
-# tester funksjonen under
-#
-# # Oversikt over namn på indeksvariablar og datavariablar
-# indeks_vars_soreg=c("PasientID", "Fodselsdato", "PasientAlder", "PasientKjonn",
-#            "OpererendeRESH", "ForlopsID", "OperasjonsID", "OperererendeSykehus")
-# # mappe for valideringsdata
-# vmappe = paste0(grunnmappe, "..\\valideringsdata\\", Sys.Date(), "\\")
-#
-# # variabler man ønsker å validere
-# # husk at nvars må være >= antall valideringsvariabler (kolonner)
-# soreg_vars = names(d)
-#
-# # kjør funksjonen
-# hent_validering_data(d,
-#                      nvars = 10,
-#                      indeks_vars = indeks_vars_soreg,
-#                      valid_vars = soreg_vars,
-#                      sjukehusvar = "OperererendeSykehus",
-#                      vdatamappe = vmappe)
