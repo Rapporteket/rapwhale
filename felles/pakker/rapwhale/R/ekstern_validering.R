@@ -24,7 +24,7 @@ NULL
 #' å fletta saman variablane referert til i \code{sjukehus_var}
 #' med \code{_}-teikn. Desse namna kan òg brukast som
 #' filnamn ved lagring av valideringsdatasetta til disk;
-#' sjå funksjonen `eksporter_valideringsdata}.
+#' sjå funksjonen \link{eksporter_valideringsdata}.
 #'
 #' @param df Datasettet ein ønskjer å laga valideringsdatasett for
 #'   (ei \code{\link[base]{data.frame}} eller ein \code{\link[tibble]{tibble}}).
