@@ -1,19 +1,16 @@
 Package: rapwhale
 Type: Package
-Title: Functions for quality registry reports
-Version: 0.1.0
-Authors@R: c(person("Lena Kristin", "Bache-Mathiesen",
-            email = "lena.kristin.bache-mathiesen@helse-bergen.no", role = c("aut", "cre")),
-            person("Karl Ove", "Hufthammer",
-            email = "karl.ove.hufthammer@helse-bergen.no", role = "aut"))
-Description: An ensemble of functions that are necessary or potentially useful
-    in the creation of statistical reports for medical quality registries. Includes
-    functions for creating graphs and tables, which keep the same arguments used
-    for most tables and graphs, can apply confidence intervals, and include utiities
-    for improving graphs. Other functions are developed to accomodate European file
-    formats, Norwegian grammar, and the standard format for medical reports, in addition
-    to commands usable in LaTex.
-License: Do not distribute outside of Helse Norge.
+Title: Verktøy for ekstern validering av kvalitetsregisterdata
+Version: 0.2.0
+Authors@R: c(person("Karl Ove", "Hufthammer",
+             email = "karl.ove.hufthammer@helse-bergen.no", role = c("aut", "cph", "cre")),
+             person("Lena Kristin", "Bache-Mathiesen",
+             email = "lena.kristin.bache-mathiesen@helse-bergen.no", role = c("aut", "cph")))
+Description: Ymse funksjonar for å laga valideringsdatasett for bruk til
+   ekstern validering av kvalitetsregisterdata. Kan henta ut tilfeldige
+   utval observasjonar og variablar frå datasett og lagra resultatet
+   som SPSS-filer.
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: TRUE
 Imports:
