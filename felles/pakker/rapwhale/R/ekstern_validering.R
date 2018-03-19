@@ -1,6 +1,15 @@
 # Skript for å hente ut tilfeldige celler fra datasett til validering.
 
-#' Lag valideringsdatasett frå datarammer
+#' @importFrom magrittr %>%
+#' @importFrom rlang syms
+#' @importFrom tidyr unnest
+#' @importFrom stringr str_c str_to_lower str_replace
+#' @import purrr
+#' @import dplyr
+#'
+NULL
+
+#' Lag valideringsdatasett
 #'
 #' @description
 #' Eit sett funksjonar for å henta ut (tilfeldige) data
@@ -8,7 +17,7 @@
 #' bruka til ekstern validering av registeret.
 #'
 #' Kort sagt plukkar funksjonen ut tilfeldige
-#' celler i dataramma. Ein kan velja kor mange celler (variablar)
+#' celler i dataramma som ein oppgjev. Ein kan velja kor mange celler (variablar)
 #' som skal plukkast ut for kvar rad (pasient/forløp).
 #'
 #' @return
@@ -23,15 +32,15 @@
 #' @param sjukehus_var Tekstvektor med namna på variablane
 #'   som unikt identifiserer sjukehuset/avdelingen som rada tilhøyrer,
 #'   typisk sjukehusnamn og/eller RESH-ID. Verdiane vert brukte til
-#'   å gruppera valideringsdatasettet i fleire grupper.
-#' @param indeks_var Tekstvektor med namna på indeksvariablane,
-#'   dvs. variablane som \emph{unikt} identifiserer ei rad
-#'   (typisk pasient-ID og/eller forløps-ID). Desse
+#'   å dela valideringsdatasettet inn i grupper.
+#' @param indeks_var Tekstvektor med namna på indeksvariablane i datasettet,
+#'   dvs. variablane som \emph{unikt} identifiserer ei rad.
+#'   Typiske eksempel er pasient-ID og/eller forløps-ID. Desse
 #'   vert tekne med i valideringsdatasettet som eigne kolonnar,
 #'   for å identifisera rader i originaldatasettet. Dei svarar til
 #'   primærnøklar i databasetabellar og kan \emph{ikkje} vera gjenstand
 #'   for å verta trekte ut som valideringsvariablar. Rekkjefølgja
-#'   i valideringsdatasetta vert lik rekkjefølgja oppgitt her
+#'   kolonnane står i valideringsdatasetta vert lik rekkjefølgja oppgitt her
 #'   (som kan vera forskjellig frå rekkjefølgja i \code{df}).
 #' @param ekstra_var Tekstvektor med namna på ekstra variablar
 #'   som òg skal takast med i alle rader i valideringsdatasettet,
@@ -40,19 +49,22 @@
 #'   valideringsvariablar. Dei er med fordi dei kan gjera det lettare
 #'   eller raskare å finna fram til rett pasient/forløp i pasientjournalen.
 #'   Typiske eksempel er fødselsdato, kjønn og operasjonsdato.
-#'   Rekkjefølgja i valideringsdatasetta vert lik rekkjefølgja oppgitt her
+#'   Rekkjefølgja på kolonnane i valideringsdatasetta vert lik rekkjefølgja oppgitt her
 #'   (som kan vera forskjellig frå rekkjefølgja i \code{df}).
 #' @param data_var Tekstvektor med namna på datavariablane
 #'   i registeret som kan plukkast ut som tilfeldige variablar.
 #'   Viss denne er \code{NULL} (standard), vert alle variablar i \code{df}
 #'   som ikkje er med i \code{indeks_var} brukte.
 #'   I valideringsdatasettet vert kvar tilfeldig utplukka celle
-#'   til ei rad, og radene vert sorterte i rekkjefølgja som
-#'   variabelnamna er oppgitt i \code{data_var}.
+#'   til ei rad. Radene vert sorterte i rekkjefølgja som
+#'   variabelnamna er oppgitt i \code{data_var}, så dette bør
+#'   vera ei «naturleg» rekkjefølgje.
 #' @param nvar Talet på datavariablar som skal plukkast tilfeldig frå
 #'   kvar rad i \code{df}. Set denne til lengda av \code{data_var}
 #'   dersom du ikkje ønskjer tilfeldig utplukk men heller vil
 #'   kontrollera \emph{alle} datavariablane for kvar kjelderad.
+#'
+#' @export
 lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
                                data_var = NULL, nvar = 5) {
 
@@ -64,7 +76,7 @@ lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
   # 'nvar' har meir enn eitt element).
 
   # Avgrupper dataramma, for å unngå potensielt mange problem ...
-  df = dplyr::ungroup(df)
+  df = ungroup(df)
 
   # Variablane som faktisk finst i datasettet
   df_var = names(df)
@@ -97,7 +109,7 @@ lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
   data_var_q = syms(data_var)
 
   # Sjekk at indeks_var utgjer ein ekte primærnøkkel
-  if (any(duplicated(dplyr::select(df, !!!indeks_var_q)))) {
+  if (any(duplicated(select(df, !!!indeks_var_q)))) {
     stop("'indeks_var' identifiserer ikkje radene unikt")
   }
 
@@ -150,7 +162,7 @@ lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
   # (og kanskje raskare å arbeida med?)
   alle_var_q = unique(c(indeks_var_q, ekstra_var_q, sjukehus_var_q, data_var_q))
   df = df %>%
-    dplyr::select(!!!alle_var_q)
+    select(!!!alle_var_q)
 
   # Me skal maks ha 'nvar' rader for kvart sjukehus, og det er
   # greiast å gjera det alt no. Merk at nokre sjukehus kan
@@ -192,7 +204,7 @@ lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
 
   # Lag oversikt over kva variabeltypar me faktisk har blant datavariablane våre
   res_data = res %>%
-    dplyr::select(!!!data_var_q)
+    select(!!!data_var_q)
   d_vartypar = tibble(
     varnamn = names(res_data),
     var_rklasse = map(res_data, class) %>%
@@ -222,7 +234,7 @@ lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
   # Legg til aktuelle resultatkolonnar, med rett variabelklasse (tal, dato &c.)
   # Merk at me berre gjer dette for dei variabeltypane som faktisk finst i datasettet
   d_vartypar_rformat = res %>%
-    dplyr::select(vartype, var_rklasse_ut) %>%
+    select(vartype, var_rklasse_ut) %>%
     distinct()
   for (i in 1:nrow(d_vartypar_rformat)) {
     vartype = d_vartypar_rformat %>%
@@ -266,7 +278,7 @@ lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
   innreg_kol = c(rbind(innreg_kol, str_replace(innreg_kol, "_reg$", "_epj"))) # Stygt triks for å fin rekkefølgje ...
   innreg_kol_q = syms(innreg_kol)
   res = res %>%
-    dplyr::select(!!!sjukehus_var_q, !!!indeks_var_q, !!!ekstra_var_q, varnamn, !!!innreg_kol_q)
+    select(!!!sjukehus_var_q, !!!indeks_var_q, !!!ekstra_var_q, varnamn, !!!innreg_kol_q)
 
 
   # Fornuftig sortering og gruppering ---------------------------------------
@@ -282,7 +294,7 @@ lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
       rekkefolge = factor(rekkefolge, levels = sample(unique(rekkefolge)))
     ) %>%
     arrange(sjukehus_indeks, rekkefolge, match(varnamn, !!data_var_q)) %>%
-    dplyr::select(-rekkefolge)
+    select(-rekkefolge)
 
   # Gjer om til ei liste med eitt element per sjukehus
   # og med namn lik sjukehusindeksen (skal/kan brukast som filnamn)
@@ -299,7 +311,7 @@ lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
 
 # Eksporter data til kvalitetsserveren som en SPSS fil (.sav)
 # for hvert sykehus
-d = tibble::tribble(
+d = tribble(
   ~sjukehus, ~avdeling, ~pas_id, ~opphald_id, ~kjonn, ~alder, ~reg_dato, ~diag_kode, ~hogd, ~vekt,
   "Haukeland", "Post A", 101, 34, 1, 23, as.Date("2011-12-18"), 3, 181, 82,
   "Haukeland", "Post B", 101, 52, 1, 23, as.Date("2012-01-03"), 4, 181, 88,
@@ -318,6 +330,7 @@ d_valid = lag_valideringsdata(d,
 )
 
 # fixme: Lag funksjons- og argumentskildring
+#' @importFrom haven write_sav
 eksporter_valideringsdata = function(df, utmappe) {
   # Opprett mappe for utfilene
   dir.create(utmappe, showWarnings = FALSE, recursive = TRUE)

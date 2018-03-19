@@ -16,8 +16,7 @@ Description: An ensemble of functions that are necessary or potentially useful
 License: Do not distribute outside of Helse Norge.
 Encoding: UTF-8
 LazyData: TRUE
-Depends:
-    tidyverse,
+Imports:
     purrr,
     tibble,
     haven,
