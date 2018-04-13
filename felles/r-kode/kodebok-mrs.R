@@ -37,8 +37,10 @@ kb_mrs_til_standard = function(d) {
     "Enum", "kategorisk",
     "Enkeltvalg", "kategorisk",
     "Text", "tekst",
+    "Tekst", "tekst",
     "Avkrysning", "boolsk",
     "Dato/Tid", "dato_kl",
+    "Dato/tid", "dato_kl",
     "Id (Guid)", "tekst",
     "Numerisk (heltall)", "numerisk", # Men sjå bruk «desimalar» lenger nede
     "Numerisk (flyttall)", "numerisk"
