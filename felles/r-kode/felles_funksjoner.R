@@ -150,7 +150,7 @@ lag_shewhart = function(y, x, antall = NULL, figtype, skriftstorleik = 0.8,
 #   xlab:       tekst på x-aksen (standardverdi: "År")
 #   ylab:       tekst på y-aksen (standardverdi: NULL (tom))
 #   angle:      viss sann, vis verdiane på x-aksen på skrå (for å få plass til fleire)
-#   konfint:    Legg til konfidensintervall på kvar pnutk
+#   konfint:    Legg til konfidensintervall på kvar punkt
 graf_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab = NULL,
                       angle = TRUE, konfint = TRUE) {
   grafdel = list()
