@@ -9,6 +9,7 @@ library(purrr)
 
 # Gjer kodeboka om til kanonisk form, dvs. slik at
 # implisitte verdiar er fylde ut.
+# fixme! funksjonen mangler å ta inn den nye variabelen nokkel (per i dag blir den kastet ut av kodeboka)
 kb_til_kanonisk_form = function(kb) {
   # Avgrupper (i tilfelle dataramma alt er gruppert,
   # noko som kan føra til problem nedanfor
