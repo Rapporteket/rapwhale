@@ -490,7 +490,7 @@
 					linktoc=all,
 					pdfpagemode=UseOutlines, bookmarksopen=true,
 					pdfpagelayout=OneColumn, pdfview=FitH, pdfstartview=Fit,
-    pdfescapeform=true]{hyperref}
+          pdfescapeform=true,bookmarksnumbered=true]{hyperref}
 \AtBeginDocument{%
 	\xcommaorandlist\@forfattarar\@forfattarsemikolonliste
 	\hypersetup{%
