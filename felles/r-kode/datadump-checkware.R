@@ -27,8 +27,8 @@ source("h:/kvalreg/felles/r-kode/kodebok-valider.R", encoding = "UTF-8")
 #--------------------------datainnhenting - bruker rehabiliteringsregisteret som utgangspunkt------------------------
 
 # Les inn kodebok
-mappe = "h:/kvalreg/rehabiliteringsregister/"
-kb = read_excel("h:/kvalreg/rehabiliteringsregisteret/kodebok-AFMR-register 0.7.xlsx", sheet = 1)
+mappe = "***FJERNA-ADRESSE***"
+kb = read_excel(paste0(mappe, "kodebok-AFMR-register 0.8.xlsx"), sheet = 1)
 
 # I kodeboka til rehabiliteringsregisteret er det flere kolonner som ikke
 # er utfylt fordi det ikke er aktuelt.
