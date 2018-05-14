@@ -10,6 +10,9 @@ library(purrr)
 # Gjer kodeboka om til kanonisk form, dvs. slik at
 # implisitte verdiar er fylde ut.
 # fixme! funksjonen mangler å ta inn den nye variabelen nokkel (per i dag blir den kastet ut av kodeboka)
+# fixme! funksjonen håndterer ikke ekstra variabler som f.eks variabel_id_checkware.
+# Når man er på det, bør funksjonen heller ha en option hvor man kan skrive inn kolonner man ønsker å godta selv
+# om det ikke er en del av standard-kolonnene. Da kan man ha med variabel_id_checkware, maal_id, nokkel og andre aktuelle kolonner
 kb_til_kanonisk_form = function(kb) {
   # Avgrupper (i tilfelle dataramma alt er gruppert,
   # noko som kan føra til problem nedanfor
