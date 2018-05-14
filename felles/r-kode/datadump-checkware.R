@@ -85,10 +85,12 @@ variabel_id_checkware = kb %>%
 kb_kanonisk = kb_kanonisk %>%
   left_join(variabel_id_checkware, by = "variabel_id")
 
+variabelnamn = kb_kanonisk %>%
+  filter(skjema_id == "meta" | skjema_id == "barthel") %>%
+  distinct(variabel_id, variabel_id_checkware)
+
 # henter inn data
 filnamn = "barthel.csv"
-
-
 
 d_barthel = read_delim(paste0(mappe, filnamn), delim = ";", na = "")
 
@@ -100,13 +102,9 @@ read_delim(
 )
 
 
-col_names
+kolnamn = variabelnamn$variabel_id_checkware %>%
+  setNames(variabelnamn$variabel_id)
+d = d %>%
+  rename(!!!kolnamn)
 
-kol_typar = cols(
-  PasientID = col_integer(),
-  Fodselsdato = col_date(),
-  PasientAlder = col_number(),
-  PasientKjonn = col_character()
-)
-
-col_types = kol_typar
+d
