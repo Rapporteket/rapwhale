@@ -59,7 +59,7 @@ kb = kb %>%
 
 # Fiks rekkjefølgja på variablane
 std_namn = c(
-  "skjema_id", "skjemanamn", "kategori", "innleiing", "variabel_id",
+  "skjema_id", "skjemanamn", "kategori", "innleiing", "variabel_id_checkware", "variabel_id",
   "variabeletikett", "forklaring", "variabeltype", "eining", "unik",
   "obligatorisk", "verdi", "verditekst", "manglande", "desimalar",
   "min", "maks", "min_rimeleg", "maks_rimeleg", "kommentar_rimeleg",
@@ -75,4 +75,38 @@ warnings()
 # gjør om kodeboka til kanonisk form
 kb_kanonisk = kb_til_kanonisk_form(kb)
 
+# fixme! kb_kanonisk støtter ikke andre kolonner utenom standardkolonnene,
+# derfor left_joiner vi denne inn. Fix når kb_til_kanonisk er oppdatert.
+
+variabel_id_checkware = kb %>%
+  select(variabel_id, variabel_id_checkware) %>%
+  na.omit()
+
+kb_kanonisk = kb_kanonisk %>%
+  left_join(variabel_id_checkware, by = "variabel_id")
+
 # henter inn data
+filnamn = "barthel.csv"
+
+
+
+d_barthel = read_delim(paste0(mappe, filnamn), delim = ";", na = "")
+
+read_delim(
+  adresse,
+  delim = ";",
+  na = "null",
+  locale = locale(date_format = "%d.%m.%Y", decimal_mark = ","),
+)
+
+
+col_names
+
+kol_typar = cols(
+  PasientID = col_integer(),
+  Fodselsdato = col_date(),
+  PasientAlder = col_number(),
+  PasientKjonn = col_character()
+)
+
+col_types = kol_typar
