@@ -8,26 +8,26 @@ library(rlang)
 # lager fiktivt datasett som inneholder
 # en del feil som skal oppdages i valider_datadump-funksjonen
 
-d = tribble(
-  ~pasid, ~kjonn, ~alder, ~vekt, ~frisk,
-  11, 0, 16.23, 30, TRUE,
-  12, 1, 22, 50, FALSE,
-  13, 1, -14, 60, FALSE,
-  14, NA, 80, 70.7, TRUE,
-  15, 3, 900, 1000, NA
-)
+# d = tribble(
+#   ~pasid, ~kjonn, ~alder, ~vekt, ~frisk,
+#   11,     0,      16.23,     30,    TRUE,
+#   12,     1,        22,     50,    FALSE,
+#   13,     1,       -14,    60,    FALSE,
+#   14,     NA,       80,     70.7,  TRUE,
+#   15,     3,       900,    1000,  NA
+#   )
 
 # lager en fiktiv kodebok som hører til det fiktive datasettet
 
-kb = tribble(
-  ~variabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
-  "pasid", "tekst", NA, NA, TRUE, NA, NA, NA,
-  "alder", "numerisk", 18, NA, TRUE, 0, NA, NA,
-  "vekt", "numerisk", 45, 200, TRUE, 0, NA, NA,
-  "kjonn", "kategorisk", NA, NA, TRUE, NA, 0, "kvinne",
-  "kjonn", "kategorisk", NA, NA, TRUE, NA, 1, "mann",
-  "frisk", "boolsk", NA, NA, TRUE, NA, NA, NA
-)
+# kb = tribble(
+#   ~variabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
+#   "pasid", "tekst", NA, NA, TRUE, NA, NA, NA,
+#   "alder", "numerisk", 18,  NA, TRUE,       0,     NA,         NA,
+#   "vekt", "numerisk", 45, 200, TRUE,        0, NA, NA,
+#   "kjonn", "kategorisk", NA, NA, TRUE, NA, 0, "kvinne",
+#   "kjonn", "kategorisk", NA, NA, TRUE, NA, 1, "mann",
+#   "frisk", "boolsk", NA, NA, TRUE, NA, NA, NA
+#   )
 
 #---------------------------------------------------------Tester--------------------------------------------------------------
 
@@ -113,29 +113,41 @@ lag_regelsett = function(kb, oblig = TRUE) {
   # skal være større eller lik min-verdi i kodebok.
   # Lager en egen regel for hver aktuelle rad i
   # datarammen.
-  sjekk_min = kb_min %>%
-    pmap(function(varnamn, gverdi) {
-      new_function(
-        alist(df = ),
-        expr(transmute_at(df, vars(foo = !!varnamn), rules(min_ok = . >= !!gverdi)))
-      )
-    }) %>%
-    setNames(paste0("min_", kb_min$varnamn))
-
+  if (nrow(kb_min) > 0) {
+    sjekk_min = kb_min %>%
+      pmap(function(varnamn, gverdi) {
+        new_function(
+          alist(df = ),
+          expr(transmute_at(df, vars(foo = !!varnamn), rules(min_ok = . >= !!gverdi)))
+        )
+      }) %>%
+      setNames(paste0("min_", kb_min$varnamn))
+  }
   #  -----------------------------maks-------------------------------------------
 
   # Lager "rules" som tester maks-verdier
-  sjekk_maks = kb_maks %>%
-    pmap(function(varnamn, gverdi) {
-      new_function(
-        alist(df = ),
-        expr(transmute_at(df, vars(foo = !!varnamn), rules(maks_ok = . <= !!gverdi)))
-      )
-    }) %>%
-    setNames(paste0("maks_", kb_maks$varnamn))
+  if (nrow(kb_maks) > 0) {
+    sjekk_maks = kb_maks %>%
+      pmap(function(varnamn, gverdi) {
+        new_function(
+          alist(df = ),
+          expr(transmute_at(df, vars(foo = !!varnamn), rules(maks_ok = . <= !!gverdi)))
+        )
+      }) %>%
+      setNames(paste0("maks_", kb_maks$varnamn))
+  } else {
+    sjekk_maks = NULL
+  }
 
+  l_min_maks = list()
+  if (nrow(kb_min) > 0) {
+    l_min_maks = append(l_minmaks, sjekk_min)
+  }
+  if (nrow(kb_maks) > 0) {
+    l_min_maks = append(l_minmaks, sjekk_maks)
+  }
   # lager en cell-pack med maks-sjekkene
-  er_innfor_min_og_maks = cell_packs(sjekk_min, sjekk_maks)
+  er_innfor_min_og_maks = cell_packs(l_min_maks)
 
   #-----------------------------------------desimaler-------------------------------------------------
 
