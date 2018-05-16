@@ -98,37 +98,9 @@ kb_kanonisk = kb_kanonisk %>%
     "numerisk_heiltal"
   ))
 
-# henter ut variabelnavn for metadata som er i hvert skjema +
-# for aktuelt skjema, og variabeltype
-var_info = kb_kanonisk %>%
-  filter(skjema_id == "meta" | skjema_id == "barthel") %>%
-  distinct(variabel_id, variabel_id_checkware, variabeltype)
-
 # Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
-# fixme: Kategorisk er ein litt vrien variant. *Oftast* er han
-#        tal, men me kan risikera at han er tekst òg. Ei løysing er å
-#        alltid lesa han inn som tekst, men det er ikkje ei *god* løysing.
-#        Når han er koda som tal, er det ofte betre å handsama han som tal.
-#        Det ser betre ut, og det mogleggjer å bruka operatorar som < og >=
-#        (eks. komplikasjonsgrad < 5) (men "10" er som kjent < "2"!).
-#        Og for spørjeskjema er gjerne skåringskodane lagt inn som talkodar,
-#        slik at det er fint om me kan skriva for eksempel sp1 + sp2 + ...
-#        for å få ein sumskår).
-#
-#        Så den *rette* måten å handtera dette på er å lesa inn kategoriske
-#        verdiar som tal dersom dei moglege *verdiane* i kodeboka alle er tal
-#        og som tekst elles.
-#
-#        Det kunne vera aktuelt å dela opp i kategorisk_numerisk og
-#        kategorisk_tekst i vår kanoniske kodebok, men det ville komplisera
-#        annan kode som brukar kodebøkene (eks.kb_fyll()), så det bør me nok
-#        helst ikkje gjera.
-#
-#        Programmeringsmessig blir anbefalt løysing litt komplisert,
-#        men det skal me få til!
 spek_csv_checkware = tribble(
   ~variabeltype, ~csv_bokstav,
-  "kategorisk", "i",
   "tekst", "c",
   "boolsk", "c", # Sjå konvertering nedanfor
   "dato_kl", "c", # Mellombels, jf. https://github.com/tidyverse/readr/issues/642 (fixme til "T" når denne er fiksa)
@@ -137,17 +109,59 @@ spek_csv_checkware = tribble(
   "numerisk_heiltal", "i"
 )
 
-spek_innlesing = var_info %>%
+kb_kanonisk = kb_kanonisk %>%
   left_join(spek_csv_checkware, by = "variabeltype")
+
+# de kategoriske variablene som koder med tekst-verdier skal få character
+
+# kategoriske variabler skal være integer hvis de er heltall, og character hvis de har koder som ikke er tall (type ICD-10)
+# funksjoner som sjekker om en vector er et heltall, donert av Dr. Hufthammer
+er_heiltal = function(x) {
+  isTRUE(all(x == suppressWarnings(as.integer(x))))
+}
+
+# funksjon som lager variabel i kodeboka som beskriver om det er heltall eller ikke
+tekst_eller_heiltall = function(kb) {
+  if (er_heiltal(kb$verdi)) {
+    kb = kb %>%
+      mutate(verdi_type = "heiltal")
+  } else {
+    kb = kb %>%
+      mutate(verdi_type = "tekst")
+  }
+  kb
+}
+
+# kjører funksjonen for å lage variabel som beskriver om en kategorisk variabel er heltall eller ikke
+kb_kanonisk_nest = kb_kanonisk %>%
+  group_by(variabel_id) %>%
+  nest()
+kb_kanonisk_nest$data = kb_kanonisk_nest$data %>%
+  map(tekst_eller_heiltall)
+kb_kanonisk = unnest(kb_kanonisk_nest)
+
+# vi bruker case_when for å få inn csv_bokstav for variablene
+# som har variabeltyper avhengig av visse kriterier
+kb_kanonisk = kb_kanonisk %>%
+  mutate(csv_bokstav = case_when(
+    variabeltype == "kategorisk" & verdi_type == "heiltal" ~ "i",
+    variabeltype == "kategorisk" & verdi_type == "tekst" ~ "c",
+    TRUE ~ csv_bokstav
+  ))
+
+# henter ut variabelnavn for metadata som er i hvert skjema +
+# for aktuelt skjema, og variabeltype
+var_info = kb_kanonisk %>%
+  filter(skjema_id == "meta" | skjema_id == "barthel") %>%
+  distinct(variabel_id, variabel_id_checkware, variabeltype, csv_bokstav)
 
 # Les inn datasettet
 filnamn = "barthel.csv"
 adresse = paste0(mappe, filnamn)
 
-kol_typar = str_c(spek_innlesing$csv_bokstav, collapse = "")
+kol_typar = str_c(var_info$csv_bokstav, collapse = "")
 d_barthel = read_delim(adresse,
   delim = ";", na = "",
-  col_names = spek_innlesing$variabel_id,
   quote = "\"", trim_ws = FALSE, col_types = kol_typar,
   locale = locale(
     decimal_mark = ",", grouping_mark = "",
