@@ -113,6 +113,10 @@ lag_regelsett = function(kb, oblig = TRUE) {
   # skal være større eller lik min-verdi i kodebok.
   # Lager en egen regel for hver aktuelle rad i
   # datarammen.
+
+  # lager tom liste som vi fyller reglene i
+  l_min_maks = list()
+
   if (nrow(kb_min) > 0) {
     sjekk_min = kb_min %>%
       pmap(function(varnamn, gverdi) {
@@ -122,6 +126,9 @@ lag_regelsett = function(kb, oblig = TRUE) {
         )
       }) %>%
       setNames(paste0("min_", kb_min$varnamn))
+
+    # fyller regelen i lista
+    l_min_maks = append(l_minmaks, sjekk_min)
   }
   #  -----------------------------maks-------------------------------------------
 
@@ -135,15 +142,7 @@ lag_regelsett = function(kb, oblig = TRUE) {
         )
       }) %>%
       setNames(paste0("maks_", kb_maks$varnamn))
-  } else {
-    sjekk_maks = NULL
-  }
-
-  l_min_maks = list()
-  if (nrow(kb_min) > 0) {
-    l_min_maks = append(l_minmaks, sjekk_min)
-  }
-  if (nrow(kb_maks) > 0) {
+    # fyller regelen i lista
     l_min_maks = append(l_minmaks, sjekk_maks)
   }
   # lager en cell-pack med maks-sjekkene
