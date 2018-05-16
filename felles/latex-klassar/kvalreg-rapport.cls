@@ -479,7 +479,7 @@
 }
 
 % Lenkjestøtte
-\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{hyphens,obeyspaces}{url}
 \RequirePackage[linktoc=all,%
                     linkcolor=PrimCol,%
                     citecolor=PrimCol,%
