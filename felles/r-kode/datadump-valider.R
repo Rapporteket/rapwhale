@@ -202,37 +202,51 @@ lag_regelsett = function(kb, oblig = TRUE) {
 
   #-----------------------------------------variabeltype--------------------------------------------------------
 
+  # lager en liste for å få inn regler avhengig av hvilke som eksisterer i kodeboka
+  l_vartype = list()
   # Lager "rules" som tester om en kolonne i datasettet er samme som i kodeboka.
   # en sjekk for numeriske variabler
-  sjekk_num = kb_num %>%
-    pmap(function(varnamn) {
-      new_function(
-        alist(df = ),
-        expr(summarise_at(df, vars(foo = !!varnamn), rules(vartype_ok = is.numeric(.))))
-      )
-    }) %>%
-    setNames(paste0("num_", kb_num$varnamn))
+  if (nrow(kb_num) > 0) {
+    sjekk_num = kb_num %>%
+      pmap(function(varnamn) {
+        new_function(
+          alist(df = ),
+          expr(summarise_at(df, vars(foo = !!varnamn), rules(vartype_ok = is.numeric(.))))
+        )
+      }) %>%
+      setNames(paste0("num_", kb_num$varnamn))
+    # appender regelen til lista
+    l_vartype = append(l_vartype, sjekk_num)
+  }
   # boolske
-  sjekk_boolsk = kb_boolsk %>%
-    pmap(function(varnamn) {
-      new_function(
-        alist(df = ),
-        expr(summarise_at(df, vars(foo = !!varnamn), rules(vartype_ok = is.logical(.))))
-      )
-    }) %>%
-    setNames(paste0("boolsk_", kb_boolsk$varnamn))
+  if (nrow(kb_boolsk) > 0) {
+    sjekk_boolsk = kb_boolsk %>%
+      pmap(function(varnamn) {
+        new_function(
+          alist(df = ),
+          expr(summarise_at(df, vars(foo = !!varnamn), rules(vartype_ok = is.logical(.))))
+        )
+      }) %>%
+      setNames(paste0("boolsk_", kb_boolsk$varnamn))
+    # appender regelen til lista
+    l_vartype = append(l_vartype, sjekk_boolsk)
+  }
   # tekstvariabler
-  sjekk_tekst = kb_tekst %>%
-    pmap(function(varnamn) {
-      new_function(
-        alist(df = ),
-        expr(summarise_at(df, vars(foo = !!varnamn), rules(vartype_ok = is.character(.))))
-      )
-    }) %>%
-    setNames(paste0("tekst_", kb_tekst$varnamn))
+  if (nrow(kb_tekst) > 0) {
+    sjekk_tekst = kb_tekst %>%
+      pmap(function(varnamn) {
+        new_function(
+          alist(df = ),
+          expr(summarise_at(df, vars(foo = !!varnamn), rules(vartype_ok = is.character(.))))
+        )
+      }) %>%
+      setNames(paste0("tekst_", kb_tekst$varnamn))
+    # appender regelen til lista
+    l_vartype = append(l_vartype, sjekk_tekst)
+  }
 
   # lager en col-pack med variabeltype-sjekkene
-  er_riktig_variabeltype = col_packs(sjekk_num, sjekk_boolsk, sjekk_tekst)
+  er_riktig_variabeltype = col_packs(l_vartype)
 
   #-----------------------------------------alle variabelnavn tilstede-------------------------------------------------------
   # Test sjekker at alle variablenavn i datadump er med i kodeboka (samtidig)
