@@ -83,7 +83,8 @@ lag_regelsett = function(kb, oblig = TRUE) {
   kb_min = kb_filter(kb, "min")
   kb_maks = kb_filter(kb, "maks")
   kb_des = kb_filter(kb, "desimalar")
-  kb_oblig = kb_filter(kb, "obligatorisk")
+  kb_oblig = kb_filter(kb, "obligatorisk") %>%
+    filter(gverdi == "ja")
 
   # trenger 4 filter for kodeboka for ulike typer variabel
   kb_rename = kb %>%
@@ -283,23 +284,20 @@ lag_regelsett = function(kb, oblig = TRUE) {
 # er reglane som følgjer frå kodeboka
 dd_er_gyldig = function(df, kb, ...) {
   regelsett = lag_regelsett(kb, ...)
-  har_feil = df %>%
-    expose(regelsett) %>%
-    any_breaker()
-  !har_feil
+  test_res = df %>%
+    expose(regelsett)
+
+  # Sjekk om det var noen feil + generer feilrapport
+  er_gyldig = !any_breaker(test_res)
+  rapport = get_report(test_res)
+
+  # Returner gyldighetsstatus + feilrapport
+  attr(er_gyldig, "rapport") = rapport
+  er_gyldig
 }
 
-# regelsett = lag_regelsett(kb, oblig = TRUE)
-#
-# # funksjon for å teste regelsettet på datadump
-# sjekk_dd = function(d, regelsett){
-#
-#   rapport = d %>% expose(regelsett) %>% get_report
-#   rapport
-# }
-#
-# #sjekk at funksjonen funker
-# sjekk_dd(d, regelsett)
+# sjekk at funksjonen funker
+# dd_er_gyldig(d, kb)
 #
 #
 # # # Test at funksjonen fungerer
