@@ -73,6 +73,7 @@ std_namn = c(
 kb = kb %>%
   select(!!std_namn)
 
+# fixme! det skal være mulig å bruke kb_er_gyldig() på kodebok på kanonisk form
 # Sjekk kodeboka
 kb_er_gyldig(kb)
 warnings()
@@ -82,7 +83,6 @@ kb_kanonisk = kb_til_kanonisk_form(kb)
 
 # fixme! kb_kanonisk støtter ikke andre kolonner utenom standardkolonnene,
 # derfor left_joiner vi denne inn. Fix når kb_til_kanonisk er oppdatert.
-
 variabel_id_checkware = kb %>%
   select(variabel_id, variabel_id_checkware) %>%
   na.omit()
@@ -91,6 +91,8 @@ kb_kanonisk = kb_kanonisk %>%
   left_join(variabel_id_checkware, by = "variabel_id")
 
 les_dd_checkware = function(kb, skjema) {
+
+  # Tar quotes rundt skjema
   skjema = quo_name(skjema)
 
   # filtrer på aktuelt skjema + metadata som finnes i alle skjema
@@ -164,12 +166,11 @@ les_dd_checkware = function(kb, skjema) {
   # henter ut variabelnavn og variabeltype
   var_info = kb_skjema %>%
     distinct(variabel_id, variabel_id_checkware, variabeltype, csv_bokstav)
+  kol_typar = str_c(var_info$csv_bokstav, collapse = "")
 
   # Les inn datasettet
   filnamn = paste0(skjema, ".csv")
   adresse = paste0(mappe, filnamn)
-
-  kol_typar = str_c(var_info$csv_bokstav, collapse = "")
   d = stop_for_problems(read_delim(adresse,
     delim = ";", na = "",
     quote = "\"", trim_ws = FALSE, col_types = kol_typar,
@@ -179,18 +180,7 @@ les_dd_checkware = function(kb, skjema) {
     )
   ))
 
-  # Datafila *kan* ikkje innehalda duplikate kolonnenamn,
-  # sidan me då ikkje kan veta kva kolonne eit namn svarar til.
-  # Stopp derfor viss me finn duplikate namn.
-  dupnamn = duplicated(names(d))
-  if (any(dupnamn)) {
-    stop(
-      "Datafila har duplikate variabelnamn:\n",
-      str_c(d[dupnamn], collapse = "\n")
-    )
-  }
-
-  # setter variabelnavn
+  # setter på fine variabelnavn
   kolnamn = var_info$variabel_id_checkware %>%
     setNames(var_info$variabel_id)
   d = d %>%
