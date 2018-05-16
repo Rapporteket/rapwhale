@@ -88,110 +88,117 @@ variabel_id_checkware = kb %>%
 kb_kanonisk = kb_kanonisk %>%
   left_join(variabel_id_checkware, by = "variabel_id")
 
-# filtrer på aktuelt skjema + metadata som finnes i alle skjema
+les_dd_checkware = function(kb, skjema) {
+  skjema = quo_name(skjema)
 
-kb_skjema = kb_kanonisk %>%
-  filter(skjema_id == "meta" | skjema_id == "barthel")
+  # filtrer på aktuelt skjema + metadata som finnes i alle skjema
+  kb_skjema = kb_kanonisk %>%
+    filter(skjema_id == "meta" | skjema_id == skjema)
 
-# Me skil berre mellom heiltals- og flyttalsvariablar
-# i vår kodebok ved hjelp av «desimalar»-feltet (begge
-# talvariantane har variabeltypen «numerisk»). For å
-# kunna handtera dette riktig (les: strengt) ved
-# innlesing av data, legg me derfor til ein kunstig
-# «numerisk_heiltal»-variabeltype.
-kb_skjema = kb_skjema %>%
-  mutate(variabeltype = replace(
-    variabeltype,
-    (variabeltype == "numerisk") & (desimalar == 0),
-    "numerisk_heiltal"
-  ))
+  # Me skil berre mellom heiltals- og flyttalsvariablar
+  # i vår kodebok ved hjelp av «desimalar»-feltet (begge
+  # talvariantane har variabeltypen «numerisk»). For å
+  # kunna handtera dette riktig (les: strengt) ved
+  # innlesing av data, legg me derfor til ein kunstig
+  # «numerisk_heiltal»-variabeltype.
+  kb_skjema = kb_skjema %>%
+    mutate(variabeltype = replace(
+      variabeltype,
+      (variabeltype == "numerisk") & (desimalar == 0),
+      "numerisk_heiltal"
+    ))
 
-# Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
-spek_csv_checkware = tribble(
-  ~variabeltype, ~csv_bokstav,
-  "tekst", "c",
-  "boolsk", "c", # Sjå konvertering nedanfor
-  "dato_kl", "c", # Mellombels, jf. https://github.com/tidyverse/readr/issues/642 (fixme til "T" når denne er fiksa)
-  "dato", "c",
-  "numerisk", "d",
-  "numerisk_heiltal", "i"
-)
+  # Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
+  spek_csv_checkware = tribble(
+    ~variabeltype, ~csv_bokstav,
+    "tekst", "c",
+    "boolsk", "c", # Sjå konvertering nedanfor
+    "dato_kl", "c", # Mellombels, jf. https://github.com/tidyverse/readr/issues/642 (fixme til "T" når denne er fiksa)
+    "dato", "c",
+    "numerisk", "d",
+    "numerisk_heiltal", "i"
+  )
 
-kb_skjema = kb_skjema %>%
-  left_join(spek_csv_checkware, by = "variabeltype")
+  kb_skjema = kb_skjema %>%
+    left_join(spek_csv_checkware, by = "variabeltype")
 
-# de kategoriske variablene som koder med tekst-verdier skal få character
+  # de kategoriske variablene som koder med tekst-verdier skal få character
 
-# kategoriske variabler skal være integer hvis de er heltall, og character hvis de har koder som ikke er tall (type ICD-10)
-# funksjoner som sjekker om en vector er et heltall, donert av Dr. Hufthammer
-er_heiltal = function(x) {
-  isTRUE(all(x == suppressWarnings(as.integer(x))))
-}
-
-# funksjon som lager variabel i kodeboka som beskriver om det er heltall eller ikke
-tekst_eller_heiltall = function(kb) {
-  if (er_heiltal(kb$verdi)) {
-    kb = kb %>%
-      mutate(verdi_type = "heiltal")
-  } else {
-    kb = kb %>%
-      mutate(verdi_type = "tekst")
+  # kategoriske variabler skal være integer hvis de er heltall, og character hvis de har koder som ikke er tall (type ICD-10)
+  # funksjoner som sjekker om en vector er et heltall, donert av Dr. Hufthammer
+  er_heiltal = function(x) {
+    isTRUE(all(x == suppressWarnings(as.integer(x))))
   }
-  kb
+
+  # funksjon som lager variabel i kodeboka som beskriver om det er heltall eller ikke
+  tekst_eller_heiltall = function(kb) {
+    if (er_heiltal(kb$verdi)) {
+      kb = kb %>%
+        mutate(verdi_type = "heiltal")
+    } else {
+      kb = kb %>%
+        mutate(verdi_type = "tekst")
+    }
+    kb
+  }
+
+  # kjører funksjonen for å lage variabel som beskriver om en kategorisk variabel er heltall eller ikke
+  kb_skjema_nest = kb_skjema %>%
+    group_by(variabel_id) %>%
+    nest()
+  kb_skjema_nest$data = kb_skjema_nest$data %>%
+    map(tekst_eller_heiltall)
+  kb_skjema = unnest(kb_skjema_nest)
+
+  # vi bruker case_when for å få inn csv_bokstav for variablene
+  # som har variabeltyper avhengig av visse kriterier
+  kb_skjema = kb_skjema %>%
+    mutate(csv_bokstav = case_when(
+      variabeltype == "kategorisk" & verdi_type == "heiltal" ~ "i",
+      variabeltype == "kategorisk" & verdi_type == "tekst" ~ "c",
+      TRUE ~ csv_bokstav
+    ))
+
+  # henter ut variabelnavn og variabeltype
+  var_info = kb_skjema %>%
+    distinct(variabel_id, variabel_id_checkware, variabeltype, csv_bokstav)
+
+  # Les inn datasettet
+  filnamn = paste0(skjema, ".csv")
+  adresse = paste0(mappe, filnamn)
+
+  kol_typar = str_c(var_info$csv_bokstav, collapse = "")
+  d = read_delim(adresse,
+    delim = ";", na = "",
+    quote = "\"", trim_ws = FALSE, col_types = kol_typar,
+    locale = locale(
+      decimal_mark = ",", grouping_mark = "",
+      date_format = "%d.%m.%Y", time_format = "%H:%M:%S"
+    )
+  )
+
+  # Datafila *kan* ikkje innehalda duplikate kolonnenamn,
+  # sidan me då ikkje kan veta kva kolonne eit namn svarar til.
+  # Stopp derfor viss me finn duplikate namn.
+  dupnamn = duplicated(names(d))
+  if (any(dupnamn)) {
+    stop(
+      "Datafila har duplikate variabelnamn:\n",
+      str_c(d[dupnamn], collapse = "\n")
+    )
+  }
+
+  # setter variabelnavn
+  kolnamn = var_info$variabel_id_checkware %>%
+    setNames(var_info$variabel_id)
+  d = d %>%
+    rename(!!!kolnamn)
+
+  # validerer datadumpen
+  # med dd_er_gyldig funksjonen fra datadump-valider-skriptet
+  print(dd_er_gyldig(d, kb_skjema))
+
+  d
 }
 
-# kjører funksjonen for å lage variabel som beskriver om en kategorisk variabel er heltall eller ikke
-kb_skjema_nest = kb_skjema %>%
-  group_by(variabel_id) %>%
-  nest()
-kb_skjema_nest$data = kb_skjema_nest$data %>%
-  map(tekst_eller_heiltall)
-kb_skjema = unnest(kb_skjema_nest)
-
-# vi bruker case_when for å få inn csv_bokstav for variablene
-# som har variabeltyper avhengig av visse kriterier
-kb_skjema = kb_skjema %>%
-  mutate(csv_bokstav = case_when(
-    variabeltype == "kategorisk" & verdi_type == "heiltal" ~ "i",
-    variabeltype == "kategorisk" & verdi_type == "tekst" ~ "c",
-    TRUE ~ csv_bokstav
-  ))
-
-# henter ut variabelnavn og variabeltype
-var_info = kb_skjema %>%
-  distinct(variabel_id, variabel_id_checkware, variabeltype, csv_bokstav)
-
-# Les inn datasettet
-filnamn = "barthel.csv"
-adresse = paste0(mappe, filnamn)
-
-kol_typar = str_c(var_info$csv_bokstav, collapse = "")
-d_barthel = read_delim(adresse,
-  delim = ";", na = "",
-  quote = "\"", trim_ws = FALSE, col_types = kol_typar,
-  locale = locale(
-    decimal_mark = ",", grouping_mark = "",
-    date_format = "%d.%m.%Y", time_format = "%H:%M:%S"
-  )
-)
-
-# Datafila *kan* ikkje innehalda duplikate kolonnenamn,
-# sidan me då ikkje kan veta kva kolonne eit namn svarar til.
-# Stopp derfor viss me finn duplikate namn.
-dupnamn = duplicated(names(d_barthel))
-if (any(dupnamn)) {
-  stop(
-    "Datafila har duplikate variabelnamn:\n",
-    str_c(d_barthel[dupnamn], collapse = "\n")
-  )
-}
-
-# setter variabelnavn
-kolnamn = var_info$variabel_id_checkware %>%
-  setNames(var_info$variabel_id)
-d_barthel = d_barthel %>%
-  rename(!!!kolnamn)
-
-# validerer datadumpen
-# med dd_er_gyldig funksjonen fra datadump-valider-skriptet
-dd_er_gyldig(d_barthel, kb_skjema)
+les_dd_checkware(kb_kanonisk, "barthel")
