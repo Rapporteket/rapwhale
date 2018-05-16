@@ -24,6 +24,9 @@ library(readxl)
 # henter funksjon for å lage kodebok til kanonisk form + kodebok valider
 source("h:/kvalreg/felles/r-kode/kodebok-valider.R", encoding = "UTF-8")
 
+# henter funksjon for å validere datadump
+source("h:/kvalreg/felles/r-kode/datadump-valider.R", encoding = "UTF-8")
+
 #--------------------------datainnhenting - bruker rehabiliteringsregisteret som utgangspunkt------------------------
 
 # Les inn kodebok
@@ -85,13 +88,18 @@ variabel_id_checkware = kb %>%
 kb_kanonisk = kb_kanonisk %>%
   left_join(variabel_id_checkware, by = "variabel_id")
 
+# filtrer på aktuelt skjema + metadata som finnes i alle skjema
+
+kb_skjema = kb_kanonisk %>%
+  filter(skjema_id == "meta" | skjema_id == "barthel")
+
 # Me skil berre mellom heiltals- og flyttalsvariablar
 # i vår kodebok ved hjelp av «desimalar»-feltet (begge
 # talvariantane har variabeltypen «numerisk»). For å
 # kunna handtera dette riktig (les: strengt) ved
 # innlesing av data, legg me derfor til ein kunstig
 # «numerisk_heiltal»-variabeltype.
-kb_kanonisk = kb_kanonisk %>%
+kb_skjema = kb_skjema %>%
   mutate(variabeltype = replace(
     variabeltype,
     (variabeltype == "numerisk") & (desimalar == 0),
@@ -109,7 +117,7 @@ spek_csv_checkware = tribble(
   "numerisk_heiltal", "i"
 )
 
-kb_kanonisk = kb_kanonisk %>%
+kb_skjema = kb_skjema %>%
   left_join(spek_csv_checkware, by = "variabeltype")
 
 # de kategoriske variablene som koder med tekst-verdier skal få character
@@ -133,26 +141,24 @@ tekst_eller_heiltall = function(kb) {
 }
 
 # kjører funksjonen for å lage variabel som beskriver om en kategorisk variabel er heltall eller ikke
-kb_kanonisk_nest = kb_kanonisk %>%
+kb_skjema_nest = kb_skjema %>%
   group_by(variabel_id) %>%
   nest()
-kb_kanonisk_nest$data = kb_kanonisk_nest$data %>%
+kb_skjema_nest$data = kb_skjema_nest$data %>%
   map(tekst_eller_heiltall)
-kb_kanonisk = unnest(kb_kanonisk_nest)
+kb_skjema = unnest(kb_skjema_nest)
 
 # vi bruker case_when for å få inn csv_bokstav for variablene
 # som har variabeltyper avhengig av visse kriterier
-kb_kanonisk = kb_kanonisk %>%
+kb_skjema = kb_skjema %>%
   mutate(csv_bokstav = case_when(
     variabeltype == "kategorisk" & verdi_type == "heiltal" ~ "i",
     variabeltype == "kategorisk" & verdi_type == "tekst" ~ "c",
     TRUE ~ csv_bokstav
   ))
 
-# henter ut variabelnavn for metadata som er i hvert skjema +
-# for aktuelt skjema, og variabeltype
-var_info = kb_kanonisk %>%
-  filter(skjema_id == "meta" | skjema_id == "barthel") %>%
+# henter ut variabelnavn og variabeltype
+var_info = kb_skjema %>%
   distinct(variabel_id, variabel_id_checkware, variabeltype, csv_bokstav)
 
 # Les inn datasettet
@@ -185,3 +191,7 @@ kolnamn = var_info$variabel_id_checkware %>%
   setNames(var_info$variabel_id)
 d_barthel = d_barthel %>%
   rename(!!!kolnamn)
+
+# validerer datadumpen
+# med dd_er_gyldig funksjonen fra datadump-valider-skriptet
+dd_er_gyldig(d_barthel, kb_skjema)
