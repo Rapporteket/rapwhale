@@ -168,14 +168,14 @@ les_dd_checkware = function(kb, skjema) {
   adresse = paste0(mappe, filnamn)
 
   kol_typar = str_c(var_info$csv_bokstav, collapse = "")
-  d = read_delim(adresse,
+  d = stop_for_problems(read_delim(adresse,
     delim = ";", na = "",
     quote = "\"", trim_ws = FALSE, col_types = kol_typar,
     locale = locale(
       decimal_mark = ",", grouping_mark = "",
       date_format = "%d.%m.%Y", time_format = "%H:%M:%S"
     )
-  )
+  ))
 
   # Datafila *kan* ikkje innehalda duplikate kolonnenamn,
   # sidan me då ikkje kan veta kva kolonne eit namn svarar til.
@@ -196,9 +196,19 @@ les_dd_checkware = function(kb, skjema) {
 
   # validerer datadumpen
   # med dd_er_gyldig funksjonen fra datadump-valider-skriptet
-  print(dd_er_gyldig(d, kb_skjema))
+  er_gyldig = dd_er_gyldig(d, kb_skjema)
+
+  if (!er_gyldig) {
+    print(attr(er_gyldig, "rapport"))
+    stop("Datadumpen er ikke gyldig. Se feilene over.")
+  }
 
   d
 }
 
-les_dd_checkware(kb_kanonisk, "barthel")
+# sjekk at funksjonen funker
+d_barthel = les_dd_checkware(kb_kanonisk, "barthel")
+d_moca = les_dd_checkware(kb_kanonisk, "moca")
+d_mrs = les_dd_checkware(kb_kanonisk, "mrs")
+d_nihss = les_dd_checkware(kb_kanonisk, "nihss")
+d_tis = les_dd_checkware(kb_kanonisk, "tis")
