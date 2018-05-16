@@ -30,6 +30,8 @@ source("h:/kvalreg/felles/r-kode/datadump-valider.R", encoding = "UTF-8")
 #--------------------------datainnhenting - bruker rehabiliteringsregisteret som utgangspunkt------------------------
 
 # Les inn kodebok
+# fixme! for å lage en funksjon som bare tar inn mappenavn og skjemanavn,
+# må kodebok ha et standardisert navn, og mappene en standardisert struktur
 mappe = "***FJERNA-ADRESSE***"
 kb = read_excel(paste0(mappe, "kodebok-AFMR-register 0.8.xlsx"), sheet = 1)
 
