@@ -94,7 +94,7 @@ lag_regelsett = function(kb, oblig = TRUE) {
     select(varnamn, verdi) %>%
     rename(gverdi = "verdi")
   kb_num = kb_rename %>%
-    filter(variabeltype == "numerisk" | variabeltype == "kategorisk" | variabeltype == "utrekna") %>%
+    filter(variabeltype == "numerisk" | variabeltype == "utrekna") %>%
     distinct(varnamn)
   kb_boolsk = kb_rename %>%
     filter(variabeltype == "boolsk") %>%
