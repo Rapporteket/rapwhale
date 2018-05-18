@@ -14,6 +14,13 @@ library(methods) # Nødvendig for å fungera skikkeleg med RScript,
 # jf. https://yihui.name/en/2017/12/library-methods/ :(
 
 
+# Personlege innstillingar ------------------------------------------------
+
+# Skal ein visa feilmeldingar/åtvaringar i terminalvindauget?
+vis_feilmeldingar = FALSE
+
+
+
 # Årsrapportoversikt ------------------------------------------------------
 
 # Filer me skal kompilera
@@ -78,7 +85,7 @@ kompiler_tex = function(adresse, maksiter = 5) {
     old_opts = options(warn = 1) # Vis åtvaringar når dei skjer (for eksempel viss PDF-fila er låst for skriving)
     logg = suppressWarnings(system2(
       "lualatex",
-      args = paste("--interaction=errorstopmode --file-line-error", filnamn),
+      args = paste("--interaction=nonstopmode --halt-on-error --file-line-error", filnamn),
       stdout = TRUE
     ))
 
@@ -88,12 +95,18 @@ kompiler_tex = function(adresse, maksiter = 5) {
     loggfil = str_replace(adresse, ".tex$", ".log")
     logg = read_lines(loggfil)
 
-    options(old_opts)
-    feil = any(str_detect(logg, "no output PDF file produced"))
-    ferdig = !any(str_detect(logg, "run LaTeX again|Rerun to|Rerun LaTeX"))
+    # Loggteksten har linjelengd på 80 teikn, som kan bli delt midt i ei
+    # feilmelding (til og med midt inni eit ord!). Det gjer det vanskelegare
+    # å automatisk finna spesifikke feilmeldingar. Lagar derfor ein versjon
+    # der loggen er éin long tekst utan linjeskift.
+    logg1l = str_c(logg, collapse = "")
 
-    # Loggteksten har linjelengd på 80 teikn, med automatiske linjeskift
-    # Me fjernar desse og definerer ei loggmelding til å vera tekst etterfølgt av ei tom linje
+    options(old_opts)
+    feil = str_detect(logg1l, "no output PDF file produced")
+    ferdig = !str_detect(logg1l, "run LaTeX again|Rerun to|Rerun LaTeX")
+
+    # Skil loggen inn i separate «loggmeldingar», som me definerer
+    # til å vera tekst etterfølgt av ei *tom* linje
     loggmeldingar = str_c(logg, collapse = "\n") %>% # Gjer loggteksten om til éin stor streng
       str_split("\n\n+") %>%
       pluck(1) # Del opp i loggmeldingar
@@ -101,7 +114,7 @@ kompiler_tex = function(adresse, maksiter = 5) {
 
     # Vis eventuelle feilmeldingar/åtvaringar i loggen
     vis_loggfeil = function() {
-      if (length(logg_akt) > 0) {
+      if (vis_feilmeldingar && (length(logg_akt) > 0)) {
         cat("Åtvaringar/feil: ",
           str_c("  ", str_replace_all(logg_akt, "\n", "\n  ")),
           sep = "\n"
@@ -115,7 +128,7 @@ kompiler_tex = function(adresse, maksiter = 5) {
       break
     } else if (ferdig) {
       cat("OK\n")
-      # vis_loggfeil() # Det kan vera åtvaringar sjølv om kompileringa fungerte ...
+      vis_loggfeil() # Det kan vera åtvaringar sjølv om kompileringa fungerte ...
       break
     } else if (iter >= maksiter) {
       cat("GJEV OPP (for mange rekompileringar)\n")
