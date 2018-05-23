@@ -129,7 +129,7 @@ lag_regelsett = function(kb, oblig = TRUE) {
       setNames(paste0("min_", kb_min$varnamn))
 
     # fyller regelen i lista
-    l_min_maks = append(l_minmaks, sjekk_min)
+    l_min_maks = append(l_min_maks, sjekk_min)
   }
   #  -----------------------------maks-------------------------------------------
 
@@ -144,7 +144,7 @@ lag_regelsett = function(kb, oblig = TRUE) {
       }) %>%
       setNames(paste0("maks_", kb_maks$varnamn))
     # fyller regelen i lista
-    l_min_maks = append(l_minmaks, sjekk_maks)
+    l_min_maks = append(l_min_maks, sjekk_maks)
   }
   # lager en cell-pack med maks-sjekkene
   er_innfor_min_og_maks = cell_packs(l_min_maks)
