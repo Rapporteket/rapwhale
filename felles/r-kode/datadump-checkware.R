@@ -27,11 +27,16 @@ source("h:/kvalreg/felles/r-kode/kodebok-valider.R", encoding = "UTF-8")
 # henter funksjon for å validere datadump
 source("h:/kvalreg/felles/r-kode/datadump-valider.R", encoding = "UTF-8")
 
-# henter funksjon for å validere datadump
-source("h:/kvalreg/felles/r-kode/r-til-spss.R", encoding = "UTF-8")
-
 #--------------------------datainnhenting - bruker rehabiliteringsregisteret som utgangspunkt------------------------
 
+# funksjon for å tilrettelegge checkware-data basert på kodebok,
+# hvor funksjonen automatisk henter inn kodebok som blir brukt.
+# funksjonen trenger:
+# - Ei mappeadresse, der mappa inneheld kodebok og tilhøyrande datadumpfiler.
+# - Ein skjema-ID, som tilsvarer skjema-ID-en i kodeboka og filnamnet til datadumpen (men utan .csv).
+# funksjonen sjekker at kodeboka er gyldig, med kodebok_er_gyldig() funksjonen fra kodebok-valider skriptet
+# funksjonen sjekker at datadumpen er gyldig, med dd_er_gyldig() funksjonen fra datadump-valider skriptet
+# krever pakkene tidyverse, magrittr og readxl
 lag_checkware_data = function(mappe, skjema) {
 
   # hent datoer på mappene
@@ -48,7 +53,7 @@ lag_checkware_data = function(mappe, skjema) {
   # innlesing av kodebok
   kb = read_excel(paste0(adresse, "kodebok.xlsx"), sheet = 1)
 
-  # I kodeboka til rehabiliteringsregisteret er det flere kolonner som ikke
+  # I kodeboka er det flere kolonner som ikke
   # er utfylt fordi det ikke er aktuelt.
   # disse har ikke klart å få riktig tolkning for variabeltype
   # Rettet datatype for nokre (tomme) variablar som vart feiltolka til feil datatype
