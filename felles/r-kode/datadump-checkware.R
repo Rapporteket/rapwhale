@@ -218,20 +218,10 @@ lag_checkware_data = function(mappe, skjema) {
 }
 
 # sjekk at funksjonen funker
-mappe = "***FJERNA-ADRESSE***"
-
-d_barthel = lag_checkware_data(mappe, skjema = "barthel")
-d_moca = lag_checkware_data(mappe, skjema = "moca")
-d_mrs = lag_checkware_data(mappe, "mrs")
-d_nihss = lag_checkware_data(mappe, "nihss")
-d_tis = lag_checkware_data(mappe, "tis")
-
-# sender data som spss til registerets kvalitetsserver
-
-lagre_mappe = "***FJERNA-ADRESSE***"
-
-kb_skjema = kb_kanonisk %>%
-  filter(skjema_id == "meta" | skjema_id == "barthel")
-
-d_spss = kb_til_spss(kb_skjema, df = d_barthel)
-write_sav(d_spss, paste0(lagre_mappe, "/d_barthel.sav"))
+# mappe = "***FJERNA-ADRESSE***"
+#
+# d_barthel = lag_checkware_data(mappe, skjema = "barthel")
+# d_moca = lag_checkware_data(mappe, skjema = "moca")
+# d_mrs = lag_checkware_data(mappe, "mrs")
+# d_nihss = lag_checkware_data(mappe, "nihss")
+# d_tis = lag_checkware_data(mappe, "tis")
