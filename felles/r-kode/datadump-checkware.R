@@ -50,16 +50,46 @@ lag_checkware_data = function(mappe, skjema) {
   # paste0 mappa
   adresse = paste0(mappe, nyeste_dato, "/")
 
-  # innlesing av kodebok
-  kb = read_excel(paste0(adresse, "kodebok.xlsx"), sheet = 1)
+  # kodebok-kolonnetyper
+  kb_koltyper = c(
+    "text",
+    "text",
+    "text",
+    "text",
+    "text",
+    "text",
+    "text",
+    "text",
+    "text",
+    "text",
+    "text",
+    "text",
+    "text",
+    "text",
+    "text",
+    "numeric",
+    "numeric",
+    "numeric",
+    "numeric",
+    "numeric",
+    "text",
+    "text",
+    "text",
+    "text"
+  )
 
-  # gjør om kodeboka til kanonisk form
-  kb_kanonisk = kb_til_kanonisk_form(kb)
+  # innlesing av kodebok
+  kb = read_excel(paste0(adresse, "kodebok.xlsx"), col_types = kb_koltyper, sheet = 1)
+
+  kb = kb %>%
+    mutate(desimalar = as.integer(desimalar))
 
   # fixme! det skal være mulig å bruke kb_er_gyldig() på kodebok på kanonisk form
   # Sjekk kodeboka
-  kb_er_gyldig(kb_kanonisk)
-  warnings()
+  kb_er_gyldig(kb)
+
+  # gjør om kodeboka til kanonisk form
+  kb_kanonisk = kb_til_kanonisk_form(kb)
 
   # fixme! kb_kanonisk støtter ikke andre kolonner utenom standardkolonnene,
   # derfor left_joiner vi variabel_id_checkware tilbake inn. Fix når kb_til_kanonisk er oppdatert.
