@@ -50,7 +50,7 @@ lag_checkware_data = function(mappe, skjema) {
   # paste0 mappa
   adresse = paste0(mappe, nyeste_dato, "/")
 
-  # kodebok-kolonnetyper
+  # kodebok-kolonnetyper som skal brukes når man henter inn kodeboka
   kb_koltyper = c(
     "text",
     "text",
@@ -81,10 +81,11 @@ lag_checkware_data = function(mappe, skjema) {
   # innlesing av kodebok
   kb = read_excel(paste0(adresse, "kodebok.xlsx"), col_types = kb_koltyper, sheet = 1)
 
+  # read_excel har ingen mulighet for å skille "numeric" i forhold til "integer" i col_types spesifikasjonen.
+  # vi endrer desimalar manuelt til å være dette for å kunne komme gjennom kb_er_gyldig.
   kb = kb %>%
     mutate(desimalar = as.integer(desimalar))
 
-  # fixme! det skal være mulig å bruke kb_er_gyldig() på kodebok på kanonisk form
   # Sjekk kodeboka
   kb_er_gyldig(kb)
 
@@ -96,10 +97,14 @@ lag_checkware_data = function(mappe, skjema) {
   variabel_id_checkware = kb %>%
     select(variabel_id, variabel_id_checkware) %>%
     na.omit()
-
   kb_kanonisk = kb_kanonisk %>%
     left_join(variabel_id_checkware, by = "variabel_id")
 
+  # funksjon som henter inn checkware-data ved hjelp av en kodebok
+  # funksjonen trenger en kodebok på kanonisk format og et skjema-navn (f.eks "barthel")
+  # og gir dataene fine navn basert på variabel_id i kodeboka,
+  # ved hjelp av variabel_id_checkware som identifiserer variablene i datadumpene
+  # datadumpen får også variabeltypene som er definert i kodeboka
   les_dd_checkware = function(kb, skjema) {
 
     # Tar quotes rundt skjema
