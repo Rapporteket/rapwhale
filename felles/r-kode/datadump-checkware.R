@@ -53,54 +53,16 @@ lag_checkware_data = function(mappe, skjema) {
   # innlesing av kodebok
   kb = read_excel(paste0(adresse, "kodebok.xlsx"), sheet = 1)
 
-  # I kodeboka er det flere kolonner som ikke
-  # er utfylt fordi det ikke er aktuelt.
-  # disse har ikke klart å få riktig tolkning for variabeltype
-  # Rettet datatype for nokre (tomme) variablar som vart feiltolka til feil datatype
-  kb = kb %>%
-    mutate(
-      desimalar = as.integer(desimalar),
-      eining = as.character(eining),
-      kategori = skjemanamn,
-      maks = as.double(maks),
-    )
-
-  # Legg til standardkolonnar som manglar
-  kb = kb %>%
-    mutate(
-      innleiing = NA_character_,
-      kategori = NA_character_,
-      unik = "nei",
-      manglande = NA_character_,
-      min_rimeleg = NA_real_,
-      maks_rimeleg = NA_real_,
-      kommentar_rimeleg = NA_character_,
-      utrekningsformel = NA_character_,
-      logikk = NA_character_,
-      kommentar = NA_character_
-    )
-
-  # Fiks rekkjefølgja på variablane
-  std_namn = c(
-    "skjema_id", "skjemanamn", "kategori", "innleiing", "variabel_id_checkware", "variabel_id",
-    "variabeletikett", "forklaring", "variabeltype", "eining", "unik",
-    "obligatorisk", "verdi", "verditekst", "manglande", "desimalar",
-    "min", "maks", "min_rimeleg", "maks_rimeleg", "kommentar_rimeleg",
-    "utrekningsformel", "logikk", "kommentar"
-  )
-  kb = kb %>%
-    select(!!std_namn)
-
-  # fixme! det skal være mulig å bruke kb_er_gyldig() på kodebok på kanonisk form
-  # Sjekk kodeboka
-  kb_er_gyldig(kb)
-  warnings()
-
   # gjør om kodeboka til kanonisk form
   kb_kanonisk = kb_til_kanonisk_form(kb)
 
+  # fixme! det skal være mulig å bruke kb_er_gyldig() på kodebok på kanonisk form
+  # Sjekk kodeboka
+  kb_er_gyldig(kb_kanonisk)
+  warnings()
+
   # fixme! kb_kanonisk støtter ikke andre kolonner utenom standardkolonnene,
-  # derfor left_joiner vi denne inn. Fix når kb_til_kanonisk er oppdatert.
+  # derfor left_joiner vi variabel_id_checkware tilbake inn. Fix når kb_til_kanonisk er oppdatert.
   variabel_id_checkware = kb %>%
     select(variabel_id, variabel_id_checkware) %>%
     na.omit()
