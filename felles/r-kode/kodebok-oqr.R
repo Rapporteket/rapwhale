@@ -95,7 +95,7 @@ les_oqr_kb = function(adresse) {
       utrekningsformel = NA_character_,
       logikk = NA_character_,
       obligatorisk = str_to_lower(obligatorisk),
-      variabel_id = str_to_lower(variabel_id)
+      variabel_id = str_to_lower(fysisk_feltnavn)
     )
 
   # Ein «Statusvariabel» er eigentleg ein kategorisk variabel
