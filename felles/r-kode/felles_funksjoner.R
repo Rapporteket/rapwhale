@@ -36,7 +36,7 @@ tema = theme_light(base_size = skriftstorleik)
 tema$panel.grid.minor$colour = "white"
 tema$strip.background$fill = "#f3f1ee"
 tema$strip.background$colour = "#e4e0da"
-tema$strip.text.x$colour = "black"
+tema$strip.text.x = element_text(colour = "black")
 tema$panel.spacing = unit("13", "pt")
 tema$panel.border$colour = tema$strip.background$colour
 tema$panel.grid.major$colour = tema$strip.background$colour
