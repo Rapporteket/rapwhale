@@ -15,12 +15,19 @@
 \fi
 
 % Språkstøtte:
+% fixme: Språkstøtta bør forbetrast. Men det er litt vrient
+%        å få både språkstøtte i klassen og alle pakkar til
+%        å fungera skikkeleg utan å lista opp alle språka
+%        me støttar på denne måten. Undersøk beste løysinga
+%        (sjå polyglossia- og babel-pakkane for litt info).
 \newif\ifkvalreg@bokmal         \kvalreg@bokmaltrue     % Bokmål er standard
 \newif\ifkvalreg@nynorsk        \kvalreg@nynorskfalse   % Nynorsk er ikkje standard
+\newif\ifkvalreg@british        \kvalreg@britishfalse   % Britisk engelsk er ikkje standard
 
 % Aktiver språkstøtta:
 \DeclareOption{nynorsk}{\kvalreg@nynorsktrue\kvalreg@bokmalfalse}
 \DeclareOption{bokmal}{\kvalreg@nynorskfalse\kvalreg@bokmaltrue}
+\DeclareOption{british}{\kvalreg@britishtrue\kvalreg@bokmalfalse}
 \ProcessOptions\relax
 
 % Støtte for utkast (raskare kompilering + UTKAST-vassmerke)
@@ -35,7 +42,9 @@
      \PassOptionsToClass{a4paper,11pt,twoside,openany,nynorsk}{memoir}
    \else\ifkvalreg@bokmal
      \PassOptionsToClass{a4paper,11pt,twoside,openany,norsk}{memoir}
-   \fi\fi
+   \else\ifkvalreg@british
+     \PassOptionsToClass{a4paper,11pt,twoside,openany,british}{memoir}
+   \fi\fi\fi
    \ProcessOptions\relax
 \LoadClass{memoir}
 
@@ -46,7 +55,9 @@
   \setdefaultlanguage{nynorsk}
 \else\ifkvalreg@bokmal
   \setdefaultlanguage{norsk}
-\fi\fi
+\else\ifkvalreg@british
+  \setdefaultlanguage{british}
+\fi\fi\fi
 \setotherlanguages{english}
 \AtBeginDocument{%
   \lefthyphenmin=3
@@ -204,7 +215,9 @@
   \RequirePackage[nynorsk]{varioref}
 \else\ifkvalreg@bokmal
   \RequirePackage[norsk]{varioref}
-\fi\fi
+\else\ifkvalreg@british
+  \RequirePackage[english]{varioref}
+\fi\fi\fi
 
 % Godta komma som desimalskiljeteikn i matte
 \RequirePackage{ncccomma}
@@ -504,7 +517,11 @@
 \renewrobustcmd{\url}[1]{\textcolor{PrimCol}{\oldurl{#1}}}
 
 % cleverref finst ikkje på nynorsk enno, så bruk bokmål mellombels (fixme)
-\RequirePackage[nameinlink,norsk]{cleveref}
+\ifkvalreg@british
+  \RequirePackage[nameinlink,norsk]{cleveref}
+\else
+  \RequirePackage[nameinlink,norsk]{cleveref}
+\fi
 
 % Kommando for å skriva prosentteiknet, med rett avstand før
 \RequirePackage{xspace}
@@ -553,7 +570,11 @@
 % Legg ev. til UTKAST-vassmerke
 \ifdraft
   \usepackage{draftwatermark}
-  \SetWatermarkText{UTKAST}
+  \ifkvalreg@british
+    \SetWatermarkText{DRAFT}
+  \else
+    \SetWatermarkText{UTKAST}
+  \fi
   \SetWatermarkLightness{.95}
 \fi
 
