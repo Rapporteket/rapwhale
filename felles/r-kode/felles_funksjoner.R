@@ -362,6 +362,7 @@ ki_bin = function(x, n) {
 ### Konfidenstinervall basert på gjennomsnittet til en  kontinuerlig variabel
 # med mulighet for bootstrap lagt inn i funksjonen
 library(dplyr)
+library(simpleboot)
 
 ki_univar = function(x, bootstrap = FALSE, antall, ...) {
   # Hvis det er for få eller for lite varierende
@@ -376,16 +377,23 @@ ki_univar = function(x, bootstrap = FALSE, antall, ...) {
   } else {
 
     # Hvis man ønsker boostrap kjøres denne koden,
-    # antall ganger beskrives med argumentet "antall"
-    if (bootstrap == TRUE) {
-      utvalg = sample(x, antall, replace = TRUE)
-      mod = t.test(utvalg)
-
-      tibble(
-        low = mod$conf.int[1],
-        mean = mod$estimate,
-        high = mod$conf.int[2]
-      )
+    if (bootstrap) {
+      snitt_ki = function(x) {
+        n = sum(!is.na(x))
+        snitt = mean(x)
+        if ((length(x) > 1) & (sd(x) > 0)) {
+          b = one.boot(x, mean, R = 9999)
+          ki = boot.ci(b, type = "perc")$percent[4:5]
+        } else {
+          ki = c(NA, NA)
+        }
+        tibble(
+          mean = snitt,
+          low = ki[1],
+          high = ki[2],
+          n = n
+        )
+      }
     } else {
       mod = t.test(x)
       tibble(
