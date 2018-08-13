@@ -518,7 +518,7 @@
 
 % cleverref finst ikkje på nynorsk enno, så bruk bokmål mellombels (fixme)
 \ifkvalreg@british
-  \RequirePackage[nameinlink,english]{cleveref}
+  \RequirePackage[nameinlink,noabbrev,capitalise,english]{cleveref}
 \else
   \RequirePackage[nameinlink,norsk]{cleveref}
 \fi
