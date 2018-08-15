@@ -62,6 +62,12 @@ NULL
 #'   kvar rad i \code{df}. Set denne til lengda av \code{data_var}
 #'   dersom du ikkje ønskjer tilfeldig utplukk men heller vil
 #'   kontrollera \emph{alle} datavariablane for kvar kjelderad.
+#' @param dato_uthenta Datoen valideringsdatasettet/datadumpen
+#'   vart uthenta. Vert som standard sett til dagens dato (som jo er
+#'   den faktiske datoen valideringsdatasettet vart uthenta/klargjort),
+#'   men viss ein ønskjer, kan ein heller spesifisera ein dato
+#'   manuelt, for eksempel datoen for uthenting av datadumpen.
+#'   Vert lagt til som eiga kolonne fremst i valideringsfila.
 #'
 #' @export
 #'
@@ -96,7 +102,7 @@ NULL
 #' # som i originaldatasettet)
 #' d_val[[2]]
 lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
-                               data_var = NULL, nvar = 5) {
+                               data_var = NULL, nvar = 5, dato_uthenta = Sys.Date()) {
 
   # Elementær datasjekk -----------------------------------------------------
 
@@ -104,6 +110,9 @@ lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
   # der det er lett å blingsa. For andre ting dukkar det
   # gjerne opp feilmeldingar automatisk (for eksempel viss
   # 'nvar' har meir enn eitt element).
+
+  # Uthentingsdatoen må vera ein ekte dato
+  stopifnot(inherits(dato_uthenta, "Date"))
 
   # Avgrupper dataramma, for å unngå potensielt mange problem ...
   df = ungroup(df)
@@ -300,6 +309,10 @@ lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
     do(flytt_resultat(.)) %>% # Ev. bruka purr-funksjonar til dette?
     ungroup()
 
+  # Legg til kolonne for uthentingsdato
+  res = res %>%
+    mutate(dato_uthenta = !!dato_uthenta)
+
   # Fjern dei gamle datakolonnane og andre hjelpekolonnar.
   # Men me kan ikkje fjerna datakolonnane direkte, sidan
   # nokre av dei òg kan vera ekstrakolonnar. Me hentar
@@ -310,7 +323,7 @@ lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
   innreg_kol = c(rbind(innreg_kol, str_replace(innreg_kol, "_reg$", "_epj"))) # Stygt triks for å fin rekkefølgje ...
   innreg_kol_q = syms(innreg_kol)
   res = res %>%
-    select(!!!sjukehus_var_q, !!!indeks_var_q, !!!ekstra_var_q, varnamn, !!!innreg_kol_q)
+    select(dato_uthenta, !!!sjukehus_var_q, !!!indeks_var_q, !!!ekstra_var_q, varnamn, !!!innreg_kol_q)
 
 
   # Fornuftig sortering og gruppering ---------------------------------------
