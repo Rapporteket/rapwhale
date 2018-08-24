@@ -588,6 +588,20 @@
 % Støtte for autogenerert eksempeltekst (nyttig ved testing)
 \usepackage{lipsum}
 
+% Gjev veldig tydeleg melding om at ein har gjort noko
+% frykteleg gale dersom ein brukar å bruka \underline-kommandoen
+% For det første skal aldri understreking brukast i skikkeleg
+% typografi (jf. https://practicaltypography.com/underlining.html)
+% og for det andre er \underline-kommandoen feil måte
+% å få understreking i LaTeX.
+%
+% Understreking skal endrast til kursivering (\emph) eller
+% eller til vanlege overskrifter (\section, \paragraph e.l.).
+\renewcommand{\underline}[1]{%
+  \textcolor{red}{\textls{BRUK AV FORBUDT \textbackslash underline-kommando\footnote{\url{https://practicaltypography.com/underlining.html}}:}} #1%
+  \ClassWarning{kvalreg-rapport}{Bruk av forbudt underline-kommando}
+}
+
 % Rett feilmelding frå tikz (fixme: finn ut korfor ein får denne)
 % http://tex.stackexchange.com/questions/165929/semiverbatim-with-tikz-in-beamer
 \global\let\tikz@ensure@dollar@catcode=\relax
