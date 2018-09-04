@@ -68,6 +68,18 @@ fjern_y_ticks = theme(axis.ticks.y = element_blank())
 # expand-argumentet til skaladefinisjonar.
 expand_soyle = expand_scale(mult = c(0.0, .05), add = 0)
 
+# Fjern luft til venstre for y-akseteksten og legg
+# til ekstra luft til høgre for han, fjern luft under
+# x-akseteksten og legg til ekstra luft over han,
+# fjern nesten all luft rundt figurane (eventuell
+# nødvendig luft legg me til via LaTeX).
+#
+# (Merk: Me set den ytre margen til 3 punkt
+# opp og nede i staden for 0 punkt for å sikra at at
+# kantane på alle bokstavane alltid vert med.)
+tema$axis.title.y$margin = margin(r = tema$text$size / 2)
+tema$axis.title.x$margin = margin(t = tema$text$size / 2)
+tema$plot.margin = margin(3, 3, 3, 3)
 
 
 # Graffunksjoner ----------------------------------------------------------
