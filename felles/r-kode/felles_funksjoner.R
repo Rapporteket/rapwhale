@@ -341,10 +341,9 @@ akse_prosent = function(x) {
 }
 # Tilsvarande funksjon, men der ein vel talet på
 # desimalar manuelt
-prosent = function(x, desimalar = 0) {
+prosent = function(x, desimalar = 0, tabell = FALSE) {
   prosent_tekst = x %>%
-    map_chr(~ round(100 * .x, desimalar) %>%
-      format(nsmall = desimalar) %>%
+    map_chr(~ num(100 * .x, desimalar, tabell = tabell) %>%
       str_c("\\prosent"))
   ifelse(is.na(x), "\\textendash{}", prosent_tekst)
 }
