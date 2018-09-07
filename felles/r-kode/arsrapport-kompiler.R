@@ -17,7 +17,7 @@ library(methods) # Nødvendig for å fungera skikkeleg med RScript,
 # Personlege innstillingar ------------------------------------------------
 
 # Skal ein visa feilmeldingar/åtvaringar i terminalvindauget?
-vis_feilmeldingar = FALSE
+vis_feilmeldingar = TRUE
 
 
 
