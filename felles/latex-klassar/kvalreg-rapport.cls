@@ -170,8 +170,16 @@
 \setsecheadstyle{\Large\bfseries\raggedright\overskrift}
 \setsubsecheadstyle{\large\bfseries\raggedright\overskrift}
 \setsubsubsecheadstyle{\large\bfseries\raggedright\overskrift}
-\hangsecnum
 \setlength{\aftersubsecskip}{.02ex plus 0.01ex minus -0.1ex}
+
+% Som \hangnum, men med fast avstand mellom tal og tekst i
+% overskriftene. Dette ser mykje finare ut når ein \section
+% vert direkte følgt av ein \subsection (ein dårleg idé,
+% men noko som førekjem). (\hangnum brukar ein \quad, som
+% avheng av skriftstorleiken, og derfor vert forskjellig for
+% dei ulike overskriftsnivåa).
+\setsecnumformat{\llap{\csname the#1\endcsname\hspace{.25cm}}} 
+
 
 % Nummerer òg \subsection-overskrifter og ta dei med i innhaldslista.
 % Merk at skrifta for \subsection og \subsubsection er lik / like stor,
