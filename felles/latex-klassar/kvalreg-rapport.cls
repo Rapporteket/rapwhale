@@ -152,17 +152,24 @@
 
 % Definer formatering for overskrifter på ulike nivå
 \chapterstyle{section}
-\newcommand{\overskrift}{\color{PrimCol}\altskrift}
-\renewcommand*{\partnamefont}{\overskrift\Huge\bfseries}
-\renewcommand*{\partnumfont}{\overskrift\Huge\bfseries}
-\renewcommand*{\parttitlefont}{\overskrift\Huge\mdseries}
+% Fargelagde overskrifter med fin skrift.
+% Det logiske ville vore \color, ikkje \textcolor her, men det kan
+% (i sjeldne tilfelle) føra til sideskift mellom to overskrifter,
+% av grunnen forklart her: https://tex.stackexchange.com/a/101643
+% Ved å bruka \textcolor i staden for, omgår me problemet
+% (merk at \overskrift då alltid må vera sistargument).
+\newcommand{\overskrift}{\altskrift\textcolor{PrimCol}}
+\newcommand{\overskriftColor}{\altskrift\color{PrimCol}} % Alternativ variant som må brukast for kapitteloverskrifter
+\renewcommand*{\partnamefont}{\Huge\bfseries\overskrift}
+\renewcommand*{\partnumfont}{\Huge\bfseries\overskrift}
+\renewcommand*{\parttitlefont}{\Huge\mdseries\overskrift}
 \renewcommand*{\chapterheadstart}{\noindent\hspace*{\margjuster}}
-\renewcommand*{\chapnumfont}{\overskrift\huge\bfseries\raggedright}
+\renewcommand*{\chapnumfont}{\huge\bfseries\raggedright\overskriftColor}
 \renewcommand{\printchapternum}{\chapnumfont \thechapter\space\space}
-\renewcommand*{\chaptitlefont}{\overskrift\huge\bfseries}
-\setsecheadstyle{\overskrift\Large\bfseries\raggedright}
-\setsubsecheadstyle{\overskrift\large\bfseries\raggedright}
-\setsubsubsecheadstyle{\overskrift\large\bfseries\raggedright}
+\renewcommand*{\chaptitlefont}{\huge\bfseries\overskrift}
+\setsecheadstyle{\Large\bfseries\raggedright\overskrift}
+\setsubsecheadstyle{\large\bfseries\raggedright\overskrift}
+\setsubsubsecheadstyle{\large\bfseries\raggedright\overskrift}
 \hangsecnum
 \setlength{\aftersubsecskip}{.02ex plus 0.01ex minus -0.1ex}
 
@@ -182,8 +189,8 @@
 }
 
 % For kapittel i innhaldslista
-\renewcommand{\cftpartfont}{\overskrift\bfseries} 
-\renewcommand{\cftchapterfont}{\overskrift\bfseries}
+\renewcommand{\cftpartfont}{\bfseries\overskrift} 
+\renewcommand{\cftchapterfont}{\bfseries\overskrift}
 
 % Bruk ikkjeproporsjonale tal i innhaldslista
 % (elles vert for eksempel 11 med 12 under
