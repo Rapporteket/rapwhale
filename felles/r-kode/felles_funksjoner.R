@@ -331,16 +331,26 @@ num = function(x, desimalar, tabell = FALSE) {
 
 ### Prosent med norsk stavemåte i aksenotasjoner
 
+# fixme: Bør rydda opp i prosentfunksjonane slik at dei alle
+#        tar same argument og elles er meir gjennomtenkte
+#        (krev gjerne endringar i filene som brukar dei).
+#
 # Tar inn eit desimaltal og viser det som prosent,
 # med mellomrom før prosentteiknet (slik det skal vera
-# på norsk), eks. 0.5 --> "50 %". Har intelligent
-# val av talet på desimalar, noko som ikkje alltid
-# er ønskjeleg.
-akse_prosent = function(x) {
-  stringr::str_replace(scales::percent(x), "%$", " %")
+# på norsk), eks. 0.5 --> "50 %", og med komma
+# som desimalteikn. Som standard vert tala viste
+# med éin desimal, men dette kan ein endra ved
+# å spesifisera «accuracy», for eksempel «accuracy = 0.1»
+# for éin desimal eller «accuracy = .05» for å runda av til
+# næraste halve promille. Bruk «accuracy = NULL» for
+# automatisk/«smart» val av desimalar (vanlegvis ikkje tilrådd).
+akse_prosent = function(x, accuracy = 1, decimal.mark = ",", ...) {
+  scales::percent(x,
+    suffix = " %",
+    accuracy = accuracy, decimal.mark = decimal.mark, ...
+  )
 }
-# Tilsvarande funksjon, men der ein vel talet på
-# desimalar manuelt
+# Liknande funksjon for formatering av prosentverdiar som LaTeX-tekst.
 prosent = function(x, desimalar = 0, tabell = FALSE) {
   prosent_tekst = x %>%
     map_chr(~ num(100 * .x, desimalar, tabell = tabell) %>%
