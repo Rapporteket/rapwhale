@@ -29,8 +29,9 @@ adresser = list.files("h:/kvalreg/",
   recursive = TRUE, full.names = TRUE
 )
 
-# Ikkje kompiler LKG-registeret, sidan me ikkje vedlikeheld det lenger
+# Ikkje kompiler LKG-registeret og SmerteReg, sidan me ikkje vedlikeheld dei lenger
 adresser = setdiff(adresser, "h:/kvalreg//lkg-registeret/arsrapport-lkg.Rnw")
+adresser = setdiff(adresser, "h:/kvalreg//smerteregisteret/arsrapport-smertereg.Rnw")
 
 # Oversikt over alle årsrapportfiler med tilhøyrande endringsdato
 filinfo = tibble(
