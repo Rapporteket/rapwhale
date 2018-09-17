@@ -171,6 +171,7 @@
 \setsubsecheadstyle{\large\bfseries\raggedright\overskrift}
 \setsubsubsecheadstyle{\large\bfseries\raggedright\overskrift}
 \setlength{\aftersubsecskip}{.02ex plus 0.01ex minus -0.1ex}
+\setlength{\aftersubsubsecskip}{.02ex plus 0.01ex minus -0.1ex}
 
 % Som \hangnum, men med fast avstand mellom tal og tekst i
 % overskriftene. Dette ser mykje finare ut når ein \section
