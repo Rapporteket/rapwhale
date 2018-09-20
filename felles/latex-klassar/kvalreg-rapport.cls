@@ -207,6 +207,7 @@
 \renewcommand*{\cftpartpagefont}{\mainupropskrift\bfseries}
 \renewcommand*{\cftchapterpagefont}{\mainupropskrift\bfseries}
 \renewcommand*{\cftsectionpagefont}{\mainupropskrift}
+\renewcommand*{\cftsubsectionpagefont}{\mainupropskrift}
 
 % Ikkje blokkjuster tekst i innhaldslista
 \setrmarg{3.55em plus 1fil}
