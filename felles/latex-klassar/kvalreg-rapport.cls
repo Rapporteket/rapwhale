@@ -282,9 +282,9 @@
 
 % Lag minst mulig PDF-fil (berre mogleg med LuaLaTex)
 \iffinal
-  \pdfcompresslevel=9
-  \pdfminorversion=5
-  \pdfobjcompresslevel=3
+  \pdfvariable compresslevel=9
+  \pdfvariable minorversion=5
+  \pdfvariable objcompresslevel=3
 \fi
 
 % Støtte for kommando brukt i LaTeX-malen til SKDE
