@@ -101,11 +101,11 @@ lag_checkware_data = function(mappe, skjema) {
     left_join(variabel_id_checkware, by = "variabel_id")
 
   # funksjon som henter inn checkware-data ved hjelp av en kodebok
-  # funksjonen trenger en kodebok på kanonisk format og et skjema-navn (f.eks "barthel")
+  # funksjonen trenger en kodebok på kanonisk format og et skjema-navn (f.eks "barthel") og adressen til datadump
   # og gir dataene fine navn basert på variabel_id i kodeboka,
   # ved hjelp av variabel_id_checkware som identifiserer variablene i datadumpene
   # datadumpen får også variabeltypene som er definert i kodeboka
-  les_dd_checkware = function(kb, skjema) {
+  les_dd_checkware = function(adresse, kb, skjema) {
 
     # Tar quotes rundt skjema
     skjema = quo_name(skjema)
