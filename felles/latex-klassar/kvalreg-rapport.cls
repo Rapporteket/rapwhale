@@ -148,7 +148,7 @@
 \newfontfamily\lettskrift[Ligatures=TeX,Numbers={Proportional,Uppercase}]{Calibri Light}
 
 % Skrift for teikn som ikkje finst i standardskriftene
-\newfontfamily\uniskrift[Scale=MatchLowercase]{Arial Unicode MS}
+\newfontfamily\uniskrift[Scale=MatchLowercase]{DejaVu Sans}
 
 % Definer formatering for overskrifter på ulike nivå
 \chapterstyle{section}
@@ -550,8 +550,8 @@
 
 % Kommandoar for å skriva avkryssingsteikn og avkryssingsboksar
 \newcommand{\sjekk}{{\uniskrift ✓}}
-\newcommand{\sjekknei}{{\uniskrift\Large ☐}}
-\newcommand{\sjekkja}{{\uniskrift\Large ☑}}
+\newcommand{\sjekknei}{{\uniskrift ☐}}
+\newcommand{\sjekkja}{{\uniskrift ☑}}
 
 % La R-kjeldekode (og utdata frå køyring av denne) dekka heile sidebreidda
 \iffalse
