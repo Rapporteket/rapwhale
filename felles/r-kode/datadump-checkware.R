@@ -27,7 +27,48 @@ source("h:/kvalreg/felles/r-kode/kodebok-valider.R", encoding = "UTF-8")
 # henter funksjon for å validere datadump
 source("h:/kvalreg/felles/r-kode/datadump-valider.R", encoding = "UTF-8")
 
-#--------------------------datainnhenting - bruker rehabiliteringsregisteret som utgangspunkt------------------------
+#--------------------------les kodebok checkware funksjon-----------------------------------------------
+
+# funksjon for å hente ut checkware-kodebøker.
+# trenger adressen til kodeboka.
+# kjører kodebok_er_gyldig() for å teste at kodeboka er gyldig.
+# gjør kodeboka til kanonisk form
+les_kb_checkware = function(adresse_kb) {
+
+  # kodebok-kolonnetyper som skal brukes når man henter inn kodeboka
+  # Noen ganger har kodeboka tomme kolonner, og kolonnetypen må defineres på forhånd uansett
+  # Kodeboka er laget i excel, og dessverre må disse per i dag defineres manuelt # fixme! automatiser ved automatisert kodeboka.
+  # Excel har heller ikke så mange, presise variabeltyper
+  # I standardrekkefølgen på kolonner til Fagsenterets standard kodebokformat skal de 15 første kolonnene
+  # skjema_id, skjema_namn, kategori, innleiing, varibel_id_checkware, variabel_id, variabeletikett, forklaring,
+  # eining, obligatorisk, unik, verdi, verditekst og manglande være "text",
+  # de 5 neste, desimalar, min, maks, min_rimeleg og maks_rimeleg "numeric"
+  # og de 4 siste, kommentar_rimeleg, utrekningsformel, logikk, kommentar "text".
+  kb_koltyper = c(rep("text", 15), rep("numeric", 5), rep("text", 4))
+
+  # read_excel har ingen mulighet for å skille "numeric" i forhold til "integer" i col_types spesifikasjonen.
+  # vi endrer desimalar manuelt til å være dette for å kunne komme gjennom kb_er_gyldig.
+  # standard kodebok er at første ark inneholder informasjon. Vi har ikke satt noe standard for ark-navn.
+  kb = read_excel(adresse_kb, col_types = kb_koltyper, sheet = 1) %>%
+    mutate(desimalar = as.integer(desimalar))
+
+  # Sjekk gyldigheten til kodeboka
+  kb_er_gyldig(kb)
+
+  # gjør om kodeboka til kanonisk form
+  kb_kanonisk = kb_til_kanonisk_form(kb)
+
+  # fixme! kb_kanonisk støtter ikke andre kolonner utenom standardkolonnene,
+  # derfor left_joiner vi variabel_id_checkware tilbake inn. Fix når kb_til_kanonisk er oppdatert.
+  variabel_id_checkware = kb %>%
+    select(variabel_id, variabel_id_checkware) %>%
+    na.omit()
+  kb_kanonisk = kb_kanonisk %>%
+    left_join(variabel_id_checkware, by = "variabel_id")
+  kb_kanonisk
+}
+
+#------------------------------------------------lag datadump checkware------------------------
 
 # funksjon for å tilrettelegge checkware-data basert på kodebok,
 # hvor funksjonen automatisk henter inn kodebok som blir brukt.
@@ -49,56 +90,11 @@ lag_checkware_data = function(mappe, skjema) {
 
   # paste0 mappa
   adresse = paste0(mappe, nyeste_dato, "/")
+  filnamn_kb = "kodebok.xlsx"
+  adresse_kb = paste0(adresse, filnamn_kb) # adressen til kodeboka
 
-  # kodebok-kolonnetyper som skal brukes når man henter inn kodeboka
-  kb_koltyper = c(
-    "text",
-    "text",
-    "text",
-    "text",
-    "text",
-    "text",
-    "text",
-    "text",
-    "text",
-    "text",
-    "text",
-    "text",
-    "text",
-    "text",
-    "text",
-    "numeric",
-    "numeric",
-    "numeric",
-    "numeric",
-    "numeric",
-    "text",
-    "text",
-    "text",
-    "text"
-  )
-
-  # innlesing av kodebok
-  kb = read_excel(paste0(adresse, "kodebok.xlsx"), col_types = kb_koltyper, sheet = 1)
-
-  # read_excel har ingen mulighet for å skille "numeric" i forhold til "integer" i col_types spesifikasjonen.
-  # vi endrer desimalar manuelt til å være dette for å kunne komme gjennom kb_er_gyldig.
-  kb = kb %>%
-    mutate(desimalar = as.integer(desimalar))
-
-  # Sjekk kodeboka
-  kb_er_gyldig(kb)
-
-  # gjør om kodeboka til kanonisk form
-  kb_kanonisk = kb_til_kanonisk_form(kb)
-
-  # fixme! kb_kanonisk støtter ikke andre kolonner utenom standardkolonnene,
-  # derfor left_joiner vi variabel_id_checkware tilbake inn. Fix når kb_til_kanonisk er oppdatert.
-  variabel_id_checkware = kb %>%
-    select(variabel_id, variabel_id_checkware) %>%
-    na.omit()
-  kb_kanonisk = kb_kanonisk %>%
-    left_join(variabel_id_checkware, by = "variabel_id")
+  # henter ut kodebok ved hjelp av tidligere utarbeidet kb-funksjon
+  kb = les_kb_checkware(adresse_kb)
 
   # funksjon som henter inn checkware-data ved hjelp av en kodebok
   # funksjonen trenger en kodebok på kanonisk format og et skjema-navn (f.eks "barthel") og adressen til datadump
@@ -219,7 +215,7 @@ lag_checkware_data = function(mappe, skjema) {
   d
 }
 
-# sjekk at funksjonen funker
+# sjekk at funksjonen funker med rehabiliteringsregisteret som eksempel
 # mappe = "***FJERNA-ADRESSE***"
 #
 # d_barthel = lag_checkware_data(mappe, skjema = "barthel")
