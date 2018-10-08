@@ -20,6 +20,7 @@
 library(tidyverse) # livsnæring
 library(magrittr) # pipe-funksjon
 library(readxl)
+library(lubridate)
 
 # henter funksjon for å lage kodebok til kanonisk form + kodebok valider
 source("h:/kvalreg/felles/r-kode/kodebok-valider.R", encoding = "UTF-8")
@@ -125,8 +126,8 @@ hent_checkware_data = function(mappe, skjema_id) {
       ~variabeltype, ~csv_bokstav,
       "tekst", "c",
       "boolsk", "c", # Sjå konvertering nedanfor
-      "dato_kl", "c", # Mellombels, jf. https://github.com/tidyverse/readr/issues/642 (fixme til "T" når denne er fiksa)
-      "dato", "c",
+      "dato_kl", "c", # Mellombels, jf. https://github.com/tidyverse/readr/issues/642 (!fixme til "T" når denne er fiksa)
+      "dato", "D",
       "numerisk", "d",
       "numerisk_heiltal", "i"
     )
@@ -192,6 +193,16 @@ hent_checkware_data = function(mappe, skjema_id) {
       setNames(var_info$variabel_id)
     d = d %>%
       rename(!!!kolnamn)
+
+    # siden datetime blir hentet inn som character
+    # fikser vi disse til å være datetime her
+    # (jf. https://github.com/tidyverse/readr/issues/642 (!fixme til "T" når denne er fiksa))
+    dato_kl_var = kb %>%
+      filter(variabeltype == "dato_kl") %>%
+      distinct(variabel_id) %>%
+      pull("variabel_id")
+    d = d %>%
+      mutate_at(dato_kl_var, parse_datetime, format = "%d.%m.%Y %H:%M")
 
     # validerer datadumpen
     # med dd_er_gyldig funksjonen fra datadump-valider-skriptet
