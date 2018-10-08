@@ -78,7 +78,7 @@ les_kb_checkware = function(adresse_kb) {
 # funksjonen sjekker at kodeboka er gyldig, med kodebok_er_gyldig() funksjonen fra kodebok-valider skriptet
 # funksjonen sjekker at datadumpen er gyldig, med dd_er_gyldig() funksjonen fra datadump-valider skriptet
 # krever pakkene tidyverse, magrittr og readxl
-lag_checkware_data = function(mappe, skjema) {
+hent_checkware_data = function(mappe, skjema_id) {
 
   # hent datoer på mappene
   eksport_mapper = dir(mappe, pattern = "[0-9]{4}-[0-9]{2}-[0-9]{2}", full.names = FALSE)
@@ -101,14 +101,11 @@ lag_checkware_data = function(mappe, skjema) {
   # og gir dataene fine navn basert på variabel_id i kodeboka,
   # ved hjelp av variabel_id_checkware som identifiserer variablene i datadumpene
   # datadumpen får også variabeltypene som er definert i kodeboka
-  les_dd_checkware = function(adresse, kb, skjema) {
-
-    # Tar quotes rundt skjema
-    skjema = quo_name(skjema)
+  les_dd_checkware = function(adresse, kb, skjema_id) {
 
     # filtrer på aktuelt skjema + metadata som finnes i alle skjema
     kb_skjema = kb %>%
-      filter(skjema_id == "meta" | skjema_id == skjema)
+      filter(skjema_id == "meta" | skjema_id == skjema_id)
 
     # Me skil berre mellom heiltals- og flyttalsvariablar
     # i vår kodebok ved hjelp av «desimalar»-feltet (begge
@@ -180,7 +177,7 @@ lag_checkware_data = function(mappe, skjema) {
     kol_typar = str_c(var_info$csv_bokstav, collapse = "")
 
     # Les inn datasettet
-    filnamn = paste0(skjema, ".csv")
+    filnamn = paste0(skjema_id, ".csv")
     adresse_dd = paste0(adresse, filnamn)
     d = stop_for_problems(read_delim(adresse_dd,
       delim = ";", na = "",
@@ -209,7 +206,7 @@ lag_checkware_data = function(mappe, skjema) {
   }
 
   # kjør les_dd_checkware på kodebok og skjemanavn for å tilrettelegge dataene basert på kodeboka
-  d = les_dd_checkware(kb_kanonisk, skjema)
+  d = les_dd_checkware(adresse, kb, skjema_id)
 
   # returner dataene
   d
