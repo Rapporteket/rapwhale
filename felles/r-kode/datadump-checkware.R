@@ -105,7 +105,7 @@ hent_checkware_data = function(mappe, skjema_id) {
 
     # filtrer på aktuelt skjema + metadata som finnes i alle skjema
     kb_skjema = kb %>%
-      filter(skjema_id == "meta" | skjema_id == skjema_id)
+      filter(skjema_id == "meta" | skjema_id == !!skjema_id)
 
     # Me skil berre mellom heiltals- og flyttalsvariablar
     # i vår kodebok ved hjelp av «desimalar»-feltet (begge
@@ -170,7 +170,6 @@ hent_checkware_data = function(mappe, skjema_id) {
         variabeltype == "kategorisk" & verdi_type == "tekst" ~ "c",
         TRUE ~ csv_bokstav
       ))
-
     # henter ut variabelnavn og variabeltype
     var_info = kb_skjema %>%
       distinct(variabel_id, variabel_id_checkware, variabeltype, csv_bokstav)
