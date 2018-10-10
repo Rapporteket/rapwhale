@@ -241,7 +241,38 @@ farge_morkare = function(fargar, grad = 5) {
   hex(farge_rgb)
 }
 
+# funksjon for å lage søylediagram
+# d = datasett
+# x = variabel for x-aksen - som vanligvis er en kategorisk variabel
+# y = variabel for y-aksen - en kontinuerlig variabel. Kan være en prosent.
+# farge = fargen på søylene, default er kjedelig SKDE-blå. Kan endres i andre sammenheng
+# facet = boolsk, bestemmer om man skal lage panel på en variabel, TRUE, eller ikke FALSE (default)
+# facet_gruppe = hvilken variabel som skal brukes for å dele på panel, brukes kun hvis facet = TRUE
+# prosent = om y-aksen er en prosent (TRUE) eller ikke (FALSE). Er defaultet som prosent, siden disse er så vanlige.
+lag_soyle = function(d, x, y, farge = ColPrim[3], facet = FALSE, facet_gruppe = NULL, prosent = TRUE, ...) {
+  x_var = syms(x)[[1]]
+  y_var = syms(y)[[1]]
 
+  plott = ggplot(d, aes(x = !!x_var, y = !!y_var)) +
+    geom_barh(stat = "identity", fill = farge, width = 2 / 3) +
+    xlab(NULL) +
+    ylab(NULL) +
+    tema +
+    fjern_y +
+    scale_x_continuous(expand = expand_soyle) +
+    fjern_y_ticks
+  if (facet) {
+    facet_gruppe = syms(facet_gruppe)[[1]]
+    plott = plott + facet_wrap(vars(!!facet_gruppe))
+    plott
+  }
+  if (prosent) {
+    plott = plott +
+      scale_x_continuous(labels = akse_prosent, limits = c(NA, 1), breaks = breaks_bredde(0.1), expand = expand_soyle)
+    plott
+  }
+  plott
+}
 
 # Variabelnamnfunksjonar ----------------------------------------------------
 
