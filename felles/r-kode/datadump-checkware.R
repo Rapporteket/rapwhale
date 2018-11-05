@@ -184,7 +184,7 @@ hent_checkware_data = function(mappe, skjema_id) {
       quote = "\"", trim_ws = FALSE, col_types = kol_typar,
       locale = locale(
         decimal_mark = ",", grouping_mark = "",
-        date_format = "%d.%m.%Y", time_format = "%H:%M:%S"
+        date_format = "%Y-%m-%d", time_format = "%H:%M:%S"
       )
     ))
 
@@ -202,7 +202,7 @@ hent_checkware_data = function(mappe, skjema_id) {
       distinct(variabel_id) %>%
       pull("variabel_id")
     d = d %>%
-      mutate_at(dato_kl_var, parse_datetime, format = "%d.%m.%Y %H:%M")
+      mutate_at(dato_kl_var, parse_datetime, format = "%Y-%m-%d %H:%M:%S")
 
     # validerer datadumpen
     # med dd_er_gyldig funksjonen fra datadump-valider-skriptet
@@ -223,10 +223,10 @@ hent_checkware_data = function(mappe, skjema_id) {
 }
 
 # sjekk at funksjonen funker med rehabiliteringsregisteret som eksempel
-# mappe = "***FJERNA-ADRESSE***"
+mappe = "***FJERNA-ADRESSE***"
 #
-# d_barthel = lag_checkware_data(mappe, skjema = "barthel")
-# d_moca = lag_checkware_data(mappe, skjema = "moca")
-# d_mrs = lag_checkware_data(mappe, "mrs")
-# d_nihss = lag_checkware_data(mappe, "nihss")
-# d_tis = lag_checkware_data(mappe, "tis")
+# d_barthel = hent_checkware_data(mappe, skjema = "barthel")
+# d_moca = hent_checkware_data(mappe, skjema = "moca")
+# d_mrs = hent_checkware_data(mappe, "mrs")
+# d_nihss = hent_checkware_data(mappe, "nihss")
+# d_tis = hent_checkware_data(mappe, "tis")
