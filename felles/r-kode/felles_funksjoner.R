@@ -221,6 +221,7 @@ graf_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab = 
 # ofte er en datovariabel, men hvis det ikke er det settes tidsvinsing til FALSE.
 # panel_gruppe er hvilken variabel man ønkser å dele opp et panel på (gjelder kun tidsvisning),
 # periode hvilket tidsrom (f.eks "month" eller "2 months", gjelder kun tidsvising) og tittel for tittelen til plottet.
+# krever pakkene tidyverse og qicharts2
 lag_shewhart_pro = function(d, x, y, n, panel_gruppe, tidsvisning = TRUE, periode, tittel) {
   d$qic_x = d[[x]]
   d$qic_y = d[[y]]
@@ -248,8 +249,13 @@ lag_shewhart_pro = function(d, x, y, n, panel_gruppe, tidsvisning = TRUE, period
       scale_x_discrete(expand = c(0, 0.1)) +
       scale_y_continuous(labels = akse_prosent))
   } else {
+
+    # setter i rekkefølge fra størst til minst i nevneren
+    # nevner = d %>% count(qic_x)
+    # d = d %>% left_join(nevner, by = "qic_x") %>% arrange(desc(nnn)) %>% mutate(qic_x = fct_inorder(qic_x))
+    #
     plot = suppressMessages(qic(
-      x = factor(qic_x),
+      x = qic_x,
       y = qic_y, # telleren i indikatoren
       n = qic_n, # nevneren til indikatoren
       data = d,
@@ -302,8 +308,15 @@ lag_shewhart_xbar = function(d, x, y, yakse_tekst, panel_gruppe, tidsvisning = T
       theme(legend.position = "none") +
       geom_point())
   } else {
+    # setter i rekkefølge fra størst til minst i nevneren
+    nevner = d %>%
+      count(qic_x)
+    d = d %>%
+      left_join(nevner, by = "qic_x") %>%
+      arrange(desc(n)) %>%
+      mutate(qic_x = fct_inorder(qic_x))
     plot = suppressMessages(qic(
-      x = factor(qic_x),
+      x = qic_x,
       y = qic_y, # telleren i indikatoren
       data = d,
       chart = "xbar", # plottypen
@@ -322,7 +335,6 @@ lag_shewhart_xbar = function(d, x, y, yakse_tekst, panel_gruppe, tidsvisning = T
 
   plot
 }
-
 
 # Fargefunksjonar ---------------------------------------------------------
 
