@@ -216,10 +216,11 @@ graf_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab = 
   grafdel
 }
 
-# funksjon for å lage p-chart shewhart-diagram med facets
+# funksjon for å lage p-chart shewhart-diagram med eller uten facets
 # funksjonen krever et datasett (d) som inneholder teller (y) og nevner (n), med variabel for x.aksen (x) som
-# ofte er en datovariabel. panel_gruppe er hvilken variabel man ønkser å dele opp et panel på,
-# periode hvilket tidsrom (f.eks "month" eller "2 months") og tittel for tittelen til plottet.
+# ofte er en datovariabel, men hvis det ikke er det settes tidsvinsing til FALSE.
+# panel_gruppe er hvilken variabel man ønkser å dele opp et panel på (gjelder kun tidsvisning),
+# periode hvilket tidsrom (f.eks "month" eller "2 months", gjelder kun tidsvising) og tittel for tittelen til plottet.
 lag_shewhart_pro = function(d, x, y, n, panel_gruppe, tidsvisning = TRUE, periode, tittel) {
   d$qic_x = d[[x]]
   d$qic_y = d[[y]]
@@ -258,6 +259,7 @@ lag_shewhart_pro = function(d, x, y, n, panel_gruppe, tidsvisning = TRUE, period
       ylab = "Andel",
       title = tittel
     ) +
+      coord_flip() +
       tema +
       fjern_x +
       fjern_y +
@@ -268,6 +270,59 @@ lag_shewhart_pro = function(d, x, y, n, panel_gruppe, tidsvisning = TRUE, period
 
   plot
 }
+
+
+
+# funksjon for å lage p-chart shewhart-diagram med eller uten facets
+# funksjonen krever et datasett (d) som inneholder teller (y) og nevner (n), med variabel for x.aksen (x) som
+# ofte er en datovariabel, men hvis det ikke er det settes tidsvinsing til FALSE.
+# panel_gruppe er hvilken variabel man ønkser å dele opp et panel på (gjelder kun tidsvisning),
+# periode hvilket tidsrom (f.eks "month" eller "2 months", gjelder kun tidsvising) og tittel for tittelen til plottet.
+lag_shewhart_xbar = function(d, x, y, yakse_tekst, panel_gruppe, tidsvisning = TRUE, periode, tittel) {
+  d$qic_x = d[[x]]
+  d$qic_y = d[[y]]
+  d$qic_facet = d[[panel_gruppe]]
+
+  if (tidsvisning) {
+    plot = suppressMessages(qic(
+      x = qic_x,
+      y = qic_y, # telleren i indikatoren
+      data = d,
+      facets = ~qic_facet,
+      chart = "xbar", # plottypen
+      x.period = periode,
+      show.labels = FALSE,
+      xlab = NULL,
+      ylab = yakse_tekst,
+      title = tittel
+    ) +
+      tema +
+      fjern_x +
+      fjern_y +
+      theme(legend.position = "none") +
+      geom_point())
+  } else {
+    plot = suppressMessages(qic(
+      x = factor(qic_x),
+      y = qic_y, # telleren i indikatoren
+      data = d,
+      chart = "xbar", # plottypen
+      show.labels = FALSE,
+      xlab = NULL,
+      ylab = yakse_tekst,
+      title = tittel
+    ) +
+      coord_flip() +
+      tema +
+      fjern_x +
+      fjern_y +
+      theme(legend.position = "none") +
+      geom_point())
+  }
+
+  plot
+}
+
 
 # Fargefunksjonar ---------------------------------------------------------
 
