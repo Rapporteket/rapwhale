@@ -220,31 +220,52 @@ graf_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab = 
 # funksjonen krever et datasett (d) som inneholder teller (y) og nevner (n), med variabel for x.aksen (x) som
 # ofte er en datovariabel. panel_gruppe er hvilken variabel man ønkser å dele opp et panel på,
 # periode hvilket tidsrom (f.eks "month" eller "2 months") og tittel for tittelen til plottet.
-lag_shewhart_pro = function(d, x, y, n, panel_gruppe, periode, tittel) {
+lag_shewhart_pro = function(d, x, y, n, panel_gruppe, tidsvisning = TRUE, periode, tittel) {
   d$qic_x = d[[x]]
   d$qic_y = d[[y]]
   d$qic_n = d[[n]]
   d$qic_facet = d[[panel_gruppe]]
 
-  plot = suppressMessages(qic(
-    x = qic_x,
-    y = qic_y, # telleren i indikatoren
-    n = qic_n, # nevneren til indikatoren
-    data = d,
-    facets = ~qic_facet,
-    chart = "p", # plottypen
-    x.period = periode,
-    show.labels = FALSE,
-    xlab = NULL,
-    ylab = "Andel",
-    title = tittel
-  ) +
-    tema +
-    fjern_x +
-    fjern_y +
-    theme(legend.position = "none") +
-    scale_x_discrete(expand = c(0, 0.1)) +
-    scale_y_continuous(labels = akse_prosent))
+  if (tidsvisning) {
+    plot = suppressMessages(qic(
+      x = qic_x,
+      y = qic_y, # telleren i indikatoren
+      n = qic_n, # nevneren til indikatoren
+      data = d,
+      facets = ~qic_facet,
+      chart = "p", # plottypen
+      x.period = periode,
+      show.labels = FALSE,
+      xlab = NULL,
+      ylab = "Andel",
+      title = tittel
+    ) +
+      tema +
+      fjern_x +
+      fjern_y +
+      theme(legend.position = "none") +
+      scale_x_discrete(expand = c(0, 0.1)) +
+      scale_y_continuous(labels = akse_prosent))
+  } else {
+    plot = suppressMessages(qic(
+      x = factor(qic_x),
+      y = qic_y, # telleren i indikatoren
+      n = qic_n, # nevneren til indikatoren
+      data = d,
+      chart = "p", # plottypen
+      show.labels = FALSE,
+      xlab = NULL,
+      ylab = "Andel",
+      title = tittel
+    ) +
+      tema +
+      fjern_x +
+      fjern_y +
+      theme(legend.position = "none") +
+      scale_x_discrete(expand = c(0, 0.1)) +
+      scale_y_continuous(labels = akse_prosent))
+  }
+
   plot
 }
 
