@@ -251,8 +251,12 @@ lag_shewhart_pro = function(d, x, y, n, panel_gruppe, tidsvisning = TRUE, period
   } else {
 
     # setter i rekkefølge fra størst til minst i nevneren
-    # nevner = d %>% count(qic_x)
-    # d = d %>% left_join(nevner, by = "qic_x") %>% arrange(desc(nnn)) %>% mutate(qic_x = fct_inorder(qic_x))
+    nevner = d %>%
+      count(qic_x)
+    d = d %>%
+      left_join(nevner, by = "qic_x") %>%
+      arrange(desc(nnn)) %>%
+      mutate(qic_x = fct_inorder(qic_x))
     #
     plot = suppressMessages(qic(
       x = qic_x,
@@ -329,8 +333,7 @@ lag_shewhart_xbar = function(d, x, y, yakse_tekst, panel_gruppe, tidsvisning = T
       tema +
       fjern_x +
       fjern_y +
-      theme(legend.position = "none") +
-      geom_point())
+      theme(legend.position = "none"))
   }
 
   plot
