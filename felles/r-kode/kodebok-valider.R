@@ -341,6 +341,17 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
     gyldig = FALSE
   }
 
+  # Sjekk at kategoriske variablar har minst *to* svaralternativ
+  verdi_ok = kb_kat_nest$data %>%
+    map_lgl(~ nrow(.) >= 2)
+  if (any(!verdi_ok)) {
+    warning(
+      advar_tekst, " færre enn to svaralternativ:\n",
+      lag_liste(kb_kat_nest$variabel_id[!verdi_ok])
+    )
+    gyldig = FALSE
+  }
+
   # *Viss* kodeboka brukar kategoriar (det er frivillig å bruka,
   # men viss ein brukar det, skal alle skjema ha minst éin kategori),
   # sjekk at alle skjema startar med ei kategorioverskrift
