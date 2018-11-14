@@ -216,126 +216,49 @@ graf_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab = 
   grafdel
 }
 
-# funksjon for å lage p-chart shewhart-diagram med eller uten facets
-# funksjonen krever et datasett (d) som inneholder teller (y) og nevner (n), med variabel for x.aksen (x) som
-# ofte er en datovariabel, men hvis det ikke er det settes tidsvinsing til FALSE.
-# panel_gruppe er hvilken variabel man ønkser å dele opp et panel på (gjelder kun tidsvisning),
-# periode hvilket tidsrom (f.eks "month" eller "2 months", gjelder kun tidsvising) og tittel for tittelen til plottet.
+
+# funksjon for å lage shewhart-diagram
+# funksjonen krever et datasett (d) som inneholder teller (y) og en variabel for x.aksen (x) som
+# ofte er en datovariabel, hvilket type shewhart-diagram det er er (velges "p" må også nevner, tilgjengelig i d, oppgis)
+# gruppe er hvilken variabel man ønkser å dele opp et panel på, hvis ønskelig (default NULL),
+# periode hvilket tidsrom (f.eks "month" eller "2 months", gjelder kun tidsvising)
+# kan velge å legge til tittelen for plottet i tittel, x-aksenavn i x_navn og y-akse-navn i y-akse.
 # krever pakkene tidyverse og qicharts2
-lag_shewhart_pro = function(d, x, y, n, panel_gruppe, tidsvisning = TRUE, periode, tittel) {
-  d$qic_x = d[[x]]
-  d$qic_y = d[[y]]
-  d$qic_n = d[[n]]
-  d$qic_facet = d[[panel_gruppe]]
+lag_shewhart_fig = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
+                            gruppe = NULL, periode = NULL, x_navn = NULL, y_navn = NULL,
+                            tidsvisning = TRUE, ...) {
 
-  if (tidsvisning) {
-    plot = suppressMessages(qic(
-      x = qic_x,
-      y = qic_y, # telleren i indikatoren
-      n = qic_n, # nevneren til indikatoren
-      data = d,
-      facets = ~qic_facet,
-      chart = "p", # plottypen
-      x.period = periode,
-      show.labels = FALSE,
-      xlab = NULL,
-      ylab = "Andel",
-      title = tittel
-    ) +
-      tema +
-      fjern_x +
-      fjern_y +
-      theme(legend.position = "none") +
-      scale_x_discrete(expand = c(0, 0.1)) +
-      scale_y_continuous(labels = akse_prosent))
+  # definerer alle kolonner som skal være tilgjengelig inni datasettet (d)
+  qic_x = enexpr(x)
+  qic_y = enexpr(y)
+  qic_n = enexpr(nevner)
+  qic_facet = enexpr(gruppe)
+
+  if (is.Date(d[[qic_x]])) {
+    skal_flippes = FALSE
   } else {
-
-    # setter i rekkefølge fra størst til minst i nevneren
-    nevner = d %>%
-      count(qic_x)
-    d = d %>%
-      left_join(nevner, by = "qic_x") %>%
-      arrange(desc(nnn)) %>%
-      mutate(qic_x = fct_inorder(qic_x))
-    #
-    plot = suppressMessages(qic(
-      x = qic_x,
-      y = qic_y, # telleren i indikatoren
-      n = qic_n, # nevneren til indikatoren
-      data = d,
-      chart = "p", # plottypen
-      show.labels = FALSE,
-      xlab = NULL,
-      ylab = "Andel",
-      title = tittel
-    ) +
-      coord_flip() +
-      tema +
-      fjern_x +
-      fjern_y +
-      theme(legend.position = "none") +
-      scale_x_discrete(expand = c(0, 0.1)) +
-      scale_y_continuous(labels = akse_prosent))
+    skal_flippes = TRUE
   }
 
-  plot
-}
+  # lager grunnplottet med alt som alle shewhart-diagram trenger + eventuelle tilleggsvalg, og ggplot2 tema
+  plot = eval_bare(expr(qic(
+    data = d, y = !!qic_y, n = maybe_missing(!!qic_n), x = !!qic_x, chart = figtype,
+    title = tittel, xlab = x_navn, ylab = y_navn, show.labels = FALSE, x.period = periode, facets = ~ (!!qic_facet),
+    flip = skal_flippes
+  ))) +
+    tema +
+    fjern_x +
+    fjern_y +
+    theme(legend.position = "none") +
+    scale_x_discrete(expand = c(0, 0.1))
 
-
-
-# funksjon for å lage p-chart shewhart-diagram med eller uten facets
-# funksjonen krever et datasett (d) som inneholder teller (y) og nevner (n), med variabel for x.aksen (x) som
-# ofte er en datovariabel, men hvis det ikke er det settes tidsvinsing til FALSE.
-# panel_gruppe er hvilken variabel man ønkser å dele opp et panel på (gjelder kun tidsvisning),
-# periode hvilket tidsrom (f.eks "month" eller "2 months", gjelder kun tidsvising) og tittel for tittelen til plottet.
-lag_shewhart_xbar = function(d, x, y, yakse_tekst, panel_gruppe, tidsvisning = TRUE, periode, tittel) {
-  d$qic_x = d[[x]]
-  d$qic_y = d[[y]]
-  d$qic_facet = d[[panel_gruppe]]
-
-  if (tidsvisning) {
-    plot = suppressMessages(qic(
-      x = qic_x,
-      y = qic_y, # telleren i indikatoren
-      data = d,
-      facets = ~qic_facet,
-      chart = "xbar", # plottypen
-      x.period = periode,
-      show.labels = FALSE,
-      xlab = NULL,
-      ylab = yakse_tekst,
-      title = tittel
-    ) +
-      tema +
-      fjern_x +
-      fjern_y +
-      theme(legend.position = "none") +
-      geom_point())
-  } else {
-    # setter i rekkefølge fra størst til minst i nevneren
-    nevner = d %>%
-      count(qic_x)
-    d = d %>%
-      left_join(nevner, by = "qic_x") %>%
-      arrange(desc(n)) %>%
-      mutate(qic_x = fct_inorder(qic_x))
-    plot = suppressMessages(qic(
-      x = qic_x,
-      y = qic_y, # telleren i indikatoren
-      data = d,
-      chart = "xbar", # plottypen
-      show.labels = FALSE,
-      xlab = NULL,
-      ylab = yakse_tekst,
-      title = tittel
-    ) +
-      coord_flip() +
-      tema +
-      fjern_x +
-      fjern_y +
-      theme(legend.position = "none"))
+  # legger på ekstra tema under visse forhold
+  if (figtype == "p") { # hvis det er p-chart ønsker vi norske prosenter fra funksjon i dette r-skriptet
+    plot = plot + scale_y_continuous(labels = akse_prosent)
   }
-
+  if (is.Date(d[[qic_x]])) { # hvis det er en tidsvisning trenger vi en dot for punktene i linjediagrammet
+    plot = plot + geom_point()
+  }
   plot
 }
 
