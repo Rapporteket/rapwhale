@@ -249,8 +249,7 @@ lag_shewhart_fig = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
     tema +
     fjern_x +
     fjern_y +
-    theme(legend.position = "none") +
-    scale_x_discrete(expand = c(0, 0.1))
+    theme(legend.position = "none")
 
   # legger på ekstra tema under visse forhold
   if (figtype == "p") { # hvis det er p-chart ønsker vi norske prosenter fra funksjon i dette r-skriptet
