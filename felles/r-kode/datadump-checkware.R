@@ -243,3 +243,7 @@ mappe = "***FJERNA-ADRESSE***"
 # d_mrs = hent_checkware_data(mappe, "mrs")
 # d_nihss = hent_checkware_data(mappe, "nihss")
 # d_tis = hent_checkware_data(mappe, "tis")
+# d_legeinn = hent_checkware_data(mappe, "legeinn")
+# d_legeut = hent_checkware_data(mappe, "legeut")
+# d_sykinn = hent_checkware_data(mappe, "sykinn")
+# d_sykut = hent_checkware_data(mappe, "sykut")
