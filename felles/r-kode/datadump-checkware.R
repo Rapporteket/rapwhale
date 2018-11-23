@@ -197,7 +197,7 @@ hent_checkware_data = function(mappe, skjema_id) {
     # siden datetime blir hentet inn som character
     # fikser vi disse til å være datetime her
     # (jf. https://github.com/tidyverse/readr/issues/642 (!fixme til "T" når denne er fiksa))
-    dato_kl_var = kb %>%
+    dato_kl_var = kb_skjema %>%
       filter(variabeltype == "dato_kl") %>%
       distinct(variabel_id) %>%
       pull("variabel_id")
