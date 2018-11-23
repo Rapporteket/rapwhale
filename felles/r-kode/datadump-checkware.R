@@ -222,7 +222,7 @@ hent_checkware_data = function(mappe, skjema_id) {
     er_gyldig = dd_er_gyldig(d, kb_skjema)
 
     if (!er_gyldig) {
-      print(attr(er_gyldig, "rapport"))
+      print(attr(er_gyldig, "rapport"), n = Inf)
       stop("Datadumpen er ikke gyldig. Se feilene over.")
     }
     d
