@@ -204,6 +204,19 @@ hent_checkware_data = function(mappe, skjema_id) {
     d = d %>%
       mutate_at(dato_kl_var, parse_datetime, format = "%Y-%m-%d %H:%M:%S")
 
+    # I CheckWare vert boolske verdiar koda som "1" for sann og NA for usann.
+    # Kodar derfor om til ekte boolske verdiar.
+    boolsk_var = kb_skjema %>%
+      filter(variabeltype == "boolsk") %>%
+      distinct(variabel_id) %>%
+      pull("variabel_id")
+    cw_til_boolsk = function(x) {
+      stopifnot(all(x %in% c("1", NA)))
+      !is.na(x)
+    }
+    d = d %>%
+      mutate_at(boolsk_var, cw_til_boolsk)
+
     # validerer datadumpen
     # med dd_er_gyldig funksjonen fra datadump-valider-skriptet
     er_gyldig = dd_er_gyldig(d, kb_skjema)
