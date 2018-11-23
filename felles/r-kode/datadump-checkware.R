@@ -183,7 +183,7 @@ hent_checkware_data = function(mappe, skjema_id) {
       delim = ";", na = "",
       quote = "\"", trim_ws = FALSE, col_types = kol_typar,
       locale = locale(
-        decimal_mark = ",", grouping_mark = "",
+        decimal_mark = ".", grouping_mark = "",
         date_format = "%Y-%m-%d", time_format = "%H:%M:%S"
       )
     ))
