@@ -32,7 +32,6 @@ adresser = list.files("h:/kvalreg/",
 # Ikkje kompiler LKG-registeret og SmerteReg, sidan me ikkje vedlikeheld dei lenger
 adresser = setdiff(adresser, "h:/kvalreg//lkg-registeret/arsrapport-lkg.Rnw")
 adresser = setdiff(adresser, "h:/kvalreg//smerteregisteret/arsrapport-smertereg.Rnw")
-adresser = setdiff(adresser, "h:/kvalreg//norartritt/arsrapport-norartritt.Rnw")
 
 # Andre rapporter vi også gjerne vil auto-kompilere
 adresser = c(adresser, "h:/kvalreg//rehabiliteringsregisteret/kvartalsrapport-rehab.Rnw")
