@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{kvalreg-rapport}[2018/10/05 Rapportar for kvalitetsregister]
+\ProvidesClass{kvalreg-rapport}[2019/01/09 Rapportar for kvalitetsregister]
 
 % Krev bruk av LuaLaTeX
 \RequirePackage{ifluatex}
@@ -552,6 +552,10 @@
 \newcommand{\sjekk}{{\uniskrift ✓}}
 \newcommand{\sjekknei}{{\uniskrift ☐}}
 \newcommand{\sjekkja}{{\uniskrift ☑}}
+
+% Støtte for QR-kodar (hovudsakleg for adressa til 
+% heimesida til register, vist på baksida av rapportar)
+\RequirePackage{qrcode}
 
 % La R-kjeldekode (og utdata frå køyring av denne) dekka heile sidebreidda
 \iffalse
