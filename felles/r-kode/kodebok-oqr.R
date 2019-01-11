@@ -73,8 +73,8 @@ les_oqr_kb = function(adresse) {
     mutate(
       skjema_id = tabell,
       skjemanamn = skjemanavn,
-      oqr_variabel_id_norsk = navn_i_rapporteket,
-      oqr_variabel_id_engelsk = variabel_id,
+      variabel_id = str_to_lower(fysisk_feltnavn),
+      obligatorisk = str_to_lower(obligatorisk),
       variabeletikett = ledetekst,
       forklaring = hjelpetekst,
       variabeltype = type,
@@ -93,9 +93,7 @@ les_oqr_kb = function(adresse) {
       manglande = NA_character_,
       kommentar_rimeleg = NA_character_,
       utrekningsformel = NA_character_,
-      logikk = NA_character_,
-      obligatorisk = str_to_lower(obligatorisk),
-      variabel_id = str_to_lower(fysisk_feltnavn)
+      logikk = NA_character_
     )
 
   # Ein «Statusvariabel» er eigentleg ein kategorisk variabel
@@ -144,7 +142,7 @@ les_oqr_kb = function(adresse) {
   nye_vartypar = na.omit(setdiff(kodebok$variabeltype, vartype_oqr_standard$type_oqr))
   if (length(nye_vartypar) > 0) {
     stop(
-      "Kodeboka har variabeltypar me ikkje har standardnamn på: ",
+      "Kodeboka har variabeltypar me ikkje støttar / har standardnamn på: ",
       str_c(nye_vartypar, collapse = ", ")
     )
   }
@@ -163,12 +161,10 @@ les_oqr_kb = function(adresse) {
     "utrekningsformel", "logikk", "kommentar"
   )
 
-  # Treng òg nokre ekstranamn som me brukar (berre) for å lesa inn datafiler
-  ekstra_namn = c("oqr_variabel_id_engelsk", "oqr_variabel_id_norsk")
 
   # Ta med dei namna me brukar, i fornuftig rekkjefølgje
   kodebok = kodebok %>%
-    select_(.dots = c(std_namn, ekstra_namn))
+    select(!!std_namn)
 
   # Returner kodeboka
   kodebok
