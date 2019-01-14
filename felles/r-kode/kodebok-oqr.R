@@ -8,6 +8,7 @@ options(stringsAsFactors = FALSE)
 
 # Nødvendige pakkar
 library(tidyverse) # Ymse standardpakkar
+library(lubridate) # Datohandtering
 library(stringr) # Tekstmassering
 library(magrittr) # Funksjonar som kan brukast med røyr-operatoren
 library(readr) # For innlesing av CSV-filer
@@ -15,10 +16,34 @@ library(readr) # For innlesing av CSV-filer
 
 # Les inn kodebok og gjer om til standardformat ---------------------------
 
-# Les inn kodebok
-les_oqr_kb = function(adresse) {
+# Les inn OQR-kodebok på dokumentert format og
+# gjer om til vårt standardformat (kanonisk form)
+#
+# Inndata:
+#   mappe_dd: Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
+#   reg_id: ID som identifiserer registeret og er prefiks til alle filnamna
+#   dato: Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
+#
+# Utdata:
+#   kodeboka på standardformat (kanonisk form)
+#
+les_oqr_kb = function(mappe_dd, reg_id, dato = NULL) {
+
+  # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
+  if (is.null(dato)) {
+    dato = list.dirs(mappe_dd, recursive = FALSE, full.names = FALSE) %>%
+      sort() %>%
+      last()
+  }
+  dato = as_date(dato) # I tilfelle det var ein tekstreng
+
+  # Les inn kodeboka
+  adresse_kb = paste0(
+    mappe_dd, "\\", dato, "\\",
+    reg_id, "_klokeboken.csv_", format(dato, "%d.%m.%Y"), ".csv"
+  )
   kodebok_oqr_format = read_delim(
-    adresse,
+    adresse_kb,
     delim = ";", quote = "\"",
     col_types = cols(
       skjemanavn = col_character(),
