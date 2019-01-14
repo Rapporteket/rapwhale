@@ -1,4 +1,5 @@
 # Lesing/tolking av det flotte kodebokformatet til OQR :)
+# og av OQR-datadumpar.
 
 
 # Oppsett -----------------------------------------------------------------
@@ -21,13 +22,13 @@ library(readr) # For innlesing av CSV-filer
 #
 # Inndata:
 #   mappe_dd: Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
-#   reg_id: ID som identifiserer registeret og er prefiks til alle filnamna
-#   dato: Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
+#   reg_id:   ID som identifiserer registeret og er prefiks til alle filnamna
+#   dato:     Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
 #
 # Utdata:
-#   kodeboka på standardformat (kanonisk form)
+#   kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar
 #
-les_oqr_kb = function(mappe_dd, reg_id, dato = NULL) {
+les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av kodebok?
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
@@ -198,17 +199,62 @@ les_oqr_kb = function(mappe_dd, reg_id, dato = NULL) {
 
 # Les datadump frå OQR-register -------------------------------------------
 
-# Bruk oppgitt kodebok til å henta inn data frå
-# OQR-fil slik at variablane får rett format
-# (tal, tekst, dato osv.)
-# Argument:
-#   adresse: adressa til datafila (med norske/teite variabelnamn)
-#        kb: standardisert kodebok
-les_dd_oqr = function(adresse, kb, datoformat = "%Y-%m-%d", dd_kolnamn_er_norsk = TRUE) {
+# Les inn OQR-data frå gitt skjema ved hjelp av kodebok.
+# Kodeboka vert brukt til å gje alle variablane rett format
+# (tal, tekst, dato, boolske/logiske verdiar osv.) og til å
+# sikra at datadumpen er i samsvar med kodeboka.
+#
+# Som standard treng ein ikkje oppgje kodebok; ho vert automatisk henta inn.
+# Men dersom ein skal lesa inn mange skjema, er det lurare å lesa inn
+# kodeboka separat først, for at ting skal gå raskare (innlesing og validering
+# av kodeboka kan ta litt tid). Det er òg nødvendig å gjera det slik dersom
+# ein har kodeboka frå ei anna kjelde eller viss ein vil bruka ei modifisert
+# kodebok (generelt farleg!).
+#
+# Inndata:
+#   mappe_dd:  Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
+#   reg_id:    ID som identifiserer registeret og er prefiks til alle filnamna
+#   skjema_id: ID til skjemaet ein vil henta inn (brukt i filnamnet og i kolonnen «tabell» i kodeboka)
+#   dato:      Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
+#   kb:        Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
+#
+# Utdata:
+#   R-datasett for det aktuelle skjemaet.
+#
+les_dd_oqr = function(mappe_dd, reg_id, skjema_id, dato = NULL, kb = NULL) { # fixme: Legg på dd-validering?
+  # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
+  if (is.null(dato)) {
+    dato = list.dirs(mappe_dd, recursive = FALSE, full.names = FALSE) %>%
+      sort() %>%
+      last()
+  }
+  dato = as_date(dato) # I tilfelle det var ein tekstreng
+
+  # Les inn kodeboka dersom ho ikkje er spesifisert
+  if (is.null(kb)) {
+    kb = les_kb_oqr(mappe_dd, reg_id, dato) # fixme: Ev. validering
+  }
+  # Hent ut variabelinfo frå kodeboka for det gjeldande skjemaet
+  kb_akt = kb %>%
+    filter(skjema_id == !!skjema_id)
+
+  # Les inn kodeboka
+  adresse_dd = paste0(
+    mappe_dd, "\\", dato, "\\",
+    reg_id, "_", skjema_id, "_datadump.csv_", format(dato, "%d.%m.%Y"), ".csv"
+  )
+
   # Les inn variabelnamna som vert brukt i datafila
-  varnamn_fil = scan(adresse,
-    fileEncoding = "UTF-8", what = "character",
+  varnamn_fil = scan(adresse_dd,
+    fileEncoding = "UTF-8-BOM", what = "character",
     sep = ";", nlines = 1, quiet = TRUE
+  )
+
+  # Sjekk at alle variablane i datadumpen finst i kodeboka
+  # og at alle variablane i kodeboka finst i datadumpen
+  # (og i same rekkjefølgje)
+  stopifnot(
+    identical(unique(kb_akt$variabel_id), tolower(varnamn_fil))
   )
 
   # Datafila *kan* ikkje innehalda duplikate kolonnenamn,
