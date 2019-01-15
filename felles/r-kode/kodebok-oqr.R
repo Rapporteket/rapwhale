@@ -219,7 +219,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av ko
 #   kb:        Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
 #
 # Utdata:
-#   R-datasett for det aktuelle skjemaet.
+#   R-datasett for det aktuelle skjemaet, med variabelnamn gjort om til små bokstavar.
 #
 les_dd_oqr = function(mappe_dd, reg_id, skjema_id, dato = NULL, kb = NULL) { # fixme: Legg på dd-validering?
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
@@ -238,6 +238,12 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, dato = NULL, kb = NULL) { # f
   kb_akt = kb %>%
     filter(skjema_id == !!skjema_id)
 
+  # Kodeboka må ha informasjon om variablane i
+  # i det aktuelle skjemaet for at me skal halda fram ...
+  if (nrow(kb_akt) == 0) {
+    stop("Kodeboka manglar informasjon om skjemaet '", skjema_id, "'")
+  }
+
   # Les inn kodeboka
   adresse_dd = paste0(
     mappe_dd, "\\", dato, "\\",
@@ -245,26 +251,42 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, dato = NULL, kb = NULL) { # f
   )
 
   # Les inn variabelnamna som vert brukt i datafila
-  varnamn_fil = scan(adresse_dd,
+  varnamn_dd = tolower(scan(adresse_dd,
     fileEncoding = "UTF-8-BOM", what = "character",
     sep = ";", nlines = 1, quiet = TRUE
-  )
+  ))
 
   # Sjekk at alle variablane i datadumpen finst i kodeboka
   # og at alle variablane i kodeboka finst i datadumpen
   # (og i same rekkjefølgje)
-  stopifnot(
-    identical(unique(kb_akt$variabel_id), tolower(varnamn_fil))
-  )
+  varnamn_kb = unique(kb_akt$variabel_id)
+  if (!identical(var_kb, var_dd)) {
+    feilmelding = "Er ikkje same variablar i kodeboka og i datadumpfila.\n"
+    ekstra_kb = setdiff(varnamn_kb, varnamn_dd)
+    ekstra_dd = setdiff(varnamn_dd, varnamn_kb)
+    if (length(ekstra_kb) >= 0) {
+      feilmelding = paste0(
+        feilmelding, "Desse variablane finst berre i kodeboka:\n",
+        paste(ekstra_kb, collapse = ", "), "\n"
+      )
+    }
+    if (length(ekstra_dd) >= 0) {
+      feilmelding = paste0(
+        feilmelding, "Desse variablane finst berre i datadumpen:\n",
+        paste(toupper(ekstra_dd), collapse = ", "), "\n"
+      )
+    }
+    stop(feilmelding)
+  }
 
   # Datafila *kan* ikkje innehalda duplikate kolonnenamn,
   # sidan me då ikkje kan veta kva kolonne eit namn svarar til.
   # Stopp derfor viss me finn duplikate namn.
-  dupnamn = duplicated(varnamn_fil)
+  dupnamn = duplicated(varnamn_dd)
   if (any(dupnamn)) {
     stop(
       "Datafila har duplikate variabelnamn:\n",
-      str_c(varnamn_fil[dupnamn], collapse = "\n")
+      str_c(varnamn_dd[dupnamn], collapse = "\n")
     )
   }
 
