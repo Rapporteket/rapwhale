@@ -215,13 +215,17 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av ko
 #   mappe_dd:  Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
 #   reg_id:    ID som identifiserer registeret og er prefiks til alle filnamna
 #   skjema_id: ID til skjemaet ein vil henta inn (brukt i filnamnet og i kolonnen «tabell» i kodeboka)
+#   status:    Berre ta med skjema med desse statusverdiane (-1 = oppretta, 0 = kladd, 1 = ferdigstilt).
+#              Kan òg vera NULL, for å henta alt, uavhengig av status (dvs. også inkludert NA-status
+#              og ugyldige statusverdiar, eller datadumpar som manglar statusvariabel
+#              (ikkje noko av dette *skal* vera mogleg å få, men alt kan skje i denne verda ...)).
 #   dato:      Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
 #   kb:        Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
 #
 # Utdata:
 #   R-datasett for det aktuelle skjemaet, med variabelnamn gjort om til små bokstavar.
 #
-les_dd_oqr = function(mappe_dd, reg_id, skjema_id, dato = NULL, kb = NULL) { # fixme: Legg på dd-validering?
+les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kb = NULL) { # fixme: Legg på dd-validering?
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
     dato = dir(mappe_dd, pattern = "[0-9]{4}-[0-1]{2}-[0-9]{2}", full.names = FALSE) %>%
@@ -383,6 +387,13 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, dato = NULL, kb = NULL) { # f
       date_format = datoformat, time_format = "%H:%M:%S"
     )
   ))
+
+  # Filtrer vekk skjema som ikkje har rett statusvariabel
+  # (som standard vert berre ferdigstilte skjema tekne med)
+  if (!is.null(status)) {
+    d = filter(status %in% !!status)
+  }
+
 
   # Gjer om boolske variablar til ekte boolske variablar
   oqr_boolsk_til_boolsk = function(x) {
