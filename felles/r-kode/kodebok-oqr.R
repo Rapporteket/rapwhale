@@ -43,7 +43,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av ko
     mappe_dd, "\\", dato, "\\",
     reg_id, "_klokeboken.csv_", format(dato, "%d.%m.%Y"), ".csv"
   )
-  kodebok_oqr_format = read_delim(
+  kodebok_oqr_format = stop_for_problems(read_delim(
     adresse_kb,
     delim = ";", quote = "\"",
     col_types = cols(
@@ -75,7 +75,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av ko
       variabel_id = col_character(),
       hjelpetekst = col_character()
     )
-  )
+  ))
 
   # Dei numeriske min- og maksverdiane kan ifølgje dokumentasjonen
   # http://helseregister.no/confluence/display/KG/Klokeboken
@@ -353,14 +353,14 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, dato = NULL, kb = NULL) { # f
 
   # Les inn datasettet
   kol_typar = str_c(spek_innlesing$csv_bokstav, collapse = "")
-  d = read_delim(adresse,
+  d = stop_for_problems(read_delim(adresse,
     delim = ";", quote = "\"", trim_ws = FALSE, na = "null",
     col_names = spek_innlesing$variabel_id, col_types = kol_typar, skip = 1, # Hopp over overskriftsrada
     locale = locale(
       decimal_mark = ",", grouping_mark = "",
       date_format = datoformat, time_format = "%H:%M:%S"
     )
-  )
+  ))
 
   # Gjer om boolske variablar til ekte boolske variablar
   oqr_boolsk_til_boolsk = function(x) {
