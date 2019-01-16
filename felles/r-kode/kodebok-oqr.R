@@ -192,6 +192,9 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av ko
   kodebok = kodebok %>%
     select(!!std_namn)
 
+  # fixme: Vurder om det er nødvendig å køyra funksjonen som gjer
+  #        kodebok om til kanonisk form (eller om ho alt *er* på kanonisk form)
+
   # Returner kodeboka
   kodebok
 }
