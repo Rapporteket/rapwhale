@@ -192,6 +192,28 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av ko
   kodebok = kodebok %>%
     select(!!std_namn)
 
+  # I tillegg til dei definerte variablane har datadumpane seks ekstra
+  # variablar, to før kodebokvariablane og fire etter. Desse er definerte
+  # i dokumentasjonen til datadumpane(dokumentet «4.2 Dokumentasjon på
+  # format av Datadump i register.doc»)
+  legg_til_ekstravar = function(kb) {
+    kb_ekstra = tribble(
+      ~variabel_id, ~variabeletikett, ~variabeltype, ~unik, ~obligatorisk, ~desimalar,
+      "mceid", "Forløps-ID", "numerisk", "ja", "ja", 0,
+      "centreid", "RESH-ID", "numerisk", "nei", "ja", 0,
+      "tsupdated", "Skjema sist oppdatert", "dato_kl", "nei", "nei", NA,
+      "updatedby", "Skjema oppdatert av", "tekst", "nei", "nei", NA,
+      "tscreated", "Skjema oppretta", "dato_kl", "nei", "ja", NA,
+      "createddb", "Skjema oppretta av", "tekst", "nei", "ja", NA
+    )
+    kb_utvida = bind_rows(kb_ekstra[1:2, ], kb, kb_ekstra[3:6, ])
+    kb_utvida
+  }
+  kodebok = kodebok %>%
+    nest(-skjema_id, -skjemanamn) %>%
+    mutate(data = map(data, legg_til_ekstravar)) %>%
+    unnest()
+
   # fixme: Vurder om det er nødvendig å køyra funksjonen som gjer
   #        kodebok om til kanonisk form (eller om ho alt *er* på kanonisk form)
 
