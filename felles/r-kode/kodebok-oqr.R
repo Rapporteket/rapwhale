@@ -204,7 +204,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av ko
       "tsupdated", "Skjema sist oppdatert", "dato_kl", "nei", "nei", NA,
       "updatedby", "Skjema oppdatert av", "tekst", "nei", "nei", NA,
       "tscreated", "Skjema oppretta", "dato_kl", "nei", "ja", NA,
-      "createddb", "Skjema oppretta av", "tekst", "nei", "ja", NA
+      "createdb", "Skjema oppretta av", "tekst", "nei", "ja", NA
     )
     kb_utvida = bind_rows(kb_ekstra[1:2, ], kb, kb_ekstra[3:6, ])
     kb_utvida
@@ -273,13 +273,11 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kb =
     stop("Kodeboka manglar informasjon om skjemaet '", skjema_id, "'")
   }
 
-  # Les inn kodeboka
+  # Les inn variabelnamna som vert brukt i datafila
   adresse_dd = paste0(
     mappe_dd, "\\", dato, "\\",
     reg_id, "_", skjema_id, "_datadump.csv_", format(dato, "%d.%m.%Y"), ".csv"
   )
-
-  # Les inn variabelnamna som vert brukt i datafila
   varnamn_dd = tolower(scan(adresse_dd,
     fileEncoding = "UTF-8-BOM", what = "character",
     sep = ";", nlines = 1, quiet = TRUE
@@ -289,7 +287,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kb =
   # og at alle variablane i kodeboka finst i datadumpen
   # (og i same rekkjefølgje)
   varnamn_kb = unique(kb_akt$variabel_id)
-  if (!identical(var_kb, var_dd)) {
+  if (!identical(varnamn_kb, varnamn_dd)) {
     feilmelding = "Er ikkje same variablar i kodeboka og i datadumpfila.\n"
     ekstra_kb = setdiff(varnamn_kb, varnamn_dd)
     ekstra_dd = setdiff(varnamn_dd, varnamn_kb)
