@@ -200,7 +200,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av ko
     kb_ekstra = tribble(
       ~variabel_id, ~variabeletikett, ~variabeltype, ~unik, ~obligatorisk, ~desimalar,
       "mceid", "Forløps-ID", "numerisk", "ja", "ja", 0,
-      "centreid", "RESH-ID", "numerisk", "nei", "ja", 0,
+      "centreid", "RESH-ID", "tekst", "nei", "ja", 0,
       "tsupdated", "Skjema sist oppdatert", "dato_kl", "nei", "nei", NA,
       "updatedby", "Skjema oppdatert av", "tekst", "nei", "nei", NA,
       "tscreated", "Skjema oppretta", "dato_kl", "nei", "ja", NA,
