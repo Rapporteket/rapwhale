@@ -28,17 +28,40 @@ source("h:/kvalreg/felles/r-kode/kodebok-valider.R", encoding = "UTF-8")
 # henter funksjon for å validere datadump
 source("h:/kvalreg/felles/r-kode/datadump-valider.R", encoding = "UTF-8")
 
-#--------------------------les kodebok checkware funksjon-----------------------------------------------
+# Les inn kodebok og gjer om til standardformat ---------------------------
 
-# funksjon for å hente ut checkware-kodebøker.
-# trenger adressen til kodeboka.
-# kjører kodebok_er_gyldig() for å teste at kodeboka er gyldig.
-# gjør kodeboka til kanonisk form
-les_kb_checkware = function(adresse_kb) {
+# Les inn OQR-kodebok på dokumentert format og
+# gjer om til vårt standardformat (kanonisk form)
+
+# Inndata:
+#   mappe_dd: Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
+#   reg_id:   ID som identifiserer registeret og er prefiks til alle filnamna
+#   dato:     Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
+#
+# Utdata:
+#   kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar
+# trenger følgende argumenter:
+# mappe_dd - plasseringa til mappene for datadumper.
+#            Her er det gitt at nyeste kodebok legges i samme mappe som nedhentede datadumper, og at datadumpene legges i hver sin fil
+#            avhengig av datoen de var lastet ned
+# dato - hvis man ønsker å hente kodebok fra en spesifikk dato. Hvis ikke hentes dette fra nyeste dato. Default til NULL.
+
+les_kb_checkware = function(mappe_dd, dato = NULL) {
+
+  # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
+  if (is.null(dato)) {
+    dato = dir(mappe_dd, pattern = "[0-9]{4}-[0-1]{2}-[0-9]{2}", full.names = FALSE) %>%
+      sort() %>%
+      last()
+  }
+  dato = as_date(dato) # I tilfelle det var ein tekstreng
+
+  # Adressen til kodeboka
+  adresse_kb = paste0(mappe_dd, dato, "/kodebok.xlsx")
 
   # kodebok-kolonnetyper som skal brukes når man henter inn kodeboka
   # Noen ganger har kodeboka tomme kolonner, og kolonnetypen må defineres på forhånd uansett
-  # Kodeboka er laget i excel, og dessverre må disse per i dag defineres manuelt # fixme! automatiser ved automatisert kodeboka.
+  # Kodeboka er laget i excel, og dessverre må disse per i dag defineres manuelt # fixme! automatiser ved automatisert kodebok.
   # Excel har heller ikke så mange, presise variabeltyper
   # I standardrekkefølgen på kolonner til Fagsenterets standard kodebokformat skal de 15 første kolonnene
   # skjema_id, skjema_namn, kategori, innleiing, varibel_id_checkware, variabel_id, variabeletikett, forklaring,
@@ -68,6 +91,9 @@ les_kb_checkware = function(adresse_kb) {
     left_join(variabel_id_checkware, by = "variabel_id")
   kb_kanonisk
 }
+# kan teste at funksjonen funker med koden under
+# grunnmappe = "***FJERNA-ADRESSE***"
+# kb = les_kb_checkware(grunnmappe)
 
 #------------------------------------------------lag datadump checkware------------------------
 
