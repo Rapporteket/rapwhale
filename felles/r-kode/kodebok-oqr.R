@@ -1,6 +1,4 @@
-# Lesing/tolking av det flotte kodebokformatet til OQR :)
-# og av OQR-datadumpar.
-
+# Innlesing av kodebøker og datadumpar frå OQR.
 
 # Oppsett -----------------------------------------------------------------
 
@@ -11,7 +9,6 @@ options(stringsAsFactors = FALSE)
 library(tidyverse) # Ymse standardpakkar
 library(lubridate) # Datohandtering
 library(stringr) # Tekstmassering
-library(magrittr) # Funksjonar som kan brukast med røyr-operatoren
 library(readr) # For innlesing av CSV-filer
 
 
@@ -19,6 +16,9 @@ library(readr) # For innlesing av CSV-filer
 
 # Les inn OQR-kodebok på dokumentert format og
 # gjer om til vårt standardformat (kanonisk form)
+#
+# Denne funksjonen er laga basert på den offisielle dokumentasjonen på kodebok-
+# formatet til OQR, dvs. dokumentet «KG-Klokeboken-100418-1349-11.pdf».
 #
 # Inndata:
 #   mappe_dd: Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
@@ -194,7 +194,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av ko
 
   # I tillegg til dei definerte variablane har datadumpane seks ekstra
   # variablar, to før kodebokvariablane og fire etter. Desse er definerte
-  # i dokumentasjonen til datadumpane(dokumentet «4.2 Dokumentasjon på
+  # i dokumentasjonen til datadumpane (dokumentet «4.2 Dokumentasjon på
   # format av Datadump i register.doc»)
   legg_til_ekstravar = function(kb) {
     kb_ekstra = tribble(
@@ -235,6 +235,9 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av ko
 # av kodeboka kan ta litt tid). Det er òg nødvendig å gjera det slik dersom
 # ein har kodeboka frå ei anna kjelde eller viss ein vil bruka ei modifisert
 # kodebok (generelt farleg!).
+#
+# Denne funksjonen er laga basert på den offisielle dokumentasjonen på datadump-
+# formatet til OQR, dvs. dokumentet «4.2 Dokumentasjon på format av Datadump i register.doc».
 #
 # Inndata:
 #   mappe_dd:  Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
@@ -288,7 +291,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kb =
   # (og i same rekkjefølgje)
   varnamn_kb = unique(kb_akt$variabel_id)
   if (!identical(varnamn_kb, varnamn_dd)) {
-    feilmelding = "Er ikkje same variablar i kodeboka og i datadumpfila.\n"
+    feilmelding = "Er ikkje same variablar i kodeboka og i datadumpfila\n(eller variabelrekkjefølgja er forskjellig).\n"
     ekstra_kb = setdiff(varnamn_kb, varnamn_dd)
     ekstra_dd = setdiff(varnamn_dd, varnamn_kb)
     if (length(ekstra_kb) >= 0) {
@@ -317,49 +320,15 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kb =
     )
   }
 
-  # disse variabelnamna er ikkje dei vi brukar.
-  # henter inn namna som vi faktisk brukar
-  # avhengig om variabelnavnene er norske eller engelske
-  # i de ulike kodebøkene velger vi å matche mot norske
-  # eller engelske navn for å få inn de vi vil ha
-  if (dd_kolnamn_er_norsk) {
-    dd_kolid = "oqr_variabel_id_norsk"
-  } else {
-    dd_kolid = "oqr_variabel_id_engelsk"
-  }
-  varnamn = kb$variabel_id[match(varnamn_fil, kb[[dd_kolid]])] %>%
-    coalesce(varnamn_fil)
-
   # Hent ut første linje frå kodeboka, dvs. den linja som
   # inneheld aktuell informasjon
   kb_info = kb %>%
     distinct(variabel_id, .keep_all = TRUE)
 
   # Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
-  # fixme: Kategorisk er ein litt vrien variant. *Oftast* er han
-  #        tal, men me kan risikera at han er tekst òg. Ei løysing er å
-  #        alltid lesa han inn som tekst, men det er ikkje ei *god* løysing.
-  #        Når han er koda som tal, er det ofte betre å handsama han som tal.
-  #        Det ser betre ut, og det mogleggjer å bruka operatorar som < og >=
-  #        (eks. komplikasjonsgrad < 5) (men "10" er som kjent < "2"!).
-  #        Og for spørjeskjema er gjerne skåringskodane lagt inn som talkodar,
-  #        slik at det er fint om me kan skriva for eksempel sp1 + sp2 + ...
-  #        for å få ein sumskår).
-  #
-  #        Så den *rette* måten å handtera dette på er å lesa inn kategoriske
-  #        verdiar som tal dersom dei moglege *verdiane* i kodeboka alle er tal
-  #        og som tekst elles.
-  #
-  #        Det kunne vera aktuelt å dela opp i kategorisk_numerisk og
-  #        kategorisk_tekst i vår kanoniske kodebok, men det ville komplisera
-  #        annan kode som brukar kodebøkene (eks.kb_fyll()), så det bør me nok
-  #        helst ikkje gjera.
-  #
-  #        Programmeringsmessig blir anbefalt løysing litt komplisert,
-  #        men det skal me få til!
   spek_csv_oqr = tribble(
     ~variabeltype, ~csv_bokstav,
-    "kategorisk", "n",
+    "kategorisk", "c", # Sjå kommentar nedanfor
     "tekst", "c",
     "boolsk", "c", # Sjå konvertering nedanfor
     "dato_kl", "c", # Mellombels, jf. https://github.com/tidyverse/readr/issues/642 (fixme til "T" når denne er fiksa)
@@ -367,7 +336,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kb =
     "dato", "D",
     "kl", "t"
   )
-  spek_innlesing = tibble(variabel_id = varnamn) %>%
+  spek_innlesing = tibble(variabel_id = varnamn_kb) %>%
     left_join(kb_info, by = "variabel_id") %>%
     left_join(spek_csv_oqr, by = "variabeltype")
 
@@ -381,81 +350,99 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kb =
     )
   }
 
-  # Er det nokon variablar me manglar metadata for (dvs. variablar
-  # som finst i datafila men *ikkje* i kodeboka)?
-  # Fixme: Vurder å legga til eit argument i funksjonen
-  #        for å gøyma åtvaringar for standardvariablar
-  #        (dvs. dei som finst i alle OQR-datadumpar)
-  manglar_metadata = is.na(spek_innlesing$csv_bokstav)
-  ukjende_var = spek_innlesing$variabel_id[manglar_metadata]
-  if (any(manglar_metadata)) {
-    warning(
-      "Manglar metadata for nokre variablar. Dei vert derfor\n",
-      "handterte som tekst og variabelnamna vert gjorde om til\n",
-      "små bokstavar og får prefikset «oqr_».\n",
-      "Problematiske variablar:\n",
-      str_c(ukjende_var, collapse = "\n")
-    )
-    spek_innlesing$csv_bokstav[manglar_metadata] = "c"
-    spek_innlesing$variabel_id[manglar_metadata] = str_to_lower(str_c("oqr_", spek_innlesing$variabel_id[manglar_metadata]))
-  }
-
   # Les inn datasettet
   kol_typar = str_c(spek_innlesing$csv_bokstav, collapse = "")
-  d = stop_for_problems(read_delim(adresse,
-    delim = ";", quote = "\"", trim_ws = FALSE, na = "null",
-    col_names = spek_innlesing$variabel_id, col_types = kol_typar, skip = 1, # Hopp over overskriftsrada
-    locale = locale(
-      decimal_mark = ",", grouping_mark = "",
-      date_format = datoformat, time_format = "%H:%M:%S"
-    )
-  ))
+  adresse_dd = paste0(mappe_dd, "\\", dato, "\\", reg_id, "_", skjema_id, "_datadump.csv_", format(dato, "%d.%m.%Y"), ".csv")
+  oqr_lokale = locale(
+    decimal_mark = ".", grouping_mark = "",
+    date_format = "%Y-%m-%d", time_format = "%H:%M:%S",
+    tz = "Europe/Oslo"
+  ) # Vert brukt både her og seinare
+  d = read_delim(adresse_dd,
+    delim = ";", quote = "", trim_ws = FALSE, na = "",
+    escape_double = FALSE, quoted_na = TRUE,
+    col_names = spek_innlesing$variabel_id, col_types = kol_typar,
+    skip = 1, # Hopp over overskriftsrada
+    locale = oqr_lokale
+  )
+  stop_for_problems(d) # Stopp viss det er nokon som helst problem med fila/innlesinga
 
   # Filtrer vekk skjema som ikkje har rett statusvariabel
   # (som standard vert berre ferdigstilte skjema tekne med)
   if (!is.null(status)) {
-    d = filter(status %in% !!status)
+    d = d %>%
+      filter(status %in% !!status)
   }
 
+  # Kategorisk er ein litt vrien variant. *Oftast* er han
+  # tal, men me kan risikera at han er tekst òg. Ei løysing er å
+  # alltid lesa han inn som tekst, men det er ikkje ei *god* løysing.
+  # Når han er koda som tal, er det ofte betre å handsama han som tal.
+  # Det ser betre ut, og det mogleggjer å bruka operatorar som < og >=
+  # (eks. komplikasjonsgrad < 5) (men "10" er som kjent < "2"!).
+  # Og for spørjeskjema er gjerne skåringskodane lagt inn som talkodar,
+  # slik at det er fint om me kan skriva for eksempel sp1 + sp2 + ...
+  # for å få ein sumskår).
+  #
+  # Så den *rette* måten å handtera dette på er å lesa inn kategoriske
+  # verdiar som tal dersom dei moglege *verdiane* i kodeboka alle er tal,
+  # og som tekst elles.
 
-  # Gjer om boolske variablar til ekte boolske variablar
+  # Først må me kunne gjenkjenna kva som er tal og kva som ikkje er det
+  # (funksjonen nedanfor handterer ikkje tal på vitskapleg form,
+  # som «1e-7», og det er bevisst, då slike ikkje bør stå i kodeboka,
+  # og viss dei gjer det, er det nok som bokstavkodar, ikkje talkodar).
+  er_tal = function(x) {
+    str_detect(x, "^-?[0-9]+(\\.[0-9]+)?$")
+  }
+  ## Ev. kjapp test på at funksjonen fungerer som han skal
+  # stopifnot(all(er_tal(c("-3", "0", "1", "997", "3.14", "-3.14", "0.7"))))
+  # stopifnot(all(!er_tal(c("a", "2B", "F42.7", "-x", "1e-7", "3.", ".7")))) # Ev. godta "3." og .7"?
+
+  # Finn dei kategoriske variablane som har berre numeriske verdiar ...
+  vars_num = kb_akt %>%
+    filter(variabeltype == "kategorisk") %>%
+    group_by(variabel_id) %>%
+    summarise(er_talkat = all(er_tal(verdi))) %>%
+    filter(er_talkat) %>%
+    pull(variabel_id)
+  # ... og gjer tilhøyrande innlesne variablar (om det er nokon) om til talvariablar
+  d = d %>%
+    mutate_at(vars_num, as.numeric)
+
+  # Gjer eventuelle boolske variablar om til ekte boolske variablar
   oqr_boolsk_til_boolsk = function(x) {
     # Sjekk først at det berre er gyldige verdiar
-    er_gyldig = (x %in% 0:1) | is.na(x)
+    er_gyldig = (x %in% c("0", "1")) | is.na(x)
     if (!all(er_gyldig)) {
-      stop("Finst ugyldige verdiar i boolsk variablar (skal vera 0, 1 eller NA)")
+      stop("Finst ugyldige verdiar i boolsk variabel (skal vera 0, 1 eller NA)")
     } else {
       x == 1 # Gjer om til boolsk variabel
     }
   }
-  boolsk_ind = which(spek_innlesing$variabeltype == "boolsk")
-  d[, boolsk_ind] = lapply(d[, boolsk_ind], oqr_boolsk_til_boolsk)
+  vars_boolsk = spek_innlesing$variabel_id[spek_innlesing$variabeltype == "boolsk"]
+  d = d %>%
+    mutate_at(vars_boolsk, oqr_boolsk_til_boolsk)
 
-  # Gjer om tidsvariablar til ekte tidsvariablar
+  # Gjer eventuelle tidsvariablar om til ekte tidsvariablar
   # Fixme: Nødvendig pga. https://github.com/tidyverse/readr/issues/642
   #        Fjern når denne feilen er fiksa (rett då òg fixme-en
   #        lenger oppe som også handlar om dette)
-  dt_ind = which(spek_innlesing$variabeltype == "dato_kl")
-  d[, dt_ind] = lapply(d[, dt_ind], parse_datetime, format = "%Y-%m-%d %H:%M:%S")
+  vars_datokl = spek_innlesing$variabel_id[spek_innlesing$variabeltype == "dato_kl"]
+  d = d %>%
+    mutate_at(vars_datokl, parse_datetime,
+      format = "%Y-%m-%d %H:%M:%OS",
+      locale = oqr_lokale
+    )
 
   # Returner datasettet
   d
 }
 
 
-# Eksempel  -----------------------------------------------------------
+# Eksempel på bruk  -----------------------------------------------------------
 
-# # Les inn eksempeldata
-# mappe_dd = "***FJERNA-ADRESSE***"
-# filnamn_dd = "Datadump_Alle_variabler_numerisk.csv"
-# adresse_dd = paste0(mappe_dd, filnamn_dd)
-#
-# # Les inn kodeboka
-# adresse_kb = "***FJERNA-ADRESSE***"
-# kb = les_oqr_kb(adresse_kb)
-#
-# # Les inn datadump
-# d = les_dd_oqr(adresse_dd, kb)
-#
-# # Sjå nøyare på eventuelle importproblem
-# problems(d)
+# Les inn eksempeldata
+mappe_dd = "***FJERNA-ADRESSE***"
+kb = les_kb_oqr(mappe_dd, reg_id = "AblaNor")
+d = les_dd_oqr(mappe_dd, reg_id = "AblaNor", skjema_id = "rand12", kb = kb) # Ev. utelat «kb»-argumentet
