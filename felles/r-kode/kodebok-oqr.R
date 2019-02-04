@@ -248,12 +248,12 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av ko
 #              og ugyldige statusverdiar, eller datadumpar som manglar statusvariabel
 #              (ikkje noko av dette *skal* vera mogleg å få, men alt kan skje i denne verda ...)).
 #   dato:      Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
-#   kb:        Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
+#   kodebok:   Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
 #
 # Utdata:
 #   R-datasett for det aktuelle skjemaet, med variabelnamn gjort om til små bokstavar.
 #
-les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kb = NULL) { # fixme: Legg på dd-validering?
+les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kodebok = NULL) { # fixme: Legg på dd-validering?
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
     dato = dir(mappe_dd, pattern = "[0-9]{4}-[0-1]{2}-[0-9]{2}", full.names = FALSE) %>%
@@ -263,11 +263,11 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kb =
   dato = as_date(dato) # I tilfelle det var ein tekstreng
 
   # Les inn kodeboka dersom ho ikkje er spesifisert
-  if (is.null(kb)) {
-    kb = les_kb_oqr(mappe_dd, reg_id, dato) # fixme: Ev. validering
+  if (is.null(kodebok)) {
+    kodebok = les_kb_oqr(mappe_dd, reg_id, dato) # fixme: Ev. validering
   }
   # Hent ut variabelinfo frå kodeboka for det gjeldande skjemaet
-  kb_akt = kb %>%
+  kb_akt = kodebok %>%
     filter(skjema_id == !!skjema_id)
 
   # Kodeboka må ha informasjon om variablane i
@@ -322,7 +322,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kb =
 
   # Hent ut første linje frå kodeboka, dvs. den linja som
   # inneheld aktuell informasjon
-  kb_info = kb %>%
+  kb_info = kodebok %>%
     distinct(variabel_id, .keep_all = TRUE)
 
   # Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
@@ -445,4 +445,4 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kb =
 # Les inn eksempeldata
 mappe_dd = "***FJERNA-ADRESSE***"
 kb = les_kb_oqr(mappe_dd, reg_id = "AblaNor")
-d = les_dd_oqr(mappe_dd, reg_id = "AblaNor", skjema_id = "rand12", kb = kb) # Ev. utelat «kb»-argumentet
+d = les_dd_oqr(mappe_dd, reg_id = "AblaNor", skjema_id = "rand12", kodebok = kb) # Ev. utelat «kb»-argumentet
