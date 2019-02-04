@@ -40,11 +40,11 @@ source("h:/kvalreg/felles/r-kode/datadump-valider.R", encoding = "UTF-8")
 #
 # Utdata:
 #   kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar
-# trenger følgende argumenter:
-# mappe_dd - plasseringa til mappene for datadumper.
-#            Her er det gitt at nyeste kodebok legges i samme mappe som nedhentede datadumper, og at datadumpene legges i hver sin fil
-#            avhengig av datoen de var lastet ned
-# dato - hvis man ønsker å hente kodebok fra en spesifikk dato. Hvis ikke hentes dette fra nyeste dato. Default til NULL.
+#
+# Argumenter:
+# mappe_dd: Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
+#            Her er det gitt at nyeste kodebok legges i samme mappe som nedhentede datadumper
+# dato: hvis man ønsker å hente kodebok fra en spesifikk dato. Hvis ikke hentes dette fra nyeste dato. Default til NULL.
 
 les_kb_checkware = function(mappe_dd, dato = NULL) {
 
@@ -92,179 +92,188 @@ les_kb_checkware = function(mappe_dd, dato = NULL) {
   kb_kanonisk
 }
 # kan teste at funksjonen funker med koden under
-# grunnmappe = "***FJERNA-ADRESSE***"
-# kb = les_kb_checkware(grunnmappe)
+# mappe = "***FJERNA-ADRESSE***"
+# kb = les_kb_checkware(mappe)
 
 #------------------------------------------------lag datadump checkware------------------------
 
-# funksjon for å tilrettelegge checkware-data basert på kodebok,
-# hvor funksjonen automatisk henter inn kodebok som blir brukt.
-# funksjonen trenger:
-# - Ei mappeadresse, der mappa inneheld kodebok og tilhøyrande datadumpfiler.
-# - Ein skjema-ID, som tilsvarer skjema-ID-en i kodeboka og filnamnet til datadumpen (men utan .csv).
+
+# Funksjon for å tilrettelegge checkware-data basert på kodebok,
+# hvor funksjonen automatisk henter inn kodebok som blir brukt (hvis ønskelig).
+# Kodeboka vert brukt til å gje alle variablane rett format
+# (tal, tekst, dato, boolske/logiske verdiar osv.) og til å
+# sikra at datadumpen er i samsvar med kodeboka.
+#
+# Som standard treng ein ikkje oppgje kodebok; ho vert automatisk henta inn.
+# Men dersom ein skal lesa inn mange skjema, er det lurare å lesa inn
+# kodeboka separat først, for at ting skal gå raskare (innlesing og validering
+# av kodeboka kan ta litt tid). Det er òg nødvendig å gjera det slik dersom
+# ein har kodeboka frå ei anna kjelde eller viss ein vil bruka ei modifisert
+# kodebok (generelt farleg!).
+#
+# Videre ønsker man gjerne å ha kodeboka tilgjengelig mens man jobber, og derfor har
+# vi også en separat funksjon (over) for nedhenting av kodebok.
+#
 # funksjonen sjekker at kodeboka er gyldig, med kodebok_er_gyldig() funksjonen fra kodebok-valider skriptet
 # funksjonen sjekker at datadumpen er gyldig, med dd_er_gyldig() funksjonen fra datadump-valider skriptet
 # krever pakkene tidyverse, magrittr og readxl
-hent_checkware_data = function(mappe, skjema_id) {
+#
+# Argumenter:
+#   mappe_dd:  Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
+#   skjema_id: ID til skjemaet ein vil henta inn (brukt i filnamnet til datadumpen og i kolonnen «skjema_id» i kodeboka)
+#   dato:      Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
+#   kb:        Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
+#
+# Utdata:
+#   R-datasett for det aktuelle skjemaet, med variabelnamn gjort om til ønnskede, tilsvarende verdier funnet i kodeboka.
+#   (I stedet for Q1, Q2, Q3 osv. som CheckWare ofte oppgir)
 
-  # hent datoer på mappene
-  eksport_mapper = dir(mappe, pattern = "[0-9]{4}-[0-9]{2}-[0-9]{2}", full.names = FALSE)
+hent_checkware_data = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL) {
 
-  # finn nyeste mappe
-  nyeste_dato = eksport_mapper %>%
-    sort() %>%
-    last()
+  # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
+  if (is.null(dato)) {
+    dato = dir(mappe_dd, pattern = "[0-9]{4}-[0-1]{2}-[0-9]{2}", full.names = FALSE) %>%
+      sort() %>%
+      last()
+  }
+  dato = as_date(dato) # I tilfelle det var ein tekstreng
 
-  # paste0 mappa
-  adresse = paste0(mappe, nyeste_dato, "/")
-  filnamn_kb = "kodebok.xlsx"
-  adresse_kb = paste0(adresse, filnamn_kb) # adressen til kodeboka
-
-  # henter ut kodebok ved hjelp av tidligere utarbeidet kb-funksjon
-  kb = les_kb_checkware(adresse_kb)
-
-  # funksjon som henter inn checkware-data ved hjelp av en kodebok
-  # funksjonen trenger en kodebok på kanonisk format og et skjema-navn (f.eks "barthel") og adressen til datadump
-  # og gir dataene fine navn basert på variabel_id i kodeboka,
-  # ved hjelp av variabel_id_checkware som identifiserer variablene i datadumpene
-  # datadumpen får også variabeltypene som er definert i kodeboka
-  les_dd_checkware = function(adresse, kb, skjema_id) {
-
-    # filtrer på aktuelt skjema + metadata som finnes i alle skjema
-    kb_skjema = kb %>%
-      filter(skjema_id == "meta" | skjema_id == !!skjema_id)
-
-    # Me skil berre mellom heiltals- og flyttalsvariablar
-    # i vår kodebok ved hjelp av «desimalar»-feltet (begge
-    # talvariantane har variabeltypen «numerisk»). For å
-    # kunna handtera dette riktig (les: strengt) ved
-    # innlesing av data, legg me derfor til ein kunstig
-    # «numerisk_heiltal»-variabeltype.
-    kb_skjema = kb_skjema %>%
-      mutate(variabeltype = replace(
-        variabeltype,
-        (variabeltype == "numerisk") & (desimalar == 0),
-        "numerisk_heiltal"
-      ))
-
-    # Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
-    spek_csv_checkware = tribble(
-      ~variabeltype, ~csv_bokstav,
-      "tekst", "c",
-      "boolsk", "c", # Sjå konvertering nedanfor
-      "dato_kl", "c", # Mellombels, jf. https://github.com/tidyverse/readr/issues/642 (!fixme til "T" når denne er fiksa)
-      "dato", "D",
-      "numerisk", "d",
-      "numerisk_heiltal", "i"
-    )
-
-    kb_skjema = kb_skjema %>%
-      left_join(spek_csv_checkware, by = "variabeltype")
-
-    # de kategoriske variablene som koder med tekst-verdier skal få character
-
-    # kategoriske variabler skal være integer hvis de er heltall, og character hvis de har koder som ikke er tall (type ICD-10)
-    # funksjoner som sjekker om en vector er et heltall, donert av Dr. Hufthammer
-    er_heiltal = function(x) {
-      isTRUE(all(x == suppressWarnings(as.integer(x))))
-    }
-
-    # funksjon som lager variabel i kodeboka som beskriver om det er heltall eller ikke
-    tekst_eller_heiltall = function(kb) {
-      if (er_heiltal(kb$verdi)) {
-        kb = kb %>%
-          mutate(verdi_type = "heiltal")
-      } else {
-        kb = kb %>%
-          mutate(verdi_type = "tekst")
-      }
-      kb
-    }
-
-    # kjører funksjonen for å lage variabel som beskriver om en kategorisk variabel er heltall eller ikke
-    kb_skjema_nest = kb_skjema %>%
-      group_by(variabel_id) %>%
-      nest()
-    kb_skjema_nest$data = kb_skjema_nest$data %>%
-      map(tekst_eller_heiltall)
-    kb_skjema = unnest(kb_skjema_nest)
-
-    # vi bruker case_when for å få inn csv_bokstav for variablene
-    # som har variabeltyper avhengig av visse kriterier
-    kb_skjema = kb_skjema %>%
-      mutate(csv_bokstav = case_when(
-        variabeltype == "kategorisk" & verdi_type == "heiltal" ~ "i",
-        variabeltype == "kategorisk" & verdi_type == "tekst" ~ "c",
-        TRUE ~ csv_bokstav
-      ))
-    # henter ut variabelnavn og variabeltype
-    var_info = kb_skjema %>%
-      distinct(variabel_id, variabel_id_checkware, variabeltype, csv_bokstav)
-    kol_typar = str_c(var_info$csv_bokstav, collapse = "")
-
-    # Les inn datasettet
-    filnamn = paste0(skjema_id, ".csv")
-    adresse_dd = paste0(adresse, filnamn)
-    d = stop_for_problems(read_delim(adresse_dd,
-      delim = ";", na = "",
-      quote = "\"", trim_ws = FALSE, col_types = kol_typar,
-      locale = locale(
-        decimal_mark = ".", grouping_mark = "",
-        date_format = "%Y-%m-%d", time_format = "%H:%M:%S"
-      )
-    ))
-
-    # setter på fine variabelnavn
-    kolnamn = var_info$variabel_id_checkware %>%
-      setNames(var_info$variabel_id)
-    d = d %>%
-      rename(!!!kolnamn)
-
-    # siden datetime blir hentet inn som character
-    # fikser vi disse til å være datetime her
-    # (jf. https://github.com/tidyverse/readr/issues/642 (!fixme til "T" når denne er fiksa))
-    dato_kl_var = kb_skjema %>%
-      filter(variabeltype == "dato_kl") %>%
-      distinct(variabel_id) %>%
-      pull("variabel_id")
-    d = d %>%
-      mutate_at(dato_kl_var, parse_datetime, format = "%Y-%m-%d %H:%M:%S")
-
-    # I CheckWare vert boolske verdiar koda som "1" for sann og NA for usann.
-    # Kodar derfor om til ekte boolske verdiar.
-    boolsk_var = kb_skjema %>%
-      filter(variabeltype == "boolsk") %>%
-      distinct(variabel_id) %>%
-      pull("variabel_id")
-    cw_til_boolsk = function(x) {
-      stopifnot(all(x %in% c("1", NA)))
-      !is.na(x)
-    }
-    d = d %>%
-      mutate_at(boolsk_var, cw_til_boolsk)
-
-    # validerer datadumpen
-    # med dd_er_gyldig funksjonen fra datadump-valider-skriptet
-    er_gyldig = dd_er_gyldig(d, kb_skjema)
-
-    if (!er_gyldig) {
-      print(attr(er_gyldig, "rapport"), n = Inf)
-      stop("Datadumpen er ikke gyldig. Se feilene over.")
-    }
-    d
+  # Les inn kodeboka dersom ho ikkje er spesifisert
+  # her sjekkes også gyldigheten av kodeboka
+  if (is.null(kodebok)) {
+    kb = les_kb_checkware(mappe_dd)
   }
 
-  # kjør les_dd_checkware på kodebok og skjemanavn for å tilrettelegge dataene basert på kodeboka
-  d = les_dd_checkware(adresse, kb, skjema_id)
+  # filtrer på aktuelt skjema + metadata som finnes i alle skjema
+  kb_skjema = kb %>%
+    filter(skjema_id == "meta" | skjema_id == !!skjema_id)
+
+  # Me skil berre mellom heiltals- og flyttalsvariablar
+  # i vår kodebok ved hjelp av «desimalar»-feltet (begge
+  # talvariantane har variabeltypen «numerisk»). For å
+  # kunna handtera dette riktig (les: strengt) ved
+  # innlesing av data, legg me derfor til ein kunstig
+  # «numerisk_heiltal»-variabeltype.
+  kb_skjema = kb_skjema %>%
+    mutate(variabeltype = replace(
+      variabeltype,
+      (variabeltype == "numerisk") & (desimalar == 0),
+      "numerisk_heiltal"
+    ))
+
+  # Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
+  spek_csv_checkware = tribble(
+    ~variabeltype, ~csv_bokstav,
+    "tekst", "c",
+    "boolsk", "c", # Sjå konvertering nedanfor
+    "dato_kl", "c", # Mellombels, jf. https://github.com/tidyverse/readr/issues/642 (!fixme til "T" når denne er fiksa)
+    "dato", "D",
+    "numerisk", "d",
+    "numerisk_heiltal", "i"
+  )
+
+  kb_skjema = kb_skjema %>%
+    left_join(spek_csv_checkware, by = "variabeltype")
+
+  # de kategoriske variablene som koder med tekst-verdier skal få character
+
+  # kategoriske variabler skal være integer hvis de er heltall, og character hvis de har koder som ikke er tall (type ICD-10)
+  # funksjoner som sjekker om en vector er et heltall, donert av Dr. Hufthammer
+  er_heiltal = function(x) {
+    isTRUE(all(x == suppressWarnings(as.integer(x))))
+  }
+
+  # Funksjon som lager variabel i kodeboka som beskriver om det er heltall eller ikke
+  tekst_eller_heiltall = function(kb) {
+    if (er_heiltal(kb$verdi)) {
+      kb = kb %>%
+        mutate(verdi_type = "heiltal")
+    } else {
+      kb = kb %>%
+        mutate(verdi_type = "tekst")
+    }
+    kb
+  }
+
+  # Lager variabel som beskriver om en kategorisk variabel er heltall eller ikke
+  kb_skjema_nest = kb_skjema %>%
+    group_by(variabel_id) %>%
+    nest()
+  kb_skjema_nest$data = kb_skjema_nest$data %>%
+    map(tekst_eller_heiltall)
+  kb_skjema = unnest(kb_skjema_nest)
+
+  # vi bruker case_when for å få inn csv_bokstav for variablene
+  # som har variabeltyper avhengig av visse kriterier (per dags dato bare om kategoriske er heltall eller tekst)
+  kb_skjema = kb_skjema %>%
+    mutate(csv_bokstav = case_when(
+      variabeltype == "kategorisk" & verdi_type == "heiltal" ~ "i",
+      variabeltype == "kategorisk" & verdi_type == "tekst" ~ "c",
+      TRUE ~ csv_bokstav
+    ))
+
+  # henter ut variabelnavn og variabeltype
+  var_info = kb_skjema %>%
+    distinct(variabel_id, variabel_id_checkware, variabeltype, csv_bokstav)
+  kol_typar = str_c(var_info$csv_bokstav, collapse = "")
+
+  # Les inn datasettet
+  filnamn = paste0(skjema_id, ".csv")
+  adresse_dd = paste0(mappe_dd, "/", dato, "/", filnamn)
+  d = stop_for_problems(read_delim(adresse_dd,
+    delim = ";", na = "",
+    quote = "\"", trim_ws = FALSE, col_types = kol_typar,
+    locale = locale(
+      decimal_mark = ".", grouping_mark = "",
+      date_format = "%Y-%m-%d", time_format = "%H:%M:%S"
+    )
+  ))
+
+  # setter på fine variabelnavn
+  kolnamn = var_info$variabel_id_checkware %>%
+    setNames(var_info$variabel_id)
+  d = d %>%
+    rename(!!!kolnamn)
+
+  # siden datetime blir hentet inn som character
+  # fikser vi disse til å være datetime her
+  # (jf. https://github.com/tidyverse/readr/issues/642 (!fixme til "T" når denne er fiksa))
+  dato_kl_var = kb_skjema %>%
+    filter(variabeltype == "dato_kl") %>%
+    distinct(variabel_id) %>%
+    pull("variabel_id")
+  d = d %>%
+    mutate_at(dato_kl_var, parse_datetime, format = "%Y-%m-%d %H:%M:%S")
+
+  # I CheckWare vert boolske verdiar koda som "1" for sann og NA for usann.
+  # Kodar derfor om til ekte boolske verdiar.
+  boolsk_var = kb_skjema %>%
+    filter(variabeltype == "boolsk") %>%
+    distinct(variabel_id) %>%
+    pull("variabel_id")
+  cw_til_boolsk = function(x) {
+    stopifnot(all(x %in% c("1", NA)))
+    !is.na(x)
+  }
+  d = d %>%
+    mutate_at(boolsk_var, cw_til_boolsk)
+
+  # validerer datadumpen
+  # med dd_er_gyldig funksjonen fra datadump-valider-skriptet
+  er_gyldig = dd_er_gyldig(d, kb_skjema)
+
+  if (!er_gyldig) {
+    print(attr(er_gyldig, "rapport"), n = Inf)
+    stop("Datadumpen er ikke gyldig. Se feilene over.")
+  }
 
   # returner dataene
   d
 }
 
 # sjekk at funksjonen funker med rehabiliteringsregisteret som eksempel
-mappe = "***FJERNA-ADRESSE***"
-#
-# d_barthel = hent_checkware_data(mappe, skjema = "barthel")
+# mappe = "***FJERNA-ADRESSE***"
+# d_barthel = hent_checkware_data(mappe, skjema_id = "barthel")
 # d_moca = hent_checkware_data(mappe, skjema = "moca")
 # d_mrs = hent_checkware_data(mappe, "mrs")
 # d_nihss = hent_checkware_data(mappe, "nihss")
