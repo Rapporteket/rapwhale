@@ -45,6 +45,8 @@ source("h:/kvalreg/felles/r-kode/datadump-valider.R", encoding = "UTF-8")
 # mappe_dd: Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
 #            Her er det gitt at nyeste kodebok legges i samme mappe som nedhentede datadumper
 # dato: hvis man ønsker å hente kodebok fra en spesifikk dato. Hvis ikke hentes dette fra nyeste dato. Default til NULL.
+# validering: Om man ønsker å validere kodeboka ja/nei (TRUE/FALSE).
+#             Hvis man ønsker å ikke validere kodebok med kb_er_gyldig, kan man sette denne til FALSE. Default er TRUE.
 
 les_kb_checkware = function(mappe_dd, dato = NULL, validering = TRUE) {
 
@@ -127,6 +129,8 @@ les_kb_checkware = function(mappe_dd, dato = NULL, validering = TRUE) {
 #   skjema_id: ID til skjemaet ein vil henta inn (brukt i filnamnet til datadumpen og i kolonnen «skjema_id» i kodeboka)
 #   dato:      Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
 #   kb:        Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
+# validering: Om man ønsker å validere datadumpen ja/nei (TRUE/FALSE).
+#             Hvis man ønsker å ikke validere datadump med dd_er_gyldig, kan man sette denne til FALSE. Default er TRUE.
 #
 # Utdata:
 #   R-datasett for det aktuelle skjemaet, med variabelnamn gjort om til ønnskede, tilsvarende verdier funnet i kodeboka.
