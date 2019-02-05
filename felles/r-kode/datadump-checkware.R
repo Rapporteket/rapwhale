@@ -46,7 +46,7 @@ source("h:/kvalreg/felles/r-kode/datadump-valider.R", encoding = "UTF-8")
 #            Her er det gitt at nyeste kodebok legges i samme mappe som nedhentede datadumper
 # dato: hvis man ønsker å hente kodebok fra en spesifikk dato. Hvis ikke hentes dette fra nyeste dato. Default til NULL.
 
-les_kb_checkware = function(mappe_dd, dato = NULL) {
+les_kb_checkware = function(mappe_dd, dato = NULL, validering = TRUE) {
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
@@ -76,8 +76,12 @@ les_kb_checkware = function(mappe_dd, dato = NULL) {
   kb = read_excel(adresse_kb, col_types = kb_koltyper, sheet = 1) %>%
     mutate(desimalar = as.integer(desimalar))
 
+
   # Sjekk gyldigheten til kodeboka
-  kb_er_gyldig(kb)
+  # Mulighet for å hoppe over sjekk hvis man setter validering = FALSE
+  if (validering) {
+    kb_er_gyldig(kb)
+  }
 
   # gjør om kodeboka til kanonisk form
   kb_kanonisk = kb_til_kanonisk_form(kb)
@@ -128,7 +132,7 @@ les_kb_checkware = function(mappe_dd, dato = NULL) {
 #   R-datasett for det aktuelle skjemaet, med variabelnamn gjort om til ønnskede, tilsvarende verdier funnet i kodeboka.
 #   (I stedet for Q1, Q2, Q3 osv. som CheckWare ofte oppgir)
 
-hent_checkware_data = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL) {
+hent_checkware_data = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, validering = TRUE) {
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
@@ -260,11 +264,14 @@ hent_checkware_data = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL)
 
   # validerer datadumpen
   # med dd_er_gyldig funksjonen fra datadump-valider-skriptet
-  er_gyldig = dd_er_gyldig(d, kb_skjema)
+  # mulighet for å skru dette av med validering = FALSE
+  if (validering) {
+    er_gyldig = dd_er_gyldig(d, kb_skjema)
 
-  if (!er_gyldig) {
-    print(attr(er_gyldig, "rapport"), n = Inf)
-    stop("Datadumpen er ikke gyldig. Se feilene over.")
+    if (!er_gyldig) {
+      print(attr(er_gyldig, "rapport"), n = Inf)
+      stop("Datadumpen er ikke gyldig. Se feilene over.")
+    }
   }
 
   # returner dataene
