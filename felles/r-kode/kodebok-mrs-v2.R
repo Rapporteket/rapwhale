@@ -70,14 +70,15 @@ kb_mrs_til_standard = function(d) {
   # Å finna dei andre verdiane (for eksempel kodar og kodetekst) gjer ein på
   # tilsvarande vanskelege måtar
   kodebok_utg = tibble(
-    datadump_var_id = d$Datadumpnavn[ind_nyvar], # Datadumpnamn (vert ikkje brukt til noko)
     variabel_id = d$Variabelnavn[ind_nyvar] %>% str_replace(".*\\.", ""),
     variabeletikett = d$Feltnavn[ind_nyvar], # Berre forklaring for *enkelte* variablar, men er det beste me har …
     variabeltype = vartype_mrs_standard$type_standard[
       match(d$Felttype[ind_nyvar], vartype_mrs_standard$type_mrs)
     ],
-    obligatorisk = str_to_lower(d$Obligatorisk[ind_nyvar]),
-    # skjema_id = d$Skjema[ind_nyvar], # Ventar spent på at denne skal dukka opp (førespurnad er send)
+    # obligatorisk = str_to_lower(d$Obligatorisk[ind_nyvar]), # fixme! kodeboka har ikke lenger et felt som heter obligatorisk.
+    # Dette fordi kjernen ikke støtter riktig innhenting av dette.
+    # Tar dette med en gang i fremtiden når HEMIT har fikset det.
+    # skjema_id = d$Skjema[ind_nyvar], # fixme! Ventar spent på at denne skal dukka opp (førespurnad er send)
     verdi = NA_integer_, # Føreset førbels at MRS-kodane alltid er tal (gjer om til tekst om dette ikkje stemmer)
     verdi_tekst = NA_character_,
     desimalar = ifelse(d$Felttype[ind_nyvar] == "Numerisk (heltall)", 0L, NA_integer_)
@@ -93,7 +94,7 @@ kb_mrs_til_standard = function(d) {
   # Hent ut kodane og tilhøyrande tekst til alle Enum/Enkeltvalg-variablane
   enums = d %>%
     filter(is.na(Felttype)) %>%
-    extract2("Variabelnavn") %>%
+    extract2("Mulige verdier") %>%
     str_split_fixed(" = ", n = 2)
 
   # Legg kodane inn i den nye kodeboka,
@@ -123,9 +124,9 @@ kb_mrs_til_standard = function(d) {
 # Argument:
 #   adresse: adressa til datafila (med norske/teite variabelnamn)
 #        kb: standardisert kodebok
-les_dd_mrs = function(adresse, kb) {
+les_dd_mrs = function(adresse_dd, kb) {
   # Les inn variabelnamna i datafila
-  varnamn_fil = scan(adresse,
+  varnamn_fil = scan(adresse_dd,
     fileEncoding = "UTF-8-BOM", what = "character",
     sep = ";", nlines = 1, quiet = TRUE
   )
@@ -190,8 +191,8 @@ les_dd_mrs = function(adresse, kb) {
     "numerisk", "d",
     "numerisk_heiltal", "i"
   )
-  spek_innlesing = tibble(datadump_var_id = varnamn_fil) %>%
-    left_join(kb_info, by = "datadump_var_id") %>%
+  spek_innlesing = tibble(variabel_id = varnamn_fil) %>%
+    left_join(kb_info, by = "variabel_id") %>%
     left_join(spek_csv_mrs, by = "variabeltype")
 
   # Har kodeboka variablar av ein type me ikkje har lagt inn støtte for?
@@ -207,7 +208,7 @@ les_dd_mrs = function(adresse, kb) {
   # Er det nokon variablar me manglar metadata for (dvs. variablar
   # som finst i datafila men *ikkje* i kodeboka)?
   manglar_metadata = is.na(spek_innlesing$csv_bokstav)
-  ukjende_var = spek_innlesing$datadump_var_id[manglar_metadata]
+  ukjende_var = spek_innlesing$variabel_id[manglar_metadata]
   if (any(manglar_metadata)) {
     # Vis ikkje åtvaringa viss det berre er snakk om den siste, namnlause, tomme kolonnen som MRS automatisk legg til alle datadumpar
     if (!all(ukjende_var == "")) {
@@ -219,12 +220,12 @@ les_dd_mrs = function(adresse, kb) {
       )
     }
     spek_innlesing$csv_bokstav[manglar_metadata] = "c"
-    spek_innlesing$variabel_id[manglar_metadata] = str_c("mrs_", spek_innlesing$datadump_var_id[manglar_metadata])
+    spek_innlesing$variabel_id[manglar_metadata] = str_c("mrs_", spek_innlesing$variabel_id[manglar_metadata])
   }
 
   # Les inn datasettet
   kol_typar = str_c(spek_innlesing$csv_bokstav, collapse = "")
-  d = read_delim(adresse,
+  d = read_delim(adresse_dd,
     delim = ";", quote = "\"", trim_ws = FALSE, na = "",
     col_names = spek_innlesing$variabel_id, col_types = kol_typar, skip = 1, # Hopp over overskriftsrada
     locale = locale(
