@@ -299,13 +299,15 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
 
   # Les inn datasettet
   kol_typar = str_c(spek_innlesing$csv_bokstav, collapse = "")
+  lokale_mrs = locale(
+    decimal_mark = ",", grouping_mark = "",
+    date_format = "%d.%m.%Y", time_format = "%H:%M:%S",
+    tz = "Europe/Oslo"
+  )
   d = read_delim(adresse_dd,
     delim = ";", quote = "\"", trim_ws = FALSE, na = "",
     col_names = spek_innlesing$variabel_id, col_types = kol_typar, skip = 1, # Hopp over overskriftsrada
-    locale = locale(
-      decimal_mark = ",", grouping_mark = "",
-      date_format = "%d.%m.%Y", time_format = "%H:%M:%S"
-    )
+    locale = lokale_mrs
   )
 
   # Fixme: For kategoriske variablar er det ei spesiell koding av manglande
