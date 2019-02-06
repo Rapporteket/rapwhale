@@ -13,6 +13,9 @@ library(stringr) # Tekstmassering
 library(magrittr) # Funksjonar som kan brukast med røyr-operatoren
 library(rlang) #
 
+# henter funksjon for å lage kodebok til kanonisk form + kodebok valider
+source("h:/kvalreg/felles/r-kode/kodebok-valider.R", encoding = "UTF-8")
+
 # Lag standardisert kodebok -----------------------------------------------
 
 # Gjer om MRS-kodebok til kodebok på normalform
@@ -110,12 +113,10 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
     variabel_id = kb_mrs$Variabelnavn[ind_nyvar] %>% str_replace(".*\\.", ""),
     variabeletikett = kb_mrs$Feltnavn[ind_nyvar], # Berre forklaring for *enkelte* variablar, men er det beste me har …
     variabeltype = vartype_mrs_standard$type_standard[match(kb_mrs$Felttype[ind_nyvar], vartype_mrs_standard$type_mrs)],
-    # obligatorisk = str_to_lower(d$Obligatorisk[ind_nyvar]), # fixme! kodeboka har ikke lenger et felt som heter obligatorisk.
-    # Dette fordi kjernen ikke støtter riktig innhenting av dette.
-    # Tar dette med en gang i fremtiden når HEMIT har fikset det.
+    obligatorisk = "nei",
     # skjema_id = d$Skjema[ind_nyvar], # fixme! Ventar spent på at denne skal dukka opp (førespurnad er send)
     verdi = NA_integer_, # Føreset førbels at MRS-kodane alltid er tal (gjer om til tekst om dette ikkje stemmer)
-    verdi_tekst = NA_character_,
+    verditekst = NA_character_,
     desimalar = ifelse(kb_mrs$Felttype[ind_nyvar] == "Numerisk (heltall)", 0L, NA_integer_)
   )
 
@@ -138,15 +139,18 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   enum_ind = (kodebok$variabeltype == "kategorisk")
   kodebok$verdi[enum_ind] = enums[, 1] %>%
     as.numeric() # Kodar
-  kodebok$verdi_tekst[enum_ind] = enums[, 2] # Tilhøyrande tekst
+  kodebok$verditekst[enum_ind] = enums[, 2] # Tilhøyrande tekst
 
   # Nokre verditekstar tyder at verdien ikkje er registrert,
   # og me markerer det i kodeboka
   kodebok = kodebok %>%
-    mutate(manglande = ifelse(verdi_tekst %in% c("---", "Velg verdi", "Ikke valgt"), "ja", "nei"))
+    mutate(manglande = ifelse(verditekst %in% c("---", "Velg verdi", "Ikke valgt"), "ja", "nei"))
+
+  # gjør om kodeboka til kanonisk form
+  kb_kanonisk = kb_til_kanonisk_form(kodebok)
 
   # Returner standardisert kodebok
-  kodebok
+  kb_kanonisk
 }
 
 # Les datadump frå MRS-register -------------------------------------------
