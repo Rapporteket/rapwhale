@@ -18,10 +18,46 @@ library(rlang) #
 # Gjer om MRS-kodebok til kodebok på normalform
 #
 # Inndata:
-#   d: Dataramme med MRS-kodebok
-kb_mrs_til_standard = function(d) {
+#   mappe_dd: Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
+#             Her er en antagelse at nyeste versjon av kodeboka ligger i samme mappe som datadumpene
+#   dato:     Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
+#
+# Utdata: kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar
+#
+
+les_kb_mrs = function(mappe_dd, dato = NULL) {
+
+  # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
+  if (is.null(dato)) {
+    dato = dir(mappe_dd, pattern = "[0-9]{4}-[0-1]{2}-[0-9]{2}", full.names = FALSE) %>%
+      sort() %>%
+      last()
+  }
+  dato = as_date(dato) # I tilfelle det var ein tekstreng
+
+  # Sammensatt adresse til kodeboka
+  adresse_kb = paste0(mappe_dd, "\\", dato, "\\", dato, " kodebok MRSv2.xlsx")
+
+  # Kodeboka er laget i excel. Excel har heller ikke så mange, presise variabeltyper
+  # MRS gjør det gangske enkelt med at alle kolonnene er "text".
+  # Per i dag har de 6 kolonner
+  kb_mrs_koltyper = rep("text", 5)
+
+  # henter inn excel-ark navn
+  ark = excel_sheets(adresse_kb)
+
+  # funksjon for å hente inn alle ark og sette dem 1 objekt, med skjema_id lik ark-navnet
+  les_excel_ark = function(ark_id) {
+    read_excel(adresse_kb, col_types = kb_mrs_koltyper, sheet = ark_id) %>%
+      mutate(skjema_id = !!ark_id)
+  }
+
+  # henter inn kodebok
+  kb_mrs = ark %>%
+    map_df(les_excel_ark)
+
   # Indeks til rader som startar ein ny variabel
-  ind_nyvar = which(!is.na(d$Feltnavn))
+  ind_nyvar = which(!is.na(kb_mrs$Feltnavn))
   nvars = length(ind_nyvar) # Talet på variablar
 
   # Kor mange kodar kvar variabel har
@@ -29,7 +65,7 @@ kb_mrs_til_standard = function(d) {
   #  avløyst av ein ny variabel, og må
   #  derfor handterast spesielt.)
   var_nverd = diff(ind_nyvar) - 1
-  var_nverd[nvars] = nrow(d) - ind_nyvar[nvars] # Sistevariabel
+  var_nverd[nvars] = nrow(kb_mrs) - ind_nyvar[nvars] # Sistevariabel
 
   # Oversikt over variabeltypar i MRS og tilhøyrande standardnamn som me brukar
   vartype_mrs_standard = tribble(
@@ -45,7 +81,7 @@ kb_mrs_til_standard = function(d) {
     "Numerisk (heltall)", "numerisk", # Men sjå bruk «desimalar» lenger nede
     "Numerisk (flyttall)", "numerisk"
   )
-  nye_vartypar = na.omit(setdiff(d$Felttype, vartype_mrs_standard$type_mrs))
+  nye_vartypar = na.omit(setdiff(kb_mrs$Felttype, vartype_mrs_standard$type_mrs))
   if (length(nye_vartypar) > 0) {
     stop("Kodeboka har variabeltypar me ikkje har standardnamn på: ", str_c(nye_vartypar, collapse = ", "))
   }
@@ -70,18 +106,17 @@ kb_mrs_til_standard = function(d) {
   # Å finna dei andre verdiane (for eksempel kodar og kodetekst) gjer ein på
   # tilsvarande vanskelege måtar
   kodebok_utg = tibble(
-    variabel_id = d$Variabelnavn[ind_nyvar] %>% str_replace(".*\\.", ""),
-    variabeletikett = d$Feltnavn[ind_nyvar], # Berre forklaring for *enkelte* variablar, men er det beste me har …
-    variabeltype = vartype_mrs_standard$type_standard[
-      match(d$Felttype[ind_nyvar], vartype_mrs_standard$type_mrs)
-    ],
+    skjema_id = kb_mrs$skjema_id[ind_nyvar],
+    variabel_id = kb_mrs$Variabelnavn[ind_nyvar] %>% str_replace(".*\\.", ""),
+    variabeletikett = kb_mrs$Feltnavn[ind_nyvar], # Berre forklaring for *enkelte* variablar, men er det beste me har …
+    variabeltype = vartype_mrs_standard$type_standard[match(kb_mrs$Felttype[ind_nyvar], vartype_mrs_standard$type_mrs)],
     # obligatorisk = str_to_lower(d$Obligatorisk[ind_nyvar]), # fixme! kodeboka har ikke lenger et felt som heter obligatorisk.
     # Dette fordi kjernen ikke støtter riktig innhenting av dette.
     # Tar dette med en gang i fremtiden når HEMIT har fikset det.
     # skjema_id = d$Skjema[ind_nyvar], # fixme! Ventar spent på at denne skal dukka opp (førespurnad er send)
     verdi = NA_integer_, # Føreset førbels at MRS-kodane alltid er tal (gjer om til tekst om dette ikkje stemmer)
     verdi_tekst = NA_character_,
-    desimalar = ifelse(d$Felttype[ind_nyvar] == "Numerisk (heltall)", 0L, NA_integer_)
+    desimalar = ifelse(kb_mrs$Felttype[ind_nyvar] == "Numerisk (heltall)", 0L, NA_integer_)
   )
 
   # Kor mange gongar kvar variabel skal gjentakast i
@@ -92,7 +127,7 @@ kb_mrs_til_standard = function(d) {
   kodebok = kodebok_utg[rep(1:nvars, times = reps), ]
 
   # Hent ut kodane og tilhøyrande tekst til alle Enum/Enkeltvalg-variablane
-  enums = d %>%
+  enums = kb_mrs %>%
     filter(is.na(Felttype)) %>%
     extract2("Mulige verdier") %>%
     str_split_fixed(" = ", n = 2)
