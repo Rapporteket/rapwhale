@@ -149,17 +149,51 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   kodebok
 }
 
-
-
 # Les datadump frå MRS-register -------------------------------------------
 
-# Bruk oppgitt kodebok til å henta inn data frå
-# MRS-fil slik at variablane får rett format
-# (tal, tekst, dato osv.)
-# Argument:
-#   adresse: adressa til datafila (med norske/teite variabelnamn)
-#        kb: standardisert kodebok
-les_dd_mrs = function(adresse_dd, kb) {
+# Les inn MRS-data frå gitt skjema ved hjelp av kodebok.
+# Kodeboka vert brukt til å gje alle variablane rett format
+# (tal, tekst, dato, boolske/logiske verdiar osv.) og til å
+# sikra at datadumpen er i samsvar med kodeboka.
+#
+# Som standard treng ein ikkje oppgje kodebok; ho vert automatisk henta inn.
+# Men dersom ein skal lesa inn mange skjema, er det lurare å lesa inn
+# kodeboka separat først, for at ting skal gå raskare (innlesing og validering
+# av kodeboka kan ta litt tid). Det er òg nødvendig å gjera det slik dersom
+# ein har kodeboka frå ei anna kjelde eller viss ein vil bruka ei modifisert
+# kodebok (generelt farleg!).
+#
+# Inndata:
+#   mappe_dd:  Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
+#              Antagelse ligger til grunn at nyeste kodebok ligger i samme mappe som de nyeste datadumpene.
+#   skjema_id: ID til skjemaet ein vil henta inn (brukt i filnamnet og i kolonnen «tabell» i kodeboka)
+#   versjon:   Om datadumpen er "Prod" eller om den er fra "Test". Standardverdi er "Prod".
+#   dato:      Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
+#   kodebok:   Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
+#
+# Utdata:
+#   R-datasett for det aktuelle skjemaet
+les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebok = NULL) {
+
+  # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
+  if (is.null(dato)) {
+    dato = dir(mappe_dd, pattern = "[0-9]{4}-[0-1]{2}-[0-9]{2}", full.names = FALSE) %>%
+      sort() %>%
+      last()
+  }
+  dato = as_date(dato) # I tilfelle det var ein tekstreng
+
+  # Les inn kodeboka dersom ho ikkje er spesifisert
+  if (is.null(kodebok)) {
+    kodebok = les_kb_mrs(mappe_dd, dato) # fixme: Ev. validering
+  }
+  # Hent ut variabelinfo frå kodeboka for det gjeldande skjemaet
+  kb_akt = kodebok %>%
+    filter(skjema_id == !!skjema_id)
+
+  # Adressen til datadumpen gitt datoen som vi har fått
+  adresse_dd = paste0(mappe_dd, dato, "\\", "DataDump_", versjon, "_", skjema_id, "_", dato, ".csv")
+
   # Les inn variabelnamna i datafila
   varnamn_fil = scan(adresse_dd,
     fileEncoding = "UTF-8-BOM", what = "character",
@@ -179,7 +213,8 @@ les_dd_mrs = function(adresse_dd, kb) {
 
   # Hent ut første linje frå kodeboka, dvs. den linja som
   # inneheld aktuell informasjon
-  kb_info = kb %>%
+  # Henter ut den aktuelle delen av kodeboka
+  kb_info = kb_akt %>%
     distinct(variabel_id, .keep_all = TRUE)
 
   # Me skil berre mellom heiltals- og flyttalsvariablar
