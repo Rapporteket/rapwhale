@@ -59,6 +59,30 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   kb_mrs = ark %>%
     map_df(les_excel_ark)
 
+  # ark-navnene er horrible. De er avkuttede versjoner av menneskelig-vennlige skjemanavn
+  # De samsvarer ikke med skjemanavnet slik det er skrevet i filnavnet til datadumpen
+  # Derfor erstatter vi disse med skjemanavnene slik de er i filnavnet til datadumpene.
+
+  # henter inn fil som har en kolonne for skjema_id-ene i ark-navnene,
+  # og en kolonne for skjema_id-ene i filnavnene til datadumpene, slik at vi vet hvilken som samsvarer med hvilken.
+  # Denne er laget på forhånd, manuelt, men skal alltid legges i den nyeste mappen med datadumper v/ ny innhenting av data.
+  adresse_skjema_id = paste0(mappe_dd, "/", dato, "/skjema_id_kobling.csv")
+  d_skjema_id = read_delim(
+    adresse_skjema_id,
+    delim = ";",
+    locale = locale(encoding = "windows-1252"),
+    col_types = cols(
+      skjema_id_datadump = col_character(),
+      skjema_id_kodebok = col_character()
+    )
+  )
+
+  # legger til "riktige" skjema_id
+  kb_mrs = kb_mrs %>%
+    left_join(d_skjema_id, by = c("skjema_id" = "skjema_id_kodebok")) %>%
+    mutate(skjema_id = skjema_id_datadump) %>%
+    select(-skjema_id_datadump)
+
   # Indeks til rader som startar ein ny variabel
   ind_nyvar = which(!is.na(kb_mrs$Feltnavn))
   nvars = length(ind_nyvar) # Talet på variablar
@@ -189,7 +213,7 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
 
   # Les inn kodeboka dersom ho ikkje er spesifisert
   if (is.null(kodebok)) {
-    kodebok = les_kb_mrs(mappe_dd, dato) # fixme: Ev. validering
+    kodebok = les_kb_mrs(mappe_dd, dato)
   }
   # Hent ut variabelinfo frå kodeboka for det gjeldande skjemaet
   kb_akt = kodebok %>%
@@ -301,8 +325,7 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
   kol_typar = str_c(spek_innlesing$csv_bokstav, collapse = "")
   lokale_mrs = locale(
     decimal_mark = ",", grouping_mark = "",
-    date_format = "%d.%m.%Y", time_format = "%H:%M:%S",
-    tz = "Europe/Oslo"
+    date_format = "%d.%m.%Y", time_format = "%H:%M:%S"
   )
   d = read_delim(adresse_dd,
     delim = ";", quote = "\"", trim_ws = FALSE, na = "",
