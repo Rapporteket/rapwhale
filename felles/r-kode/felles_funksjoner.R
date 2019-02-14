@@ -451,23 +451,23 @@ kjed_ord = function(ord, skiljeteikn = ", ", og = " og ", foer = "", etter = foe
 
   # hvis det er er ingenting i objektet, returnes...ingenting
   if (n == 0) {
-    ord
+    tekst = ord
   }
   # Hvis det er bare 1 ord, får den mellomrom før og etter. Dette kan endres med argumentene foer og etter
   ord = paste0(foer, ord, etter)
   if (n == 1) {
-    ord
+    tekst = ord
     # Hvis det er 2 ord, bindes ordene sammen med " og ", men dette kan også endres i argumentet og.
     # F.eks om du vil bruke &-teignet
   }
   if (n == 2) {
-    str_flatten(ord, og)
+    tekst = str_flatten(ord, og)
   }
   # hvis det er flere enn 2 ord, bindes ordene sammen med skiljeteiknet, her komma, bortsett fra siste ord som får " og ".
   if (n > 2) {
     tekst = paste0(str_flatten(ord[1:n - 1], skiljeteikn), og, ord[n])
-    tekst
   }
+  tekst
 }
 
 
