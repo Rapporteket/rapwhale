@@ -466,8 +466,8 @@ kjed_ord = function(ord, skiljeteikn = ", ", og = " og ", foer = "", etter = foe
   # hvis det er flere enn 2 ord, bindes ordene sammen med skiljeteiknet, her komma, bortsett fra siste ord som får " og ".
   if (n > 2) {
     tekst = paste0(str_flatten(ord[1:n - 1], skiljeteikn), og, ord[n])
+    tekst
   }
-  tekst
 }
 
 
