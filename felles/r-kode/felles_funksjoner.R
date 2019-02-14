@@ -432,6 +432,43 @@ prosent = function(x, desimalar = 0, tabell = FALSE) {
   ifelse(is.na(x), "\\textendash{}", prosent_tekst)
 }
 
+# Funksjon som kjeder sammen ord grammatisk riktig.
+# Hvis det er to ord, kjedes det med " og ", f.eks "Per og Kari"
+# Hvis det er flere, kjedes det med ", " bortsett fra siste ord som får " og ", f.eks "Per, Kari og Pål."
+# Tar inn en vektor med ord
+# Returenerer en tekststreng med ett element
+
+# Argumenter:
+# ord - Nødvendig, en vektor med ordene du ønsker å kjede
+# skjeileteikn - Standard er komme ", " men man kan velge noe annet
+# og - Standard er " og " men man kan velge noe annet (f.eks " and ", " och ", " & " eller min personlige favoritt " und ")
+# foer - Tegn før første ord, vanligvis ingenting "", men kan alltids legge til noe her...
+# etter - Tegn etter siste ord, vanligvis ingenting "", men kan velge noe annet...
+library(stringr)
+kjed_ord = function(ord, skiljeteikn = ", ", og = " og ", foer = "", etter = foer) {
+  # antall ord
+  n = length(ord)
+
+  # hvis det er er ingenting i objektet, returnes...ingenting
+  if (n == 0) {
+    ord
+  }
+  # Hvis det er bare 1 ord, får den mellomrom før og etter. Dette kan endres med argumentene foer og etter
+  ord = paste0(foer, ord, etter)
+  if (n == 1) {
+    ord
+    # Hvis det er 2 ord, bindes ordene sammen med " og ", men dette kan også endres i argumentet og.
+    # F.eks om du vil bruke &-teignet
+  }
+  if (n == 2) {
+    str_flatten(ord, og)
+  }
+  # hvis det er flere enn 2 ord, bindes ordene sammen med skiljeteiknet, her komma, bortsett fra siste ord som får " og ".
+  if (n > 2) {
+    tekst = paste0(str_flatten(ord[1:n - 1], skiljeteikn), og, ord[n])
+  }
+  tekst
+}
 
 
 # Andre funksjoner --------------------------------------------------------
