@@ -98,8 +98,8 @@ kb_til_kanonisk_form = function(kb) {
   # Fyll ut implisitte obligatoriskverdiar og unikverdiar
   # til «nei». «ja*» tyder obligatorisk berre under visse
   # vilkår, så det skal òg reknast som «nei», med mindre det
-  # er snakk om boolske variablar.
-  kb$obligatorisk[kb$variabeltype == "boolsk" & kb$obligatorisk == "ja*"] = "ja"
+  # er snakk om boolske variablar, som alltid er obligatoriske.
+  kb$obligatorisk[kb$variabeltype == "boolsk"] = "ja"
   kb$obligatorisk[is.na(kb$obligatorisk) | kb$obligatorisk == "ja*"] = "nei"
   kb$unik[is.na(kb$unik) | kb$unik == "ja*"] = "nei"
 
