@@ -195,7 +195,8 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av ko
   # I tillegg til dei definerte variablane har datadumpane seks ekstra
   # variablar, to før kodebokvariablane og fire etter. Desse er definerte
   # i dokumentasjonen til datadumpane (dokumentet «4.2 Dokumentasjon på
-  # format av Datadump i register.doc»)
+  # format av Datadump i register.doc»). Desse *burde* vore med kodebøkene,
+  # men sidan HNIKT ikkje har klart å leggja dei til, må me gjera det sjølv.
   legg_til_ekstravar = function(kb) {
     kb_ekstra = tribble(
       ~variabel_id, ~variabeletikett, ~variabeltype, ~unik, ~obligatorisk, ~desimalar,
