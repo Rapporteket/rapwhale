@@ -219,7 +219,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av ko
   # slik at variablar kjem hulter til bulter. Fiksar derfor dette.
   # Men sorterer *ikkje* alfabetisk, sidan den naturlege rekkjefølgja
   # ofte er meir logisk.
-  kodebok = kodebokde %>%
+  kodebok = kodebok %>%
     arrange(fct_inorder(skjema_id))
 
   # fixme: Vurder om det er nødvendig å køyra funksjonen som gjer
