@@ -184,7 +184,6 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
     gyldig = FALSE
   }
 
-
   # Sjå på standardkolonnane, men i rekkefølgja dei finst på i kodeboka
   kb_namn = names(kb_glissen[names(kb_glissen) %in% std_namn])
 
@@ -293,7 +292,10 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   }
   sjekk_dup(kb, skjema_id)
   sjekk_dup(kb, skjemanamn)
-  sjekk_dup(kb, variabel_id) # Skal vera unik, ikkje berre innan skjema
+  kb_per_skjema = kb %>%
+    split(.$skjema_id)
+  kb_per_skjema %>%
+    walk(~ sjekk_dup(., variabel_id)) # Skal vera unik, men det held at det berre er innanfor skjema
 
   # Sjekk at valt variabel berre har éin verdi innanfor kvar gruppe
   sjekk_ikkjevar = function(df, gruppe, varid) {
@@ -320,17 +322,22 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
 
   # Sjekk at kvar variabel berre har éin (dvs. unik)
   # variabeltype, variabeletikett osv.
+  # (Nokre av testane gjer me innnanfor skjema,
+  # då det ikkje er *så* farleg om dei varierer på
+  # tvers av skjema.)
   sjekk_ikkjevar(kb, variabel_id, variabeltype)
-  sjekk_ikkjevar(kb, variabel_id, variabeletikett)
-  sjekk_ikkjevar(kb, variabel_id, forklaring)
+  kb_per_skjema %>%
+    walk(~ sjekk_ikkjevar(., variabel_id, variabeletikett))
+  kb_per_skjema %>%
+    walk(~ sjekk_ikkjevar(., variabel_id, forklaring))
   sjekk_ikkjevar(kb, variabel_id, unik)
-  sjekk_ikkjevar(kb, variabel_id, obligatorisk)
+  kb_per_skjema %>%
+    walk(~ sjekk_ikkjevar(., variabel_id, obligatorisk))
   sjekk_ikkjevar(kb, variabel_id, kategori) # Variablar kan ikkje kryssa kategori- eller skjemagrenser
-  sjekk_ikkjevar(kb, variabel_id, skjema_id)
 
   # Sjekk at alle verdiar for kategoriske variablar er unike og ingen er NA
   kb_kat_nest = kb_kat %>%
-    nest(-variabel_id)
+    nest(-variabel_id, -skjema_id)
   verdi_ok = kb_kat_nest$data %>%
     map_lgl(~ (!any(duplicated(.x$verdi) | is.na(.x$verdi))))
   if (any(!verdi_ok)) {
@@ -505,7 +512,6 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   # Funksjonen tar et argument for objektet (kodeboka)
   # som skal testes, og en for kolonnetypen
   # som ikke kan ha noen andre verdier enn "ja" og "nei".
-
   sjekk_ja_nei = function(kb, kolonnetype) {
 
     # objekt som tester at kolonnetypen er innenfor ja og nei
@@ -662,7 +668,6 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
       gyldig = FALSE
     }
   }
-
   gyldig
 }
 
