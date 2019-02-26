@@ -210,6 +210,21 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av ko
     "utrekningsformel", "logikk", "kommentar"
   )
 
+  # fixme: Sjekk at verdiane til variablane faktiske er *like* på alle tabellane
+  # Det er ein føresetnad for at det nedanfor skal fungera. Viss for eksempel
+  # operasjonstype «1» tyder ABC på operasjonsskjema men CDE på oppfølgingsskjemaet,
+  # kan variabelen ikkje brukast, då han har tvetyding definisjon.
+  #
+  # Nokre variablar er med fleire gongar på same tabell (men på ulike «skjema»)
+  # Me treng (og skal ha) berre første oppføring per *tabell*. For eksempel
+  # viss «type komplikasjon» er registrert med variabelen «type_kompl»
+  # i tabellen «kompl», og blir fylt ved 1-års, 2-års og 3-års oppfølging
+  # (tre ulike skjemanamn), vil det finnast tre separate oppføringar for
+  # «type_kompl», eitt for kvart skjema. Me skal berre ha første. (Men
+  # merk at denne kan bestå av fleire *rader*, for kategoriske variablar.)
+  kodebok = kodebok %>%
+    distinct(skjema_id, variabel_id, verdi, .keep_all = TRUE)
+
   # Bruk vidare berre standardkolonnne, og i standard/fornuftig rekkjefølgje
   # (Må stå etter legg_til_ekstravar(), sidan denne endrar rekkjefølgja)
   kodebok = kodebok %>%
