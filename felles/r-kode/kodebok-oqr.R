@@ -215,6 +215,43 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av ko
   kodebok = kodebok %>%
     select(!!std_namn)
 
+  # Skjemanamna heng ikkje saman med tabellnamna(!). Det ser ut til
+  # at skjemanamna høyrer til dei faktiske skjemaa i innregistrerings-
+  # løysinga, men kva tabell ting vert lagra i er noko anna.
+  # For eksempel kan ein ha ein variabel for dødsdato på eit
+  # operasjons- og/eller oppfølgingsskjema, men dødsdatoen vert
+  # (heldigvis) berre lagra i pasienttabellen.
+  #
+  # For å få fornuftige skjemanamn til kvar tabell(-ID), vel me
+  # derfor det første *ledige* skjemanamnet som den aktuelle
+  # tabellen har. Viss det ikkje finst nokon ledige, brukar me
+  # tabell-ID-en.
+  tabell_id_til_skjemanamn = function(ids, namn) {
+    # Lag ein omkodingstabell, frå tabell-ID til skjemanamn
+    kod_id = unique(ids)
+    kod_namn = character(length(kod_id)) # Tom vektor til å halda resultatet
+
+    # Sjå på alle observerte kombinasjonar av tabell-ID og skjemanamn (i naturleg rekkjefølgje)
+    komb = distinct(tibble(id = ids, namn))
+    for (i in seq_along(kod_id)) {
+      kandidatar = c(komb$namn[komb$id == kod_id[i]], kod_id[i])
+      kandidatar = setdiff(kandidatar, kod_namn) # Fjern allereie brukte skjemanamn
+      kod_namn[i] = kandidatar[1] # Bruk første *ledige* (vil alltid vera ein, utanom det patologiske tilfelle der skjemanamna er lik skjema-ID-ane, men ikkje med 1-1-samsvar)
+    }
+
+    # Bruk omkodingstabellen til gje ut rett namn på alle ID-ane
+    kod_namn[match(ids, kod_id)]
+  }
+  # # Eksempel (og test)
+  # ids   = c("pasreg",  "basereg", "basereg","pasreg",   "op",       "op",       "ev",       "basereg")
+  # namn  = c("Pasient", "Basis",   "Basis",  "Opskjema", "Pasient",  "Opskjema", "Opskjema", "Basis")
+  # fasit = c("Pasient", "Basis",   "Basis",  "Pasient",  "Opskjema", "Opskjema", "ev",       "Basis")
+  # stopifnot(identical(fasit, tabell_id_til_skjemanamn(ids, namn)))
+
+  # Fiksa oppgitt skjemanamn til noko som er unikt for kvar
+  # skjema-ID (= tabell-ID)
+  kodebok$skjemanamn = tabell_id_til_skjemanamn(kodebok$skjema_id, kodebok$skjemanamn)
+
   # Nokre kodebøker er ikkje sorterte skikkeleg etter skjema_id,
   # slik at variablar kjem hulter til bulter. Fiksar derfor dette.
   # Men sorterer *ikkje* alfabetisk, sidan den naturlege rekkjefølgja
