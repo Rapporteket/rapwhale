@@ -48,7 +48,7 @@ source("h:/kvalreg/felles/r-kode/datadump-valider.R", encoding = "UTF-8")
 # validering: Om man ønsker å validere kodeboka ja/nei (TRUE/FALSE).
 #             Hvis man ønsker å ikke validere kodebok med kb_er_gyldig, kan man sette denne til FALSE. Default er TRUE.
 
-les_kb_checkware = function(mappe_dd, dato = NULL, validering = TRUE) {
+les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
@@ -81,7 +81,7 @@ les_kb_checkware = function(mappe_dd, dato = NULL, validering = TRUE) {
 
   # Sjekk gyldigheten til kodeboka
   # Mulighet for å hoppe over sjekk hvis man setter validering = FALSE
-  if (validering) {
+  if (valider_kb) {
     kb_er_gyldig(kb)
   }
 
@@ -136,7 +136,7 @@ les_kb_checkware = function(mappe_dd, dato = NULL, validering = TRUE) {
 #   R-datasett for det aktuelle skjemaet, med variabelnamn gjort om til ønnskede, tilsvarende verdier funnet i kodeboka.
 #   (I stedet for Q1, Q2, Q3 osv. som CheckWare ofte oppgir)
 
-hent_checkware_data = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, validering = TRUE) {
+hent_checkware_data = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, valider_dd = TRUE) {
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
@@ -269,7 +269,7 @@ hent_checkware_data = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL,
   # validerer datadumpen
   # med dd_er_gyldig funksjonen fra datadump-valider-skriptet
   # mulighet for å skru dette av med validering = FALSE
-  if (validering) {
+  if (valider_dd) {
     er_gyldig = dd_er_gyldig(d, kb_skjema)
 
     if (!er_gyldig) {
