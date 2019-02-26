@@ -321,11 +321,14 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
 #              (ikkje noko av dette *skal* vera mogleg å få, men alt kan skje i denne verda ...)).
 #   dato:      Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
 #   kodebok:   Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
+#   valider_kb: Skal kodeboka validerast? Standard er ja dersom kodeboka skal hentast inn automatisk, elles nei.
+#   valider_dd: Skal datadumpen validerast? Standard er ja.
 #
 # Utdata:
 #   R-datasett for det aktuelle skjemaet, med variabelnamn gjort om til små bokstavar.
 #
-les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kodebok = NULL) { # fixme: Legg på dd-validering?
+les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kodebok = NULL,
+                      valider_kb = is.null(kodebok), valider_dd = TRUE) {
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
     dato = dir(mappe_dd, pattern = "^[0-9]{4}-[0-1][0-9]-[0-9]{2}$", full.names = FALSE) %>%
@@ -336,7 +339,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
 
   # Les inn kodeboka dersom ho ikkje er spesifisert
   if (is.null(kodebok)) {
-    kodebok = les_kb_oqr(mappe_dd, reg_id, dato) # fixme: Ev. validering
+    kodebok = les_kb_oqr(mappe_dd, reg_id, dato, valider_kb = valider_kb)
   }
   # Hent ut variabelinfo frå kodeboka for det gjeldande skjemaet
   kb_akt = kodebok %>%
@@ -506,6 +509,14 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
       format = "%Y-%m-%d %H:%M:%OS",
       locale = oqr_lokale
     )
+
+  # Sjekk eventuelt at datadumpen er gyldig
+  if (valider_dd) {
+    gyldig = dd_er_gyldig(d, kb_akt)
+    if (!gyldig) {
+      stop("Datadumpen er ikkje gyldig")
+    }
+  }
 
   # Returner datasettet
   d
