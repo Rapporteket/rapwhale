@@ -11,6 +11,9 @@ library(lubridate) # Datohandtering
 library(stringr) # Tekstmassering
 library(readr) # For innlesing av CSV-filer
 
+# Funksjonar for validering av kodebøker og datadumpar
+source("h:/kvalreg/felles/r-kode/kodebok-valider.R", encoding = "utf-8")
+
 
 # Les inn kodebok og gjer om til standardformat ---------------------------
 
@@ -24,11 +27,12 @@ library(readr) # For innlesing av CSV-filer
 #   mappe_dd: Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
 #   reg_id:   ID som identifiserer registeret og er prefiks til alle filnamna
 #   dato:     Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
+#   valider_kb: Skal kodeboka automatisk validerast? Ho må då vera gyldig for at ein skal få noko ut.
 #
 # Utdata:
 #   kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar
 #
-les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av kodebok?
+les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixme: Validering av kodebok?
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
@@ -201,15 +205,6 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av ko
     mutate(data = map(data, legg_til_ekstravar)) %>%
     unnest()
 
-  # Dei variabel-/kolonnenamna me brukar, i standard/fornuftig rekkjefølgje
-  std_namn = c(
-    "skjema_id", "skjemanamn", "kategori", "innleiing", "variabel_id",
-    "variabeletikett", "forklaring", "variabeltype", "eining", "unik",
-    "obligatorisk", "verdi", "verditekst", "manglande", "desimalar",
-    "min", "maks", "min_rimeleg", "maks_rimeleg", "kommentar_rimeleg",
-    "utrekningsformel", "logikk", "kommentar"
-  )
-
   # fixme: Sjekk at verdiane til variablane faktiske er *like* på alle tabellane
   # Det er ein føresetnad for at det nedanfor skal fungera. Viss for eksempel
   # operasjonstype «1» tyder ABC på operasjonsskjema men CDE på oppfølgingsskjemaet,
@@ -224,6 +219,15 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av ko
   # merk at denne kan bestå av fleire *rader*, for kategoriske variablar.)
   kodebok = kodebok %>%
     distinct(skjema_id, variabel_id, verdi, .keep_all = TRUE)
+
+  # Dei variabel-/kolonnenamna me brukar, i standard/fornuftig rekkjefølgje
+  std_namn = c(
+    "skjema_id", "skjemanamn", "kategori", "innleiing", "variabel_id",
+    "variabeletikett", "forklaring", "variabeltype", "eining", "unik",
+    "obligatorisk", "verdi", "verditekst", "manglande", "desimalar",
+    "min", "maks", "min_rimeleg", "maks_rimeleg", "kommentar_rimeleg",
+    "utrekningsformel", "logikk", "kommentar"
+  )
 
   # Bruk vidare berre standardkolonnne, og i standard/fornuftig rekkjefølgje
   # (Må stå etter legg_til_ekstravar(), sidan denne endrar rekkjefølgja)
@@ -274,8 +278,16 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av ko
   kodebok = kodebok %>%
     arrange(fct_inorder(skjema_id))
 
-  # fixme: Vurder om det er nødvendig å køyra funksjonen som gjer
-  #        kodebok om til kanonisk form (eller om ho alt *er* på kanonisk form)
+  # Sjekk eventuelt at kodeboka er gyldig
+  if (valider_kb) {
+    gyldig = kb_er_gyldig(kodebok)
+    if (!gyldig) {
+      stop("Kodeboka er ikkje gyldig")
+    }
+  }
+
+  # Gjer om til kanonisk form
+  kodebok = kb_til_kanonisk_form(kodebok)
 
   # Returner kodeboka
   kodebok
