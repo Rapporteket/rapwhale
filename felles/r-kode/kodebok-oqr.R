@@ -178,20 +178,6 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av ko
     match(kodebok$variabeltype, vartype_oqr_standard$type_oqr)
   ]
 
-  # Dei variabelnamna me brukar, og i ei fornuftig rekkjefølgje
-  std_namn = c(
-    "skjema_id", "skjemanamn", "kategori", "innleiing", "variabel_id",
-    "variabeletikett", "forklaring", "variabeltype", "eining", "unik",
-    "obligatorisk", "verdi", "verditekst", "manglande", "desimalar",
-    "min", "maks", "min_rimeleg", "maks_rimeleg", "kommentar_rimeleg",
-    "utrekningsformel", "logikk", "kommentar"
-  )
-
-
-  # Ta med dei namna me brukar, i fornuftig rekkjefølgje
-  kodebok = kodebok %>%
-    select(!!std_namn)
-
   # I tillegg til dei definerte variablane har datadumpane seks ekstra
   # variablar, to før kodebokvariablane og fire etter. Desse er definerte
   # i dokumentasjonen til datadumpane (dokumentet «4.2 Dokumentasjon på
@@ -214,6 +200,20 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av ko
     nest(-skjema_id, -skjemanamn) %>%
     mutate(data = map(data, legg_til_ekstravar)) %>%
     unnest()
+
+  # Dei variabel-/kolonnenamna me brukar, i standard/fornuftig rekkjefølgje
+  std_namn = c(
+    "skjema_id", "skjemanamn", "kategori", "innleiing", "variabel_id",
+    "variabeletikett", "forklaring", "variabeltype", "eining", "unik",
+    "obligatorisk", "verdi", "verditekst", "manglande", "desimalar",
+    "min", "maks", "min_rimeleg", "maks_rimeleg", "kommentar_rimeleg",
+    "utrekningsformel", "logikk", "kommentar"
+  )
+
+  # Bruk vidare berre standardkolonnne, og i standard/fornuftig rekkjefølgje
+  # (Må stå etter legg_til_ekstravar(), sidan denne endrar rekkjefølgja)
+  kodebok = kodebok %>%
+    select(!!std_namn)
 
   # Nokre kodebøker er ikkje sorterte skikkeleg etter skjema_id,
   # slik at variablar kjem hulter til bulter. Fiksar derfor dette.
