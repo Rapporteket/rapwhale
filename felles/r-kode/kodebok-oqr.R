@@ -214,6 +214,13 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL) { # fixme: Validering av ko
     mutate(data = map(data, legg_til_ekstravar)) %>%
     unnest()
 
+  # Nokre kodebøker er ikkje sorterte skikkeleg etter skjema_id,
+  # slik at variablar kjem hulter til bulter. Fiksar derfor dette.
+  # Men sorterer *ikkje* alfabetisk, sidan den naturlege rekkjefølgja
+  # ofte er meir logisk.
+  kodebok = kodebokde %>%
+    arrange(fct_inorder(skjema_id))
+
   # fixme: Vurder om det er nødvendig å køyra funksjonen som gjer
   #        kodebok om til kanonisk form (eller om ho alt *er* på kanonisk form)
 
