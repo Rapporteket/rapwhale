@@ -195,7 +195,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
       "tsupdated", "Skjema sist oppdatert", "dato_kl", "nei", "nei", NA,
       "updatedby", "Skjema oppdatert av", "tekst", "nei", "nei", NA,
       "tscreated", "Skjema oppretta", "dato_kl", "nei", "ja", NA,
-      "createdb", "Skjema oppretta av", "tekst", "nei", "ja", NA
+      "createdby", "Skjema oppretta av", "tekst", "nei", "ja", NA
     )
     kb_utvida = bind_rows(kb_ekstra[1:2, ], kb, kb_ekstra[3:6, ])
     kb_utvida
