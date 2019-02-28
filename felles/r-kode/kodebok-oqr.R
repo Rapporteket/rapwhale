@@ -36,7 +36,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
-    dato = dir(mappe_dd, pattern = "[0-9]{4}-[0-1]{2}-[0-9]{2}", full.names = FALSE) %>%
+    dato = dir(mappe_dd, pattern = "^[0-9]{4}-[0-1][0-9]-[0-9]{2}$", full.names = FALSE) %>%
       sort() %>%
       last()
   }
@@ -514,6 +514,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
   if (valider_dd) {
     gyldig = dd_er_gyldig(d, kb_akt)
     if (!gyldig) {
+      print(attr(gyldig, "rapport"), n = Inf) # Vis grunnen til at datadumpen ikkje er gyldig
       stop("Datadumpen er ikkje gyldig")
     }
   }
