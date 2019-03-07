@@ -218,7 +218,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
   # «type_kompl», eitt for kvart skjema. Me skal berre ha første. (Men
   # merk at denne kan bestå av fleire *rader*, for kategoriske variablar.)
   kodebok = kodebok %>%
-    distinct(skjema_id, variabel_id, verdi, .keep_all = TRUE)
+    distinct(skjema_id, variabel_id, verdi, verditekst, .keep_all = TRUE)
 
   # Dei variabel-/kolonnenamna me brukar, i standard/fornuftig rekkjefølgje
   std_namn = c(
