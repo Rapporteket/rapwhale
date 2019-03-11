@@ -80,7 +80,7 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
 
 
   # Sjekk gyldigheten til kodeboka
-  # Mulighet for å hoppe over sjekk hvis man setter validering = FALSE
+  # Mulighet for å hoppe over sjekk hvis man setter valider_kb = FALSE
   if (valider_kb) {
     kb_er_gyldig(kb)
   }
@@ -136,7 +136,7 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
 #   R-datasett for det aktuelle skjemaet, med variabelnamn gjort om til ønnskede, tilsvarende verdier funnet i kodeboka.
 #   (I stedet for Q1, Q2, Q3 osv. som CheckWare ofte oppgir)
 
-hent_checkware_data = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, valider_dd = TRUE) {
+hent_checkware_data = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, valider_dd = TRUE, valider_kb = TRUE) {
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
@@ -150,6 +150,12 @@ hent_checkware_data = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL,
   # her sjekkes også gyldigheten av kodeboka
   if (is.null(kodebok)) {
     kb = les_kb_checkware(mappe_dd)
+  }
+
+  # Sjekk gyldigheten til kodeboka
+  # Mulighet for å hoppe over sjekk hvis man setter valider_kb = FALSE
+  if (valider_kb) {
+    kb_er_gyldig(kb)
   }
 
   # filtrer på aktuelt skjema + metadata som finnes i alle skjema
@@ -268,7 +274,7 @@ hent_checkware_data = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL,
 
   # validerer datadumpen
   # med dd_er_gyldig funksjonen fra datadump-valider-skriptet
-  # mulighet for å skru dette av med validering = FALSE
+  # mulighet for å skru dette av med valider_dd = FALSE
   if (valider_dd) {
     er_gyldig = dd_er_gyldig(d, kb_skjema)
 
