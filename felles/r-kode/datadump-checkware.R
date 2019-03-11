@@ -136,7 +136,7 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
 #   R-datasett for det aktuelle skjemaet, med variabelnamn gjort om til ønnskede, tilsvarende verdier funnet i kodeboka.
 #   (I stedet for Q1, Q2, Q3 osv. som CheckWare ofte oppgir)
 
-hent_checkware_data = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, valider_dd = TRUE, valider_kb = TRUE) {
+les_dd_checkware = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, valider_dd = TRUE, valider_kb = TRUE) {
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
@@ -149,17 +149,17 @@ hent_checkware_data = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL,
   # Les inn kodeboka dersom ho ikkje er spesifisert
   # her sjekkes også gyldigheten av kodeboka
   if (is.null(kodebok)) {
-    kb = les_kb_checkware(mappe_dd)
+    kodebok = les_kb_checkware(mappe_dd)
   }
 
   # Sjekk gyldigheten til kodeboka
   # Mulighet for å hoppe over sjekk hvis man setter valider_kb = FALSE
   if (valider_kb) {
-    kb_er_gyldig(kb)
+    kb_er_gyldig(kodebok)
   }
 
   # filtrer på aktuelt skjema + metadata som finnes i alle skjema
-  kb_skjema = kb %>%
+  kb_skjema = kodebok %>%
     filter(skjema_id == "meta" | skjema_id == !!skjema_id)
 
   # Me skil berre mellom heiltals- og flyttalsvariablar
@@ -290,12 +290,12 @@ hent_checkware_data = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL,
 
 # sjekk at funksjonen funker med rehabiliteringsregisteret som eksempel
 # mappe = "***FJERNA-ADRESSE***"
-# d_barthel = hent_checkware_data(mappe, skjema_id = "barthel")
-# d_moca = hent_checkware_data(mappe, skjema = "moca")
-# d_mrs = hent_checkware_data(mappe, "mrs")
-# d_nihss = hent_checkware_data(mappe, "nihss")
-# d_tis = hent_checkware_data(mappe, "tis")
-# d_legeinn = hent_checkware_data(mappe, "legeinn")
-# d_legeut = hent_checkware_data(mappe, "legeut")
-# d_sykinn = hent_checkware_data(mappe, "sykinn")
-# d_sykut = hent_checkware_data(mappe, "sykut")
+# d_barthel = les_dd_checkware(mappe, skjema_id = "barthel")
+# d_moca = les_dd_checkware(mappe, skjema = "moca")
+# d_mrs = les_dd_checkware(mappe, "mrs")
+# d_nihss = les_dd_checkware(mappe, "nihss")
+# d_tis = les_dd_checkware(mappe, "tis")
+# d_legeinn = les_dd_checkware(mappe, "legeinn")
+# d_legeut = les_dd_checkware(mappe, "legeut")
+# d_sykinn = les_dd_checkware(mappe, "sykinn")
+# d_sykut = les_dd_checkware(mappe, "sykut")
