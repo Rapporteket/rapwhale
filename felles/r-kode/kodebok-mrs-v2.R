@@ -39,7 +39,7 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   dato = as_date(dato) # I tilfelle det var ein tekstreng
 
   # Sammensatt adresse til kodeboka
-  adresse_kb = paste0(mappe_dd, "\\", dato, "\\", dato, " kodebok MRSv2.xlsx")
+  adresse_kb = paste0(mappe_dd, "\\", dato, "\\kodebok.xlsx")
 
   # Kodeboka er laget i excel. Excel har heller ikke så mange, presise variabeltyper
   # MRS gjør det gangske enkelt med at alle kolonnene er "text".
