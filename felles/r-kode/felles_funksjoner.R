@@ -445,21 +445,24 @@ prosent = function(x, desimalar = 0, tabell = FALSE) {
 # foer - Tegn før første ord, vanligvis ingenting "", men kan alltids legge til noe her...
 # etter - Tegn etter siste ord, vanligvis ingenting "", men kan velge noe annet...
 library(stringr)
-kjed_ord = function(ord, skiljeteikn = ", ", og = " og ", foer = "", etter = foer) {
+kjed_ord = function(ord, skiljeteikn = ", ", og = " og ") {
+
+  # gjør om missing til "NA" som tekststreng
+  ord = str_replace_na(ord)
+
   # antall ord
   n = length(ord)
 
   # hvis det er er ingenting i objektet, returnes...ingenting
   if (n == 0) {
-    tekst = ord
+    tekst = paste0("")
+    warning("")
   }
-  # Hvis det er bare 1 ord, får den mellomrom før og etter. Dette kan endres med argumentene foer og etter
-  ord = paste0(foer, ord, etter)
+
   if (n == 1) {
     tekst = ord
-    # Hvis det er 2 ord, bindes ordene sammen med " og ", men dette kan også endres i argumentet og.
-    # F.eks om du vil bruke &-teignet
-  }
+  } # Hvis det er 2 ord, bindes ordene sammen med " og ", men dette kan også endres i argumentet og.
+  # F.eks om du vil bruke &-teignet
   if (n == 2) {
     tekst = str_flatten(ord, og)
   }
@@ -469,6 +472,11 @@ kjed_ord = function(ord, skiljeteikn = ", ", og = " og ", foer = "", etter = foe
   }
   tekst
 }
+
+kjed_ord(LETTERS[0])
+# Kan legge til prefiks og suffiks til ord hvis ønskelig med argumentetne foer og etter. Per nå er det bare et tomt felt "".
+ord = paste0(foer, ord, etter)
+
 
 
 # Andre funksjoner --------------------------------------------------------
