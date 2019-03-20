@@ -473,12 +473,6 @@ kjed_ord = function(ord, skiljeteikn = ", ", og = " og ") {
   tekst
 }
 
-kjed_ord(LETTERS[0])
-# Kan legge til prefiks og suffiks til ord hvis ønskelig med argumentetne foer og etter. Per nå er det bare et tomt felt "".
-ord = paste0(foer, ord, etter)
-
-
-
 # Andre funksjoner --------------------------------------------------------
 
 ### Variant av table()-funksjonen som tar med NA-verdiar om dei finst
