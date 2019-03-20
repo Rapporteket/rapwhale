@@ -442,8 +442,6 @@ prosent = function(x, desimalar = 0, tabell = FALSE) {
 # ord - Nødvendig, en vektor med ordene du ønsker å kjede
 # skjeileteikn - Standard er komme ", " men man kan velge noe annet
 # og - Standard er " og " men man kan velge noe annet (f.eks " and ", " och ", " & " eller min personlige favoritt " und ")
-# foer - Tegn før første ord, vanligvis ingenting "", men kan alltids legge til noe her...
-# etter - Tegn etter siste ord, vanligvis ingenting "", men kan velge noe annet...
 library(stringr)
 kjed_ord = function(ord, skiljeteikn = ", ", og = " og ") {
 
@@ -458,7 +456,6 @@ kjed_ord = function(ord, skiljeteikn = ", ", og = " og ") {
     tekst = paste0("")
     warning("")
   }
-
   if (n == 1) {
     tekst = ord
   } # Hvis det er 2 ord, bindes ordene sammen med " og ", men dette kan også endres i argumentet og.
