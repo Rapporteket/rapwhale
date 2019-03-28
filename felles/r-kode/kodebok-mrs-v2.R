@@ -44,7 +44,7 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   # Kodeboka er laget i excel. Excel har heller ikke så mange, presise variabeltyper
   # MRS gjør det gangske enkelt med at alle kolonnene er "text".
   # Per i dag har de 6 kolonner
-  kb_mrs_koltyper = rep("text", 5)
+  kb_mrs_koltyper = rep("text", 6)
 
   # henter inn excel-ark navn
   ark = excel_sheets(adresse_kb)
@@ -141,7 +141,8 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
     # skjema_id = d$Skjema[ind_nyvar], # fixme! Ventar spent på at denne skal dukka opp (førespurnad er send)
     verdi = NA_integer_, # Føreset førbels at MRS-kodane alltid er tal (gjer om til tekst om dette ikkje stemmer)
     verditekst = NA_character_,
-    desimalar = ifelse(kb_mrs$Felttype[ind_nyvar] == "Numerisk (heltall)", 0L, NA_integer_)
+    desimalar = ifelse(kb_mrs$Felttype[ind_nyvar] == "Numerisk (heltall)", 0L, NA_integer_),
+    kommentar = kb_mrs$Hjelpetekst[ind_nyvar]
   )
 
   # Kor mange gongar kvar variabel skal gjentakast i
