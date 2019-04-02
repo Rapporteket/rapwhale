@@ -39,7 +39,7 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   dato = as_date(dato) # I tilfelle det var ein tekstreng
 
   # Sammensatt adresse til kodeboka
-  adresse_kb = paste0(mappe_dd, "\\", dato, "\\kodebok.xlsx")
+  adresse_kb = paste0(mappe_dd, "\\", dato, "\\rapport.xlsx")
 
   # Kodeboka er laget i excel. Excel har heller ikke så mange, presise variabeltyper
   # MRS gjør det gangske enkelt med at alle kolonnene er "text".
@@ -196,7 +196,7 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
 #   mappe_dd:  Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
 #              Antagelse ligger til grunn at nyeste kodebok ligger i samme mappe som de nyeste datadumpene.
 #   skjema_id: ID til skjemaet ein vil henta inn (brukt i filnamnet og i kolonnen «tabell» i kodeboka)
-#   versjon:   Om datadumpen er "Prod" eller om den er fra "Test". Standardverdi er "Prod".
+#   versjon:   Om datadumpen er "Prod" eller om den er fra "QA". Standardverdi er "Prod".
 #   dato:      Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
 #   kodebok:   Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
 #
