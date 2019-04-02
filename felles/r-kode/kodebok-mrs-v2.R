@@ -228,7 +228,7 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
 
   # finner navnet på fila med riktig klokkslett
   filnavn = list.files(mappe_dd_dato, pattern = regexp_filnavn)
-
+  stopifnot(length(filnavn) == 1)
   # og dermed adressen til datadumpen gitt datoen vi har fått
   adresse_dd = paste0(mappe_dd_dato, filnavn)
 
