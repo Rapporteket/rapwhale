@@ -221,7 +221,16 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
     filter(skjema_id == !!skjema_id)
 
   # Adressen til datadumpen gitt datoen som vi har fått
-  adresse_dd = paste0(mappe_dd, dato, "\\", "DataDump_", versjon, "_", skjema_id, "_", dato, ".csv")
+  # Alle datadumper starter med samme prefiks + navn på skjema + dato + klokkeslett
+  mappe_dd_dato = paste0(mappe_dd, "\\", dato, "\\") # mappe med dato, brukes flere ganger
+  dd_navn_start = paste0("^DataDump_", versjon, "_", skjema_id, "_", dato, "_") # prefiks
+  regexp_filnavn = paste0(dd_navn_start, "[0-9]{4}\\.csv$") # regexp for å finne riktig fil med klokkeslett
+
+  # finner navnet på fila med riktig klokkslett
+  filnavn = list.files(mappe_dd_dato, pattern = regexp_filnavn)
+
+  # og dermed adressen til datadumpen gitt datoen vi har fått
+  adresse_dd = paste0(mappe_dd_dato, filnavn)
 
   # Les inn variabelnamna i datafila
   varnamn_fil = scan(adresse_dd,
