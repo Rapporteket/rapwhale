@@ -12,6 +12,7 @@ library(readxl) # Lesing av Excel-filer
 library(stringr) # Tekstmassering
 library(magrittr) # Funksjonar som kan brukast med røyr-operatoren
 library(rlang) #
+library(lubridate) # Datohåndtering
 
 # henter funksjon for å lage kodebok til kanonisk form + kodebok valider
 source("h:/kvalreg/felles/r-kode/kodebok-valider.R", encoding = "UTF-8")
