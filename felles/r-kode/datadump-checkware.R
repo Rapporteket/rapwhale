@@ -129,9 +129,10 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
 #   skjema_id: ID til skjemaet ein vil henta inn (brukt i filnamnet til datadumpen og i kolonnen «skjema_id» i kodeboka)
 #   dato:      Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
 #   kb:        Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
-# validering: Om man ønsker å validere datadumpen ja/nei (TRUE/FALSE).
+#   valider_dd: Om man ønsker å validere datadumpen ja/nei (TRUE/FALSE).
 #             Hvis man ønsker å ikke validere datadump med dd_er_gyldig, kan man sette denne til FALSE. Default er TRUE.
-#
+#   valider_kb: Om man ønsker å validere kodeboka ja/nei (TRUE/FALSE).
+#             Hvis man ønsker å ikke validere kodebok med kb_er_gyldig, kan man sette denne til FALSE. Default er TRUE.
 # Utdata:
 #   R-datasett for det aktuelle skjemaet, med variabelnamn gjort om til ønnskede, tilsvarende verdier funnet i kodeboka.
 #   (I stedet for Q1, Q2, Q3 osv. som CheckWare ofte oppgir)
@@ -158,10 +159,15 @@ les_dd_checkware = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, va
     kb_er_gyldig(kodebok)
   }
 
-  # filtrer på aktuelt skjema + metadata som finnes i alle skjema
-  kb_skjema = kodebok %>%
-    filter(skjema_id == "meta" | skjema_id == !!skjema_id)
-
+  # Lager objekt med filter på kodebok til å bare innneholde informasjon om aktuelt skjema til datadumpen
+  # Alle datadumper kommer med ett skjema + metadata, bortsett fra treatments, som ikke inneholder metadata, bortsett fra r_id.
+  if (skjema_id == "treatments") {
+    kb_skjema = kodebok %>%
+      filter(skjema_id == !!skjema_id)
+  } else {
+    kb_skjema = kodebok %>%
+      filter(skjema_id == "meta" | skjema_id == !!skjema_id)
+  }
   # Me skil berre mellom heiltals- og flyttalsvariablar
   # i vår kodebok ved hjelp av «desimalar»-feltet (begge
   # talvariantane har variabeltypen «numerisk»). For å
