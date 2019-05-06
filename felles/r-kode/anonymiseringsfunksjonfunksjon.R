@@ -1,5 +1,8 @@
 # Anonymiseringsfunksjonfunksjon
 
+
+library(testthat) # for testing av at funksjonen funker
+
 # 1. Eksempeldatasett til testing
 
 # Datasett 1: hofteoperasjoner
@@ -17,7 +20,7 @@ pas_ids_oppf = c(1, 3, 2, 5, 4, 9, 7, 8, 11)
 # Datasett 1 og 2
 pas_ids = c(pas_ids_hofteop, pas_ids_kneop)
 
-anonymiser_reg = function(alle_ids, startnr = 101) {
+lag_ano_funk = function(alle_ids, startnr = 101) {
   anonymiser_id_vektor = function(id_vektor) {
     if (any(is.na(id_vektor))) {
       warning("ID-vektoren inneholder NA-verdier")
@@ -32,18 +35,28 @@ anonymiser_reg = function(alle_ids, startnr = 101) {
   anonymiser_id_vektor
 }
 
-anonymiser_mittreg = anonymiser_reg(pas_ids, 101)
-anonymiser_mittreg(pas_ids_oppf)
-anonymiser_mittreg(pas_ids_hofteop_na)
 
-library(testthat)
-
-# Test som skal gi feilmelding dersom "ut-funksjonen" av lag_ano_funk() blir brukt på ukjente ID-er
-test_that("Funksjonen kan kjøres uten å gi feilmeldinger/advarsler", {
-  expect_warning(anonymiser_mittreg(pas_ids_oppf), NA)
-})
+#--------------- Tester at lag_ano_funk funker som den skal
 
 # Test som skal gi feilmelding dersom det finnes NA-verdier blant ID-ene
-test_that("Funksjonen kan kjøres uten å gi feilmeldinger/advarsler", {
-  expect_warning(anonymiser_mittreg(pas_ids_hofteop_na), NA)
+test_that("Funksjonen skal gi advarsler ved NA-verdier", {
+  expect_warning(lag_ano_funk(pas_ids_hofteop_na), "ID-vektoren inneholder NA-verdier")
 })
+
+#--------------- Tester at funksjonen som kommer ut av lag_ano_funk funker som den skal
+
+# Test som skal gi feilmelding dersom "ut-funksjonen" av lag_ano_funk() blir brukt på ukjente ID-er
+test_that("Funksjonen skal gi advarsel ved ukjente ID-er (utenom NA-ID-er)", {
+  anonymiser_mittreg = lag_ano_funk(pas_ids)
+  expect_warning(anonymiser_mittreg(pas_ids_oppf), "ID-vektoren inneholder nye ID-er")
+
+  # Skal ikke gi advarsel dersom alle de nye verdiene bare er NA-verdier
+  expect_warning(anonymiser_mittreg(c(pas_ids, NA)), "ID-vektoren inneholder NA-verdier", all = TRUE)
+})
+
+
+# Flere potensielle tester...
+# 1. Test at hvis man har matet inn lag_ano_funk med et sett med IDer som kommer fra to forskjellige kilder (fra f. eks to skjema)
+#    og man da kjører denne for å få anonymiser_id_vektor (anonymiser_mittreg), og deretter bruker anonymiser_id_vektor på
+#    alle kildene, så blir IDene like på tvers av kildene (en test på at funksjonen gjør det den skal)
+#
