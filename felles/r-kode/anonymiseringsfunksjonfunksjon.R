@@ -12,7 +12,7 @@ pas_ids_hofteop = c(2, 4, 6, 3, 4, 7, 7, 1, 3, 7)
 pas_ids_hofteop_na = c(2, 4, 6, 3, 4, 7, 7, NA, 3, 7)
 
 # Datasett 3: kneoperasjoner (inneholder noen id-er fra datasett 1, samt noen nye)
-pas_ids_kneop = c(1, 6, 2, 3, 9, 8, 8, 12)
+pas_ids_kneop = c(1, 6, 2, 3, 9, 8, 8, 12, 3, 3)
 
 # Datasett 4: oppfølging (inneholder de fleste id-er fra datasett 1 og datasett 2, samt 1 ny)
 pas_ids_oppf = c(1, 3, 2, 5, 4, 9, 7, 8, 11)
@@ -60,3 +60,23 @@ test_that("Funksjonen skal gi advarsel ved ukjente ID-er (utenom NA-ID-er)", {
 #    og man da kjører denne for å få anonymiser_id_vektor (anonymiser_mittreg), og deretter bruker anonymiser_id_vektor på
 #    alle kildene, så blir IDene like på tvers av kildene (en test på at funksjonen gjør det den skal)
 #
+
+pas_ids_hofteop
+pas_ids_kneop
+anonymiser_mittreg = lag_ano_funk(pas_ids)
+anonymiser_mittreg(pas_ids_hofteop)
+anonymiser_mittreg(pas_ids_kneop)
+
+# Denne skal passere testen
+lag_ano_funk = function(x) {
+  function(y) {
+    100 * y
+  }
+}
+
+# Denne skal ikke passere
+lag_ano_funk = function(x) {
+  function(y) {
+    sample(10 * y)
+  }
+}
