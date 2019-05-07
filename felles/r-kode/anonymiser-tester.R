@@ -38,7 +38,7 @@ test_that("Funksjonen skal gi advarsler ved NA-verdier", {
 
 #--------------- Tester at funksjonen som kommer ut av lag_ano_funk funker som den skal
 
-# Test som skal gi feilmelding dersom "ut-funksjonen" av lag_ano_funk() blir brukt på ukjente ID-er
+# Test som skal gi advarsel dersom "ut-funksjonen" av lag_ano_funk() blir brukt på ukjente ID-er
 test_that("Funksjonen skal gi advarsel ved ukjente ID-er (utenom NA-ID-er)", {
   anonymiser_mittreg = lag_ano_funk(pas_ids)
   expect_warning(anonymiser_mittreg(pas_ids_oppf), "ID-vektoren inneholder nye ID-er")
@@ -53,7 +53,7 @@ test_that("Funksjonen skal gi advarsel ved ukjente ID-er (utenom NA-ID-er)", {
 #    alle kildene, så blir IDene like på tvers av kildene (en test på at funksjonen gjør det den skal)
 
 # Test som skal gi feilmelding dersom like ID-er fra ulike skjemaer får ulike anonymiserte ID-er
-test_that("pas_ids_oppf inneholder ikke nye ID-er", {
+test_that("Funksjonen skal gi feilmeldig dersom like ID-er fra ulike skjemaer får ulike anonymiserte ID-er", {
   expect_that(
     anyNA(match(
       match(anonymiser_mittreg_1(pas_ids_hofteop), anonymiser_mittreg_1(pas_ids_kneop)),
