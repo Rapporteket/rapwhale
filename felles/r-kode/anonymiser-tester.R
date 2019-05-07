@@ -47,32 +47,40 @@ test_that("Funksjonen skal gi advarsel ved ukjente ID-er (utenom NA-ID-er)", {
   expect_warning(anonymiser_mittreg(c(pas_ids, NA)), "ID-vektoren inneholder NA-verdier", all = TRUE)
 })
 
-
 # Flere potensielle tester...
 # 1. Test at hvis man har matet inn lag_ano_funk med et sett med IDer som kommer fra to forskjellige kilder (fra f. eks to skjema)
 #    og man da kjører denne for å få anonymiser_id_vektor (anonymiser_mittreg), og deretter bruker anonymiser_id_vektor på
 #    alle kildene, så blir IDene like på tvers av kildene (en test på at funksjonen gjør det den skal)
-#
 
-pas_ids_hofteop
-pas_ids_kneop
-anonymiser_mittreg = lag_ano_funk(pas_ids)
-anonymiser_mittreg(pas_ids_hofteop)
-anonymiser_mittreg(pas_ids_kneop)
+# Test som skal gi feilmelding dersom like ID-er fra ulike skjemaer får ulike anonymiserte ID-er
+test_that("pas_ids_oppf inneholder ikke nye ID-er", {
+  expect_that(
+    anyNA(match(
+      match(anonymiser_mittreg_1(pas_ids_hofteop), anonymiser_mittreg_1(pas_ids_kneop)),
+      match(anonymiser_mittreg_1(pas_ids_hofteop), anonymiser_mittreg_1(pas_ids_kneop))
+    )),
+    equals(FALSE)
+  )
+})
+
+# Eksempelfunksjoner for å sjekke den den siste testen
 
 # Denne skal passere testen
-lag_ano_funk = function(x) {
+lag_ano_funk_1 = function(x) {
   function(y) {
     100 * y
   }
 }
 
 # Denne skal ikke passere
-lag_ano_funk = function(x) {
+lag_ano_funk_2 = function(x) {
   function(y) {
     sample(10 * y)
   }
 }
+
+anonymiser_mittreg_1 = lag_ano_funk_1(pas_ids)
+anonymiser_mittreg_2 = lag_ano_funk_2(pas_ids)
 
 
 
