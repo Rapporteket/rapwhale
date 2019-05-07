@@ -47,53 +47,32 @@ test_that("Funksjonen skal gi advarsel ved ukjente ID-er (utenom NA-ID-er)", {
   expect_warning(anonymiser_mittreg(c(pas_ids, NA)), "ID-vektoren inneholder NA-verdier", all = TRUE)
 })
 
-# Flere potensielle tester...
-# 1. Test at hvis man har matet inn lag_ano_funk med et sett med IDer som kommer fra to forskjellige kilder (fra f. eks to skjema)
-#    og man da kjører denne for å få anonymiser_id_vektor (anonymiser_mittreg), og deretter bruker anonymiser_id_vektor på
-#    alle kildene, så blir IDene like på tvers av kildene (en test på at funksjonen gjør det den skal)
-
 # Test som skal gi feilmelding dersom like ID-er fra ulike skjemaer får ulike anonymiserte ID-er
 test_that("Funksjonen skal gi feilmeldig dersom like ID-er fra ulike skjemaer får ulike anonymiserte ID-er", {
   anonymiser_mittreg = lag_ano_funk(pas_ids)
-  expect_that(
+  expect_identical(
     match(pas_ids_hofteop, pas_ids_kneop),
-    equals(match(anonymiser_mittreg(pas_ids_hofteop), anonymiser_mittreg(pas_ids_kneop)))
+    match(anonymiser_mittreg(pas_ids_hofteop), anonymiser_mittreg(pas_ids_kneop))
   )
-  expect_that(
+  expect_identical(
     match(pas_ids_kneop, pas_ids_hofteop),
-    equals(match(anonymiser_mittreg(pas_ids_kneop), anonymiser_mittreg(pas_ids_hofteop)))
+    match(anonymiser_mittreg(pas_ids_kneop), anonymiser_mittreg(pas_ids_hofteop))
   )
-  expect_that(
+  expect_identical(
     match(pas_ids_hofteop_na, pas_ids_kneop),
-    equals(match(anonymiser_mittreg(pas_ids_hofteop_na), anonymiser_mittreg(pas_ids_kneop)))
+    match(anonymiser_mittreg(pas_ids_hofteop_na), anonymiser_mittreg(pas_ids_kneop))
   )
-  expect_that(
+  expect_identical(
     match(pas_ids_kneop, pas_ids_hofteop_na),
-    equals(match(anonymiser_mittreg(pas_ids_kneop), anonymiser_mittreg(pas_ids_hofteop_na)))
+    match(anonymiser_mittreg(pas_ids_kneop), anonymiser_mittreg(pas_ids_hofteop_na))
   )
 })
-
-# Eksempelfunksjoner for å sjekke den den siste testen
-
-# Denne skal passere testen
-lag_ano_funk_1 = function(x) {
-  function(y) {
-    100 * y
-  }
-}
-
-# Denne skal ikke passere
-lag_ano_funk_2 = function(x) {
-  function(y) {
-    sample(10 * y)
-  }
-}
 
 
 
 
 # Testar for anonymiser()-funksjonen
-#
+
 # Kanskje litt mange testar for ein såpass enkel funksjon,
 # men no er me iallfall sikra at ting fungerer nokolunde. :)
 
