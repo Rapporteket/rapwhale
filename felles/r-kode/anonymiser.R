@@ -1,6 +1,9 @@
 # Anonymiseringsfunksjonfunksjon
 
 lag_ano_funk = function(alle_ids, startnr = 101) {
+  if (any(is.na(alle_ids))) {
+    warning("ID-vektoren inneholder NA-verdier")
+  }
   anonymiser_id_vektor = function(id_vektor) {
     if (any(is.na(id_vektor))) {
       warning("ID-vektoren inneholder NA-verdier")
