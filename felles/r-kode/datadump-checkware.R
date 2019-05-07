@@ -272,8 +272,13 @@ les_dd_checkware = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, va
     distinct(variabel_id) %>%
     pull("variabel_id")
   cw_til_boolsk = function(x) {
-    stopifnot(all(x %in% c("1", NA)))
-    !is.na(x)
+    if (skjema_id != "treatments") { # treatments skjema har boolske variabler kodet som true/false,
+      # i motsetning til alle andre skjema. treatments er felles for alle registre.
+      stopifnot(all(x %in% c("1", NA)))
+      !is.na(x)
+    } else {
+      as.logical(ifelse("false", 0, 1))
+    }
   }
   d = d %>%
     mutate_at(boolsk_var, cw_til_boolsk)
@@ -283,13 +288,12 @@ les_dd_checkware = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, va
   # mulighet for å skru dette av med valider_dd = FALSE
   if (valider_dd) {
     er_gyldig = dd_er_gyldig(d, kb_skjema)
-
     if (!er_gyldig) {
       print(attr(er_gyldig, "rapport"), n = Inf)
       stop("Datadumpen er ikke gyldig. Se feilene over.")
     }
   }
-
+  names(d)
   # returner dataene
   d
 }
