@@ -37,12 +37,12 @@ library(rlang)
 # dette fordi MRS-kodebøker har feil i sin obligatorisk-koding,
 # og dermed er uaktuelt for testing. Defaulter er TRUE.
 
-lag_regelsett = function(kb, oblig = TRUE) {
+lag_regelsett = function(kodebok, oblig = TRUE) {
 
   # for å lage regler må kodeboka ha følgende kolonner:
   nodvar = c("variabel_id", "variabeltype", "min", "maks", "desimalar", "verdi", "verditekst")
-  # kolonner i kb
-  kol = names(kb)
+  # kolonner i kodebok
+  kol = names(kodebok)
 
   # Stopp hvis kodeboka mangler helt nødvendige kolonner
   if (!all(nodvar %in% kol)) {
@@ -53,7 +53,7 @@ lag_regelsett = function(kb, oblig = TRUE) {
 
   # Stopp hvis variabel_id eller variabeltype mangler verdi
   for (kol in c("variabel_id", "variabeltype")) {
-    if (any(is.na(kb[[kol]]))) {
+    if (any(is.na(kodebok[[kol]]))) {
       stop(paste0("Kodeboka har manglende verdier for variabel_id og/eller variabeltype."))
     }
   }
@@ -62,12 +62,12 @@ lag_regelsett = function(kb, oblig = TRUE) {
   # som brukes i en gitt test. F.eks, om man ønsker å teste min-verdier
   # i en datadump, så trenger man bare informasjon om min-verdier
   # for variabler som faktisk *har* min-verdier.
-  kb_filter = function(kb, kolonne) {
+  kb_filter = function(kodebok, kolonne) {
 
     # henter ut delen av kodeboka som
     # har en verdi i en aktuelle kolonnen
-    kb_utsnitt = kb %>%
-      filter(!is.na(kb[kolonne])) %>%
+    kb_utsnitt = kodebok %>%
+      filter(!is.na(kodebok[kolonne])) %>%
       select(variabel_id, kolonne) %>%
       rename(varnamn = "variabel_id")
     # rename funksjonen støtter ikke expressions.
@@ -80,14 +80,14 @@ lag_regelsett = function(kb, oblig = TRUE) {
     kb_utsnitt
   }
 
-  kb_min = kb_filter(kb, "min")
-  kb_maks = kb_filter(kb, "maks")
-  kb_des = kb_filter(kb, "desimalar")
-  kb_oblig = kb_filter(kb, "obligatorisk") %>%
+  kb_min = kb_filter(kodebok, "min")
+  kb_maks = kb_filter(kodebok, "maks")
+  kb_des = kb_filter(kodebok, "desimalar")
+  kb_oblig = kb_filter(kodebok, "obligatorisk") %>%
     filter(gverdi == "ja")
 
   # trenger 4 filter for kodeboka for ulike typer variabel
-  kb_rename = kb %>%
+  kb_rename = kodebok %>%
     rename(varnamn = "variabel_id") # bruker denne lenger nede også
   kb_kat = kb_rename %>%
     filter(variabeltype == "kategorisk") %>%
@@ -185,21 +185,22 @@ lag_regelsett = function(kb, oblig = TRUE) {
   #------------------------------------------kategoriske verdier----------------------------------------
 
   # Lager "rules" som sier at verdiene til kategoriske variabler må være tilstede i kodeboka
-  kb_kat_kompakt = kb_kat %>%
-    nest(gverdi)
-  sjekk_kat = kb_kat_kompakt %>%
-    pmap(function(varnamn, data) {
-      gverdi = data$gverdi
-      new_function(
-        alist(df = ),
-        expr(transmute_at(df, vars(foo = !!varnamn), rules(gyl_kat = . %in% !!gverdi | is.na(.))))
-      )
-    }) %>%
-    setNames(paste0("kat_", kb_kat_kompakt$varnamn))
+  if (nrow(kb_kat) != 0) {
+    kb_kat_kompakt = kb_kat %>%
+      nest(gverdi)
+    sjekk_kat = kb_kat_kompakt %>%
+      pmap(function(varnamn, data) {
+        gverdi = data$gverdi
+        new_function(
+          alist(df = ),
+          expr(transmute_at(df, vars(foo = !!varnamn), rules(gyl_kat = . %in% !!gverdi | is.na(.))))
+        )
+      }) %>%
+      setNames(paste0("kat_", kb_kat_kompakt$varnamn))
 
-  # lager en cell-pack med verdi-sjekkene
-  kat_er_innfor_verdier = cell_packs(sjekk_kat)
-
+    # lager en cell-pack med verdi-sjekkene
+    kat_er_innfor_verdier = cell_packs(sjekk_kat)
+  }
   #-----------------------------------------variabeltype--------------------------------------------------------
 
   # lager en liste for å få inn regler avhengig av hvilke som eksisterer i kodeboka
@@ -252,21 +253,20 @@ lag_regelsett = function(kb, oblig = TRUE) {
   # Test sjekker at alle variablenavn i datadump er med i kodeboka (samtidig)
   # og at alle varibelnavn i kodebok er med i datadump
   alle_var_er_med = data_packs(
-    sjekk_alle_varnavn_dd = . %>% summarise(all(alle_varnavn = names(.) %in% (kb %>% distinct(variabel_id))$variabel_id)),
-    sjekk_alle_varnavn_kb = . %>% summarise(all(alle_varnavn = (kb %>% distinct(variabel_id))$variabel_id %in% names(.)))
+    sjekk_alle_varnavn_dd = . %>% summarise(all(alle_varnavn = names(.) %in% (kodebok %>% distinct(variabel_id))$variabel_id)),
+    sjekk_alle_varnavn_kb = . %>% summarise(all(alle_varnavn = (kodebok %>% distinct(variabel_id))$variabel_id %in% names(.)))
   )
 
   #-------------------------------------lik rekkefølge på variabelnavn som i kodebok----------------------------------
 
   # sjekk at rekkefølgen på kolonner er lik mellom data og kodebok
   er_lik_rekkefolge = data_packs(
-    sjekk_rekkefolge = . %>% summarise(rekkefolge_varnavn = identical(names(.), (kb %>% distinct(variabel_id))$variabel_id))
+    sjekk_rekkefolge = . %>% summarise(rekkefolge_varnavn = identical(names(.), (kodebok %>% distinct(variabel_id))$variabel_id))
   )
 
   regelsett = list(
     er_innfor_min_og_maks,
     har_riktig_ant_des,
-    kat_er_innfor_verdier,
     er_riktig_variabeltype,
     alle_var_er_med,
     er_lik_rekkefolge
@@ -275,15 +275,17 @@ lag_regelsett = function(kb, oblig = TRUE) {
   if (oblig) {
     regelsett = c(regelsett, list(oblig_har_ingen_missing))
   }
-
+  if (nrow(kb_kat) > 0) {
+    regelsett = c(regelsett, list(kat_er_innfor_verdier))
+  }
   # returnerer lista
   regelsett
 }
 
 # Returner sann viss og berre viss datadumpen er gyldig
 # er reglane som følgjer frå kodeboka
-dd_er_gyldig = function(df, kb, ...) {
-  regelsett = lag_regelsett(kb, ...)
+dd_er_gyldig = function(df, kodebok, ...) {
+  regelsett = lag_regelsett(kodebok, ...)
   test_res = df %>%
     expose(regelsett)
 
