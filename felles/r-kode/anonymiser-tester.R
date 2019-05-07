@@ -54,12 +54,22 @@ test_that("Funksjonen skal gi advarsel ved ukjente ID-er (utenom NA-ID-er)", {
 
 # Test som skal gi feilmelding dersom like ID-er fra ulike skjemaer får ulike anonymiserte ID-er
 test_that("Funksjonen skal gi feilmeldig dersom like ID-er fra ulike skjemaer får ulike anonymiserte ID-er", {
+  anonymiser_mittreg = lag_ano_funk(pas_ids)
   expect_that(
-    anyNA(match(
-      match(anonymiser_mittreg_1(pas_ids_hofteop), anonymiser_mittreg_1(pas_ids_kneop)),
-      match(anonymiser_mittreg_1(pas_ids_hofteop), anonymiser_mittreg_1(pas_ids_kneop))
-    )),
-    equals(FALSE)
+    match(pas_ids_hofteop, pas_ids_kneop),
+    equals(match(anonymiser_mittreg(pas_ids_hofteop), anonymiser_mittreg(pas_ids_kneop)))
+  )
+  expect_that(
+    match(pas_ids_kneop, pas_ids_hofteop),
+    equals(match(anonymiser_mittreg(pas_ids_kneop), anonymiser_mittreg(pas_ids_hofteop)))
+  )
+  expect_that(
+    match(pas_ids_hofteop_na, pas_ids_kneop),
+    equals(match(anonymiser_mittreg(pas_ids_hofteop_na), anonymiser_mittreg(pas_ids_kneop)))
+  )
+  expect_that(
+    match(pas_ids_kneop, pas_ids_hofteop_na),
+    equals(match(anonymiser_mittreg(pas_ids_kneop), anonymiser_mittreg(pas_ids_hofteop_na)))
   )
 })
 
@@ -78,9 +88,6 @@ lag_ano_funk_2 = function(x) {
     sample(10 * y)
   }
 }
-
-anonymiser_mittreg_1 = lag_ano_funk_1(pas_ids)
-anonymiser_mittreg_2 = lag_ano_funk_2(pas_ids)
 
 
 
