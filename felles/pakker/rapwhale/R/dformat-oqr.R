@@ -24,6 +24,7 @@ NULL
 # Utdata:
 #   kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar
 #
+#' @export
 les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixme: Validering av kodebok?
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
@@ -319,6 +320,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
 # Utdata:
 #   R-datasett for det aktuelle skjemaet, med variabelnamn gjort om til små bokstavar.
 #
+#' @export
 les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kodebok = NULL,
                       valider_kb = is.null(kodebok), valider_dd = TRUE) {
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
