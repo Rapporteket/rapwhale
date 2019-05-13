@@ -1,21 +1,9 @@
 # Lesing/tolking av det elendige kodebokformatet til MRS :(
 
-
-# Oppsett -----------------------------------------------------------------
-
-# Ikkje gjer om tekst til faktorar automatisk
-options(stringsAsFactors = FALSE)
-
-# Nødvendige pakkar
-library(tidyverse) # Ymse nyttige pakkar
-library(readxl) # Lesing av Excel-filer
-library(stringr) # Tekstmassering
-library(magrittr) # Funksjonar som kan brukast med røyr-operatoren
-library(rlang) #
-library(lubridate) # Datohåndtering
-
-# henter funksjon for å lage kodebok til kanonisk form + kodebok valider
-source("h:/kvalreg/felles/r-kode/kodebok-valider.R", encoding = "UTF-8")
+#' @importFrom magrittr %>%
+#' @importFrom lubridate as_date
+#' @importFrom stringr str_c
+#' @import dplyr
 
 # Lag standardisert kodebok -----------------------------------------------
 
@@ -48,17 +36,17 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   kb_mrs_koltyper = rep("text", 6)
 
   # henter inn excel-ark navn
-  ark = excel_sheets(adresse_kb)
+  ark = readxl::excel_sheets(adresse_kb)
 
   # funksjon for å hente inn alle ark og sette dem 1 objekt, med skjema_id lik ark-navnet
   les_excel_ark = function(ark_id) {
-    read_excel(adresse_kb, col_types = kb_mrs_koltyper, sheet = ark_id) %>%
+    readxl::read_excel(adresse_kb, col_types = kb_mrs_koltyper, sheet = ark_id) %>%
       mutate(skjema_id = !!ark_id)
   }
 
   # henter inn kodebok
   kb_mrs = ark %>%
-    map_df(les_excel_ark)
+    purrr::map_df(les_excel_ark)
 
   # ark-navnene er horrible. De er avkuttede versjoner av menneskelig-vennlige skjemanavn
   # De samsvarer ikke med skjemanavnet slik det er skrevet i filnavnet til datadumpen
@@ -68,7 +56,7 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   # og en kolonne for skjema_id-ene i filnavnene til datadumpene, slik at vi vet hvilken som samsvarer med hvilken.
   # Denne er laget på forhånd, manuelt, men skal alltid legges i den nyeste mappen med datadumper v/ ny innhenting av data.
   adresse_skjema_id = paste0(mappe_dd, "/", dato, "/skjema_id_kobling.csv")
-  d_skjema_id = read_delim(
+  d_skjema_id = readr::read_delim(
     adresse_skjema_id,
     delim = ";",
     locale = locale(encoding = "windows-1252"),
@@ -135,7 +123,7 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   # tilsvarande vanskelege måtar
   kodebok_utg = tibble(
     skjema_id = kb_mrs$skjema_id[ind_nyvar],
-    variabel_id = kb_mrs$Variabelnavn[ind_nyvar] %>% str_replace(".*\\.", ""),
+    variabel_id = kb_mrs$Variabelnavn[ind_nyvar] %>% stringr::str_replace(".*\\.", ""),
     variabeletikett = kb_mrs$Feltnavn[ind_nyvar], # Berre forklaring for *enkelte* variablar, men er det beste me har …
     variabeltype = vartype_mrs_standard$type_standard[match(kb_mrs$Felttype[ind_nyvar], vartype_mrs_standard$type_mrs)],
     obligatorisk = "nei",
@@ -156,8 +144,8 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   # Hent ut kodane og tilhøyrande tekst til alle Enum/Enkeltvalg-variablane
   enums = kb_mrs %>%
     filter(is.na(Felttype)) %>%
-    extract2("Mulige verdier") %>%
-    str_split_fixed(" = ", n = 2)
+    pull(`Mulige verdier`) %>%
+    stringr::str_split_fixed(" = ", n = 2)
 
   # Legg kodane inn i den nye kodeboka,
   # med rett format (heiltal for kodar
@@ -334,11 +322,11 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
 
   # Les inn datasettet
   kol_typar = str_c(spek_innlesing$csv_bokstav, collapse = "")
-  lokale_mrs = locale(
+  lokale_mrs = readr::locale(
     decimal_mark = ",", grouping_mark = "",
     date_format = "%d.%m.%Y", time_format = "%H:%M:%S"
   )
-  d = read_delim(adresse_dd,
+  d = readr::read_delim(adresse_dd,
     delim = ";", quote = "\"", trim_ws = FALSE, na = "",
     col_names = spek_innlesing$variabel_id, col_types = kol_typar, skip = 1, # Hopp over overskriftsrada
     locale = lokale_mrs
@@ -398,7 +386,7 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
     filter(variabeltype == "dato_kl") %>%
     pull(variabel_id)
   d = d %>%
-    mutate_at(tid_var, parse_datetime, format = "%d.%m.%Y %H:%M:%S")
+    mutate_at(tid_var, readr::parse_datetime, format = "%d.%m.%Y %H:%M:%S")
 
   # Fila har (ved ein feil) ekstra semikolon på slutten, som fører
   # til ekstra kolonne som har tomt namn (men får prefikset mrs_).
