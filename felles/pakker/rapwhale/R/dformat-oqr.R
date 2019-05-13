@@ -3,6 +3,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom lubridate as_date
 #' @importFrom stringr str_c str_to_lower
+#' @importFrom readr col_character col_integer
 #' @import dplyr
 NULL
 
@@ -38,10 +39,10 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
     mappe_dd, "\\", dato, "\\",
     reg_id, "_klokeboken.csv_", format(dato, "%d.%m.%Y"), ".csv"
   )
-  kodebok_oqr_format = readr::stop_for_problems(read_delim(
+  kodebok_oqr_format = readr::stop_for_problems(readr::read_delim(
     adresse_kb,
     delim = ";", quote = "\"",
-    col_types = cols(
+    col_types = readr::cols(
       skjemanavn = col_character(),
       navn_i_rapporteket = col_character(),
       ledetekst = col_character(),
