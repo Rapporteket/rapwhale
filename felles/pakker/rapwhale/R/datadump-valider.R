@@ -1,35 +1,14 @@
 # datavalideringsskript
 
-# nødvendige pakker
-library(tidyverse)
-library(ruler) # pakke for validering
-library(rlang)
+#' @importFrom magrittr %>%
+#' @importFrom purrr pmap
+#' @importFrom tidyr nest
+#' @importFrom rlang expr
+#' @importFrom ruler cell_packs rules col_packs data_packs get_report expose
+#' @import dplyr
+#' @import purrr
 
-# lager fiktivt datasett som inneholder
-# en del feil som skal oppdages i valider_datadump-funksjonen
-
-# d = tribble(
-#   ~pasid, ~kjonn, ~alder, ~vekt, ~frisk,
-#   11,     0,      16.23,     30,    TRUE,
-#   12,     1,        22,     50,    FALSE,
-#   13,     1,       -14,    60,    FALSE,
-#   14,     NA,       80,     70.7,  TRUE,
-#   15,     3,       900,    1000,  NA
-#   )
-
-# lager en fiktiv kodebok som hører til det fiktive datasettet
-
-# kb = tribble(
-#   ~variabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
-#   "pasid", "tekst", NA, NA, TRUE, NA, NA, NA,
-#   "alder", "numerisk", 18,  NA, TRUE,       0,     NA,         NA,
-#   "vekt", "numerisk", 45, 200, TRUE,        0, NA, NA,
-#   "kjonn", "kategorisk", NA, NA, TRUE, NA, 0, "kvinne",
-#   "kjonn", "kategorisk", NA, NA, TRUE, NA, 1, "mann",
-#   "frisk", "boolsk", NA, NA, TRUE, NA, NA, NA
-#   )
-
-#---------------------------------------------------------Tester--------------------------------------------------------------
+NULL
 
 # Funksjon for å lage regler basert på informasjon
 # fra kodeboka. Krever en kodebok (kb)
@@ -48,7 +27,7 @@ lag_regelsett = function(kodebok, oblig = TRUE) {
   if (!all(nodvar %in% kol)) {
     manglende_nodvar = which(!nodvar %in% kol)
     kb_mangler = nodvar[manglende_nodvar]
-    stop(paste0("Kodeboka mangler obligatoriske kolonner: ", str_c("'", kb_mangler, "'", collapse = ", "), "."))
+    stop(paste0("Kodeboka mangler obligatoriske kolonner: ", stringr::str_c("'", kb_mangler, "'", collapse = ", "), "."))
   }
 
   # Stopp hvis variabel_id eller variabeltype mangler verdi
