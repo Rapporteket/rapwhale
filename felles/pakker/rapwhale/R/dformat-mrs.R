@@ -18,7 +18,7 @@ NULL
 #
 # Utdata: kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar
 #
-
+#' @export
 les_kb_mrs = function(mappe_dd, dato = NULL) {
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
@@ -193,6 +193,7 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
 #
 # Utdata:
 #   R-datasett for det aktuelle skjemaet
+#' @export
 les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebok = NULL) {
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
