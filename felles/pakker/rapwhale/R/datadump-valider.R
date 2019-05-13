@@ -4,7 +4,7 @@
 #' @importFrom purrr pmap
 #' @importFrom tidyr nest
 #' @importFrom rlang expr new_function
-#' @importFrom ruler cell_packs rules col_packs data_packs get_report expose any_breaker
+#' @importFrom ruler cell_packs rules col_packs data_packs any_breaker
 #' @import dplyr
 #' @import purrr
 NULL
@@ -262,14 +262,15 @@ lag_regelsett = function(kodebok, oblig = TRUE) {
 
 # Returner sann viss og berre viss datadumpen er gyldig
 # er reglane som følgjer frå kodeboka
+#' @export
 dd_er_gyldig = function(df, kodebok, ...) {
   regelsett = lag_regelsett(kodebok, ...)
   test_res = df %>%
-    expose(regelsett)
+    ruler::expose(regelsett)
 
   # Sjekk om det var noen feil + generer feilrapport
   er_gyldig = !any_breaker(test_res)
-  rapport = get_report(test_res)
+  rapport = ruler::get_report(test_res)
 
   # Returner gyldighetsstatus + feilrapport
   attr(er_gyldig, "rapport") = rapport
