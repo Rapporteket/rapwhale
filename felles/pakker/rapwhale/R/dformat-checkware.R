@@ -1,19 +1,4 @@
-# Dette skal være eit R-skript med ein funksjon for lesing av CheckWare-data og kodebok.
-#
-# Innlesingsfunksjonen bør ta inn:
-#
-# - Ei mappeadresse, der mappa inneheld kodebok og tilhøyrande datadumpfiler.
-# - Ein skjema-ID, som tilsvarer skjema-ID-en i kodeboka og filnamnet til datadumpen (men utan .csv).
-# - og returnera ein R-tibble (eller ein feil dersom ting ikkje er i orden).
-#
-# Internt lastar funksjonen inn tilhøyrande kodebok og brukar denne for å lesa tilhøyrande datadumpfil.
-# (Internt kan det vera to funksjonar, ein for lesing av kodeboka, jf. kode i h:\kvalreg\rehabiliteringsregisteret
-# og ein for lesing av datadumpfila gitt ein kodebok-tibble på kanonisk form).
-#
-# Funksjonen bør òg sjekka at kodeboka er gyldig (før bruk)
-# og at datadumpen er gyldig (etter importering),
-# og gje feilmelding (ikkje åtvaring) dersom ikkje.
-# Det bør vera mogleg å slå av desse sjekkane, men dei må vera på som standard.
+# Dette er eit R-skript med ein funksjon for lesing av CheckWare-data og kodebok.
 
 #---------------------------innhenting av pakker og funksjoner--------------------------------
 
@@ -286,7 +271,6 @@ les_dd_checkware = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, va
       stop("Datadumpen er ikke gyldig. Se feilene over.")
     }
   }
-  names(d)
   # returner dataene
   d
 }
