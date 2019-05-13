@@ -2,11 +2,10 @@
 #
 # Sjå fila kodebok-fyll-kravspek.pdf for detaljert kravspek for implementasjon
 
-# Nødvendige pakkar
-library(tidyverse)
-library(testthat)
-library(stringr)
-library(purrr)
+#' @importFrom magrittr %>%
+#' @importFrom stringr str_c
+#' @import dplyr
+NULL
 
 # Definisjon av funksjon
 kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
@@ -18,7 +17,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
 
   # Sjå vidare berre på kategoriske variablar (dersom kodeboka
   # har informasjon om kva som er kategoriske variablar)
-  if (has_name(kb, "variabeltype")) {
+  if (tibble::has_name(kb, "variabeltype")) {
     kb = kb %>%
       filter(variabeltype == "kategorisk")
   }
@@ -46,7 +45,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
       warning("Kodeboka inneheld ingen variablar som finst i datasettet.")
     }
   } else {
-    vnamn_kb = map_chr(arg, quo_name) # Tilsvarande namn i kodeboka
+    vnamn_kb = purrr::map_chr(arg, quo_name) # Tilsvarande namn i kodeboka
   }
 
   # Feilmeldingar eller åtvaringar dersom datasettet og/eller
