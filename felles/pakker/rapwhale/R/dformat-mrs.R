@@ -4,6 +4,8 @@
 #' @importFrom lubridate as_date
 #' @importFrom stringr str_c
 #' @import dplyr
+#'
+NULL
 
 # Lag standardisert kodebok -----------------------------------------------
 
