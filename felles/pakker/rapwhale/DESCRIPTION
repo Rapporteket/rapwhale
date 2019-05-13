@@ -14,8 +14,13 @@ License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: TRUE
 Imports:
+    dplyr,
+    tidyr,
+    magrittr,
     purrr,
     tibble,
     haven,
-    rlang
-RoxygenNote: 6.1.0
+    rlang,
+    ruler,
+    testthat
+RoxygenNote: 6.1.1
