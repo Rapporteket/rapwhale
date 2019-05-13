@@ -7,7 +7,6 @@
 #' @importFrom ruler cell_packs rules col_packs data_packs get_report expose
 #' @import dplyr
 #' @import purrr
-
 NULL
 
 # Funksjon for å lage regler basert på informasjon
