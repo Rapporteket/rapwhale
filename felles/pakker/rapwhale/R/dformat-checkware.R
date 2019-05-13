@@ -25,7 +25,7 @@ NULL
 # dato: hvis man ønsker å hente kodebok fra en spesifikk dato. Hvis ikke hentes dette fra nyeste dato. Default til NULL.
 # validering: Om man ønsker å validere kodeboka ja/nei (TRUE/FALSE).
 #             Hvis man ønsker å ikke validere kodebok med kb_er_gyldig, kan man sette denne til FALSE. Default er TRUE.
-
+#' @export
 les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
@@ -114,7 +114,7 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
 # Utdata:
 #   R-datasett for det aktuelle skjemaet, med variabelnamn gjort om til ønnskede, tilsvarende verdier funnet i kodeboka.
 #   (I stedet for Q1, Q2, Q3 osv. som CheckWare ofte oppgir)
-
+#' @export
 les_dd_checkware = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, valider_dd = TRUE, valider_kb = TRUE) {
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
