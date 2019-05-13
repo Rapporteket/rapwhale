@@ -3,8 +3,8 @@
 #' @importFrom magrittr %>%
 #' @importFrom purrr pmap
 #' @importFrom tidyr nest
-#' @importFrom rlang expr
-#' @importFrom ruler cell_packs rules col_packs data_packs get_report expose
+#' @importFrom rlang expr new_function
+#' @importFrom ruler cell_packs rules col_packs data_packs get_report expose any_breaker
 #' @import dplyr
 #' @import purrr
 NULL
