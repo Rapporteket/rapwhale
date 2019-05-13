@@ -1,19 +1,10 @@
 # Innlesing av kodebøker og datadumpar frå OQR.
 
-# Oppsett -----------------------------------------------------------------
-
-# Ikkje gjer om tekst til faktorar automatisk
-options(stringsAsFactors = FALSE)
-
-# Nødvendige pakkar
-library(tidyverse) # Ymse standardpakkar
-library(lubridate) # Datohandtering
-library(stringr) # Tekstmassering
-library(readr) # For innlesing av CSV-filer
-
-# Funksjonar for validering av kodebøker og datadumpar
-source("h:/kvalreg/felles/r-kode/kodebok-valider.R", encoding = "utf-8")
-
+#' @importFrom magrittr %>%
+#' @importFrom lubridate as_date
+#' @importFrom stringr str_c str_to_lower
+#' @import dplyr
+NULL
 
 # Les inn kodebok og gjer om til standardformat ---------------------------
 
@@ -201,9 +192,9 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
     kb_utvida
   }
   kodebok = kodebok %>%
-    nest(-skjema_id, -skjemanamn) %>%
-    mutate(data = map(data, legg_til_ekstravar)) %>%
-    unnest()
+    tidyr::nest(-skjema_id, -skjemanamn) %>%
+    mutate(data = purrr::map(data, legg_til_ekstravar)) %>%
+    tidyr::unnest()
 
   # fixme: Sjekk at verdiane til variablane faktiske er *like* på alle tabellane
   # Det er ein føresetnad for at det nedanfor skal fungera. Viss for eksempel
@@ -276,7 +267,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
   # Men sorterer *ikkje* alfabetisk, sidan den naturlege rekkjefølgja
   # ofte er meir logisk.
   kodebok = kodebok %>%
-    arrange(fct_inorder(skjema_id))
+    arrange(forcats::fct_inorder(skjema_id))
 
   # Sjekk eventuelt at kodeboka er gyldig
   if (valider_kb) {
@@ -428,12 +419,12 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
   # Les inn datasettet
   kol_typar = str_c(spek_innlesing$csv_bokstav, collapse = "")
   adresse_dd = paste0(mappe_dd, "\\", dato, "\\", reg_id, "_", skjema_id, "_datadump.csv_", format(dato, "%d.%m.%Y"), ".csv")
-  oqr_lokale = locale(
+  oqr_lokale = readr::locale(
     decimal_mark = ".", grouping_mark = "",
     date_format = "%Y-%m-%d", time_format = "%H:%M:%S",
     tz = "Europe/Oslo"
   ) # Vert brukt både her og seinare
-  d = read_delim(adresse_dd,
+  d = readr::read_delim(adresse_dd,
     delim = ";", quote = "", trim_ws = FALSE, na = "",
     escape_double = FALSE, quoted_na = TRUE,
     col_names = spek_innlesing$variabel_id, col_types = kol_typar,
@@ -505,7 +496,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
   #        lenger oppe som også handlar om dette)
   vars_datokl = spek_innlesing$variabel_id[spek_innlesing$variabeltype == "dato_kl"]
   d = d %>%
-    mutate_at(vars_datokl, parse_datetime,
+    mutate_at(vars_datokl, readr::parse_datetime,
       format = "%Y-%m-%d %H:%M:%OS",
       locale = oqr_lokale
     )
