@@ -8,6 +8,7 @@
 NULL
 
 # Definisjon av funksjon
+#' @export
 kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
 
   # Stopp viss kodeboka ikkje inneheld dei tre nødvendige kolonnane
