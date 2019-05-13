@@ -19,7 +19,6 @@
 
 #' @importFrom magrittr %>%
 #' @import dplyr
-#'
 NULL
 
 # Les inn kodebok og gjer om til standardformat ---------------------------
