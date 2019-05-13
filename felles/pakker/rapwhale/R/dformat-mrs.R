@@ -22,7 +22,7 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
-    dato = dir(mappe_dd, pattern = "[0-9]{4}-[0-1][0-9]-[0-9]{2}", full.names = FALSE) %>%
+    dato = dir(mappe_dd, pattern = "^[0-9]{4}-[0-1][0-9]-[0-9]{2}$", full.names = FALSE) %>%
       sort() %>%
       last()
   }
