@@ -1,11 +1,12 @@
 # Valider kodebok (som skal vera på vårt standardformat)
 
-# Les inn nødvendige pakkar
-library(tidyverse)
-library(stringr)
-library(readxl)
-library(rlang)
-library(purrr)
+#' @importFrom rlang enquo quo_text quos quo_name
+#' @importFrom magrittr %>%
+#' @importFrom stringr str_c
+#' @importFrom tidyr nest
+#' @importFrom purrr walk map_lgl
+#' @import dplyr
+NULL
 
 # Gjer kodeboka om til kanonisk form, dvs. slik at
 # implisitte verdiar er fylde ut.
@@ -208,7 +209,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   kb_stdkols = kb_glissen[std_namn]
 
   # Sjekk at variabelformatet (tal, tekst, dato osv.) er rett
-  format_std = tribble(
+  format_std = tibble::tribble(
     ~kol_namn, ~kol_klasse_std,
     "skjema_id", "character",
     "skjemanamn", "character",
@@ -234,7 +235,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
     "logikk", "character",
     "kommentar", "character"
   )
-  format_kb = tibble(kol_namn = names(kb_stdkols), kol_klasse = map_chr(kb_stdkols, ~ class(.x)[1]))
+  format_kb = tibble(kol_namn = names(kb_stdkols), kol_klasse = purrr::map_chr(kb_stdkols, ~ class(.x)[1]))
   format = left_join(format_std, format_kb, by = "kol_namn")
   format_feil = format %>%
     filter(kol_klasse_std != kol_klasse)
@@ -681,6 +682,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
 #
 # # Lesing frå Excel gjev ikkje automatisk rett variabeltype
 # # til alle kolonnar, så fiks dette manuelt
+# library(readxl)
 # kb_test$verdi = as.character(kb_test$verdi)
 # kb_test$desimalar = as.integer(kb_test$desimalar)
 #
