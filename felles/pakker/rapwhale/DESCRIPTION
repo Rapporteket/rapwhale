@@ -22,5 +22,7 @@ Imports:
     haven,
     rlang,
     ruler,
+    lubridate,
+    stringr,
     testthat
 RoxygenNote: 6.1.1
