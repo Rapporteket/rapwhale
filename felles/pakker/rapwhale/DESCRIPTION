@@ -27,5 +27,6 @@ Imports:
     readxl,
     readr,
     forcats,
+    glue,
     testthat
 RoxygenNote: 6.1.1
