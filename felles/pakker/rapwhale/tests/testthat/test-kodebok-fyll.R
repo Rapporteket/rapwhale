@@ -1,13 +1,6 @@
 # Testar for kb_fyll()-funksjonen, jf. kravspekken
-
-
-# Innlasting av pakkar og datasett ----------------------------------------
-
-# Nødvendige pakkar
-library(tibble)
-library(dplyr)
-library(magrittr)
-library(testthat)
+context("Kodebok fyll")
+library(rapwhale)
 
 # Eksempeldatasett
 d = tribble(
