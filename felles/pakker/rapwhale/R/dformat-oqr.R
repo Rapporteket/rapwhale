@@ -38,7 +38,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
     mappe_dd, "\\", dato, "\\",
     reg_id, "_klokeboken.csv_", format(dato, "%d.%m.%Y"), ".csv"
   )
-  kodebok_oqr_format = stop_for_problems(read_delim(
+  kodebok_oqr_format = readr::stop_for_problems(read_delim(
     adresse_kb,
     delim = ";", quote = "\"",
     col_types = cols(
@@ -431,7 +431,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
     skip = 1, # Hopp over overskriftsrada
     locale = oqr_lokale
   )
-  stop_for_problems(d) # Stopp viss det er nokon som helst problem med fila/innlesinga
+  readr::stop_for_problems(d) # Stopp viss det er nokon som helst problem med fila/innlesinga
 
   # Filtrer vekk skjema som ikkje har rett statusvariabel
   # (som standard vert berre ferdigstilte skjema tekne med)
