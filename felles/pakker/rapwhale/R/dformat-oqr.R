@@ -5,7 +5,6 @@
 #' @importFrom stringr str_c str_to_lower
 #' @importFrom readr col_character col_integer
 #' @import dplyr
-#' @import rlang
 NULL
 
 # Les inn kodebok og gjer om til standardformat ---------------------------
