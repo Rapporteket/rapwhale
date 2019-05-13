@@ -3,7 +3,7 @@
 #' @importFrom rlang enquo quo_text quos quo_name
 #' @importFrom magrittr %>%
 #' @importFrom stringr str_c
-#' @importFrom tidyr nest
+#' @importFrom tidyr nest fill
 #' @importFrom purrr walk map_lgl
 #' @import dplyr
 NULL
