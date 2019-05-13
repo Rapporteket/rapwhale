@@ -22,12 +22,6 @@ library(magrittr) # pipe-funksjon
 library(readxl)
 library(lubridate)
 
-# henter funksjon for å lage kodebok til kanonisk form + kodebok valider
-source("h:/kvalreg/felles/r-kode/kodebok-valider.R", encoding = "UTF-8")
-
-# henter funksjon for å validere datadump
-source("h:/kvalreg/felles/r-kode/datadump-valider.R", encoding = "UTF-8")
-
 # Les inn kodebok og gjer om til standardformat ---------------------------
 
 # Les inn OQR-kodebok på dokumentert format og
