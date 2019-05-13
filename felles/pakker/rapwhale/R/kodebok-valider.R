@@ -2,7 +2,7 @@
 
 #' @importFrom rlang enquo quo_text quos quo_name
 #' @importFrom magrittr %>%
-#' @importFrom stringr str_c
+#' @importFrom stringr str_c str_detect
 #' @importFrom tidyr nest fill
 #' @importFrom purrr walk map_lgl
 #' @import dplyr
@@ -304,7 +304,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
     varid_tekst = quo_name(enquo(varid))
     nest_cols = setdiff(names(df), gruppe_tekst)
     df_grupper = df %>%
-      nest_(key_col = "data", nest_cols = nest_cols) # fixme: Byt til quasi-quotation, dvs. «-!!gruppe» når det er støtta i dplyr
+      tidyr::nest_(key_col = "data", nest_cols = nest_cols) # fixme: Byt til quasi-quotation, dvs. «-!!gruppe» når det er støtta i dplyr
 
     ikkjeunike = df_grupper$data %>%
       map_lgl(~ length(unique(.x[[varid_tekst]])) > 1)
@@ -678,11 +678,10 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
 
 # # Eksempeldata for testing
 # mappe = "h:/kvalreg/ablasjonsregisteret/"
-# kb_test = read_excel(paste0(mappe,"kodebok-utkast.xlsx"), sheet = 1)
+# kb_test = readxl::read_excel(paste0(mappe,"kodebok-utkast.xlsx"), sheet = 1)
 #
 # # Lesing frå Excel gjev ikkje automatisk rett variabeltype
 # # til alle kolonnar, så fiks dette manuelt
-# library(readxl)
 # kb_test$verdi = as.character(kb_test$verdi)
 # kb_test$desimalar = as.integer(kb_test$desimalar)
 #
