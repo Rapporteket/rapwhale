@@ -4,7 +4,6 @@
 #' @importFrom lubridate as_date
 #' @importFrom stringr str_c
 #' @import dplyr
-#'
 NULL
 
 # Lag standardisert kodebok -----------------------------------------------
@@ -86,7 +85,7 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   var_nverd[nvars] = nrow(kb_mrs) - ind_nyvar[nvars] # Sistevariabel
 
   # Oversikt over variabeltypar i MRS og tilhøyrande standardnamn som me brukar
-  vartype_mrs_standard = tribble(
+  vartype_mrs_standard = tibble::tribble(
     ~type_mrs, ~type_standard,
     "Enum", "kategorisk",
     "Enkeltvalg", "kategorisk",
@@ -123,7 +122,7 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   #
   # Å finna dei andre verdiane (for eksempel kodar og kodetekst) gjer ein på
   # tilsvarande vanskelege måtar
-  kodebok_utg = tibble(
+  kodebok_utg = tibble::tibble(
     skjema_id = kb_mrs$skjema_id[ind_nyvar],
     variabel_id = kb_mrs$Variabelnavn[ind_nyvar] %>% stringr::str_replace(".*\\.", ""),
     variabeletikett = kb_mrs$Feltnavn[ind_nyvar], # Berre forklaring for *enkelte* variablar, men er det beste me har …
@@ -281,7 +280,7 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
   #
   #        Programmeringsmessig blir anbefalt løysing litt komplisert,
   #        men det skal me få til!
-  spek_csv_mrs = tribble(
+  spek_csv_mrs = tibble::tribble(
     ~variabeltype, ~csv_bokstav,
     "kategorisk", "i",
     "tekst", "c",
