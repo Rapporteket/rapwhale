@@ -146,7 +146,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
   }
 
   # Oversikt over variabeltypar i OQR og tilhøyrande standardnamn som me brukar
-  vartype_oqr_standard = tribble(
+  vartype_oqr_standard = tibble::tribble(
     ~type_oqr, ~type_standard,
     "Listevariabel", "kategorisk",
     "Tekstvariabel", "tekst",
@@ -179,7 +179,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
   # format av Datadump i register.doc»). Desse *burde* vore med kodebøkene,
   # men sidan HNIKT ikkje har klart å leggja dei til, må me gjera det sjølv.
   legg_til_ekstravar = function(kb) {
-    kb_ekstra = tribble(
+    kb_ekstra = tibble::tribble(
       ~variabel_id, ~variabeletikett, ~variabeltype, ~unik, ~obligatorisk, ~desimalar,
       "mceid", "Forløps-ID", "numerisk", "ja", "ja", 0L,
       "centreid", "RESH-ID", "tekst", "nei", "ja", NA,
@@ -392,7 +392,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
     distinct(variabel_id, .keep_all = TRUE)
 
   # Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
-  spek_csv_oqr = tribble(
+  spek_csv_oqr = tibble::tribble(
     ~variabeltype, ~csv_bokstav,
     "kategorisk", "c", # Sjå kommentar nedanfor
     "tekst", "c",
@@ -402,7 +402,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
     "dato", "D",
     "kl", "t"
   )
-  spek_innlesing = tibble(variabel_id = varnamn_kb) %>%
+  spek_innlesing = tibble::tibble(variabel_id = varnamn_kb) %>%
     left_join(kb_info, by = "variabel_id") %>%
     left_join(spek_csv_oqr, by = "variabeltype")
 
