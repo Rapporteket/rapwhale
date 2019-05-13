@@ -218,10 +218,10 @@ les_dd_checkware = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, va
   # Les inn datasettet
   filnamn = paste0(skjema_id, ".csv")
   adresse_dd = paste0(mappe_dd, "/", dato, "/", filnamn)
-  d = stop_for_problems(readr::read_delim(adresse_dd,
+  d = readr::stop_for_problems(readr::read_delim(adresse_dd,
     delim = ";", na = "",
     quote = "\"", trim_ws = FALSE, col_types = kol_typar,
-    locale = locale(
+    locale = readr::locale(
       decimal_mark = ".", grouping_mark = "",
       date_format = "%Y-%m-%d", time_format = "%H:%M:%S"
     )
