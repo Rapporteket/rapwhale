@@ -17,10 +17,8 @@
 
 #---------------------------innhenting av pakker og funksjoner--------------------------------
 
-library(tidyverse) # livsnæring
-library(magrittr) # pipe-funksjon
-library(readxl)
-library(lubridate)
+#' @importFrom magrittr %>%
+#' @import dplyr
 
 # Les inn kodebok og gjer om til standardformat ---------------------------
 
@@ -50,7 +48,7 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
       sort() %>%
       last()
   }
-  dato = as_date(dato) # I tilfelle det var ein tekstreng
+  dato = lubridate::as_date(dato) # I tilfelle det var ein tekstreng
 
   # Adressen til kodeboka
   adresse_kb = paste0(mappe_dd, dato, "/kodebok.xlsx")
@@ -69,7 +67,7 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
   # read_excel har ingen mulighet for å skille "numeric" i forhold til "integer" i col_types spesifikasjonen.
   # vi endrer desimalar manuelt til å være dette for å kunne komme gjennom kb_er_gyldig.
   # standard kodebok er at første ark inneholder informasjon. Vi har ikke satt noe standard for ark-navn.
-  kb = read_excel(adresse_kb, col_types = kb_koltyper, sheet = 1) %>%
+  kb = readxl::read_excel(adresse_kb, col_types = kb_koltyper, sheet = 1) %>%
     mutate(desimalar = as.integer(desimalar))
 
 
@@ -139,7 +137,7 @@ les_dd_checkware = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, va
       sort() %>%
       last()
   }
-  dato = as_date(dato) # I tilfelle det var ein tekstreng
+  dato = lubridate::as_date(dato) # I tilfelle det var ein tekstreng
 
   # Les inn kodeboka dersom ho ikkje er spesifisert
   # her sjekkes også gyldigheten av kodeboka
@@ -214,7 +212,7 @@ les_dd_checkware = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, va
     group_by(variabel_id) %>%
     nest()
   kb_skjema_nest$data = kb_skjema_nest$data %>%
-    map(tekst_eller_heiltall)
+    purrr::map(tekst_eller_heiltall)
   kb_skjema = unnest(kb_skjema_nest)
 
   # vi bruker case_when for å få inn csv_bokstav for variablene
@@ -229,12 +227,12 @@ les_dd_checkware = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, va
   # henter ut variabelnavn og variabeltype
   var_info = kb_skjema %>%
     distinct(variabel_id, variabel_id_checkware, variabeltype, csv_bokstav)
-  kol_typar = str_c(var_info$csv_bokstav, collapse = "")
+  kol_typar = stringr::str_c(var_info$csv_bokstav, collapse = "")
 
   # Les inn datasettet
   filnamn = paste0(skjema_id, ".csv")
   adresse_dd = paste0(mappe_dd, "/", dato, "/", filnamn)
-  d = stop_for_problems(read_delim(adresse_dd,
+  d = stop_for_problems(readr::read_delim(adresse_dd,
     delim = ";", na = "",
     quote = "\"", trim_ws = FALSE, col_types = kol_typar,
     locale = locale(
@@ -257,7 +255,7 @@ les_dd_checkware = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, va
     distinct(variabel_id) %>%
     pull("variabel_id")
   d = d %>%
-    mutate_at(dato_kl_var, parse_datetime, format = "%Y-%m-%d %H:%M:%S")
+    mutate_at(dato_kl_var, readr::parse_datetime, format = "%Y-%m-%d %H:%M:%S")
 
   # I CheckWare vert boolske verdiar koda som "1" for sann og NA for usann.
   # Kodar derfor om til ekte boolske verdiar.
