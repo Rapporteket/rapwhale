@@ -1,16 +1,9 @@
 # Tester for funksjonen lag_regelsett og dd_er_gyldig
 
-#' @importFrom testthat test_that expect_error expect_identical
-#' @import dplyr
-#' @importFrom magrittr %>%
-#' @importFrom purrr pmap
-#' @importFrom tidyr nest
-#' @importFrom rlang expr
-#' @importFrom ruler cell_packs rules col_packs data_packs get_report expose
-#' @import purrr
-
 # lager fiktivt datasett som inneholder
 # en del feil som skal oppdages i valider_datadump-funksjonen
+context("Datadump er gyldig")
+library(rapwhale)
 
 d = dplyr::tribble(
   ~pasid, ~kjonn, ~alder, ~vekt, ~frisk,
