@@ -84,6 +84,7 @@ tema$plot.margin = margin(3, 3, 3, 3)
 # i ggplot2, eks. breaks = breaks_bredde(10)
 # Viss min eller maks er definert, bruk dette
 # i stedet for verdiene fra lims
+#' @export
 breaks_bredde = function(bredde = 5, min = NULL, maks = NULL) {
   function(lims) {
     lims = c(max(min, lims[1]), min(maks, lims[2]))
@@ -102,6 +103,7 @@ breaks_bredde = function(bredde = 5, min = NULL, maks = NULL) {
 #   tekst: teksten i tekstane (berre brukt til å telja kor mange linjer det er)
 #   hoyde: høgda kvar linje tekst tar opp (i grafkoordinatar)
 # Ut: Ny y-koordinat, der tekstane forhåpentlegvis ikkje overlappar (elles: auk hoyde-argumentet)
+#' @export
 flytt_opp = function(y, tekst, hoyde = .015) {
   tekst_ny = tekst[order(y)]
   y = y[order(y)]
@@ -163,6 +165,7 @@ lag_shewhart = function(y, x, antall = NULL, figtype, skriftstorleik = 0.8,
 #   ylab:       tekst på y-aksen (standardverdi: NULL (tom))
 #   angle:      viss sann, vis verdiane på x-aksen på skrå (for å få plass til fleire)
 #   konfint:    Legg til konfidensintervall på kvar punkt
+#' @export
 graf_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab = NULL,
                       angle = TRUE, konfint = TRUE) {
   grafdel = list()
@@ -261,6 +264,7 @@ lag_shewhart_fig = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
 # «grad» seier kor mykje mørkare fargen
 # skal gjerast (so bruk negative verdiar for
 # å gjera han lysare).
+#' @export
 farge_morkare = function(fargar, grad = 5) {
   farge_lab = as(colorspace::hex2RGB(fargar), "LAB")
   farge_lab@coords[, 1] = pmax(farge_lab@coords[, 1] - grad, 0)
@@ -277,7 +281,8 @@ farge_morkare = function(fargar, grad = 5) {
 # farge = fargen på søylene, default er kjedelig SKDE-blå. Kan endres i andre sammenheng
 # facet = boolsk, bestemmer om man skal lage panel på en variabel, TRUE, eller ikke FALSE (default)
 # facet_gruppe = hvilken variabel som skal brukes for å dele på panel, brukes kun hvis facet = TRUE
-# prosent = om y-aksen er en prosent (TRUE) eller ikke (FALSE). Er defaultet som prosent, siden disse er så vanlige.
+# prosent = om y-aksen er en prosent (TRUE) eller ikke (FALSE). Er prosent som standard, siden disse er så vanlige.
+#' @export
 lag_soyle = function(d, x, y, farge = ColPrim[3], facet = FALSE, facet_gruppe = NULL, prosent = TRUE, ...) {
   x_var = syms(x)[[1]]
   y_var = syms(y)[[1]]
