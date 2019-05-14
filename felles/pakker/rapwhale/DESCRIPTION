@@ -21,11 +21,15 @@ Imports:
     haven,
     rlang,
     ruler,
+    ggplot2,
     lubridate,
     stringr,
     readxl,
     readr,
     forcats,
     glue,
+    simpleboot,
+    colorspace,
+    binom,
     testthat
 RoxygenNote: 6.1.1
