@@ -1,0 +1,142 @@
+# Dette skriptet inneholder en rekke funksjoner som er potensielt nyttige
+# (og noen, uunnværlige) i registersammenheng og i andre sammenheng.
+
+# LaTeX-ting --------------------------------------------------------------
+
+# Kopier klassefila me brukar til ein plass LaTeX finn ho,
+# slik at me slepp å ha ein kopi overalt.
+# Sjå https://tex.stackexchange.com/a/1138 for meir informasjon.
+texmappe_rot = system2("kpsewhich", "-var-value=TEXMFHOME", stdout = TRUE)
+texmappe = paste0(texmappe_rot, "/tex/latex/kvalreg/")
+dir.create(texmappe, showWarnings = FALSE, recursive = TRUE)
+invisible(file.copy(
+  from = "h:/kvalreg/felles/latex-klassar/kvalreg-rapport.cls",
+  to = texmappe, overwrite = TRUE, copy.date = TRUE
+))
+
+# LaTeX-/rapportskrivingsfunksjoner ---------------------------------------
+
+### Funksjon for å legge inn tall i en rapport som bruker LaTeX
+
+# Tar inn eit tal x og viser det som \num{x}, som (om nødvendig)
+# legg inn fine mellomrom som tusenskiljeteikn og endrar
+# desimalpunktum til desimalkomma.
+
+# Innargument:
+#   desimalar: talet på desimalar etter komma (rund av og vis så mange desimalar)
+#      tabell: talet vert brukt i ein tabell og skal derfor ha tabelltekst
+#
+# Argumentet «tabell» burde vore unødvendig, men siunitx *insisterer*
+# på å endra skrifta til \textrm, sjølv om eg har slått på alle moglege
+# detect-argument (og prøvd mykje anna, og søkt på nettet etter løysingar
+# (bruk søkeorda «siunitx» og «fontspec»)). Alle andre løysingar eg har
+# funne gjer at anten vert ikkje rett skrift brukt i brødteksten eller så vert
+# ikkje rett tekst brukt i tabellforklaringa eller så vert ikkje rett tekst
+# brukt i sjølve tabellen. (Merk at me brukar ulik skrift i tabell-/
+# figurforklaringa, sjølv om dei begge er Calibri. Ein ser lettast forskjellen
+# ved å studera 1-tala.)
+#
+# Som ei nødløysing har me ordna det slik at me kan manuelt velja at
+# tabellskrifta skal brukast når me kallar num()-funksjonen.
+num = function(x, desimalar, tabell = FALSE) {
+  # Argument til \num-kommandoen
+  arg = NULL
+  if (tabell) {
+    arg = "text-rm=\\tablefont"
+  }
+
+  # Spesialtilpass kommandoen etter talet på desimalar
+  if (!missing(desimalar)) {
+    # \num kan runda av for oss, men rundar av i R
+    # for å sikra avrundinga vert identisk som ved
+    # andre plassar der me ikkje brukar \num.
+    x = round(x, desimalar)
+
+    # Viss me vil ha desimalar, vis *alle* desimalane
+    # (eks. vert både 3.1 og 3.123 vist som 3,1),
+    # også for heiltal (eks. vert 3 vist som 3.0).
+    if (desimalar > 0) {
+      arg = arg %>%
+        append(c(
+          paste0("round-precision=", desimalar),
+          "round-integer-to-decimal=true"
+        ))
+    }
+  }
+  # Legg til argumentliste
+  argtekst = paste0("[", paste0(arg, collapse = ", "), "]")
+
+  # Returner LaTeX-kode for talformatering. Me legg *heile* kommandoen
+  # mellom {} for å hindra problem ved bruk for eksempel inni shortcap-delen
+  # av \caption[shortcap]{longcap} (eventuelle ]-teikn vert elles tolka
+  # til å avslutta shortcap-argumentet, jf. https://tex.stackexchange.com/a/78416)
+  paste0("{\\num", argtekst, "{", format(x, scientific = FALSE), "}}")
+}
+
+
+### Prosent med norsk stavemåte i aksenotasjoner
+
+# fixme: Bør rydda opp i prosentfunksjonane slik at dei alle
+#        tar same argument og elles er meir gjennomtenkte
+#        (krev gjerne endringar i filene som brukar dei).
+#
+# Tar inn eit desimaltal og viser det som prosent,
+# med mellomrom før prosentteiknet (slik det skal vera
+# på norsk), eks. 0.5 --> "50 %", og med komma
+# som desimalteikn. Som standard vert tala viste
+# med éin desimal, men dette kan ein endra ved
+# å spesifisera «accuracy», for eksempel «accuracy = 0.1»
+# for éin desimal eller «accuracy = .05» for å runda av til
+# næraste halve promille. Bruk «accuracy = NULL» for
+# automatisk/«smart» val av desimalar (vanlegvis ikkje tilrådd).
+akse_prosent = function(x, accuracy = 1, decimal.mark = ",", ...) {
+  scales::percent(x,
+    suffix = " %",
+    accuracy = accuracy, decimal.mark = decimal.mark, ...
+  )
+}
+# Liknande funksjon for formatering av prosentverdiar som LaTeX-tekst.
+prosent = function(x, desimalar = 0, tabell = FALSE) {
+  prosent_tekst = x %>%
+    map_chr(~ num(100 * .x, desimalar, tabell = tabell) %>%
+      str_c("\\prosent"))
+  ifelse(is.na(x), "\\textendash{}", prosent_tekst)
+}
+
+# Funksjon som kjeder sammen ord grammatisk riktig.
+# Hvis det er to ord, kjedes det med " og ", f.eks "Per og Kari"
+# Hvis det er flere, kjedes det med ", " bortsett fra siste ord som får " og ", f.eks "Per, Kari og Pål."
+# Tar inn en vektor med ord
+# Returenerer en tekststreng med ett element
+
+# Argumenter:
+# ord - Nødvendig, en vektor med ordene du ønsker å kjede
+# skjeileteikn - Standard er komme ", " men man kan velge noe annet
+# og - Standard er " og " men man kan velge noe annet (f.eks " and ", " och ", " & " eller min personlige favoritt " und ")
+library(stringr)
+kjed_ord = function(ord, skiljeteikn = ", ", og = " og ") {
+
+  # gjør om missing til "NA" som tekststreng
+  ord = str_replace_na(ord)
+
+  # antall ord
+  n = length(ord)
+
+  # hvis det er er ingenting i objektet, returnes...ingenting
+  if (n == 0) {
+    tekst = paste0("")
+    warning("")
+  }
+  if (n == 1) {
+    tekst = ord
+  } # Hvis det er 2 ord, bindes ordene sammen med " og ", men dette kan også endres i argumentet og.
+  # F.eks om du vil bruke &-teignet
+  if (n == 2) {
+    tekst = str_flatten(ord, og)
+  }
+  # hvis det er flere enn 2 ord, bindes ordene sammen med skiljeteiknet, her komma, bortsett fra siste ord som får " og ".
+  if (n > 2) {
+    tekst = paste0(str_flatten(ord[1:n - 1], skiljeteikn), og, ord[n])
+  }
+  tekst
+}
