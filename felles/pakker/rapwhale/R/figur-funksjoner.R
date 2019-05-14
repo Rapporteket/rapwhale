@@ -1,6 +1,7 @@
 # Dette skriptet inneholder en rekke funksjoner som er potensielt nyttige
 # (og noen, uunnværlige) i registersammenheng og i andre sammenheng.
 
+#' @importFrom magrittr %>%
 #' @importFrom colorspace coords
 #' @importFrom rlang enexpr syms
 #' @import ggplot2
