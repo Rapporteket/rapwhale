@@ -55,7 +55,7 @@ round_any = function(x, accuracy, f = round) {
 # «Binomial confidence intervals and contingency tests:
 # mathematical fundamentals and the evaluation of alternative methods», av Sean Wallis, University College London
 #' @export
-ki_bin = function(x, n) {
+regn_ki_bin = function(x, n) {
   ki = binom::binom.wilson(x, n)
   tibble(
     low = pmax(0, ki$lower), # Fiks for at grensene av og til kan gå *bitte litt* utanfor [0,1]
@@ -66,7 +66,7 @@ ki_bin = function(x, n) {
 ### Konfidenstinervall basert på gjennomsnittet til en  kontinuerlig variabel
 # med mulighet for bootstrap lagt inn i funksjonen
 #' @export
-ki_univar = function(x, bootstrap = FALSE, antall, ...) {
+regn_ki_univar = function(x, bootstrap = FALSE, antall, ...) {
   # Hvis det er for få eller for lite varierende
   # observasjoner til å regne ut konfidensintervall,
   # returner NA for konfidensintervallene
@@ -111,7 +111,7 @@ ki_univar = function(x, bootstrap = FALSE, antall, ...) {
 # med mulighet for å gjøre den stor nok til hele siden (wide = TRUE).
 # optional arguments inkluderer colheads=c() og caption = paste0("").
 
-create_ltable = function(dataframe, label, caption, wide = FALSE, ...) {
+lag_tab_latex = function(dataframe, label, caption, wide = FALSE, ...) {
 
   # Viss dataramma ikkje har nokon radar, bryt latex()-funksjonen
   # heilt saman dersom numeric.dollar er FALSE (og det er FALSE
