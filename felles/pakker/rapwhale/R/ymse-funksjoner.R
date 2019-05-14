@@ -110,7 +110,7 @@ ki_univar = function(x, bootstrap = FALSE, antall, ...) {
 # For å lage pene LaTeX-tabeller i et standardisert format for alle årsrapporter,
 # med mulighet for å gjøre den stor nok til hele siden (wide = TRUE).
 # optional arguments inkluderer colheads=c() og caption = paste0("").
-#' @export
+
 create_ltable = function(dataframe, label, caption, wide = FALSE, ...) {
 
   # Viss dataramma ikkje har nokon radar, bryt latex()-funksjonen
