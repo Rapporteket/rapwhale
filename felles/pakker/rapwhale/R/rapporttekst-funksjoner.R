@@ -1,6 +1,9 @@
 # Dette skriptet inneholder en rekke funksjoner som er potensielt nyttige
 # (og noen, uunnværlige) i registersammenheng og i andre sammenheng.
 
+#' @importFrom magrittr %>%
+#' @importFrom stringr str_flatten
+
 # LaTeX-ting --------------------------------------------------------------
 
 # Kopier klassefila me brukar til ein plass LaTeX finn ho,
@@ -98,8 +101,8 @@ akse_prosent = function(x, accuracy = 1, decimal.mark = ",", ...) {
 # Liknande funksjon for formatering av prosentverdiar som LaTeX-tekst.
 prosent = function(x, desimalar = 0, tabell = FALSE) {
   prosent_tekst = x %>%
-    map_chr(~ num(100 * .x, desimalar, tabell = tabell) %>%
-      str_c("\\prosent"))
+    purrr::map_chr(~ num(100 * .x, desimalar, tabell = tabell) %>%
+      stringr::str_c("\\prosent"))
   ifelse(is.na(x), "\\textendash{}", prosent_tekst)
 }
 
@@ -113,11 +116,10 @@ prosent = function(x, desimalar = 0, tabell = FALSE) {
 # ord - Nødvendig, en vektor med ordene du ønsker å kjede
 # skjeileteikn - Standard er komme ", " men man kan velge noe annet
 # og - Standard er " og " men man kan velge noe annet (f.eks " and ", " och ", " & " eller min personlige favoritt " und ")
-library(stringr)
 kjed_ord = function(ord, skiljeteikn = ", ", og = " og ") {
 
   # gjør om missing til "NA" som tekststreng
-  ord = str_replace_na(ord)
+  ord = stringr::str_replace_na(ord)
 
   # antall ord
   n = length(ord)
