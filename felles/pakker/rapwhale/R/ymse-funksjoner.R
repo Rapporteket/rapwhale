@@ -1,5 +1,7 @@
 # Dette skriptet inneholder en rekke funksjoner som er potensielt nyttige
-# (og noen, uunnværlige) i registersammenheng og i andre sammenheng.
+# i registersammenheng og i andre sammenheng.
+# Disse funksjonene tilhører ingen annen kategori,
+# og er ikke flere enn én i samme kategori, derav navnet ymse.
 
 #' @importFrom magrittr %>%
 #' @importFrom stringr str_replace_all
