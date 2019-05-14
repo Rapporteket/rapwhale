@@ -1,6 +1,10 @@
 # Dette skriptet inneholder en rekke funksjoner som er potensielt nyttige
 # (og noen, uunnværlige) i registersammenheng og i andre sammenheng.
 
+#' @importFrom magrittr %>%
+#' @importFrom stringr::str_replace_all
+#' @importFrom tibble tibble
+#' @import dplyr
 
 ### Normaliser variabelnamn til å ha _ som skiljeteikn og berre små bokstavar
 
@@ -8,14 +12,13 @@
 #   c("hopp og.SprettTest", "SykdomsAktivitet.PasientGlobalSykdomsaktivitet") %>% normaliser_varnamn
 #   som gjev
 #   c("hopp_og_sprett_test", "sykdoms_aktivitet_pasient_global_sykdomsaktivitet")
-library(purrr)
 normaliser_varnamn = function(x) {
   teikn = x %>%
-    str_split("") # Splitt i enkeltteikn
+    stringr::str_split("") # Splitt i enkeltteikn
 
   # Putt inn _ før alle store bokstavar (utanom første teikn i strengen)
   teikn = teikn %>%
-    map(~ str_replace_all(., "([[:upper:]])", "_\\1"))
+    purrr::map(~ str_replace_all(., "([[:upper:]])", "_\\1"))
 
   teikn %>%
     map_chr(~ paste0(., collapse = "")) %>% # Slå saman til lange strengar igjen
@@ -46,9 +49,8 @@ round_any = function(x, accuracy, f = round) {
 # Brukar Wilson-intervallet, som anbefalt i
 # «Binomial confidence intervals and contingency tests:
 # mathematical fundamentals and the evaluation of alternative methods», av Sean Wallis, University College London
-library(binom)
 ki_bin = function(x, n) {
-  ki = binom.wilson(x, n)
+  ki = binom::binom.wilson(x, n)
   tibble(
     low = pmax(0, ki$lower), # Fiks for at grensene av og til kan gå *bitte litt* utanfor [0,1]
     high = pmin(1, ki$upper)
@@ -78,8 +80,8 @@ ki_univar = function(x, bootstrap = FALSE, antall, ...) {
         n = sum(!is.na(x))
         snitt = mean(x)
         if ((length(x) > 1) & (sd(x) > 0)) {
-          b = one.boot(x, mean, R = 9999)
-          ki = boot.ci(b, type = "perc")$percent[4:5]
+          b = simpleboot::one.boot(x, mean, R = 9999)
+          ki = simpleboot::boot.ci(b, type = "perc")$percent[4:5]
         } else {
           ki = c(NA, NA)
         }
@@ -104,9 +106,6 @@ ki_univar = function(x, bootstrap = FALSE, antall, ...) {
 # For å lage pene LaTeX-tabeller i et standardisert format for alle årsrapporter,
 # med mulighet for å gjøre den stor nok til hele siden (wide = TRUE).
 # optional arguments inkluderer colheads=c() og caption = paste0("").
-library(Hmisc)
-library(stringr)
-library(magrittr)
 create_ltable = function(dataframe, label, caption, wide = FALSE, ...) {
 
   # Viss dataramma ikkje har nokon radar, bryt latex()-funksjonen
@@ -129,7 +128,7 @@ create_ltable = function(dataframe, label, caption, wide = FALSE, ...) {
       "\\end{table}"
     )
   } else {
-    tabell = capture.output(latex(dataframe,
+    tabell = capture.output(hmisc::latex(dataframe,
       file = "", center = "centering",
       label = label, caption = caption, rowname = NULL,
       where = "htbp", booktabs = TRUE, numeric.dollar = FALSE, ...
