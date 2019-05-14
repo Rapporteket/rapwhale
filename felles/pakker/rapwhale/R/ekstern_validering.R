@@ -1,4 +1,8 @@
 # Skript for å hente ut tilfeldige celler fra datasett til validering.
+# Ymse funksjonar for å laga valideringsdatasett for bruk til
+# ekstern validering av kvalitetsregisterdata. Kan henta ut tilfeldige
+# utval observasjonar og variablar frå datasett og lagra resultatet
+# som SPSS-filer.
 
 #' @importFrom magrittr %>%
 #' @importFrom rlang syms
