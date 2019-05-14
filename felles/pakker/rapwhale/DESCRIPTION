@@ -31,5 +31,6 @@ Imports:
     simpleboot,
     colorspace,
     binom,
+    scales,
     testthat
 RoxygenNote: 6.1.1
