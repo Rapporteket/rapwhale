@@ -2,7 +2,7 @@
 # (og noen, uunnværlige) i registersammenheng og i andre sammenheng.
 
 #' @importFrom magrittr %>%
-#' @importFrom stringr::str_replace_all
+#' @importFrom stringr str_replace_all
 #' @importFrom tibble tibble
 #' @import dplyr
 
