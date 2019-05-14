@@ -1,6 +1,10 @@
 # Dette skriptet inneholder en rekke funksjoner som er potensielt nyttige
 # (og noen, uunnværlige) i registersammenheng og i andre sammenheng.
 
+#' @importFrom colorspace coords
+#' @importFrom rlang enexpr syms
+#' @import ggplot2
+#' @import dplyr
 
 # Fargar og grafinnstillingar/-objekt -------------------------------------
 
@@ -11,7 +15,6 @@ colNoyt = c("#4D4D4D", "#737373", "#A6A6A6", "#DADADA") # Nøytralfarge
 colKontr = "#FF7260" # Kontrastfarge
 
 # ggplot2-tema for figurar
-library(ggplot2)
 if (!exists("skriftstorleik")) { # Skriftstorleik bør vera definert i kvar årsrapportfil
   skriftstorleik = 13
 }
@@ -102,7 +105,7 @@ flytt_opp = function(y, tekst, hoyde = .015) {
   tekst_ny = tekst[order(y)]
   y = y[order(y)]
   linjer = tekst_ny %>%
-    str_split("\n") %>%
+    stringr::str_split("\n") %>%
     sapply(length)
   nedre = y - linjer * hoyde / 2
   ovre = y + linjer * hoyde / 2
@@ -140,7 +143,7 @@ lag_shewhart = function(y, x, antall = NULL, figtype, skriftstorleik = 0.8,
   if (!is.null(gruppe)) { # hvis man ønsker å dele opp panelet i grupper
     tcc_args = append(tcc_args, list(g1 = data[[gruppe]]))
   }
-  do.call(tcc, tcc_args) +
+  do.call(qicharts::tcc, tcc_args) +
     theme(
       axis.title.y = element_text(angle = 0),
       axis.text.x = element_text(angle = 45, vjust = 0.5),
@@ -224,7 +227,7 @@ lag_shewhart_fig = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
   }
 
   # lager grunnplottet med alt som alle shewhart-diagram trenger + eventuelle tilleggsvalg, og ggplot2 tema
-  plot = eval_bare(expr(qic(
+  plot = eval_bare(rlang::expr(qic(
     data = d, y = !!qic_y, n = maybe_missing(!!qic_n), x = !!qic_x, chart = figtype,
     title = tittel, xlab = x_navn, ylab = y_navn, show.labels = FALSE, x.period = periode, facets = ~ (!!qic_facet),
     flip = skal_flippes
@@ -257,9 +260,8 @@ lag_shewhart_fig = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
 # «grad» seier kor mykje mørkare fargen
 # skal gjerast (so bruk negative verdiar for
 # å gjera han lysare).
-library(colorspace)
 farge_morkare = function(fargar, grad = 5) {
-  farge_lab = as(hex2RGB(fargar), "LAB")
+  farge_lab = as(colorspace::hex2RGB(fargar), "LAB")
   farge_lab@coords[, 1] = pmax(farge_lab@coords[, 1] - grad, 0)
   farge_rgb = as(farge_lab, "RGB")
   farge_rgb@coords[] = pmax(farge_rgb@coords, 0)
