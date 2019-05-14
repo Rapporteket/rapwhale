@@ -101,6 +101,7 @@ akse_prosent = function(x, accuracy = 1, decimal.mark = ",", ...) {
   )
 }
 # Liknande funksjon for formatering av prosentverdiar som LaTeX-tekst.
+#' @export
 prosent = function(x, desimalar = 0, tabell = FALSE) {
   prosent_tekst = x %>%
     purrr::map_chr(~ num(100 * .x, desimalar, tabell = tabell) %>%
