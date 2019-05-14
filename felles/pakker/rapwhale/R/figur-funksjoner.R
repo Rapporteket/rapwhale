@@ -85,7 +85,7 @@ tema$plot.margin = margin(3, 3, 3, 3)
 # Viss min eller maks er definert, bruk dette
 # i stedet for verdiene fra lims
 #' @export
-breaks_bredde = function(bredde = 5, min = NULL, maks = NULL) {
+sett_avkutningspunkt_bredde = function(bredde = 5, min = NULL, maks = NULL) {
   function(lims) {
     lims = c(max(min, lims[1]), min(maks, lims[2]))
     seq(round_any(lims[1], bredde, floor),
@@ -166,8 +166,8 @@ lag_shewhart = function(y, x, antall = NULL, figtype, skriftstorleik = 0.8,
 #   angle:      viss sann, vis verdiane på x-aksen på skrå (for å få plass til fleire)
 #   konfint:    Legg til konfidensintervall på kvar punkt
 #' @export
-graf_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab = NULL,
-                      angle = TRUE, konfint = TRUE) {
+lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab = NULL,
+                         angle = TRUE, konfint = TRUE) {
   grafdel = list()
   # Legg ev. til referanselinje(r)
   if (!is.null(refline)) {
@@ -214,7 +214,7 @@ graf_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab = 
 # periode hvilket tidsrom (f.eks "month" eller "2 months", gjelder kun tidsvising)
 # kan velge å legge til tittelen for plottet i tittel, x-aksenavn i x_navn og y-akse-navn i y-akse.
 # krever pakkene tidyverse og qicharts2
-lag_shewhart_fig = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
+lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
                             gruppe = NULL, periode = NULL, x_navn = NULL, y_navn = NULL,
                             tidsvisning = TRUE, ...) {
 
@@ -283,7 +283,7 @@ farge_morkare = function(fargar, grad = 5) {
 # facet_gruppe = hvilken variabel som skal brukes for å dele på panel, brukes kun hvis facet = TRUE
 # prosent = om y-aksen er en prosent (TRUE) eller ikke (FALSE). Er prosent som standard, siden disse er så vanlige.
 #' @export
-lag_soyle = function(d, x, y, farge = ColPrim[3], facet = FALSE, facet_gruppe = NULL, prosent = TRUE, ...) {
+lag_fig_soyle = function(d, x, y, farge = ColPrim[3], facet = FALSE, facet_gruppe = NULL, prosent = TRUE, ...) {
   x_var = syms(x)[[1]]
   y_var = syms(y)[[1]]
 
