@@ -122,39 +122,6 @@ flytt_opp = function(y, tekst, hoyde = .015) {
   y[match(tekst, tekst_ny)]
 }
 
-# Funksjon for å lage shewhart charts
-# Denne følger samme input som qic i qicharts-pakken
-# Den skal utivkles til ggplot format etterhvert.
-# y = responsvariabel (y-aksen)
-# antall = nevneren i en prosent-chart
-# x = forklaringsvariabel/tisdvariabel/gruppe (x-aksen)
-# figtype = figurtypen, basert på typer i kallet til qic. som oftest xbar eller p (prosentfigur)
-# d = data, gjerne på long format
-# tittel = Hvis du vil mot all formening ha en tittel til "Figuren".
-# gruppe = grupper som deles opp i et panel.
-
-lag_shewhart = function(y, x, antall = NULL, figtype, skriftstorleik = 0.8,
-                        data, tittel = NULL, gruppe = NULL, ...) {
-
-  # argumenter som gjelder ALLE shewhart diagram
-  tcc_args = list(n = data[[y]], x = data[[x]], chart = figtype, cex = skriftstorleik, main = tittel, ...)
-
-  # argumentet "antall" brukes bare av noen figurtyper. deriblandt figurtype = "p", prosent, som trenger en nevner
-  if (!is.null(antall)) {
-    tcc_args = append(tcc_args, list(d = data[[antall]]))
-  }
-  if (!is.null(gruppe)) { # hvis man ønsker å dele opp panelet i grupper
-    tcc_args = append(tcc_args, list(g1 = data[[gruppe]]))
-  }
-  do.call(qicharts::tcc, tcc_args) +
-    theme(
-      axis.title.y = element_text(angle = 0),
-      axis.text.x = element_text(angle = 45, vjust = 0.5),
-      axis.line.x = element_line(color = "black", size = 0.5), # noe fjerner aksen fjerner akse
-      axis.line.y = element_line(color = "black", size = 0.5)
-    ) # legger dem til igjen her
-}
-
 ### Lag linjegraf med 95 % konfidensintervall
 
 # Krev følgjande aes-verdiar: x, y, ymin, ymax (dei to siste berre viss konfint = TRUE)
