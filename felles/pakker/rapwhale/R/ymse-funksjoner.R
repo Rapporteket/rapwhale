@@ -14,6 +14,7 @@
 #   c("hopp og.SprettTest", "SykdomsAktivitet.PasientGlobalSykdomsaktivitet") %>% normaliser_varnamn
 #   som gjev
 #   c("hopp_og_sprett_test", "sykdoms_aktivitet_pasient_global_sykdomsaktivitet")
+#' @export
 normaliser_varnamn = function(x) {
   teikn = x %>%
     stringr::str_split("") # Splitt i enkeltteikn
@@ -32,6 +33,7 @@ normaliser_varnamn = function(x) {
 ### Variant av table()-funksjonen som tar med NA-verdiar om dei finst
 
 # Lag tabell som også viser NA-verdiar om dei finst
+#' @export
 tab = function(...) {
   table(..., useNA = "ifany")
 }
@@ -41,6 +43,7 @@ tab = function(...) {
 
 # tatt frå plyr-pakken (nyttige verdiar
 # av f er round, floor og ceiling)
+#' @export
 round_any = function(x, accuracy, f = round) {
   f(x / accuracy) * accuracy
 }
@@ -51,6 +54,7 @@ round_any = function(x, accuracy, f = round) {
 # Brukar Wilson-intervallet, som anbefalt i
 # «Binomial confidence intervals and contingency tests:
 # mathematical fundamentals and the evaluation of alternative methods», av Sean Wallis, University College London
+#' @export
 ki_bin = function(x, n) {
   ki = binom::binom.wilson(x, n)
   tibble(
@@ -61,9 +65,7 @@ ki_bin = function(x, n) {
 
 ### Konfidenstinervall basert på gjennomsnittet til en  kontinuerlig variabel
 # med mulighet for bootstrap lagt inn i funksjonen
-library(dplyr)
-library(simpleboot)
-
+#' @export
 ki_univar = function(x, bootstrap = FALSE, antall, ...) {
   # Hvis det er for få eller for lite varierende
   # observasjoner til å regne ut konfidensintervall,
@@ -108,6 +110,7 @@ ki_univar = function(x, bootstrap = FALSE, antall, ...) {
 # For å lage pene LaTeX-tabeller i et standardisert format for alle årsrapporter,
 # med mulighet for å gjøre den stor nok til hele siden (wide = TRUE).
 # optional arguments inkluderer colheads=c() og caption = paste0("").
+#' @export
 create_ltable = function(dataframe, label, caption, wide = FALSE, ...) {
 
   # Viss dataramma ikkje har nokon radar, bryt latex()-funksjonen
