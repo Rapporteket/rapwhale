@@ -41,6 +41,7 @@ invisible(file.copy(
 #
 # Som ei nødløysing har me ordna det slik at me kan manuelt velja at
 # tabellskrifta skal brukast når me kallar num()-funksjonen.
+#' @export
 num = function(x, desimalar, tabell = FALSE) {
   # Argument til \num-kommandoen
   arg = NULL
@@ -92,6 +93,7 @@ num = function(x, desimalar, tabell = FALSE) {
 # for éin desimal eller «accuracy = .05» for å runda av til
 # næraste halve promille. Bruk «accuracy = NULL» for
 # automatisk/«smart» val av desimalar (vanlegvis ikkje tilrådd).
+#' @export
 akse_prosent = function(x, accuracy = 1, decimal.mark = ",", ...) {
   scales::percent(x,
     suffix = " %",
@@ -116,6 +118,7 @@ prosent = function(x, desimalar = 0, tabell = FALSE) {
 # ord - Nødvendig, en vektor med ordene du ønsker å kjede
 # skjeileteikn - Standard er komme ", " men man kan velge noe annet
 # og - Standard er " og " men man kan velge noe annet (f.eks " and ", " och ", " & " eller min personlige favoritt " und ")
+#' @export
 kjed_ord = function(ord, skiljeteikn = ", ", og = " og ") {
 
   # gjør om missing til "NA" som tekststreng
