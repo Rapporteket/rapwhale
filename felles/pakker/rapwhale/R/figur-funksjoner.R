@@ -238,7 +238,7 @@ farge_morkare = function(fargar, grad = 5) {
   farge_rgb = as(farge_lab, "RGB")
   farge_rgb@coords[] = pmax(farge_rgb@coords, 0)
   farge_rgb@coords[] = pmin(farge_rgb@coords, 1)
-  hex(farge_rgb)
+  colorspace::hex(farge_rgb)
 }
 
 # funksjon for å lage søylediagram
