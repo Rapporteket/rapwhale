@@ -9,16 +9,16 @@ library(tidyverse)
 
 # 1. Eksempeldatasett til testing
 
-# Datasett 1: hofteoperasjoner
+# Datasett 1: hofteoperasjonar
 pas_ids_hofteop = c(2, 4, 6, 3, 4, 7, 7, 1, 3, 7)
 
-# Datasett 2: hofteoperasjoner med NA-verdier
+# Datasett 2: hofteoperasjonar med NA-verdiar
 pas_ids_hofteop_na = c(2, 4, 6, 3, 4, 7, 7, NA, 3, 7)
 
-# Datasett 3: kneoperasjoner (inneholder noen id-er fra datasett 1, samt noen nye)
+# Datasett 3: kneoperasjonar (inneheld nokre ID-ar frå datasett 1, samt nokre nye)
 pas_ids_kneop = c(1, 6, 2, 3, 9, 8, 8, 12, 3, 3)
 
-# Datasett 4: oppfølging (inneholder de fleste id-er fra datasett 1 og datasett 2, samt 1 ny)
+# Datasett 4: oppfølging (inneheld dei fleste ID-ar frå datasett 1 og datasett 2, samt 1 ny)
 pas_ids_oppf = c(1, 3, 2, 5, 4, 9, 7, 8, 11)
 
 # Datasett 1 og 2
@@ -29,26 +29,26 @@ pas_ids = c(pas_ids_hofteop, pas_ids_kneop)
 
 context("Testar for anonymiseringsfunksjonfunksjonen")
 
-#--------------- Tester at lag_ano_funk funker som den skal
+#--------------- Testar at lag_ano_funk fungerar som den skal
 
-# Test som skal gi feilmelding dersom det finnes NA-verdier blant ID-ene
-test_that("Funksjonen skal gi advarsler ved NA-verdier", {
-  expect_warning(lag_ano_funk(pas_ids_hofteop_na), "ID-vektoren inneholder NA-verdier")
+# Test som skal gje feilmelding dersom det finst NA-verdiar blant ID-ane
+test_that("Funksjonen skal gje advarsel ved NA-verdiar", {
+  expect_warning(lag_ano_funk(pas_ids_hofteop_na), "ID-vektoren inneheld NA-verdiar")
 })
 
-#--------------- Tester at funksjonen som kommer ut av lag_ano_funk funker som den skal
+#--------------- Testar at funksjonen som kjem ut av lag_ano_funk fungerar som den skal
 
-# Test som skal gi advarsel dersom "ut-funksjonen" av lag_ano_funk() blir brukt på ukjente ID-er
-test_that("Funksjonen skal gi advarsel ved ukjente ID-er (utenom NA-ID-er)", {
+# Test som skal gi advarsel dersom "ut-funksjonen" av lag_ano_funk() blir brukt på ukjende ID-ar
+test_that("Funksjonen skal gi advarsel ved ukjende ID-ar (utenom NA-ID-ar)", {
   anonymiser_mittreg = lag_ano_funk(pas_ids)
-  expect_warning(anonymiser_mittreg(pas_ids_oppf), "ID-vektoren inneholder nye ID-er")
+  expect_warning(anonymiser_mittreg(pas_ids_oppf), "ID-vektoren inneheld nye ID-ar")
 
-  # Skal ikke gi advarsel dersom alle de nye verdiene bare er NA-verdier
-  expect_warning(anonymiser_mittreg(c(pas_ids, NA)), "ID-vektoren inneholder NA-verdier", all = TRUE)
+  # Skal ikkje gje advarsel dersom alle dei nye verdiane berre er NA-verdiar
+  expect_warning(anonymiser_mittreg(c(pas_ids, NA)), "ID-vektoren inneheld NA-verdiar", all = TRUE)
 })
 
-# Test som skal gi feilmelding dersom like ID-er fra ulike skjemaer får ulike anonymiserte ID-er
-test_that("Funksjonen skal gi feilmeldig dersom like ID-er fra ulike skjemaer får ulike anonymiserte ID-er", {
+# Test som skal gi feilmelding dersom like ID-ar frå ulike skjema får ulike anonymiserte ID-ar
+test_that("Funksjonen skal gje feilmeldig dersom like ID-ar frå ulike skjema får ulike anonymiserte ID-ar", {
   anonymiser_mittreg = lag_ano_funk(pas_ids)
   expect_identical(
     match(pas_ids_hofteop, pas_ids_kneop),
