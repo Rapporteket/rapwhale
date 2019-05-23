@@ -20,15 +20,6 @@ lag_ano_funk = function(id_vektor, startnr = 101) {
   anonymiser_id_vektor
 }
 
-anonymiser_mittreg = lag_ano_funk(pas_ids)
-anonymiser_mittreg(pas_ids_hofteop)
-anonymiser_mittreg(pas_ids_kneop)
-anonymiser_mittreg(pas_ids_oppf)
-pas_ids_hofteop_lengre = sample(pas_ids_hofteop, 12, replace = TRUE)
-length(pas_ids_hofteop)
-anonymiser_hofteop = lag_ano_funk(pas_ids_hofteop)
-anonymiser_hofteop(pas_ids_hofteop_lengre)
-
 anonymiser = function(x, startnr = 1001) {
   lag_ano_funk(x, startnr = startnr)(x)
 }
