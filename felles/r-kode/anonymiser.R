@@ -1,23 +1,23 @@
 # Anonymiseringsfunksjonfunksjon
 
-lag_ano_funk = function(id_vektor, startnr = 101) {
-  if (any(is.na(id_vektor))) {
+lag_ano_funk = function(x, startnr = 101) {
+  if (any(is.na(x))) {
     warning("ID-vektoren inneheld NA-verdiar")
   }
-  fra = sort(unique(id_vektor))
+  fra = sort(unique(x))
   til = as.integer(sample.int(length(fra)) + startnr - 1)
 
-  anonymiser_id_vektor = function(id_vektor_ny) {
-    if (any(is.na(id_vektor_ny))) {
+  anonymiser_x_utvalg = function(x_utvalg) {
+    if (any(is.na(x_utvalg))) {
       warning("ID-vektoren inneheld NA-verdiar")
     }
-    if (any(is.na(match(id_vektor_ny[!is.na(id_vektor_ny)], id_vektor)))) {
+    if (any(is.na(match(x_utvalg[!is.na(x_utvalg)], x)))) {
       warning("ID-vektoren inneheld nye ID-ar")
     }
-    nye_ids = til[match(id_vektor_ny, fra)]
+    nye_ids = til[match(x_utvalg, fra)]
     nye_ids
   }
-  anonymiser_id_vektor
+  anonymiser_x_utvalg
 }
 
 anonymiser = function(x, startnr = 1001) {
