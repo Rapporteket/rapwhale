@@ -2,17 +2,17 @@
 
 lag_ano_funk = function(id_vektor, startnr = 101) {
   if (any(is.na(id_vektor))) {
-    warning("ID-vektoren inneholder NA-verdier")
+    warning("ID-vektoren inneheld NA-verdiar")
   }
   fra = sort(unique(id_vektor))
   til = as.integer(sample.int(length(fra)) + startnr - 1)
 
   anonymiser_id_vektor = function(id_vektor_ny) {
     if (any(is.na(id_vektor_ny))) {
-      warning("ID-vektoren inneholder NA-verdier")
+      warning("ID-vektoren inneheld NA-verdiar")
     }
     if (any(is.na(match(id_vektor_ny[!is.na(id_vektor_ny)], id_vektor)))) {
-      warning("ID-vektoren inneholder nye ID-er")
+      warning("ID-vektoren inneheld nye ID-ar")
     }
     nye_ids = til[match(id_vektor_ny, fra)]
     nye_ids
