@@ -2,8 +2,8 @@
 
 # Funksjonen lag_ano_funk() tar inn to argument. Det første (x) er ein vektor med ID-ar og det andre
 # (startnr) er startnummeret for dei anonymiserte id-ane (standardverdi = 101). Funksjonen gjev
-# ut ein anonymiseringsfunksjon (anonymiser_x_utvalg) som fungerer slik at ID-ar (som finst i fleire datasett) får dei
-# same anonymiserte ID-ane på tvers av datasetta.
+# ut ein anonymiseringsfunksjon (anonymiser_x_utvalg) som fungerer slik at ID-ar (som finst i fleire
+# datasett) får dei same anonymiserte ID-ane på tvers av datasetta.
 lag_ano_funk = function(x, startnr = 101) {
   # Funksjonen gjev advarsel dersom x inneheld NA-verdiar
   if (any(is.na(x))) {
@@ -37,8 +37,8 @@ lag_ano_funk = function(x, startnr = 101) {
   anonymiser_x_utvalg
 }
 
-# Hjelpefunksjonen anonymiser() vil vera tidsbesparande dersom ein berre har eitt datasett. Funksjonen
-# gjer at ein slepp å kalla anonymiseringsfunksjonen på det same datasettet to gonger.
+# Hjelpefunksjonen anonymiser() vil vera tidsbesparande dersom ein berre har eitt datasett.
+# Funksjonen gjer at ein slepp å kalla anonymiseringsfunksjonen på det same datasettet to gonger.
 anonymiser = function(x, startnr = 1001) {
   lag_ano_funk(x, startnr = startnr)(x)
 }
