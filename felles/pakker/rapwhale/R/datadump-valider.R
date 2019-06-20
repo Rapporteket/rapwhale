@@ -1,4 +1,12 @@
-# datavalideringsskript
+# dd_er_gyldig er en funksjon for å
+# sjekke at en datadump fra et register er gyldig gitt
+# informasjonen som er tilgjengelig om datadumpen i
+# tilhørende kodebok (dokumentasjon).
+
+# I dd_er_gyldig lages et regelsett fra aktuell kodebok automatisk
+# via funksjonen lag_regelsett. Deretter sjekkes om reglene er oppfylt (TRUE).
+# Hvis datadumpen ikke er gydlig, vil man få en oppsummering av feilene og hvor de er
+# å finne, på format utarbeidet av ruler-pakken.
 
 #' @importFrom magrittr %>%
 #' @importFrom purrr pmap
@@ -10,10 +18,10 @@
 NULL
 
 # Funksjon for å lage regler basert på informasjon
-# fra kodeboka. Krever en kodebok (kb)
+# fra kodeboka. Krever en kodebok.
 # Argumentet "oblig" gjør det mulig å velge om man ønsker å sjekke obligatoriske felt.
 # dette fordi MRS-kodebøker har feil i sin obligatorisk-koding,
-# og dermed er uaktuelt for testing. Defaulter er TRUE.
+# og dermed er uaktuelle for testing av dette feltet. Standard er TRUE.
 
 lag_regelsett = function(kodebok, oblig = TRUE) {
 
@@ -260,12 +268,21 @@ lag_regelsett = function(kodebok, oblig = TRUE) {
   regelsett
 }
 
+# Funksjon som automatisk lager et regelsett basert på en kodebok,
+# og sjekker at datadumpen er gyldig gitt dette regelsettet.
 # Returner sann viss og berre viss datadumpen er gyldig
-# er reglane som følgjer frå kodeboka
+# er reglane som følgjer frå kodeboka.
+# Hvis FALSE, vil funksjonen gi ut en oppsummering
+# på et format fra ruler-pakken på hva som er feil og hvor disse er å finne.
+# Trenger
+# d = datasett som skal valideres
+# kodebok = kodebok med informasjon om variablene i valgt datadump.
+#           Skal være kodebok på kanonisk form og på
+#           Nasjonalt servicemiljø for medisinske kvalitetsregistre region vest (NASERVE) sitt standard kodebokformat.
 #' @export
-dd_er_gyldig = function(df, kodebok, ...) {
+dd_er_gyldig = function(d, kodebok, ...) {
   regelsett = lag_regelsett(kodebok, ...)
-  test_res = df %>%
+  test_res = d %>%
     ruler::expose(regelsett)
 
   # Sjekk om det var noen feil + generer feilrapport
