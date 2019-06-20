@@ -1,10 +1,9 @@
-# Anonymiseringsfunksjonfunksjon
+# Testar til anonymiseringsfunksjonfunksjonen
 
 # Innlasting av pakkar og datasett --------------------------------------------------------
 
 # Nødvendige pakkar
 library(tidyverse)
-
 
 
 # 1. Eksempeldatasett til testing
@@ -25,25 +24,26 @@ pas_ids_oppf = c(1, 3, 2, 5, 4, 9, 7, 8, 11)
 pas_ids = c(pas_ids_hofteop, pas_ids_kneop)
 
 
-
 context("Testar for anonymiseringsfunksjonfunksjonen")
 
 # Testar at lag_ano_funk() fungerar som den skal ------------------------------------------
 
-# Test som skal gje feilmelding dersom det finst NA-verdiar blant ID-ane
+# Test som sjekkar at lag_ano_funk() gjev advarsel dersom det finst NA-verdiar blant ID-ane
 test_that("Funksjonen skal gje advarsel ved NA-verdiar", {
   expect_warning(lag_ano_funk(pas_ids_hofteop_na), "ID-vektoren inneheld NA-verdiar")
 })
 
 # Testar at funksjonen som kjem ut av lag_ano_funk() fungerar som den skal ----------------
 
-# Test som skal gi advarsel dersom "ut-funksjonen" av lag_ano_funk() blir brukt på ukjende ID-ar
+# Test som sjekkar at "ut-funksjonen" av lag_ano_funk() gjev advarsel dersom den blir brukt
+# på ukjende ID-ar
 test_that("Funksjonen skal gi advarsel ved ukjende ID-ar (utenom NA-ID-ar)", {
   anonymiser_mittreg = lag_ano_funk(pas_ids)
   expect_warning(anonymiser_mittreg(pas_ids_oppf), "ID-vektoren inneheld nye ID-ar")
 
-  # Skal ikkje gje advarsel dersom alle dei nye verdiane berre er NA-verdiar
-  expect_warning(anonymiser_mittreg(c(pas_ids, NA)), "ID-vektoren inneheld NA-verdiar", all = TRUE)
+  # "Ut-funksjonen" skal ikkje gje advarselen "ID-vektoren inneheld nye ID-ar" dersom alle
+  # dei nye verdiane berre er NA-verdiar
+  expect_warning(anonymiser_mittreg(c(pas_ids, NA, 11)), "ID-vektoren inneheld NA-verdiar", all = TRUE)
 })
 
 # Test som skal gi feilmelding dersom like ID-ar frå ulike skjema får ulike anonymiserte ID-ar
@@ -72,7 +72,6 @@ test_that("ID-ar som finst i fleire skjema får like anonymiserte ID-ar på tver
     )
   )
 })
-
 
 
 # Testar anonymiser() fungerar som den skal -----------------------------------------------
