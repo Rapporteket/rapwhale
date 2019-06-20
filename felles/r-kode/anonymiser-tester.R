@@ -43,7 +43,7 @@ test_that("Funksjonen skal gi advarsel ved ukjende ID-ar (utenom NA-ID-ar)", {
 
   # "Ut-funksjonen" skal ikkje gje advarselen "ID-vektoren inneheld nye ID-ar" dersom alle
   # dei nye verdiane berre er NA-verdiar
-  expect_warning(anonymiser_mittreg(c(pas_ids, NA, 11)), "ID-vektoren inneheld NA-verdiar", all = TRUE)
+  expect_warning(anonymiser_mittreg(c(pas_ids, NA)), "ID-vektoren inneheld NA-verdiar", all = TRUE)
 })
 
 # Test som skal gi feilmelding dersom like ID-ar frå ulike skjema får ulike anonymiserte ID-ar
