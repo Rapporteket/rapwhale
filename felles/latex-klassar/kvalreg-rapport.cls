@@ -145,7 +145,7 @@
 % Bruk proporsjonale tabelltal for overskrifter, då det ser best ut
 % (sjå for eksempel botnen på 1-tal)
 \newfontfamily\altskrift[Ligatures=TeX,Numbers={Proportional,Uppercase}]{Calibri}
-\newfontfamily\lettskrift[Ligatures=TeX,Numbers={Proportional,Uppercase}]{Calibri Light}
+\newfontfamily\lettskrift[Ligatures=TeX,Numbers={Proportional,Uppercase}]{Calibri Light Italic}
 
 % Skrift for teikn som ikkje finst i standardskriftene
 \newfontfamily\uniskrift[Scale=MatchLowercase]{DejaVu Sans}
