@@ -17,7 +17,7 @@ colKontr = "#FF7260" # Kontrastfarge
 
 # ggplot2-tema for figurar
 if (!exists("skriftstorleik")) { # Skriftstorleik bør vera definert i kvar årsrapportfil
-  skriftstorleik = 13
+  skriftstorleik = 9
 }
 tema = theme_light(base_size = skriftstorleik)
 tema$panel.grid.minor$colour = "white"
