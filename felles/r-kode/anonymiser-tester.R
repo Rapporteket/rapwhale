@@ -1,12 +1,9 @@
 # Testar til anonymiseringsfunksjonfunksjonen
 
-# Innlasting av pakkar og datasett --------------------------------------------------------
 
-# Nødvendige pakkar
-library(tidyverse)
+# Testar ------------------------------------------------------------------
 
-
-# 1. Eksempeldatasett til testing
+context("Testar for anonymiseringsfunksjonfunksjonen")
 
 # Datasett 1: hofteoperasjonar
 pas_ids_hofteop = c(2, 4, 6, 3, 4, 7, 7, 1, 3, 7)
@@ -24,53 +21,38 @@ pas_ids_oppf = c(1, 3, 2, 5, 4, 9, 7, 8, 11)
 pas_ids = c(pas_ids_hofteop, pas_ids_kneop)
 
 
-context("Testar for anonymiseringsfunksjonfunksjonen")
-
 # Testar at lag_ano_funk() fungerar som den skal ------------------------------------------
 
-# Test som sjekkar at lag_ano_funk() gjev advarsel dersom det finst NA-verdiar blant ID-ane
-test_that("Funksjonen skal gje advarsel ved NA-verdiar", {
+test_that("Skal gje advarsel ved NA-verdiar", {
   expect_warning(lag_ano_funk(pas_ids_hofteop_na), "ID-vektoren inneheld NA-verdiar")
 })
 
 # Testar at funksjonen som kjem ut av lag_ano_funk() fungerar som den skal ----------------
 
-# Test som sjekkar at "ut-funksjonen" av lag_ano_funk() gjev advarsel dersom den blir brukt
-# på ukjende ID-ar
-test_that("Funksjonen skal gi advarsel ved ukjende ID-ar (utenom NA-ID-ar)", {
+test_that("Skal gje advarsel ved ukjende ID-ar (utenom NA-ID-ar)", {
   anonymiser_mittreg = lag_ano_funk(pas_ids)
-  expect_warning(anonymiser_mittreg(pas_ids_oppf), "ID-vektoren inneheld nye ID-ar")
+  expect_warning(anonymiser_mittreg(pas_ids_oppf), "ID-vektoren inneheld nye (ukjende) ID-ar", fixed = TRUE)
 
-  # "Ut-funksjonen" skal ikkje gje advarselen "ID-vektoren inneheld nye ID-ar" dersom alle
-  # dei nye verdiane berre er NA-verdiar
+  # Utfunksjonen skal *ikkje* gje advarselen "ID-vektoren inneheld nye (ukjende) ID-ar"
+  # dersom alle dei nye (ukjende) verdiane berre er NA-verdiar
   expect_warning(anonymiser_mittreg(c(pas_ids, NA)), "ID-vektoren inneheld NA-verdiar", all = TRUE)
 })
 
-# Test som skal gi feilmelding dersom like ID-ar frå ulike skjema får ulike anonymiserte ID-ar
 test_that("ID-ar som finst i fleire skjema får like anonymiserte ID-ar på tvers av skjemaa", {
   anonymiser_mittreg = lag_ano_funk(pas_ids)
-  expect_identical(
-    match(pas_ids_hofteop, pas_ids_kneop),
-    match(anonymiser_mittreg(pas_ids_hofteop), anonymiser_mittreg(pas_ids_kneop))
-  )
-  expect_identical(
-    match(pas_ids_kneop, pas_ids_hofteop),
-    match(anonymiser_mittreg(pas_ids_kneop), anonymiser_mittreg(pas_ids_hofteop))
-  )
-  expect_identical(
-    match(pas_ids_hofteop_na, pas_ids_kneop),
-    match(
-      suppressWarnings(anonymiser_mittreg(pas_ids_hofteop_na)),
-      anonymiser_mittreg(pas_ids_kneop)
+  test_idsamsvar = function(d1, d2) {
+    expect_identical(
+      match(d1, d2),
+      match(
+        suppressWarnings(anonymiser_mittreg(d1)),
+        suppressWarnings(anonymiser_mittreg(d2))
+      )
     )
-  )
-  expect_identical(
-    match(pas_ids_kneop, pas_ids_hofteop_na),
-    match(
-      anonymiser_mittreg(pas_ids_kneop),
-      suppressWarnings(anonymiser_mittreg(pas_ids_hofteop_na))
-    )
-  )
+  }
+  test_idsamsvar(pas_ids_hofteop, pas_ids_kneop)
+  test_idsamsvar(pas_ids_kneop, pas_ids_hofteop)
+  test_idsamsvar(pas_ids_hofteop_na, pas_ids_kneop)
+  test_idsamsvar(pas_ids_kneop, pas_ids_hofteop_na)
 })
 
 
@@ -109,7 +91,6 @@ test_that("Gjev ut rett mengd element, og av rett type", {
   expect_type(anonymiser(pas_id), "integer")
 })
 
-# Gjev feilmeldingar ved ugyldige inndata
 test_that("Gjev feilmelding ved feil datatypar", {
   expect_error(anonymiser(1:5, "5"))
   expect_error(anonymiser(iris))
