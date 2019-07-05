@@ -71,19 +71,22 @@ tema$plot.margin = margin(3, 3, 3, 3)
 
 # Graffunksjoner ----------------------------------------------------------
 
-### Funksjonal for breaks-argument i ggplot2
-
-# Funksjon som lager funksjon som tar inn to tall
-# og lager aritmetisk tallfølge med valgfri
-# intervallbredde slik at alle tall i følgen er
-# multiplum av intervallbredden og de to tallene
-# er innenfor range() av følgen (puh!).
-#
-# Eks. er breaks_bredde(5)(c(9,16)) lik c(5,10,15,20).
-# Nyttig til bruk i breaks- og minor-breaks-argument
-# i ggplot2, eks. breaks = breaks_bredde(10)
-# Viss min eller maks er definert, bruk dette
-# i stedet for verdiene fra lims
+#' Funksjonal for breaks-argument i ggplot2
+#'
+#' Funksjon som lager funksjon som tar inn to tall
+#' og lager aritmetisk tallfølge med valgfri
+#' intervallbredde slik at alle tall i følgen er
+#' multiplum av intervallbredden og de to tallene
+#' er innenfor range() av følgen (puh!).
+#' Eks. er breaks_bredde(5)(c(9,16)) lik c(5,10,15,20).
+#' Nyttig til bruk i breaks- og minor-breaks-argument
+#' i ggplot2, eks. breaks = breaks_bredde(10)
+#' Viss min eller maks er definert, bruk dette
+#' i stedet for verdiene fra lims
+#' @param bredde Valgt bredde, standard er 5
+#' @param min Minste mulige verdi
+#' @param maks Største mulige verdi
+#' @examples
 #' @export
 sett_avkutningspunkt_bredde = function(bredde = 5, min = NULL, maks = NULL) {
   function(lims) {
@@ -96,11 +99,13 @@ sett_avkutningspunkt_bredde = function(bredde = 5, min = NULL, maks = NULL) {
 }
 
 
-#' Funksjon som flytter opp labels inni grafer hvis de kolliderer
+#' Flytt-opp funksjon.
 #'
+#' Funksjon som flytter opp labels inni grafer hvis de kolliderer
 #' @param y y-koordinat til (midten av) tekstane
 #' @param tekst teksten i tekstane (berre brukt til å telja kor mange linjer det er).
 #' @param hoyde høgda kvar linje tekst tar opp (i grafkoordinatar)
+#' @examples
 #' @export
 flytt_opp = function(y, tekst, hoyde = .015) {
   tekst_ny = tekst[order(y)]
