@@ -96,13 +96,11 @@ sett_avkutningspunkt_bredde = function(bredde = 5, min = NULL, maks = NULL) {
 }
 
 
-### Funksjon som flytter opp labels inni grafer hvis de kolliderer
-
-# Innargument:
-#   y:     y-koordinat til (midten av) tekstane
-#   tekst: teksten i tekstane (berre brukt til å telja kor mange linjer det er)
-#   hoyde: høgda kvar linje tekst tar opp (i grafkoordinatar)
-# Ut: Ny y-koordinat, der tekstane forhåpentlegvis ikkje overlappar (elles: auk hoyde-argumentet)
+#' Funksjon som flytter opp labels inni grafer hvis de kolliderer
+#'
+#' @param y y-koordinat til (midten av) tekstane
+#' @param tekst teksten i tekstane (berre brukt til å telja kor mange linjer det er).
+#' @param hoyde høgda kvar linje tekst tar opp (i grafkoordinatar)
 #' @export
 flytt_opp = function(y, tekst, hoyde = .015) {
   tekst_ny = tekst[order(y)]
