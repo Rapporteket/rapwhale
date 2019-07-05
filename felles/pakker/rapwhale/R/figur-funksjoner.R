@@ -125,16 +125,15 @@ flytt_opp = function(y, tekst, hoyde = .015) {
   y[match(tekst, tekst_ny)]
 }
 
-### Lag linjegraf med 95 % konfidensintervall
-
-# Krev følgjande aes-verdiar: x, y, ymin, ymax (dei to siste berre viss konfint = TRUE)
-# Argument:
-#   refline:    y-koordinaten til vassrett referanselinje
-#   refline_df: ev. dataramme med éi rad for kvart panel refline skal gjelda for
-#   xlab:       tekst på x-aksen (standardverdi: "År")
-#   ylab:       tekst på y-aksen (standardverdi: NULL (tom))
-#   angle:      viss sann, vis verdiane på x-aksen på skrå (for å få plass til fleire)
-#   konfint:    Legg til konfidensintervall på kvar punkt
+#' Lag linjegraf med 95 prosent konfidensintervall
+#'
+#' description
+#' @param refline y-koordinaten til vassrett referanselinje
+#' @param refline_df ev. dataramme med éi rad for kvart panel refline skal gjelda for
+#' @param xlab tekst på x-aksen (standardverdi: "År")
+#' @param ylab tekst på y-aksen (standardverdi: NULL (tom))
+#' @param angle viss sann, vis verdiane på x-aksen på skrå (for å få plass til fleire)
+#' @param konfint Legg til konfidensintervall på kvar punkt
 #' @export
 lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab = NULL,
                          angle = TRUE, konfint = TRUE) {
@@ -223,17 +222,15 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
 
 # Fargefunksjonar ---------------------------------------------------------
 
-### Lag mørkare/lysare fargar
-
-# Gjer ein vektor med fargar mørkare.
-# Brukar CIELAB-fargerommet til utrekningar
-# (i staden for RGB-fargerommet), for
-# betre resultat (meir tilpassa korleis
-# synet vårt fungerer).
-#
-# «grad» seier kor mykje mørkare fargen
-# skal gjerast (so bruk negative verdiar for
-# å gjera han lysare).
+#' Lag mørkare/lysare fargar
+#'
+#' Gjer ein vektor med fargar mørkare.
+#' Brukar CIELAB-fargerommet til utrekningar
+#' (i staden for RGB-fargerommet), for
+#' betre resultat (meir tilpassa korleis
+#' synet vårt fungerer).
+#' @param fargar en vektor med farger.
+#' @param grad seier kor mykje mørkare fargen skal gjerast (so bruk negative verdiar for å gjera han lysare).
 #' @export
 farge_morkare = function(fargar, grad = 5) {
   farge_lab = as(colorspace::hex2RGB(fargar), "LAB")
