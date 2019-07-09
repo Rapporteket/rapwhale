@@ -241,14 +241,18 @@ farge_morkare = function(fargar, grad = 5) {
   colorspace::hex(farge_rgb)
 }
 
-# funksjon for å lage søylediagram
-# d = datasett
-# x = variabel for x-aksen - som vanligvis er en kategorisk variabel
-# y = variabel for y-aksen - en kontinuerlig variabel. Kan være en prosent.
-# farge = fargen på søylene, default er kjedelig SKDE-blå. Kan endres i andre sammenheng
-# facet = boolsk, bestemmer om man skal lage panel på en variabel, TRUE, eller ikke FALSE (default)
-# facet_gruppe = hvilken variabel som skal brukes for å dele på panel, brukes kun hvis facet = TRUE
-# prosent = om y-aksen er en prosent (TRUE) eller ikke (FALSE). Er prosent som standard, siden disse er så vanlige.
+
+#' Lag Søylediagram
+#'
+#' Funksjon for å lage søylediagram.
+#'
+#' @param d Datasett som inkluderer de variablene man ønsker å bruke i søylediagrammet.
+#' @param x Variabel for x-aksen - Vanligvis er dette en kategorisk variabel.
+#' @param y Variabel for y-aksen - En kontinuerlig variabel. Kan være en prosent.
+#' @param farge Fargen på søylene. Default er SKDE-blå. Kan endres i andre sammenhenger.
+#' @param facet Boolsk variabel som bestemmer om man skal lage panel på en variabel. TRUE eller FALSE.
+#' @param facet_gruppe Hvilken variabel som skal brukes for å dele på panel. Brukes kun hvis facet = TRUE.
+#' @param prosent Om Y-aksen er en prosent (TRUE) eller ikke (FALSE). Er prosent som standard, siden disse er mest vanlig.
 #' @export
 lag_fig_soyle = function(d, x, y, farge = ColPrim[3], facet = FALSE, facet_gruppe = NULL, prosent = TRUE, ...) {
   x_var = syms(x)[[1]]
