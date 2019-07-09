@@ -17,7 +17,19 @@ NULL
 #   dato:     Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
 #
 # Utdata: kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar
-#
+
+
+# Roxygen dokumentasjon
+
+#' Konverter MRS-kodebok til standardformat
+#'
+#' Gjer om MRS-kodebok til kodebok på standardformat.
+#'
+#' Returnerer kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstaver.
+#'
+#' @param mappe_dd Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
+#' Her er en antagelse at nyeste versjon av kodeboka ligger i samme mappe som datadumpene.
+#' @param dato Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
 #' @export
 les_kb_mrs = function(mappe_dd, dato = NULL) {
 
@@ -193,6 +205,33 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
 #
 # Utdata:
 #   R-datasett for det aktuelle skjemaet
+
+
+# Roxygen dokumentasjon
+
+#' Les datadump fra MRS-register
+#'
+#' Les inn MRS-data frå gitt skjema ved hjelp av kodebok. \cr
+#' Kodeboka vert brukt til å gje alle variablane rett format
+#' (tal, tekst, dato, boolske/logiske verdiar osv.) og til å
+#' sikra at datadumpen er i samsvar med kodeboka. \cr \cr
+#' Som standard treng ein ikkje oppgje kodebok; ho vert automatisk henta inn. \cr
+#' Men dersom ein skal lesa inn mange skjema, er det lurare å lesa inn
+#' kodeboka separat først, for at ting skal gå raskare (innlesing og validering
+#' av kodeboka kan ta litt tid). \cr
+#' Det er òg nødvendig å gjera det slik dersom ein har kodeboka frå ei anna
+#' kjelde eller viss ein vil bruka ei modifisert
+#' kodebok (generelt farleg!).
+#'
+#'
+#' Returnerer et R-datasett for det aktuelle skjemaet.
+#'
+#' @param mappe_dd Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
+#' Antagelse ligger til grunn at nyeste kodebok ligger i samme mappe som de nyeste datadumpene.
+#' @param skjema_id ID til skjemaet ein vil henta inn (brukt i filnamnet og i kolonnen «tabell» i kodeboka)
+#' @param versjon Om datadumpen er "Prod" eller om den er fra "QA". Standardverdi er "Prod".
+#' @param dato Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
+#' @param kodebok Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
 #' @export
 les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebok = NULL) {
 
