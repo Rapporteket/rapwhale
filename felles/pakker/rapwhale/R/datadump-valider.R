@@ -275,10 +275,24 @@ lag_regelsett = function(kodebok, oblig = TRUE) {
 # Hvis FALSE, vil funksjonen gi ut en oppsummering
 # på et format fra ruler-pakken på hva som er feil og hvor disse er å finne.
 # Trenger
-# d = datasett som skal valideres
+# d = datasett som skal valideres.
 # kodebok = kodebok med informasjon om variablene i valgt datadump.
 #           Skal være kodebok på kanonisk form og på
 #           Nasjonalt servicemiljø for medisinske kvalitetsregistre region vest (NASERVE) sitt standard kodebokformat.
+
+
+#' Validering av datadump
+#'
+#' Funksjon som automatisk lager et regelsett basert på en kodebok, og sjekker at
+#' datadumpen er gyldig gitt dette regelsettet. \cr \cr
+#' Returnerer TRUE viss og berre viss datadumpen er gyldig. \cr
+#' Hvis FALSE, vil funksjonen gi ut en oppsummering på et format fra ruler-pakken
+#' på hva som er feil og hvor disse er å finne.
+#'
+#' @param d Datasett som skal valideres.
+#' @param kodebok Kodebok med informasjon om variablene i valgt datadump.
+#' Skal være kodebok på kanonisk form og på Nasjonalt servicemiljø for medisinske kvalitetsregistre region vest (NASERVE)
+#' sitt standard kodebokformat.
 #' @export
 dd_er_gyldig = function(d, kodebok, ...) {
   regelsett = lag_regelsett(kodebok, ...)
