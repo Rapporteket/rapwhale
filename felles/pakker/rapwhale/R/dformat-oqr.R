@@ -23,7 +23,19 @@ NULL
 #
 # Utdata:
 #   kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar
-#
+
+
+# Roxygen dokumentasjon
+
+#' Konverter OQR-kodebok til standardformat
+#'
+#' Funksjonen leser inn OQR-kodebok på dokumentert format og gjer om til vårt standardformat (kanonisk form).
+#'
+#' Returnerer kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar.
+#' @param mappe_dd Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak).
+#' @param reg_id ID som identifiserer registeret og er prefiks til alle filnamna.
+#' @param dato Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
+#' @param valider_kb Skal kodeboka automatisk validerast? Ho må då vera gyldig for at ein skal få noko ut.
 #' @export
 les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixme: Validering av kodebok?
 
@@ -319,7 +331,35 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
 #
 # Utdata:
 #   R-datasett for det aktuelle skjemaet, med variabelnamn gjort om til små bokstavar.
-#
+
+
+# Roxygen dokumentasjon
+
+#' Les datadump fra OQR-register
+#'
+#' Les inn OQR-data frå gitt skjema ved hjelp av kodebok. \cr \cr
+#' Kodeboka vert brukt til å gje alle variablane rett format (tal, tekst, dato, boolske/logiske verdiar osv.)
+#' og til å sikra at datadumpen er i samsvar med kodeboka. \cr
+#' Som standard treng ein ikkje oppgje kodebok; ho vert automatisk henta inn. \cr
+#' Men dersom ein skal lesa inn mange skjema, er det lurare å lesa inn
+#' kodeboka separat først, for at ting skal gå raskare (innlesing og validering
+#' av kodeboka kan ta litt tid). \cr \cr
+#' Det er òg nødvendig å gjera det slik dersom ein har kodeboka frå
+#' ei anna kjelde eller viss ein vil bruka ei modifisert kodebok (generelt farleg!).
+#'
+#' Returnerer et R-datasett for det aktuelle skjemaet, med variabelnamn gjort om til små bokstavar.
+#'
+#' @param mappe_dd Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak).
+#' @param reg_id ID som identifiserer registeret og er prefiks til alle filnamna.
+#' @param skjema_id ID til skjemaet ein vil henta inn (brukt i filnamnet og i kolonnen «tabell» i kodeboka).
+#' @param status Berre ta med skjema med desse statusverdiane (-1 = oppretta, 0 = kladd, 1 = ferdigstilt). \cr
+#' Kan òg vera NULL, for å henta alt, uavhengig av status (dvs. også inkludert NA-status og ugyldige statusverdiar,
+#' eller datadumpar som manglar statusvariabel \cr
+#' (ikkje noko av dette \emph{skal} vera mogleg å få, men alt kan skje i denne verda ...)).
+#' @param dato Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
+#' @param kodebok Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
+#' @param valider_kb Skal kodeboka validerast? Standard er ja dersom kodeboka skal hentast inn automatisk, elles nei.
+#' @param valider_dd Skal datadumpen validerast? Standard er ja.
 #' @export
 les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kodebok = NULL,
                       valider_kb = is.null(kodebok), valider_dd = TRUE) {
