@@ -8,6 +8,18 @@
 NULL
 
 # Definisjon av funksjon
+
+
+#' Hent variabeltekst for kategoriske variabler
+#'
+#' Funksjon for å hente variabeltekstar på kategoriske variablar basert på kodebok. Genererer nye variabler med oppgitt suffiks
+#' og returnerer datasettet med de nye variablene inkludert. For en variabel som er kodet med en vilkårlig verdi vil denne funksjonen
+#' hente direkte fra kodebok hvilken gruppe de forskjellige verdiene representerer.
+#'
+#' @param df Datasett som inkluderer de kategoriske variablene.
+#' @param kb Kodebok for registeret.
+#' @param ...
+#' @param suffiks Suffiks for variabelnavn som kobles på det opprinnelige variabelnavnet. Default er "_tekst".
 #' @export
 kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
 
