@@ -25,6 +25,21 @@ NULL
 # dato: hvis man ønsker å hente kodebok fra en spesifikk dato. Hvis ikke hentes dette fra nyeste dato. Default til NULL.
 # validering: Om man ønsker å validere kodeboka ja/nei (TRUE/FALSE).
 #             Hvis man ønsker å ikke validere kodebok med kb_er_gyldig, kan man sette denne til FALSE. Default er TRUE.
+
+
+# Roxygen dokumentasjon
+
+#' Konverter Checkware kodebok til standardformat
+#'
+#' Les inn OQR-kodebok på dokumentert format og gjer om til vårt standardformat (kanonisk form).
+#'
+#' Returnerer kodeboken på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar.
+#'
+#' @param mappe_dd Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD,
+#' for kvart uttak) Her er det gitt at nyeste kodebok legges i samme mappe som nedhentede datadumper.
+#' @param dato Hvis man ønsker å hente kodebok fra en spesifikk dato. Hvis ikke hentes dette fra nyeste dato. Default er NULL.
+#' @param valider_kb Om man ønsker å validere kodeboka ja/nei (TRUE/FALSE).
+#' Hvis man ønsker å ikke validere kodebok med kb_er_gyldig, kan man sette denne til FALSE. Default er TRUE.
 #' @export
 les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
 
@@ -114,6 +129,33 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
 # Utdata:
 #   R-datasett for det aktuelle skjemaet, med variabelnamn gjort om til ønnskede, tilsvarende verdier funnet i kodeboka.
 #   (I stedet for Q1, Q2, Q3 osv. som CheckWare ofte oppgir)
+
+
+# Roxygen dokumentasjon
+
+#' Konverter Checkware-data til format fra kodebok
+#'
+#' Funksjon for å tilrettelegge checkware-data basert på kodebok,
+#' hvor funksjonen automatisk henter inn kodebok som blir brukt (hvis ønskelig). \cr
+#' Kodeboka vert brukt til å gje alle variablane rett format
+#' (tal, tekst, dato, boolske/logiske verdiar osv.) og til å
+#' sikra at datadumpen er i samsvar med kodeboka. \cr \cr
+#' Som standard treng ein ikkje oppgje kodebok; ho vert automatisk henta inn.
+#' Men dersom ein skal lesa inn mange skjema, er det lurare å lesa inn
+#' kodeboka separat først, for at ting skal gå raskare (innlesing og validering
+#' av kodeboka kan ta litt tid). Det er òg nødvendig å gjera det slik dersom
+#' ein har kodeboka frå ei anna kjelde eller viss ein vil bruka ei modifisert
+#' kodebok (generelt farleg!).
+#'
+#' Returnerer et R-datasett for det aktuelle skjemaet, med variabelnamn gjort om til ønnskede, tilsvarende verdier funnet i kodeboka.
+#'   (I stedet for Q1, Q2, Q3 osv. som CheckWare ofte oppgir)
+#'
+#' @param mappe_dd Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak).
+#' @param skjema_id ID til skjemaet ein vil henta inn (brukt i filnamnet til datadumpen og i kolonnen «skjema_id» i kodeboka).
+#' @param dato Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
+#' @param kodebok Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
+#' @param valider_dd Om man ønsker å validere datadumpen ja/nei (TRUE/FALSE). Hvis man ønsker å ikke validere datadump med dd_er_gyldig, kan man sette denne til FALSE. Default er TRUE.
+#' @param valider_kb Om man ønsker å validere kodeboka ja/nei (TRUE/FALSE). Hvis man ønsker å ikke validere kodebok med kb_er_gyldig, kan man sette denne til FALSE. Default er TRUE.
 #' @export
 les_dd_checkware = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, valider_dd = TRUE, valider_kb = TRUE) {
 
@@ -274,6 +316,7 @@ les_dd_checkware = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, va
   # returner dataene
   d
 }
+
 
 # sjekk at funksjonen funker med rehabiliteringsregisteret som eksempel
 # mappe = "***FJERNA-ADRESSE***"
