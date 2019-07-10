@@ -86,7 +86,6 @@ tema$plot.margin = margin(3, 3, 3, 3)
 #' @param bredde Valgt bredde, standard er 5
 #' @param min Minste mulige verdi
 #' @param maks Største mulige verdi
-#' @examples
 #' @export
 sett_avkutningspunkt_bredde = function(bredde = 5, min = NULL, maks = NULL) {
   function(lims) {
@@ -105,7 +104,6 @@ sett_avkutningspunkt_bredde = function(bredde = 5, min = NULL, maks = NULL) {
 #' @param y y-koordinat til (midten av) tekstane
 #' @param tekst teksten i tekstane (berre brukt til å telja kor mange linjer det er).
 #' @param hoyde høgda kvar linje tekst tar opp (i grafkoordinatar)
-#' @examples
 #' @export
 flytt_opp = function(y, tekst, hoyde = .015) {
   tekst_ny = tekst[order(y)]
