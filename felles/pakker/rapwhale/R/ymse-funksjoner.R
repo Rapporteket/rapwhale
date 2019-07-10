@@ -7,6 +7,7 @@
 #' @importFrom stringr str_replace_all
 #' @importFrom tibble tibble
 #' @import dplyr
+NULL
 
 ### Normaliser variabelnamn til å ha _ som skiljeteikn og berre små bokstavar
 
@@ -14,6 +15,13 @@
 #   c("hopp og.SprettTest", "SykdomsAktivitet.PasientGlobalSykdomsaktivitet") %>% normaliser_varnamn
 #   som gjev
 #   c("hopp_og_sprett_test", "sykdoms_aktivitet_pasient_global_sykdomsaktivitet")
+
+#' Normaliser variabelnamn
+#'
+#' Funksjon for å konvertere variabelnavn til standardformat. \cr
+#' Standardformatering er "snake_case", hvor "_" blir brukt som skilletegn, og kun små bokstaver benyttes.
+#'
+#' @param x Tekststreng med variabelnavn som skal konverteres.
 #' @export
 normaliser_varnamn = function(x) {
   teikn = x %>%
@@ -33,6 +41,11 @@ normaliser_varnamn = function(x) {
 ### Variant av table()-funksjonen som tar med NA-verdiar om dei finst
 
 # Lag tabell som også viser NA-verdiar om dei finst
+
+#' Tabell inkludert NA-verdier
+#'
+#' Variant av table()-funksjonen som tar med NA-verdiar om dei finst.
+#' @param ... Tilsvarende argumenter som brukes i table()-funksjonen.
 #' @export
 tab = function(...) {
   table(..., useNA = "ifany")
