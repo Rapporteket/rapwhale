@@ -110,16 +110,18 @@ prosent = function(x, desimalar = 0, tabell = FALSE) {
   ifelse(is.na(x), "\\textendash{}", prosent_tekst)
 }
 
-# Funksjon som kjeder sammen ord grammatisk riktig.
-# Hvis det er to ord, kjedes det med " og ", f.eks "Per og Kari"
-# Hvis det er flere, kjedes det med ", " bortsett fra siste ord som får " og ", f.eks "Per, Kari og Pål."
-# Tar inn en vektor med ord
-# Returenerer en tekststreng med ett element
 
-# Argumenter:
-# ord - Nødvendig, en vektor med ordene du ønsker å kjede
-# skjeileteikn - Standard er komme ", " men man kan velge noe annet
-# og - Standard er " og " men man kan velge noe annet (f.eks " and ", " och ", " & " eller min personlige favoritt " und ")
+#' Koble sammen ord
+#'
+#' Funksjon som kjeder sammen ord grammatisk riktig. \cr
+#' Hvis det er to ord, kjedes det med " og ", f.eks "Per og Kari".
+#' Hvis det er flere, kjedes det med ", " bortsett fra siste ord som får " og ", f.eks "Per, Kari og Pål.". \cr \cr
+#'
+#' Tar inn en vektor med ord, og returenerer en tekststreng med ett element.
+#'
+#' @param ord En vektor med de ordene som skal kjedes sammen.
+#' @param skiljeteikn Skilletegn mellom ordene. Standard er ",".
+#' @param og Ord som settes inn mellom de to siste ordene. Standard er "og".
 #' @export
 kjed_ord = function(ord, skiljeteikn = ", ", og = " og ") {
 
