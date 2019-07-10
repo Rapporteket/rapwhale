@@ -3,6 +3,7 @@
 
 #' @importFrom magrittr %>%
 #' @importFrom stringr str_flatten
+NULL
 
 # LaTeX-/rapportskrivingsfunksjoner ---------------------------------------
 
@@ -28,6 +29,26 @@
 #
 # Som ei nødløysing har me ordna det slik at me kan manuelt velja at
 # tabellskrifta skal brukast når me kallar num()-funksjonen.
+
+
+#' Konverter tall til LaTeX-format
+#'
+#' Funksjon som tar inn eit tal x og konverterer det til riktig format i LaTeX, og (om nødvendig) legg inn fine mellomrom som tusenskiljeteikn og endrar desimalpunktum til desimalkomma.
+#'
+#' Argumentet «tabell» burde vore unødvendig, men siunitx \emph{insisterer}
+#' på å endra skrifta til \strong{\textrm}, sjølv om eg har slått på alle moglege
+#' detect-argument (og prøvd mykje anna, og søkt på nettet etter løysingar
+#' (bruk søkeorda «siunitx» og «fontspec»)). Alle andre løysingar eg har
+#' funne gjer at anten vert ikkje rett skrift brukt i brødteksten eller så vert
+#' ikkje rett tekst brukt i tabellforklaringa eller så vert ikkje rett tekst
+#' brukt i sjølve tabellen. (Merk at me brukar ulik skrift i tabell-/
+#' figurforklaringa, sjølv om dei begge er Calibri. Ein ser lettast forskjellen
+#' ved å studera 1-tala.). \cr\cr
+#' Som ei nødløysing har me ordna det slik at me kan manuelt velja at
+#' tabellskrifta skal brukast når me kallar num()-funksjonen.
+#' @param x Tallet en ønsker å skrive på LaTeX-format.
+#' @param desimalar Hvor mange desimaler skal inkluderes etter komma? (Rund av og vis så mange desimaler).
+#' @param tabell \code{TRUE} eller \code{FALSE} for å indikere om tallet skal brukes i en tabell, og dermed skal ha tabelltekst.
 #' @export
 num = function(x, desimalar, tabell = FALSE) {
   # Argument til \num-kommandoen
