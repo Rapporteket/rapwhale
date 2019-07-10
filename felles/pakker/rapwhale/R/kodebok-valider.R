@@ -14,6 +14,14 @@ NULL
 # fixme! funksjonen håndterer ikke ekstra variabler som f.eks variabel_id_checkware.
 # Når man er på det, bør funksjonen heller ha en option hvor man kan skrive inn kolonner man ønsker å godta selv
 # om det ikke er en del av standard-kolonnene. Da kan man ha med variabel_id_checkware, maal_id, nokkel og andre aktuelle kolonner
+
+
+#' Valider kodebok
+#'
+#' Gjer kodeboka om til kanonisk form, dvs. funksjonen fyller inn implisitte
+#' verdiar for variablane i kodeboka.
+#'
+#' @param kb Kodebok som skal valideres.
 #' @export
 
 kb_til_kanonisk_form = function(kb) {
@@ -155,6 +163,16 @@ kb_til_kanonisk_form = function(kb) {
 # Argument:
 #   sjekk_varnamn: Skal variabelnavn også sjekkes for gyldighet (bare små bokstaver, _ og siffer)
 #             ...: Andre argument som skal videresendes til intern funksjon varnamn_er_gyldig()
+
+
+#' Tester om kodebok er gyldig
+#'
+#' Funksjonen går gjennom en rekke tester for å se om en kodebok er gyldig. Tar inn en kodebok på glissen form.
+#'
+#' @param kb_glissen Kodebok på glissen form, det vil si en kodebok som er
+#' formatert i henhold til fagsenterets standardformat.
+#' @param sjekk_varnamn Skal variabelnavn også sjekkes for gyldighet?
+#' Godkjente variabelnavn er i snake-case; små bokstaver og "_" som mellomrom.
 #' @export
 kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
 
