@@ -70,16 +70,23 @@ num = function(x, desimalar, tabell = FALSE) {
 # fixme: Bør rydda opp i prosentfunksjonane slik at dei alle
 #        tar same argument og elles er meir gjennomtenkte
 #        (krev gjerne endringar i filene som brukar dei).
-#
-# Tar inn eit desimaltal og viser det som prosent,
-# med mellomrom før prosentteiknet (slik det skal vera
-# på norsk), eks. 0.5 --> "50 %", og med komma
-# som desimalteikn. Som standard vert tala viste
-# med éin desimal, men dette kan ein endra ved
-# å spesifisera «accuracy», for eksempel «accuracy = 0.1»
-# for éin desimal eller «accuracy = .05» for å runda av til
-# næraste halve promille. Bruk «accuracy = NULL» for
-# automatisk/«smart» val av desimalar (vanlegvis ikkje tilrådd).
+
+#' Vis desimaltal som prosent
+#'
+#' Tar inn eit desimaltal og viser det som prosent,
+#' med mellomrom før prosentteiknet (slik det skal vera
+#' på norsk), eks. 0.5 --> "50 %", og med komma
+#' som desimalteikn. Som standard vert tala viste
+#' med éin desimal, men dette kan ein endra ved
+#' å spesifisera «accuracy», for eksempel «accuracy = 0.1»
+#' for éin desimal eller «accuracy = .05» for å runda av til
+#' næraste halve promille. Bruk «accuracy = NULL» for
+#' automatisk/«smart» val av desimalar (vanlegvis ikkje tilrådd).
+#'
+#' @param x Tallet som skal skrives som prosent.
+#' @param accuracy Antall desimaler som skal benyttes.
+#' @param decimal.mark Skal desimalskille være "," eller "." Standard er ",".
+#' @param ... Ytterligere argumenter.
 #' @export
 akse_prosent = function(x, accuracy = 1, decimal.mark = ",", ...) {
   scales::percent(x,
@@ -88,6 +95,13 @@ akse_prosent = function(x, accuracy = 1, decimal.mark = ",", ...) {
   )
 }
 # Liknande funksjon for formatering av prosentverdiar som LaTeX-tekst.
+
+#' Vis prosent-verdi som LaTeX-tekst
+#'
+#' Tar inn et tall og konverterer det til LaTeX-kommando for å skrive prosent-tegn i tekst.
+#' @param x Tallet som skal skrives som prosentverdi.
+#' @param desimalar Antall desimaler som skal vises.
+#' @param tabell TRUE eller FALSE for å indikere om tallet skal brukes i en tabell, og dermed skal ha tabelltekst.
 #' @export
 prosent = function(x, desimalar = 0, tabell = FALSE) {
   prosent_tekst = x %>%
