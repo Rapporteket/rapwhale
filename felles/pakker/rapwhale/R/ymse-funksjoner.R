@@ -56,6 +56,15 @@ tab = function(...) {
 
 # tatt frå plyr-pakken (nyttige verdiar
 # av f er round, floor og ceiling)
+
+#' Avrunding med valfri presisjon og funksjon
+#'
+#' Funksjonen avrunder tallet med ønsket presisjon. \cr
+#' Gode avrundingsfunksjoner er: round, floor eller ceiling.
+#'
+#' @param x Tallet som skal avrundes.
+#' @param accuracy Hvilken presisjon skal avrundingen gjøres med?
+#' @param f Hvilken avrundingsfunksjon som skal brukes. round, floor eller ceiling.
 #' @export
 round_any = function(x, accuracy, f = round) {
   f(x / accuracy) * accuracy
