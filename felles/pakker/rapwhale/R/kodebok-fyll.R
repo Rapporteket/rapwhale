@@ -18,7 +18,7 @@ NULL
 #'
 #' @param df Datasett som inkluderer de kategoriske variablene.
 #' @param kb Kodebok for registeret.
-#' @param ...
+#' @param ... Ytterligere argumenter.
 #' @param suffiks Suffiks for variabelnavn som kobles på det opprinnelige variabelnavnet. Default er "_tekst".
 #' @export
 kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
