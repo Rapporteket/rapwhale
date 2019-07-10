@@ -36,7 +36,7 @@ NULL
 #' Funksjon som tar inn eit tal x og konverterer det til riktig format i LaTeX, og (om nødvendig) legg inn fine mellomrom som tusenskiljeteikn og endrar desimalpunktum til desimalkomma.
 #'
 #' Argumentet «tabell» burde vore unødvendig, men siunitx \emph{insisterer}
-#' på å endra skrifta til \strong{\textrm}, sjølv om eg har slått på alle moglege
+#' på å endra skrifta til \code{\\textrm}, sjølv om eg har slått på alle moglege
 #' detect-argument (og prøvd mykje anna, og søkt på nettet etter løysingar
 #' (bruk søkeorda «siunitx» og «fontspec»)). Alle andre løysingar eg har
 #' funne gjer at anten vert ikkje rett skrift brukt i brødteksten eller så vert
