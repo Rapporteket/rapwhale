@@ -71,11 +71,16 @@ round_any = function(x, accuracy, f = round) {
 }
 
 
-#### Konfidensintervall for binomisk fordeling
-
-# Brukar Wilson-intervallet, som anbefalt i
-# «Binomial confidence intervals and contingency tests:
-# mathematical fundamentals and the evaluation of alternative methods», av Sean Wallis, University College London
+#' Konfidensintervall for binomisk fordeling
+#'
+#' Brukar Wilson-intervallet, som anbefalt i «Binomial confidence intervals
+#' and contingency tests: mathematical fundamentals and the evaluation of
+#' alternative methods», av Sean Wallis, University College London.
+#'
+#' Returnerer en tibble med nedre og øvre grense for et 95 \%
+#' wilson-konfidensintervall.
+#' @param x Antall suksesser i forsøket.
+#' @param n Antall uavhengige forsøk.
 #' @export
 regn_ki_bin = function(x, n) {
   ki = binom::binom.wilson(x, n)
@@ -85,8 +90,11 @@ regn_ki_bin = function(x, n) {
   )
 }
 
+
+
 ### Konfidenstinervall basert på gjennomsnittet til en  kontinuerlig variabel
 # med mulighet for bootstrap lagt inn i funksjonen
+
 #' @export
 regn_ki_univar = function(x, bootstrap = FALSE, antall, ...) {
   # Hvis det er for få eller for lite varierende
@@ -128,6 +136,8 @@ regn_ki_univar = function(x, bootstrap = FALSE, antall, ...) {
     }
   }
 }
+
+
 
 # For å lage pene LaTeX-tabeller i et standardisert format for alle årsrapporter,
 # med mulighet for å gjøre den stor nok til hele siden (wide = TRUE).
