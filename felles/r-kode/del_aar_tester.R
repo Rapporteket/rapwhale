@@ -2,48 +2,49 @@
 
 # Tester - Funksjon 1 -----------------------------------------------------
 
-context("Funksjon 1 - inndata")
+context("Funksjon 1: feilmeldinger ved ugyldige inndata")
 
-# Sjekk at det gis feilmelding om årstall inneholder desimal:
 test_that("Det gis feilmelding om årstall-vektor ikke er heltallsvektor", {
-  ar_m_des = c(2017, 2018, 2019, 2017, 2015, 2010, 2020, 2018.5)
-  kvart_i_db = c(1, 2, 3, 4, 1, 2, 3, 1, 2, 3)
-  expect_error(del_aar(ar_m_des, kvart_i_db, 4))
+  expect_error(del_aar(c(2017, 2018, 2019, 2020.5), 1:4, 4))
 })
 
-# Sjekk at det gis feilmelding om antall_deler er mindre enn 1..
-test_that("Det gis feilmelding om antall_deler er mindre enn 1.", {
-  ar_i_db = c(2015, 2020, 2015, 2013, 2019, 2020, 2015, 2019, 2018, 2017)
-  kvart_i_db = c(1, 2, 3, 4, 1, 2, 3, 1, 2, 3)
-  expect_error(del_aar(ar_i_db, kvart_i_db, 0.5), "Antall deler er < 1")
+test_that("Det gis feilmelding ved ugyldige delnummer", {
+  expect_error(del_aar(2001:2004, 1:4, 3), "delnummer må være verdier i 1:3")
+  expect_error(del_aar(2001:2004, c(1, 1.5, 2, 3), 3), "delnummer må være verdier i 1:3")
+  expect_error(del_aar(2001:2004, -1:2, 12), "delnummer må være verdier i 1:12")
 })
 
-# Sjekk at funksjonen gir en advarsel om årstall inneholder NA:
-test_that("Det gis advarsel om det finnes NA-verdier i årstall", {
-  ar_i_db_na = c(2017, 2018, 2019, NA_integer_, 2020, 2018, 2015, 2020, 2019, 2270)
-  kvart_i_db = c(1, 2, 3, 4, 1, 2, 3, 1, 2, 3)
-  expect_warning(del_aar(ar_i_db_na, kvart_i_db, 4), "År inneholder NA-verdier",
-    fixed = TRUE
-  )
+test_that("Det gis feilmelding hvis årstall og delnummer ikke er like lange", {
+  expect_error(del_aar(2001:2004, 1:5, 12))
+  expect_error(del_aar(2001:2005, 1:4, 12))
 })
 
-context("Funksjon 1 - Utdata")
-
-# Utdata er aldri heltall, selv med flere enn 365 deler.
-test_that("Utdata aldri er et heltall", {
-  ar_i_db_diger = sample(x = c(2017, 2018, 2019, 2020), size = 1000, replace = TRUE)
-  kvart_i_db_diger = sample(x = 1:4, size = 1000, replace = TRUE)
-  # expect_false(any(del_aar(ar_i_db_diger, kvart_i_db_diger, 4) == floor(del_aar(ar_i_db_diger, kvart_i_db_diger, 4))))
-  expect_false(isTRUE(del_aar(ar_i_db_diger, kvart_i_db_diger, 4) == floor(del_aar(ar_i_db_diger, kvart_i_db_diger, 4))))
+test_that("Det gis feilmelding om antall_deler ikke har lengde 1", {
+  expect_error(del_aar(2001:2004, 1:4, c(4, 12)), "antall_deler må ha lengde 1")
 })
+
+test_that("Det gis feilmelding om antall_deler ikke er heltallig", {
+  expect_error(del_aar(2001:2004, 1:4, 2.5), "antall_deler må være et heltall")
+})
+
+test_that("Det gis feilmelding om antall_deler er mindre enn 1", {
+  expect_error(del_aar(2001:2004, 1:4, 0), "antall_deler må være >= 1")
+})
+
+test_that("Det gis advarsel om det finnes NA-verdier i årstall eller delnummer", {
+  expect_warning(del_aar(c(2001, NA, 2003), 1:3, 4), "Inndata inneholder NA-verdier")
+  expect_warning(del_aar(2001:2003, c(1, NA, 2), 4), "Inndata inneholder NA-verdier")
+})
+
+context("Funksjon 1: Utdata")
 
 # Utdata samsvarer med forventet utverdi.
 test_that("Utdata samsvarer med forventet resultat.", {
-  aar = rep(2019, 4)
-  kvart = c(1, 2, 3, 4)
-  mnd = c(1, 7, 2, 12)
-  forvent = c(2019.125, 2019.375, 2019.625, 2019.875)
-  forvent12 = c(2019 + (1 / 12) * mnd - 1 / 24)
+  aar = c(rep(2019, 4), 2020)
+  kvart = c(1, 2, 3, 4, 1)
+  mnd = c(1, 7, 2, 12, 1)
+  forvent = c(2019.125, 2019.375, 2019.625, 2019.875, 2020.125)
+  forvent12 = c(2019 + (1 / 12) * mnd[1:4] - 1 / 24, 2020 + 1 / 24)
   expect_identical(del_aar(aar, kvart, 4), forvent)
   expect_equal(del_aar(aar, mnd, 12), forvent12)
 })
@@ -51,17 +52,14 @@ test_that("Utdata samsvarer med forventet resultat.", {
 
 context("Funksjon 1 - Grensetilfeller")
 
-# Få observasjoner i årstall
 test_that("Funksjonen fungerer med kun ett årstall", {
   expect_equal(del_aar(2019, 1, 4), 2019.125)
 })
 
-# Funksjonen fungerer med kun 1 del.
 test_that("Funksjonen fungerer med kun en del", {
   expect_equal(del_aar(2019, 1, 1), 2019.5)
 })
 
-# Funksjonen fungerer med 366 deler
 test_that("Funksjonen fungerer med 366 deler", {
   expect_equal(del_aar(2019, 1, 366), 2019 + (1 / 366 / 2))
 })
@@ -196,4 +194,22 @@ test_that("Funksjonen fungerer med kun en datoverdi", {
 test_that("Funksjonen fungerer med kun en del", {
   dato = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
   expect_equal(lag_periode(dato, 1), c(2019.5, 2019.5, 2019.5, 2019.5))
+})
+
+# Utdata er aldri heltall, selv med flere enn 365 deler.
+test_that("Utdata alltid er desimaltall", {
+  ar_i_db_diger = sample(x = c(2017, 2018, 2019, 2020), size = 1000, replace = TRUE)
+  kvart_i_db_diger = sample(x = 1:4, size = 1000, replace = TRUE)
+
+  aar = c(2000, 2000, 2001, 2001)
+
+  er_desimaltall = function(x) {
+    (x %% 1) > 0
+  }
+  alle_er_desimaltall = function(x) {
+    all(er_desimaltall(x))
+  }
+
+  expect_true(alle_er_desimaltall(del_aar(ar_i_db_diger, kvart_i_db_diger, 365)))
+  expect_true(alle_er_desimaltall(del_aar(ar_i_db_diger, kvart_i_db_diger, 365)))
 })

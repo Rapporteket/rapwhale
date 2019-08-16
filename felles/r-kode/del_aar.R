@@ -9,14 +9,11 @@ del_aar = function(aar, delnummer, antall_deler) {
 
   # Sjekk at inndata er i riktig format
   stopifnot(length(aar) == length(delnummer))
-  if (any(is.na(aar))) {
-    warning("År inneholder NA-verdier")
-  }
-  if (any(is.na(delnummer))) {
-    warning("Delnummer inneholder NA-verdier")
+  if (any(is.na(aar) | is.na(delnummer))) {
+    warning("Inndata inneholder NA-verdier")
   }
   if (antall_deler < 1) {
-    stop("Antall deler er < 1")
+    stop("antall_deler må være >= 1")
   }
 
   (aar + delnummer / antall_deler - (1 / antall_deler) / 2)
