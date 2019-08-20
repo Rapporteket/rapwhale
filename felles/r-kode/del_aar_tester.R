@@ -198,13 +198,6 @@ test_that("Vi får ønsket utverdi når dato er i POSIXct-format med klokkeslett
   expect_true(any(lag_periode(dato_ct_med_klokke_diff, 500) != lag_periode(dato_ct_med_klokke, 500))) # Forskjellig klokkeslett gir forskjellig utverdi gitt korte nok interval.
 })
 
-test_that("Vi får ønsket utverdi når dato er i POSIXlt-format uten klokkeslett", {
-  dato_lt_uten_klokke = as.POSIXlt(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
-  dato_Date = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
-
-  expect_identical(lag_periode(dato_lt_uten_klokke, 5), lag_periode(dato_Date, 5))
-})
-
 test_that("Vi får ønsket utverdi når dato er i POSIXlt-format med klokkeslett", {
   dato_lt_med_klokke = as.POSIXlt(c("2019-01-01 12:00", "2019-04-01 12:00", "2019-08-01 12:00", "2019-12-01 12:00"))
   dato_lt_med_klokke_diff = as.POSIXlt(c("2019-01-01 02:00", "2019-04-01 02:00", "2019-08-01 02:00", "2019-12-01 02:00"))
