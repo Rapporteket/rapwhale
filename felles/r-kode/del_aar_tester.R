@@ -189,12 +189,6 @@ test_that("Vi får samme resultat med dato-vektor uten klokkeslett, og dato vekt
   expect_equal(lag_periode(dato_u_klokke, 4), lag_periode(dato_klokke, 4))
 })
 
-test_that("Vi får ønsket utverdi når dato er i POSIXct-format uten klokkeslett", {
-  dato_ct_uten_klokke = as.POSIXct(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
-  dato_Date = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
-  expect_identical(lag_periode(dato_ct_uten_klokke, 5), lag_periode(dato_Date, 5))
-})
-
 test_that("Vi får ønsket utverdi når dato er i POSIXct-format med klokkeslett", {
   dato_ct_med_klokke = as.POSIXct(c("2019-01-01 12:00", "2019-04-01 12:00", "2019-08-01 12:00", "2019-12-01 12:00"))
   dato_ct_med_klokke_diff = as.POSIXct(c("2019-01-01 02:00", "2019-04-01 02:00", "2019-08-01 02:00", "2019-12-01 02:00"))
