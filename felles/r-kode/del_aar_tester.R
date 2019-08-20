@@ -211,12 +211,12 @@ test_that("Vi får ønsket utverdi når dato er i POSIXlt-format med klokkeslett
 
 context("lag_periode - Grensetilfeller")
 
-test_that("Funksjonen fungerer med kun en datoverdi", {
+test_that("Funksjonen fungerer med kun én datoverdi", {
   dato = as.Date("2019-01-01")
   expect_equal(lag_periode(dato, 4), 2019.125)
 })
 
-test_that("Funksjonen fungerer med kun en del", {
+test_that("Funksjonen fungerer med kun én del", {
   dato = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
   expect_equal(lag_periode(dato, 1), c(2019.5, 2019.5, 2019.5, 2019.5))
 })
