@@ -39,6 +39,16 @@ del_aar = function(aar, delnummer, antall_deler) {
 lag_periode = function(dato, antall_deler) {
 
   # Sjekke inndata
+  if (length(antall_deler) != 1) {
+    stop("antall_deler må ha lengde 1")
+  }
+  if (antall_deler < 1) {
+    stop("antall_deler må være >= 1")
+  }
+  if (antall_deler != floor(antall_deler)) {
+    stop("antall_deler må være et heltall")
+  }
+
   if (!(is.timepoint(dato))) { # TRUE for både Date og POSIXt-format
     stop("Dato-vektor er ikke i Date- eller POSIXt-format")
   }
