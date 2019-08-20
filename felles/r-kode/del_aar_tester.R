@@ -54,7 +54,7 @@ test_that("Funksjonen fungerer med kun ett årstall", {
   expect_equal(del_aar(2019, 1, 4), 2019.125)
 })
 
-test_that("Funksjonen fungerer med kun en del", {
+test_that("Funksjonen fungerer med kun én del", {
   expect_equal(del_aar(2019, 1, 1), 2019.5)
 })
 
@@ -67,17 +67,13 @@ test_that("Funksjonen fungerer med 366 deler", {
 context("lag_periode - feilmeldinger ved ugyldige inndata")
 
 test_that("Det gis advarsel om det finnes NA-verdier i datovektor", {
-  dato_m_na = c(sample(seq(from = as.Date("2019-01-01"), to = as.Date("2021-12-31"), "days"), size = 30), NA, NA, NA)
-  expect_warning(lag_periode(dato_m_na, 3), "Det finnes NA-verdier i dato-vektor",
-    fixed = TRUE
-  )
+  dato_m_na = c(as.Date("2019-01-01"), NA)
+  expect_warning(lag_periode(dato_m_na, 3), "Det finnes NA-verdier i dato-vektor")
 })
 
 test_that("Det gis feilmelding om dato ikke er i Date-format", {
-  ar_i_db = c(2015, 2020, 2015, 2013, 2019, 2020, 2015, 2019, 2018, 2017)
-  ar_i_char = c("2015", "2020", "2015", "2013", "2019", "2020", "2015", "2019", "2018", "2017")
-  expect_error(lag_periode(ar_i_db, 12), "Dato-vektor er ikke i Date- eller POSIXt-format")
-  expect_error(lag_periode(ar_i_char, 12), "Dato-vektor er ikke i Date- eller POSIXt-format")
+  expect_error(lag_periode(2001:2004, 12), "Dato-vektor er ikke i Date- eller POSIXt-format")
+  expect_error(lag_periode(as.character(2001:2004), 12), "Dato-vektor er ikke i Date- eller POSIXt-format")
 })
 
 test_that("Det gis feilmelding om antall_deler ikke har lengde 1", {
@@ -92,33 +88,80 @@ test_that("Det gis feilmelding om antall_deler ikke er heltallig", {
 
 test_that("Det gis feilmelding om antall_deler er mindre enn 1", {
   dato = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
-  expect_error(lag_periode(dato = dato, antall_deler = 0.8), "antall_deler må være >= 1")
+  expect_error(lag_periode(dato = dato, antall_deler = 0), "antall_deler må være >= 1")
 })
 
 
 context("lag_periode - Utdata")
 
 test_that("Utdata samsvarer med forventet resultat, ", {
-  dato = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
-  forvent = c(2019.125, 2019.125, 2019.625, 2019.875)
-  forvent2 = c(2019.25, 2019.25, 2019.75, 2019.75)
-  expect_identical(lag_periode(dato, 4), forvent)
+  dato = as.Date(c(
+    "2019-01-01",
+    "2019-04-01", "2019-04-02",
+    "2019-06-30", "2019-07-01", "2019-07-02",
+    "2019-09-30", "2019-10-01",
+    "2019-12-31"
+  ))
+  forvent4 = c(
+    2019.125,
+    2019.125, 2019.375,
+    2019.375, 2019.625, 2019.625,
+    2019.625, 2019.875,
+    2019.875
+  )
+  forvent2 = c(
+    2019.25,
+    2019.25, 2019.25,
+    2019.25, 2019.75, 2019.75,
+    2019.75, 2019.75,
+    2019.75
+  )
+  # Merk: Skal ein plassera datoar i intervall, må dei nødvendigvis
+  # representerast ved eit *tidspunkt*. Elles kan ein ein dato høyra
+  # heime i meir enn eitt intervall. Deler ein for eksempel året i
+  # to, vil 1. juli høyra heime i begge intervalla, første 12 timar i
+  # første intervall og neste 12 timar i andre intervall. Me føreset
+  # at kvar dato vert representert ved klokka 12 på den aktuelle datoen.
+  expect_identical(lag_periode(dato, 4), forvent4)
   expect_identical(lag_periode(dato, 2), forvent2)
 })
 
 test_that("Det gis ulike resultat ved forskjellige klokkeslett", {
-  dato_tidlig = as.POSIXlt(c("2019-01-01 02:00:00", "2019-04-01 02:00:00", "2019-08-01 02:00:00", "2019-12-01 02:00:00"))
-  dato_sent = as.POSIXlt(c("2019-01-01 21:00:00", "2019-04-01 21:00:00", "2019-08-01 21:00:00", "2019-12-01 21:00:00"))
-  expect_false(any(lag_periode(dato_tidlig, 730) == lag_periode(dato_sent, 730)))
+  tider_tidlig = as.POSIXlt(c("2019-01-01 02:00:00", "2019-04-01 02:00:00", "2019-08-01 02:00:00", "2019-12-01 02:00:00"))
+  tider_sent = as.POSIXlt(c("2019-01-01 21:00:00", "2019-04-01 21:00:00", "2019-08-01 21:00:00", "2019-12-01 21:00:00"))
+  expect_false(any(lag_periode(tider_tidlig, 730) == lag_periode(tider_sent, 730)))
 })
 
-test_that("Utdata aldri er et heltall", {
-  dato_diger = sample(seq(from = as.Date("2019-01-01"), to = as.Date("2025-12-31"), "days"), size = 3000, replace = TRUE)
-  dato_aarevis = sample(seq(from = as.Date("2019-01-01"), to = as.Date("2025-12-31"), "days"), size = 30, replace = TRUE)
-  expect_false(any(lag_periode(dato_diger, 10000) == floor(lag_periode(dato_diger, 10000)))) &
-    expect_false(any(lag_periode(dato_diger, 3) == floor(lag_periode(dato_diger, 3)))) &
-    expect_false(any(lag_periode(dato_aarevis, 1000) == floor(lag_periode(dato_aarevis, 1000))))
+test_that("Det taes hensyn til tidssone", {
+  # Utregningene skal foregå i tidssonen til inndataene.
+  # Antar altså at det bare finnes én tidssone
+  # (sant for POSIXct-objekt, hvis vi ser vekk fra sommertid).
+  # (For Norge er det strengt tatt to tidssoner, én for normaltid (CET) og én for sommertid (CEST),
+  # men utregninger mellom disse går likevel fint, og tidssonen for starten av året er lik
+  # tidssonen for slutten av året.)
+
+  # Lager variabler for klokka 02:15 (UTC + 1) for alle dagene i 2019.
+  # Men merk at *veggtid* vil variere (UTC + 1 for vintertid og UTC + 2 for sommertid).
+  tid_norsk = as.POSIXct("2019-01-01 02:15", tz = "CET") + (0:364) * 24 * 60 * 60
+
+  # Tilsvarende variablar for klokka 02:15 UTC.
+  tid_utc = as.POSIXct("2019-01-01 02:15", tz = "UTC") + (0:364) * 24 * 60 * 60
+
+  # Skal ha like intervall for norsk tidssone og UTC-tidssone
+  ant_per = 365 * 24 * 2
+  expect_identical(lag_periode(tid_norsk, ant_per), lag_periode(tid_utc, ant_per))
+
+  # Det går ett døgn mellom hvert tidspunkt, så differansen/inkrementene
+  # mellom etterfølgende punkt på tidslinjene skal være konstant
+  # (her lik 2 * 24 / ant_per)
+  unike_inkrement = function(x, desimaler = 4) {
+    inkrement = round(diff(x) * ant_per, desimaler)
+    length(unique(inkrement))
+  }
+  expect_identical(unike_inkrement(lag_periode(tid_norsk, ant_per)), 1L)
+  expect_identical(unike_inkrement(lag_periode(tid_utc, ant_per)), 1L)
 })
+
 
 test_that("Utdata verdi er alltid innen det samme året som inn-dato", {
   dato_diger = sample(seq(from = as.Date("2019-01-01"), to = as.Date("2025-12-31"), "days"), size = 3000, replace = TRUE)
