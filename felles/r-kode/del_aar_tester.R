@@ -5,7 +5,7 @@
 context("Funksjon 1: feilmeldinger ved ugyldige inndata")
 
 test_that("Det gis feilmelding om årstall-vektor ikke er heltallsvektor", {
-  expect_error(del_aar(c(2017, 2018, 2019, 2020.5), 1:4, 4))
+  expect_error(del_aar(c(2017, 2018, 2019, 2020.5), 1:4, 4), "aar må være heltall")
 })
 
 test_that("Det gis feilmelding ved ugyldige delnummer", {
@@ -49,7 +49,6 @@ test_that("Utdata samsvarer med forventet resultat.", {
   expect_equal(del_aar(aar, mnd, 12), forvent12)
 })
 
-
 context("Funksjon 1 - Grensetilfeller")
 
 test_that("Funksjonen fungerer med kun ett årstall", {
@@ -65,7 +64,6 @@ test_that("Funksjonen fungerer med 366 deler", {
 })
 
 # Tester - Funksjon 2 -----------------------------------------------------
-
 
 context("Funksjon 2 - inndata")
 
