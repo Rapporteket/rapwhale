@@ -169,10 +169,16 @@ test_that("Utdata verdi er alltid innen det samme året som inn-dato", {
 })
 
 test_that("Avstand mellom ut-verdier er symmetrisk fordelt", {
-  dato = as.Date(c("2019-01-01", "2019-12-31"))
-  expect_identical((lag_periode(dato, 365)[1] - year(dato)[1]), ((year(dato)[1] + 1 - lag_periode(dato, 365)[2])))
-  expect_identical((lag_periode(dato, 5)[1] - year(dato)[1]), ((year(dato)[1] + 1 - lag_periode(dato, 5)[2])))
-  expect_identical((lag_periode(dato, 13)[1] - year(dato)[1]), ((year(dato)[1] + 1 - lag_periode(dato, 13)[2])))
+  test_symmetri = function(antall_deler) {
+    expect_identical(
+      lag_periode(as.Date("2019-01-01"), antall_deler) - 2019,
+      2020 - lag_periode(as.Date("2019-12-31"), antall_deler)
+    )
+  }
+  test_symmetri(antall_deler = 1000)
+  test_symmetri(antall_deler = 365)
+  test_symmetri(antall_deler = 5)
+  test_symmetri(antall_deler = 13)
 })
 
 test_that("Vi får samme resultat med dato-vektor uten klokkeslett, og dato vektor med klokkeslett = 12", {
