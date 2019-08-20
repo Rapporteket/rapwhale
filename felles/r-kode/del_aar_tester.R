@@ -164,6 +164,7 @@ test_that("Det taes hensyn til tidssone", {
 
 
 test_that("Utdata verdi er alltid innen det samme året som inn-dato", {
+  set.seed(1234)
   dato_diger = sample(seq(from = as.Date("2019-01-01"), to = as.Date("2025-12-31"), "days"), size = 3000, replace = TRUE)
   expect_identical(floor(lag_periode(dato_diger, 10000)), year(dato_diger))
 })
