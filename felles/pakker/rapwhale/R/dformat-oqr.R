@@ -200,7 +200,9 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
       "tsupdated", "Skjema sist oppdatert", "dato_kl", "nei", "nei", NA,
       "updatedby", "Skjema oppdatert av", "tekst", "nei", "nei", NA,
       "tscreated", "Skjema oppretta", "dato_kl", "nei", "ja", NA,
-      "createdby", "Skjema oppretta av", "tekst", "nei", "ja", NA
+      "createdby", "Skjema oppretta av", "tekst", "nei", "ja", NA,
+      "first_time_closed", "Skjema er ferdigstilt", "dato_kl", "nei", "ja", NA,
+      "first_time_closed_by", "Skjema er ferdigstilt av", "tekst", "nei", "ja", NA
     )
     kb_utvida = bind_rows(kb_ekstra[1:2, ], kb, kb_ekstra[3:6, ])
     kb_utvida
@@ -300,38 +302,6 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
 
 
 # Les datadump frå OQR-register -------------------------------------------
-
-# Les inn OQR-data frå gitt skjema ved hjelp av kodebok.
-# Kodeboka vert brukt til å gje alle variablane rett format
-# (tal, tekst, dato, boolske/logiske verdiar osv.) og til å
-# sikra at datadumpen er i samsvar med kodeboka.
-#
-# Som standard treng ein ikkje oppgje kodebok; ho vert automatisk henta inn.
-# Men dersom ein skal lesa inn mange skjema, er det lurare å lesa inn
-# kodeboka separat først, for at ting skal gå raskare (innlesing og validering
-# av kodeboka kan ta litt tid). Det er òg nødvendig å gjera det slik dersom
-# ein har kodeboka frå ei anna kjelde eller viss ein vil bruka ei modifisert
-# kodebok (generelt farleg!).
-#
-# Denne funksjonen er laga basert på den offisielle dokumentasjonen på datadump-
-# formatet til OQR, dvs. dokumentet «4.2 Dokumentasjon på format av Datadump i register.doc».
-#
-# Inndata:
-#   mappe_dd:  Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
-#   reg_id:    ID som identifiserer registeret og er prefiks til alle filnamna
-#   skjema_id: ID til skjemaet ein vil henta inn (brukt i filnamnet og i kolonnen «tabell» i kodeboka)
-#   status:    Berre ta med skjema med desse statusverdiane (-1 = oppretta, 0 = kladd, 1 = ferdigstilt).
-#              Kan òg vera NULL, for å henta alt, uavhengig av status (dvs. også inkludert NA-status
-#              og ugyldige statusverdiar, eller datadumpar som manglar statusvariabel
-#              (ikkje noko av dette *skal* vera mogleg å få, men alt kan skje i denne verda ...)).
-#   dato:      Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
-#   kodebok:   Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
-#   valider_kb: Skal kodeboka validerast? Standard er ja dersom kodeboka skal hentast inn automatisk, elles nei.
-#   valider_dd: Skal datadumpen validerast? Standard er ja.
-#
-# Utdata:
-#   R-datasett for det aktuelle skjemaet, med variabelnamn gjort om til små bokstavar.
-
 
 # Roxygen dokumentasjon
 
