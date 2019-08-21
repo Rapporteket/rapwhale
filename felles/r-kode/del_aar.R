@@ -93,10 +93,10 @@ lag_periode = function(dato, antall_deler) {
   (aar_midtpunkt[nye_pkt])
 }
 
-# TESTER
-library(testthat)
-test_adr = "H:\\kvalreg\\felles\\R-kode\\del_aar_tester.R"
-test_file(test_adr, reporter = "minimal") # *Veldig* kort og konsist samandrag
-test_file(test_adr, reporter = "check") # 13-linjes samandrag
-test_file(test_adr, reporter = "summary") # Alt, med fint samandrag i starten
-test_file(test_adr)
+# # TESTER
+# library(testthat)
+# test_adr = "H:\\kvalreg\\felles\\R-kode\\del_aar_tester.R"
+# test_file(test_adr, reporter="minimal") # *Veldig* kort og konsist samandrag
+# test_file(test_adr, reporter="check")   # 13-linjes samandrag
+# test_file(test_adr, reporter="summary") # Alt, med fint samandrag i starten
+# test_file(test_adr)
