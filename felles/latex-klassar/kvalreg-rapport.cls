@@ -634,3 +634,18 @@
 \makeatletter
 \renewcommand{\counterwithin}{\@ifstar{\@csinstar}{\@csin}}
 \makeatother
+
+% Lagra tekst (typisk for samandragskapittelet) i eiga fil for
+% bruk ein annan plass i dokumentet (gjerne *før* definisjonen).
+% Er nyttig når samandragskapittelet brukar utrekningar som
+% vert gjort seinare i dokumentet. Merk at ein må kompilera
+% dokumentet minst to gongar etter å ha gjort endringar.
+%
+% Inspirert av løysinga her, men med nokre endringar:
+% http://tex.stackexchange.com/a/150840/8540
+\newcommand{\introtekst}[1]{%
+   \newwrite\introfil
+   \immediate\openout\introfil=introtekst.tex
+   \immediate\write\introfil{\unexpanded{#1}}
+   \immediate\closeout\introfil
+}
