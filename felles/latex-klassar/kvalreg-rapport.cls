@@ -236,9 +236,6 @@
   \RequirePackage[english]{varioref}
 \fi\fi\fi
 
-% Godta komma som desimalskiljeteikn i matte
-\RequirePackage{ncccomma}
-
 % Støtte for elementære utrekningar
 \RequirePackage{calc}
 
@@ -471,6 +468,9 @@
 
 \frontmatter
 \cleartorecto % Hopp til ny høgreside
+
+% Godta komma som desimalskiljeteikn i matte
+\RequirePackage{ncccomma}
 
 % Vis innhadsliste
 {\hypersetup{hidelinks}
