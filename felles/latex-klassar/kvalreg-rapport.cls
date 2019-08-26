@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{kvalreg-rapport}[2019/01/09 Rapportar for kvalitetsregister]
+\ProvidesClass{kvalreg-rapport}[2019/08/26 Rapportar for kvalitetsregister]
 
 % Krev bruk av LuaLaTeX
 \RequirePackage{ifluatex}
@@ -115,6 +115,9 @@
 \RequirePackage{mathtools}        % Rett nokre mattegreier
 \mathtoolsset{mathic}             % Ditto
 \RequirePackage[warnings-off={mathtools-colon,mathtools-overbracket}]{unicode-math}     % Unicode-matte for LuaLaTeX
+
+% Godta komma som desimalskiljeteikn i matte
+\RequirePackage{ncccomma}
 
 % Viser akronyom med kapitélar
 % (Brukar \texorpdfstring for å hindra problem med bruk av kommandoen i PDF-innhaldslista)
@@ -468,9 +471,6 @@
 
 \frontmatter
 \cleartorecto % Hopp til ny høgreside
-
-% Godta komma som desimalskiljeteikn i matte
-\RequirePackage{ncccomma}
 
 % Vis innhadsliste
 {\hypersetup{hidelinks}
