@@ -142,7 +142,7 @@ lag_regelsett = function(kodebok, oblig = TRUE) {
     pmap(function(varnamn, gverdi) {
       new_function(
         alist(df = ),
-        expr(transmute_at(df, vars(foo = !!varnamn), rules(des_ok = round(., gverdi) == .)))
+        expr(transmute_at(df, vars(foo = !!varnamn), rules(des_ok = is.na(.) | (round(., gverdi) == .))))
       )
     }) %>%
     setNames(paste0("des_", kb_des$varnamn))
