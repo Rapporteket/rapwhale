@@ -296,6 +296,17 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
   # Gjer om til kanonisk form
   kodebok = kb_til_kanonisk_form(kodebok)
 
+  # Fra dokumentasjonen på kodebok:
+  # Obligatorisk
+  # Betydning: Om variabelen må fylles ut eller ikke dersom den er synlig.
+  # Det angis ikke om variabelen ved visse tilfeller er skjult for bruker.
+  # Det vil si at obligatoriske variabler kan være blanke dersom de ikke
+  # er relevante pga andre spørsmål i skjemaet.
+  # Vi kan med andre ord ikke håndtere noen variabler som obligatorisk
+  # - alle må ha mulighet for missing. Setter derfor alle var til å ha obligatorisk = "nei"
+  kodebok = kodebok %>%
+    mutate(obligatorisk = "nei")
+
   # Returner kodeboka
   kodebok
 }
@@ -370,13 +381,13 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
   varnamn_kb = unique(kb_akt$variabel_id)
   ekstra_kb = setdiff(varnamn_kb, varnamn_dd)
   ekstra_dd = setdiff(varnamn_dd, varnamn_kb)
-  if (length(ekstra_kb) >= 0) {
+  if (length(ekstra_kb) > 0) {
     stop(paste0(
       "Desse variablane finst berre i kodeboka:\n",
       paste(ekstra_kb, collapse = ", "), "\n"
     ))
   }
-  if (length(ekstra_dd) >= 0) {
+  if (length(ekstra_dd) > 0) {
     stop(paste0(
       "Desse variablane finst berre i datadumpen:\n",
       paste(toupper(ekstra_dd), collapse = ", "), "\n"
@@ -387,7 +398,6 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
   # er ikke nødvendigvis i samme rekkefølge som i kodeboka.
   # Vi setter navnene i kodeboka til å ha samme rekkefølge som datadumpen
   varnamn_kb = varnamn_kb[match(varnamn_dd, varnamn_kb)]
-
 
   # Datafila *kan* ikkje innehalda duplikate kolonnenamn,
   # sidan me då ikkje kan veta kva kolonne eit namn svarar til.
@@ -520,7 +530,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
 
   # Sjekk eventuelt at datadumpen er gyldig
   if (valider_dd) {
-    gyldig = dd_er_gyldig(d, kb_akt)
+    gyldig = dd_er_gyldig(d, kb_akt, oblig = FALSE)
     if (!gyldig) {
       print(attr(gyldig, "rapport"), n = Inf) # Vis grunnen til at datadumpen ikkje er gyldig
       stop("Datadumpen er ikkje gyldig")
