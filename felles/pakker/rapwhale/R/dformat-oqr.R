@@ -530,7 +530,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
 
   # Sjekk eventuelt at datadumpen er gyldig
   if (valider_dd) {
-    gyldig = dd_er_gyldig(d, kb_akt, oblig = FALSE)
+    gyldig = dd_er_gyldig(d, kb_akt, oblig = FALSE, rekkefolge = FALSE)
     if (!gyldig) {
       print(attr(gyldig, "rapport"), n = Inf) # Vis grunnen til at datadumpen ikkje er gyldig
       stop("Datadumpen er ikkje gyldig")
