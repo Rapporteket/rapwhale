@@ -109,7 +109,7 @@ lag_regelsett = function(kodebok, oblig = TRUE) {
       pmap(function(varnamn, gverdi) {
         new_function(
           alist(df = ),
-          expr(transmute_at(df, vars(foo = !!varnamn), rules(min_ok = . >= !!gverdi)))
+          expr(transmute_at(df, vars(foo = !!varnamn), rules(min_ok = (. >= !!gverdi) | is.na(.))))
         )
       }) %>%
       setNames(paste0("min_", kb_min$varnamn))
@@ -125,7 +125,7 @@ lag_regelsett = function(kodebok, oblig = TRUE) {
       pmap(function(varnamn, gverdi) {
         new_function(
           alist(df = ),
-          expr(transmute_at(df, vars(foo = !!varnamn), rules(maks_ok = . <= !!gverdi)))
+          expr(transmute_at(df, vars(foo = !!varnamn), rules(maks_ok = (. <= !!gverdi) | is.na(.))))
         )
       }) %>%
       setNames(paste0("maks_", kb_maks$varnamn))
