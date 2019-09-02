@@ -365,12 +365,18 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
     sep = ";", nlines = 1, quiet = TRUE
   ))
 
+
+
   # Sjekk at alle variablane i datadumpen finst i kodeboka
   # og at alle variablane i kodeboka finst i datadumpen
-  # (og i same rekkjefølgje)
   varnamn_kb = unique(kb_akt$variabel_id)
+  # dokumentasjonen til OpenQReg beskriver at kolonnene i datadumpen
+  # er ikke nødvendigvis i samme rekkefølge som i kodeboka.
+  # Vi setter navnene i kodeboka til å ha samme rekkefølge som datadumpen
+  # før vi sjekker at de er like
+  varnamn_kb = varnamn_kb[match(varnamn_dd, varnamn_kb)]
   if (!identical(varnamn_kb, varnamn_dd)) {
-    feilmelding = "Er ikkje same variablar i kodeboka og i datadumpfila\n(eller variabelrekkjefølgja er forskjellig).\n"
+    feilmelding = "Er ikkje same variablar i kodeboka og i datadumpfila.\n"
     ekstra_kb = setdiff(varnamn_kb, varnamn_dd)
     ekstra_dd = setdiff(varnamn_dd, varnamn_kb)
     if (length(ekstra_kb) >= 0) {
@@ -428,6 +434,9 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
       str_c(nye_typar, collapse = "\n")
     )
   }
+
+  # er rekkefølgen lik i kodebok i innlesingsspek som i datadump?
+  stopifnot(identical(spek_innlesing$variabel_id, varnamn_dd))
 
   # Les inn datasettet
   kol_typar = str_c(spek_innlesing$csv_bokstav, collapse = "")
