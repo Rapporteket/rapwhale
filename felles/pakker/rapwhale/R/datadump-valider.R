@@ -22,8 +22,11 @@ NULL
 # Argumentet "oblig" gjør det mulig å velge om man ønsker å sjekke obligatoriske felt.
 # dette fordi MRS-kodebøker har feil i sin obligatorisk-koding,
 # og dermed er uaktuelle for testing av dette feltet. Standard er TRUE.
+# Argumentet "rekkefolge" gjør det mulig å velge å sjekke om
+# datadumpen har samme rekkefølge på variabelnavn som i kodeboka.
+# Dette fordi OpenQREG har dokumentert at det ikke nødvendigvis er i samme rekkefølge.
 
-lag_regelsett = function(kodebok, oblig = TRUE) {
+lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
 
   # for å lage regler må kodeboka ha følgende kolonner:
   nodvar = c("variabel_id", "variabeltype", "min", "maks", "desimalar", "verdi", "verditekst")
@@ -246,20 +249,23 @@ lag_regelsett = function(kodebok, oblig = TRUE) {
   #-------------------------------------lik rekkefølge på variabelnavn som i kodebok----------------------------------
 
   # sjekk at rekkefølgen på kolonner er lik mellom data og kodebok
-  er_lik_rekkefolge = data_packs(
-    sjekk_rekkefolge = . %>% summarise(rekkefolge_varnavn = identical(names(.), (kodebok %>% distinct(variabel_id))$variabel_id))
-  )
-
+  if (rekkefolge) {
+    er_lik_rekkefolge = data_packs(
+      sjekk_rekkefolge = . %>% summarise(rekkefolge_varnavn = identical(names(.), (kodebok %>% distinct(variabel_id))$variabel_id))
+    )
+  }
   regelsett = list(
     er_innfor_min_og_maks,
     har_riktig_ant_des,
     er_riktig_variabeltype,
-    alle_var_er_med,
-    er_lik_rekkefolge
+    alle_var_er_med
   )
-  # legger kun til objekt for oblig hvis vi ønsker å teste det
+  # legger kun til objekt for oblig og rekkefolge hvis vi ønsker å teste det
   if (oblig) {
     regelsett = c(regelsett, list(oblig_har_ingen_missing))
+  }
+  if (rekkefolge) {
+    regelsett = c(regelsett, list(er_lik_rekkefolge))
   }
   if (nrow(kb_kat) > 0) {
     regelsett = c(regelsett, list(kat_er_innfor_verdier))
