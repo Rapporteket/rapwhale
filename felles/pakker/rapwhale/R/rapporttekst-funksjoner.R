@@ -33,8 +33,9 @@ NULL
 
 #' Konverter tall til LaTeX-format
 #'
-#' Funksjon som tar inn eit tal x og konverterer det til riktig format i LaTeX, og (om nødvendig) legg inn fine mellomrom som tusenskiljeteikn og endrar desimalpunktum til desimalkomma.
+#' Funksjon som tar inn ein vektor med tal x og konverterer han til riktig format i LaTeX, og (om nødvendig) legg inn fine mellomrom som tusenskiljeteikn og endrar desimalpunktum til desimalkomma.
 #'
+#' \code{NA}-verdiar vert gjorde om til tankestrekar. \cr\cr
 #' Argumentet «tabell» burde vore unødvendig, men siunitx \emph{insisterer}
 #' på å endra skrifta til \code{\\textrm}, sjølv om eg har slått på alle moglege
 #' detect-argument (og prøvd mykje anna, og søkt på nettet etter løysingar
@@ -82,7 +83,11 @@ num = function(x, desimalar, tabell = FALSE) {
   # mellom {} for å hindra problem ved bruk for eksempel inni shortcap-delen
   # av \caption[shortcap]{longcap} (eventuelle ]-teikn vert elles tolka
   # til å avslutta shortcap-argumentet, jf. https://tex.stackexchange.com/a/78416)
-  paste0("{\\num", argtekst, "{", format(x, scientific = FALSE), "}}")
+  x_form = paste0("{\\num", argtekst, "{", format(x, scientific = FALSE), "}}")
+  x_form[is.na(x)] = paste0("{", if (tabell) {
+    "\\tablefont"
+  }, "\\textendash{}}")
+  x_form
 }
 
 
