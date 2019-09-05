@@ -55,6 +55,10 @@ fjern_y_ticks = theme(axis.ticks.y = element_blank())
 # expand-argumentet til skaladefinisjonar.
 expand_soyle = expand_scale(mult = c(0.0, .05), add = 0)
 
+# I noen tilfeller er det ikke tilstrekkelig plass for tekst-label i plot.
+# Da kan vi bruke expand-argumentet under.
+expand_soyle_str_fig = expand_scale(mult = c(0.0, .09), add = 0)
+
 # Fjern luft til venstre for y-akseteksten og legg
 # til ekstra luft til høgre for han, fjern luft under
 # x-akseteksten og legg til ekstra luft over han,
@@ -134,7 +138,7 @@ flytt_opp = function(y, tekst, hoyde = .015) {
 #' @param konfint Legg til konfidensintervall på kvar punkt
 #' @export
 lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab = NULL,
-                         angle = TRUE, konfint = TRUE) {
+                         angle = TRUE, konfint = TRUE, point_size = 2) {
   grafdel = list()
   # Legg ev. til referanselinje(r)
   if (!is.null(refline)) {
@@ -157,7 +161,7 @@ lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab
     grafdel,
     list(
       geom_line(colour = colPrim[3], size = 1), # Linjer over tid
-      geom_point(size = 2, colour = colPrim[2]), # Punkt
+      geom_point(size = point_size, colour = colPrim[2]), # Punkt
       xlab(xlab),
       ylab(ylab),
       tema,
