@@ -1,6 +1,7 @@
 # Testar for kb_fyll()-funksjonen, jf. kravspekken
 context("Kodebok fyll")
 library(rapwhale)
+library(magrittr)
 
 # Eksempeldatasett
 d = tribble(
