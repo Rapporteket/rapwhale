@@ -164,7 +164,6 @@ lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab
       geom_point(size = point_size, colour = colPrim[2]), # Punkt
       xlab(xlab),
       ylab(ylab),
-      tema,
       fjern_x
     )
   )
@@ -207,7 +206,6 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
     title = tittel, xlab = x_navn, ylab = y_navn, show.labels = FALSE, x.period = periode, facets = ~ (!!qic_facet),
     flip = skal_flippes
   ))) +
-    tema +
     fjern_x +
     fjern_y +
     theme(legend.position = "none")
@@ -264,7 +262,6 @@ lag_fig_soyle = function(d, x, y, farge = ColPrim[3], facet = FALSE, facet_grupp
     geom_barh(stat = "identity", fill = farge, width = 2 / 3) +
     xlab(NULL) +
     ylab(NULL) +
-    tema +
     fjern_y +
     scale_x_continuous(expand = expand_soyle) +
     fjern_y_ticks
