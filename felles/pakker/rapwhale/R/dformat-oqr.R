@@ -187,6 +187,18 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
     match(kodebok$variabeltype, vartype_oqr_standard$type_oqr)
   ]
 
+  # Fra dokumentasjonen på kodebok:
+  # Obligatorisk
+  # Betydning: Om variabelen må fylles ut eller ikke dersom den er synlig.
+  # Det angis ikke om variabelen ved visse tilfeller er skjult for bruker.
+  # Det vil si at obligatoriske variabler kan være blanke dersom de ikke
+  # er relevante pga andre spørsmål i skjemaet.
+  # aktiveringsspoersmaal-kolonnen i klokeboken beskriver en variabel åpner opp nye variabler for bruker "Ja" eller ikke "Nei".
+  # Er denne "Ja" er den alltid synlig for bruker,
+  # og vi kan vite at den da vil være obligatorisk (hvis den også er markert som obligatorisk)
+  kodebok = kodebok %>%
+    mutate(obligatorisk = ifelse(aktiveringsspoersmaal == "Ja" & obligatorisk == "ja", "ja", "nei"))
+
   # I tillegg til dei definerte variablane har datadumpane seks ekstra
   # variablar, to før kodebokvariablane og fire etter. Desse er definerte
   # i dokumentasjonen til datadumpane (dokumentet «4.2 Dokumentasjon på
@@ -295,17 +307,6 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
 
   # Gjer om til kanonisk form
   kodebok = kb_til_kanonisk_form(kodebok)
-
-  # Fra dokumentasjonen på kodebok:
-  # Obligatorisk
-  # Betydning: Om variabelen må fylles ut eller ikke dersom den er synlig.
-  # Det angis ikke om variabelen ved visse tilfeller er skjult for bruker.
-  # Det vil si at obligatoriske variabler kan være blanke dersom de ikke
-  # er relevante pga andre spørsmål i skjemaet.
-  # Vi kan med andre ord ikke håndtere noen variabler som obligatorisk
-  # - alle må ha mulighet for missing. Setter derfor alle var til å ha obligatorisk = "nei"
-  kodebok = kodebok %>%
-    mutate(obligatorisk = "nei")
 
   # Returner kodeboka
   kodebok
