@@ -452,7 +452,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
     tz = "Europe/Oslo"
   ) # Vert brukt både her og seinare
   d = readr::read_delim(adresse_dd,
-    delim = ";", quote = "", trim_ws = FALSE, na = "",
+    delim = ";", quote = "\"", trim_ws = FALSE, na = "",
     escape_double = FALSE, quoted_na = TRUE,
     col_names = spek_innlesing$variabel_id, col_types = kol_typar,
     skip = 1, # Hopp over overskriftsrada
