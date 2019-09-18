@@ -369,7 +369,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
   # Les inn variabelnamna som vert brukt i datafila
   adresse_dd = paste0(
     mappe_dd, "\\", dato, "\\",
-    reg_id, "_", skjema_id, "_datadump.csv_", format(dato, "%d.%m.%Y"), ".csv"
+    reg_id, "_", skjema_id, "_datadump_", format(dato, "%d.%m.%Y"), ".csv"
   )
   varnamn_dd = tolower(scan(adresse_dd,
     fileEncoding = "UTF-8-BOM", what = "character",
@@ -445,7 +445,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
 
   # Les inn datasettet
   kol_typar = str_c(spek_innlesing$csv_bokstav, collapse = "")
-  adresse_dd = paste0(mappe_dd, "\\", dato, "\\", reg_id, "_", skjema_id, "_datadump.csv_", format(dato, "%d.%m.%Y"), ".csv")
+  adresse_dd = paste0(mappe_dd, "\\", dato, "\\", reg_id, "_", skjema_id, "_datadump_", format(dato, "%d.%m.%Y"), ".csv")
   oqr_lokale = readr::locale(
     decimal_mark = ".", grouping_mark = "",
     date_format = "%Y-%m-%d", time_format = "%H:%M:%S",
