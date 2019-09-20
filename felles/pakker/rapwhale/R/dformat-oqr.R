@@ -50,7 +50,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
   # Les inn kodeboka
   adresse_kb = paste0(
     mappe_dd, "\\", dato, "\\",
-    reg_id, "_klokeboken.csv_", format(dato, "%d.%m.%Y"), ".csv"
+    reg_id, "_klokeboken_", format(dato, "%d.%m.%Y"), ".csv"
   )
   kodebok_oqr_format = readr::stop_for_problems(readr::read_delim(
     adresse_kb,
