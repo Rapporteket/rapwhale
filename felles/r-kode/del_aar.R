@@ -1,11 +1,10 @@
 
-# Konvertere tid til punkter på en akse:
 library(lubridate)
 
-# Funksjonen del_aar tar inn en vektor med årstall, en vektor med periode-tilhørighet og et heltall som sier hvor mange deler året skal deles opp i.
-# Utdata er en vektor med desimaltall som representerer koordinatene for de ulike periodene i inndata.
+# Funksjonen periode_til_tidslinje() tar inn en vektor med årstall, en vektor med periode-tilhørighet og et heltall som sier hvor mange deler året skal deles opp i.
+# Utdata er en vektor med desimaltall som representerer koordinatene for de ulike periodene i inndata fordelt på en akse.
 
-del_aar = function(aar, delnummer, antall_deler) {
+periode_til_tidslinje = function(aar, delnummer, antall_deler) {
 
   # Sjekk at inndata er i riktig format
   stopifnot(length(aar) == length(delnummer))
@@ -28,15 +27,15 @@ del_aar = function(aar, delnummer, antall_deler) {
     warning("Inndata inneholder NA-verdier")
   }
 
+  # Returnere koordinater
   (aar + delnummer / antall_deler - (1 / antall_deler) / 2)
 }
 
+# Funksjonen tid_til_tidslinje() tar inn en vektor med datoer og et heltall som sier hvor mange deler året skal deles opp i. Tilsvarende som funksjonen
+# periode_til_tidslinje returnerer den en vektor med desimaltall som representerer koordinatene for de ulike inndata.
+# tid_til_tidslinje inkluderer også klokkeslett, helt ned til sekunder i utregning av koordinat.
 
-# Funksjonen lag_periode tar inn en vektor med datoer og et heltall som sier hvor mange deler året skal deles opp i. Tilsvarende som funksjonen
-# del_aar returnerer den en vektor med desimaltall som representerer koordinatene for de ulike inndata.
-# lag_periode inkluderer også klokkeslett, helt ned til sekunder i utregning av koordinat.
-
-lag_periode = function(dato, antall_deler) {
+tid_til_tidslinje = function(dato, antall_deler) {
 
   # Sjekke inndata
   if (length(antall_deler) != 1) {
@@ -49,24 +48,23 @@ lag_periode = function(dato, antall_deler) {
     stop("antall_deler må være et heltall")
   }
 
-  if (!(is.timepoint(dato))) { # TRUE for både Date og POSIXt-format
+  if (!(is.timepoint(dato))) { # Både Date og POSIXt-format er timepoint.
     stop("Dato-vektor er ikke i Date- eller POSIXt-format")
   }
 
   # er dato i Date format settes klokkeslett til 12:00 (konverterer dato til POSIXlt)
   if (is.Date(dato)) {
     hour(dato) = 12
+    tz(dato) = "UTC"
 
-    # Hvis inndata ikke er Date må det nødvendigvis være POSIX*t format.
-    # Av disse er det lettest å bruke POSIXlt format for å identifisere om det inneholder et klokkeslett.
-    # Alle POSIxlt konverteres til POSIXlt før vi sjekker om det er timer, minutt eller sekunder registrert.
-    # Finnes det setter vi tidssone til UTC.
-    # Finnes ingen klokkeslett setter vi det til 12:00
+    # Se om tidssone er registrert, sett til UTC hvis ikke.
   } else {
-    dato = as.POSIXlt(dato)
-    if (any(unlist(dato[1])[1:3] != 0)) {
+    if (is.null(attr(dato, "tzone"))) {
       tz(dato) = "UTC"
-    } else {
+    }
+
+    # Hvis format er POSIXlt, men time, minutt og sekund er 0 settes tidspunkt til 1200.
+    if (all(unlist(dato[1])[1:3] == 0)) {
       hour(dato) = 12
     }
   }
@@ -87,16 +85,16 @@ lag_periode = function(dato, antall_deler) {
   }
 
   # Finner hvilket intervall hver observasjon tilhører.
-  nye_pkt = findInterval(x = decimal_date(dato), vec = aar, rightmost.closed = FALSE, left.open = FALSE) # [2019,2020)
+  nye_pkt = findInterval(x = decimal_date(dato), vec = aar, rightmost.closed = FALSE, left.open = FALSE) # (2019,2020]
 
-  # Returnerer utverdi
+  # Returnerer koordinater
   (aar_midtpunkt[nye_pkt])
 }
 
-# # TESTER
-# library(testthat)
-# test_adr = "H:\\kvalreg\\felles\\R-kode\\del_aar_tester.R"
-# test_file(test_adr, reporter="minimal") # *Veldig* kort og konsist samandrag
-# test_file(test_adr, reporter="check")   # 13-linjes samandrag
-# test_file(test_adr, reporter="summary") # Alt, med fint samandrag i starten
-# test_file(test_adr)
+# TESTER
+library(testthat)
+test_adr = "H:\\kvalreg\\felles\\R-kode\\del_aar_tester.R"
+test_file(test_adr, reporter = "minimal") # *Veldig* kort og konsist samandrag
+test_file(test_adr, reporter = "check") # 13-linjes samandrag
+test_file(test_adr, reporter = "summary") # Alt, med fint samandrag i starten
+test_file(test_adr)
