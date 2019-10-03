@@ -220,7 +220,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
     kb_utvida
   }
   kodebok = kodebok %>%
-    tidyr::nest(-skjema_id, -skjemanamn) %>%
+    tidyr::nest(data = names(kodebok %>% select(-skjema_id, -skjemanamn))) %>%
     mutate(data = purrr::map(data, legg_til_ekstravar)) %>%
     tidyr::unnest()
 
