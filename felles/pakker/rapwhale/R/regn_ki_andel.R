@@ -90,7 +90,7 @@ aggreger_ki_prop = function(d_ki_ind, alpha = 0.05, gruppering = NULL) {
 }
 
 library(testthat)
-test_adr = "..\\R\\KI_funksjon\\regn_ki_andel_tester.R"
+test_adr = "felles\\pakker\\rapwhale\\tests\\testthat\\regn_ki_andel_tester.R"
 test_file(test_adr, reporter = "minimal") # *Veldig* kort og konsist samandrag
 test_file(test_adr, reporter = "check") # 13-linjes samandrag
 test_file(test_adr, reporter = "summary") # Alt, med fint samandrag i starten
