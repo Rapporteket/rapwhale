@@ -1,51 +1,57 @@
-
-library(tidyverse)
 library(testthat)
 
 # Aggregeringsfunksjoner:
 
-# ----Aggregering - Beregn andel:
+# Aggregering - Beregn andel ----------------------------------------------
+
 context("Sjekker at inndata er på forventet format")
 
-# Funksjonen skal ta inn et datasett på 101-format.
-test_that("Inndata-format er etter 101-metodikken", {
-  d = lag_d(1000)
-  d = d %>%
-    select(-ki_krit_nevner)
-  d2 = d %>%
-    select(-ki_krit_teller)
-  expect_error(aggreger_ki_prop(d))
-  expect_error(aggreger_ki_prop(d2))
-  expect_error(aggreger_ki_prop(d, gruppering = "gruppe"))
-  expect_error(aggreger_ki_prop(d2, gruppering = "gruppe"))
+test_that("Feilmelding hvis nødvendige kolonner mangler", {
+  d_uten_nevner = tibble(foo = 1:3, ki_krit_teller = rep(1, 3))
+  d_uten_telle = tibble(foo = 1:3, ki_krit_nevner = rep(1, 3))
+  d_uten_begge = tibble(foo = 1:3)
+  feilmelding_kol = "Inndata må ha både 'ki_krit_teller' og 'ki_krit_nevner'"
+  expect_error(aggreger_ki_prop(d_uten_nevner), feilmelding_kol)
+  expect_error(aggreger_ki_prop(d_uten_teller), feilmelding_kol)
+  expect_error(aggreger_ki_prop(d_uten_begge), feilmelding_kol)
 })
 
-# Kriterier nevner og teller kan ikke inneholde andre verdier enn 1 og 0, og NA.
-test_that("kriterier nevner og teller kun inneholder verdiene 1 og 0", {
-  n = 1000
-  d = lag_d(n)
-  d2 = d3 = d4 = d
-  ekstra_tall = sample(seq(0, 1, 1), size = n, replace = TRUE)
-  d$ki_krit_nevner = d$ki_krit_nevner + ekstra_tall
-  d2$ki_krit_teller = d2$ki_krit_teller - ekstra_tall
-  d3$ki_krit_teller[151] = "c"
-  expect_error(aggreger_ki_prop(d), "kriterie variablene inneholder ugyldige verdier")
-  expect_error(aggreger_ki_prop(d2), "kriterie variablene inneholder ugyldige verdier")
-  expect_error(aggreger_ki_prop(d3), "kriterie variablene inneholder ugyldige verdier")
-  expect_error(aggreger_ki_prop(d, gruppering = "gruppe"), "kriterie variablene inneholder ugyldige verdier")
-  expect_error(aggreger_ki_prop(d2, gruppering = "gruppe"), "kriterie variablene inneholder ugyldige verdier")
-  expect_error(aggreger_ki_prop(d3, gruppering = "gruppe"), "kriterie variablene inneholder ugyldige verdier")
+# test for feil variabeltyper
+test_that("Feilmelding hvis data av feil type", {
+  d_feil_teller_tekst = tibble(ki_krit_teller = c("0", "1", "1"), ki_krit_nevner = c(0, 1, 1))
+  d_feil_nevner_tekst = tibble(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c("0", "1", "1"))
+  d_feil_teller_fak = tibble(ki_krit_teller = factor(c("5", "5", "5")), ki_krit_nevner = c(0, 1, 1))
+
+  liste = list(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c(1, 1, 1))
+
+  feilmelding = "Kriterievariablene må være tall"
+  expect_error(aggreger_ki_prop(d_feil_teller_tekst), feilmelding)
+  expect_error(aggreger_ki_prop(d_feil_nevner_tekst), feilmelding)
+  expect_error(aggreger_ki_prop(d_feil_teller_fak), feilmelding)
+
+  expect_error(aggreger_ki_prop(liste), "Inndata må være data.frame eller tibble")
 })
 
-# Hvis nevner er 0 kan ikke teller være 1 for samme obs, da må teller være 0 eller NA.
-test_that("teller ikke kan være 1 hvis nevner er 0", {
-  n = 1000
-  d = lag_d(n)
-  d$ki_krit_nevner[156] = 0
-  d$ki_krit_teller[156] = 1
+test_that("Feilmelding hvis kriterievariablene inneholder annet enn 0, 1 og (for teller) NA eller er inkonsistente", {
+  d_teller_med_feil_1 = tibble(ki_krit_teller = c(0, 1, 2), ki_krit_nevner = c(1, 1, 1))
+  d_teller_med_feil_2 = tibble(ki_krit_teller = c(0, 1, 2), ki_krit_nevner = c(1, 1, 0))
+  d_teller_med_feil_3 = tibble(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c(1, 1, 0))
+  d_teller_feil_og_na = tibble(ki_krit_teller = c(0, 1, NA), ki_krit_nevner = c(1, 1, 1))
+  d_teller_ok_men_na = tibble(ki_krit_teller = c(0, 1, NA), ki_krit_nevner = c(1, 1, 0))
 
-  expect_error(aggreger_ki_prop(d))
-  expect_error(aggreger_ki_prop(d, gruppering = "gruppe"))
+  d_nevner_med_feil_1 = tibble(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c(1, 1, 2))
+  d_nevner_med_feil_2 = tibble(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c(1, 1, NA))
+
+  feilmelding_teller = "'ki_krit_teller' må være 0 eller 1 (ev. NA hvis 'ki_krit_nevner' er 0)"
+  expect_error(aggreger_ki_prop(d_teller_med_feil_1), feilmelding_teller)
+  expect_error(aggreger_ki_prop(d_teller_med_feil_2), feilmelding_teller)
+  expect_error(aggreger_ki_prop(d_teller_med_feil_3), feilmelding_teller)
+  expect_error(aggreger_ki_prop(d_teller_feil_og_na), feilmelding_teller)
+  expect_error(aggreger_ki_prop(d_teller_ok_men_na), feilmelding_teller)
+
+  feilmelding_nevner = "'ki_krit_nevner' må være 0 eller 1"
+  expect_error(aggreger_ki_prop(d_nevner_med_feil_1), feilmelding_teller)
+  expect_error(aggreger_ki_prop(d_nevner_med_feil_2), feilmelding_teller)
 })
 
 
@@ -53,35 +59,38 @@ context("Sjekker grensetilfeller i inndata")
 
 # Funksjonen må tillate tilfeller hvor sum teller_krit er 0.
 test_that("Funksjonen tillater tilfeller hvor ingen observasjoner oppfyller kriteriet for teller", {
-  n = 1000
-  d = lag_d(n)
-  d$ki_krit_teller = c(rep.int(0, times = n))
-  expect_equal(aggreger_ki_prop(d), tibble(est = 0, konfint_nedre = 0, konfint_ovre = 0, ki_teller = 0, ki_nevner = sum(d$ki_krit_nevner)))
+  d_ugruppert = tibble(ki_krit_teller = c(0, 0, 0), ki_krit_nevner = c(0, 0, 0))
+  d_gruppert = tibble(
+    sykehus = factor(rep(c("B", "A"), each = 3)),
+    ki_krit_teller = c(0, 0, 0, 0, 0, 0),
+    ki_krit_nevner = c(1, 1, 1, 0, 0, 0)
+  ) %>%
+    group_by(sykehus)
+
+  svar_ugruppert = tibble(
+    est = NA_real_,
+    ki_teller = NA_integer_, ki_nevner = NA_integer_,
+    konfint_nedre = NA_real_, konfint_ovre = NA_real_
+  )
+
+  svar_gruppert = tibble(
+    sykehus = factor(c("A", "B")), est = c(0, NA_real_),
+    ki_teller = c(0L, NA_integer_), ki_nevner = c(0L, NA_integer_),
+    konfint_nedre = c(0, NA_real_), konfint_ovre = c(binom::binom.wilson(0, 3)$upper, NA_real_)
+  )
+
+  expect_identical(aggreger_ki_prop(d_ugruppert), svar_ugruppert)
+  expect_identical(aggreger_ki_prop(d_gruppert), svar_gruppert)
 })
 
 
-# Funksjonen må ha en løsning for tilfeller hvor sum nevner_krit er 0. (Returnere 0 for NaN-verdier)
-test_that("Funksjonen returnerer 0 og ikke NaN i de tilfellene hvor ingen observasjoner oppfyller kriterier for nevner", {
-  n = 1000
-  d = lag_d(n)
-  d$ki_krit_nevner = c(rep.int(0, times = n))
-  d$ki_krit_teller = c(rep.int(0, times = n))
-  expect_equal(aggreger_ki_prop(d), tibble(est = 0, konfint_nedre = 0, konfint_ovre = 0, ki_teller = 0, ki_nevner = 0))
-})
-
-context("Sjekker at utdata er innenfor forventede verdier")
-
-# Funksjonen kan kun gi ut en verdi for estimat som er mellom 0 og 1, inklusive endepunkt.
-# Sjekker 100% dekning.
-test_that("Funksjonen returnerer godkjent verdi når alle observasjoner oppfyller begge kriterier", {
-  n = 1000
-  d = lag_d(n)
-  d$ki_krit_nevner = c(rep.int(1, times = n))
-  d$ki_krit_teller = c(rep.int(1, times = n))
-  expect_equal(aggreger_ki_prop(d), tibble(est = 1, konfint_nedre = 1, konfint_ovre = 1, ki_teller = n, ki_nevner = n))
-})
-
-# Hvordan skal funksjonen håndtere missing i grupperingsvariabel?
+# 1) Hvordan skal funksjonen håndtere missing i grupperingsvariabel?
+#
+# 2) Hvordan håndtere grupperingsvariabel er faktor som har nivå som ikke eksisterer i datasettet?
+# Eks.:
+# d_gruppert$sykehus = factor(d_gruppert$sykehus, levels = LETTERS[1:4])
+# d_gruppert %>% group_by(sykehus, .drop = FALSE) %>% summarise(snitt=mean(ki_krit_teller))
+#   Her skal NaN bli til NA i tilsvarende aggreger_ki_prop()-kjøring
 test_that("Funksjonen gir en advarsel når det finnes NA-verdier i grupperingsvariabel", {
   n = 1000
   d = lag_d(n)
