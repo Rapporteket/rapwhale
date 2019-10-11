@@ -8,8 +8,9 @@
 #' @importFrom rlang syms
 #' @importFrom tidyr unnest
 #' @importFrom stringr str_c str_to_lower str_replace
-#' @import purrr
-#' @import dplyr
+#' @importFrom purrr map map_chr
+#' @importFrom dplyr ungroup group_by setdiff select intersect mutate do sample_n anti_join left_join arrange
+#' @importFrom tibble tibble tribble
 #'
 NULL
 
@@ -283,9 +284,9 @@ lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
     distinct()
   for (i in 1:nrow(d_vartypar_rformat)) {
     vartype = d_vartypar_rformat %>%
-      pluck("vartype", i)
+      purrr::pluck("vartype", i)
     rklasse = d_vartypar_rformat %>%
-      pluck("var_rklasse_ut", i)
+      purrr::pluck("var_rklasse_ut", i)
     suffiksverdiar = c("_reg", "_epj")
     for (suffiks in suffiksverdiar) {
       varnamn = paste0(vartype, suffiks)
@@ -379,7 +380,7 @@ eksporter_valideringsdata = function(df, utmappe, opna_utmappe = FALSE) {
 
   # Eksporter data for sjukehus til kvar si fil
   filadresser = paste0(utmappe, "/", names(df), ".sav")
-  pwalk(
+  purrr::pwalk(
     list(
       data = df,
       path = filadresser
