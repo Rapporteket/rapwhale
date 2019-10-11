@@ -2,9 +2,10 @@
 
 #' @importFrom magrittr %>%
 #' @importFrom lubridate as_date
-#' @importFrom stringr str_c str_to_lower
+#' @importFrom stringr str_c str_to_lower str_detect
 #' @importFrom readr col_character col_integer
-#' @import dplyr
+#' @importFrom dplyr mutate setdiff select distinct arrange filter left_join mutate_at group_by summarise pull
+#' @importFrom tibble tibble tribble
 NULL
 
 # Les inn kodebok og gjer om til standardformat ---------------------------
@@ -160,7 +161,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
   }
 
   # Oversikt over variabeltypar i OQR og tilhøyrande standardnamn som me brukar
-  vartype_oqr_standard = tibble::tribble(
+  vartype_oqr_standard = tribble(
     ~type_oqr, ~type_standard,
     "Listevariabel", "kategorisk",
     "Tekstvariabel", "tekst",
@@ -205,7 +206,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
   # format av Datadump i register.doc»). Desse *burde* vore med kodebøkene,
   # men sidan HNIKT ikkje har klart å leggja dei til, må me gjera det sjølv.
   legg_til_ekstravar = function(kb) {
-    kb_ekstra = tibble::tribble(
+    kb_ekstra = tribble(
       ~variabel_id, ~variabeletikett, ~variabeltype, ~unik, ~obligatorisk, ~desimalar,
       "mceid", "Forløps-ID", "numerisk", "ja", "ja", 0L,
       "centreid", "RESH-ID", "tekst", "nei", "ja", NA,
@@ -417,7 +418,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
     distinct(variabel_id, .keep_all = TRUE)
 
   # Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
-  spek_csv_oqr = tibble::tribble(
+  spek_csv_oqr = tribble(
     ~variabeltype, ~csv_bokstav,
     "kategorisk", "c", # Sjå kommentar nedanfor
     "tekst", "c",
@@ -427,7 +428,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
     "dato", "D",
     "kl", "t"
   )
-  spek_innlesing = tibble::tibble(variabel_id = varnamn_kb) %>%
+  spek_innlesing = tibble(variabel_id = varnamn_kb) %>%
     left_join(kb_info, by = "variabel_id") %>%
     left_join(spek_csv_oqr, by = "variabeltype")
 
