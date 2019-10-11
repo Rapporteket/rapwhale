@@ -32,5 +32,6 @@ Imports:
     colorspace,
     binom,
     scales,
+    qicharts2,
     testthat
 RoxygenNote: 6.1.1
