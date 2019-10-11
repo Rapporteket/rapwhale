@@ -2,10 +2,11 @@
 
 #' @importFrom rlang enquo quo_text quos quo_name
 #' @importFrom magrittr %>%
-#' @importFrom stringr str_c str_detect
+#' @importFrom stringr str_c str_detect str_to_lower str_split_fixed
 #' @importFrom tidyr nest fill
 #' @importFrom purrr walk map_lgl
-#' @import dplyr
+#' @importFrom dplyr ungroup mutate group_by arrange select setdiff left_join filter pull
+#' @importFrom tibble tribble tibble
 NULL
 
 # Gjer kodeboka om til kanonisk form, dvs. slik at
@@ -230,7 +231,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   kb_stdkols = kb_glissen[std_namn]
 
   # Sjekk at variabelformatet (tal, tekst, dato osv.) er rett
-  format_std = tibble::tribble(
+  format_std = tribble(
     ~kol_namn, ~kol_klasse_std,
     "skjema_id", "character",
     "skjemanamn", "character",
