@@ -1,5 +1,3 @@
-library(testthat)
-
 # Aggregeringsfunksjoner:
 
 # Aggregering - Beregn andel ----------------------------------------------

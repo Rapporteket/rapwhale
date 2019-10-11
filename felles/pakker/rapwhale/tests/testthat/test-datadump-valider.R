@@ -3,7 +3,6 @@
 # lager fiktivt datasett som inneholder
 # en del feil som skal oppdages i valider_datadump-funksjonen
 context("Datadump er gyldig")
-library(rapwhale)
 
 d = dplyr::tribble(
   ~pasid, ~kjonn, ~alder, ~vekt, ~frisk,
