@@ -13,8 +13,8 @@
 #' @importFrom tidyr nest
 #' @importFrom rlang expr new_function
 #' @importFrom ruler cell_packs rules col_packs data_packs any_breaker
-#' @import dplyr
-#' @import purrr
+#' @importFrom dplyr filter select rename distinct transmute_at vars summarise_at
+#' @importFrom stringr str_c
 NULL
 
 # Funksjon for å lage regler basert på informasjon
@@ -37,7 +37,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   if (!all(nodvar %in% kol)) {
     manglende_nodvar = which(!nodvar %in% kol)
     kb_mangler = nodvar[manglende_nodvar]
-    stop(paste0("Kodeboka mangler obligatoriske kolonner: ", stringr::str_c("'", kb_mangler, "'", collapse = ", "), "."))
+    stop(paste0("Kodeboka mangler obligatoriske kolonner: ", str_c("'", kb_mangler, "'", collapse = ", "), "."))
   }
 
   # Stopp hvis variabel_id eller variabeltype mangler verdi
