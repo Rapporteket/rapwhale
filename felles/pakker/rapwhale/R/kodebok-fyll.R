@@ -5,7 +5,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom stringr str_c
 #' @importFrom rlang has_name quos
-#' @importFrom dplyr filter intersect setdiff
+#' @importFrom dplyr filter
 NULL
 
 # Definisjon av funksjon
