@@ -6,7 +6,7 @@ library(testthat)
 
 context("Sjekker at inndata er på forventet format")
 
-test_that("Feilmelding hvis ikke tibble/data.frame med nødvendige kolonner mangler", {
+test_that("Feilmelding hvis ikke tibble/data.frame med nødvendige kolonner", {
   d_uten_nevner = tibble(foo = 1:3, ki_krit_teller = rep(1, 3))
   d_uten_telle = tibble(foo = 1:3, ki_krit_nevner = rep(1, 3))
   d_uten_begge = tibble(foo = 1:3)
