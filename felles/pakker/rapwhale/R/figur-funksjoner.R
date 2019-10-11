@@ -3,9 +3,11 @@
 
 #' @importFrom magrittr %>%
 #' @importFrom colorspace coords
-#' @importFrom rlang enexpr syms
+#' @importFrom rlang enexpr syms eval_bare maybe_missing
+#' @importFrom lubridate is.Date
+#' @importFrom quicharts2 qic
 #' @import ggplot2
-#' @import dplyr
+
 
 # Fargar og grafinnstillingar/-objekt -------------------------------------
 
