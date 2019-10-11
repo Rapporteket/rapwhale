@@ -3,7 +3,10 @@
 #---------------------------innhenting av pakker og funksjoner--------------------------------
 
 #' @importFrom magrittr %>%
-#' @import dplyr
+#' @importFrom dplyr mutate select group_by case_when left_join last filter rename distinct pull mutate_at
+#' @importFrom lubridate as_date
+#' @importFrom tibble tribble
+#' @importFrom tidyr nest unnest
 NULL
 
 # Les inn kodebok og gjer om til standardformat ---------------------------
@@ -49,7 +52,7 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
       sort() %>%
       last()
   }
-  dato = lubridate::as_date(dato) # I tilfelle det var ein tekstreng
+  dato = as_date(dato) # I tilfelle det var ein tekstreng
 
   # Adressen til kodeboka
   adresse_kb = paste0(mappe_dd, dato, "/kodebok.xlsx")
@@ -165,7 +168,7 @@ les_dd_checkware = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, va
       sort() %>%
       last()
   }
-  dato = lubridate::as_date(dato) # I tilfelle det var ein tekstreng
+  dato = as_date(dato) # I tilfelle det var ein tekstreng
 
   # Les inn kodeboka dersom ho ikkje er spesifisert
   # her sjekkes også gyldigheten av kodeboka
