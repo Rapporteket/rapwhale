@@ -5,7 +5,7 @@
 #' @importFrom stringr str_c str_detect str_to_lower str_split_fixed
 #' @importFrom tidyr nest fill
 #' @importFrom purrr walk map_lgl
-#' @importFrom dplyr ungroup mutate group_by arrange select setdiff left_join filter pull
+#' @importFrom dplyr ungroup mutate group_by arrange select left_join filter pull
 #' @importFrom tibble tribble tibble
 NULL
 

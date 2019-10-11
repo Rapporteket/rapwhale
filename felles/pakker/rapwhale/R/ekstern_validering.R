@@ -9,7 +9,7 @@
 #' @importFrom tidyr unnest
 #' @importFrom stringr str_c str_to_lower str_replace
 #' @importFrom purrr map map_chr
-#' @importFrom dplyr ungroup group_by setdiff select intersect mutate do sample_n anti_join left_join arrange
+#' @importFrom dplyr ungroup group_by select mutate do sample_n anti_join left_join arrange
 #' @importFrom tibble tibble tribble
 #'
 NULL
