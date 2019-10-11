@@ -5,7 +5,7 @@
 #' @importFrom colorspace coords
 #' @importFrom rlang enexpr syms eval_bare maybe_missing
 #' @importFrom lubridate is.Date
-#' @importFrom quicharts2 qic
+#' @importFrom qicharts2 qic
 #' @import ggplot2
 
 
