@@ -4,7 +4,8 @@
 
 #' @importFrom magrittr %>%
 #' @importFrom stringr str_c
-#' @import dplyr
+#' @importFrom rlang has_name quos
+#' @importFrom dplyr filter intersect setdiff
 NULL
 
 # Definisjon av funksjon
@@ -30,7 +31,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
 
   # Sjå vidare berre på kategoriske variablar (dersom kodeboka
   # har informasjon om kva som er kategoriske variablar)
-  if (tibble::has_name(kb, "variabeltype")) {
+  if (rlang::has_name(kb, "variabeltype")) {
     kb = kb %>%
       filter(variabeltype == "kategorisk")
   }
