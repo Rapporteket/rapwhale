@@ -4,7 +4,7 @@
 #' @importFrom lubridate as_date
 #' @importFrom stringr str_c
 #' @importFrom rlang !!
-#' @importFrom dplyr mutate left_join select setdiff filter pull distinct mutate_at
+#' @importFrom dplyr mutate left_join select filter pull distinct mutate_at
 NULL
 
 # Lag standardisert kodebok -----------------------------------------------
