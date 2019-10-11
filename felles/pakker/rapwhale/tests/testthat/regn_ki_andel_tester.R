@@ -75,7 +75,7 @@ test_that("Funksjonen tillater tilfeller hvor ingen observasjoner oppfyller krit
   svar_gruppert = tibble(
     sykehus = factor(c("A", "B")), est = c(0, NA_real_),
     ki_teller = c(0L, NA_integer_), ki_nevner = c(0L, NA_integer_),
-    konfint_nedre = c(0, NA_real_), konfint_ovre = c(binom::binom.wilson(0, 3)$upper, NA_real_)
+    konfint_nedre = c(0, NA_real_), konfint_ovre = c(0.5614970317550454, NA_real_)
   )
 
   expect_identical(aggreger_ki_prop(d_ugruppert), svar_ugruppert)
