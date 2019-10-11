@@ -6,11 +6,14 @@ library(testthat)
 
 context("Sjekker at inndata er på forventet format")
 
-test_that("Feilmelding hvis nødvendige kolonner mangler", {
+test_that("Feilmelding hvis ikke tibble/data.frame med nødvendige kolonner mangler", {
   d_uten_nevner = tibble(foo = 1:3, ki_krit_teller = rep(1, 3))
-  d_uten_teller = tibble(foo = 1:3, ki_krit_nevner = rep(1, 3))
+  d_uten_telle = tibble(foo = 1:3, ki_krit_nevner = rep(1, 3))
   d_uten_begge = tibble(foo = 1:3)
-  feilmelding_kol = "Inndata må ha både 'ki_krit_teller' og 'ki_krit_nevner'"
+  liste = list(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c(1, 1, 1))
+
+  feilmelding_kol = "Inndata må være tibble/data.frame med kolonnene 'ki_krit_teller' og 'ki_krit_nevner'"
+  expect_error(aggreger_ki_prop(liste), feilmelding_kol)
   expect_error(aggreger_ki_prop(d_uten_nevner), feilmelding_kol)
   expect_error(aggreger_ki_prop(d_uten_teller), feilmelding_kol)
   expect_error(aggreger_ki_prop(d_uten_begge), feilmelding_kol)
@@ -22,14 +25,10 @@ test_that("Feilmelding hvis data av feil type", {
   d_feil_nevner_tekst = tibble(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c("0", "1", "1"))
   d_feil_teller_fak = tibble(ki_krit_teller = factor(c("5", "5", "5")), ki_krit_nevner = c(0, 1, 1))
 
-  liste = list(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c(1, 1, 1))
-
   feilmelding = "Kriterievariablene må være tall"
   expect_error(aggreger_ki_prop(d_feil_teller_tekst), feilmelding)
   expect_error(aggreger_ki_prop(d_feil_nevner_tekst), feilmelding)
   expect_error(aggreger_ki_prop(d_feil_teller_fak), feilmelding)
-
-  expect_error(aggreger_ki_prop(liste), "Inndata må være data.frame eller tibble")
 })
 
 test_that("Feilmelding hvis kriterievariablene inneholder annet enn 0, 1 og (for teller) NA eller er inkonsistente", {
