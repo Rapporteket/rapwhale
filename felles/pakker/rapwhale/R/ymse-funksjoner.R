@@ -4,9 +4,9 @@
 # og er ikke flere enn én i samme kategori, derav navnet ymse.
 
 #' @importFrom magrittr %>%
-#' @importFrom stringr str_replace_all
+#' @importFrom stringr str_replace_all str_split
 #' @importFrom tibble tibble
-#' @import dplyr
+#' @importFrom purrr map map_chr
 NULL
 
 ### Normaliser variabelnamn til å ha _ som skiljeteikn og berre små bokstavar
@@ -25,7 +25,7 @@ NULL
 #' @export
 normaliser_varnamn = function(x) {
   teikn = x %>%
-    stringr::str_split("") # Splitt i enkeltteikn
+    str_split("") # Splitt i enkeltteikn
 
   # Putt inn _ før alle store bokstavar (utanom første teikn i strengen)
   teikn = teikn %>%
@@ -165,7 +165,7 @@ lag_tab_latex = function(dataframe, label, caption, wide = FALSE, ...) {
       "\\end{table}"
     )
   } else {
-    tabell = capture.output(hmisc::latex(dataframe,
+    tabell = capture.output(Hmisc::latex(dataframe,
       file = "", center = "centering",
       label = label, caption = caption, rowname = NULL,
       where = "htbp", booktabs = TRUE, numeric.dollar = FALSE, ...
