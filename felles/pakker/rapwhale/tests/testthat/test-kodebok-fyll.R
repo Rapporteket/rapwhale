@@ -26,13 +26,13 @@ kb = tribble(
 # Nivåa til dei ulike faktorane (i rett rekkjefølgje)
 niv_kjonn = kb %>%
   filter(variabel_id == "kjonn") %>%
-  extract2("verditekst")
+  pull(verditekst)
 niv_med = kb %>%
   filter(variabel_id == "med") %>%
-  extract2("verditekst")
+  pull(verditekst)
 niv_gensp = kb %>%
   filter(variabel_id == "gensp") %>%
-  extract2("verditekst")
+  pull(verditekst)
 
 # Ymse testar basert på kravspek ------------------------------------------
 
@@ -47,10 +47,11 @@ test_that("Enkel bruk utan nokon argument fungerer (side 4)", {
     102, 1, "mann", 37, 4, "Globoid", 2,
     103, 1, "mann", 17, 1, "Antibac", 3
   )
-  d_fylt %<>% mutate(
-    kjonn_tekst = factor(kjonn_tekst, levels = niv_kjonn),
-    med_tekst = factor(med_tekst, levels = niv_med)
-  )
+  d_fylt = d_fylt %>%
+    mutate(
+      kjonn_tekst = factor(kjonn_tekst, levels = niv_kjonn),
+      med_tekst = factor(med_tekst, levels = niv_med)
+    )
   expect_identical(d %>% kb_fyll(kb), d_fylt)
 })
 
@@ -62,7 +63,8 @@ test_that("Val av variabel å fylla ut fungerer (side 5)", {
     102, 1, "mann", 37, 4, 2,
     103, 1, "mann", 17, 1, 3
   )
-  d_fylt %<>% mutate(kjonn_tekst = factor(kjonn_tekst, levels = niv_kjonn))
+  d_fylt = d_fylt %>%
+    mutate(kjonn_tekst = factor(kjonn_tekst, levels = niv_kjonn))
   expect_identical(d %>% kb_fyll(kb, kjonn), d_fylt)
 })
 
@@ -74,10 +76,11 @@ test_that("Val av variabel som har anna namn i kodeboka fungerer (side 6)", {
     102, 1, "mann", 37, 4, 2, "både og",
     103, 1, "mann", 17, 1, 3, "fornøgd"
   )
-  d_fylt %<>% mutate(
-    kjonn_tekst = factor(kjonn_tekst, levels = niv_kjonn),
-    prem_tekst = factor(prem_tekst, levels = niv_gensp)
-  )
+  d_fylt = d_fylt %>%
+    mutate(
+      kjonn_tekst = factor(kjonn_tekst, levels = niv_kjonn),
+      prem_tekst = factor(prem_tekst, levels = niv_gensp)
+    )
   expect_identical(d %>% kb_fyll(kb, kjonn, prem = "gensp"), d_fylt)
   expect_identical(d %>% kb_fyll(kb, kjonn, prem = gensp), d_fylt)
 })
@@ -247,7 +250,8 @@ test_that("Val av suffiks fungerer (side 11)", {
     102, 1, 37, 4, "Globoid", 2,
     103, 1, 17, 1, "Antibac", 3
   )
-  d_fylt %<>% mutate(med_hei = factor(med_hei, levels = niv_med))
+  d_fylt = d_fylt %>%
+    mutate(med_hei = factor(med_hei, levels = niv_med))
   expect_identical(d %>% kb_fyll(kb, med, .suffiks = "_hei"), d_fylt)
 })
 
@@ -258,10 +262,11 @@ test_that("Tomt suffiks fungerer (og gjev åtvaring) (side 12)", {
     102, "mann", 37, "Globoid", 2,
     103, "mann", 17, "Antibac", 3
   )
-  d_fylt %<>% mutate(
-    kjonn = factor(kjonn, levels = niv_kjonn),
-    med = factor(med, levels = niv_med)
-  )
+  d_fylt = d_fylt %>%
+    mutate(
+      kjonn = factor(kjonn, levels = niv_kjonn),
+      med = factor(med, levels = niv_med)
+    )
   expect_identical(suppressWarnings(d %>% kb_fyll(kb, .suffiks = "")), d_fylt)
   expect_warning(d %>% kb_fyll(kb, .suffiks = ""), "Overskriv variabel: 'kjonn'")
   expect_warning(d %>% kb_fyll(kb, .suffiks = ""), "Overskriv variabel: 'med'")
@@ -280,7 +285,8 @@ test_that("Overskriving av variablar ved *ikkje-tomt* suffiks gjev også åtvari
     102, 1, "mann",
     103, 1, "mann"
   )
-  d2_fylt %<>% mutate(kjonntest = factor(kjonntest, levels = niv_kjonn))
+  d2_fylt = d2_fylt %>%
+    mutate(kjonntest = factor(kjonntest, levels = niv_kjonn))
   expect_warning(d2 %>% kb_fyll(kb, .suffiks = "test"), "Overskriv variabel: 'kjonntest'")
   expect_identical(suppressWarnings(d2 %>% kb_fyll(kb, .suffiks = "test")), d2_fylt)
 })
@@ -299,10 +305,11 @@ test_that("Variabelkolonnar som står heilt først eller sist i datasettet funge
     "mann", "Globoid",
     "mann", "Antibac"
   )
-  d_fylt %<>% mutate(
-    kjonn = factor(kjonn, levels = niv_kjonn),
-    med = factor(med, levels = niv_med)
-  )
+  d_fylt = d_fylt %>%
+    mutate(
+      kjonn = factor(kjonn, levels = niv_kjonn),
+      med = factor(med, levels = niv_med)
+    )
   expect_identical(suppressWarnings(d2 %>% kb_fyll(kb, .suffiks = "")), d_fylt)
 })
 
@@ -313,7 +320,8 @@ test_that("Lause variablar som heiter det same som variablar i datasettet fører
     102, 1, "mann", 37, 4, 2,
     103, 1, "mann", 17, 1, 3
   )
-  d_fylt %<>% mutate(kjonn_tekst = factor(kjonn_tekst, levels = niv_kjonn))
+  d_fylt = d_fylt %>%
+    mutate(kjonn_tekst = factor(kjonn_tekst, levels = niv_kjonn))
   d2_fylt = d_fylt %>%
     mutate(prem_tekst = factor(c("både og", "både og", "fornøgd"), levels = niv_gensp))
   kjonn = "med"
