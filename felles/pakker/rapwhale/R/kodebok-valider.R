@@ -388,7 +388,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   # (me sjekkar tidlegare oppe at desse er unike innanfor variabel_id)
   if (any(!is.na(kb$kategori))) {
     kb_skjema = kb %>%
-      nest(-skjema_id)
+      nest(data = -skjema_id)
     har_kat = kb_skjema$data %>%
       map_lgl(~ (!is.na(.x$kategori[1])) & (.x$kategori[1] != ""))
     if (any(!har_kat)) {
