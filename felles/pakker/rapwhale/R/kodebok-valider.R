@@ -326,7 +326,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
     varid_tekst = quo_name(enquo(varid))
     nest_cols = setdiff(names(df), gruppe_tekst)
     df_grupper = df %>%
-      tidyr::nest_(key_col = "data", nest_cols = nest_cols) # fixme: Byt til quasi-quotation, dvs. «-!!gruppe» når det er støtta i dplyr
+      tidyr::nest(data = !!nest_cols)
 
     ikkjeunike = df_grupper$data %>%
       map_lgl(~ length(unique(.x[[varid_tekst]])) > 1)
@@ -360,7 +360,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
 
   # Sjekk at alle verdiar for kategoriske variablar er unike og ingen er NA
   kb_kat_nest = kb_kat %>%
-    nest(-variabel_id, -skjema_id)
+    nest(data = c(-variabel_id, -skjema_id))
   verdi_ok = kb_kat_nest$data %>%
     map_lgl(~ (!any(duplicated(.x$verdi) | is.na(.x$verdi))))
   if (any(!verdi_ok)) {
