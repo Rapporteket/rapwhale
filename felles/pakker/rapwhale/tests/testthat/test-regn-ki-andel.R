@@ -5,9 +5,9 @@
 context("Sjekker at inndata er på forventet format")
 
 test_that("Feilmelding hvis ikke tibble/data.frame med nødvendige kolonner", {
-  d_uten_nevner = tibble(foo = 1:3, ki_krit_teller = rep(1, 3))
-  d_uten_telle = tibble(foo = 1:3, ki_krit_nevner = rep(1, 3))
-  d_uten_begge = tibble(foo = 1:3)
+  d_uten_nevner = tibble::tibble(foo = 1:3, ki_krit_teller = rep(1, 3))
+  d_uten_teller = tibble::tibble(foo = 1:3, ki_krit_nevner = rep(1, 3))
+  d_uten_begge = tibble::tibble(foo = 1:3)
   liste = list(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c(1, 1, 1))
 
   feilmelding_kol = "Inndata må være tibble/data.frame med kolonnene 'ki_krit_teller' og 'ki_krit_nevner'"
@@ -19,9 +19,9 @@ test_that("Feilmelding hvis ikke tibble/data.frame med nødvendige kolonner", {
 
 # test for feil variabeltyper
 test_that("Feilmelding hvis data av feil type", {
-  d_feil_teller_tekst = tibble(ki_krit_teller = c("0", "1", "1"), ki_krit_nevner = c(0, 1, 1))
-  d_feil_nevner_tekst = tibble(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c("0", "1", "1"))
-  d_feil_teller_fak = tibble(ki_krit_teller = factor(c("5", "5", "5")), ki_krit_nevner = c(0, 1, 1))
+  d_feil_teller_tekst = tibble::tibble(ki_krit_teller = c("0", "1", "1"), ki_krit_nevner = c(0, 1, 1))
+  d_feil_nevner_tekst = tibble::tibble(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c("0", "1", "1"))
+  d_feil_teller_fak = tibble::tibble(ki_krit_teller = factor(c("5", "5", "5")), ki_krit_nevner = c(0, 1, 1))
 
   feilmelding = "Kriterievariablene må være tall"
   expect_error(aggreger_ki_prop(d_feil_teller_tekst), feilmelding)
@@ -30,25 +30,26 @@ test_that("Feilmelding hvis data av feil type", {
 })
 
 test_that("Feilmelding hvis kriterievariablene inneholder annet enn 0, 1 og (for teller) NA eller er inkonsistente", {
-  d_teller_med_feil_1 = tibble(ki_krit_teller = c(0, 1, 2), ki_krit_nevner = c(1, 1, 1))
-  d_teller_med_feil_2 = tibble(ki_krit_teller = c(0, 1, 2), ki_krit_nevner = c(1, 1, 0))
-  d_teller_med_feil_3 = tibble(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c(1, 1, 0))
-  d_teller_feil_og_na = tibble(ki_krit_teller = c(0, 1, NA), ki_krit_nevner = c(1, 1, 1))
-  d_teller_ok_men_na = tibble(ki_krit_teller = c(0, 1, NA), ki_krit_nevner = c(1, 1, 0))
+  d_teller_med_feil_1 = tibble::tibble(ki_krit_teller = c(0, 1, 2), ki_krit_nevner = c(1, 1, 1))
+  d_teller_med_feil_2 = tibble::tibble(ki_krit_teller = c(0, 1, 2), ki_krit_nevner = c(1, 1, 0))
+  d_teller_med_feil_3 = tibble::tibble(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c(1, 1, 0))
+  d_teller_feil_og_na = tibble::tibble(ki_krit_teller = c(0, 1, NA), ki_krit_nevner = c(1, 1, 1))
+  d_teller_ok_men_na = tibble::tibble(ki_krit_teller = c(0, 1, NA), ki_krit_nevner = c(1, 1, 0))
+  d_teller_ok_men_na_res = tibble::tibble(est = 0.5, konfint_nedre = 0.0256, konfint_ovre = 0.974, ki_teller = 1, ki_nevner = 2)
 
-  d_nevner_med_feil_1 = tibble(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c(1, 1, 2))
-  d_nevner_med_feil_2 = tibble(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c(1, 1, NA))
+  d_nevner_med_feil_1 = tibble::tibble(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c(1, 1, 2))
+  d_nevner_med_feil_2 = tibble::tibble(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c(1, 1, NA))
 
-  feilmelding_teller = "'ki_krit_teller' må være 0 eller 1 (ev. NA hvis 'ki_krit_nevner' er 0)"
+  feilmelding_teller = "ki_krit_teller må være 0 eller 1, eventuelt NA hvis ki_krit_nevner er 0"
   expect_error(aggreger_ki_prop(d_teller_med_feil_1), feilmelding_teller)
   expect_error(aggreger_ki_prop(d_teller_med_feil_2), feilmelding_teller)
   expect_error(aggreger_ki_prop(d_teller_med_feil_3), feilmelding_teller)
   expect_error(aggreger_ki_prop(d_teller_feil_og_na), feilmelding_teller)
-  expect_error(aggreger_ki_prop(d_teller_ok_men_na), feilmelding_teller)
+  # expect_identical(aggreger_ki_prop(d_teller_ok_men_na), d_teller_ok_men_na_res)
 
   feilmelding_nevner = "'ki_krit_nevner' må være 0 eller 1"
-  expect_error(aggreger_ki_prop(d_nevner_med_feil_1), feilmelding_teller)
-  expect_error(aggreger_ki_prop(d_nevner_med_feil_2), feilmelding_teller)
+  expect_error(aggreger_ki_prop(d_nevner_med_feil_1), feilmelding_nevner)
+  expect_error(aggreger_ki_prop(d_nevner_med_feil_2), feilmelding_nevner)
 })
 
 
@@ -56,55 +57,125 @@ context("Sjekker grensetilfeller i inndata")
 
 # Funksjonen må tillate tilfeller hvor sum teller_krit er 0.
 test_that("Funksjonen tillater tilfeller hvor ingen observasjoner oppfyller kriteriet for teller", {
-  d_ugruppert = tibble(ki_krit_teller = c(0, 0, 0), ki_krit_nevner = c(0, 0, 0))
-  d_gruppert = tibble(
+  d_ugruppert = tibble::tibble(ki_krit_teller = c(0, 0, 0), ki_krit_nevner = c(0, 0, 0))
+  d_gruppert = tibble::tibble(
     sykehus = factor(rep(c("B", "A"), each = 3)),
     ki_krit_teller = c(0, 0, 0, 0, 0, 0),
     ki_krit_nevner = c(1, 1, 1, 0, 0, 0)
   ) %>%
-    group_by(sykehus)
+    dplyr::group_by(sykehus)
 
-  svar_ugruppert = tibble(
+  svar_ugruppert = tibble::tibble(
     est = NA_real_,
     ki_teller = NA_integer_, ki_nevner = NA_integer_,
     konfint_nedre = NA_real_, konfint_ovre = NA_real_
   )
 
-  svar_gruppert = tibble(
-    sykehus = factor(c("A", "B")), est = c(0, NA_real_),
-    ki_teller = c(0L, NA_integer_), ki_nevner = c(0L, NA_integer_),
-    konfint_nedre = c(0, NA_real_), konfint_ovre = c(0.5614970317550454, NA_real_)
+  svar_gruppert = tibble::tibble(
+    sykehus = factor(c("A", "B")), est = c(NA_real_, 0),
+    ki_teller = c(NA_integer_, 0L), ki_nevner = c(NA_integer_, 3L),
+    konfint_nedre = c(NA_real_, 0), konfint_ovre = c(NA_real_, 0.5614970317550454)
   )
 
   expect_identical(aggreger_ki_prop(d_ugruppert), svar_ugruppert)
   expect_identical(aggreger_ki_prop(d_gruppert), svar_gruppert)
 })
 
-
 # 1) Hvordan skal funksjonen håndtere missing i grupperingsvariabel?
-#
-# 2) Hvordan håndtere grupperingsvariabel er faktor som har nivå som ikke eksisterer i datasettet?
+
+# Vi bør ta en avgjørelse for hvordan det skal defineres i de spesifikke indikator-funksjonene,
+# slik at vi har en klar forventning om hva som blir inndata.
+# Denne testen må eventuelt oppdateres om vi velger å definere missing på en annen måte enn "na_level = NA".
+
+test_that("Funksjonen returnerer 'NA' for de grupperte verdiene som ikke har noen øvrig gruppetilhørighet", {
+  d_gruppert_med_na = tibble::tibble(
+    sykehus = forcats::fct_explicit_na(rep(c("B", "A", NA), each = 3), na_level = NA),
+    ki_krit_teller = c(0, 0, 0, 0, 0, 0, 0, 1, 0),
+    ki_krit_nevner = c(1, 1, 1, 0, 0, 0, 0, 1, 0)
+  ) %>%
+    dplyr::group_by(sykehus)
+
+  svar_gruppert_med_na = tibble::tibble(
+    sykehus = forcats::fct_explicit_na(c("A", "B", NA), na_level = NA),
+    est = c(NA_real_, 0, 1),
+    ki_teller = c(NA_integer_, 0L, 1L), ki_nevner = c(NA_integer_, 3L, 1L),
+    konfint_nedre = c(NA_real_, 0, 0.2065493143772375), konfint_ovre = c(NA_real_, 0.5614970317550454, 1)
+  )
+
+  expect_identical(aggreger_ki_prop(d_gruppert_med_na), svar_gruppert_med_na)
+})
+
+# 2) Hvordan håndtere at grupperingsvariabel er en faktor som har nivå som ikke eksisterer i datasettet?
 # Eks.:
-# d_gruppert$sykehus = factor(d_gruppert$sykehus, levels = LETTERS[1:4])
-# d_gruppert %>% group_by(sykehus, .drop = FALSE) %>% summarise(snitt=mean(ki_krit_teller))
-#   Her skal NaN bli til NA i tilsvarende aggreger_ki_prop()-kjøring
 test_that("Funksjonen gir en advarsel når det finnes NA-verdier i grupperingsvariabel", {
-  n = 1000
-  d = lag_d(n)
-  d$gruppe[1] = NA
-  expect_warning(aggreger_ki_prop(d, gruppering = "gruppe"))
+  d_gruppert_ekstra_levels = tibble::tibble(
+    sykehus = factor(rep(c("B", "A"), each = 3), levels = LETTERS[1:4]),
+    ki_krit_teller = c(0, 0, 0, 0, 0, 0),
+    ki_krit_nevner = c(1, 1, 1, 0, 0, 0)
+  ) %>%
+    dplyr::group_by(sykehus, .drop = FALSE)
+
+  feilmelding_ekstra_levels = "Det finnes grupper uten observasjoner i grupperingsvariabel"
+
+  expect_warning(aggreger_ki_prop(d_gruppert_ekstra_levels), feilmelding_ekstra_levels)
 })
 
-# Hvordan skal funksjonen håndtere tilfeller hvor ingen er i en av gruppene?
-# Vil her at vi får ut en oppføring for *HVER* gruppe, inkludert de som ikke har noen observasjoner
-# De må da bli 0 for alle variabler.
-# Grupper som ikke har noen verdier kan eventuelt filtreres ut i etterkant hvis de ikke skal være med i figurer, etc.
+# # Hvordan skal funksjonen håndtere tilfeller hvor ingen er i en av gruppene?
+# # Vil her at vi får ut en oppføring for *HVER* gruppe, inkludert de som ikke har noen observasjoner
+# # Grupper som ikke har noen verdier kan eventuelt filtreres ut i etterkant hvis de ikke skal være med i figurer, etc.
 test_that("Funksjonen returnerer verdier for alle grupper i inndata, selv de gruppene som ikke inneholder observasjoner", {
-  n = 1000
-  d = lag_d(n)
-  expect_equal(nrow(aggreger_ki_prop(d, gruppering = "gruppe")), length(levels(d$gruppe)))
+  d_grupper_uten_innhold = tibble::tibble(
+    sykehus = forcats::fct_explicit_na(rep(c("B", "A", "C"), each = 3)),
+    ki_krit_teller = c(0, 0, 0, 0, 0, 0, 1, 1, 0),
+    ki_krit_nevner = c(1, 1, 1, 0, 0, 0, 1, 1, 0)
+  ) %>%
+    group_by(sykehus)
+
+  svar_uten_innhold = tibble::tibble(
+    sykehus = forcats::fct_explicit_na(c("A", "B", "C")),
+    est = c(NA_real_, 0, 1),
+    ki_teller = c(NA_integer_, 0L, 2L), ki_nevner = c(NA_integer_, 3L, 2L),
+    konfint_nedre = c(NA_real_, 0, 0.3423802275066532), konfint_ovre = c(NA_real_, 0.5614970317550454, 1)
+  )
+
+  expect_identical(aggreger_ki_prop(d_grupper_uten_innhold), svar_uten_innhold)
 })
 
 
-# Test datasett:
-# https://stackoverflow.com/questions/42734547/generating-random-strings
+test_that("Funksjonen gir forventet resultat", {
+  d_25 = tibble::tibble(
+    ki_krit_teller = c(1, 0, 0, 0),
+    ki_krit_nevner = c(1, 1, 1, 1)
+  )
+  svar_25 = tibble::tibble(est = 0.25, ki_teller = 1L, ki_nevner = 4L, konfint_nedre = 0.04558726080970059, konfint_ovre = 0.699358157417598)
+
+  d_33 = tibble::tibble(
+    ki_krit_teller = c(1, 0, 0, 0),
+    ki_krit_nevner = c(1, 1, 1, 0)
+  )
+  svar_33 = tibble::tibble(est = 0.3333333333333333, ki_teller = 1L, ki_nevner = 3L, konfint_nedre = 0.06149194472039624, konfint_ovre = 0.7923403991979524)
+
+  d_50 = tibble::tibble(
+    ki_krit_teller = c(1, 1, 0, 0),
+    ki_krit_nevner = c(1, 1, 1, 1)
+  )
+  svar_50 = tibble::tibble(est = 0.5, ki_teller = 2L, ki_nevner = 4L, konfint_nedre = 0.15003898915214955, konfint_ovre = 0.84996101084785047)
+
+  d_67 = tibble::tibble(
+    ki_krit_teller = c(1, 1, 0, 0),
+    ki_krit_nevner = c(1, 1, 1, 0)
+  )
+  svar_67 = tibble::tibble(est = 0.6666666666666666, ki_teller = 2L, ki_nevner = 3L, konfint_nedre = 0.20765960080204776, konfint_ovre = 0.93850805527960379)
+
+  d_75 = tibble::tibble(
+    ki_krit_teller = c(1, 1, 1, 0),
+    ki_krit_nevner = c(1, 1, 1, 1)
+  )
+  svar_75 = tibble::tibble(est = 0.75, ki_teller = 3L, ki_nevner = 4L, konfint_nedre = 0.300641842582402, konfint_ovre = 0.9544127391902995)
+
+  expect_identical(aggreger_ki_prop(d_25), svar_25)
+  expect_identical(aggreger_ki_prop(d_33), svar_33)
+  expect_identical(aggreger_ki_prop(d_50), svar_50)
+  expect_identical(aggreger_ki_prop(d_67), svar_67)
+  expect_identical(aggreger_ki_prop(d_75), svar_75)
+})
