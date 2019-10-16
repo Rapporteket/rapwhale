@@ -211,7 +211,7 @@ test_that("Dupliserte verdiar i kodeboka vert oppdaga", {
 
 test_that("NA-verdiar i 'verdi' vert godtekne så lenge dei berre er blant ikkje-kategoriske variablar", {
   # Legg til eit par ikkje-kategoriske variablar først i kodeboka
-  kb2 = bind_rows(kb[1:2, ], kb)
+  kb2 = dplyr::bind_rows(kb[1:2, ], kb)
   kb2$variabel_id[1:2] = c("pasient_fnr", "alder")
   kb2$verdi[1:2] = NA
   kb2$verditekst[1:2] = NA
