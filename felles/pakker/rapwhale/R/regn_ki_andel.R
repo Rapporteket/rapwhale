@@ -1,4 +1,3 @@
-
 #' @importFrom rlang sym !!
 #' @importFrom tibble as_tibble
 #' @importFrom dplyr group_by summarise case_when
@@ -13,38 +12,47 @@ NULL
 #' @export
 aggreger_ki_prop = function(d_ki_ind, alpha = 0.05) {
 
-  # "Inndata må ha både 'ki_krit_teller' og 'ki_krit_nevner'"
-  if (!(exists("ki_krit_nevner", d_ki_ind) & exists("ki_krit_teller", d_ki_ind))) {
-    stop("Inndata må ha både 'ki_krit_teller' og 'ki_krit_nevner'")
+  # Teste inndata
+  if (any(!is.data.frame(d_ki_ind) | !all(hasName(d_ki_ind, c("ki_krit_teller", "ki_krit_nevner"))))) {
+    stop("Inndata må være tibble/data.frame med kolonnene 'ki_krit_teller' og 'ki_krit_nevner'")
   }
-
-  if (is.numeric(c(d_ki_ind$ki_krit_nevner, d_ki_ind$ki_krit_teller))) {
-    "Kriterievariablene må være tall"
+  if (all(!(is.numeric(d_ki_ind$ki_krit_teller) && is.numeric(d_ki_ind$ki_krit_nevner)))) {
+    stop("Kriterievariablene må være tall")
   }
-
-  # Sjekk at kriterie-variabler er kun gyldige verdier (0,1,NA):
-  if (any(!d_ki_ind$ki_krit_teller %in% c(0, 1, NA)) |
-    any(!d_ki_ind$ki_krit_nevner %in% c(0, 1))) {
-    stop("kriterie variablene inneholder ugyldige verdier")
+  if (any(!d_ki_ind$ki_krit_nevner %in% c(0, 1))) {
+    stop("'ki_krit_nevner' må være 0 eller 1")
   }
-
-  # Sjekke at det ikke finnes observasjoner hvor teller_krit er oppfylt når nevner_krit ikke er oppfylt.
-  stopifnot(all(d_ki_ind$ki_krit_teller <= d_ki_ind$ki_krit_nevner |
-    is.na(d_ki_ind$ki_krit_teller)))
-
-  # regn ki:
-  d_agg_prop =
-    d_ki_ind %>%
+  if (any(!d_ki_ind$ki_krit_teller %in% c(0, 1, NA))) {
+    stop("ki_krit_teller må være 0 eller 1, eventuelt NA hvis ki_krit_nevner er 0")
+  } else if (any(is.na(d_ki_ind$ki_krit_teller) &
+    d_ki_ind$ki_krit_nevner != 0)) {
+    stop("ki_krit_teller må være 0 eller 1, eventuelt NA hvis ki_krit_nevner er 0")
+  } else if (any(d_ki_ind$ki_krit_teller > d_ki_ind$ki_krit_nevner, na.rm = TRUE)) {
+    stop("ki_krit_teller må være 0 eller 1, eventuelt NA hvis ki_krit_nevner er 0")
+  }
+  if (any(lengths(attr(d_ki_ind, "groups")$.rows) == 0)) {
+    warning("Det finnes grupper uten observasjoner i grupperingsvariabel")
+  }
+  # Beregne konfidensintervall og utdata:
+  d_summary = d_ki_ind %>%
     summarise(
-      est = case_when(
-        sum(ki_krit_nevner) == 0 ~ 0,
-        TRUE ~ sum(ki_krit_teller, na.rm = TRUE) / sum(ki_krit_nevner)
-      ),
-      konfint_nedre = est - qnorm(1 - (alpha / 2)) * sqrt(est * (1 - est) / nrow(d_ki_ind)),
-      konfint_ovre = est + qnorm(1 - (alpha / 2)) * sqrt(est * (1 - est) / nrow(d_ki_ind)),
-      ki_teller = sum(ki_krit_teller, na.rm = TRUE),
-      ki_nevner = sum(ki_krit_nevner)
+      est = as.integer(sum(ki_krit_teller, na.rm = TRUE)) / as.integer(sum(ki_krit_nevner)),
+      ki_teller = as.integer(sum(ki_krit_teller, na.rm = TRUE)),
+      ki_nevner = as.integer(sum(ki_krit_nevner))
+    )
+  d_ci = d_summary %>%
+    dplyr::group_modify(~ binom::binom.wilson(.x$ki_teller, .x$ki_nevner, alpha = alpha))
+  names(d_ci)[5:6] = c("konfint_nedre", "konfint_ovre")
+  d_agg_prop = dplyr::bind_cols(d_summary, as_tibble(d_ci)[5:6])
+
+  d_agg_prop = d_agg_prop %>%
+    mutate(
+      est = dplyr::if_else(ki_nevner == 0, NA_real_, est),
+      ki_nevner = dplyr::if_else(ki_nevner == 0, NA_integer_, ki_nevner),
+      ki_teller = dplyr::if_else(ki_nevner == 0, NA_integer_, ki_teller),
+      konfint_nedre = dplyr::if_else(ki_nevner == 0, NA_real_, konfint_nedre),
+      konfint_ovre = dplyr::if_else(ki_nevner == 0, NA_real_, konfint_ovre)
     )
 
-  as_tibble(d_agg_prop)
+  (d_agg_prop)
 }
