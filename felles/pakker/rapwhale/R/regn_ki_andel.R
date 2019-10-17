@@ -35,10 +35,16 @@ aggreger_ki_prop = function(d_ki_ind, alpha = 0.05) {
   # Beregne utdata
   d_sammendrag = d_ki_ind %>%
     summarise(
-      est = as.integer(sum(ki_krit_teller, na.rm = TRUE)) / as.integer(sum(ki_krit_nevner)),
       ki_teller = as.integer(sum(ki_krit_teller, na.rm = TRUE)),
-      ki_nevner = as.integer(sum(ki_krit_nevner))
+      ki_nevner = as.integer(sum(ki_krit_nevner)),
+      est = ki_teller / ki_nevner
     )
+
+  # Fiks kolonnerekkefølgje (uelegant!)
+  d_sammendrag = bind_cols(
+    select(d_sammendrag, -ki_teller, -ki_nevner),
+    select(d_sammendrag, ki_teller, ki_nevner)
+  )
 
   # Legg til konfidensintervall
   konfint = binom::binom.wilson(d_sammendrag$ki_teller, d_sammendrag$ki_nevner, alpha = alpha)
