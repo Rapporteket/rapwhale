@@ -179,3 +179,22 @@ test_that("Funksjonen gir forventet resultat", {
   expect_identical(aggreger_ki_prop(d_67), svar_67)
   expect_identical(aggreger_ki_prop(d_75), svar_75)
 })
+
+test_that("Funksjonen støtter angivelse av konfidensinvå", {
+  d_test = tibble::tibble(
+    ki_krit_teller = c(1, 0, 0, 0),
+    ki_krit_nevner = c(1, 1, 1, 0)
+  )
+  d_svar_05 = tibble::tibble(
+    est = 0.3333333333333333, ki_teller = 1L, ki_nevner = 3L,
+    konfint_nedre = 0.06149194472039624, konfint_ovre = 0.7923403991979524
+  )
+  d_svar_10 = tibble::tibble(
+    est = 0.3333333333333333, ki_teller = 1L, ki_nevner = 3L,
+    konfint_nedre = 0.07826572633372843, konfint_ovre = 0.7464661317187757
+  )
+
+  expect_identical(aggreger_ki_prop(d_test), d_svar_05) # Standard skal være 95 %-KI
+  expect_identical(aggreger_ki_prop(d_test, alfa = .05), d_svar_05)
+  expect_identical(aggreger_ki_prop(d_test, alfa = .10), d_svar_10)
+})

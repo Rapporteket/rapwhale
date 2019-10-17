@@ -10,7 +10,7 @@ NULL
 #' @param d_ki_ind Inndata på 101-format
 #' @param alpha Verdi for å bestemme bredde på konfidensintervall, default er 0.05
 #' @export
-aggreger_ki_prop = function(d_ki_ind, alpha = 0.05) {
+aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
   # Teste inndata
   if (!(is.data.frame(d_ki_ind) && all(hasName(d_ki_ind, c("ki_krit_teller", "ki_krit_nevner"))))) {
     stop("Inndata må være tibble/data.frame med kolonnene 'ki_krit_teller' og 'ki_krit_nevner'")
@@ -47,7 +47,7 @@ aggreger_ki_prop = function(d_ki_ind, alpha = 0.05) {
   )
 
   # Legg til konfidensintervall
-  konfint = binom::binom.wilson(d_sammendrag$ki_teller, d_sammendrag$ki_nevner, alpha = alpha)
+  konfint = binom::binom.wilson(d_sammendrag$ki_teller, d_sammendrag$ki_nevner, conf.level = 1 - alfa)
   d_sammendrag$konfint_nedre = konfint$lower
   d_sammendrag$konfint_ovre = konfint$upper
 
