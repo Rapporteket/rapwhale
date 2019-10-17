@@ -40,7 +40,7 @@ test_that("Feilmelding hvis kriterievariablene inneholder annet enn 0, 1 og (for
   d_nevner_med_feil_1 = tibble::tibble(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c(1, 1, 2))
   d_nevner_med_feil_2 = tibble::tibble(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c(1, 1, NA))
 
-  feilmelding_teller = "ki_krit_teller må være 0 eller 1, eventuelt NA hvis ki_krit_nevner er 0"
+  feilmelding_teller = "'ki_krit_teller' må være 0 eller 1 hvis 'ki_krit_nevner' er 1, og 0 eller NA hvis 'ki_krit_nevner' er 0"
   expect_error(aggreger_ki_prop(d_teller_med_feil_1), feilmelding_teller)
   expect_error(aggreger_ki_prop(d_teller_med_feil_2), feilmelding_teller)
   expect_error(aggreger_ki_prop(d_teller_med_feil_3), feilmelding_teller)

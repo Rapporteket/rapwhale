@@ -11,28 +11,27 @@ NULL
 #' @param alpha Verdi for å bestemme bredde på konfidensintervall, default er 0.05
 #' @export
 aggreger_ki_prop = function(d_ki_ind, alpha = 0.05) {
-
   # Teste inndata
-  if (any(!is.data.frame(d_ki_ind) | !all(hasName(d_ki_ind, c("ki_krit_teller", "ki_krit_nevner"))))) {
+  if (!(is.data.frame(d_ki_ind) && all(hasName(d_ki_ind, c("ki_krit_teller", "ki_krit_nevner"))))) {
     stop("Inndata må være tibble/data.frame med kolonnene 'ki_krit_teller' og 'ki_krit_nevner'")
   }
-  if (all(!(is.numeric(d_ki_ind$ki_krit_teller) && is.numeric(d_ki_ind$ki_krit_nevner)))) {
+  if (!(is.numeric(d_ki_ind$ki_krit_teller) && is.numeric(d_ki_ind$ki_krit_nevner))) {
     stop("Kriterievariablene må være tall")
   }
-  if (any(!d_ki_ind$ki_krit_nevner %in% c(0, 1))) {
+  if (!all(d_ki_ind$ki_krit_nevner %in% c(0, 1))) {
     stop("'ki_krit_nevner' må være 0 eller 1")
   }
-  if (any(!d_ki_ind$ki_krit_teller %in% c(0, 1, NA))) {
-    stop("ki_krit_teller må være 0 eller 1, eventuelt NA hvis ki_krit_nevner er 0")
-  } else if (any(is.na(d_ki_ind$ki_krit_teller) &
-    d_ki_ind$ki_krit_nevner != 0)) {
-    stop("ki_krit_teller må være 0 eller 1, eventuelt NA hvis ki_krit_nevner er 0")
-  } else if (any(d_ki_ind$ki_krit_teller > d_ki_ind$ki_krit_nevner, na.rm = TRUE)) {
-    stop("ki_krit_teller må være 0 eller 1, eventuelt NA hvis ki_krit_nevner er 0")
+  if (!all(
+    (d_ki_ind$ki_krit_teller %in% c(0, 1, NA)) &
+      ((d_ki_ind$ki_krit_teller %in% c(0, 1) & d_ki_ind$ki_krit_nevner == 1) |
+        (d_ki_ind$ki_krit_teller %in% c(0, NA) & d_ki_ind$ki_krit_nevner == 0))
+  )) {
+    stop("'ki_krit_teller' må være 0 eller 1 hvis 'ki_krit_nevner' er 1, og 0 eller NA hvis 'ki_krit_nevner' er 0")
   }
   if (any(lengths(attr(d_ki_ind, "groups")$.rows) == 0)) {
     warning("Det finnes grupper uten observasjoner i grupperingsvariabel")
   }
+
   # Beregne konfidensintervall og utdata:
   d_summary = d_ki_ind %>%
     summarise(
