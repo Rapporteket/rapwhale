@@ -33,7 +33,7 @@ aggreger_ki_prop = function(d_ki_ind, alpha = 0.05) {
   }
 
   # Beregne utdata
-  d_summary = d_ki_ind %>%
+  d_sammendrag = d_ki_ind %>%
     summarise(
       est = as.integer(sum(ki_krit_teller, na.rm = TRUE)) / as.integer(sum(ki_krit_nevner)),
       ki_teller = as.integer(sum(ki_krit_teller, na.rm = TRUE)),
@@ -41,11 +41,11 @@ aggreger_ki_prop = function(d_ki_ind, alpha = 0.05) {
     )
 
   # Legg til konfidensintervall
-  konfint = binom::binom.wilson(d_summary$ki_teller, d_summary$ki_nevner, alpha = alpha)
-  d_summary$konfint_nedre = konfint$lower
-  d_summary$konfint_ovre = konfint$upper
+  konfint = binom::binom.wilson(d_sammendrag$ki_teller, d_sammendrag$ki_nevner, alpha = alpha)
+  d_sammendrag$konfint_nedre = konfint$lower
+  d_sammendrag$konfint_ovre = konfint$upper
 
-  d_agg_prop = d_summary %>%
+  d_sammendrag = d_sammendrag %>%
     mutate(
       est = dplyr::if_else(ki_nevner == 0, NA_real_, est),
       ki_nevner = dplyr::if_else(ki_nevner == 0, NA_integer_, ki_nevner),
@@ -54,5 +54,5 @@ aggreger_ki_prop = function(d_ki_ind, alpha = 0.05) {
       konfint_ovre = dplyr::if_else(ki_nevner == 0, NA_real_, konfint_ovre)
     )
 
-  (d_agg_prop)
+  d_sammendrag
 }
