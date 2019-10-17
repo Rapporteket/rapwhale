@@ -1,6 +1,6 @@
 #' @importFrom rlang sym !!
 #' @importFrom tibble as_tibble
-#' @importFrom dplyr group_by summarise case_when
+#' @importFrom dplyr group_by summarise case_when bind_cols
 NULL
 #' Regn ut Kvalitetsindikator - Andel:
 #'
