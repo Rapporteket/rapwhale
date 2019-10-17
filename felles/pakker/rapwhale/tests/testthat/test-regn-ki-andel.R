@@ -67,13 +67,13 @@ test_that("Funksjonen tillater tilfeller hvor ingen observasjoner oppfyller krit
 
   svar_ugruppert = tibble::tibble(
     est = NA_real_,
-    ki_teller = NA_integer_, ki_nevner = NA_integer_,
+    ki_teller = 0L, ki_nevner = 0L,
     konfint_nedre = NA_real_, konfint_ovre = NA_real_
   )
 
   svar_gruppert = tibble::tibble(
     sykehus = factor(c("A", "B")), est = c(NA_real_, 0),
-    ki_teller = c(NA_integer_, 0L), ki_nevner = c(NA_integer_, 3L),
+    ki_teller = c(0L, 0L), ki_nevner = c(0L, 3L),
     konfint_nedre = c(NA_real_, 0), konfint_ovre = c(NA_real_, 0.5614970317550454)
   )
 
@@ -98,7 +98,7 @@ test_that("Funksjonen returnerer 'NA' for de grupperte verdiene som ikke har noe
   svar_gruppert_med_na = tibble::tibble(
     sykehus = forcats::fct_explicit_na(c("A", "B", NA), na_level = NA),
     est = c(NA_real_, 0, 1),
-    ki_teller = c(NA_integer_, 0L, 1L), ki_nevner = c(NA_integer_, 3L, 1L),
+    ki_teller = c(0L, 0L, 1L), ki_nevner = c(0L, 3L, 1L),
     konfint_nedre = c(NA_real_, 0, 0.2065493143772375), konfint_ovre = c(NA_real_, 0.5614970317550454, 1)
   )
 
@@ -134,7 +134,7 @@ test_that("Funksjonen returnerer verdier for alle grupper i inndata, selv de gru
   svar_uten_innhold = tibble::tibble(
     sykehus = forcats::fct_explicit_na(c("A", "B", "C")),
     est = c(NA_real_, 0, 1),
-    ki_teller = c(NA_integer_, 0L, 2L), ki_nevner = c(NA_integer_, 3L, 2L),
+    ki_teller = c(0L, 0L, 2L), ki_nevner = c(0L, 3L, 2L),
     konfint_nedre = c(NA_real_, 0, 0.3423802275066532), konfint_ovre = c(NA_real_, 0.5614970317550454, 1)
   )
 

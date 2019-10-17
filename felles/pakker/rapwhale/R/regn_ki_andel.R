@@ -51,13 +51,12 @@ aggreger_ki_prop = function(d_ki_ind, alpha = 0.05) {
   d_sammendrag$konfint_nedre = konfint$lower
   d_sammendrag$konfint_ovre = konfint$upper
 
+  # Sørg for at manglende estimat alltid blir returnert som NA
+  # (og ikke for eksempel NaN, som vi får ved 0/0)
   d_sammendrag = d_sammendrag %>%
-    mutate(
-      est = dplyr::if_else(ki_nevner == 0, NA_real_, est),
-      ki_nevner = dplyr::if_else(ki_nevner == 0, NA_integer_, ki_nevner),
-      ki_teller = dplyr::if_else(ki_nevner == 0, NA_integer_, ki_teller),
-      konfint_nedre = dplyr::if_else(ki_nevner == 0, NA_real_, konfint_nedre),
-      konfint_ovre = dplyr::if_else(ki_nevner == 0, NA_real_, konfint_ovre)
+    mutate_at(vars(est, konfint_nedre, konfint_ovre),
+      tidyr::replace_na,
+      replace = NA
     )
 
   d_sammendrag
