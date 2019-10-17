@@ -32,19 +32,20 @@ aggreger_ki_prop = function(d_ki_ind, alpha = 0.05) {
     warning("Det finnes grupper uten observasjoner i grupperingsvariabel")
   }
 
-  # Beregne konfidensintervall og utdata:
+  # Beregne utdata
   d_summary = d_ki_ind %>%
     summarise(
       est = as.integer(sum(ki_krit_teller, na.rm = TRUE)) / as.integer(sum(ki_krit_nevner)),
       ki_teller = as.integer(sum(ki_krit_teller, na.rm = TRUE)),
       ki_nevner = as.integer(sum(ki_krit_nevner))
     )
-  d_ci = d_summary %>%
-    dplyr::group_modify(~ binom::binom.wilson(.x$ki_teller, .x$ki_nevner, alpha = alpha))
-  names(d_ci)[5:6] = c("konfint_nedre", "konfint_ovre")
-  d_agg_prop = dplyr::bind_cols(d_summary, as_tibble(d_ci)[5:6])
 
-  d_agg_prop = d_agg_prop %>%
+  # Legg til konfidensintervall
+  konfint = binom::binom.wilson(d_summary$ki_teller, d_summary$ki_nevner, alpha = alpha)
+  d_summary$konfint_nedre = konfint$lower
+  d_summary$konfint_ovre = konfint$upper
+
+  d_agg_prop = d_summary %>%
     mutate(
       est = dplyr::if_else(ki_nevner == 0, NA_real_, est),
       ki_nevner = dplyr::if_else(ki_nevner == 0, NA_integer_, ki_nevner),
