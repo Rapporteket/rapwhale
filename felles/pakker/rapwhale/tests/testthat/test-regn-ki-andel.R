@@ -83,20 +83,18 @@ test_that("Funksjonen tillater tilfeller hvor ingen observasjoner oppfyller krit
 
 # 1) Hvordan skal funksjonen håndtere missing i grupperingsvariabel?
 
-# Vi bør ta en avgjørelse for hvordan det skal defineres i de spesifikke indikator-funksjonene,
-# slik at vi har en klar forventning om hva som blir inndata.
-# Denne testen må eventuelt oppdateres om vi velger å definere missing på en annen måte enn "na_level = NA".
-
 test_that("Funksjonen returnerer 'NA' for de grupperte verdiene som ikke har noen øvrig gruppetilhørighet", {
-  d_gruppert_med_na = tibble::tibble(
-    sykehus = forcats::fct_explicit_na(rep(c("B", "A", NA), each = 3), na_level = NA),
-    ki_krit_teller = c(0, 0, 0, 0, 0, 0, 0, 1, 0),
-    ki_krit_nevner = c(1, 1, 1, 0, 0, 0, 0, 1, 0)
-  ) %>%
-    dplyr::group_by(sykehus)
+  d_gruppert_med_na = suppressWarnings({
+    tibble::tibble(
+      sykehus = factor(rep(c("B", "A", NA), each = 3)),
+      ki_krit_teller = c(0, 0, 0, 0, 0, 0, 0, 1, 0),
+      ki_krit_nevner = c(1, 1, 1, 0, 0, 0, 0, 1, 0)
+    ) %>%
+      dplyr::group_by(sykehus)
+  })
 
   svar_gruppert_med_na = tibble::tibble(
-    sykehus = forcats::fct_explicit_na(c("A", "B", NA), na_level = NA),
+    sykehus = factor(c("A", "B", NA)),
     est = c(NA_real_, 0, 1),
     ki_teller = c(0L, 0L, 1L), ki_nevner = c(0L, 3L, 1L),
     konfint_nedre = c(NA_real_, 0, 0.2065493143772375), konfint_ovre = c(NA_real_, 0.5614970317550454, 1)
@@ -125,14 +123,14 @@ test_that("Funksjonen gir en advarsel når det finnes NA-verdier i grupperingsva
 # # Grupper som ikke har noen verdier kan eventuelt filtreres ut i etterkant hvis de ikke skal være med i figurer, etc.
 test_that("Funksjonen returnerer verdier for alle grupper i inndata, selv de gruppene som ikke inneholder observasjoner", {
   d_grupper_uten_innhold = tibble::tibble(
-    sykehus = forcats::fct_explicit_na(rep(c("B", "A", "C"), each = 3)),
+    sykehus = factor(rep(c("B", "A", "C"), each = 3)),
     ki_krit_teller = c(0, 0, 0, 0, 0, 0, 1, 1, 0),
     ki_krit_nevner = c(1, 1, 1, 0, 0, 0, 1, 1, 0)
   ) %>%
     group_by(sykehus)
 
   svar_uten_innhold = tibble::tibble(
-    sykehus = forcats::fct_explicit_na(c("A", "B", "C")),
+    sykehus = factor(c("A", "B", "C")),
     est = c(NA_real_, 0, 1),
     ki_teller = c(0L, 0L, 2L), ki_nevner = c(0L, 3L, 2L),
     konfint_nedre = c(NA_real_, 0, 0.3423802275066532), konfint_ovre = c(NA_real_, 0.5614970317550454, 1)
