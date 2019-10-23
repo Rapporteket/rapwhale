@@ -15,18 +15,18 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
   if (!(is.data.frame(d_ki_ind) && all(hasName(d_ki_ind, c("ki_krit_teller", "ki_krit_nevner"))))) {
     stop("Inndata må være tibble/data.frame med kolonnene 'ki_krit_teller' og 'ki_krit_nevner'")
   }
-  if (!(is.numeric(d_ki_ind$ki_krit_teller) && is.numeric(d_ki_ind$ki_krit_nevner))) {
-    stop("Kriterievariablene må være tall")
+  if (!(is.logical(d_ki_ind$ki_krit_teller) && is.logical(d_ki_ind$ki_krit_nevner))) {
+    stop("Kriterievariablene må være boolsk")
   }
-  if (!all(d_ki_ind$ki_krit_nevner %in% c(0, 1))) {
-    stop("'ki_krit_nevner' må være 0 eller 1")
+  if (!all(d_ki_ind$ki_krit_nevner %in% c(T, F))) {
+    stop("'ki_krit_nevner' må være TRUE eller FALSE")
   }
   if (!all(
-    (d_ki_ind$ki_krit_teller %in% c(0, 1, NA)) &
-      ((d_ki_ind$ki_krit_teller %in% c(0, 1) & d_ki_ind$ki_krit_nevner == 1) |
-        (d_ki_ind$ki_krit_teller %in% c(0, NA) & d_ki_ind$ki_krit_nevner == 0))
+    (d_ki_ind$ki_krit_teller %in% c(F, T, NA)) &
+      ((d_ki_ind$ki_krit_teller %in% c(F, T) & d_ki_ind$ki_krit_nevner == T) |
+        (d_ki_ind$ki_krit_teller %in% c(F, NA) & d_ki_ind$ki_krit_nevner == F))
   )) {
-    stop("'ki_krit_teller' må være 0 eller 1 hvis 'ki_krit_nevner' er 1, og 0 eller NA hvis 'ki_krit_nevner' er 0")
+    stop("'ki_krit_teller' må være TRUE eller FALSE hvis 'ki_krit_nevner' er TRUE, og FALSE eller NA hvis 'ki_krit_nevner' er FALSE")
   }
   if (any(lengths(attr(d_ki_ind, "groups")$.rows) == 0)) {
     warning("Det finnes grupper uten observasjoner i grupperingsvariabel")

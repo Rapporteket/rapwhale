@@ -5,10 +5,10 @@
 context("Sjekker at inndata er på forventet format")
 
 test_that("Feilmelding hvis ikke tibble/data.frame med nødvendige kolonner", {
-  d_uten_nevner = tibble::tibble(foo = 1:3, ki_krit_teller = rep(1, 3))
-  d_uten_teller = tibble::tibble(foo = 1:3, ki_krit_nevner = rep(1, 3))
+  d_uten_nevner = tibble::tibble(foo = 1:3, ki_krit_teller = rep(TRUE, 3))
+  d_uten_teller = tibble::tibble(foo = 1:3, ki_krit_nevner = rep(TRUE, 3))
   d_uten_begge = tibble::tibble(foo = 1:3)
-  liste = list(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c(1, 1, 1))
+  liste = list(ki_krit_teller = c(FALSE, TRUE, TRUE), ki_krit_nevner = c(TRUE, TRUE, TRUE))
 
   feilmelding_kol = "Inndata må være tibble/data.frame med kolonnene 'ki_krit_teller' og 'ki_krit_nevner'"
   expect_error(aggreger_ki_prop(liste), feilmelding_kol)
@@ -19,37 +19,38 @@ test_that("Feilmelding hvis ikke tibble/data.frame med nødvendige kolonner", {
 
 # test for feil variabeltyper
 test_that("Feilmelding hvis data av feil type", {
-  d_feil_teller_tekst = tibble::tibble(ki_krit_teller = c("0", "1", "1"), ki_krit_nevner = c(0, 1, 1))
-  d_feil_nevner_tekst = tibble::tibble(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c("0", "1", "1"))
-  d_feil_teller_fak = tibble::tibble(ki_krit_teller = factor(c("5", "5", "5")), ki_krit_nevner = c(0, 1, 1))
+  d_feil_teller_tekst = tibble::tibble(ki_krit_teller = c("0", "1", "1"), ki_krit_nevner = c(FALSE, TRUE, TRUE))
+  d_feil_nevner_tekst = tibble::tibble(ki_krit_teller = c(FALSE, TRUE, TRUE), ki_krit_nevner = c("0", "1", "1"))
+  d_feil_teller_fak = tibble::tibble(ki_krit_teller = factor(c("5", "5", "5")), ki_krit_nevner = c(FALSE, TRUE, TRUE))
+  d_feil_nevner_fak = tibble::tibble(ki_krit_teller = c(FALSE, FALSE, TRUE), ki_krit_nevner = c(factor(c("5", "5", "5"))))
+  d_feil_teller_num = tibble::tibble(ki_krit_teller = c(FALSE, TRUE, 2), ki_krit_nevner = c(TRUE, TRUE, TRUE))
+  d_feil_nevner_num = tibble::tibble(ki_krit_teller = c(FALSE, TRUE, TRUE), ki_krit_nevner = c(TRUE, TRUE, 2))
 
-  feilmelding = "Kriterievariablene må være tall"
+  feilmelding = "Kriterievariablene må være boolsk"
   expect_error(aggreger_ki_prop(d_feil_teller_tekst), feilmelding)
   expect_error(aggreger_ki_prop(d_feil_nevner_tekst), feilmelding)
   expect_error(aggreger_ki_prop(d_feil_teller_fak), feilmelding)
+  expect_error(aggreger_ki_prop(d_feil_teller_num), feilmelding)
+  expect_error(aggreger_ki_prop(d_feil_nevner_num), feilmelding)
+  expect_error(aggreger_ki_prop(d_feil_nevner_fak), feilmelding)
 })
 
-test_that("Feilmelding hvis kriterievariablene inneholder annet enn 0, 1 og (for teller) NA eller er inkonsistente", {
-  d_teller_med_feil_1 = tibble::tibble(ki_krit_teller = c(0, 1, 2), ki_krit_nevner = c(1, 1, 1))
-  d_teller_med_feil_2 = tibble::tibble(ki_krit_teller = c(0, 1, 2), ki_krit_nevner = c(1, 1, 0))
-  d_teller_med_feil_3 = tibble::tibble(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c(1, 1, 0))
-  d_teller_feil_og_na = tibble::tibble(ki_krit_teller = c(0, 1, NA), ki_krit_nevner = c(1, 1, 1))
-  d_teller_ok_men_na = tibble::tibble(ki_krit_teller = c(0, 1, NA), ki_krit_nevner = c(1, 1, 0))
-  d_teller_ok_men_na_res = tibble::tibble(est = 0.5, konfint_nedre = 0.0256, konfint_ovre = 0.974, ki_teller = 1, ki_nevner = 2)
+test_that("Feilmelding hvis kriterievariablene inneholder annet enn TRUE, FALSE og (for teller) NA eller er inkonsistente", {
+  d_teller_med_feil_1 = tibble::tibble(ki_krit_teller = c(FALSE, TRUE, TRUE), ki_krit_nevner = c(TRUE, TRUE, FALSE))
+  d_teller_feil_og_na = tibble::tibble(ki_krit_teller = c(FALSE, TRUE, NA), ki_krit_nevner = c(TRUE, TRUE, TRUE))
 
-  d_nevner_med_feil_1 = tibble::tibble(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c(1, 1, 2))
-  d_nevner_med_feil_2 = tibble::tibble(ki_krit_teller = c(0, 1, 1), ki_krit_nevner = c(1, 1, NA))
+  d_teller_ok_men_na = tibble::tibble(ki_krit_teller = c(FALSE, TRUE, NA), ki_krit_nevner = c(TRUE, TRUE, FALSE))
+  d_teller_ok_men_na_res = tibble::tibble(est = 0.5, ki_teller = 1L, ki_nevner = 2L, konfint_nedre = 0.094531205734230739, konfint_ovre = 0.90546879426576921)
 
-  feilmelding_teller = "'ki_krit_teller' må være 0 eller 1 hvis 'ki_krit_nevner' er 1, og 0 eller NA hvis 'ki_krit_nevner' er 0"
+  d_nevner_med_feil = tibble::tibble(ki_krit_teller = c(FALSE, TRUE, TRUE), ki_krit_nevner = c(TRUE, TRUE, NA))
+
+  feilmelding_teller = "'ki_krit_teller' må være TRUE eller FALSE hvis 'ki_krit_nevner' er TRUE, og FALSE eller NA hvis 'ki_krit_nevner' er FALSE"
   expect_error(aggreger_ki_prop(d_teller_med_feil_1), feilmelding_teller)
-  expect_error(aggreger_ki_prop(d_teller_med_feil_2), feilmelding_teller)
-  expect_error(aggreger_ki_prop(d_teller_med_feil_3), feilmelding_teller)
   expect_error(aggreger_ki_prop(d_teller_feil_og_na), feilmelding_teller)
-  # expect_identical(aggreger_ki_prop(d_teller_ok_men_na), d_teller_ok_men_na_res)
+  expect_identical(aggreger_ki_prop(d_teller_ok_men_na), d_teller_ok_men_na_res)
 
-  feilmelding_nevner = "'ki_krit_nevner' må være 0 eller 1"
-  expect_error(aggreger_ki_prop(d_nevner_med_feil_1), feilmelding_nevner)
-  expect_error(aggreger_ki_prop(d_nevner_med_feil_2), feilmelding_nevner)
+  feilmelding_nevner = "'ki_krit_nevner' må være TRUE eller FALSE"
+  expect_error(aggreger_ki_prop(d_nevner_med_feil), feilmelding_nevner)
 })
 
 
@@ -57,11 +58,11 @@ context("Sjekker grensetilfeller i inndata")
 
 # Funksjonen må tillate tilfeller hvor sum teller_krit er 0.
 test_that("Funksjonen tillater tilfeller hvor ingen observasjoner oppfyller kriteriet for teller", {
-  d_ugruppert = tibble::tibble(ki_krit_teller = c(0, 0, 0), ki_krit_nevner = c(0, 0, 0))
+  d_ugruppert = tibble::tibble(ki_krit_teller = c(rep(FALSE, 3)), ki_krit_nevner = c(rep(FALSE, 3)))
   d_gruppert = tibble::tibble(
     sykehus = factor(rep(c("B", "A"), each = 3)),
-    ki_krit_teller = c(0, 0, 0, 0, 0, 0),
-    ki_krit_nevner = c(1, 1, 1, 0, 0, 0)
+    ki_krit_teller = c(rep(FALSE, 6)),
+    ki_krit_nevner = c(rep(c(TRUE, FALSE), each = 3))
   ) %>%
     dplyr::group_by(sykehus)
 
@@ -87,8 +88,8 @@ test_that("Funksjonen returnerer 'NA' for de grupperte verdiene som ikke har noe
   d_gruppert_med_na = suppressWarnings({
     tibble::tibble(
       sykehus = factor(rep(c("B", "A", NA), each = 3)),
-      ki_krit_teller = c(0, 0, 0, 0, 0, 0, 0, 1, 0),
-      ki_krit_nevner = c(1, 1, 1, 0, 0, 0, 0, 1, 0)
+      ki_krit_teller = c(rep(FALSE, 7), TRUE, FALSE),
+      ki_krit_nevner = c(rep(c(TRUE, FALSE), each = 3), FALSE, TRUE, FALSE)
     ) %>%
       dplyr::group_by(sykehus)
   })
@@ -108,8 +109,8 @@ test_that("Funksjonen returnerer 'NA' for de grupperte verdiene som ikke har noe
 test_that("Funksjonen gir en advarsel når det finnes NA-verdier i grupperingsvariabel", {
   d_gruppert_ekstra_levels = tibble::tibble(
     sykehus = factor(rep(c("B", "A"), each = 3), levels = LETTERS[1:4]),
-    ki_krit_teller = c(0, 0, 0, 0, 0, 0),
-    ki_krit_nevner = c(1, 1, 1, 0, 0, 0)
+    ki_krit_teller = c(rep(FALSE, 6)),
+    ki_krit_nevner = c(rep(c(TRUE, FALSE), each = 3))
   ) %>%
     dplyr::group_by(sykehus, .drop = FALSE)
 
@@ -124,8 +125,8 @@ test_that("Funksjonen gir en advarsel når det finnes NA-verdier i grupperingsva
 test_that("Funksjonen returnerer verdier for alle grupper i inndata, selv de gruppene som ikke inneholder observasjoner", {
   d_grupper_uten_innhold = tibble::tibble(
     sykehus = factor(rep(c("B", "A", "C"), each = 3)),
-    ki_krit_teller = c(0, 0, 0, 0, 0, 0, 1, 1, 0),
-    ki_krit_nevner = c(1, 1, 1, 0, 0, 0, 1, 1, 0)
+    ki_krit_teller = c(rep(FALSE, 6), TRUE, TRUE, FALSE),
+    ki_krit_nevner = c(rep(c(TRUE, FALSE), each = 3), TRUE, TRUE, FALSE)
   ) %>%
     group_by(sykehus)
 
@@ -142,32 +143,32 @@ test_that("Funksjonen returnerer verdier for alle grupper i inndata, selv de gru
 
 test_that("Funksjonen gir forventet resultat", {
   d_25 = tibble::tibble(
-    ki_krit_teller = c(1, 0, 0, 0),
-    ki_krit_nevner = c(1, 1, 1, 1)
+    ki_krit_teller = c(TRUE, FALSE, FALSE, FALSE),
+    ki_krit_nevner = c(rep(TRUE, 4))
   )
   svar_25 = tibble::tibble(est = 0.25, ki_teller = 1L, ki_nevner = 4L, konfint_nedre = 0.04558726080970059, konfint_ovre = 0.699358157417598)
 
   d_33 = tibble::tibble(
-    ki_krit_teller = c(1, 0, 0, 0),
-    ki_krit_nevner = c(1, 1, 1, 0)
+    ki_krit_teller = c(TRUE, FALSE, FALSE, FALSE),
+    ki_krit_nevner = c(TRUE, TRUE, TRUE, FALSE)
   )
   svar_33 = tibble::tibble(est = 0.3333333333333333, ki_teller = 1L, ki_nevner = 3L, konfint_nedre = 0.06149194472039624, konfint_ovre = 0.7923403991979524)
 
   d_50 = tibble::tibble(
-    ki_krit_teller = c(1, 1, 0, 0),
-    ki_krit_nevner = c(1, 1, 1, 1)
+    ki_krit_teller = c(rep(c(TRUE, FALSE), each = 2)),
+    ki_krit_nevner = c(rep(TRUE, 4))
   )
   svar_50 = tibble::tibble(est = 0.5, ki_teller = 2L, ki_nevner = 4L, konfint_nedre = 0.15003898915214955, konfint_ovre = 0.84996101084785047)
 
   d_67 = tibble::tibble(
-    ki_krit_teller = c(1, 1, 0, 0),
-    ki_krit_nevner = c(1, 1, 1, 0)
+    ki_krit_teller = c(TRUE, TRUE, FALSE, FALSE),
+    ki_krit_nevner = c(TRUE, TRUE, TRUE, FALSE)
   )
   svar_67 = tibble::tibble(est = 0.6666666666666666, ki_teller = 2L, ki_nevner = 3L, konfint_nedre = 0.20765960080204776, konfint_ovre = 0.93850805527960379)
 
   d_75 = tibble::tibble(
-    ki_krit_teller = c(1, 1, 1, 0),
-    ki_krit_nevner = c(1, 1, 1, 1)
+    ki_krit_teller = c(TRUE, TRUE, TRUE, FALSE),
+    ki_krit_nevner = c(TRUE, TRUE, TRUE, TRUE)
   )
   svar_75 = tibble::tibble(est = 0.75, ki_teller = 3L, ki_nevner = 4L, konfint_nedre = 0.300641842582402, konfint_ovre = 0.9544127391902995)
 
@@ -180,8 +181,8 @@ test_that("Funksjonen gir forventet resultat", {
 
 test_that("Funksjonen støtter angivelse av konfidensinvå", {
   d_test = tibble::tibble(
-    ki_krit_teller = c(1, 0, 0, 0),
-    ki_krit_nevner = c(1, 1, 1, 0)
+    ki_krit_teller = c(TRUE, FALSE, FALSE, FALSE),
+    ki_krit_nevner = c(TRUE, TRUE, TRUE, FALSE)
   )
   d_svar_05 = tibble::tibble(
     est = 0.3333333333333333, ki_teller = 1L, ki_nevner = 3L,
