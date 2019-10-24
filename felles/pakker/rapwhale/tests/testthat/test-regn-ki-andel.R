@@ -1,5 +1,3 @@
-# Aggregeringsfunksjoner:
-
 # Aggregering - Beregn andel ----------------------------------------------
 
 context("Sjekker at inndata er på forventet format")
