@@ -24,7 +24,7 @@ Link til Pasientrapporterte data [https://www.kvalitetsregistre.no/pasientrappor
 
 RAND-12/SF-12 er spørreskjema med 12 spørsmål som måler livskvalitet - både
 fysisk og mental. RAND-12/SF-12 er forkortede versjoner som av RAND-36/SF-36 
-(som er den opprinnelige versjonen med 36 spørsmål). Spørreskjemaene SF-12 og 
+(som er de opprinnelige versjonene med 36 spørsmål). Spørreskjemaene SF-12 og 
 SF-36har samme spørsmål som RAND-12 og RAND-36, men har en annen anbefalt 
 skåringsalgoritme (?) og er i tillegg lisensbelagt.  
 
@@ -37,12 +37,13 @@ Under «Generelle instrument» på nettsiden
 ligger manualen for skåring av RAND-12. SPSS-syntaksen finnes her 
 [https://www.kvalitetsregistre.no/sites/default/files/rand12_script.txt].
 
-Manglende verdier, alt må være besvart (SYSMIS, ifelse)
+For at skriptet skal fungere må variabelnavnene i SPSS-datafilen være de samme som 
+i skriptet (GH1, PF02, PF04, RP2, RP3, RE2, RE3, BP2, MH3, VT2, MH4, SF2). Det er 
+valgfritt om man velger å bruke små eller store bokstaver. 
 
-For at skriptet skal fungere må 
-variabelnavnene i SPSS-datafilen være de samme som i skriptet 
-(GH1, PF02, PF04, RP2, RP3, RE2, RE3, BP2, MH3, VT2, MH4, SF2). Det er valgfritt om
-man velger å bruke små eller store bokstaver. 
+Syntaksen regner ut en sumskår for både PCS12 (Physical Component Summary score) og 
+MCS12 (Mental Component Summary score). Sumskårene blir bare regnet ut hvis alle 12 
+spørsmålene er besvart. (SYSMIS, ifelse)
 
 Selve skriptet har ingen test / gir ingen advarsel ved ugyldige verdier, men det 
 står i kommentert i starten av skriptet at dette må sjekkes og korrigeres før 
@@ -59,14 +60,15 @@ helse for alle 12 variablene.
 
 Neste steg i skriptet er at det opprettes en ny variabel for hvert svaralternativ 
 (utenom for det alternativet med høyest verdi) i de 12 spørsmålene. F.eks. for
-spørsmål 2a betyr dette at det opprettes 2 nye variabler, hvor den første av de får 
-verdien 1 dersom det er krysset av på første svaralternativ («Ja, begrenser meg mye»),
-og verdien 0 ellers. Den andre variabelen får verdien 1 dersom det er krysset av
-på andre alternativ («Ja, begrenser meg litt»), og verdien 0 ellers. Grunnen til
-denne kategoriseringen er at hvert svaralternativ (bortsett fra det med høyest verdi - utdype)
-påvirker sumskåren med ulike vekter. Artikkelen som SPSS-syntaksen er basert på finnes her
-[https://www.ncbi.nlm.nih.gov/pubmed/17825096]. Tabell 5 i artikkelen viser 
-regresjonskoeffisientene (vektene) for hver variabel.
+spørsmål 2a betyr dette at det opprettes 2 nye variabler, hvor den første (PF02_1) 
+får verdien 1 dersom det er krysset av på første svaralternativ 
+(«Ja, begrenser meg mye»), og verdien 0 ellers. Den andre variabelen (PF02_2) får 
+verdien 1 dersom det er krysset av på andre svaralternativ 
+(«Ja, begrenser meg litt»), og verdien 0 ellers. Grunnen til at disse nye 
+variablene opprettes er at hvert svaralternativ påvirker sumskåren med ulike vekter 
+(svaralternativene med høyest verdi trekker ikke ned sumskåren). Artikkelen som 
+SPSS-syntaksen er basert på finnes her [https://www.ncbi.nlm.nih.gov/pubmed/17825096]. 
+Tabell 5 i artikkelen viser regresjonskoeffisientene (vektene) for hver variabel.
 
 # Deskriptiv skåring-statistikk
 
