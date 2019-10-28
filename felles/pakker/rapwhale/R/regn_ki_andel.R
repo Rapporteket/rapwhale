@@ -1,6 +1,6 @@
 #' @importFrom rlang sym !!
 #' @importFrom tibble as_tibble
-#' @importFrom dplyr group_by summarise case_when bind_cols
+#' @importFrom dplyr group_by summarise case_when bind_cols groups
 NULL
 #' Regn ut Kvalitetsindikator - Andel:
 #'
@@ -38,13 +38,8 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
       ki_teller = as.integer(sum(ki_krit_teller, na.rm = TRUE)),
       ki_nevner = as.integer(sum(ki_krit_nevner)),
       est = ki_teller / ki_nevner
-    )
-
-  # Fiks kolonnerekkefølgje (uelegant!)
-  d_sammendrag = bind_cols(
-    select(d_sammendrag, -ki_teller, -ki_nevner),
-    select(d_sammendrag, ki_teller, ki_nevner)
-  )
+    ) %>%
+    select(!!!groups(d_ki_ind), est, ki_teller, ki_nevner)
 
   # Legg til konfidensintervall
   konfint = binom::binom.wilson(d_sammendrag$ki_teller, d_sammendrag$ki_nevner, conf.level = 1 - alfa)
