@@ -19,14 +19,18 @@ test_that("Feilmelding hvis data av feil type", {
   d_feil_aktuell_tekst = tibble::tibble(ki_x = c(15, 12.2, 12.5), ki_aktuell = c("0", "1", "1"))
   d_feil_aktuell_fak = tibble::tibble(ki_x = c(15, 12.2, 12.2), ki_aktuell = c(factor(c("5", "5", "5"))))
   d_feil_aktuell_num = tibble::tibble(ki_x = c(13, 14, 16), ki_aktuell = c(TRUE, TRUE, 2))
-  feilmelding_aktuell = "'ki_aktuell' må være boolsk"
+  d_feil_aktuell_na = tibble::tibble(ki_x = 1:6, ki_aktuell = c(TRUE, TRUE, FALSE, FALSE, NA, TRUE))
+
+  feilmelding_aktuell = "'ki_aktuell' må være TRUE eller FALSE"
   expect_error(aggreger_ki_snitt(d_feil_aktuell_tekst), feilmelding_aktuell)
   expect_error(aggreger_ki_snitt(d_feil_aktuell_num), feilmelding_aktuell)
   expect_error(aggreger_ki_snitt(d_feil_aktuell_fak), feilmelding_aktuell)
+  expect_error(aggreger_ki_snitt(d_feil_aktuell_na), feilmelding_aktuell)
 
   d_feil_x_tekst = tibble::tibble(ki_x = c("0", "1", "1"), ki_aktuell = c(FALSE, TRUE, TRUE))
   d_feil_x_fak = tibble::tibble(ki_x = factor(c("5", "5", "5")), ki_aktuell = c(FALSE, TRUE, TRUE))
   d_feil_x_lgl = tibble::tibble(ki_x = c(FALSE, TRUE, TRUE), ki_aktuell = c(TRUE, TRUE, TRUE))
+
   feilmelding_x = "'ki_x' må være numerisk"
   expect_error(aggreger_ki_snitt(d_feil_x_tekst), feilmelding_x)
   expect_error(aggreger_ki_snitt(d_feil_x_fak), feilmelding_x)
@@ -92,9 +96,35 @@ test_that("Funksjonen håndterer tilfeller hvor en gruppe bare har 'ki_aktuell' 
   expect_equal(aggreger_ki_snitt(d_gruppe_tom), d_gruppe_tom_ut)
 })
 
-# test at n_aktuell kun teller de inkluderte fra ki_aktuell
-# teste at vi får riktig feilmelding gitt antall = 1 innad i en gruppe
-# teste at vi får ønsket utdata gitt at det er null observasjoner i en gruppe
+test_that("Funksjonen håndterer tilfeller hvor standardavvik er 0", {
+  d_sd_lik_null = tibble::tibble(
+    sykehus = factor(rep(c("A", "B"), each = 3)),
+    ki_x = c(rep(3, 3), 4, 5, 6),
+    ki_aktuell = rep(TRUE, 6)
+  ) %>%
+    group_by(sykehus)
+  d_sd_lik_null_ut = tibble::tibble(
+    sykehus = factor(c("A", "B")),
+    est = c(3, 5),
+    konfint_nedre = c(NA_real_, 2.5158622882496702),
+    konfint_ovre = c(NA_real_, 7.4841377117503303),
+    n_aktuell = c(3L, 3L)
+  )
 
-# teste at ki_aktuell filtreres ut hvis NA
-# teste ved standardavvik lik 0
+  expect_equal(aggreger_ki_snitt(d_sd_lik_null), d_sd_lik_null_ut)
+})
+
+
+test_that("'ki_aktuell' kun inkluderes når den er TRUE", {
+  d_ki_akt_variert = tibble::tibble(
+    ki_x = 1:6,
+    ki_aktuell = c(TRUE, FALSE, TRUE, TRUE, TRUE, FALSE)
+  )
+  d_ki_akt_variert_ut = tibble::tibble(
+    est = 3.25,
+    konfint_nedre = 0.53246911620398474,
+    konfint_ovre = 5.96753088379601504,
+    n_aktuell = 4L
+  )
+  expect_equal(aggreger_ki_snitt(d_ki_akt_variert), d_ki_akt_variert_ut)
+})
