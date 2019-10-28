@@ -46,14 +46,18 @@ For at skriptet skal fungere må variabelnavnene i SPSS-datafilen være de samme
 i skriptet (GH1, PF02, PF04, RP2, RP3, RE2, RE3, BP2, MH3, VT2, MH4, SF2). Det er 
 valgfritt om man velger å bruke små eller store bokstaver. 
 
-Syntaksen regner ut både PCS12 (Physical Component Summary score) og MCS12 
+SPSS-Syntaksen regner ut både PCS12 (Physical Component Summary score) og MCS12 
 (Mental Component Summary score). Sumskårene blir bare regnet ut hvis alle 12 
 spørsmålene er besvart. Selve skriptet har ingen test / gir ingen advarsel ved 
-ugyldige verdier, men det står i kommentert i starten av skriptet at dette må 
+ugyldige verdier, men det står kommentert i starten av skriptet at dette må 
 sjekkes og korrigeres før skriptet kjøres. Om man ikke sjekker dette før skriptet 
-kjøres, og det finnes ugyldige verdier, vil det føre til at det ikke blir regnet ut 
-en skår for skjemaene som inneholder en eller flere ugyldige verdier - og ingen 
-advarsel vil bli gitt. Alle spørmålene må altså være besvart med gyldig verdier for
+kjøres, og det finnes ugyldige verdier, vil det føre til at det blir regnet ut en 
+sumskår som sannsynligvis er høyere enn den skal være. Dette er fordi SPSS-syntaksen
+alltid vil betrakte en ugyldig verdi som om det er krysset av på det 
+svaralternativet som tilsvarer best helse. Hvorfor dette er tilfellet står forklart
+i siste avsnitt i dette kapitlet.
+
+Alle spørmålene må altså ikke være besvart med gyldig verdier for
 at sumskåren skal bli regnet ut. Se 
 [https://www.kvalitetsregistre.no/sites/default/files/attachments/norsk_rand-12_m_koder.pdf]
 for mulige/gyldige verdier.
