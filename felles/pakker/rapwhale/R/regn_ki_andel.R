@@ -8,7 +8,7 @@ NULL
 #' Tar inn et datasett på 101-format, og returnerer et estimert resultat
 #'
 #' @param d_ki_ind Inndata på 101-format
-#' @param alpha Verdi for å bestemme bredde på konfidensintervall, default er 0.05
+#' @param alfa Verdi for å bestemme bredde på konfidensintervall, standardverid er 0.05
 #' @export
 aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
   # Teste inndata
