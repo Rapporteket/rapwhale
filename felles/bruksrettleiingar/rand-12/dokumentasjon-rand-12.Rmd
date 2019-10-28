@@ -87,9 +87,9 @@ er like sannsynlige og vil derfor ikke være representative for en pasientgruppe
 Figurene under viser fordelingen for PCS12 og MCS12.
 
 ```{r fordeling-pcs, echo=FALSE, fig.cap="Fordeling PCS12", out.width = '100%'}
-knitr::include_graphics("H:\\kvalreg\\felles\\bruksrettleiingar\\rand-12\\histogram-utregnet-pc.png")
+knitr::include_graphics("histogram-utregnet-pc.png")
 ```
 
 ```{r fordeling-mcs, echo=FALSE, fig.cap="Fordeling MCS12", out.width = '100%'}
-knitr::include_graphics("H:\\kvalreg\\felles\\bruksrettleiingar\\rand-12\\histogram-utregnet-mc.png")
+knitr::include_graphics("histogram-utregnet-mc.png")
 ```
