@@ -7,6 +7,7 @@ test_that("Feilmelding hvis ikke tibble/data.frame med nødvendige kolonner", {
   d_uten_x = tibble::tibble(foo = 1:3, ki_aktuell = rep(TRUE, 3))
   d_uten_begge = tibble::tibble(foo = 1:3)
   liste = list(ki_x = c(FALSE, TRUE, TRUE), ki_aktuell = c(TRUE, TRUE, TRUE))
+
   feilmelding_kol = "Inndata må være tibble/data.frame med kolonnene 'ki_x' og 'ki_aktuell'"
   expect_error(aggreger_ki_snitt(liste), feilmelding_kol)
   expect_error(aggreger_ki_snitt(d_uten_aktuell), feilmelding_kol)
@@ -43,7 +44,7 @@ test_that("Feilmelding hvis 'ki_x' er missing når 'ki_aktuell' er TRUE", {
   expect_error(aggreger_ki_snitt(d_x_na), feilmelding_x_na)
 })
 
-test_that("funksjonen gir forventet utdata når inndata er gruppert og ugruppert", {
+test_that("Forventet utdata når inndata er gruppert og ugruppert", {
   d_gruppert = tibble::tibble(
     sykehus = factor(c("B", "B", "B", "A", "A", "A", "A")),
     ki_x = c(seq(1, 7, 1)), ki_aktuell = c(rep(TRUE, 7))
@@ -67,7 +68,7 @@ test_that("funksjonen gir forventet utdata når inndata er gruppert og ugruppert
   expect_equal(aggreger_ki_snitt(d_ugruppert), d_ugruppert_ut)
 })
 
-test_that("Funksjonen håndterer tilfeller hvor det kun er ett individ i en gruppe", {
+test_that("Tilfeller hvor det kun er ett individ i en gruppe", {
   d_gruppe_alene = tibble::tibble(
     sykehus = factor(rep(c("A", "B"), each = 3)),
     ki_x = c(5, NA_real_, 11, 1, 2, 3),
@@ -82,7 +83,7 @@ test_that("Funksjonen håndterer tilfeller hvor det kun er ett individ i en grup
   expect_equal(aggreger_ki_snitt(d_gruppe_alene), d_gruppe_alene_ut)
 })
 
-test_that("Funksjonen håndterer tilfeller hvor en gruppe bare har 'ki_aktuell' som er FALSE", {
+test_that("Tilfeller hvor en gruppe bare har 'ki_aktuell' som er FALSE", {
   d_gruppe_tom = tibble::tibble(
     sykehus = factor(rep(c("A", "B"), each = 3)),
     ki_x = c(1:6), ki_aktuell = c(rep(c(TRUE, FALSE), each = 3))
@@ -96,7 +97,7 @@ test_that("Funksjonen håndterer tilfeller hvor en gruppe bare har 'ki_aktuell' 
   expect_equal(aggreger_ki_snitt(d_gruppe_tom), d_gruppe_tom_ut)
 })
 
-test_that("Funksjonen håndterer tilfeller hvor standardavvik er 0", {
+test_that("Tilfeller hvor standardavvik er 0", {
   d_sd_lik_null = tibble::tibble(
     sykehus = factor(rep(c("A", "B"), each = 3)),
     ki_x = c(rep(3, 3), 4, 5, 6),
@@ -114,8 +115,7 @@ test_that("Funksjonen håndterer tilfeller hvor standardavvik er 0", {
   expect_equal(aggreger_ki_snitt(d_sd_lik_null), d_sd_lik_null_ut)
 })
 
-
-test_that("'ki_aktuell' kun inkluderes når den er TRUE", {
+test_that("'ki_aktuell' inkluderes i 'n_aktuell' kun når den er TRUE", {
   d_ki_akt_variert = tibble::tibble(
     ki_x = 1:6,
     ki_aktuell = c(TRUE, FALSE, TRUE, TRUE, TRUE, FALSE)
