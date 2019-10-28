@@ -1,4 +1,15 @@
-library(tidyverse)
+#' @importFrom purrr possibly map_dbl pluck
+#' @importFrom tidyr replace_na
+#' @importFrom dplyr summarise mutate select groups
+NULL
+#' Regn ut Kvalitetsindikator - Andel:
+#'
+#' Funksjon for å regne ut kvalitetsindikatorer for andeler.
+#' Tar inn et datasett på 101-format, og returnerer et estimert resultat
+#'
+#' @param d_ki_ind Inndata på 101-format
+#' @param alfa Verdi for å bestemme bredde på konfidensintervall, standardverdi er 0.05
+#' @export
 aggreger_ki_snitt = function(d_ki_ind, alfa = 0.05) {
 
   # Sjekke hvor mange som er inkludert i hver gruppe
@@ -20,7 +31,7 @@ aggreger_ki_snitt = function(d_ki_ind, alfa = 0.05) {
 
   # Husk å legge inn tester for dette tilfellet.
   konfint = function(x) {
-    konfint_robust = purrr::possibly(
+    konfint_robust = possibly(
       ~ t.test(.x)$conf.int,
       otherwise = c(NA_real_, NA_real_)
     )
