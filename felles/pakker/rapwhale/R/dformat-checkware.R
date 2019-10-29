@@ -244,7 +244,8 @@ les_dd_checkware = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, va
     nest()
   kb_skjema_nest$data = kb_skjema_nest$data %>%
     purrr::map(tekst_eller_heiltall)
-  kb_skjema = unnest(kb_skjema_nest)
+  kb_skjema = unnest(kb_skjema_nest, cols = c(data)) %>%
+    ungroup()
 
   # vi bruker case_when for å få inn csv_bokstav for variablene
   # som har variabeltyper avhengig av visse kriterier (per dags dato bare om kategoriske er heltall eller tekst)
