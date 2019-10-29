@@ -1,6 +1,6 @@
 # Aggregering - Beregn andel ----------------------------------------------
 
-context("Sjekker at inndata er på forventet format")
+context("aggreger_ki_andel")
 
 test_that("Feilmelding hvis ikke tibble/data.frame med nødvendige kolonner", {
   d_uten_nevner = tibble::tibble(foo = 1:3, ki_krit_teller = rep(TRUE, 3))
@@ -50,9 +50,6 @@ test_that("Feilmelding hvis kriterievariablene inneholder annet enn TRUE, FALSE 
   feilmelding_nevner = "'ki_krit_nevner' må være TRUE eller FALSE"
   expect_error(aggreger_ki_prop(d_nevner_med_feil), feilmelding_nevner)
 })
-
-
-context("Sjekker grensetilfeller i inndata")
 
 # Funksjonen må tillate tilfeller hvor sum teller_krit er 0.
 test_that("Funksjonen tillater tilfeller hvor ingen observasjoner oppfyller kriteriet for teller", {
