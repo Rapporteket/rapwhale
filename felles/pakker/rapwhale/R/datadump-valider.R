@@ -176,7 +176,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   # Lager "rules" som sier at verdiene til kategoriske variabler må være tilstede i kodeboka
   if (nrow(kb_kat) != 0) {
     kb_kat_kompakt = kb_kat %>%
-      nest(gverdi)
+      nest(data = c(gverdi))
     sjekk_kat = kb_kat_kompakt %>%
       pmap(function(varnamn, data) {
         gverdi = data$gverdi
