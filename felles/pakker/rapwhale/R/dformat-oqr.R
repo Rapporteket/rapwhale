@@ -4,7 +4,7 @@
 #' @importFrom lubridate as_date
 #' @importFrom stringr str_c str_to_lower str_detect
 #' @importFrom readr col_character col_integer
-#' @importFrom dplyr mutate select distinct arrange filter left_join mutate_at group_by summarise pull
+#' @importFrom dplyr mutate select distinct arrange filter left_join mutate_at group_by summarise pull bind_rows
 #' @importFrom tibble tibble tribble
 NULL
 
@@ -315,8 +315,6 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
 
 
 # Les datadump frå OQR-register -------------------------------------------
-
-# Roxygen dokumentasjon
 
 #' Les datadump fra OQR-register
 #'
