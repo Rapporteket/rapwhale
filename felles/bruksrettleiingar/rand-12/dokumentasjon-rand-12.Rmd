@@ -58,9 +58,7 @@ Andre kilder for mer informasjon:
 SF-36 - «Conceptual framework and item selection».
 [https://pdfs.semanticscholar.org/06cb/0076e310136d0ca8b56cc8585ec2bf43e029.pdf]
 
-«The SF-36 and RAND-36 include the same set of items that were developed in the 
-Medical Outcomes Study. Scoring of the general health and pain scales is different 
-between the versions».
+Oppsummering av forskjeller mellom RAND-36-skåring og SF-36-skåring:
 [https://onlinelibrary.wiley.com/doi/abs/10.1002/hec.4730020305]
 
 «The results suggest that where two summary scores of health status are adequate 
