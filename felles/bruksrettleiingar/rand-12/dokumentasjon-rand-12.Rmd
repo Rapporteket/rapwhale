@@ -1,5 +1,5 @@
 ---
-title: "Dokumentasjon for utregning av RAND-12/SF-12-skåring"
+title: "Dokumentasjon syntaks for RAND-12/SF-12-skåring"
 author: "Stian Tufte Veisene"
 output:
   html_document:
@@ -13,27 +13,63 @@ editor_options:
 
 # Innledning
 
-PROM-senteret har utarbeidet en manual/SPSS-syntaks for skåring av RAND-12/SF-12
-(versjon 1.1. og 1.2.). Dette dokumentet er ment som et «gå-til-dokument» når man 
-lurer på noe om RAND-12/SF-12 i kvalitetsregistersammenheng, da hovedsaklig når 
-man skal benytte denne manualen/SPSS-syntaksen, men også for generell informasjon 
-om RAND-12/SF-12. 
+PROM-senteret har utarbeidet en manual/SPSS-syntaks for skåring av norsk versjon
+av RAND-12/SF-12 (versjon 1.1 og 1.2). Dette dokumentet er ment som et 
+«gå-til-dokument» når man lurer på noe om RAND-12/RAND-36/SF-12/SF-36 i 
+kvalitetsregistersammenheng, da hovedsaklig når man skal benytte denne 
+manualen/SPSS-syntaksen, men også for generell informasjon om spørreskjemaene. 
 
 Link til PROM-senterets startside:
 [https://www.kvalitetsregistre.no/pasientrapporterte-data#skaring-av-rand-12sf-12]
 
-# RAND-12/SF-12
+# RAND-12/RAND-36/SF-12/SF-36
 
 RAND-12/SF-12 er spørreskjema med 12 spørsmål som måler livskvalitet - både
 fysisk og mental. RAND-12/SF-12 er forkortede versjoner som av RAND-36/SF-36 (som 
-er de opprinnelige versjonene med 36 spørsmål). Spørreskjemaene SF-12 og 
-SF-36 har samme spørsmål som RAND-12 og RAND-36, men de er lisensbelagte. 
-PROM-senteret skriver at SF-36 og RAND-36 har noe ulike anbefalte 
-skåringsalgoritmer. SPSS-syntaksen som omtales i dette dokumentet kan brukes for
-skåring av både RAND-12 og SF-12 (versjon 1.1. og 1.2.).
+er de opprinnelige versjonene med 36 spørsmål). RAND-36 og SF-36 stammer 
+opprinnelig fra Medical Outcomes Study (MOS) utført av den amerikanske 
+organisasjonen RAND Corporation. Spørreskjemaene SF-12 og SF-36 har samme 
+spørsmål som RAND-12 og RAND-36, men de er lisensbelagte. Skjemaene har også noe 
+ulike anbefalte skåringsalgoritmer. SPSS-syntaksen som omtales i dette dokumentet 
+kan brukes for skåring av både RAND-12 og SF-12 (norsk versjon 1.1 og 1.2).
+
+Det finnes to versjoner (versjon 1.0 og versjon 2.0)av SF-12/SF-36, mens det 
+finnes kun en versjon (versjon 1.0) av RAND-12/RAND-36. Dette betyr at for 
+å kunne benytte den nyeste versjonen (hvor det har blitt gjort noen 
+utbedringer), må det betales lisens. Det finnes tre norske versjoner av 
+SF-12/SF-36 (1.1, 1.2, 2.0). Versjon 1.1 benyttes i liten grad på grunn av 
+fare for mistolkning av noen spørsmål. I versjon 1.2 er formuleringen bedre 
+og dermed sannsynligheten for mistolkning mindre.
+
+I versjon 2.0 av SF-12/SF-36 har det blitt gjort noen utbedringer i forhold til 
+versjon 1.0. Dette inkluderer blant annet bedre instruksjoner og forenklede 
+spørsmålsformuleringer, bedre sammenlignbarhet på tvers av ulike oversettelser 
+og endret antall svaralternativ for noen spørsmål. Utbedringene står grundig 
+forklart i boken «How to Score Version 2 of the SF-36 Health Survey (Standard & 
+Acute Forms)». Boken beskriver også hvordan «versjon 1.0-skårer» direkte skal 
+kunne sammenlignes med «versjon 2.0-skårer». Utfyllende informasjon om SF-36 
+versjon 1.0 finnes i boken «SF-36 Health Survey Manual & Interpretaion Guide».
 
 Link til norsk RAND-12 i PDF-format: 
 [https://www.kvalitetsregistre.no/sites/default/files/https-/www.fhi.no/globalassets/dokumenterfiler/tema/brukererfaring/norsk-rand-12.pdf]
+
+Andre kilder for mer informasjon:
+
+SF-36 - «Conceptual framework and item selection».
+[https://pdfs.semanticscholar.org/06cb/0076e310136d0ca8b56cc8585ec2bf43e029.pdf]
+
+«The SF-36 and RAND-36 include the same set of items that were developed in the 
+Medical Outcomes Study. Scoring of the general health and pain scales is different 
+between the versions».
+[https://onlinelibrary.wiley.com/doi/abs/10.1002/hec.4730020305]
+
+«The results suggest that where two summary scores of health status are adequate 
+than the SF-12 may be the instrument of choice».
+[https://www.researchgate.net/publication/13977335_A_Shorter_Form_Health_Survey_Can_the_SF-12_Replicate_Results_from_the_SF-36_in_Longitudinal_Studies]
+
+Ware JE, Kosinski M, Turner-Bowker DM, Gandek B: How to Score Version 2 of the 
+SF-12 Health Survey (With a Supplement Documenting Version 1). Lincoln, RI: 
+QualityMetric Incorporated; 2002.)
 
 # Manual/SPSS-syntaks
 
@@ -46,28 +82,27 @@ For at skriptet skal fungere må variabelnavnene i SPSS-datafilen være de samme
 i skriptet (GH1, PF02, PF04, RP2, RP3, RE2, RE3, BP2, MH3, VT2, MH4, SF2). Det er 
 valgfritt om man velger å bruke små eller store bokstaver. 
 
-SPSS-Syntaksen regner ut både PCS12 (Physical Component Summary score) og MCS12 
-(Mental Component Summary score). Sumskårene blir bare regnet ut hvis alle 12 
-spørsmålene er besvart. Selve skriptet har ingen test / gir ingen advarsel ved 
-ugyldige verdier, men det står kommentert i starten av skriptet at dette må 
-sjekkes og korrigeres før skriptet kjøres. Om man ikke sjekker dette før skriptet 
-kjøres, og det finnes ugyldige verdier, vil det føre til at det blir regnet ut en 
-sumskår som sannsynligvis er høyere enn den skal være. Dette er fordi SPSS-syntaksen
-alltid vil betrakte en ugyldig verdi som om det er krysset av på det 
-svaralternativet som tilsvarer best helse. Hvorfor dette er tilfellet står forklart
-i siste avsnitt i dette kapitlet.
-
-Alle spørmålene må altså ikke være besvart med gyldig verdier for
-at sumskåren skal bli regnet ut. Se 
-[https://www.kvalitetsregistre.no/sites/default/files/attachments/norsk_rand-12_m_koder.pdf]
-for mulige/gyldige verdier.
-
 For spørsmålene 1, 5, 6a og 6b tilsvarer lav verdi god helse, mens for resten av 
 spørsmålene tilsvarer lav verdi dårlig helse. På grunn av dette inverteres 
 disse 4 variablene i starten på SPSS-skriptet slik at lav verdi tilsvarer dårlig 
 helse for alle 12 variablene.
 
-Neste steg i skriptet er at det opprettes en ny variabel for hvert svaralternativ 
+SPSS-Syntaksen regner ut både PCS12 (Physical Component Summary score) og MCS12 
+(Mental Component Summary score). Sumskårene blir bare regnet ut hvis det er fylt 
+inn en verdi for alle 12 spørsmål. Selve skriptet har ingen test / gir ingen advarsel ved 
+ugyldige verdier, men det står kommentert i starten av skriptet at dette må 
+sjekkes og korrigeres før skriptet kjøres. (Se 
+[https://www.kvalitetsregistre.no/sites/default/files/attachments/norsk_rand-12_m_koder.pdf]
+for mulige/gyldige verdier.) Om man ikke sjekker dette før skriptet kjøres, og det 
+finnes ugyldige verdier, vil det føre til at det blir regnet ut en sumskår som 
+sannsynligvis er høyere enn den skal være. Dette er fordi SPSS-syntaksen
+alltid vil betrakte en ugyldig verdi som om det er krysset av på det 
+svaralternativet som tilsvarer best helse. Det samme problemet oppstår hvis det 
+benyttes brukerdefinerte koder som sier hvorfor et spørsmål ikke er besvart 
+(f.eks. verdi 99 - «Pasienten ønsket ikke å svare»). Det står forklart hvorfor 
+dette er tilfellet i neste avsnitt.
+
+I syntaksen opprettes det en ny variabel for hvert svaralternativ 
 (utenom for det alternativet med høyest verdi) i de 12 spørsmålene. F.eks. for
 spørsmål 2a betyr dette at det opprettes 2 nye variabler, hvor den første (PF02_1) 
 får verdien 1 dersom det er krysset av på første svaralternativ («Ja, begrenser meg 
@@ -75,9 +110,17 @@ mye»), og verdien 0 ellers. Den andre variabelen (PF02_2) får verdien 1 dersom
 er krysset av på andre svaralternativ («Ja, begrenser meg litt»), og verdien 0 
 ellers. Grunnen til at disse nye variablene opprettes er at hvert svaralternativ 
 påvirker sumskåren med ulike vekter (svaralternativene med høyest verdi trekker 
-ikke ned sumskåren). Artikkelen som SPSS-syntaksen er basert på finnes her 
-[https://www.ncbi.nlm.nih.gov/pubmed/17825096]. Tabell 5 i artikkelen viser 
-regresjonskoeffisientene (vektene) for hver variabel.
+ikke ned sumskåren). 
+
+Artikkelen som SPSS-syntaksen er basert på finnes her 
+[https://www.ncbi.nlm.nih.gov/pubmed/17825096]. SPSS-syntaksen som omtales i 
+dette dokumentet er basert på at PCS12 og MCS12 kan være fritt korrelert 
+«oblique model». Artikkelen oppgir også vektene for det motsatte tilfellet 
+(«orthogonal model»). Tabell 5 i artikkelen viser både de korrelerte og 
+ikke-korrelerte regresjonskoeffisientene (vektene) for hver variabel.
+
+Det skal nevnes at syntaksen er under utbedring i disse dager, og flere av problemene
+vil dermed bli rettet opp.
 
 # Deskriptiv skåring-statistikk
 
