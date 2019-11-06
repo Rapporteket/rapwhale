@@ -145,7 +145,7 @@ kb_til_kanonisk_form = function(kb) {
     "min", "maks", "min_rimeleg", "maks_rimeleg", "kommentar_rimeleg",
     "utrekningsformel", "logikk", "kommentar"
   )
-  ekstravars = setdiff(names(kb), std_namn)
+  ekstravars = setdiff(names(kb), c("variabel_id_checkware", std_namn)) # fixme: "variabel_id_checkware" er mellombels løysing berre for å kunna støtta CheckWare-datasett (fjern òg lag betre løysing på problemet)
   if (length(ekstravars) > 0) {
     warning(paste0(
       "Fjernar kolonnar som ikkje skal vera med i kodeboka:\n",
