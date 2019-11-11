@@ -3,7 +3,7 @@
 
 # Testar ------------------------------------------------------------------
 
-context("Testar for anonymiseringsfunksjonfunksjonen")
+context("Anonymisering: Testar for anonymiseringsfunksjonfunksjonen")
 
 # Datasett 1: hofteoperasjonar
 pas_ids_hofteop = c(2, 4, 6, 3, 4, 7, 7, 1, 3, 7)
@@ -64,7 +64,7 @@ test_that("ID-ar som finst i fleire skjema får like anonymiserte ID-ar på tver
 
 # Grunnleggjande testar -------------------------------------------------------------------
 
-context("Anonymisering fungerer (på eksempeldata)")
+context("Anonymisering: Anonymisering fungerer (på eksempeldata)")
 
 # Eksempeldata
 pas_nr = c(3, 5, 1, 1, 6, 3, 7, 3, 10, 12)
@@ -113,7 +113,7 @@ test_that("Alle pasientene får same anonymiserte ID for kvar oppføring dei har
 
 # Grensetilfelle --------------------------------------------------------------------------
 
-context("Grensetilfelle (få/mange data) fungerer")
+context("Anonymisering: Grensetilfelle (få/mange data) fungerer")
 
 test_that("Gjev rett svar når det er 2 unike element", {
   x = c("p2", "p1", "p2", "p2")
@@ -150,7 +150,7 @@ test_that("Gjev rett svar når det er mange (unike/ikkje-unike) element", {
 
 # Eventuelle NA-verdiar skal gje åtvaring,
 # men skal anonymisert til NA-verdiar
-context("Handterer NA-verdiar riktig")
+context("Anonymisering: Handterer NA-verdiar riktig")
 
 # Eksempeldata
 x_med_na = c("p1", "p2", NA, "p1", NA)

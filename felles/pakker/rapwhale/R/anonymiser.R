@@ -31,11 +31,3 @@ lag_ano_funk = function(x, startnr = 1001) {
 anonymiser = function(x, startnr = 1001) {
   lag_ano_funk(x, startnr = startnr)(x)
 }
-
-# Test at funksjonen fungerer
-library(testthat)
-test_adr = "H:\\kvalreg\\felles\\r-kode\\anonymiser-tester.R"
-test_file(test_adr, reporter = "minimal") # *Veldig* kort og konsist samandrag
-test_file(test_adr, reporter = "check") # 13-linjes samandrag
-test_file(test_adr, reporter = "summary") # Alt, med fint samandrag i starten
-test_file(test_adr)
