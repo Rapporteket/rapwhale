@@ -1,12 +1,17 @@
-# Anonymiseringsfunksjonfunksjon
+#' @importFrom rlang is_empty
+NULL
 
-library(tidyverse)
-library(rlang)
+#' Anonymiseringsfunksjonfunksjon
+#'
+#' Funksjonen lag_ano_funk() tar inn to argument og gjev ut ein
+#' anonymiseringsfunksjon (anonymiser_x_utvalg) som fungerer
+#' slik at ID-ar (som finst i fleire datasett) får dei same
+#' anonymiserte ID-ane på tvers av datasetta.
+#'
+#' @param x Ein vektor med ID-ar
+#' @param startnr Startnummeret for dei anonymiserte id-ane (standardverdi = 101)
+#' @export
 
-# Funksjonen lag_ano_funk() tar inn to argument. Det første (x) er ein vektor med ID-ar og det andre
-# (startnr) er startnummeret for dei anonymiserte id-ane (standardverdi = 101). Funksjonen gjev
-# ut ein anonymiseringsfunksjon (anonymiser_x_utvalg) som fungerer slik at ID-ar (som finst i fleire
-# datasett) får dei same anonymiserte ID-ane på tvers av datasetta.
 lag_ano_funk = function(x, startnr = 1001) {
   if (any(is.na(x))) {
     warning("ID-vektoren inneheld NA-verdiar")

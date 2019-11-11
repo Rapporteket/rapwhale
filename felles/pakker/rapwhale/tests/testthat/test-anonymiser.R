@@ -70,7 +70,7 @@ context("Anonymisering: Anonymisering fungerer (på eksempeldata)")
 pas_nr = c(3, 5, 1, 1, 6, 3, 7, 3, 10, 12)
 pas_dato = as.Date(pas_nr, "2000-01-01")
 pas_id = paste0("P", pas_nr)
-n_unik = n_distinct(pas_id)
+n_unik = dplyr::n_distinct(pas_id)
 
 test_that("Funksjonen kan køyrast (utan åtvaringar/feilmeldingar)", {
   expect_warning(anonymiser(pas_id), NA)
@@ -140,8 +140,8 @@ test_that("Gjev rett svar når det er mange (unike/ikkje-unike) element", {
   x = sample(n, replace = TRUE)
   res = anonymiser(x)
   expect_identical(
-    as.numeric(fct_inorder(factor(x))),
-    as.numeric(fct_inorder(factor(res)))
+    as.numeric(forcats::fct_inorder(factor(x))),
+    as.numeric(forcats::fct_inorder(factor(res)))
   )
 })
 
