@@ -155,12 +155,13 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
 #'
 #' @param mappe_dd Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak).
 #' @param skjema_id ID til skjemaet ein vil henta inn (brukt i filnamnet til datadumpen og i kolonnen «skjema_id» i kodeboka).
+#' @param status Berre ta med rader med kontekst lik T0, T1 eller T2 (i kolonnen a_inst_context_label) som standard.
 #' @param dato Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
 #' @param kodebok Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
 #' @param valider_dd Om man ønsker å validere datadumpen ja/nei (TRUE/FALSE). Hvis man ønsker å ikke validere datadump med dd_er_gyldig, kan man sette denne til FALSE. Default er TRUE.
 #' @param valider_kb Om man ønsker å validere kodeboka ja/nei (TRUE/FALSE). Hvis man ønsker å ikke validere kodebok med kb_er_gyldig, kan man sette denne til FALSE. Default er TRUE.
 #' @export
-les_dd_checkware = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, valider_dd = TRUE, valider_kb = TRUE) {
+les_dd_checkware = function(mappe_dd, skjema_id, status = TRUE, dato = NULL, kodebok = NULL, valider_dd = TRUE, valider_kb = TRUE) {
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
@@ -272,6 +273,13 @@ les_dd_checkware = function(mappe_dd, skjema_id, dato = NULL, kodebok = NULL, va
       date_format = "%Y-%m-%d", time_format = "%H:%M:%S"
     )
   ))
+
+  # Filtrer vekk rader som ikke har riktig kontekst
+  # (som standard blir bare T0, T1 og T2 tatt med)
+  if (status) {
+    d = d %>%
+      filter(a_inst_context_label %in% c("T0", "T1", "T2"))
+  }
 
   # setter på fine variabelnavn
   kolnamn = var_info$variabel_id_checkware %>%
