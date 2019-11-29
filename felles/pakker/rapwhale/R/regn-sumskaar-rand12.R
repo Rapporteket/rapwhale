@@ -17,8 +17,14 @@ endre_variabelnavn = function(d, variabelnavn) {
 
 }
 
-sjekk_variabelnavn = function(d, variabelnavn = skaaringstabell$variabel) {
+# Skal sjekke at variabelnavnene i d er identiske til variabelnavnene i skaaringstabell
 
+sjekk_variabelnavn = function(d, variabelnavn) {
+  var_mangler = variabelnavn[!(variabelnavn %in% names(d))]
+  var_mangler_tekst = paste0(var_mangler, collapse = ", ")
+  if (length(var_mangler) > 0) {
+    stop("Mangler kolonner: ", var_mangler_tekst)
+  }
 }
 
 sjekk_variabelverdier = function(d,
