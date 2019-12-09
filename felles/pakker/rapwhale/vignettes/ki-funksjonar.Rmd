@@ -60,3 +60,58 @@ d_reg = tibble::tribble(
   )
 print(d_reg)
 ```
+
+Pasientane skal helst følgjast opp innan eitt år etter operasjon,
+og me har ein eigen kvalitetsindikator for dette. Der er det blant
+anna definert at «eitt år» skal reknast som 365 dagar.
+
+## Første forsøk på utrekning
+
+Viss me vart bedt om å rekna ut kvalitetsindikatoren, ville me kanskje
+gjort det slik:
+
+```{r}
+sum(d_reg$dato_oppfolging - d_reg$dato_operasjon <= 365, na.rm = TRUE) / nrow(d_reg)
+```
+
+Så det ser ut til at berre ein tredel av pasientane får oppfølging innan fristen.
+
+Det er dessverre fleire problem  utrekninga.
+For det første er svaret feil!
+Merk at pasient 13 har `NA` for oppfølgingsdato,
+som tyder at ho enno ikkje er følgd opp.
+Sidan det var under eit år sidan operasjonen
+(la oss anta at dagens dato er `r dato_uthenting_tekst`),
+skal ho ekskluderast frå utrekninga.
+Det vert ho i utrekninga av teljaren (`na.rm = TRUE`),
+men ikkje i utrekninga av nemnaren (`nrow(d_reg)`),
+så brøken vert feil.
+
+Dette er eksempel på ein feil som lett kan oppstå når utrekninga
+av teljaren og nemnaren vert gjort på ulike datakjelder.
+Spesielt er det stor risiko viss det er snakk om to ulike *datarammer*
+(så det bør ein *aldri* bruka!).
+
+## Andre forsøk på utrekning
+
+Problemet med to ulike datakjelder er lett å retta opp.
+Me kan for eksempel skriva det slik:
+
+```{r}
+mean(d_reg$dato_oppfolging - d_reg$dato_operasjon <= 365, na.rm = TRUE)
+```
+
+Så halvparten får oppfølging innan fristen. Mykje betre!
+Problemet er at svaret framleis er feil!
+
+Pasient 29 vert ekskludert frå utrekninga, men me ser at han
+vart operert for godt over eit år sidan og har *ikkje* fått oppfølging
+enno (altså per `r dato_uthenting_tekst`).
+Han bør altså reknast som ein som ikkje fekk oppfølging innan fristen.
+Og i motsetning til pasient 13, bør han *ikkje* ekskluderast frå
+utrekninga.
+
+fixme: eksempel på rammeverket  
+fixme: skriva om difftime()  
+fixme: fordeling på sjukehus  
+fixme: nemna 0/0  
