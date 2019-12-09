@@ -117,14 +117,14 @@ test_that("sjekk_variabelverdier() gjev inga feilmelding for datasett med gyldig
 test_that("sjekk_variabelverdier() gjev feilmelding for datasett med NA-verdiar viss godta_manglende = FALSE (", {
   expect_error(
     sjekk_variabelverdier(d_ugyldig_eks1, skaaringstabell_eks, godta_manglende = FALSE),
-    "Ugyldige verdier: NA"
+    "Ugyldige verdier: gen: NA, fys1: NA"
   )
 })
 
 test_that("sjekk_variabelverdier() gjev feilmelding for datasett med ugyldige variabelverdiar", {
-  feilmelding_ugyldig_verdi = "^Ugyldige verdier: 200$"
-  feilmelding_ugyldige_verdier = "^Ugyldige verdier: 200, blablabla$"
-  feilmelding_ugyldige_verdier_na = "^Ugyldige verdier: 200, blablabla, NA$"
+  feilmelding_ugyldig_verdi = "^Ugyldige verdier: gen: 200$"
+  feilmelding_ugyldige_verdier = "^Ugyldige verdier: gen: 200, blablabla$"
+  feilmelding_ugyldige_verdier_na = "^Ugyldige verdier: gen: 200, blablabla, NA$"
   expect_error(
     sjekk_variabelverdier(tibble(gen = c(200, 200)), skaaringstabell_eks, godta_manglende = FALSE),
     feilmelding_ugyldig_verdi
