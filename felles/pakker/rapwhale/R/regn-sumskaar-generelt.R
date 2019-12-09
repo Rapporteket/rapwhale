@@ -24,18 +24,18 @@ sjekk_variabelverdier = function(d, koblingstabell, godta_manglende) {
 
   # variabelnavn_akt = names(d)[names(d)%in% koblingstabell$variabel]
   alle_ugyldige = vector()
-  for (i in names(d)) {
-    verdier_d = d[[i]]
+  for (var_d in names(d)) {
+    verdier_d = d[[var_d]]
     verdier_koblingstabell = koblingstabell %>%
-      filter(variabel == !!i) %>%
+      filter(variabel == !!var_d) %>%
       pull(verdi)
 
     if (godta_manglende) {
       verdier_koblingstabell = append(verdier_koblingstabell, NA)
     }
-    verdier_d_ugyldig = setdiff(verdier_d, verdier_koblingstabell)
-    if (length(verdier_d_ugyldig) > 0) {
-      alle_ugyldige = append(alle_ugyldige, verdier_d_ugyldig)
+    verdier_d_ugyldige = setdiff(verdier_d, verdier_koblingstabell)
+    if (length(verdier_d_ugyldige) > 0) {
+      alle_ugyldige = append(alle_ugyldige, paste0(var_d, ": ", paste0(verdier_d_ugyldige, collapse = ", ")))
     }
   }
   alle_ugyldige = unique(alle_ugyldige)
