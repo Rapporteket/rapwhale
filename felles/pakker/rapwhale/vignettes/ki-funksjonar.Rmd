@@ -41,7 +41,7 @@ seinare følgde opp. Nokre av variablane i registeret kan sjå slik ut:
 
 ```{r lageksempel, echo = FALSE}
 dato_uthenting = Sys.Date()
-dato_uthenting_tekst = format(dato_uthenting, "%e. %b %Y")
+dato_uthenting_tekst = format(dato_uthenting, "%e. %B %Y")
 forskyvingsdagar = as.numeric(dato_uthenting) - 18239 # Magisk tal for å flytta datoar nærare notida
 d_reg = tibble::tribble(
   ~pas_id, ~kjonn, ~alder, ~sjukehus, ~dato_operasjon, ~dato_oppfolging,
