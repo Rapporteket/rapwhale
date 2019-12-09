@@ -1,0 +1,62 @@
+---
+title: "Kvalitetsindikatorfunksjonar"
+author: "Karl Ove Hufthammer"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Kvalitetsindikatorfunksjonar}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r pakkelasting, include = FALSE}
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(rapwhale)
+})
+```
+
+# Innleiing
+
+Ved utrekning av kvalitetsindikatorar er det mange fallgruver å gå i.
+Me har derfor utvikla eit rammeverk for korleis dette skal gjerast.
+Ved hjelp av ein fastsett metodikk og eit tilhøyrande sett R-funksjonar
+reduserer me risikoen for at indikatorane vert rekna ut feil,
+og me gjer det raskare og enklare å bruka indikatorane i ulike situasjonar.
+
+Det er greiast å visa rammeverket via nokre eksempel:
+
+# Eksempel – eittårsoppfølging
+
+Me har eit enkelt register der pasientar vert opererte og
+seinare følgde opp. Nokre av variablane i registeret kan sjå slik ut:
+
+```{r lageksempel, echo = FALSE}
+dato_uthenting = Sys.Date()
+dato_uthenting_tekst = format(dato_uthenting, "%e. %b %Y")
+forskyvingsdagar = as.numeric(dato_uthenting) - 18239 # Magisk tal for å flytta datoar nærare notida
+d_reg = tibble::tribble(
+  ~pas_id, ~kjonn, ~alder, ~sjukehus, ~dato_operasjon, ~dato_oppfolging,
+  11L, "mann", 18, "A", "2018-02-01", "2019-01-15",
+  13L, "kvinne", 36, "C", "2019-04-07", NA,
+  14L, "mann", 25, "B", "2018-04-13", "2019-09-17",
+  27L, "kvinne", 29, "A", "2018-07-28", "2019-07-02",
+  28L, "mann", 78, "B", "2018-07-26", "2019-11-11",
+  29L, "mann", 45, "B", "2018-03-19", NA
+) %>%
+  mutate(
+    kjonn = factor(kjonn),
+    sjukehus = factor(sjukehus),
+    dato_operasjon = as.Date(dato_operasjon) + forskyvingsdagar,
+    dato_oppfolging = as.Date(dato_oppfolging) + forskyvingsdagar
+  )
+print(d_reg)
+```
