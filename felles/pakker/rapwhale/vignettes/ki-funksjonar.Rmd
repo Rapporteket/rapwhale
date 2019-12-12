@@ -111,7 +111,135 @@ Han bør altså reknast som ein som ikkje fekk oppfølging innan fristen.
 Og i motsetning til pasient 13, bør han *ikkje* ekskluderast frå
 utrekninga.
 
-fixme: eksempel på rammeverket  
-fixme: skriva om difftime()  
+
+## Eksempel på rammeverket
+
+Rammeverket vårt løyser problema ovanfor. For brøkbaserte kvalitetsindikatorar
+(som for eksempel målar prosentdelen av pasientar oppfyller eit kriterium)
+brukar ein følgjande framgangsmåte.
+
+Ein definerer på *individnivå* (radnivå) *om* ein observasjon
+(pasient, operasjon eller liknande) skal inngå i utrekninga
+av kvalitetsindikatoren, dvs. om han skal inngå i nemnaren i brøken.
+Tilsvarande definerer ein på *individnivå* om han skal inngå i
+teljaren.
+
+Reint konkret lagar ein for kvar kvalitetsindikator ein R-funksjon
+(kvalitetsindikatorfunksjon, *KI-funksjon*) som tek inn ei dataramme
+på eit fastsett – og dokumentert – format, samt eventuelt andre argument.
+KI-funksjonen gjev ut dataramma med (iallfall) desse to variablane lagde til:
+
+- `ki_krit_nevner`: Logisk variabel som seier om observasjonen oppfølgde
+  kriteria for å vera med i utrekning av nemnaren i brøken.
+- `ki_krit_teller`: Logisk variabel som seier om observasjonen oppfølgde
+  kriteria for å telja som eit «ja» i kvalitetsindikatoren, dvs. om han
+  skal telja «positivt» i teljaren i brøken.
+  
+Variabelen `ki_krit_nevner` må vera sann eller usann (dvs. ikkje `NA`)
+for alle radene. Variabelen `ki_krit_teller` må vera sann eller usann
+dersom `ki_krit_nevner` er sann, og usann eller `NA` dersom `ki_krit_nevner`
+er usann.
+
+(Grunnen til at me ikkje tillèt `NA`-verdiar for `ki_krit_teller`
+dersom `ki_krit_nevner` er sann, er at for ein *skikkeleg* definert
+kvaltitetsindikator **skal** ein alltid kunna avgjera om ein observasjon
+som inngår i utrekninga av indikatoren *oppfyller* kriteria for å telja
+positivt i teljaren.
+Hadde me godteke `NA`, og for eksempel tolka dette som `FALSE`, hadde
+det vore stor risiko å gje ut feil svar, då ein `NA`-verdi lett kunne
+vera resultat av at KI-funksjonen ikkje var perfekt gjennomtenkt, og
+for eksempel feilaktig antok at alle variablane som inngjekk i utrekningane
+var ikkje-manglande. Ved å forby `NA`-verdiar, eliminerer me denne risikoen.)
+
+**fixme**: Informasjon om attributt for namn og forklaring på KI-ar.
+som tek inn ei dataramme
+
+### Eksempel på KI-funksjon
+
+For eksempelet ovanfor kan KI-funksjonen sjå slik ut:
+
+```{r def-ki-funk-1aar-oppf}
+ki_oppf_innan_1_aar = function(d_reg, dato_datasett) {
+  d_reg %>%
+    mutate(
+      dagar_sidan_op = difftime(!!dato_datasett, dato_operasjon, units = "days"),
+      dagar_for_oppf = difftime(dato_oppfolging, dato_operasjon, units = "days"),
+      ki_krit_nevner = dagar_sidan_op >= 365,
+      ki_krit_teller = ki_krit_nevner & !is.na(dato_oppfolging) & dagar_for_oppf <= 365
+    )
+}
+```
+
+Køyrer me funksjonen på datasettet, får me:
+
+```{r}
+ki_oppf_innan_1_aar(d_reg, dato_datasett = Sys.Date())
+```
+
+Ting å merka seg:
+
+- Om ein pasient inngår i kvalitetsindikatoren er avhengig av kva dato datasettet er frå.
+  Her har me for enkelheits skuld brukt dagens dato (`Sys.Date()`), men i praksis må
+  ein sjølvsagt bruka den reelle nedlastingsdatoen for datasettet.
+- Det er bevisst at me ikkje har sett `Sys.Date()` som standardverdi. Då kunne ein
+  venja seg til å ikkje eksplisitt oppgje dato, fordi ein *oftast* har ferske data,
+  som ville ført til feil resultat dei få gongane ein såg på historiske data.
+- I definisjonen av `ki_krit_teller` krev me først at `ki_krit_nevner` er sann.
+  Dette er lurt, då det reduserer risikoen for at teljaren vert feil definert.
+  I ein del tilfelle kan det òg gjera definisjonen av `ki_krit_teller` ein del
+  enklare/kortare. (Det gjeld dei tilfella kriteria for inngå i nemnaren er veldig
+  omfattande, med for eksempel bruk av mange variablar, mens kriteria for å inngå
+  i teljaren er dei same pluss berre *eitt* tillegskriterium.)
+- Me brukar `difftime()` med eksplisitt definisjon av tidseining (`units = "days"`).
+  I dette tilfelle ville R-koden `dato_oppfolging - dato_operasjon` hatt nøyaktig
+  same effekt, men det er generelt ein mykje meir risikabel kode. Han ville ikkje
+  fungera likt dersom datovariablane ein gong i framtida vart endra til *tidsvariablar*
+  (dato + klokkeslett – `POSIXct`-objekt), dvs. om ein også registrerte klokkeslett for operasjon
+  eller oppfølging. Men han ville *oftast* fungerte likt, så det hadde vore ein feil
+  som hadde vore lett å oversjå. Det er nemleg slik at koden `x - y` ikkje alltid gjev
+  ut talet på dagar mellom `x` og `y` når variablane er tidsvariablar; han gjev av og
+  til ut dagar, av og til timar, av og til minutt og av og til sekund, avhengig av
+  avstanden tidsavstanden. Derfor bør ein *alltid* bruka `difftime()` med eksplisitt val
+  av `units` når ein reknar med tids- eller datovariablar.
+  
+### Bruk av KI-funksjonen
+
+Når ein har definert ein KI-funksjon, gjev rammeverket oss fleire verktøy for *bruk*
+av funksjonen. Oftast vil ein rett og slett rekna ut kvalitetsindikatoren.
+Det gjer ein enkelt med ein aggregeringsfunksjon. For proporsjonsbaserte
+KI-funksjonar er dette `aggreger_ki_prop()`:
+
+```{r}
+d_reg %>%
+  ki_oppf_innan_1_aar(dato_datasett = Sys.Date()) %>%
+  aggreger_ki_prop()
+```
+
+Her får me ut både estimatet av kvalitetsindikatoren (rett svar var altså 40 %),
+tala som inngår i teljaren og nemnaren og eit 95 %-konfidensintervall
+for indikatoren.
+Nokre ting å merka seg:
+
+- I *praksis* ville ein nok gjerne allerie ha lagra resultatet
+  av `ki_oppf_innan_1_aar()` køyrd på datasettet som eit eige objekt, og
+  så køyrd `aggreger_ki_prop()` på dette igjen.
+  Men me viser her ei «røyr-køyring» for å illustrera at R-rammeverket er
+  utforma slik at det skal kunna brukast i ein «`tidyverse`-dataflyt».
+- Sjølv om det var 6 rader, vart nemnaren berre 5, sidan det var éin
+  pasient som var så nyleg opererert at han ikkje kunne inngå i
+  utrekning av kvalitetsindikatoren.
+- Konfidensintervallet utrekna er Wilson-/skår-intervallet, som fungerer veldig
+  godt for *både* verdiar av indikatoren nær 0 %, 100 % og 50 %, og for *både*
+  små og store nemnarar, og er derfor det me anbefaler for generell bruk
+  i kvalitetsindikatorsamanheng (sjå òg https://doi.org/10.1214/ss/1009213286).
+  Konfidensintervalla ein får ut frå `binom.test()`-funksjonen
+  (Clopper–Pearson-intervalla) vil vera breiare, og kan vera *svært* konservative
+  i nokre tilfelle.
+- Dersom det hadde vore noko logisk feil med definisjonane av `ki_krit_teller`-
+  og `ki_krit_nevner`-variablane, ville funksjonen ha gjeve ei feilmelding
+  og nekta å rekna ut kvalitetsindikatoren.
+
+
+
 fixme: fordeling på sjukehus  
 fixme: nemna 0/0  
