@@ -240,6 +240,52 @@ Nokre ting å merka seg:
   og nekta å rekna ut kvalitetsindikatoren.
 
 
+### Aggregering på gruppenivå
 
-fixme: fordeling på sjukehus  
-fixme: nemna 0/0  
+Ofte vil ein visa kvalitetsindikatorar stratifisert på sjukehus,
+diagnose eller tidsperiode, eller ein ein kombinasjon av dette.
+Det fiksar rammeverket for oss. La oss første laga eit objekt
+med inndata på individnivå.
+
+```{r}
+d_oppf1 = d_reg %>%
+  ki_oppf_innan_1_aar(dato_datasett = Sys.Date())
+```
+
+Vil me visa resultata på sjukehusnivå,
+treng me berre gruppera `d_oppf1` på vanleg vis før
+me køyrer aggregeringsfunksjonen:
+
+```{r}
+d_oppf1 %>%
+  group_by(sjukehus) %>%
+  aggreger_ki_prop()
+```
+
+Ting å merka seg:
+
+- Funksjonen handterer fint tilfelle der nemnaren vert 0.
+  Då vert både indikatoren og tilhøyrande konfidensgrenser `NA`
+  (og ikkje for eksempel `NaN`, som `0/0` vert i R,
+  eller ei feilmelding, som `binom.test(0,0)` gjev).
+- Rekkjefølgja sjukehusa vert vist på (her: ABC), svarar til nivåa til
+  grupperingsvariabelen/-ane. Dette er ikkje nødvendigvis lik
+  rekkjefølgja som radene *opphavleg* står i (her: ACB).
+- Om det manglar observasjonar for nokre av nivåa til grupperingsvariablane,
+  følgjer utrekninga dei vanlege reglane for `.drop`-argumentet i
+  `group_by()`-funksjonen. Men ein får ei åtvaring dersom `.drop = FALSE`
+  og det manglar slike observasjonar. (fixme: Bør me ha dette?
+  Viss ja, bør me ha det for alle grupper der nevner er 0?)
+
+Her er eksempel på det siste punktet. Me fjernar pasientane for B-sjukehuset
+og reknar ut indikatoren på nytt, med to ulike verdiar for `.drop`:
+
+```{r}
+d_oppf1_utan_b = filter(d_oppf1, sjukehus != "B")
+d_oppf1_utan_b %>%
+  group_by(sjukehus, .drop = TRUE) %>% # Standardverdi
+  aggreger_ki_prop()
+d_oppf1_utan_b %>%
+  group_by(sjukehus, .drop = FALSE) %>%
+  aggreger_ki_prop()
+```
