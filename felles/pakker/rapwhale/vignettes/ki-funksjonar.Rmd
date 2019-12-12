@@ -235,6 +235,8 @@ Nokre ting å merka seg:
   Konfidensintervalla ein får ut frå `binom.test()`-funksjonen
   (Clopper–Pearson-intervalla) vil vera breiare, og kan vera *svært* konservative
   i nokre tilfelle.
+- Det er sjølvsagt mogleg å velja konfidensnivå, dersom ein for eksempel vil
+  ha 90 %- eller 99 %-konfidensintervall.
 - Dersom det hadde vore noko logisk feil med definisjonane av `ki_krit_teller`-
   og `ki_krit_nevner`-variablane, ville funksjonen ha gjeve ei feilmelding
   og nekta å rekna ut kvalitetsindikatoren.
