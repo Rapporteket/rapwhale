@@ -291,3 +291,10 @@ d_oppf1_utan_b %>%
   group_by(sjukehus, .drop = FALSE) %>%
   aggreger_ki_prop()
 ```
+
+fixme: Meir avansert/realistisk eksempel, oppfølging innan normtid, vilkårleg oppfølgingsår  
+fixme: Detaljar/råd om namngjeving av funksjonar og objekt  
+fixme: Kva med fleire datasett som inndata? (Storleiken på inndata vs. utdata.)  
+fixme: Detaljar om rammeverket, eks. om tanken om nivå 1- og nivå 2-funksjonar  
+fixme: Informasjon om funksjon for totalrad  
+fixme: Informasjon om indikator for kontinuerlege funksjonar  
