@@ -49,7 +49,7 @@ d_reg = tibble::tribble(
   13L, "kvinne", 36, "C", "2019-04-07", NA,
   14L, "mann", 25, "B", "2018-04-13", "2019-09-17",
   27L, "kvinne", 29, "A", "2018-07-28", "2019-07-02",
-  28L, "mann", 78, "B", "2018-07-26", "2019-11-11",
+  28L, "mann", 78, "B", "2017-06-26", "2019-06-11",
   29L, "mann", 45, "B", "2018-03-19", NA
 ) %>%
   mutate(
@@ -292,7 +292,85 @@ d_oppf1_utan_b %>%
   aggreger_ki_prop()
 ```
 
-fixme: Meir avansert/realistisk eksempel, oppfølging innan normtid, vilkårleg oppfølgingsår  
+
+# Fleksible KI-funksjonar
+
+Det er òg mogleg å laga KI-funksjonar for ein *familie*
+av kvalitetsfunksjonar. Her er eit eksempel.
+
+Tidlegare såg me på oppfølging *innan* eitt år. I praksis
+bør eittårsoppfølginga skje etter *cirka* eitt år.
+Ein pasient som vart følgd opp seks veker etter operasjonen,
+bør derfor ikkje reknast til å ha fått eittårsoppfølging.
+Me innfører derfor omgrepet *normtid*. Ein person som har
+blitt følgd opp ved «1 år ± *x* dagar» (der *x* for eksempel
+er 30), vert rekna til å vera følgd opp innan normtid.
+
+Me kan òg generalisera utrekninga til å gjelda oppfølging
+på vilkårlege andre tidspunkt (seksmånadsoppfølging, toårsoppfølging etc.):
+
+```{r def-ki-funk-oppf-innan-normtid}
+ki_oppf_innan_normtid = function(d_reg, dato_datasett, oppf_aar, slingringsmonn_dagar = 30) {
+  # Måltidspunkt for oppfølging, målt i dagar
+  oppf_maal = oppf_aar * 365
+  nedre_grense = oppf_maal - slingringsmonn_dagar
+  ovre_grense = oppf_maal + slingringsmonn_dagar
+
+  d_reg %>%
+    mutate(
+      dagar_sidan_op = difftime(!!dato_datasett, dato_operasjon, units = "days"),
+      dagar_for_oppf = difftime(dato_oppfolging, dato_operasjon, units = "days"),
+      ki_krit_nevner = dagar_sidan_op >= ovre_grense,
+      ki_krit_teller = ki_krit_nevner & !is.na(dato_oppfolging) &
+        (dagar_for_oppf >= nedre_grense) & (dagar_for_oppf <= ovre_grense)
+    )
+}
+```
+
+I dette registeret brukar me vanlegvis eit slingringsmonn på 30 dagar for alle normtider,
+så det er sett som standardverdi. Her er eksempel på bruk:
+
+```{r}
+# Oppfølging innan 1 år ± 30 dagar
+d_reg %>%
+  ki_oppf_innan_normtid(dato_datasett = Sys.Date(), oppf_aar = 1) %>%
+  aggreger_ki_prop()
+
+# Oppfølging innan 2 år ± 60 dagar, gruppert på sjukehus
+d_reg %>%
+  ki_oppf_innan_normtid(
+    dato_datasett = Sys.Date(),
+    oppf_aar = 2, slingringsmonn_dagar = 60
+  ) %>%
+  group_by(sjukehus) %>%
+  aggreger_ki_prop()
+```
+
+Viss me skal bruka utrekningane av eitt- og toårsoppfølging i fleire samanhengar,
+kan det vera greitt å definera eigne funksjonar for dette,
+med dei ulike argumenta sett til standardverdiar. Viss me alltid
+arbeider med ferske data (for eksempel direkte frå ein database),
+kan ein for eksempel definera funksjonane slik:
+
+```{r}
+ki_oppf_innan_1_aar = function(d_reg) {
+  ki_oppf_innan_normtid(d_reg, dato_datasett = Sys.Date(), oppf_aar = 1)
+}
+ki_oppf_innan_2_aar = function(d_reg) {
+  ki_oppf_innan_normtid(d_reg, dato_datasett = Sys.Date(), oppf_aar = 1)
+}
+```
+
+Me brukar dei nydefinerte funksjonane som vanlege KI-funksjonar:
+
+```{r}
+d_reg %>%
+  ki_oppf_innan_1_aar() %>%
+  aggreger_ki_prop()
+```
+
+  
+
 fixme: Detaljar/råd om namngjeving av funksjonar og objekt  
 fixme: Kva med fleire datasett som inndata? (Storleiken på inndata vs. utdata.)  
 fixme: Detaljar om rammeverket, eks. om tanken om nivå 1- og nivå 2-funksjonar  
