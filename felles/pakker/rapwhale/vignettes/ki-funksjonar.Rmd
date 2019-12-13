@@ -371,10 +371,45 @@ d_reg %>%
   aggreger_ki_prop()
 ```
 
-  
+# Fleire inndatasett
 
-fixme: Detaljar/råd om namngjeving av funksjonar og objekt  
-fixme: Kva med fleire datasett som inndata? (Storleiken på inndata vs. utdata.)  
-fixme: Detaljar om rammeverket, eks. om tanken om nivå 1- og nivå 2-funksjonar  
-fixme: Informasjon om funksjon for totalrad  
-fixme: Informasjon om indikator for kontinuerlege funksjonar  
+(fixme: Skal her skriva om ei utviding av oppfølgingseksempelet.
+Me har eitt datasett for operasjon og eitt datasett for oppfølging.
+Ein operasjon kan ha fleire oppfølgingar (ved seks månadar, eitt år osv.),
+og KI-funksjonen tar inn fleire datasett. Strukturen på utdataa
+vert altså ikkje lik strukturen på inndataa.)
+
+
+# Utrekning av totalrader
+
+(fixme: Skal dokumentera korleis ein brukar funksjonen for totalrader.)
+
+
+# Kontinuerlege variablar
+
+(fixme: Eit eksempel på bruk av KI-funksjonar for kontinuerlege data.
+Brukar aggregeringsfunksjonen for gjennomsnitt (som eksempel),
+men bør nemna at ein kan ha fleire aggregeringsfunksjonar.
+Bør til slutt nemna at me har planar om ein rate-funksjon.)
+
+
+# Generelt og detaljar om rammeverket
+
+(fixme: Etter alle eksempela ser me no på rammeverket generelt.
+Må forklara kva me meiner med nivå 1 og nivå 2-funksjonar
+(skal dei ha andre namn?), dokumentera kva eigenskapar funksjonar
+på ulike nivå må ha (inndata og utdata), og ha ei oversikt
+over dei ulike typane pakken støttar (p.t. berre funksjonar
+for brøkdata og for kontinuerlege funksjonar).
+Kanskje òg ei liste med dei ulike aggregeringsfunksjonane.
+Litt om designprinsippa bak metodikken
+(eks. tidyverse-tankegang, robustheit, minimera risiko for feil,
+gjera jobben raskare og enklare, konsistente funksjonsnamn).
+Eit eksempel på korleis ein lagar sin eigen type. Kan bruka
+korrelasjon som eksempel (og brukaren kan utvida funksjonen
+til å støtta ulike korrelasjonstypar).
+Skriva om kor viktig det er at funksjonane er robuste
+(eksempel for t.test-funksjonen: med 0 observasjonar,
+med SD == 0, og med SD ~= 0).
+Detaljar/råd om namngjeving av funksjonar og objekt,
+og at funksjonar bør leggast i pakkar.)
