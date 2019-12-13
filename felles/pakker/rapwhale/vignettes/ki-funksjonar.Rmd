@@ -1,7 +1,9 @@
 ---
 title: "Kvalitetsindikatorfunksjonar"
 author: "Karl Ove Hufthammer"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    toc: true
 vignette: >
   %\VignetteIndexEntry{Kvalitetsindikatorfunksjonar}
   %\VignetteEncoding{UTF-8}
