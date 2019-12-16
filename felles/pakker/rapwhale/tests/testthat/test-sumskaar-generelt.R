@@ -60,28 +60,19 @@ d_gyldig_eks1 = tibble::tribble(
 )
 
 # Eksempel på inndata med både gyldige tallverdier og gyldige NA-verdier
-d_gyldig_eks2 = tibble::tribble(
-  ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2,
-  1, 1, 1, 10, 10,
-  2, 2, 2, 20, 20,
-  3, 1, 2, NA, 10
-)
+d_gyldig_eks2 = d_gyldig_eks1
+d_gyldig_eks2$psyk1[3] = NA
 
 # Eksempel på inndata med ugyldige NA-verdier (for "gen" og "fys1")
-d_ugyldig_eks1 = tibble::tribble(
-  ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2,
-  1, NA, 1, 10, 10,
-  2, 2, 2, 20, 20,
-  NA, 1, 2, NA, 10
-)
+d_ugyldig_eks1 = d_gyldig_eks1
+d_ugyldig_eks1$gen[3] = NA
+d_ugyldig_eks1$fys1[1] = NA
 
 # Eksempel på inndata med både ugyldige tallverdier (26 og 43) og ugyldige NA-verdier (for "gen" og "fys1")
-d_ugyldig_eks2 = tibble::tribble(
-  ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2,
-  1, NA, 1, 10, 10,
-  2, 2, 43, 20, 20,
-  NA, 26, 2, NA, 10
-)
+d_ugyldig_eks2 = d_gyldig_eks1
+d_ugyldig_eks2$gen[3] = NA
+d_ugyldig_eks2$fys1[c(1, 3)] = c(NA, 26)
+d_ugyldig_eks2$psyk1[c(2, 3)] = c(43, NA)
 
 # Eksempel på skåringstabell med ugyldige kolonnenavn
 skaaringstabell_ugyldig_eks1 = dplyr::rename(skaaringstabell_eks, tullball = variabel, ballball = verdi)
