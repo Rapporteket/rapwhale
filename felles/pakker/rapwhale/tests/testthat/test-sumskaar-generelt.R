@@ -49,7 +49,7 @@ test_that("sjekk_variabelnavn() gjev feilmelding viss variablar manglar", {
 })
 
 
-context("sjekk_variabelverdier")
+context("finn_ugyldige_verdier")
 
 # Eksempel på inndata med bare gyldige tallverdier
 d_gyldig_eks1 = tibble::tribble(
@@ -58,6 +58,66 @@ d_gyldig_eks1 = tibble::tribble(
   2, 2, 2, 20, 20,
   3, 1, 2, 20, 10
 )
+
+# Lager en tom dataramme og spesifiserer variabeltypene
+dataramme_tom = tibble(
+  radnr = integer(),
+  variabel = character(),
+  feilverdi = numeric()
+)
+
+# Eksempel på inndata med 1 feil
+d_ugyldig_1_feil = d_gyldig_eks1
+d_ugyldig_1_feil$fys1[1] = 13
+
+# Lager en dataramme med 1 feil. Det er slik datarammen som finn_ugyldige_verdier() returnerer
+# skal se ut dersom d_ugyldig_1_feil blir tatt inn som første argument
+dataramme_1_feil = tibble(
+  radnr = 1L,
+  variabel = "fys1",
+  feilverdi = 13
+)
+
+# Eksempel på inndata med 3 feil (2 av de gjelder samme variabel)
+d_ugyldig_3_feil = d_gyldig_eks1
+d_ugyldig_3_feil$gen[1] = 9
+d_ugyldig_3_feil$gen[3] = 6
+d_ugyldig_3_feil$psyk2[2] = NA
+
+# Lager en dataramme med 3 feil. Det er slik datarammen som finn_ugyldige_verdier() returnerer
+# skal se ut dersom d_ugyldig_3_feil blir tatt inn som første argument
+dataramme_3_feil = tibble(
+  radnr = c(1L, 2L, 3L),
+  variabel = c("gen", "psyk2", "gen"),
+  feilverdi = c(9, NA, 6)
+)
+
+# Eksempel på inndata med bare 1 ugyldig NA-verdi
+d_ugyldig_na_feil = d_gyldig_eks1
+d_ugyldig_na_feil$fys1[1] = NA
+
+# Lager en dataramme med bare 1 ugyldig NA-verdi. Det er slik datarammen som finn_ugyldige_verdier() returnerer
+# skal se ut dersom d_ugyldig_na_feil blir tatt inn som første argument
+dataramme_na_feil = tibble(
+  radnr = 1L,
+  variabel = "fys1",
+  feilverdi = as.numeric(NA)
+)
+
+# Test at finn_ugyldige_verdier() gir ut en dataramme (med kun kolonnenavn) hvis inndata er gyldig
+test_that("finn_ugyldige_verdier() gir ut en dataramme (med kun kolonnenavn) hvis inndata er gyldig", {
+  expect_identical(finn_ugyldige_verdier(d_gyldig_eks1, skaaringstabell_eks), dataramme_tom)
+})
+
+# Test at finn_ugyldige_verdier() gir ut korrekt feiloversikt hvis det finnes ugyldige verdier i inndata
+test_that("finn_ugyldige_verdier() gir ut korrekt feiloversikt hvis det finnes ugyldige verdier i inndata", {
+  expect_identical(finn_ugyldige_verdier(d_ugyldig_1_feil, skaaringstabell_eks), dataramme_1_feil)
+  expect_identical(finn_ugyldige_verdier(d_ugyldig_3_feil, skaaringstabell_eks), dataramme_3_feil)
+  expect_identical(finn_ugyldige_verdier(d_ugyldig_na_feil, skaaringstabell_eks), dataramme_na_feil)
+})
+
+
+################################# Midlertidig kode ################################
 
 # Eksempel på inndata med både gyldige tallverdier og gyldige NA-verdier
 d_gyldig_eks2 = d_gyldig_eks1
