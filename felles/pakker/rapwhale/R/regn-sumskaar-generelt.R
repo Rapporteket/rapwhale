@@ -39,6 +39,13 @@ finn_ugyldige_verdier = function(d, koblingstabell) {
   oversikt_ugyldige
 }
 
+# Funksjon som skal ta inn datarammen som finn_ugyldige_verdier() returnerer og presentere
+# feilverdiene på en god måte
+
+oppsummer_ugyldige_verdier = function(d_ugyldige) {
+
+}
+
 
 ################################# Midlertidig kode ################################
 
