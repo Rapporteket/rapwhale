@@ -117,6 +117,24 @@ test_that("finn_ugyldige_verdier() gir ut korrekt feiloversikt hvis det finnes u
 })
 
 
+context("oppsummer_ugyldige_verdier")
+
+# Test at oppsummer_ugyldige_verdier() presenterer feilverdiene på korrekt måte
+test_that("oppsummer_ugyldige_verdier() presenterer feilverdier på korrekt måte", {
+  expect_output(
+    oppsummer_ugyldige_verdier(),
+    "Fant 3 ugyldige verdier:
+                   gen: 9, 6
+                   psyk2: NA"
+  )
+})
+
+# Test at oppsummer_ugyldige_verdier() gir ut korrekt melding hvis det ikke finnes feilverdier
+test_that("oppsummer_ugyldige_verdier() gir ut korrekt melding hvis det ikke finnes feilverdier", {
+  expect_output(oppsummer_ugyldige_verdier(), "Alle verdiene er gyldige")
+})
+
+
 ################################# Midlertidig kode ################################
 
 # Eksempel på inndata med både gyldige tallverdier og gyldige NA-verdier
