@@ -405,7 +405,7 @@ For oppfølgingsindikatorane var det eigentleg urealistisk
 å ha berre éin variabel med oppfølgingsdato.
 Pasientane kan jo ha fleire oppfølgingar
 (ved seks månadar, eitt år, to år, …).
-Eit meir tilfelle vil vera at me har to datasett,
+Eit meir realistisk eksempel vil vera at me har to datasett,
 eitt for operasjonar og eitt for oppfølgingar,
 og ein koplingsnøkkel (pasient- og/eller operasjons-ID)
 mellom desse.
@@ -436,7 +436,10 @@ Ein fleksibel funksjon for oppfølging innan normtid kan sjå slik ut:
 
 ```{r}
 ki_oppf_innan_normtid = function(d_oper, d_oppf, dato_datasett, oppf_aar, slingringsmonn_dagar = 30) {
-  # Måltidspunkt for oppfølging, målt i dagar
+  # Talet på dagar etter operasjon som skal reknast som
+  # mål-tidspunkt (ideelt tidspunkt) for oppfølging,
+  # pluss nedre og øvre grense for kva som er akseptabelt
+  # (dvs. innanfor normtid)
   oppf_maal = oppf_aar * 365
   nedre_grense = oppf_maal - slingringsmonn_dagar
   ovre_grense = oppf_maal + slingringsmonn_dagar
@@ -455,7 +458,7 @@ ki_oppf_innan_normtid = function(d_oper, d_oppf, dato_datasett, oppf_aar, slingr
         (dagar_til_oppf >= nedre_grense) & (dagar_til_oppf <= ovre_grense)
     )
 
-  # For kvar operasjon som burde vore følgt opp no, rekn ut kriterievariablar
+  # For kvar operasjon som *burde* vore følgt opp no, rekn ut kriterievariablar
   d_ki = d_ki_per_oppf %>%
     filter(ki_krit_nevner) %>%
     group_by(!!!syms(names(d_oper)), ki_krit_nevner) %>%
@@ -470,18 +473,20 @@ ki_oppf_innan_normtid = function(d_oper, d_oppf, dato_datasett, oppf_aar, slingr
 - For enkeltheits skuld gjev funksjonen her berre ut rader for
   pasientar der indikatoren kan reknast ut, altså der `ki_krit_nevner` er sann.
   Det gjer ting hakket enklare, men han kan òg lett utvidast til å gje ut
-  rader for alle operasjonane.
+  rader for *alle* operasjonane.
 - Funksjonen kan sjølvsagt òg utvidast til å gje ut tilleggsvariablar som
   `dagar_til_oppf`. Men her må ein tenka godt gjennom implementasjon for
   å sikra at alt vert handtert riktig, for eksempel dersom det finst fleire
   oppfølgingar innan normtid på *same* operasjon.
-- Utrekningnane vert i prinsippet gjort på same måte som før. Einaste forskjellen
+- Utrekningane vert i prinsippet gjort på same måte som før. Einaste forskjellen
   er at me no reknar først ut kriterievariablane for *kvar oppfølging* pasienten har hatt.
   Ein operasjon har oppfølging innan normtid dersom det finst *minst* éi slik oppfølging
   innnan normtid (`any(ki_krit_teller)`).
 - Me har brukt `!!!syms(names(d_oper))` som grupperingsvariablar for å sikra
   at me får med alle kolonnane i operasjonsskjemaet, i tilfelle me seinare
   vil stratifisera på desse.
+- Det er òg viktig å avgruppera før me returnerer objektet,
+  slik at seinare aggregering (som standard) vert gjort ugruppert.
 
 Funksjonen brukar me på tilsvarande måte som før:
 
