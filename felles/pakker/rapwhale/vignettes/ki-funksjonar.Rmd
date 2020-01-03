@@ -169,9 +169,9 @@ ki_oppf_innan_1_aar = function(d_reg, dato_datasett) {
   d_reg %>%
     mutate(
       dagar_sidan_op = difftime(!!dato_datasett, dato_operasjon, units = "days"),
-      dagar_for_oppf = difftime(dato_oppfolging, dato_operasjon, units = "days"),
+      dagar_til_oppf = difftime(dato_oppfolging, dato_operasjon, units = "days"),
       ki_krit_nevner = dagar_sidan_op >= 365,
-      ki_krit_teller = ki_krit_nevner & !is.na(dato_oppfolging) & dagar_for_oppf <= 365
+      ki_krit_teller = ki_krit_nevner & !is.na(dato_oppfolging) & dagar_til_oppf <= 365
     )
 }
 ```
@@ -325,10 +325,10 @@ ki_oppf_innan_normtid = function(d_reg, dato_datasett, oppf_aar, slingringsmonn_
   d_reg %>%
     mutate(
       dagar_sidan_op = difftime(!!dato_datasett, dato_operasjon, units = "days"),
-      dagar_for_oppf = difftime(dato_oppfolging, dato_operasjon, units = "days"),
+      dagar_til_oppf = difftime(dato_oppfolging, dato_operasjon, units = "days"),
       ki_krit_nevner = dagar_sidan_op >= ovre_grense,
       ki_krit_teller = ki_krit_nevner & !is.na(dato_oppfolging) &
-        (dagar_for_oppf >= nedre_grense) & (dagar_for_oppf <= ovre_grense)
+        (dagar_til_oppf >= nedre_grense) & (dagar_til_oppf <= ovre_grense)
     )
 }
 ```
@@ -431,10 +431,10 @@ ki_oppf_innan_normtid = function(d_oper, d_oppf, dato_datasett, oppf_aar, slingr
   d_ki_per_oppf = d_reg %>%
     mutate(
       dagar_sidan_op = difftime(!!dato_datasett, dato_operasjon, units = "days"),
-      dagar_for_oppf = difftime(dato_oppfolging, dato_operasjon, units = "days"),
+      dagar_til_oppf = difftime(dato_oppfolging, dato_operasjon, units = "days"),
       ki_krit_nevner = dagar_sidan_op >= ovre_grense,
       ki_krit_teller = ki_krit_nevner & !is.na(dato_oppfolging) &
-        (dagar_for_oppf >= nedre_grense) & (dagar_for_oppf <= ovre_grense)
+        (dagar_til_oppf >= nedre_grense) & (dagar_til_oppf <= ovre_grense)
     )
 
   # For kvar operasjon som burde vore følgt opp no, rekn ut kriterievariablar
@@ -454,7 +454,7 @@ ki_oppf_innan_normtid = function(d_oper, d_oppf, dato_datasett, oppf_aar, slingr
   Det gjer ting hakket enklare, men han kan òg lett utvidast til å gje ut
   rader for alle operasjonane.
 - Funksjonen kan sjølvsagt òg utvidast til å gje ut tilleggsvariablar som
-  `dagar_for_oppf`. Men her må ein tenka godt gjennom implementasjon for
+  `dagar_til_oppf`. Men her må ein tenka godt gjennom implementasjon for
   å sikra at alt vert handtert riktig, for eksempel dersom det finst fleire
   oppfølgingar innan normtid på *same* operasjon.
 - Utrekningnane vert i prinsippet gjort på same måte som før. Einaste forskjellen
