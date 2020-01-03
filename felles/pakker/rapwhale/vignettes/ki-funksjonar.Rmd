@@ -373,11 +373,117 @@ d_reg %>%
 
 # Fleire inndatasett
 
-(fixme: Skal her skriva om ei utviding av oppfølgingseksempelet.
-Me har eitt datasett for operasjon og eitt datasett for oppfølging.
-Ein operasjon kan ha fleire oppfølgingar (ved seks månadar, eitt år osv.),
-og KI-funksjonen tar inn fleire datasett. Strukturen på utdataa
-vert altså ikkje lik strukturen på inndataa.)
+I eksempla me har sett til no, har KI-funksjonane tatt
+eitt inndatasett (pluss nokre ekstraargument), og dette
+inndatasettet vart tilføyd nokre kolonnar.
+Men det er ingenting i vegen for at ein KI-funksjon
+kan ta *fleire* inndatasett. La oss sjå på eit eksempel.
+
+For oppfølgingsindikatorane var det eigentleg urealistisk
+å ha berre éin variabel med oppfølgingsdato.
+Pasientane kan jo ha fleire oppfølgingar
+(ved seks månadar, eitt år, to år, …).
+Eit meir tilfelle vil vera at me har to datasett,
+eitt for operasjonar og eitt for oppfølgingar,
+og ein koplingsnøkkel (pasient- og/eller operasjons-ID)
+mellom desse.
+
+Viss me føreset at kvar pasient har berre éin operasjon
+men kan ha vilkårleg mange oppfølgingar, kan datasetta
+sjå slik ut:
+
+```{r, echo=FALSE, results='hide'}
+d_oper = select(d_reg, pas_id, kjonn, alder, sjukehus, dato_operasjon)
+d_oppf_orig = select(d_reg, pas_id, dato_oppfolging)
+d_oppf = d_oppf_orig %>%
+  bind_rows(
+    mutate(filter(d_oppf_orig, pas_id == 11), dato_oppfolging = dato_oppfolging + 320),
+    mutate(filter(d_oppf_orig, pas_id == 28), dato_oppfolging = dato_oppfolging - 360),
+    mutate(filter(d_oppf_orig, pas_id == 28), dato_oppfolging = dato_oppfolging + 130)
+  ) %>%
+  filter(!is.na(dato_oppfolging)) %>%
+  arrange(pas_id, dato_oppfolging)
+```
+
+```{r}
+d_oper # Operasjonar
+d_oppf # Oppfølgingar
+```
+
+Ein fleksibel funksjon for oppfølging innan normtid kan sjå slik ut:
+
+```{r}
+ki_oppf_innan_normtid = function(d_oper, d_oppf, dato_datasett, oppf_aar, slingringsmonn_dagar = 30) {
+  # Måltidspunkt for oppfølging, målt i dagar
+  oppf_maal = oppf_aar * 365
+  nedre_grense = oppf_maal - slingringsmonn_dagar
+  ovre_grense = oppf_maal + slingringsmonn_dagar
+
+  # For kvar operasjon, legg til info om eventuelle oppfølgingar
+  d_reg = d_oper %>%
+    left_join(d_oppf, by = "pas_id")
+
+  # For kvar oppfølging, rekn ut kriterievariablar
+  d_ki_per_oppf = d_reg %>%
+    mutate(
+      dagar_sidan_op = difftime(!!dato_datasett, dato_operasjon, units = "days"),
+      dagar_for_oppf = difftime(dato_oppfolging, dato_operasjon, units = "days"),
+      ki_krit_nevner = dagar_sidan_op >= ovre_grense,
+      ki_krit_teller = ki_krit_nevner & !is.na(dato_oppfolging) &
+        (dagar_for_oppf >= nedre_grense) & (dagar_for_oppf <= ovre_grense)
+    )
+
+  # For kvar operasjon som burde vore følgt opp no, rekn ut kriterievariablar
+  d_ki = d_ki_per_oppf %>%
+    filter(ki_krit_nevner) %>%
+    group_by(!!!syms(names(d_oper)), ki_krit_nevner) %>%
+    summarise(ki_krit_teller = any(ki_krit_teller)) %>%
+    ungroup()
+
+  # Returner datasett med indikatorvariablar
+  d_ki
+}
+```
+
+- For enkeltheits skuld gjev funksjonen her berre ut rader for
+  pasientar der indikatoren kan reknast ut, altså der `ki_krit_nevner` er sann.
+  Det gjer ting hakket enklare, men han kan òg lett utvidast til å gje ut
+  rader for alle operasjonane.
+- Funksjonen kan sjølvsagt òg utvidast til å gje ut tilleggsvariablar som
+  `dagar_for_oppf`. Men her må ein tenka godt gjennom implementasjon for
+  å sikra at alt vert handtert riktig, for eksempel dersom det finst fleire
+  oppfølgingar innan normtid på *same* operasjon.
+- Utrekningnane vert i prinsippet gjort på same måte som før. Einaste forskjellen
+  er at me no reknar først ut kriterievariablane for *kvar oppfølging* pasienten har hatt.
+  Ein operasjon har oppfølging innan normtid dersom det finst *minst* éi slik oppfølging
+  innnan normtid (`any(ki_krit_teller)`).
+- Me har brukt `!!!syms(names(d_oper))` som grupperingsvariablar for å sikra
+  at me får med alle kolonnane i operasjonsskjemaet, i tilfelle me seinare
+  vil stratifisera på desse.
+
+Funksjonen brukar me på tilsvarande måte som før:
+
+```{r}
+# Rekn ut kriteriedatasett
+d_oppf1 = ki_oppf_innan_normtid(d_oper, d_oppf, dato_datasett = Sys.Date(), oppf_aar = 1)
+d_oppf1
+
+# Rekn ut sjølve kvalitetsindikatoren,
+# både totalt og stratifisert på kjønn
+d_oppf1 %>%
+  aggreger_ki_prop()
+d_oppf1 %>%
+  group_by(kjonn) %>%
+  aggreger_ki_prop()
+```
+
+Ting å merka seg:
+
+- Funksjonen treng ikkje gje ut eit datasett med like mange rader
+  som i nokon av inndatasetta. Her er det `r nrow(d_oper)` operasjonar og
+  `r nrow(d_oppf)` oppfølgingar, men KI-funksjonen gjev ut
+  `r nrow(d_oppf1)` rader. Det viktige er at han gjev ut data på
+  *individnivå* (her: person-/operasjonsnivå).
 
 
 # Utrekning av totalrader
