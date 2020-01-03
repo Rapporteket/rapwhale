@@ -383,6 +383,16 @@ d_reg %>%
   aggreger_ki_prop()
 ```
 
+Viss det berre er eitt eller nokre få argument me vil låsa fast,
+kan me heller bruka argumentellipse (`...`) for dei resterande argumenta:
+
+```{r}
+ki_oppf_innan_2_aar = function(...) {
+  ki_oppf_innan_normtid(..., oppf_aar = 2)
+}
+```
+
+
 # Fleire inndatasett
 
 I eksempla me har sett til no, har KI-funksjonane tatt
