@@ -67,6 +67,7 @@ Pasientane skal helst følgjast opp innan eitt år etter operasjon,
 og me har ein eigen kvalitetsindikator for dette. Der er det blant
 anna definert at «eitt år» skal reknast som 365 dagar.
 
+
 ## Første forsøk på utrekning
 
 Viss me vart bedt om å rekna ut kvalitetsindikatoren, ville me kanskje
@@ -78,11 +79,11 @@ sum(d_reg$dato_oppfolging - d_reg$dato_operasjon <= 365, na.rm = TRUE) / nrow(d_
 
 Så det ser ut til at berre ein tredel av pasientane får oppfølging innan fristen.
 
-Det er dessverre fleire problem  utrekninga.
+Det er dessverre fleire problem med utrekninga.
 For det første er svaret feil!
-Merk at pasient 13 har `NA` for oppfølgingsdato,
+Merk at pasient 13 har `NA` på oppfølgingsdatoen,
 som tyder at ho enno ikkje er følgd opp.
-Sidan det var under eit år sidan operasjonen
+Sidan det var mindre enn eitt år sidan ho vart operert
 (la oss anta at dagens dato er `r dato_uthenting_tekst`),
 skal ho ekskluderast frå utrekninga.
 Det vert ho i utrekninga av teljaren (`na.rm = TRUE`),
@@ -91,8 +92,9 @@ så brøken vert feil.
 
 Dette er eksempel på ein feil som lett kan oppstå når utrekninga
 av teljaren og nemnaren vert gjort på ulike datakjelder.
-Spesielt er det stor risiko viss det er snakk om to ulike *datarammer*
-(så det bør ein *aldri* bruka!).
+Spesielt er det stor risiko viss det er snakk om to ulike *datarammer*,
+så det bør ein *aldri* bruka.
+
 
 ## Andre forsøk på utrekning
 
@@ -103,7 +105,7 @@ Me kan for eksempel skriva det slik:
 mean(d_reg$dato_oppfolging - d_reg$dato_operasjon <= 365, na.rm = TRUE)
 ```
 
-Så halvparten får oppfølging innan fristen. Mykje betre!
+Så halvparten av pasientane får oppfølging innan fristen. Mykje betre!
 Problemet er at svaret framleis er feil!
 
 Pasient 29 vert ekskludert frå utrekninga, men me ser at han
@@ -116,9 +118,11 @@ utrekninga.
 
 ## Eksempel på rammeverket
 
-Rammeverket vårt løyser problema ovanfor. For brøkbaserte kvalitetsindikatorar
-(som for eksempel målar prosentdelen av pasientar oppfyller eit kriterium)
-brukar ein følgjande framgangsmåte.
+Rammeverket vårt løyser (delvis) problema ovanfor,
+blant anna ved at ein for brøkbaserte kvalitetsindikatorar
+(som for eksempel målar prosentdelen av pasientar som oppfyller eit kriterium)
+må vera meir eksplisitt på kven
+som skal inngå i teljaren og nemnaren.
 
 Ein definerer på *individnivå* (radnivå) *om* ein observasjon
 (pasient, operasjon eller liknande) skal inngå i utrekninga
@@ -129,14 +133,14 @@ teljaren.
 Reint konkret lagar ein for kvar kvalitetsindikator ein R-funksjon
 (kvalitetsindikatorfunksjon, *KI-funksjon*) som tek inn ei dataramme
 på eit fastsett – og dokumentert – format, samt eventuelt andre argument.
-KI-funksjonen gjev ut dataramma med (iallfall) desse to variablane lagde til:
+KI-funksjonen gjev ut ei dataramma med (iallfall) desse to variablane (lagde til):
 
 - `ki_krit_nevner`: Logisk variabel som seier om observasjonen oppfølgde
   kriteria for å vera med i utrekning av nemnaren i brøken.
 - `ki_krit_teller`: Logisk variabel som seier om observasjonen oppfølgde
   kriteria for å telja som eit «ja» i kvalitetsindikatoren, dvs. om han
-  skal telja «positivt» i teljaren i brøken.
-  
+  skal vera med i utrekning av teljaren i brøken.
+
 Variabelen `ki_krit_nevner` må vera sann eller usann (dvs. ikkje `NA`)
 for alle radene. Variabelen `ki_krit_teller` må vera sann eller usann
 dersom `ki_krit_nevner` er sann, og usann eller `NA` dersom `ki_krit_nevner`
@@ -144,7 +148,7 @@ er usann.
 
 (Grunnen til at me ikkje tillèt `NA`-verdiar for `ki_krit_teller`
 dersom `ki_krit_nevner` er sann, er at for ein *skikkeleg* definert
-kvaltitetsindikator **skal** ein alltid kunna avgjera om ein observasjon
+kvaltitetsindikator alltid **skal** kunna avgjera om ein observasjon
 som inngår i utrekninga av indikatoren *oppfyller* kriteria for å telja
 positivt i teljaren.
 Hadde me godteke `NA`, og for eksempel tolka dette som `FALSE`, hadde
@@ -154,7 +158,7 @@ for eksempel feilaktig antok at alle variablane som inngjekk i utrekningane
 var ikkje-manglande. Ved å forby `NA`-verdiar, eliminerer me denne risikoen.)
 
 **fixme**: Informasjon om attributt for namn og forklaring på KI-ar.
-som tek inn ei dataramme
+
 
 ### Eksempel på KI-funksjon
 
