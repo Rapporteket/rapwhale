@@ -179,7 +179,8 @@ ki_oppf_innan_1_aar = function(d_reg, dato_datasett) {
 Køyrer me funksjonen på datasettet, får me:
 
 ```{r}
-ki_oppf_innan_1_aar(d_reg, dato_datasett = Sys.Date())
+ki_oppf_innan_1_aar(d_reg, dato_datasett = Sys.Date()) %>%
+  print(width = Inf)
 ```
 
 Ting å merka seg:
@@ -187,7 +188,7 @@ Ting å merka seg:
 - Om ein pasient inngår i kvalitetsindikatoren er avhengig av kva dato datasettet er frå.
   Her har me for enkelheits skuld brukt dagens dato (`Sys.Date()`), men i praksis må
   ein sjølvsagt bruka den reelle nedlastingsdatoen for datasettet.
-- Det er bevisst at me ikkje har sett `Sys.Date()` som standardverdi. Då kunne ein
+- Det er bevisst at me ikkje har sett `Sys.Date()` som standardverdi i funksjonen. Då kunne ein
   venja seg til å ikkje eksplisitt oppgje dato, fordi ein *oftast* har ferske data,
   som ville ført til feil resultat dei få gongane ein såg på historiske data.
 - I definisjonen av `ki_krit_teller` krev me først at `ki_krit_nevner` er sann.
@@ -195,24 +196,25 @@ Ting å merka seg:
   I ein del tilfelle kan det òg gjera definisjonen av `ki_krit_teller` ein del
   enklare/kortare. (Det gjeld dei tilfella kriteria for inngå i nemnaren er veldig
   omfattande, med for eksempel bruk av mange variablar, mens kriteria for å inngå
-  i teljaren er dei same pluss berre *eitt* tillegskriterium.)
+  i teljaren er dei same pluss berre eitt eller nokre få tillegskriterium.)
 - Me brukar `difftime()` med eksplisitt definisjon av tidseining (`units = "days"`).
-  I dette tilfelle ville R-koden `dato_oppfolging - dato_operasjon` hatt nøyaktig
-  same effekt, men det er generelt ein mykje meir risikabel kode. Han ville ikkje
+  Her ville R-koden `dato_oppfolging - dato_operasjon` hatt nøyaktig
+  same effekt, men det er *generelt* ein mykje meir risikabel kode. Han ville ikkje
   fungera likt dersom datovariablane ein gong i framtida vart endra til *tidsvariablar*
-  (dato + klokkeslett – `POSIXct`-objekt), dvs. om ein også registrerte klokkeslett for operasjon
+  (`POSIXct`-objekt), dvs. om ein også registrerte klokkeslett for operasjon
   eller oppfølging. Men han ville *oftast* fungerte likt, så det hadde vore ein feil
   som hadde vore lett å oversjå. Det er nemleg slik at koden `x - y` ikkje alltid gjev
   ut talet på dagar mellom `x` og `y` når variablane er tidsvariablar; han gjev av og
   til ut dagar, av og til timar, av og til minutt og av og til sekund, avhengig av
-  avstanden tidsavstanden. Derfor bør ein *alltid* bruka `difftime()` med eksplisitt val
+  tidsavstanden. Derfor bør ein *alltid* bruka `difftime()` med eksplisitt val
   av `units` når ein reknar med tids- eller datovariablar.
-  
+
+
 ### Bruk av KI-funksjonen
 
 Når ein har definert ein KI-funksjon, gjev rammeverket oss fleire verktøy for *bruk*
 av funksjonen. Oftast vil ein rett og slett rekna ut kvalitetsindikatoren.
-Det gjer ein enkelt med ein aggregeringsfunksjon. For proporsjonsbaserte
+Det gjer ein enkelt med ein aggregeringsfunksjon. For binomiske/proporsjonsbaserte
 KI-funksjonar er dette `aggreger_ki_prop()`:
 
 ```{r}
@@ -235,7 +237,7 @@ Nokre ting å merka seg:
   pasient som var så nyleg opererert at han ikkje kunne inngå i
   utrekning av kvalitetsindikatoren.
 - Konfidensintervallet utrekna er Wilson-/skår-intervallet, som fungerer veldig
-  godt for *både* verdiar av indikatoren nær 0 %, 100 % og 50 %, og for *både*
+  godt for *både* verdiar av indikatoren nær 0 %, 100 % og andre verdiar, og for *både*
   små og store nemnarar, og er derfor det me anbefaler for generell bruk
   i kvalitetsindikatorsamanheng (sjå òg https://doi.org/10.1214/ss/1009213286).
   Konfidensintervalla ein får ut frå `binom.test()`-funksjonen
@@ -244,7 +246,9 @@ Nokre ting å merka seg:
 - Det er sjølvsagt mogleg å velja konfidensnivå, dersom ein for eksempel vil
   ha 90 %- eller 99 %-konfidensintervall.
 - Dersom det hadde vore noko logisk feil med definisjonane av `ki_krit_teller`-
-  og `ki_krit_nevner`-variablane, ville funksjonen ha gjeve ei feilmelding
+  og `ki_krit_nevner`-variablane, for eksempel om `ki_krit_teller` på ei rad var
+  sann mens `ki_krit_nevner` var usann – noko som tyder på ein feil i programmeringa
+  av KI-funksjonen – ville funksjonen ha gjeve ei feilmelding
   og nekta å rekna ut kvalitetsindikatoren.
 
 
@@ -302,7 +306,7 @@ d_oppf1_utan_b %>%
 # Fleksible KI-funksjonar
 
 Det er òg mogleg å laga KI-funksjonar for ein *familie*
-av kvalitetsfunksjonar. Her er eit eksempel.
+av kvalitetsindikatorar. Her er eit eksempel.
 
 Tidlegare såg me på oppfølging *innan* eitt år. I praksis
 bør eittårsoppfølginga skje etter *cirka* eitt år.
@@ -317,7 +321,10 @@ på vilkårlege andre tidspunkt (seksmånadsoppfølging, toårsoppfølging etc.
 
 ```{r def-ki-funk-oppf-innan-normtid}
 ki_oppf_innan_normtid = function(d_reg, dato_datasett, oppf_aar, slingringsmonn_dagar = 30) {
-  # Måltidspunkt for oppfølging, målt i dagar
+  # Talet på dagar etter operasjon som skal reknast som
+  # mål-tidspunkt (ideelt tidspunkt) for oppfølging,
+  # pluss nedre og øvre grense for kva som er akseptabelt
+  # (dvs. innanfor normtid)
   oppf_maal = oppf_aar * 365
   nedre_grense = oppf_maal - slingringsmonn_dagar
   ovre_grense = oppf_maal + slingringsmonn_dagar
@@ -334,7 +341,8 @@ ki_oppf_innan_normtid = function(d_reg, dato_datasett, oppf_aar, slingringsmonn_
 ```
 
 I dette registeret brukar me vanlegvis eit slingringsmonn på 30 dagar for alle normtider,
-så det er sett som standardverdi. Her er eksempel på bruk:
+så det er sett som standardverdi (`slingringsmonn_dagar = 30`).
+Her er eksempel på bruk:
 
 ```{r}
 # Oppfølging innan 1 år ± 30 dagar
@@ -356,14 +364,14 @@ Viss me skal bruka utrekningane av eitt- og toårsoppfølging i fleire samanheng
 kan det vera greitt å definera eigne funksjonar for dette,
 med dei ulike argumenta sett til standardverdiar. Viss me alltid
 arbeider med ferske data (for eksempel direkte frå ein database),
-kan ein for eksempel definera funksjonane slik:
+kan me for eksempel definera funksjonane slik:
 
 ```{r}
 ki_oppf_innan_1_aar = function(d_reg) {
   ki_oppf_innan_normtid(d_reg, dato_datasett = Sys.Date(), oppf_aar = 1)
 }
 ki_oppf_innan_2_aar = function(d_reg) {
-  ki_oppf_innan_normtid(d_reg, dato_datasett = Sys.Date(), oppf_aar = 1)
+  ki_oppf_innan_normtid(d_reg, dato_datasett = Sys.Date(), oppf_aar = 2)
 }
 ```
 
