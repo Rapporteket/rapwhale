@@ -627,6 +627,8 @@ Må forklara kva me meiner med nivå 1 og nivå 2-funksjonar
 på ulike nivå må ha (inndata og utdata), og ha ei oversikt
 over dei ulike typane pakken støttar (p.t. berre funksjonar
 for brøkdata og for kontinuerlege funksjonar).
+Skriv om at me har planar om funksjonar for ratedata og
+(kanskje) levetidsdata.
 Kanskje òg ei liste med dei ulike aggregeringsfunksjonane.
 Litt om designprinsippa bak metodikken
 (eks. tidyverse-tankegang, robustheit, minimera risiko for feil,
