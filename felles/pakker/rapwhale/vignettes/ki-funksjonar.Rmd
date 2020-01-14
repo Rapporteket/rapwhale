@@ -520,10 +520,103 @@ Ting å merka seg:
 
 # Kontinuerlege variablar
 
-(fixme: Eit eksempel på bruk av KI-funksjonar for kontinuerlege data.
-Brukar aggregeringsfunksjonen for gjennomsnitt (som eksempel),
-men bør nemna at ein kan ha fleire aggregeringsfunksjonar.
-Bør til slutt nemna at me har planar om ein rate-funksjon.)
+Til no har me sett på binomiske data. Men det kan lagast
+kvalitetsindikatorar for mange andre typar data.
+Her skal me sjå kontinuerlege data, meir spesifikt data på
+intervall- eller forholdstalsnivå.
+Dette er data der det gjev meining å snakka om gjennomsnittsverdiar,
+medianar og kvantilar.
+
+Ein definerer KI-funksjonar som før, men no skal dei
+returnera datarammer med (iallfall) desse to variablane:
+
+- `ki_x`: Verdien til den kontinuerlege variabelen.
+- `ki_aktuell`: Logisk variabel som seier om observasjonen
+  oppfølgde kriteria for å inngå i kvalitetsindikatoren
+  (svarar altså til `ki_krit_nevner` for binomiske data).
+
+Verdiane til `ki_aktuell` må vera sann eller usann,
+og `ki_x` må vera eit tal (ikkje `NA`) dersom
+`ki_aktuell` er sann.
+
+
+## Eksempel: langtidsblodsukker (HbA1c)
+
+Eit kvalitetsregister har HbA1c-nivå på pasientane som ein kvalitetsindikator.
+Dette målar langtidsblodsukker (gjennomsnittleg blodsukkernivå over tid).
+Viss behandlinga er god, bør dette vera i intervallet 20–42 mmol/mol.
+Høge verdiar er negativt, og verdiar frå 48 mmol/mol indikerer diabetes.
+Her er eksempeldata:
+
+```{r, echo = FALSE}
+d_reg_kont = d_reg %>%
+  select(pas_id, kjonn, alder, sjukehus) %>%
+  mutate(hb1ac = c(26.1, NA, 53.8, NA, 65.2, 49.8))
+```
+
+```{r}
+d_reg_kont
+```
+
+I det tilfellet er indikatoren ferdigutrekna,
+så KI-funksjonen vert svært enkelt:
+
+```{r}
+ki_hb1ac = function(d_reg) {
+  d_reg %>%
+    mutate(
+      ki_x = hb1ac,
+      ki_aktuell = !is.na(hb1ac)
+    )
+}
+```
+
+
+## Aggergeringsfunksjonar for kontinurlege data
+
+Det kan finnast fleire aggregeringsfunksjonar for
+kontinuerlege data. Førebels støttar me éin,
+for utrekning av gjennomsnittsverdiar, `aggreger_ki_snitt()`:
+
+```{r}
+# Rekn ut kvalitetsindikatoren
+d_hba1c = d_reg_kont %>%
+  ki_hb1ac()
+
+# Snittverdiar for heile registeret
+d_hba1c %>%
+  aggreger_ki_snitt()
+
+# Snittverdiar fordelt på sjukehus
+d_hba1c %>%
+  group_by(sjukehus) %>%
+  aggreger_ki_snitt()
+```
+
+Så det *ser ut* til at pasientane frå sjukehus B gjer det dårlegare
+enn dei frå sjukehusa A (men me har sjølvsagt altfor lite data til
+å konkludera!).
+
+Ting å merka seg:
+
+- Summen av `n_aktuell` er 4, sjølv om det var 6 pasientar
+  i datasettet. Grunnen er at to av dei mangla HBA1C-verdi.
+- Konfidensintervallet vert rekna ut dersom det *kan*
+  reknast ut. Viss det for eksempel er berre éin pasient
+  i ei gruppe, vert det ikkje rekna ut. For sjukehus A
+  får me gjennomsnitt men ikkje konfidensintervall, mens
+  for sjukehus C får me ingen av delane.
+
+Føresetnadane for å bruka funksjonen er dei same som for
+bruk av *t*-testar: Det må gje meining å rekna ut
+gjennomsnittsverdiar, og fordelinga til dei empiriske
+gjennomsnitta må kunna godt approksimerast av tilhøyrande *t*-fordeling
+(dette er vanlegvis oppfylt dersom ein har *ikkje veldig få* observasjonar
+per grupppe, eller viss verdiane innanfor kvar gruppe er normalfordelte).
+
+(Me har òg langsiktige planar om å legga til støtte for bootstrap-baserte
+konfindensintervall for gjennomsnitta. Desse kan brukast der *t*-fordelinga
+ikkje er realistisk.)
 
 
 # Generelt og detaljar om rammeverket
