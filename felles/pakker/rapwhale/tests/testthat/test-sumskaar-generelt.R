@@ -66,6 +66,11 @@ dataramme_tom = tibble(
   feilverdi = numeric()
 )
 
+# Test at finn_ugyldige_verdier() gir ut en dataramme (med kun kolonnenavn) hvis inndata er gyldig
+test_that("finn_ugyldige_verdier() gir ut en dataramme (med kun kolonnenavn) hvis inndata er gyldig", {
+  expect_identical(finn_ugyldige_verdier(d_gyldig_eks1, skaaringstabell_eks), dataramme_tom)
+})
+
 # Eksempel på inndata med 1 feil
 d_ugyldig_1_feil = d_gyldig_eks1
 d_ugyldig_1_feil$fys1[1] = 13
@@ -103,9 +108,9 @@ d_ugyldig_2_feil_samme_rad$psyk2[1] = NA
 # Det er slik datarammen som finn_ugyldige_verdier() returnerer skal se
 # ut dersom d_ugyldig_2_feil_samme_rad blir tatt inn som første argument
 dataramme_2_feil_samme_rad = tibble(
-  radnr = c(1L, 2L, 1L),
-  variabel = c("gen", "fys1", "psyk2"),
-  feilverdi = c(9, 10, NA)
+  radnr = c(1L, 1L, 2L),
+  variabel = c("gen", "psyk2", "fys1"),
+  feilverdi = c(9, NA, 10)
 )
 
 # Eksempel på inndata med 3 feil (2 like feil i samme variabel)
@@ -115,8 +120,8 @@ d_ugyldig_2_like_feil_samme_variabel$gen[3] = 4
 d_ugyldig_2_like_feil_samme_variabel$psyk2[2] = NA
 
 # Lager en dataramme med 3 feil (2 like feil i samme variabel).
-# Det er slik datarammen som finn_ugyldige_verdier() returnerer
-# skal se ut dersom d_ugyldig_3_feil blir tatt inn som første argument
+# Det er slik datarammen som finn_ugyldige_verdier() returnerer skal se ut
+# dersom d_ugyldig_2_like_feil_samme_variabel blir tatt inn som første argument
 dataramme_2_like_feil_samme_variabel = tibble(
   radnr = c(1L, 2L, 3L),
   variabel = c("gen", "psyk2", "gen"),
@@ -127,24 +132,37 @@ dataramme_2_like_feil_samme_variabel = tibble(
 d_ugyldig_na_feil = d_gyldig_eks1
 d_ugyldig_na_feil$fys1[1] = NA
 
-# Lager en dataramme med bare 1 ugyldig NA-verdi. Det er slik datarammen som finn_ugyldige_verdier() returnerer
-# skal se ut dersom d_ugyldig_na_feil blir tatt inn som første argument
+# Lager en dataramme med bare 1 ugyldig NA-verdi.
+# Det er slik datarammen som finn_ugyldige_verdier() returnerer skal
+# se ut dersom d_ugyldig_na_feil blir tatt inn som første argument
 dataramme_na_feil = tibble(
   radnr = 1L,
   variabel = "fys1",
   feilverdi = as.numeric(NA)
 )
 
-# Test at finn_ugyldige_verdier() gir ut en dataramme (med kun kolonnenavn) hvis inndata er gyldig
-test_that("finn_ugyldige_verdier() gir ut en dataramme (med kun kolonnenavn) hvis inndata er gyldig", {
-  expect_identical(finn_ugyldige_verdier(d_gyldig_eks1, skaaringstabell_eks), dataramme_tom)
-})
-
 # Test at finn_ugyldige_verdier() gir ut korrekt feiloversikt hvis det finnes ugyldige verdier i inndata
 test_that("finn_ugyldige_verdier() gir ut korrekt feiloversikt hvis det finnes ugyldige verdier i inndata", {
-  expect_identical(finn_ugyldige_verdier(d_ugyldig_1_feil, skaaringstabell_eks), dataramme_1_feil)
-  expect_identical(finn_ugyldige_verdier(d_ugyldig_3_feil, skaaringstabell_eks), dataramme_3_feil)
-  expect_identical(finn_ugyldige_verdier(d_ugyldig_na_feil, skaaringstabell_eks), dataramme_na_feil)
+  expect_identical(
+    finn_ugyldige_verdier(d_ugyldig_1_feil, skaaringstabell_eks),
+    dataramme_1_feil
+  )
+  expect_identical(
+    finn_ugyldige_verdier(d_ugyldig_3_feil, skaaringstabell_eks),
+    dataramme_3_feil
+  )
+  expect_identical(
+    finn_ugyldige_verdier(d_ugyldig_2_feil_samme_rad, skaaringstabell_eks),
+    dataramme_2_feil_samme_rad
+  )
+  expect_identical(
+    finn_ugyldige_verdier(d_ugyldig_2_like_feil_samme_variabel, skaaringstabell_eks),
+    dataramme_2_like_feil_samme_variabel
+  )
+  expect_identical(
+    finn_ugyldige_verdier(d_ugyldig_na_feil, skaaringstabell_eks),
+    dataramme_na_feil
+  )
 })
 
 
