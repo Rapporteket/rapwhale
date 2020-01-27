@@ -84,12 +84,43 @@ d_ugyldig_3_feil$gen[1] = 9
 d_ugyldig_3_feil$gen[3] = 6
 d_ugyldig_3_feil$psyk2[2] = NA
 
-# Lager en dataramme med 3 feil. Det er slik datarammen som finn_ugyldige_verdier() returnerer
+# Lager en dataramme med 3 feil (2 av de gjelder samme variabel).
+# Det er slik datarammen som finn_ugyldige_verdier() returnerer
 # skal se ut dersom d_ugyldig_3_feil blir tatt inn som første argument
 dataramme_3_feil = tibble(
   radnr = c(1L, 2L, 3L),
   variabel = c("gen", "psyk2", "gen"),
   feilverdi = c(9, NA, 6)
+)
+
+# Eksempel på inndata med 3 feil (2 av de er i samme rad)
+d_ugyldig_2_feil_samme_rad = d_gyldig_eks1
+d_ugyldig_2_feil_samme_rad$gen[1] = 9
+d_ugyldig_2_feil_samme_rad$fys1[2] = 10
+d_ugyldig_2_feil_samme_rad$psyk2[1] = NA
+
+# Lager en dataramme med 3 feil (2 av de er i samme rad).
+# Det er slik datarammen som finn_ugyldige_verdier() returnerer skal se
+# ut dersom d_ugyldig_2_feil_samme_rad blir tatt inn som første argument
+dataramme_2_feil_samme_rad = tibble(
+  radnr = c(1L, 2L, 1L),
+  variabel = c("gen", "fys1", "psyk2"),
+  feilverdi = c(9, 10, NA)
+)
+
+# Eksempel på inndata med 3 feil (2 like feil i samme variabel)
+d_ugyldig_2_like_feil_samme_variabel = d_gyldig_eks1
+d_ugyldig_2_like_feil_samme_variabel$gen[1] = 4
+d_ugyldig_2_like_feil_samme_variabel$gen[3] = 4
+d_ugyldig_2_like_feil_samme_variabel$psyk2[2] = NA
+
+# Lager en dataramme med 3 feil (2 like feil i samme variabel).
+# Det er slik datarammen som finn_ugyldige_verdier() returnerer
+# skal se ut dersom d_ugyldig_3_feil blir tatt inn som første argument
+dataramme_2_like_feil_samme_variabel = tibble(
+  radnr = c(1L, 2L, 3L),
+  variabel = c("gen", "psyk2", "gen"),
+  feilverdi = c(4, NA, 4)
 )
 
 # Eksempel på inndata med bare 1 ugyldig NA-verdi
@@ -121,17 +152,15 @@ context("oppsummer_ugyldige_verdier")
 
 # Test at oppsummer_ugyldige_verdier() presenterer feilverdiene på korrekt måte
 test_that("oppsummer_ugyldige_verdier() presenterer feilverdier på korrekt måte", {
-  expect_output(
-    oppsummer_ugyldige_verdier(),
-    "Fant 3 ugyldige verdier:
-                   gen: 9, 6
-                   psyk2: NA"
+  expect_identical(
+    oppsummer_ugyldige_verdier(dataramme_3_feil),
+    "Fant 3 ugyldige verdier:\ngen: 9, 6\npsyk2: NA"
   )
 })
 
 # Test at oppsummer_ugyldige_verdier() gir ut korrekt melding hvis det ikke finnes feilverdier
 test_that("oppsummer_ugyldige_verdier() gir ut korrekt melding hvis det ikke finnes feilverdier", {
-  expect_output(oppsummer_ugyldige_verdier(), "Alle verdiene er gyldige")
+  expect_identical(oppsummer_ugyldige_verdier(dataramme_tom), "Alle verdiene er gyldige")
 })
 
 
@@ -183,31 +212,13 @@ test_that("sjekk_variabelverdier() gjev inga feilmelding for datasett med gyldig
   expect_silent(sjekk_variabelverdier(d_gyldig_eks2, skaaringstabell_eks, godta_manglende = TRUE))
 })
 
-test_that("sjekk_variabelverdier() gjev feilmelding for datasett med NA-verdiar viss godta_manglende = FALSE (", {
-  expect_error(
-    sjekk_variabelverdier(d_ugyldig_eks1, skaaringstabell_eks, godta_manglende = FALSE),
-    "Ugyldige verdier: gen: NA, fys1: NA"
-  )
+test_that("sjekk_variabelverdier() gjev feilmelding for datasett med NA-verdiar viss godta_manglende = FALSE", {
+  expect_error(sjekk_variabelverdier(d_ugyldig_eks1, skaaringstabell_eks, godta_manglende = FALSE))
 })
 
 test_that("sjekk_variabelverdier() gjev feilmelding for datasett med ugyldige variabelverdiar", {
-  feilmelding_ugyldig_verdi = "^Ugyldige verdier: gen: 200$"
-  feilmelding_ugyldige_verdier = "^Ugyldige verdier: gen: 200, blablabla$"
-  feilmelding_ugyldige_verdier_na = "^Ugyldige verdier: gen: 200, blablabla, NA$"
-  expect_error(
-    sjekk_variabelverdier(tibble(gen = c(200, 200)), skaaringstabell_eks, godta_manglende = FALSE),
-    feilmelding_ugyldig_verdi
-  )
-  expect_error(
-    sjekk_variabelverdier(tibble(gen = c(200, 200, "blablabla")), skaaringstabell_eks, godta_manglende = FALSE),
-    feilmelding_ugyldige_verdier
-  )
-  expect_error(
-    sjekk_variabelverdier(tibble(gen = c(200, 200, "blablabla", NA)), skaaringstabell_eks, godta_manglende = FALSE),
-    feilmelding_ugyldige_verdier_na
-  )
-  expect_error(
-    sjekk_variabelverdier(tibble(gen = c(200, 200, "blablabla", NA)), skaaringstabell_eks, godta_manglende = TRUE),
-    feilmelding_ugyldige_verdier
-  )
+  expect_error(sjekk_variabelverdier(tibble(gen = c(200, 200)), skaaringstabell_eks, godta_manglende = FALSE))
+  expect_error(sjekk_variabelverdier(tibble(gen = c(200, 200, "blablabla")), skaaringstabell_eks, godta_manglende = FALSE))
+  expect_error(sjekk_variabelverdier(tibble(gen = c(200, 200, "blablabla", NA)), skaaringstabell_eks, godta_manglende = FALSE))
+  expect_error(sjekk_variabelverdier(tibble(gen = c(200, 200, "blablabla", NA)), skaaringstabell_eks, godta_manglende = TRUE))
 })
