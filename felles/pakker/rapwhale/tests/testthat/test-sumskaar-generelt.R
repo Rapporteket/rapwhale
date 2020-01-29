@@ -168,7 +168,7 @@ test_that("finn_ugyldige_verdier() gir ut korrekt feiloversikt hvis det finnes u
 
 context("oppsummer_ugyldige_verdier")
 
-# Test at oppsummer_ugyldige_verdier() presenterer feilverdiene på korrekt måte
+# Test at oppsummer_ugyldige_verdier() presenterer feilverdiene på korrekt måte (2 av de gjelder samme variabel)
 test_that("oppsummer_ugyldige_verdier() presenterer feilverdier på korrekt måte", {
   expect_identical(
     oppsummer_ugyldige_verdier(dataramme_3_feil),
@@ -176,9 +176,28 @@ test_that("oppsummer_ugyldige_verdier() presenterer feilverdier på korrekt måt
   )
 })
 
+# Test at oppsummer_ugyldige_verdier() presenterer feilverdiene på korrekt måte (2 av de er i samme rad)
+test_that("oppsummer_ugyldige_verdier() presenterer feilverdier på korrekt måte", {
+  expect_identical(
+    oppsummer_ugyldige_verdier(dataramme_2_feil_samme_rad),
+    "Fant 3 ugyldige verdier:\ngen: 9\npsyk2: NA\nfys1: 10"
+  )
+})
+
+# Test at oppsummer_ugyldige_verdier() presenterer feilverdiene på korrekt måte (2 like feil i samme variabel)
+test_that("oppsummer_ugyldige_verdier() presenterer feilverdier på korrekt måte", {
+  expect_identical(
+    oppsummer_ugyldige_verdier(dataramme_2_like_feil_samme_variabel),
+    "Fant 3 ugyldige verdier:\ngen: 4, 4\npsyk2: NA"
+  )
+})
+
 # Test at oppsummer_ugyldige_verdier() gir ut korrekt melding hvis det ikke finnes feilverdier
 test_that("oppsummer_ugyldige_verdier() gir ut korrekt melding hvis det ikke finnes feilverdier", {
-  expect_identical(oppsummer_ugyldige_verdier(dataramme_tom), "Alle verdiene er gyldige")
+  expect_identical(
+    oppsummer_ugyldige_verdier(dataramme_tom),
+    "Alle verdiene er gyldige"
+  )
 })
 
 
