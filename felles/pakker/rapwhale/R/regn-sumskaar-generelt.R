@@ -36,9 +36,9 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 
 #'
 #' @param d Dataramme/tibble med nøyaktig samme variabelnavn som finnes i variabel-kolonnen i verditabell.
-#' @param verditabell Dataramme/tibble med kolonne variabel og verdi, som sier hvilke verdier som er gyldige
+#' @param verditabell Dataramme/tibble med to kolonner (variabel og verdi), som sier hvilke verdier som er gyldige
 #'     for hvilke variabler.
-#' @param godta_manglende Om NA-verdier skal regnes som gydlige (selv om de ikke er nevnt i verditabell).
+#' @param godta_manglende Om NA-verdier skal regnes som gyldige (selv om de ikke er nevnt i verditabell).
 #'
 #' @return Dataramme med radnummer, variabelnavn og feilverdi for ugyldige verdier. Sortert etter radnummer
 #'     og så rekkefølge i d.
@@ -75,9 +75,27 @@ finn_ugyldige_verdier = function(d, verditabell, godta_manglende) {
 # feilverdiene på en god måte
 
 oppsummer_ugyldige_verdier = function(d_ugyldige) {
-
+  if (length(d_ugyldige$feilverdi) > 0) {
+    oppsummert_ugyldige = character()
+    for (var_ugyldig in unique(d_ugyldige$variabel)) {
+      indeks_var_ugyldig = which(d_ugyldige$variabel %in% var_ugyldig)
+      oppsummert_ugyldige = append(
+        oppsummert_ugyldige,
+        paste0(
+          var_ugyldig, ": ",
+          paste0(d_ugyldige$feilverdi[indeks_var_ugyldig],
+            collapse = ", "
+          )
+        )
+      )
+    }
+    antall_ugyldige_verdier = length(d_ugyldige$feilverdi)
+    oppsummert_ugyldige = paste0(oppsummert_ugyldige, collapse = "\n")
+    paste0("Fant ", antall_ugyldige_verdier, " ugyldige verdier:\n", oppsummert_ugyldige)
+  } else {
+    "Alle verdiene er gyldige"
+  }
 }
-
 
 ################################# Midlertidig kode ################################
 
