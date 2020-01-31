@@ -1,5 +1,5 @@
 # csv-filer for testing ligger i mappen:
-mappe = "felles/pakker/rapwhale/tests/testthat/"
+mappe = "tests/testthat/"
 
 # Håndtering av inndata fra datadump og spesifikasjon ---------------------
 context("les_varnavn")
