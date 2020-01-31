@@ -18,3 +18,15 @@ les_varnavn = function(dd_sti) {
   }
   varnavn
 }
+
+# Sammenligne variabelnavn og rekkefølge mellom dd og i spesifikasjon-tibble (Bør dette flyttes til en valideringsfunksjon?)
+sjekk_varnavn = function(dd_sti, varnavn_kilde) {
+  varnavn_i_dd = les_varnavn(dd_sti)
+
+  if (sum(!is.na(match(varnavn_i_dd, varnavn_kilde))) != length(varnavn_i_dd)) {
+    stop(error = "Variabelnavn i spesifikasjon stemmer ikke overens med variabelnavn i datadump")
+  }
+  if (any(match(varnavn_i_dd, varnavn_kilde) != seq(1:length(varnavn_i_dd)))) {
+    warning("Variabelnavn har ulik rekkefølge i datadump og spesifikasjon")
+  }
+}
