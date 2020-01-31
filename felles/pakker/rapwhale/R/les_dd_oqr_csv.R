@@ -64,3 +64,45 @@ konverter_dato_kl = function(d, vartype) { # fixme - Hvordan skal den reagere p�
     )
   d
 }
+
+#' Leser inn OQR-datadump i csv-format
+#'
+#' Funksjon for å lese inn datadump for oqr-register. Tar innn en filplassering og en spesifikasjonstibble.
+#' Tibble inneholder variabelnavn fra datadump, eventuelt nye variabelnavn, variabeltype og kolonnespesifikasjon.
+#'
+#' Det returneres en tibble med nye variabelnavn og variabeltype som er oppgitt i spesifikasjon.
+#' Hvis det er uoverenstemmelser mellom datadump og spesifikasjon vil det gis feilmeldinger.
+#'
+#' @param dd_sti Filplassering for datadump i csv format.
+#' @param oqr_specs Tibble med spesifikasjon for hvilken struktur datadump har. Inneholder kolonnene varnavn, nye_variabelnavn, variabeltype og kolonnespesifikasjon.
+les_oqr_csv_base = function(dd_sti, csv_bokstav, varnavn_kilde, nye_varnavn, vartype) {
+
+  # hent kolonnespec på riktig format
+  kol_type = str_c(csv_bokstav, collapse = "")
+
+  names = tibble(varnavn_kilde, nye_varnavn)
+  names = names %>%
+    mutate(col_names = case_when(
+      is.na(nye_varnavn) ~ varnavn_kilde,
+      !is.na(nye_varnavn) ~ nye_varnavn
+    ))
+
+  # Definere innstillinger for locale som er likt for alle OQR-register.
+  oqr_lokale = readr::locale(
+    decimal_mark = ",",
+    date_format = "%d.%m.%Y", time_format = "%H:%M",
+    tz = "Europe/Oslo"
+  )
+
+  # les inn datasett
+  d = readr::read_delim(dd_sti,
+    delim = ";",
+    locale = oqr_lokale,
+    skip = 1,
+    col_names = names$col_names,
+    col_types = kol_type
+  )
+
+  readr::stop_for_problems(d)
+  d
+}
