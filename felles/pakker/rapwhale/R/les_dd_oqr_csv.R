@@ -50,3 +50,17 @@ konverter_boolske = function(d, vartype) {
     mutate_at(ind, oqr_boolsk_til_boolsk)
   d
 }
+
+# Funksjon som konverterer dato_kl variabler fra character til DD.MM.YYYY HH:MM format.
+konverter_dato_kl = function(d, vartype) { # fixme - Hvordan skal den reagere på dato_kl i feil format?
+  ind = which(vartype == "dato_kl")
+  d = d %>%
+    mutate_at(ind, readr::parse_datetime,
+      format = "%d.%m.%Y %H:%M",
+      locale = locale(
+        decimal_mark = ",",
+        tz = "Europe/Oslo"
+      )
+    )
+  d
+}
