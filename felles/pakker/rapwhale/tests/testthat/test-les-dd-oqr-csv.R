@@ -37,3 +37,18 @@ test_that("Funksjonen leser inn variabler med bindestrek i navnet", {
 
   expect_identical(les_kolnavn(dd_sti = paste0(mappe, dd_kolonnenavn_med_bindestrek)), forventet_med_bindestrek)
 })
+
+
+context("sjekk_varnavn")
+
+dd_ok = "dd_ok.csv"
+varnavn_ok = c("alfa", "beta", "cappa", "delta", "echo")
+varnavn_feil_rekkefolge = c("alfa", "beta", "delta", "cappa", "echo")
+varnavn_feil_navn = c("alfa", "beta", "cappa", "delta", "eple")
+
+# Feilmelding hvis det ikke er overenstemmelse
+test_that("Funksjonen gir feilmelding hvis variabelnavn i datadump ikke stemmer overens med navn i spesifikasjon", {
+  expect_identical(sjekk_varnavn(paste0(mappe, dd_ok), varnavn_ok), NULL) # Forventer null return
+  expect_warning(sjekk_varnavn(paste0(mappe, dd_ok), varnavn_feil_rekkefolge), "Variabelnavn har ulik rekkefølge i datadump og spesifikasjon") # Ulik rekkefølge i spes sammenlignet med dd.
+  expect_error(sjekk_varnavn(paste0(mappe, dd_ok), varnavn_feil_navn), "Variabelnavn i spesifikasjon stemmer ikke overens med variabelnavn i datadump") # Feil navn
+})
