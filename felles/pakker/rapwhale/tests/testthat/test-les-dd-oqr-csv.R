@@ -38,7 +38,6 @@ test_that("Funksjonen leser inn variabler med bindestrek i navnet", {
   expect_identical(les_kolnavn(dd_sti = paste0(mappe, dd_kolonnenavn_med_bindestrek)), forventet_med_bindestrek)
 })
 
-
 context("sjekk_varnavn")
 
 dd_ok = "dd_ok.csv"
@@ -51,4 +50,40 @@ test_that("Funksjonen gir feilmelding hvis variabelnavn i datadump ikke stemmer 
   expect_identical(sjekk_varnavn(paste0(mappe, dd_ok), varnavn_ok), NULL) # Forventer null return
   expect_warning(sjekk_varnavn(paste0(mappe, dd_ok), varnavn_feil_rekkefolge), "Variabelnavn har ulik rekkefølge i datadump og spesifikasjon") # Ulik rekkefølge i spes sammenlignet med dd.
   expect_error(sjekk_varnavn(paste0(mappe, dd_ok), varnavn_feil_navn), "Variabelnavn i spesifikasjon stemmer ikke overens med variabelnavn i datadump") # Feil navn
+})
+
+
+# Konvertering av variabeltyper -------------------------------------------
+context("konverter_boolske")
+
+d_base = les_oqr_csv_base(
+  dd_sti = paste0(mappe, dd_ok_hel),
+  varnavn_kilde = oqr_specs_dd_ok_hel$navn_kilde,
+  nye_varnavn = nye_navn_mangler,
+  vartype = oqr_specs_dd_ok_hel$vartype,
+  csv_bokstav = oqr_specs_dd_ok_hel$csv_bokstav
+) # Fixme - Flytte denne opp
+
+d_base_m_feil_logisk = d_base
+d_base_m_feil_logisk$epsilon[2] = "2"
+
+test_that("Funksjonen gir feilmelding hvis en boolsk variabel inneholder andre verdier enn (0,1,NA)", {
+  expect_error(konverter_boolske(d = d_base_m_feil_logisk, vartype = oqr_specs_dd_ok_hel$vartype),
+    "Det finnes ugyldige verdier for en boolsk variabel. (Må være 0,1 eller NA)",
+    fixed = TRUE
+  )
+})
+
+test_that("Funksjonen klarer å konvertere flere boolske", {
+  d_base_m_flere_logisk = d_base
+  ekstra_logisk = d_base$epsilon
+  d_base_m_flere_logisk = bind_cols(d_base_m_flere_logisk, ekstra_logisk = ekstra_logisk)
+
+  forventet_m_ekstra_logisk = d_base_m_flere_logisk
+  forventet_m_ekstra_logisk$epsilon = as.logical(d_base_m_flere_logisk$epsilon)
+  forventet_m_ekstra_logisk$epsilon = c(TRUE, FALSE, NA, TRUE)
+  forventet_m_ekstra_logisk$ekstra_logisk = as.logical(d_base_m_flere_logisk$ekstra_logisk)
+  forventet_m_ekstra_logisk$ekstra_logisk = c(TRUE, FALSE, NA, TRUE)
+
+  expect_equal(konverter_boolske(d = d_base_m_flere_logisk, vartype = c(oqr_specs_dd_ok_hel$vartype, "boolsk")), forventet_m_ekstra_logisk)
 })
