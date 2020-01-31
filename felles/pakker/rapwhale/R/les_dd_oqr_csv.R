@@ -106,3 +106,17 @@ les_oqr_csv_base = function(dd_sti, csv_bokstav, varnavn_kilde, nye_varnavn, var
   readr::stop_for_problems(d)
   d
 }
+
+# Hjelpefunksjon for å lese inn en datadump fra csv-fil for et OQR-register.
+les_oqr_csv_v2 = function(dd_sti, csv_bokstav, varnavn_kilde, nye_varnavn, vartype) {
+  varnavn = les_varnavn(dd_sti)
+  sjekk_varnavn(dd_sti, varnavn_kilde)
+
+  d = les_oqr_csv_base(dd_sti, csv_bokstav, varnavn_kilde, nye_varnavn, vartype)
+
+  d = konverter_boolske(d, vartype)
+  d = konverter_dato_kl(d, vartype)
+  # d = konverter_kategorisk(d, vartype)
+
+  d
+}
