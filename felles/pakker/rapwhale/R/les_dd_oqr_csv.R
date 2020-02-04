@@ -1,4 +1,4 @@
-#' Leser inn variabelnavn fra datadump.
+#' Les inn variabelnavn fra datadump.
 #'
 #' Henter ut variabelnavn fra en datadump. Bruker filplassering som argument.
 #'
@@ -19,7 +19,14 @@ les_varnavn = function(dd_sti) {
   varnavn
 }
 
-# Sammenligne variabelnavn og rekkefølge mellom dd og i spesifikasjon-tibble (Bør dette flyttes til en valideringsfunksjon?)
+#' Sammenlign variabelnavn
+#'
+#' Funksjon som sjekker at variabelnavn i en datadump tilsvarer de variabelnavn som er oppgitt i en spesifikasjon/kodebok.
+#' Tar inn fil-plassering til en data-fil eller en tibble/dataramme. Returnerer feilmelding hvis det er ulike navn i
+#' datasett og spesifikasjon. Returnerer en advarsel om variabelnavn er i ulik rekkefølge i datasett og spesifikasjon.
+#'
+#' @param data Enten en tekst-streng som inneholder sti til en data-fil, eller en tibble/dataramme.
+#' @param varnavn_kilde En vektor med navn slik det skal være i datasettet.
 sammenlign_variabelnavn = function(data, varnavn_kilde) {
   if (is.character(data)) {
     varnavn_i_dd = les_varnavn(data)
