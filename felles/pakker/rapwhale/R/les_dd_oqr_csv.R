@@ -20,8 +20,12 @@ les_varnavn = function(dd_sti) {
 }
 
 # Sammenligne variabelnavn og rekkefølge mellom dd og i spesifikasjon-tibble (Bør dette flyttes til en valideringsfunksjon?)
-sjekk_varnavn = function(dd_sti, varnavn_kilde) {
-  varnavn_i_dd = les_varnavn(dd_sti)
+sammenlign_variabelnavn = function(data, varnavn_kilde) {
+  if (is.character(data)) {
+    varnavn_i_dd = les_varnavn(data)
+  } else {
+    varnavn_i_dd = colnames(data)
+  }
 
   if (sum(!is.na(match(varnavn_i_dd, varnavn_kilde))) != length(varnavn_i_dd)) {
     stop(error = "Variabelnavn i spesifikasjon stemmer ikke overens med variabelnavn i datadump")
@@ -110,7 +114,7 @@ les_oqr_csv_base = function(dd_sti, csv_bokstav, varnavn_kilde, nye_varnavn, var
 # Hjelpefunksjon for å lese inn en datadump fra csv-fil for et OQR-register.
 les_oqr_csv_v2 = function(dd_sti, csv_bokstav, varnavn_kilde, nye_varnavn, vartype) {
   varnavn = les_varnavn(dd_sti)
-  sjekk_varnavn(dd_sti, varnavn_kilde)
+  sammenlign_variabelnavn(dd_sti, varnavn_kilde)
 
   d = les_oqr_csv_base(dd_sti, csv_bokstav, varnavn_kilde, nye_varnavn, vartype)
 

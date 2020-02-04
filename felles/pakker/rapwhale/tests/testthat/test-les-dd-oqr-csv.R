@@ -30,17 +30,32 @@ test_that("Funksjonen leser inn variabler med bindestrek i navnet", {
   expect_identical(les_varnavn(dd_sti = "dd_kolonnenavn_med_bindestrek.csv"), forventet_med_bindestrek)
 })
 
-context("sjekk_varnavn")
+context("sammenlign_variabelnavn")
 
 varnavn_ok = c("alfa", "beta", "cappa", "delta", "echo")
 varnavn_feil_rekkefolge = c("alfa", "beta", "delta", "cappa", "echo")
 varnavn_feil_navn = c("alfa", "beta", "cappa", "delta", "eple")
+dd_ok = tibble::tribble(
+  ~alfa, ~beta, ~cappa, ~delta, ~echo,
+  1L, 1L, 1L, 1L, 1L,
+  0L, 0L, 1L, 0L, 0L
+)
 
-# Feilmelding hvis det ikke er overenstemmelse
 test_that("Funksjonen gir feilmelding hvis variabelnavn i datadump ikke stemmer overens med navn i spesifikasjon", {
-  expect_identical(sjekk_varnavn("dd_ok.csv", varnavn_ok), NULL) # Forventer null return
-  expect_warning(sjekk_varnavn("dd_ok.csv", varnavn_feil_rekkefolge), "Variabelnavn har ulik rekkefølge i datadump og spesifikasjon") # Ulik rekkefølge i spes sammenlignet med dd.
-  expect_error(sjekk_varnavn("dd_ok.csv", varnavn_feil_navn), "Variabelnavn i spesifikasjon stemmer ikke overens med variabelnavn i datadump") # Feil navn
+  expect_identical(sammenlign_variabelnavn("dd_ok.csv", varnavn_ok), NULL)
+  expect_warning(sammenlign_variabelnavn("dd_ok.csv", varnavn_feil_rekkefolge), "Variabelnavn har ulik rekkefølge i datadump og spesifikasjon")
+  expect_error(sammenlign_variabelnavn("dd_ok.csv", varnavn_feil_navn), "Variabelnavn i spesifikasjon stemmer ikke overens med variabelnavn i datadump")
+})
+
+test_that("Funksjonen gir forventet resultat ved innlesning fra tibble", {
+  expect_identical(sammenlign_variabelnavn(dd_ok, varnavn_ok), NULL)
+  expect_warning(sammenlign_variabelnavn(dd_ok, varnavn_feil_rekkefolge), "Variabelnavn har ulik rekkefølge i datadump og spesifikasjon")
+  expect_error(sammenlign_variabelnavn(dd_ok, varnavn_feil_navn), "Variabelnavn i spesifikasjon stemmer ikke overens med variabelnavn i datadump")
+})
+
+# Feilmelding om en vektor med variabelnavn gies som 'data'
+test_that("Funksjonen gir feilmelding om argumentet 'data' er en character-vektor", {
+  expect_error(sammenlign_variabelnavn(varnavn_feil_rekkefolge, varnavn_ok))
 })
 
 # Konvertering av variabeltyper -------------------------------------------
