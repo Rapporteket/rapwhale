@@ -71,19 +71,18 @@ test_that("finn_ugyldige_verdier() gir ut en dataramme (med kun kolonnenavn) hvi
   expect_identical(finn_ugyldige_verdier(d_gyldig_eks1, skaaringstabell_eks), dataramme_tom)
 })
 
-# Eksempel på inndata med 1 feil
+# Eksempeldata med 1 feil
 d_ugyldig_1_feil = d_gyldig_eks1
 d_ugyldig_1_feil$fys1[1] = 13
 
-# Lager en dataramme med 1 feil. Det er slik datarammen som finn_ugyldige_verdier() returnerer
-# skal se ut dersom d_ugyldig_1_feil blir tatt inn som første argument
+# Gyldighetstabell for d_ugyldig_1_feil
 dataramme_1_feil = tibble(
   radnr = 1L,
   variabel = "fys1",
   feilverdi = 13
 )
 
-# Eksempel på inndata med 3 feil (2 av de gjelder samme variabel)
+# Eksempel på inndata med 3 feil, der 2 av de gjelder samme variabel
 d_ugyldig_3_feil = d_gyldig_eks1
 d_ugyldig_3_feil$gen[1] = 9
 d_ugyldig_3_feil$gen[3] = 6
@@ -169,7 +168,7 @@ test_that("finn_ugyldige_verdier() gir ut korrekt feiloversikt hvis det finnes u
 context("oppsummer_ugyldige_verdier")
 
 # Test at oppsummer_ugyldige_verdier() presenterer feilverdiene på korrekt måte (2 av de gjelder samme variabel)
-test_that("oppsummer_ugyldige_verdier() presenterer feilverdier på korrekt måte", {
+test_that("oppsummer_ugyldige_verdier() presenterer korrekte feilverdier alfabetisk etter variabelnavn", {
   expect_identical(
     oppsummer_ugyldige_verdier(dataramme_3_feil),
     "Fant 3 ugyldige verdier:\ngen: 9, 6\npsyk2: NA"
@@ -177,15 +176,15 @@ test_that("oppsummer_ugyldige_verdier() presenterer feilverdier på korrekt måt
 })
 
 # Test at oppsummer_ugyldige_verdier() presenterer feilverdiene på korrekt måte (2 av de er i samme rad)
-test_that("oppsummer_ugyldige_verdier() presenterer feilverdier på korrekt måte", {
+test_that("oppsummer_ugyldige_verdier() presenterer korrekte feilverdier alfabetisk etter variabelnavn", {
   expect_identical(
     oppsummer_ugyldige_verdier(dataramme_2_feil_samme_rad),
-    "Fant 3 ugyldige verdier:\ngen: 9\npsyk2: NA\nfys1: 10"
+    "Fant 3 ugyldige verdier:\nfys1: 10\ngen: 9\npsyk2: NA"
   )
 })
 
 # Test at oppsummer_ugyldige_verdier() presenterer feilverdiene på korrekt måte (2 like feil i samme variabel)
-test_that("oppsummer_ugyldige_verdier() presenterer feilverdier på korrekt måte", {
+test_that("oppsummer_ugyldige_verdier() presenterer korrekte feilverdier alfabetisk etter variabelnavn", {
   expect_identical(
     oppsummer_ugyldige_verdier(dataramme_2_like_feil_samme_variabel),
     "Fant 3 ugyldige verdier:\ngen: 4, 4\npsyk2: NA"
