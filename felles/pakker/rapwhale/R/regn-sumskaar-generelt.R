@@ -34,6 +34,7 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
   }
 }
 
+#' Gir ut oversikt over ugyldige verdier i et datasett.
 #'
 #' @param d Dataramme/tibble med nøyaktig samme variabelnavn som finnes i variabel-kolonnen i verditabell.
 #' @param verditabell Dataramme/tibble med to kolonner (variabel og verdi), som sier hvilke verdier som er gyldige
@@ -62,9 +63,9 @@ finn_ugyldige_verdier = function(d, verditabell, godta_manglende) {
   }
   oversikt_ugyldige = arrange(
     tibble(
-      radnr = as.integer(radnr_ugyldige),
-      variabel = as.character(variabler_ugyldige),
-      feilverdi = as.numeric(verdier_ugyldige)
+      radnr = radnr_ugyldige,
+      variabel = variabler_ugyldige,
+      feilverdi = verdier_ugyldige
     ),
     radnr
   )
@@ -75,27 +76,18 @@ finn_ugyldige_verdier = function(d, verditabell, godta_manglende) {
 # feilverdiene på en god måte
 
 oppsummer_ugyldige_verdier = function(d_ugyldige) {
-  if (length(d_ugyldige$feilverdi) > 0) {
-    oppsummert_ugyldige = character()
-    for (var_ugyldig in unique(d_ugyldige$variabel)) {
-      indeks_var_ugyldig = which(d_ugyldige$variabel %in% var_ugyldig)
-      oppsummert_ugyldige = append(
-        oppsummert_ugyldige,
-        paste0(
-          var_ugyldig, ": ",
-          paste0(d_ugyldige$feilverdi[indeks_var_ugyldig],
-            collapse = ", "
-          )
-        )
-      )
-    }
-    antall_ugyldige_verdier = length(d_ugyldige$feilverdi)
-    oppsummert_ugyldige = paste0(oppsummert_ugyldige, collapse = "\n")
-    paste0("Fant ", antall_ugyldige_verdier, " ugyldige verdier:\n", oppsummert_ugyldige)
+  if (nrow(d_ugyldige) > 0) {
+    oppsummert = d_ugyldige %>%
+      group_by(variabel) %>%
+      summarise(feil_verdier = paste0(feilverdi, collapse = ", ")) %>%
+      summarise(feil_variabler_verdier = paste0(variabel, ": ", feil_verdier, collapse = "\n")) %>%
+      summarise(feiltekst = paste0("Fant ", nrow(d_ugyldige), " ugyldige verdier:\n", feil_variabler_verdier))
+    pull(oppsummert, feiltekst)
   } else {
     "Alle verdiene er gyldige"
   }
 }
+
 
 ################################# Midlertidig kode ################################
 
