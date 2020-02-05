@@ -119,6 +119,28 @@ les_oqr_csv_base = function(dd_sti, csv_bokstav, varnavn_kilde, nye_varnavn, var
   d
 }
 
+#' Les inn csv-fil
+#'
+#' Funksjon som leser inn en csv-fil fra en filplassering med angitt ariabeltype fra en spesifikasjons-tibble.
+#' Faktorer, tekstvariabler, dato med klokkeslett og
+#'
+#' @param dd_sti Filplassering for datadump som skal leses inn
+#' @param spesifikasjon Tibble med fire kolonner. Inneholder varnavn_kilde, nye_variabelnavn, vartype og kolonnetype.
+les_csv_base = function(dd_sti, spesifikasjon) {
+  kol_type = str_c(spesifikasjon$kolonnetype, collapse = "")
+
+  d = readr::read_delim(dd_sti,
+    delim = ";",
+    locale = readr::locale(
+      decimal_mark = ",", date_format = "%d.%m.%Y",
+      time_format = "%H:%M", tz = "Europe/Oslo"
+    ),
+    col_types = kol_type
+  )
+  readr::stop_for_problems(d)
+  d
+}
+
 # Hjelpefunksjon for å lese inn en datadump fra csv-fil for et OQR-register.
 les_oqr_csv_v2 = function(dd_sti, csv_bokstav, varnavn_kilde, nye_varnavn, vartype) {
   varnavn = les_varnavn(dd_sti)
