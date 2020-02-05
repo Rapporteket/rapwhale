@@ -53,16 +53,32 @@ test_that("Funksjonen gir forventet resultat ved innlesning fra tibble", {
   expect_error(sammenlign_variabelnavn(dd_ok, varnavn_feil_navn), "Variabelnavn i spesifikasjon stemmer ikke overens med variabelnavn i datadump")
 })
 
-# Feilmelding om en vektor med variabelnavn gies som 'data'
 test_that("Funksjonen gir feilmelding om argumentet 'data' er en character-vektor", {
   expect_error(sammenlign_variabelnavn(varnavn_feil_rekkefolge, varnavn_ok))
 })
 
-# Konvertering av variabeltyper -------------------------------------------
-context("konverter_boolske")
 
-oqr_specs_dd_ok_hel = tibble::tribble(
-  ~navn_kilde, ~nye_varnavn, ~vartype, ~csv_bokstav,
+# les_csv_base ------------------------------------------------------------
+context("les_csv_base")
+
+dd_ok_hel = tibble::tibble(
+  alfa = c("Gruppe_1", "Gruppe_2", "Gruppe_2", "Gruppe_1"),
+  beta = c("dette", "er", "en", "tekst"),
+  gamma = c(0.5, 0.12, 0.73, 1.241),
+  delta = c(1L, 5L, 3L, 2L),
+  epsilon = c("1", "0", NA_character_, "1"),
+  zeta = c("01.01.2020 17:00", "05.10.2010 15:00", "03.02.2015 13:30", "05.05.2005 17:55"),
+  eta = lubridate::dmy("12.05.2014", "13.09.1900", "15.01.2015", "15.10.2020"),
+  theta = hms::as_hms(c("17:00:00", "14:30:00", "12:00:00", "15:05:00"))
+)
+
+dd_ok_hel_na = dd_ok_hel %>%
+  tibble::add_row(.before = 3)
+dd_ok_hel_full = dd_ok_hel %>%
+  mutate(epsilon = c("1", "0", "1", "1"))
+
+specs_dd_ok_hel = tibble::tribble(
+  ~navn_kilde, ~nye_varnavn, ~vartype, ~kolonnetype,
   "alfa", "Abso", "kategorisk", "c",
   "beta", "Beto", "tekst", "c",
   "gamma", "Gammo", "numerisk", "d",
@@ -72,6 +88,37 @@ oqr_specs_dd_ok_hel = tibble::tribble(
   "eta", "Estland", "dato", "D",
   "theta", NA_character_, "kl", "t"
 )
+
+# Gir forventet format for ulike variabeltyper.
+test_that("Funksjonen leser inn datasett og gir ut forventet format", {
+  expect_equal(les_csv_base(dd_sti = "dd_ok_hel.csv", spesifikasjon = specs_dd_ok_hel), dd_ok_hel)
+})
+
+test_that("Funksjonen håndterer NA for alle variabeltyper", {
+  expect_equal(les_csv_base(dd_sti = "dd_ok_hel_na.csv", spesifikasjon = specs_dd_ok_hel), dd_ok_hel_na)
+})
+
+test_that("Funksjonen gir feilmelding ved ukjent dato-format", {
+  expect_error(les_csv_base(dd_sti = "dd_feil_dato_format.csv", spesifikasjon = specs_dd_ok_hel),
+    "Dato er ikke på standard format (DD.MM.YYYY)",
+    fixed = TRUE
+  )
+})
+
+test_that("Funksjonen gir feilmelding om desimaltegn er '.', ikke ','", {
+  expect_error(les_csv_base(dd_sti = "dd_feil_desimaltegn.csv", spesifikasjon = specs_dd_ok_hel),
+    "Feilmelding, desimaltegn er ikke på standard format (,)",
+    fixed = TRUE
+  )
+})
+
+test_that("Funksjonen leser inn faktorer som tekst", {
+  expect_equal(les_csv_base(dd_sti = "dd_ok_hel.csv", spesifikasjon = specs_dd_ok_hel)$alfa, dd_ok_hel$alfa) # tekst-faktor
+  expect_equal(les_csv_base(dd_sti = "dd_ok_hel_full.csv", spesifikasjon = specs_dd_ok_hel)$epsilon, dd_ok_hel_full$epsilon) # kun numerisk
+})
+
+# Konvertering av variabeltyper -------------------------------------------
+context("konverter_boolske")
 
 d_base = les_oqr_csv_base(
   dd_sti = "dd_ok_hel.csv",
