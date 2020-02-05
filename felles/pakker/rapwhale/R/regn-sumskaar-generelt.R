@@ -30,7 +30,18 @@ endre_variabelnavn = function(d, variabelnavn) {
 
 }
 
-# Funksjon som sjekker at variabelnavnene i d er identiske til variabelnavnene i skaaringstabell
+#' Funksjon for å sjekke variabelnavn
+#'
+#' Skal ta inn et datasett og en vektor som inneholder variabelnavnene i skåringstabellen.
+#' Funksjonen gir feilmelding hvis datasettet inneholder variabelnavn som ikke finnes i skåringstabellen.
+#'
+#' @param d Datasett med en kolonne for hvert spørsmål.
+#' @param variabelnavn Vektor som inneholder variabelnavnene i skåringstabellen.
+#'
+#' @return Skal gi feilmelding hvis \code{d} inneholder variabelnavn som ikke
+#'     finnes i skåringstabellen. Sumskår blir da ikke regnet ut. Funksjonen
+#'     oppgir også hvilke variabelnavn som er ugyldige.
+
 sjekk_variabelnavn = function(d, variabelnavn) {
   var_mangler = unique(variabelnavn[!(variabelnavn %in% names(d))])
   var_mangler_tekst = paste0(var_mangler, collapse = ", ")
