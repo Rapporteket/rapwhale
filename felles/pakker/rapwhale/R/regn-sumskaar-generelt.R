@@ -1,6 +1,16 @@
-# Generelle funksjoner for utregning av sumskårer
+#' Generelle funksjoner for utregning av sumskårer
+#'
+#' Overordnet funksjon som skal ta inn et datasett, en vektor med nye variabelnavn
+#' (dersom det er ønskelig) og en skåringstabell.
+#'
+#' @param d Datasett med en kolonne for hvert spørsmål
+#' @param variabelnavn Vektor med gamle og nye variabelnavn
+#' @param skaaringstabell Skåringstabell med tre kolonner (variabel, verdi, koeffisient)
+#'
+#' @return Funksjonen skal returnere datasettet som blir tatt inn utvidet med en
+#'     eller flere kolonner med utregnet sumskår(er). fixme: skal bare sumskår(er) returneres?
+#'     skal skaaringstabell være et argument i denne funksjonen?
 
-# Overordnet funksjon
 skaar = function(d, variabelnavn, skaaringstabell) {
   d = endre_variabelnavn(d, variabelnavn)
   sjekk_variabelnavn(d, variabelnavn = skaaringstabell$variabel)
