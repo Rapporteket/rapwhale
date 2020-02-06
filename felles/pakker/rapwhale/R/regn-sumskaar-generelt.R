@@ -122,8 +122,16 @@ finn_ugyldige_verdier = function(d, verditabell, godta_manglende) {
   oversikt_ugyldige
 }
 
-# Funksjon som skal ta inn datarammen som finn_ugyldige_verdier() returnerer og presentere
-# feilverdiene på en god måte
+#' Funksjon for å presentere ugyldige verdier på en god måte
+#'
+#' Gir ut en oversiktlig fremstilling av ugyldige verdier i et datasett.
+#'
+#' @param d_ugyldige Dataramme/tibble som inneholder radnummer, variabelnavn og feilverdi for de
+#'     ugyldige verdiene. \code{d_ugyldige} blir returnert av funksjonen \code{finn_ugyldige_verdier()}.
+#'
+#' @return Tekststreng som inneholder variabelnavn og tilhørende feilverdier (sortert alfabetisk
+#'     etter variabelnavn). Hvis det ikke finnes ugyldige verdier returneres tekststrengen
+#'     "Alle verdiene er gyldige".
 
 oppsummer_ugyldige_verdier = function(d_ugyldige) {
   if (nrow(d_ugyldige) > 0) {
