@@ -82,13 +82,13 @@ ugyldighetstabell_1_feil = tibble(
 )
 
 # Eksempeldata med 3 feil, der 2 av de gjelder samme variabel
-d_ugyldig_3_feil = d_gyldig_eks1
-d_ugyldig_3_feil$gen[1] = 9
-d_ugyldig_3_feil$gen[3] = 6
-d_ugyldig_3_feil$psyk2[2] = NA
+d_ugyldig_2_feil_samme_variabel = d_gyldig_eks1
+d_ugyldig_2_feil_samme_variabel$gen[1] = 9
+d_ugyldig_2_feil_samme_variabel$gen[3] = 6
+d_ugyldig_2_feil_samme_variabel$psyk2[2] = NA
 
-# Ugyldighetstabell for d_ugyldig_3_feil
-ugyldighetstabell_3_feil = tibble(
+# Ugyldighetstabell for d_ugyldig_2_feil_samme_variabel
+ugyldighetstabell_2_feil_samme_variabel = tibble(
   radnr = c(1L, 2L, 3L),
   variabel = c("gen", "psyk2", "gen"),
   feilverdi = c(9, NA, 6)
@@ -131,14 +131,14 @@ ugyldighetstabell_na_feil = tibble(
   feilverdi = as.numeric(NA)
 )
 
-test_that("finn_ugyldige_verdier() gir ut korrekt feiloversikt hvis det finnes ugyldige verdier i inndata", {
+test_that("finn_ugyldige_verdier() gir ut korrekt feiloversikt hvis det finnes ugyldige verdier datasettet", {
   expect_identical(
     finn_ugyldige_verdier(d_ugyldig_1_feil, skaaringstabell_eks),
     ugyldighetstabell_1_feil
   )
   expect_identical(
-    finn_ugyldige_verdier(d_ugyldig_3_feil, skaaringstabell_eks),
-    ugyldighetstabell_3_feil
+    finn_ugyldige_verdier(d_ugyldig_2_feil_samme_variabel, skaaringstabell_eks),
+    ugyldighetstabell_2_feil_samme_variabel
   )
   expect_identical(
     finn_ugyldige_verdier(d_ugyldig_2_feil_samme_rad, skaaringstabell_eks),
@@ -157,31 +157,17 @@ test_that("finn_ugyldige_verdier() gir ut korrekt feiloversikt hvis det finnes u
 
 context("oppsummer_ugyldige_verdier")
 
-# Test at oppsummer_ugyldige_verdier() presenterer feilverdiene på korrekt måte (2 av de gjelder samme variabel)
 test_that("oppsummer_ugyldige_verdier() presenterer korrekte feilverdier alfabetisk etter variabelnavn", {
   expect_identical(
-    oppsummer_ugyldige_verdier(ugyldighetstabell_3_feil),
+    oppsummer_ugyldige_verdier(ugyldighetstabell_2_feil_samme_variabel),
     "Fant 3 ugyldige verdier:\ngen: 9, 6\npsyk2: NA"
   )
-})
-
-# Test at oppsummer_ugyldige_verdier() presenterer feilverdiene på korrekt måte (2 av de er i samme rad)
-test_that("oppsummer_ugyldige_verdier() presenterer korrekte feilverdier alfabetisk etter variabelnavn", {
-  expect_identical(
-    oppsummer_ugyldige_verdier(ugyldighetstabell_2_feil_samme_rad),
-    "Fant 3 ugyldige verdier:\nfys1: 10\ngen: 9\npsyk2: NA"
-  )
-})
-
-# Test at oppsummer_ugyldige_verdier() presenterer feilverdiene på korrekt måte (2 like feil i samme variabel)
-test_that("oppsummer_ugyldige_verdier() presenterer korrekte feilverdier alfabetisk etter variabelnavn", {
   expect_identical(
     oppsummer_ugyldige_verdier(ugyldighetstabell_2_like_feil_samme_variabel),
     "Fant 3 ugyldige verdier:\ngen: 4, 4\npsyk2: NA"
   )
 })
 
-# Test at oppsummer_ugyldige_verdier() gir ut korrekt melding hvis det ikke finnes feilverdier
 test_that("oppsummer_ugyldige_verdier() gir ut korrekt melding hvis det ikke finnes feilverdier", {
   expect_identical(
     oppsummer_ugyldige_verdier(ugyldighetstabell_tom),
