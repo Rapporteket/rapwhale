@@ -50,6 +50,26 @@ sjekk_variabelnavn = function(d, variabelnavn) {
   }
 }
 
+#' Funksjon for å sjekke variabelverdier
+#'
+#' Skal ta inn et datasett, en verditabell og et argument som bestemmer om NA-verdier skal
+#' regnes som gyldige. Funksjonen gir feilmelding hvis verditabellen ikke er satt opp
+#' riktig og/eller hvis datasettet inneholder verdier som ikke finnes i verditabellen.
+#'
+#' @param d Dataramme/tibble med nøyaktig samme variabelnavn som finnes i 'variabel'-kolonnen i \code{verditabell}.
+#' @param verditabell Dataramme/tibble med to kolonner ('variabel' og 'verdi'), som sier hvilke verdier
+#'     som er gyldige for hvilke variabler.
+#' @param godta_manglende Om NA-verdier skal regnes som gyldige (selv om de ikke er nevnt i \code{verditabell}).
+#'
+#' @return Skal gi feilmelding hvis \code{verditabell} ikke er tibble/data.frame
+#'     og/eller mangler en av / begge kolonnene 'variabel' og 'verdi'. Hvis alle verdiene
+#'     i \code{d} er gyldige skal funksjonen gi beskjed om dette, og hvis det finnes
+#'     ugyldige verdier i \code{d} skal funksjonen gi beskjed om hvilke variabler og
+#'     verdier dette gjelder. Sumskår blir da ikke regnet ut.
+#'     fixme: sjekk_variabelverdier må utvides slik at den gir beskjed om at alle verdier
+#'     er gyldige dersom dette er tilfellet og at den tar hensyn til om manglende verdier
+#'     skal bli godtatt eller ikke.
+
 sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
   if (!(is.data.frame(verditabell) &&
     all(hasName(verditabell, c("variabel", "verdi"))))) {
