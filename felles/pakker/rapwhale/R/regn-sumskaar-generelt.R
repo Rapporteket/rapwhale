@@ -146,38 +146,8 @@ oppsummer_ugyldige_verdier = function(d_ugyldige) {
   }
 }
 
-
 ################################# Midlertidig kode ################################
 
-# midl_funk = function(d, koblingstabell, godta_manglende) {
-#   if (!(is.data.frame(koblingstabell) && all(hasName(koblingstabell, c("variabel", "verdi"))))) {
-#     stop("Inndata må være tibble/data.frame og inneholde kolonnene 'variabel' og 'verdi'")
-#   }
-#
-#   # variabelnavn_akt = names(d)[names(d)%in% koblingstabell$variabel]
-#   alle_ugyldige = vector()
-#   for (var_d in names(d)) {
-#     verdier_d = d[[var_d]]
-#     verdier_koblingstabell = koblingstabell %>%
-#       filter(variabel == !!var_d) %>%
-#       pull(verdi)
-#
 #     if (godta_manglende) {
 #       verdier_koblingstabell = append(verdier_koblingstabell, NA)
 #     }
-#     verdier_d_ugyldige = setdiff(verdier_d, verdier_koblingstabell)
-#     if (length(verdier_d_ugyldige) > 0) {
-#       alle_ugyldige = append(alle_ugyldige, paste0(var_d, ": ", paste0(verdier_d_ugyldige, collapse = ", ")))
-#     }
-#   }
-#   alle_ugyldige = unique(alle_ugyldige)
-#   if(length(alle_ugyldige) > 0) {
-#     stop("Ugyldige verdier: ", paste0(alle_ugyldige, collapse = ", "))
-#   }
-# }
-#
-#
-#
-# regn_sumskaar = function(d, skaaringstabell) {
-#
-# }
