@@ -2,12 +2,12 @@
 #'
 #' Skal ta inn et datasett, en vektor med variabelnavn og en skåringstabell.
 #'
-#' @param d Datasett med en kolonne for hvert spørsmål.
+#' @param d Dataramme/tibble med en kolonne for hvert spørsmål.
 #' @param variabelnavn Vektor med gamle og nye variabelnavn. fixme: stemmer dette?
 #' @param skaaringstabell Skåringstabell med tre kolonner (variabel, verdi, koeffisient).
 #'
-#' @return Datasettet som blir tatt inn utvidet med en
-#'     eller flere kolonner med utregnet sumskår(er). fixme: skal bare sumskår(er) returneres?
+#' @return \code{d} utvidet med en eller flere kolonner som inneholder sumskår(er).
+#'     fixme: skal bare sumskår(er) returneres?
 #'     skal skaaringstabell være et argument i denne funksjonen?
 
 skaar = function(d, variabelnavn, skaaringstabell) {
@@ -21,10 +21,10 @@ skaar = function(d, variabelnavn, skaaringstabell) {
 #'
 #' Skal ta inn et datasett og en vektor med variabelnavn.
 #'
-#' @param d Datasett med en kolonne for hvert spørsmål.
+#' @param d Dataramme/tibble med en kolonne for hvert spørsmål.
 #' @param variabelnavn Vektor med gamle og nye variabelnavn. fixme: stemmer dette?
 #'
-#' @return Datasettet som blir tatt inn, med riktige variabelnavn. fixme: stemmer dette?
+#' @return \code{d} med nøyaktig samme variabelnavn som i skåringstabellen. fixme: stemmer dette?
 
 endre_variabelnavn = function(d, variabelnavn) {
 
@@ -35,7 +35,7 @@ endre_variabelnavn = function(d, variabelnavn) {
 #' Skal ta inn et datasett og en vektor som inneholder variabelnavnene i skåringstabellen.
 #' Funksjonen gir feilmelding hvis datasettet inneholder variabelnavn som ikke finnes i skåringstabellen.
 #'
-#' @param d Datasett med en kolonne for hvert spørsmål.
+#' @param d Dataramme/tibble med en kolonne for hvert spørsmål.
 #' @param variabelnavn Vektor som inneholder variabelnavnene i skåringstabellen.
 #'
 #' @return Skal gi feilmelding hvis \code{d} inneholder variabelnavn som ikke
