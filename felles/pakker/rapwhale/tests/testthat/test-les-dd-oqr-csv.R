@@ -99,17 +99,13 @@ test_that("Funksjonen håndterer NA for alle variabeltyper", {
 })
 
 test_that("Funksjonen gir feilmelding ved ukjent dato-format", {
-  expect_error(les_csv_base(dd_sti = "dd_feil_dato_format.csv", spesifikasjon = specs_dd_ok_hel),
-    "Dato er ikke på standard format (DD.MM.YYYY)",
-    fixed = TRUE
-  )
+  # expect_warning(les_csv_base(dd_sti = "dd_feil_dato_format.csv", spesifikasjon = specs_dd_ok_hel)) &&
+  expect_error(les_csv_base(dd_sti = "dd_feil_dato_format.csv", spesifikasjon = specs_dd_ok_hel))
 })
 
 test_that("Funksjonen gir feilmelding om desimaltegn er '.', ikke ','", {
-  expect_error(les_csv_base(dd_sti = "dd_feil_desimaltegn.csv", spesifikasjon = specs_dd_ok_hel),
-    "Feilmelding, desimaltegn er ikke på standard format (,)",
-    fixed = TRUE
-  )
+  # expect_warning(les_csv_base(dd_sti = "dd_feil_desimaltegn.csv", spesifikasjon = specs_dd_ok_hel)) &
+  expect_error(les_csv_base(dd_sti = "dd_feil_desimaltegn.csv", spesifikasjon = specs_dd_ok_hel))
 })
 
 test_that("Funksjonen leser inn faktorer som tekst", {
@@ -120,19 +116,16 @@ test_that("Funksjonen leser inn faktorer som tekst", {
 # Konvertering av variabeltyper -------------------------------------------
 context("konverter_boolske")
 
-d_base = les_oqr_csv_base(
+d_base = les_csv_base(
   dd_sti = "dd_ok_hel.csv",
-  varnavn_kilde = oqr_specs_dd_ok_hel$navn_kilde,
-  nye_varnavn = oqr_specs_dd_ok_hel$nye_varnavn,
-  vartype = oqr_specs_dd_ok_hel$vartype,
-  csv_bokstav = oqr_specs_dd_ok_hel$csv_bokstav
+  spesifikasjon = specs_dd_ok_hel
 )
 
 d_base_m_feil_logisk = d_base
-d_base_m_feil_logisk$Eple[2] = "2"
+d_base_m_feil_logisk$epsilon[2] = "2"
 
 test_that("Funksjonen gir feilmelding hvis en boolsk variabel inneholder andre verdier enn (0,1,NA)", {
-  expect_error(konverter_boolske(d = d_base_m_feil_logisk, vartype = oqr_specs_dd_ok_hel$vartype),
+  expect_error(konverter_boolske(d = d_base_m_feil_logisk, vartype = specs_dd_ok_hel$vartype),
     "Det finnes ugyldige verdier for en boolsk variabel. (Må være 0,1 eller NA)",
     fixed = TRUE
   )
@@ -140,14 +133,14 @@ test_that("Funksjonen gir feilmelding hvis en boolsk variabel inneholder andre v
 
 test_that("Funksjonen klarer å konvertere flere boolske", {
   d_base_m_flere_logisk = d_base
-  ekstra_logisk = d_base$Eple
+  ekstra_logisk = d_base$epsilon
   d_base_m_flere_logisk = bind_cols(d_base_m_flere_logisk, ekstra_logisk = ekstra_logisk)
 
   forventet_m_ekstra_logisk = d_base_m_flere_logisk
-  forventet_m_ekstra_logisk$Eple = as.logical(d_base_m_flere_logisk$Eple)
-  forventet_m_ekstra_logisk$Eple = c(TRUE, FALSE, NA, TRUE)
+  forventet_m_ekstra_logisk$epsilon = as.logical(d_base_m_flere_logisk$epsilon)
+  forventet_m_ekstra_logisk$epsilon = c(TRUE, FALSE, NA, TRUE)
   forventet_m_ekstra_logisk$ekstra_logisk = as.logical(d_base_m_flere_logisk$ekstra_logisk)
   forventet_m_ekstra_logisk$ekstra_logisk = c(TRUE, FALSE, NA, TRUE)
 
-  expect_equal(konverter_boolske(d = d_base_m_flere_logisk, vartype = c(oqr_specs_dd_ok_hel$vartype, "boolsk")), forventet_m_ekstra_logisk)
+  expect_equal(konverter_boolske(d = d_base_m_flere_logisk, vartype = c(specs_dd_ok_hel$vartype, "boolsk")), forventet_m_ekstra_logisk)
 })
