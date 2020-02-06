@@ -51,7 +51,7 @@ test_that("sjekk_variabelnavn() gjev feilmelding viss variablar manglar", {
 
 context("finn_ugyldige_verdier")
 
-# Eksempel på inndata med bare gyldige tallverdier
+# Eksempeldata med bare gyldige tallverdier
 d_gyldig_eks1 = tibble::tribble(
   ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2,
   1, 1, 1, 10, 10,
@@ -59,54 +59,49 @@ d_gyldig_eks1 = tibble::tribble(
   3, 1, 2, 20, 10
 )
 
-# Lager en tom dataramme og spesifiserer variabeltypene
-dataramme_tom = tibble(
+# Tom dataramme med spesifiserte variabeltyper
+ugyldighetstabell_tom = tibble(
   radnr = integer(),
   variabel = character(),
   feilverdi = numeric()
 )
 
-# Test at finn_ugyldige_verdier() gir ut en dataramme (med kun kolonnenavn) hvis inndata er gyldig
 test_that("finn_ugyldige_verdier() gir ut en dataramme (med kun kolonnenavn) hvis inndata er gyldig", {
-  expect_identical(finn_ugyldige_verdier(d_gyldig_eks1, skaaringstabell_eks), dataramme_tom)
+  expect_identical(finn_ugyldige_verdier(d_gyldig_eks1, skaaringstabell_eks), ugyldighetstabell_tom)
 })
 
 # Eksempeldata med 1 feil
 d_ugyldig_1_feil = d_gyldig_eks1
 d_ugyldig_1_feil$fys1[1] = 13
 
-# Gyldighetstabell for d_ugyldig_1_feil
-dataramme_1_feil = tibble(
+# Ugyldighetstabell for d_ugyldig_1_feil
+ugyldighetstabell_1_feil = tibble(
   radnr = 1L,
   variabel = "fys1",
   feilverdi = 13
 )
 
-# Eksempel på inndata med 3 feil, der 2 av de gjelder samme variabel
+# Eksempeldata med 3 feil, der 2 av de gjelder samme variabel
 d_ugyldig_3_feil = d_gyldig_eks1
 d_ugyldig_3_feil$gen[1] = 9
 d_ugyldig_3_feil$gen[3] = 6
 d_ugyldig_3_feil$psyk2[2] = NA
 
-# Lager en dataramme med 3 feil (2 av de gjelder samme variabel).
-# Det er slik datarammen som finn_ugyldige_verdier() returnerer
-# skal se ut dersom d_ugyldig_3_feil blir tatt inn som første argument
-dataramme_3_feil = tibble(
+# Ugyldighetstabell for d_ugyldig_3_feil
+ugyldighetstabell_3_feil = tibble(
   radnr = c(1L, 2L, 3L),
   variabel = c("gen", "psyk2", "gen"),
   feilverdi = c(9, NA, 6)
 )
 
-# Eksempel på inndata med 3 feil (2 av de er i samme rad)
+# Eksempeldata med 3 feil, der 2 av de er i samme rad
 d_ugyldig_2_feil_samme_rad = d_gyldig_eks1
 d_ugyldig_2_feil_samme_rad$gen[1] = 9
 d_ugyldig_2_feil_samme_rad$fys1[2] = 10
 d_ugyldig_2_feil_samme_rad$psyk2[1] = NA
 
-# Lager en dataramme med 3 feil (2 av de er i samme rad).
-# Det er slik datarammen som finn_ugyldige_verdier() returnerer skal se
-# ut dersom d_ugyldig_2_feil_samme_rad blir tatt inn som første argument
-dataramme_2_feil_samme_rad = tibble(
+# Ugyldighetstabell for d_ugyldig_2_feil_samme_rad
+ugyldighetstabell_2_feil_samme_rad = tibble(
   radnr = c(1L, 1L, 2L),
   variabel = c("gen", "psyk2", "fys1"),
   feilverdi = c(9, NA, 10)
@@ -144,15 +139,15 @@ dataramme_na_feil = tibble(
 test_that("finn_ugyldige_verdier() gir ut korrekt feiloversikt hvis det finnes ugyldige verdier i inndata", {
   expect_identical(
     finn_ugyldige_verdier(d_ugyldig_1_feil, skaaringstabell_eks),
-    dataramme_1_feil
+    ugyldighetstabell_1_feil
   )
   expect_identical(
     finn_ugyldige_verdier(d_ugyldig_3_feil, skaaringstabell_eks),
-    dataramme_3_feil
+    ugyldighetstabell_3_feil
   )
   expect_identical(
     finn_ugyldige_verdier(d_ugyldig_2_feil_samme_rad, skaaringstabell_eks),
-    dataramme_2_feil_samme_rad
+    ugyldighetstabell_2_feil_samme_rad
   )
   expect_identical(
     finn_ugyldige_verdier(d_ugyldig_2_like_feil_samme_variabel, skaaringstabell_eks),
@@ -170,7 +165,7 @@ context("oppsummer_ugyldige_verdier")
 # Test at oppsummer_ugyldige_verdier() presenterer feilverdiene på korrekt måte (2 av de gjelder samme variabel)
 test_that("oppsummer_ugyldige_verdier() presenterer korrekte feilverdier alfabetisk etter variabelnavn", {
   expect_identical(
-    oppsummer_ugyldige_verdier(dataramme_3_feil),
+    oppsummer_ugyldige_verdier(ugyldighetstabell_3_feil),
     "Fant 3 ugyldige verdier:\ngen: 9, 6\npsyk2: NA"
   )
 })
@@ -178,7 +173,7 @@ test_that("oppsummer_ugyldige_verdier() presenterer korrekte feilverdier alfabet
 # Test at oppsummer_ugyldige_verdier() presenterer feilverdiene på korrekt måte (2 av de er i samme rad)
 test_that("oppsummer_ugyldige_verdier() presenterer korrekte feilverdier alfabetisk etter variabelnavn", {
   expect_identical(
-    oppsummer_ugyldige_verdier(dataramme_2_feil_samme_rad),
+    oppsummer_ugyldige_verdier(ugyldighetstabell_2_feil_samme_rad),
     "Fant 3 ugyldige verdier:\nfys1: 10\ngen: 9\npsyk2: NA"
   )
 })
@@ -194,7 +189,7 @@ test_that("oppsummer_ugyldige_verdier() presenterer korrekte feilverdier alfabet
 # Test at oppsummer_ugyldige_verdier() gir ut korrekt melding hvis det ikke finnes feilverdier
 test_that("oppsummer_ugyldige_verdier() gir ut korrekt melding hvis det ikke finnes feilverdier", {
   expect_identical(
-    oppsummer_ugyldige_verdier(dataramme_tom),
+    oppsummer_ugyldige_verdier(ugyldighetstabell_tom),
     "Alle verdiene er gyldige"
   )
 })
