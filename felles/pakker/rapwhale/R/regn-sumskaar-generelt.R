@@ -82,15 +82,17 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
   }
 }
 
+#' Funksjon for å finne ugyldige verdier
+#'
 #' Gir ut oversikt over ugyldige verdier i et datasett.
 #'
-#' @param d Dataramme/tibble med nøyaktig samme variabelnavn som finnes i variabel-kolonnen i verditabell.
-#' @param verditabell Dataramme/tibble med to kolonner (variabel og verdi), som sier hvilke verdier som er gyldige
+#' @param d Dataramme/tibble med nøyaktig samme variabelnavn som finnes i 'variabel'-kolonnen i \code{verditabell}.
+#' @param verditabell Dataramme/tibble med to kolonner ('variabel' og 'verdi'), som sier hvilke verdier som er gyldige
 #'     for hvilke variabler.
-#' @param godta_manglende Om NA-verdier skal regnes som gyldige (selv om de ikke er nevnt i verditabell).
+#' @param godta_manglende Om NA-verdier skal regnes som gyldige (selv om de ikke er nevnt i \code{verditabell}).
 #'
-#' @return Dataramme med radnummer, variabelnavn og feilverdi for ugyldige verdier. Sortert etter radnummer
-#'     og så rekkefølge i d.
+#' @return Dataramme/tibble som inneholder radnummer, variabelnavn og feilverdi for de ugyldige verdiene.
+#'     Sortert etter radnummer og så rekkefølge i \code{d}.
 
 finn_ugyldige_verdier = function(d, verditabell, godta_manglende) {
   radnr_ugyldige = integer()
