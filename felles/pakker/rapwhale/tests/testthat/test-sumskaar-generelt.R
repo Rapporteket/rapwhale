@@ -83,9 +83,8 @@ skaaringstabell_ugyldig_eks2 = table(skaaringstabell_eks)
 # Eksempel på skåringstabell med både ugyldige kolonnenavn og ugyldig format
 skaaringstabell_ugyldig_eks3 = table(skaaringstabell_ugyldig_eks1)
 
-# Test at funksjonen gir feilmelding dersom de to aktuelle variablene ikke er i koblingstabellen og den ikke er en tibble
-test_that("sjekk_variabelverdier() gir feilmelding dersom de to aktuelle variablene
-          ('variabel' og 'verdi') ikke er i koblingstabellen og den ikke er en tibble/data.frame", {
+test_that("sjekk_variabelverdier() gir feilmelding hvis ikke begge de to aktuelle variablene
+          ('variabel' og 'verdi') er i koblingstabellen og/eller den ikke er en tibble/data.frame", {
   expect_error(
     sjekk_variabelverdier(d_gyldig_eks1, skaaringstabell_ugyldig_eks1),
     "Inndata må være tibble/data.frame og inneholde kolonnene 'variabel' og 'verdi'"
