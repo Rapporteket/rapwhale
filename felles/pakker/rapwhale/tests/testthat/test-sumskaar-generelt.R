@@ -107,35 +107,30 @@ ugyldighetstabell_2_feil_samme_rad = tibble(
   feilverdi = c(9, NA, 10)
 )
 
-# Eksempel på inndata med 3 feil (2 like feil i samme variabel)
+# Eksempeldata med 3 feil, der 2 av de er like og gjelder samme variabel
 d_ugyldig_2_like_feil_samme_variabel = d_gyldig_eks1
 d_ugyldig_2_like_feil_samme_variabel$gen[1] = 4
 d_ugyldig_2_like_feil_samme_variabel$gen[3] = 4
 d_ugyldig_2_like_feil_samme_variabel$psyk2[2] = NA
 
-# Lager en dataramme med 3 feil (2 like feil i samme variabel).
-# Det er slik datarammen som finn_ugyldige_verdier() returnerer skal se ut
-# dersom d_ugyldig_2_like_feil_samme_variabel blir tatt inn som første argument
-dataramme_2_like_feil_samme_variabel = tibble(
+# Ugyldighetstabell for d_ugyldig_2_like_feil_samme_variabel
+ugyldighetstabell_2_like_feil_samme_variabel = tibble(
   radnr = c(1L, 2L, 3L),
   variabel = c("gen", "psyk2", "gen"),
   feilverdi = c(4, NA, 4)
 )
 
-# Eksempel på inndata med bare 1 ugyldig NA-verdi
+# Eksempeldata med bare 1 ugyldig NA-verdi
 d_ugyldig_na_feil = d_gyldig_eks1
 d_ugyldig_na_feil$fys1[1] = NA
 
-# Lager en dataramme med bare 1 ugyldig NA-verdi.
-# Det er slik datarammen som finn_ugyldige_verdier() returnerer skal
-# se ut dersom d_ugyldig_na_feil blir tatt inn som første argument
-dataramme_na_feil = tibble(
+# Ugyldighetstabell for d_ugyldig_na_feil
+ugyldighetstabell_na_feil = tibble(
   radnr = 1L,
   variabel = "fys1",
   feilverdi = as.numeric(NA)
 )
 
-# Test at finn_ugyldige_verdier() gir ut korrekt feiloversikt hvis det finnes ugyldige verdier i inndata
 test_that("finn_ugyldige_verdier() gir ut korrekt feiloversikt hvis det finnes ugyldige verdier i inndata", {
   expect_identical(
     finn_ugyldige_verdier(d_ugyldig_1_feil, skaaringstabell_eks),
@@ -151,11 +146,11 @@ test_that("finn_ugyldige_verdier() gir ut korrekt feiloversikt hvis det finnes u
   )
   expect_identical(
     finn_ugyldige_verdier(d_ugyldig_2_like_feil_samme_variabel, skaaringstabell_eks),
-    dataramme_2_like_feil_samme_variabel
+    ugyldighetstabell_2_like_feil_samme_variabel
   )
   expect_identical(
     finn_ugyldige_verdier(d_ugyldig_na_feil, skaaringstabell_eks),
-    dataramme_na_feil
+    ugyldighetstabell_na_feil
   )
 })
 
@@ -181,7 +176,7 @@ test_that("oppsummer_ugyldige_verdier() presenterer korrekte feilverdier alfabet
 # Test at oppsummer_ugyldige_verdier() presenterer feilverdiene på korrekt måte (2 like feil i samme variabel)
 test_that("oppsummer_ugyldige_verdier() presenterer korrekte feilverdier alfabetisk etter variabelnavn", {
   expect_identical(
-    oppsummer_ugyldige_verdier(dataramme_2_like_feil_samme_variabel),
+    oppsummer_ugyldige_verdier(ugyldighetstabell_2_like_feil_samme_variabel),
     "Fant 3 ugyldige verdier:\ngen: 4, 4\npsyk2: NA"
   )
 })
