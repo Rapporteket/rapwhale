@@ -61,6 +61,7 @@ test_that("Funksjonen gir feilmelding om argumentet 'data' er en character-vekto
 # les_csv_base ------------------------------------------------------------
 context("les_csv_base")
 
+# Forventet resultat av å lese inn dd_ok_hel
 dd_ok_hel = tibble::tibble(
   alfa = c("Gruppe_1", "Gruppe_2", "Gruppe_2", "Gruppe_1"),
   beta = c("dette", "er", "en", "tekst"),
@@ -77,6 +78,7 @@ dd_ok_hel_na = dd_ok_hel %>%
 dd_ok_hel_full = dd_ok_hel %>%
   mutate(epsilon = c("1", "0", "1", "1"))
 
+# Spesifikasjon
 specs_dd_ok_hel = tibble::tribble(
   ~navn_kilde, ~nye_varnavn, ~vartype, ~kolonnetype,
   "alfa", "Abso", "kategorisk", "c",
