@@ -20,29 +20,6 @@ les_varnavn = function(adresse, formatspek) {
   varnavn
 }
 
-#' Sammenlign variabelnavn
-#'
-#' Funksjon som sjekker at variabelnavn i en datadump tilsvarer de variabelnavn som er oppgitt i en spesifikasjon/kodebok.
-#' Tar inn fil-plassering til en data-fil eller en tibble/dataramme. Returnerer feilmelding hvis det er ulike navn i
-#' datasett og spesifikasjon. Returnerer en advarsel om variabelnavn er i ulik rekkefølge i datasett og spesifikasjon.
-#'
-#' @param data Enten en tekst-streng som inneholder sti til en data-fil, eller en tibble/dataramme.
-#' @param varnavn_kilde En vektor med navn slik det skal være i datasettet.
-sammenlign_variabelnavn = function(data, varnavn_kilde) {
-  if (is.character(data)) {
-    varnavn_i_dd = les_varnavn(data)
-  } else {
-    varnavn_i_dd = colnames(data)
-  }
-
-  if (sum(!is.na(match(varnavn_i_dd, varnavn_kilde))) != length(varnavn_i_dd)) {
-    stop(error = "Variabelnavn i spesifikasjon stemmer ikke overens med variabelnavn i datadump")
-  }
-  if (any(match(varnavn_i_dd, varnavn_kilde) != seq(1:length(varnavn_i_dd)))) {
-    warning("Variabelnavn har ulik rekkefølge i datadump og spesifikasjon")
-  }
-}
-
 # Håndtering av spesielle tilfeller, variabeltype = boolsk og dato_kl
 oqr_boolsk_til_boolsk = function(x) {
 
