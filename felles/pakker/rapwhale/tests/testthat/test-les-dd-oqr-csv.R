@@ -58,20 +58,26 @@ test_that("Funksjonen gir feilmelding om argumentet 'data' er en character-vekto
 })
 
 
-context("definer_kolonnetype")
+context("std_koltype_til_readr_koltype")
 
 vartype_vektor_ok = c("tekst", "tekst", "numerisk", "heltall", "boolsk", "kl", "dato", "dato_kl")
 vartype_vektor_feil = c("tekst", "tekst", "numerisk", "heltall", "status")
 vartype_vektor_flere_feil = c("tekst", "tekst", "numerisk", "farge", "status")
+vartype_vektor_na = c("tekst", "numerisk", "heltall", "boolsk", NA_character_)
+vartype_vektor_tom = c("")
+
 forventet_koltype = c("ccdiltdD")
 
 test_that("Funksjonen leser inn alle mulige variabeltyper og returnerer riktig bokstavkode", {
-  expect_identical(definer_variabeltype(vartype_vektor), forventet_koltype)
+  expect_identical(std_koltype_til_readr_koltype(vartype_vektor_ok), forventet_koltype)
+  expect_identical(std_koltype_til_readr_koltype(vartype_vektor_tom), "")
 })
 test_that("Funksjonen gir feilmelding hvis variabeltype ikke er tillatt", {
-  expect_error(definer_kolonnetype(vartype_vektor_feil), "'status' er ikke godkjent som variabeltype.")
-  expect_error(definer_kolonnetype(vartype_vektor_flere_feil), "'farge' og 'status' er ikke godkjent som variabeltype.")
+  expect_error(std_koltype_til_readr_koltype(vartype_vektor_feil), "Ukjent variabeltype: 'status'")
+  expect_error(std_koltype_til_readr_koltype(vartype_vektor_flere_feil), "Ukjent variabeltype: 'farge', 'status'")
+  expect_error(std_koltype_til_readr_koltype(vartype_vektor_na), "Variabeltype må defineres for alle variabler")
 })
+
 
 
 
