@@ -3,60 +3,32 @@ context("les_varnavn")
 
 test_that("Funksjonen leser inn en variabel selv om den ikke har navn", {
   forventet_uten_navn = c("alfa", "beta", "", "delta", "echo")
-  expect_identical(les_varnavn(dd_sti = "dd_kolonne_uten_navn.csv"), forventet_uten_navn)
+  expect_identical(les_varnavn(adresse = "dd_kolonne_uten_navn.csv"), forventet_uten_navn)
 })
 
 test_that("Funksjonen gir feilmelding om to variabler har samme navn i datadump", {
   forventet_med_samme_navn = "Variabler i datadump kan ikke ha samme navn"
 
-  expect_error(les_varnavn(dd_sti = "dd_to_kolonner_med_samme_navn.csv"), forventet_med_samme_navn)
+  expect_error(les_varnavn(adresse = "dd_to_kolonner_med_samme_navn.csv"), forventet_med_samme_navn)
 })
 
 test_that("Funksjonen leser inn variabler med mellomrom i navnet", {
   forventet_med_mellomrom = c("alfa", "beta", "beta bert", "delta", "echo")
 
-  expect_identical(les_varnavn(dd_sti = "dd_kolonnenavn_med_mellomrom.csv"), forventet_med_mellomrom)
+  expect_identical(les_varnavn(adresse = "dd_kolonnenavn_med_mellomrom.csv"), forventet_med_mellomrom)
 })
 
 test_that("Funksjonen leser inn variabler hvor navnet starter med et tall", {
   forventet_med_tall = c("alfa", "beta", "2beta", "delta", "echo")
 
-  expect_identical(les_varnavn(dd_sti = "dd_kolonnenavn_som_starter_med_tall.csv"), forventet_med_tall)
+  expect_identical(les_varnavn(adresse = "dd_kolonnenavn_som_starter_med_tall.csv"), forventet_med_tall)
 })
 
 test_that("Funksjonen leser inn variabler med bindestrek i navnet", {
   forventet_med_bindestrek = c("alfa", "beta", "beta-bert", "delta", "echo")
 
-  expect_identical(les_varnavn(dd_sti = "dd_kolonnenavn_med_bindestrek.csv"), forventet_med_bindestrek)
+  expect_identical(les_varnavn(adresse = "dd_kolonnenavn_med_bindestrek.csv"), forventet_med_bindestrek)
 })
-
-context("sammenlign_variabelnavn")
-
-varnavn_ok = c("alfa", "beta", "cappa", "delta", "echo")
-varnavn_feil_rekkefolge = c("alfa", "beta", "delta", "cappa", "echo")
-varnavn_feil_navn = c("alfa", "beta", "cappa", "delta", "eple")
-dd_ok = tibble::tribble(
-  ~alfa, ~beta, ~cappa, ~delta, ~echo,
-  1L, 1L, 1L, 1L, 1L,
-  0L, 0L, 1L, 0L, 0L
-)
-
-test_that("Funksjonen gir feilmelding hvis variabelnavn i datadump ikke stemmer overens med navn i spesifikasjon", {
-  expect_identical(sammenlign_variabelnavn("dd_ok.csv", varnavn_ok), NULL)
-  expect_warning(sammenlign_variabelnavn("dd_ok.csv", varnavn_feil_rekkefolge), "Variabelnavn har ulik rekkefølge i datadump og spesifikasjon")
-  expect_error(sammenlign_variabelnavn("dd_ok.csv", varnavn_feil_navn), "Variabelnavn i spesifikasjon stemmer ikke overens med variabelnavn i datadump")
-})
-
-test_that("Funksjonen gir forventet resultat ved innlesning fra tibble", {
-  expect_identical(sammenlign_variabelnavn(dd_ok, varnavn_ok), NULL)
-  expect_warning(sammenlign_variabelnavn(dd_ok, varnavn_feil_rekkefolge), "Variabelnavn har ulik rekkefølge i datadump og spesifikasjon")
-  expect_error(sammenlign_variabelnavn(dd_ok, varnavn_feil_navn), "Variabelnavn i spesifikasjon stemmer ikke overens med variabelnavn i datadump")
-})
-
-test_that("Funksjonen gir feilmelding om argumentet 'data' er en character-vektor", {
-  expect_error(sammenlign_variabelnavn(varnavn_feil_rekkefolge, varnavn_ok))
-})
-
 
 # std_koltype_til_readr_koltype -------------------------------------------
 context("std_koltype_til_readr_koltype")
@@ -141,31 +113,31 @@ formatspek_ok_hel = list(
 
 # Gir forventet format for ulike variabeltyper.
 test_that("Funksjonen leser inn datasett og gir ut forventet format", {
-  expect_equal(les_csv_base(dd_sti = "dd_ok_hel.csv", spesifikasjon = specs_dd_ok_hel), dd_ok_hel)
+  expect_equal(les_csv_base(adresse = "dd_ok_hel.csv", spesifikasjon = specs_dd_ok_hel), dd_ok_hel)
 })
 
 test_that("Funksjonen håndterer NA for alle variabeltyper", {
-  expect_equal(les_csv_base(dd_sti = "dd_ok_hel_na.csv", spesifikasjon = specs_dd_ok_hel), dd_ok_hel_na)
+  expect_equal(les_csv_base(adresse = "dd_ok_hel_na.csv", spesifikasjon = specs_dd_ok_hel), dd_ok_hel_na)
 })
 
 test_that("Funksjonen gir feilmelding ved ukjent dato-format", {
-  expect_error(suppressWarnings(les_csv_base(dd_sti = "dd_feil_dato_format.csv", spesifikasjon = specs_dd_ok_hel)))
+  expect_error(suppressWarnings(les_csv_base(adresse = "dd_feil_dato_format.csv", spesifikasjon = specs_dd_ok_hel)))
 })
 
 test_that("Funksjonen gir feilmelding om desimaltegn er '.', ikke ','", {
-  expect_error(suppressWarnings(les_csv_base(dd_sti = "dd_feil_desimaltegn.csv", spesifikasjon = specs_dd_ok_hel)))
+  expect_error(suppressWarnings(les_csv_base(adresse = "dd_feil_desimaltegn.csv", spesifikasjon = specs_dd_ok_hel)))
 })
 
 test_that("Funksjonen leser inn faktorer som tekst", {
-  expect_equal(les_csv_base(dd_sti = "dd_ok_hel.csv", spesifikasjon = specs_dd_ok_hel)$alfa, dd_ok_hel$alfa) # tekst-faktor
-  expect_equal(les_csv_base(dd_sti = "dd_ok_hel_full.csv", spesifikasjon = specs_dd_ok_hel)$epsilon, dd_ok_hel_full$epsilon) # kun numerisk
+  expect_equal(les_csv_base(adresse = "dd_ok_hel.csv", spesifikasjon = specs_dd_ok_hel)$alfa, dd_ok_hel$alfa) # tekst-faktor
+  expect_equal(les_csv_base(adresse = "dd_ok_hel_full.csv", spesifikasjon = specs_dd_ok_hel)$epsilon, dd_ok_hel_full$epsilon) # kun numerisk
 })
 
 # Konvertering av variabeltyper -------------------------------------------
 context("konverter_boolske")
 
 d_base = les_csv_base(
-  dd_sti = "dd_ok_hel.csv",
+  adresse = "dd_ok_hel.csv",
   spesifikasjon = specs_dd_ok_hel
 )
 
