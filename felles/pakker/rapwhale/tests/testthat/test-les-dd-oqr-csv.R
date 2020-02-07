@@ -90,6 +90,17 @@ specs_dd_ok_hel = tibble::tribble(
   "theta", "Theeta", "kl", "t"
 )
 
+# Formatspek
+formatspek_ok_hel = list(
+  desimaltegn = ",",
+  dato = "%.%m.%Y",
+  klokkeslett = "%H:%M",
+  tidssone = "Europe/Oslo",
+  fileEncoding = "UTF-8-BOM",
+  boolsk_sann = 1,
+  boolsk_usann = 0
+)
+
 # Gir forventet format for ulike variabeltyper.
 test_that("Funksjonen leser inn datasett og gir ut forventet format", {
   expect_equal(les_csv_base(dd_sti = "dd_ok_hel.csv", spesifikasjon = specs_dd_ok_hel), dd_ok_hel)
