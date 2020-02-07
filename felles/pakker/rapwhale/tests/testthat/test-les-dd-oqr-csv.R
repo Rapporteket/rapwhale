@@ -81,14 +81,13 @@ dd_ok_hel_full = dd_ok_hel %>%
 # Spesifikasjon
 specs_dd_ok_hel = tibble::tribble(
   ~navn_kilde, ~nye_varnavn, ~vartype, ~kolonnetype,
-  "alfa", "Abso", "kategorisk", "c",
   "beta", "Beto", "tekst", "c",
-  "gamma", "Gammo", "numerisk", "d",
+  "gamma", "Gammo", "desimaltall", "d",
   "delta", "Delto", "heltall", "i",
-  "epsilon", "Eple", "boolsk", "c",
-  "zeta", "Zeppelin", "dato_kl", "c",
+  "epsilon", "Eple", "boolsk", "l",
+  "zeta", "Zeppelin", "dato_kl", "T",
   "eta", "Estland", "dato", "D",
-  "theta", NA_character_, "kl", "t"
+  "theta", "Theeta", "kl", "t"
 )
 
 # Gir forventet format for ulike variabeltyper.
