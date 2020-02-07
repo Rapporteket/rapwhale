@@ -67,8 +67,8 @@ dd_ok_hel = tibble::tibble(
   beta = c("dette", "er", "en", "tekst"),
   gamma = c(0.5, 0.12, 0.73, 1.241),
   delta = c(1L, 5L, 3L, 2L),
-  epsilon = c("1", "0", NA_character_, "1"),
-  zeta = c("01.01.2020 17:00", "05.10.2010 15:00", "03.02.2015 13:30", "05.05.2005 17:55"),
+  epsilon = c(TRUE, FALSE, NA_character_, TRUE),
+  zeta = lubridate::dmy_hm("01.01.2020 17:00", "05.10.2010 15:00", "03.02.2015 13:30", "05.05.2005 17:55"),
   eta = lubridate::dmy("12.05.2014", "13.09.1900", "15.01.2015", "15.10.2020"),
   theta = hms::as_hms(c("17:00:00", "14:30:00", "12:00:00", "15:05:00"))
 )
@@ -80,14 +80,15 @@ dd_ok_hel_full = dd_ok_hel %>%
 
 # Spesifikasjon
 specs_dd_ok_hel = tibble::tribble(
-  ~navn_kilde, ~nye_varnavn, ~vartype, ~kolonnetype,
-  "beta", "Beto", "tekst", "c",
-  "gamma", "Gammo", "desimaltall", "d",
-  "delta", "Delto", "heltall", "i",
-  "epsilon", "Eple", "boolsk", "l",
-  "zeta", "Zeppelin", "dato_kl", "T",
-  "eta", "Estland", "dato", "D",
-  "theta", "Theeta", "kl", "t"
+  ~varnavn_kilde, ~varnavn_resultat, ~vartype,
+  "alfa", "Apple", "tekst",
+  "beta", "Beto", "tekst",
+  "gamma", "Gammo", "desimaltall",
+  "delta", "Delto", "heltall",
+  "epsilon", "Eple", "boolsk",
+  "zeta", "Zeppelin", "dato_kl",
+  "eta", "Estland", "dato",
+  "theta", "Theeta", "kl"
 )
 
 # Formatspek
