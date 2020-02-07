@@ -4,11 +4,11 @@
 #'
 #' Returnerer en vektor med variabelnavn slik de er i datadump.
 #'
-#' @param dd_sti Filplassering for datadump som skal leses inn. Henter kun ut variabelnavn fra datadump.
-les_varnavn = function(dd_sti) {
-  stopifnot(is.character(dd_sti) & length(dd_sti) == 1)
+#' @param adresse Filplassering for datadump som skal leses inn. Henter kun ut variabelnavn fra datadump.
+les_varnavn = function(adresse) {
+  stopifnot(is.character(adresse) & length(adresse) == 1)
 
-  varnavn = scan(dd_sti,
+  varnavn = scan(adresse,
     fileEncoding = "UTF-8-BOM",
     what = "character", sep = ";",
     nlines = 1, quiet = TRUE
@@ -83,20 +83,20 @@ konverter_dato_kl = function(d, vartype) { # fixme - Hvordan skal den reagere p�
 #' Aksepterte variabeltyper er: tekst, desimaltall, heltall, boolsk, dato, dato_kl og klokkeslett.
 #' Variabelnavn kan endres ved å inkludere en vektor med nye variabelnavn.
 #'
-#' @param dd_sti Filplassering for datadump som skal leses inn.
+#' @param adresse Filplassering for datadump som skal leses inn.
 #' @param spesifikasjon Tibble med tre kolonner. Inneholder varnavn_kilde, varnavn_resultat og vartype.
 #' @param formatspek Liste som inneholder informasjon om hvordan csv-fil er spesifisert. Gjelder desimaltegn, datoformat, klokkeslettformat, tidssone, boolsk_sann, boolsk_usann
-les_csv_base = function(dd_sti, spesifikasjon, formatspek) {
+les_csv_base = function(adresse, spesifikasjon, formatspek) {
 
-  # Lager en col_types streng basert på innmat.
-  kolnavn_fil = les_varnavn(dd_sti)
+  # Lager en col_types streng basert på innmat. Sorterer variabelrekkefølge etter datadump
+  kolnavn_fil = les_varnavn(adresse)
   kolnavn_spek = spesifikasjon$varnavn_kilde
   testthat::expect_identical(sort(kolnavn_fil), sort(kolnavn_spek))
   radnr = match(kolnavn_fil, kolnavn_spek)
   stopifnot(all(!is.na(radnr)))
   spesifikasjon = spesifikasjon[radnr, ]
 
-  d = readr::read_delim(dd_sti,
+  d = readr::read_delim(adresse,
     delim = ";",
     locale = readr::locale(
       decimal_mark = ",", date_format = "%d.%m.%Y",
