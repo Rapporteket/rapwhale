@@ -73,6 +73,18 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
   stopifnot(all(!is.na(radnr)))
   spesifikasjon = spesifikasjon[radnr, ]
 
+  # Konverterer variabeltype til kolonnespesifikasjon for bruk i innlesning
+  spesifikasjon = spesifikasjon %>%
+    mutate(koltype = case_when(
+      vartype == "tekst" ~ "c",
+      vartype == "desimaltall" ~ "d",
+      vartype == "heltall" ~ "i",
+      vartype == "boolsk" ~ "c",
+      vartype == "dato_kl" ~ "c",
+      vartype == "dato" ~ "d",
+      vartype == "kl" ~ "t"
+    ))
+
   d = readr::read_delim(adresse,
     delim = formatspek$skilletegn,
     locale = readr::locale(
@@ -81,11 +93,11 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
       time_format = formatspek$klokkeslett,
       tz = formatspek$tidssone
     ),
-    col_types = str_c(spesifikasjon$kolonnetype, collapse = ""),
-    col_names = spesifikasjon$varnavn_resulatat
+    col_types = str_c(spesifikasjon$koltype, collapse = ""),
+    col_names = spesifikasjon$varnavn_resultat
   )
+
   readr::stop_for_problems(d)
-  d
 
   # Konverter tidsvariabler
   varnavn_boolske = spesifikasjon$varnavn_resultat[spesifikasjon$variabeltype == "boolsk"]
@@ -106,6 +118,8 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
   x[x %in% boolsk_sann] = TRUE
 
   # Konvertering og fiksing av diverse variabeltyper
+
+  d
 }
 
 # OQR-spesifikk funksjon for å lese inn csv vha les_csv_base.
