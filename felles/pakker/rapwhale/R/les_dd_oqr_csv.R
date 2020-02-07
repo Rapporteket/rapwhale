@@ -61,7 +61,7 @@ konverter_dato_kl = function(d, vartype) { # fixme - Hvordan skal den reagere p�
 #' Returnerer en sammenslått tekststreng med gyldige coltypes for bruk i diverse readrfunksjoner.
 #'
 #' @param vartyper Vektor med variabeltyper oppgitt på standardformat.
-#' Mulige typer er: tekst, desimalltall, heltall, boolks, dato, dato_kl og kl.
+#' Mulige typer er: tekst, desimalltall, heltall, boolsk, dato, dato_kl og kl.
 std_koltype_til_readr_koltype = function(vartype) {
   if (length(vartype) == 0) {
     return("")
@@ -161,5 +161,5 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
 }
 
 # OQR-spesifikk funksjon for å lese inn csv vha les_csv_base.
-les_csv_oqr = function(adresse, spesifikasjon, formatspek) {
+les_csv_oqr = function(adresse, spesifikasjon) {
 }
