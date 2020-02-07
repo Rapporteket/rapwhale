@@ -92,11 +92,12 @@ specs_dd_ok_hel = tibble::tribble(
 
 # Formatspek
 formatspek_ok_hel = list(
+  skilletegn = ";",
   desimaltegn = ",",
   dato = "%.%m.%Y",
   klokkeslett = "%H:%M",
   tidssone = "Europe/Oslo",
-  fileEncoding = "UTF-8-BOM",
+  filkoding = "UTF-8-BOM",
   boolsk_sann = 1,
   boolsk_usann = 0
 )

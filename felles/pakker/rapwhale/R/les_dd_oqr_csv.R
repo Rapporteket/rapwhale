@@ -5,12 +5,12 @@
 #' Returnerer en vektor med variabelnavn slik de er i datadump.
 #'
 #' @param adresse Filplassering for datadump som skal leses inn. Henter kun ut variabelnavn fra datadump.
-les_varnavn = function(adresse) {
+les_varnavn = function(adresse, formatspek) {
   stopifnot(is.character(adresse) & length(adresse) == 1)
 
   varnavn = scan(adresse,
-    fileEncoding = "UTF-8-BOM",
-    what = "character", sep = ";",
+    fileEncoding = formatspek$filkoding,
+    what = "character", sep = formatspek$skilletegn,
     nlines = 1, quiet = TRUE
   )
 
@@ -89,7 +89,7 @@ konverter_dato_kl = function(d, vartype) { # fixme - Hvordan skal den reagere p�
 les_csv_base = function(adresse, spesifikasjon, formatspek) {
 
   # Lager en col_types streng basert på innmat. Sorterer variabelrekkefølge etter datadump
-  kolnavn_fil = les_varnavn(adresse)
+  kolnavn_fil = les_varnavn(adresse, formatspek)
   kolnavn_spek = spesifikasjon$varnavn_kilde
   testthat::expect_identical(sort(kolnavn_fil), sort(kolnavn_spek))
   radnr = match(kolnavn_fil, kolnavn_spek)
@@ -97,10 +97,12 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
   spesifikasjon = spesifikasjon[radnr, ]
 
   d = readr::read_delim(adresse,
-    delim = ";",
+    delim = formatspek$skilletegn,
     locale = readr::locale(
-      decimal_mark = ",", date_format = "%d.%m.%Y",
-      time_format = "%H:%M", tz = "Europe/Oslo"
+      decimal_mark = formatspek$desimaltegn,
+      date_format = formatspek$dato,
+      time_format = formatspek$klokkeslett,
+      tz = formatspek$tidssone
     ),
     col_types = str_c(spesifikasjon$kolonnetype, collapse = ""),
     col_names = spesifikasjon$varnavn_resulatat
