@@ -126,3 +126,7 @@ les_csv_base = function(dd_sti, spesifikasjon, formatspek) {
 
   # Konvertering og fiksing av diverse variabeltyper
 }
+
+# OQR-spesifikk funksjon for å lese inn csv vha les_csv_base.
+les_csv_oqr = function(adresse, spesifikasjon, formatspek) {
+}
