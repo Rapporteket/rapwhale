@@ -54,6 +54,44 @@ konverter_dato_kl = function(d, vartype) { # fixme - Hvordan skal den reagere p�
   d
 }
 
+
+#' Konverter variabeltype fra standard format til readr kompakt format
+#'
+#' Funksjonen tar inn en vektor med variabeltyper oppgitt p책 v책rt standardformat.
+#' Returnerer en sammensl책tt tekststreng med gyldige coltypes for bruk i diverse readrfunksjoner.
+#'
+#' @param vartyper Vektor med variabeltyper oppgitt p책 standardformat.
+#' Mulige typer er: tekst, desimalltall, heltall, boolks, dato, dato_kl og kl.
+std_koltype_til_readr_koltype = function(vartype) {
+  if (length(vartype) == 0) {
+    return("")
+  }
+  if (any(is.na(vartype))) {
+    stop("Variabeltype m책 defineres for alle variabler")
+  }
+
+  koblingstabell = tibble::tribble(
+    ~vartype, ~koltype,
+    "tekst", "c",
+    "desimaltall", "d",
+    "heltall", "i",
+    "boolsk", "l",
+    "dato", "d",
+    "dato_kl", "c",
+    "kl", "t"
+  )
+
+  ind = match(vartype, koblingstabell$vartype)
+
+  if (any(is.na(ind))) {
+    vartype_mangler = paste0("'", vartype[is.na(ind)], "'", collapse = ", ")
+    stop("Ukjent variabeltype: ", vartype_mangler)
+  }
+
+  koltype = str_c(koblingstabell$koltype[ind], collapse = "")
+  koltype
+}
+
 #' Les inn csv-fil
 #'
 #' Funksjon som leser inn en csv-fil fra en filplassering med angitt variabeltype fra en spesifikasjons-tibble.

@@ -58,6 +58,7 @@ test_that("Funksjonen gir feilmelding om argumentet 'data' er en character-vekto
 })
 
 
+# std_koltype_til_readr_koltype -------------------------------------------
 context("std_koltype_til_readr_koltype")
 
 test_that("Gir riktig bokstavkode for alle mulige (gyldige) variabeltyper", {
@@ -80,7 +81,7 @@ test_that("Gir feilmelding ved ugyldige variabeltyper", {
   )
 
   expect_error(
-    std_koltype_til_readr_koltype(c("tekst", "status")),
+    std_koltype_til_readr_koltype(c("farge", "status")),
     "Ukjent variabeltype: 'farge', 'status'"
   )
 
