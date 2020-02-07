@@ -101,13 +101,11 @@ test_that("Funksjonen håndterer NA for alle variabeltyper", {
 })
 
 test_that("Funksjonen gir feilmelding ved ukjent dato-format", {
-  # expect_warning(les_csv_base(dd_sti = "dd_feil_dato_format.csv", spesifikasjon = specs_dd_ok_hel)) &&
-  expect_error(les_csv_base(dd_sti = "dd_feil_dato_format.csv", spesifikasjon = specs_dd_ok_hel))
+  expect_error(suppressWarnings(les_csv_base(dd_sti = "dd_feil_dato_format.csv", spesifikasjon = specs_dd_ok_hel)))
 })
 
 test_that("Funksjonen gir feilmelding om desimaltegn er '.', ikke ','", {
-  # expect_warning(les_csv_base(dd_sti = "dd_feil_desimaltegn.csv", spesifikasjon = specs_dd_ok_hel)) &
-  expect_error(les_csv_base(dd_sti = "dd_feil_desimaltegn.csv", spesifikasjon = specs_dd_ok_hel))
+  expect_error(suppressWarnings(les_csv_base(dd_sti = "dd_feil_desimaltegn.csv", spesifikasjon = specs_dd_ok_hel)))
 })
 
 test_that("Funksjonen leser inn faktorer som tekst", {
