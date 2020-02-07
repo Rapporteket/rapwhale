@@ -84,15 +84,45 @@ konverter_dato_kl = function(d, vartype) { # fixme - Hvordan skal den reagere p√
 #'
 #' @param dd_sti Filplassering for datadump som skal leses inn
 #' @param spesifikasjon Tibble med fire kolonner. Inneholder varnavn_kilde, nye_variabelnavn, vartype og kolonnetype.
-les_csv_base = function(dd_sti, spesifikasjon) {
+les_csv_base = function(dd_sti, spesifikasjon, formatspek) {
+
+  # Lager en col_types streng basert p√• innmat.
+  kolnavn_fil = les_varnavn(dd_sti)
+  kolnavn_spek = spesifikasjon$varnavn_kilde
+  testthat::expect_identical(sort(kolnavn_fil), sort(kolnavn_spek))
+  radnr = match(kolnavn_fil, kolnavn_spek)
+  stopifnot(all(!is.na(radnr)))
+  spesifikasjon = spesifikasjon[radnr, ]
+
   d = readr::read_delim(dd_sti,
     delim = ";",
     locale = readr::locale(
       decimal_mark = ",", date_format = "%d.%m.%Y",
       time_format = "%H:%M", tz = "Europe/Oslo"
     ),
-    col_types = str_c(spesifikasjon$kolonnetype, collapse = "")
+    col_types = str_c(spesifikasjon$kolonnetype, collapse = ""),
+    col_names = spesifikasjon$varnavn_resulatat
   )
   readr::stop_for_problems(d)
   d
+
+  # Konverter tidsvariabler
+  varnavn_boolske = spesifikasjon$varnavn_resultat[spesifikasjon$variabeltype == "boolsk"]
+  d = mutate_at(d, varnavn_boolske,
+    readr::parse_datetime,
+    orders = formatspek$dato_kl, locale = locale(formatspek$tidssone)
+  )
+
+  d = mutate_at(d, varnavn_boolske,
+    konverter_boolske,
+    boolsk_usann = formatspek$boolsk_usann,
+    boolsk_sann = formatspek$boolsk_sann
+  )
+
+  # Konverter_boolsk:
+  sjekk(is_empty(intersect(boolsk_usann, boolsk_sann)))
+  x[x %in% boolsk_usann] = FALSE
+  x[x %in% boolsk_sann] = TRUE
+
+  # Konvertering og fiksing av diverse variabeltyper
 }
