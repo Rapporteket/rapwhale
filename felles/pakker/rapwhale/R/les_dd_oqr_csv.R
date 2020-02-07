@@ -79,11 +79,13 @@ konverter_dato_kl = function(d, vartype) { # fixme - Hvordan skal den reagere p�
 
 #' Les inn csv-fil
 #'
-#' Funksjon som leser inn en csv-fil fra en filplassering med angitt ariabeltype fra en spesifikasjons-tibble.
-#' Faktorer, tekstvariabler, dato med klokkeslett og
+#' Funksjon som leser inn en csv-fil fra en filplassering med angitt variabeltype fra en spesifikasjons-tibble.
+#' Aksepterte variabeltyper er: tekst, desimaltall, heltall, boolsk, dato, dato_kl og klokkeslett.
+#' Variabelnavn kan endres ved å inkludere en vektor med nye variabelnavn.
 #'
-#' @param dd_sti Filplassering for datadump som skal leses inn
-#' @param spesifikasjon Tibble med fire kolonner. Inneholder varnavn_kilde, nye_variabelnavn, vartype og kolonnetype.
+#' @param dd_sti Filplassering for datadump som skal leses inn.
+#' @param spesifikasjon Tibble med tre kolonner. Inneholder varnavn_kilde, varnavn_resultat og vartype.
+#' @param formatspek Liste som inneholder informasjon om hvordan csv-fil er spesifisert. Gjelder desimaltegn, datoformat, klokkeslettformat, tidssone, boolsk_sann, boolsk_usann
 les_csv_base = function(dd_sti, spesifikasjon, formatspek) {
 
   # Lager en col_types streng basert på innmat.
