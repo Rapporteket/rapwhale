@@ -55,7 +55,7 @@ konverter_dato_kl = function(d, vartype) { # fixme - Hvordan skal den reagere p�
 }
 
 
-#' Konverter variabeltype fra standard format til readr kompakt format
+#' Konverter variabeltype fra standard format til readrformat
 #'
 #' Funksjonen tar inn en vektor med variabeltyper oppgitt på vårt standardformat.
 #' Returnerer en sammenslått tekststreng med gyldige coltypes for bruk i diverse readrfunksjoner.
@@ -111,18 +111,6 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
   stopifnot(all(!is.na(radnr)))
   spesifikasjon = spesifikasjon[radnr, ]
 
-  # Konverterer variabeltype til kolonnespesifikasjon for bruk i innlesning
-  spesifikasjon = spesifikasjon %>%
-    mutate(koltype = case_when(
-      vartype == "tekst" ~ "c",
-      vartype == "desimaltall" ~ "d",
-      vartype == "heltall" ~ "i",
-      vartype == "boolsk" ~ "c",
-      vartype == "dato_kl" ~ "c",
-      vartype == "dato" ~ "d",
-      vartype == "kl" ~ "t"
-    ))
-
   d = readr::read_delim(adresse,
     delim = formatspek$skilletegn,
     locale = readr::locale(
@@ -131,7 +119,7 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
       time_format = formatspek$klokkeslett,
       tz = formatspek$tidssone
     ),
-    col_types = str_c(spesifikasjon$koltype, collapse = ""),
+    col_types = std_koltype_til_readr_koltype(spesifikasjon$vartype),
     col_names = spesifikasjon$varnavn_resultat
   )
 
