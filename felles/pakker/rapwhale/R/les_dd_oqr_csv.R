@@ -13,10 +13,6 @@ les_varnavn = function(adresse, formatspek) {
     what = "character", sep = formatspek$skilletegn,
     nlines = 1, quiet = TRUE
   )
-
-  if (anyDuplicated(varnavn) != 0) {
-    stop("Variabler i datadump kan ikke ha samme navn")
-  }
   varnavn
 }
 
