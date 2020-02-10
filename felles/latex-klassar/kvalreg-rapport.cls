@@ -552,6 +552,9 @@
 \newcommand{\sjekk}{{\uniskrift ✓}}
 \newcommand{\sjekknei}{{\uniskrift ☐}}
 \newcommand{\sjekkja}{{\uniskrift ☑}}
+% For lettare å fylla ut dei to kolonnane i stadieinndelingstabellen
+\newcommand{\sjekkXO}{\sjekkja & \sjekknei}
+\newcommand{\sjekkOX}{\sjekknei & \sjekkja}
 
 % Støtte for QR-kodar (hovudsakleg for adressa til 
 % heimesida til register, vist på baksida av rapportar)
