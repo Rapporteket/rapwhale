@@ -99,7 +99,7 @@ std_koltype_til_readr_koltype = function(vartype) {
 #' @param formatspek Liste som inneholder informasjon om hvordan csv-fil er spesifisert. Gjelder desimaltegn, datoformat, klokkeslettformat, tidssone, boolsk_sann, boolsk_usann
 les_csv_base = function(adresse, spesifikasjon, formatspek) {
 
-  # Lager en col_types streng basert på innmat. Sorterer variabelrekkefølge etter datadump
+  # Lager en kolonnenavn streng basert på innmat. Sorterer variabelrekkefølge etter datadump
   kolnavn_fil = les_varnavn(adresse, formatspek)
   kolnavn_spek = spesifikasjon$varnavn_kilde
   testthat::expect_identical(sort(kolnavn_fil), sort(kolnavn_spek))
@@ -108,7 +108,7 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
   spesifikasjon = spesifikasjon[radnr, ]
 
   d = readr::read_delim(adresse,
-    delim = formatspek$skilletegn,
+    delim = formatspek$skilletegn, skip = 1,
     locale = readr::locale(
       decimal_mark = formatspek$desimaltegn,
       date_format = formatspek$dato,
@@ -122,7 +122,7 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
   readr::stop_for_problems(d)
 
   # Konverter tidsvariabler
-  varnavn_boolske = spesifikasjon$varnavn_resultat[spesifikasjon$variabeltype == "boolsk"]
+  varnavn_boolske = spesifikasjon$varnavn_resultat[spesifikasjon$vartype == "boolsk"]
   d = mutate_at(d, varnavn_boolske,
     readr::parse_datetime,
     orders = formatspek$dato_kl, locale = locale(formatspek$tidssone)
