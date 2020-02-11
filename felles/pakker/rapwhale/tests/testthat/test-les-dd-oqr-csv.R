@@ -4,7 +4,7 @@ context("les_varnavn")
 formatspek_ok_hel = list(
   skilletegn = ";",
   desimaltegn = ",",
-  dato = "%.%m.%Y",
+  dato = "%d.%m.%Y",
   klokkeslett = "%H:%M",
   tidssone = "Europe/Oslo",
   filkoding = "UTF-8-BOM",
@@ -28,7 +28,7 @@ test_that("Gir riktig bokstavkode for alle mulige (gyldige) variabeltyper", {
     std_koltype_til_readr_koltype(
       c("tekst", "desimaltall", "heltall", "boolsk", "kl", "dato", "dato_kl", "tekst")
     ),
-    "cdiltdcc"
+    "cdiltDcc"
   )
 })
 
@@ -58,14 +58,14 @@ context("les_csv_base")
 
 # Forventet resultat av å lese inn dd_ok_hel
 dd_ok_hel = tibble::tibble(
-  alfa = c("Gruppe_1", "Gruppe_2", "Gruppe_2", "Gruppe_1"),
-  beta = c("dette", "er", "en", "tekst"),
-  gamma = c(0.5, 0.12, 0.73, 1.241),
-  delta = c(1L, 5L, 3L, 2L),
-  epsilon = c(TRUE, FALSE, NA_character_, TRUE),
-  zeta = lubridate::dmy_hm("01.01.2020 17:00", "05.10.2010 15:00", "03.02.2015 13:30", "05.05.2005 17:55"),
-  eta = lubridate::dmy("12.05.2014", "13.09.1900", "15.01.2015", "15.10.2020"),
-  theta = hms::as_hms(c("17:00:00", "14:30:00", "12:00:00", "15:05:00"))
+  Apple = c("Gruppe_1", "Gruppe_2", "Gruppe_2", "Gruppe_1"),
+  Beto = c("dette", "er", "en", "tekst"),
+  Gammo = c(0.5, 0.12, 0.73, 1.241),
+  Delto = c(1L, 5L, 3L, 2L),
+  Eple = c(TRUE, FALSE, NA_character_, TRUE),
+  Zeppelin = c("01.01.2020 17:00", "05.10.2010 15:00", "03.02.2015 13:30", "05.05.2005 17:55"),
+  Estland = lubridate::dmy("12.05.2014", "13.09.1900", "15.01.2015", "15.10.2020"),
+  Theeta = hms::as_hms(c("17:00:00", "14:30:00", "12:00:00", "15:05:00"))
 )
 
 dd_ok_hel_na = dd_ok_hel %>%

@@ -72,7 +72,7 @@ std_koltype_til_readr_koltype = function(vartype) {
     "desimaltall", "d",
     "heltall", "i",
     "boolsk", "l",
-    "dato", "d",
+    "dato", "D",
     "dato_kl", "c",
     "kl", "t"
   )
@@ -133,7 +133,6 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
     boolsk_usann = formatspek$boolsk_usann,
     boolsk_sann = formatspek$boolsk_sann
   )
-
   # Konverter_boolsk:
   sjekk(is_empty(intersect(boolsk_usann, boolsk_sann)))
   x[x %in% boolsk_usann] = FALSE
