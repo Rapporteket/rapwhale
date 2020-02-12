@@ -71,8 +71,6 @@ dd_ok_hel = tibble::tibble(
 
 dd_ok_hel_na = dd_ok_hel %>%
   tibble::add_row(.before = 3)
-dd_ok_hel_full = dd_ok_hel %>%
-  mutate(epsilon = c("1", "0", "1", "1"))
 
 # Spesifikasjon
 specs_dd_ok_hel = tibble::tribble(
