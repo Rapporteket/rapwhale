@@ -130,3 +130,78 @@ test_that("Funksjonen leser inn faktorer som tekst", {
 
 # Konvertering av variabeltyper -------------------------------------------
 context("konverter_boolske")
+
+test_that("Funksjonen gir feilmelding hvis en boolsk variabel inneholder ugyldige verdier", {
+  expect_error(konverter_boolske(
+    x = c(0, 1, NA, 2),
+    boolsk_usann = formatspek_ok_hel$boolsk_usann,
+    boolsk_sann = formatspek_ok_hel$boolsk_sann
+  ),
+  "Det finnes ugyldige verdier for en boolsk variabel.\nboolsk_usann kan være: 0\nboolsk_sann kan være: 1",
+  fixed = TRUE
+  )
+
+  expect_error(konverter_boolske(
+    x = c("T", "F", "True", NA),
+    boolsk_usann = "F",
+    boolsk_sann = "T"
+  ),
+  "Det finnes ugyldige verdier for en boolsk variabel.\nboolsk_usann kan være: F\nboolsk_sann kan være: T",
+  fixed = TRUE
+  )
+})
+test_that("Funksjonen godkjenner diverse former for logiske variabler, 1/0, T/F etc", {
+  expect_equal(konverter_boolske(
+    x = c(0, 1, 1), boolsk_usann = 0,
+    boolsk_sann = 1
+  ), c(FALSE, TRUE, TRUE))
+  expect_equal(konverter_boolske(
+    x = c("T", "F", "T"), boolsk_usann = "F",
+    boolsk_sann = "T"
+  ), c(TRUE, FALSE, TRUE))
+  expect_equal(konverter_boolske(
+    x = c("TRUE", "FALSE", NA), boolsk_usann = c("FALSE", NA),
+    boolsk_sann = "TRUE"
+  ), c(TRUE, FALSE, FALSE))
+})
+
+test_that("Funksjonen aksepterer flere typer True og False", {
+  expect_equal(
+    konverter_boolske(
+      x = c("T", "F", "TRUE", "FA", "flips", NA),
+      boolsk_usann = c("F", "FA", "flips"),
+      boolsk_sann = c("T", "TRUE")
+    ),
+    c(TRUE, FALSE, TRUE, FALSE, FALSE, NA)
+  )
+})
+
+test_that("Funksjonen gir feilmelding om det er like verdier i boolsk_sann og boolsk_usann", {
+  expect_error(
+    konverter_boolske(
+      x = c(0, 1, NA),
+      boolsk_usann = c(0, NA),
+      boolsk_sann = c(1, NA)
+    ),
+    "boolsk_sann og boolsk_usann kan ikke inneholde samme verdier."
+  )
+})
+
+context("konverter_dato_kl")
+
+test_that("les_csv_base gir feilmelding hvis format på dato_kl i formatspek og data ikke er enige", {
+  formatspek_ok_hel_ny_dato_kl = formatspek_ok_hel
+  formatspek_ok_hel_ny_dato_kl$dato_kl = "%Y.%m.%d %H:%M"
+
+  expect_error(supressWarnings(les_csv_base(
+    adresse = "dd_ok_hel.csv",
+    spesifikasjon = specs_dd_ok_hel,
+    formatspek = formatspek_ok_hel_ny_dato_kl
+  )))
+
+  expect_error(supressWarnings(les_csv_base(
+    adresse = "dd_ok_hel_feil_dato.csv",
+    spesifikasjon = specs_dd_ok_hel,
+    formatspek = formatspek_ok_hel
+  )))
+})
