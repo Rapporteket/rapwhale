@@ -1,4 +1,4 @@
-# Håndtering av inndata fra datadump og spesifikasjon ---------------------
+# Håndtering av inndata fra datadump eller spesifikasjon ---------------------
 context("les_varnavn")
 
 formatspek_ok_hel = list(
@@ -6,11 +6,12 @@ formatspek_ok_hel = list(
   desimaltegn = ",",
   dato = "%d.%m.%Y",
   klokkeslett = "%H:%M",
+  dato_kl = "%d.%m.%Y %H:%M",
   tidssone = "Europe/Oslo",
   filkoding = "UTF-8-BOM",
   boolsk_sann = 1,
   boolsk_usann = 0
-) # kan være boolsk_usann = c(0,NA) også
+)
 
 test_that("Funksjonen leser inn en variabel selv om den ikke har navn", {
   forventet_uten_navn = c("alfa", "beta", "", "delta", "echo", "")
@@ -28,7 +29,7 @@ test_that("Gir riktig bokstavkode for alle mulige (gyldige) variabeltyper", {
     std_koltype_til_readr_koltype(
       c("tekst", "desimaltall", "heltall", "boolsk", "kl", "dato", "dato_kl", "tekst")
     ),
-    "cdiltDcc"
+    "cdictDcc"
   )
 })
 
@@ -62,8 +63,8 @@ dd_ok_hel = tibble::tibble(
   Beto = c("dette", "er", "en", "tekst"),
   Gammo = c(0.5, 0.12, 0.73, 1.241),
   Delto = c(1L, 5L, 3L, 2L),
-  Eple = c(TRUE, FALSE, NA_character_, TRUE),
-  Zeppelin = c("01.01.2020 17:00", "05.10.2010 15:00", "03.02.2015 13:30", "05.05.2005 17:55"),
+  Eple = as.logical(c(TRUE, FALSE, NA_character_, TRUE)),
+  Zeppelin = lubridate::dmy_hm(c("01.01.2020 17:00", "05.10.2010 15:00", "03.02.2015 13:30", "05.05.2005 17:55")),
   Estland = lubridate::dmy("12.05.2014", "13.09.1900", "15.01.2015", "15.10.2020"),
   Theeta = hms::as_hms(c("17:00:00", "14:30:00", "12:00:00", "15:05:00"))
 )
@@ -85,8 +86,6 @@ specs_dd_ok_hel = tibble::tribble(
   "eta", "Estland", "dato",
   "theta", "Theeta", "kl"
 )
-
-
 
 # Gir forventet format for ulike variabeltyper.
 test_that("Funksjonen leser inn datasett og gir ut forventet format", {
@@ -126,42 +125,8 @@ test_that("Funksjonen leser inn faktorer som tekst", {
     adresse = "dd_ok_hel.csv",
     spesifikasjon = specs_dd_ok_hel,
     formatspek = formatspek_ok_hel
-  )$alfa, dd_ok_hel$alfa) # tekst-faktor
-  expect_equal(les_csv_base(
-    adresse = "dd_ok_hel_full.csv",
-    spesifikasjon = specs_dd_ok_hel,
-    formatspek = formatspek_ok_hel
-  )$epsilon, dd_ok_hel_full$epsilon) # kun numerisk
+  ), dd_ok_hel)
 })
 
 # Konvertering av variabeltyper -------------------------------------------
 context("konverter_boolske")
-
-d_base = les_csv_base(
-  adresse = "dd_ok_hel.csv",
-  spesifikasjon = specs_dd_ok_hel
-)
-
-d_base_m_feil_logisk = d_base
-d_base_m_feil_logisk$epsilon[2] = "2"
-
-test_that("Funksjonen gir feilmelding hvis en boolsk variabel inneholder andre verdier enn (0,1,NA)", {
-  expect_error(konverter_boolske(d = d_base_m_feil_logisk, vartype = specs_dd_ok_hel$vartype),
-    "Det finnes ugyldige verdier for en boolsk variabel. (Må være 0,1 eller NA)",
-    fixed = TRUE
-  )
-})
-
-test_that("Funksjonen klarer å konvertere flere boolske", {
-  d_base_m_flere_logisk = d_base
-  ekstra_logisk = d_base$epsilon
-  d_base_m_flere_logisk = bind_cols(d_base_m_flere_logisk, ekstra_logisk = ekstra_logisk)
-
-  forventet_m_ekstra_logisk = d_base_m_flere_logisk
-  forventet_m_ekstra_logisk$epsilon = as.logical(d_base_m_flere_logisk$epsilon)
-  forventet_m_ekstra_logisk$epsilon = c(TRUE, FALSE, NA, TRUE)
-  forventet_m_ekstra_logisk$ekstra_logisk = as.logical(d_base_m_flere_logisk$ekstra_logisk)
-  forventet_m_ekstra_logisk$ekstra_logisk = c(TRUE, FALSE, NA, TRUE)
-
-  expect_equal(konverter_boolske(d = d_base_m_flere_logisk, vartype = c(specs_dd_ok_hel$vartype, "boolsk")), forventet_m_ekstra_logisk)
-})
