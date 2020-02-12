@@ -104,13 +104,15 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
 
   readr::stop_for_problems(d)
 
-  # Konverter tidsvariabler
-  varnavn_boolske = spesifikasjon$varnavn_resultat[spesifikasjon$vartype == "boolsk"]
-  d = mutate_at(d, varnavn_boolske,
+  # Konverter dato_kl
+  varnavn_dato_kl = spesifikasjon$varnavn_resultat[spesifikasjon$vartype == "dato_kl"]
+  d = mutate_at(d, varnavn_dato_kl,
     readr::parse_datetime,
-    orders = formatspek$dato_kl, locale = locale(formatspek$tidssone)
+    format = formatspek$dato_kl
   )
 
+  # Konverter boolske
+  varnavn_boolske = spesifikasjon$varnavn_resultat[spesifikasjon$vartype == "boolsk"]
   d = mutate_at(d, varnavn_boolske,
     konverter_boolske,
     boolsk_usann = formatspek$boolsk_usann,
