@@ -184,13 +184,13 @@ test_that("les_csv_base gir feilmelding hvis format på dato_kl i formatspek og 
   formatspek_ok_hel_ny_dato_kl = formatspek_ok_hel
   formatspek_ok_hel_ny_dato_kl$dato_kl = "%Y.%m.%d %H:%M"
 
-  expect_error(supressWarnings(les_csv_base(
+  expect_error(suppressWarnings(les_csv_base(
     adresse = "dd_ok_hel.csv",
     spesifikasjon = specs_dd_ok_hel,
     formatspek = formatspek_ok_hel_ny_dato_kl
   )))
 
-  expect_error(supressWarnings(les_csv_base(
+  expect_error(suppressWarnings(les_csv_base(
     adresse = "dd_ok_hel_feil_dato.csv",
     spesifikasjon = specs_dd_ok_hel,
     formatspek = formatspek_ok_hel
