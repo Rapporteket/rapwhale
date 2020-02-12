@@ -118,13 +118,6 @@ test_that("Funksjonen gir feilmelding om desimaltegn er '.', ikke ','", {
   )))
 })
 
-test_that("Funksjonen leser inn faktorer som tekst", {
-  expect_equal(les_csv_base(
-    adresse = "dd_ok_hel.csv",
-    spesifikasjon = specs_dd_ok_hel,
-    formatspek = formatspek_ok_hel
-  ), dd_ok_hel)
-})
 
 # Konvertering av variabeltyper -------------------------------------------
 context("konverter_boolske")
