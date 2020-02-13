@@ -149,6 +149,31 @@ test_that("Funksjonen gir feilmelding hvis format tid i data ikke tilsvarer form
   ))) # HH:MM:SS
 })
 
+test_that("Funksjonen tolker ikke NA som manglende verdi med mindre den blir bedt om det", {
+  dd_spek = tibble(varnavn_kilde = "land", varnavn_resultat = "land", vartype = "tekst")
+  formatspek_na_som_manglende = formatspek_ok_hel
+  formatspek_na_som_manglende$na_verdi = c("null", "na")
+
+  expect_equal(
+    les_csv_base(
+      adresse = "dd_na_som_vanlig_verdi.csv",
+      spesifikasjon = dd_spek,
+      formatspek = formatspek_ok_hel
+    )$land,
+    c("NO", "SV", "NA", "GB")
+  )
+
+  expect_equal(
+    les_csv_base(
+      adresse = "dd_na_som_vanlig_verdi.csv",
+      spesifikasjon = dd_spek,
+      formatspek = formatspek_na_som_manglende
+    )$land,
+    c("NO", "SV", NA, "GB")
+  )
+})
+
+
 # erstatt_med_na -------------------------------------------------------------
 context("erstatt_med_na")
 test_that("Funksjonen returnerer NA for alle 'na_verdier' som forventet", {
