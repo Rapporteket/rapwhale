@@ -20,14 +20,21 @@ les_varnavn = function(adresse, formatspek) {
 konverter_boolske = function(x, boolsk_usann, boolsk_sann) {
 
   # Sjekk først at det berre er gyldige verdiar
-  er_gyldig = (x %in% c(boolsk_sann, boolsk_usann)) | is.na(x)
-  if (!rlang::is_empty(intersect(boolsk_sann, boolsk_usann))) {
-    stop(error = paste0("boolsk_sann og boolsk_usann kan ikke inneholde samme verdier."))
+  mulige_verdier = c(boolsk_usann, boolsk_sann, NA)
+  er_gyldig = (x %in% mulige_verdier)
+  er_ugyldig = x[!er_gyldig]
+  overlapp = intersect(boolsk_usann, boolsk_sann)
+
+  if (!rlang::is_empty(overlapp)) {
+    stop(error = paste0("boolsk_sann og boolsk_usann kan ikke inneholde samme verdier"))
   }
   if (!all(er_gyldig)) {
-    stop(error = paste0("Det finnes ugyldige verdier for en boolsk variabel.\nboolsk_usann kan være: ", boolsk_usann, "\nboolsk_sann kan være: ", boolsk_sann))
+    ugyldige = paste0(er_ugyldig, collapse = ",")
+    mulige = paste0(mulige_verdier, collapse = ",")
+    stop(error = paste0("Det finnes ugyldige verdier for en boolsk variabel: ", ugyldige, "\nMulige verdier er: ", mulige))
   }
-  x == boolsk_sann # Gjer om til boolsk variabel
+
+  # Konverterer til logisk vektor
   x_boolsk = rep(NA, length(x))
   x_boolsk[x %in% boolsk_usann] = FALSE
   x_boolsk[x %in% boolsk_sann] = TRUE

@@ -157,16 +157,16 @@ test_that("Funksjonen gir feilmelding hvis en boolsk variabel inneholder ugyldig
     boolsk_usann = 0,
     boolsk_sann = 1
   ),
-  "Det finnes ugyldige verdier for en boolsk variabel.\nboolsk_usann kan være: 0\nboolsk_sann kan være: 1",
+  "Det finnes ugyldige verdier for en boolsk variabel: 2\nMulige verdier er: 0,1,NA",
   fixed = TRUE
   )
 
   expect_error(konverter_boolske(
-    x = c("Tr", "Fa", "True", NA),
+    x = c("Tr", "Fa", "True", "False", NA),
     boolsk_usann = "Fa",
     boolsk_sann = "Tr"
   ),
-  "Det finnes ugyldige verdier for en boolsk variabel.\nboolsk_usann kan være: Fa\nboolsk_sann kan være: Tr",
+  "Det finnes ugyldige verdier for en boolsk variabel: True,False\nMulige verdier er: Fa,Tr,NA",
   fixed = TRUE
   )
 })
@@ -205,7 +205,7 @@ test_that("Funksjonen gir feilmelding om det er like verdier i boolsk_sann og bo
       boolsk_usann = c(0, NA),
       boolsk_sann = c(1, NA)
     ),
-    "boolsk_sann og boolsk_usann kan ikke inneholde samme verdier."
+    "boolsk_sann og boolsk_usann kan ikke inneholde samme verdier"
   )
 })
 
