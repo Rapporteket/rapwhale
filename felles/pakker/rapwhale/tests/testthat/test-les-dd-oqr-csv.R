@@ -130,6 +130,24 @@ test_that("Funksjonen gir feilmelding om desimaltegn i data ikke tilsvarer forma
   )))
 })
 
+test_that("Funksjonen gir feilmelding hvis format tid i data ikke tilsvarer formatspek", {
+  specs_kl = specs_dd_ok_hel[specs_dd_ok_hel$vartype == "kl", ]
+
+  expect_error(suppressWarnings(les_csv_base(
+    adresse = "dd_tid_inkl_sek.csv", # HH:MM:SS
+    spesifikasjon = specs_kl,
+    formatspek = formatspek_ok_hel
+  ))) # HH:MM
+
+  formatspek_kl = formatspek_ok_hel
+  formatspek_kl$klokkeslett = "%H:%M:%S"
+  expect_error(suppressWarnings(les_csv_base(
+    adresse = "dd_tid_hh_mm.csv", # HH:MM
+    spesifikasjon = specs_kl,
+    formatspek = formaspek_kl
+  ))) # HH:MM:SS
+})
+
 # Konvertering av variabeltyper -------------------------------------------
 context("konverter_boolske")
 
