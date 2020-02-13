@@ -123,7 +123,3 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
 
   d
 }
-
-# OQR-spesifikk funksjon for å lese inn csv vha les_csv_base.
-les_csv_oqr = function(adresse, spesifikasjon) {
-}
