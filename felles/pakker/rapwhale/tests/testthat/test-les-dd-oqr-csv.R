@@ -103,21 +103,32 @@ test_that("Funksjonen håndterer NA for alle variabeltyper", {
 })
 
 test_that("Funksjonen gir feilmelding ved ukjent dato-format", {
+  specs_dato = specs_dd_ok_hel[specs_dd_ok_hel$vartype == "dato", ]
+
   expect_error(suppressWarnings(les_csv_base(
-    adresse = "dd_feil_dato_format.csv",
-    spesifikasjon = specs_dd_ok_hel,
+    adresse = "dd_feil_dato_format.csv", # "2014-05-12"
+    spesifikasjon = specs_dato,
     formatspek = formatspek_ok_hel
-  )))
+  ))) # "05.12.2014"
 })
 
-test_that("Funksjonen gir feilmelding om desimaltegn er '.', ikke ','", {
+test_that("Funksjonen gir feilmelding om desimaltegn i data ikke tilsvarer formatspek", {
+  specs_desimal = specs_dd_ok_hel[specs_dd_ok_hel$vartype == "desimaltall", ]
+
   expect_error(suppressWarnings(les_csv_base(
-    adresse = "dd_feil_desimaltegn.csv",
-    spesifikasjon = specs_dd_ok_hel,
+    adresse = "dd_desimal_punktum.csv",
+    spesifikasjon = specs_desimal,
     formatspek = formatspek_ok_hel
   )))
-})
 
+  formatspek_desimal = formatspek_ok_hel
+  formatspek_desimal$desimaltegn = "."
+  expect_error(suppressWarnings(les_csv_base(
+    adresse = "dd_desimal_komma.csv",
+    spesifikasjon = specs_desimal,
+    formatspek = formatspek_desimal
+  )))
+})
 
 # Konvertering av variabeltyper -------------------------------------------
 context("konverter_boolske")
