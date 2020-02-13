@@ -78,6 +78,12 @@ std_koltype_til_readr_koltype = function(vartype) {
   koltype
 }
 
+# Setter inn NA for 'na_verdi':
+erstatt_med_na = function(x, na_verdi) {
+  x[x %in% na_verdi] = NA
+  x
+}
+
 #' Les inn csv-fil
 #'
 #' Funksjon som leser inn en csv-fil fra en filplassering med angitt variabeltype fra en spesifikasjons-tibble.
@@ -110,6 +116,13 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
   )
 
   readr::stop_for_problems(d)
+
+  # Erstatte na_verdi oppgitt i formatspek med NA
+  d = dplyr::mutate_all(
+    d,
+    erstatt_med_na,
+    formatspek$na_verdi
+  )
 
   # Konverter dato_kl
   # fixme: Fjern denne og oppdater std_koltype_til_readr_koltype() når

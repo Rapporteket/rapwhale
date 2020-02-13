@@ -10,7 +10,8 @@ formatspek_ok_hel = list(
   tidssone = "Europe/Oslo",
   filkoding = "UTF-8-BOM",
   boolsk_sann = 1,
-  boolsk_usann = 0
+  boolsk_usann = 0,
+  na_verdi = "null"
 )
 
 test_that("Funksjonen leser inn en variabel selv om den ikke har navn", {
@@ -146,6 +147,26 @@ test_that("Funksjonen gir feilmelding hvis format tid i data ikke tilsvarer form
     spesifikasjon = specs_kl,
     formatspek = formaspek_kl
   ))) # HH:MM:SS
+})
+
+# erstatt_med_na -------------------------------------------------------------
+context("erstatt_med_na")
+test_that("Funksjonen returnerer NA for alle 'na_verdier' som forventet", {
+  expect_identical(
+    erstatt_med_na(
+      x = c("test", "hest", "fest", "missing", "missingness"),
+      na_verdi = "missing"
+    ),
+    c("test", "hest", "fest", NA, "missingness")
+  )
+
+  expect_identical(
+    erstatt_med_na(
+      x = c(1.2, 3.3, 0, -99),
+      na_verdi = c(0, -99)
+    ),
+    c(1.2, 3.3, NA, NA)
+  )
 })
 
 # Konvertering av variabeltyper -------------------------------------------
