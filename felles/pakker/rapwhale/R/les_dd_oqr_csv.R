@@ -24,6 +24,7 @@ les_varnavn = function(adresse, formatspek) {
 #' @param x Vektor med verdier som skal konverteres til en logisk vektor.
 #' @param boolsk_usann Hvilke verdier skal konverteres til FALSE? Kan inneholde flere verdier.
 #' @param boolsk_sann Hvilke verdier skal konverteres til TRUE? Kan inneholde flere verdier.
+#' @param na_verdier Hvilke verdier skal betraktes som NA? Kan inneholde flere verdier.
 konverter_boolske = function(x, boolsk_usann, boolsk_sann, na_verdier = NA) {
 
   # Sjekk først at det berre er gyldige verdiar

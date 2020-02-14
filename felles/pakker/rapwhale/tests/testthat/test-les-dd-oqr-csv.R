@@ -239,6 +239,40 @@ test_that("Funksjonen gir feilmelding om det er like verdier i boolsk_sann og bo
   )
 })
 
+test_that("Funksjonen gir feilmelding hvis det finnes NA-verdier som ikke er akseptert", {
+  expect_error(konverter_boolske(
+    x = c(0, 1, NA, "null"),
+    boolsk_usann = c(0),
+    boolsk_sann = c(1),
+    na_verdier = "null"
+  ),
+  "Det finnes ugyldige verdier for en boolsk variabel: NA\nMulige verdier er: 0,1,null",
+  fixed = TRUE
+  )
+})
+
+test_that("Funksjonen fungerer som forventet med ulike na_verdier", {
+  expect_identical(
+    konverter_boolske(
+      x = c(0, 1, NA, "null"),
+      boolsk_usann = c(0),
+      boolsk_sann = c(1),
+      na_verdier = c(NA, "null")
+    ),
+    c(FALSE, TRUE, NA, NA)
+  )
+
+  expect_identical(
+    konverter_boolske(
+      x = c("JA", "NEI", "NA", NA),
+      boolsk_usann = c("NEI", "NA"),
+      boolsk_sann = c("JA"),
+      na_verdier = c(NA)
+    ),
+    c(TRUE, FALSE, FALSE, NA)
+  )
+})
+
 context("konverter_dato_kl")
 
 test_that("les_csv_base gir feilmelding hvis format på dato_kl i formatspek og data ikke er enige", {
