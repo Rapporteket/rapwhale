@@ -27,7 +27,7 @@ les_varnavn = function(adresse, formatspek) {
 konverter_boolske = function(x, boolsk_usann, boolsk_sann, na_verdier = NA) {
 
   # Sjekk først at det berre er gyldige verdiar
-  mulige_verdier = c(boolsk_usann, boolsk_sann, NA)
+  mulige_verdier = c(boolsk_usann, boolsk_sann, na_verdier)
   er_gyldig = (x %in% mulige_verdier)
   er_ugyldig = x[!er_gyldig]
   overlapp = intersect(boolsk_usann, boolsk_sann)
@@ -116,6 +116,7 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
 
   d = readr::read_delim(adresse,
     delim = formatspek$skilletegn, skip = 1,
+    na = formatspek$na_verdier,
     locale = readr::locale(
       decimal_mark = formatspek$desimaltegn,
       date_format = formatspek$dato,
@@ -128,13 +129,6 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
 
   readr::stop_for_problems(d)
 
-  # Erstatte na_verdi oppgitt i formatspek med NA
-  d = dplyr::mutate_all(
-    d,
-    erstatt_med_na,
-    formatspek$na_verdi
-  )
-
   # Konverter dato_kl
   # fixme: Fjern denne og oppdater std_koltype_til_readr_koltype() når
   #        https://github.com/tidyverse/readr/issues/642 er fiksa
@@ -142,7 +136,10 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
   d = mutate_at(
     d, varnavn_dato_kl,
     ~ readr::stop_for_problems(
-      readr::parse_datetime(., format = formatspek$dato_kl)
+      readr::parse_datetime(.,
+        format = formatspek$dato_kl,
+        na = formatspek$na_verdier
+      )
     )
   )
 
