@@ -1,10 +1,10 @@
-#' Les inn variabelnavn fra datadump
+#' Les inn variabelnavn fra datafil
 #'
-#' Henter ut variabelnavn fra en datadump. Bruker filplassering som argument.
+#' \code{les_varnavn()} henter ut første rad fra en datafil. Bruker filplassering som argument.
 #'
-#' Returnerer en vektor med variabelnavn slik de er i datadump.
+#' Returnerer en vektor med variabelnavn slik de er i datafilen.
 #'
-#' @param adresse Filplassering for datadump som skal leses inn. Henter kun ut variabelnavn fra datadump.
+#' @param adresse Filplassering for datafil som skal leses inn. Henter kun ut variabelnavn.
 les_varnavn = function(adresse, formatspek) {
   stopifnot(is.character(adresse) & length(adresse) == 1)
 
@@ -16,8 +16,15 @@ les_varnavn = function(adresse, formatspek) {
   varnavn
 }
 
-# Håndtering av spesielle tilfeller, variabeltype = boolsk og dato_kl
-konverter_boolske = function(x, boolsk_usann, boolsk_sann) {
+#' Konverter en variabel til logisk variabel
+#'
+#' \code{konverter_boolske()} tar inn en vektor som skal konverteres, i tillegg til vektorer
+#' som beskriver hva som skal regnes som TRUE og FALSE.
+#'
+#' @param x Vektor med verdier som skal konverteres til en logisk vektor.
+#' @param boolsk_usann Hvilke verdier skal konverteres til FALSE? Kan inneholde flere verdier.
+#' @param boolsk_sann Hvilke verdier skal konverteres til TRUE? Kan inneholde flere verdier.
+konverter_boolske = function(x, boolsk_usann, boolsk_sann, na_verdier = NA) {
 
   # Sjekk først at det berre er gyldige verdiar
   mulige_verdier = c(boolsk_usann, boolsk_sann, NA)
@@ -43,8 +50,9 @@ konverter_boolske = function(x, boolsk_usann, boolsk_sann) {
 
 #' Konverter variabeltype fra standard format til readrformat
 #'
-#' Funksjonen tar inn en vektor med variabeltyper oppgitt på vårt standardformat.
-#' Returnerer en sammenslått tekststreng med gyldige coltypes for bruk i diverse readrfunksjoner.
+#' \code{std_koltype_til_readr_koltype()} tar inn en vektor med variabeltyper oppgitt på vårt standardformat.
+#' Returnerer en sammenslått tekststreng med gyldige coltypes for bruk i \code{read_*()}-funksjoner fra readr-pakken.
+#' Se \code{read_delim()}
 #'
 #' @param vartyper Vektor med variabeltyper oppgitt på standardformat.
 #' Mulige typer er: tekst, desimalltall, heltall, boolsk, dato, dato_kl og kl.
@@ -86,9 +94,12 @@ erstatt_med_na = function(x, na_verdi) {
 
 #' Les inn csv-fil
 #'
-#' Funksjon som leser inn en csv-fil fra en filplassering med angitt variabeltype fra en spesifikasjons-tibble.
-#' Aksepterte variabeltyper er: tekst, desimaltall, heltall, boolsk, dato, dato_kl og klokkeslett.
+#' \code{les_csv_base()} leser inn en csv-fil fra en filplassering.
+#' Spesifisering av format og datastruktur gjøres i argumentene formatspek og spesifikasjon.
+#' Se rapwhale::formatspek og rapwhale::spesifikasjon for eksempeloppsett for
+#' ulike innstillinger.
 #' Variabelnavn kan endres ved å inkludere en vektor med nye variabelnavn.
+#' Aksepterte variabeltyper er: tekst, desimaltall, heltall, boolsk, dato, dato_kl og klokkeslett.
 #'
 #' @param adresse Filplassering for datadump som skal leses inn.
 #' @param spesifikasjon Tibble med tre kolonner. Inneholder varnavn_kilde, varnavn_resultat og vartype.
