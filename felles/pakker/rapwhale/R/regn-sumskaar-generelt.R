@@ -146,6 +146,11 @@ oppsummer_ugyldige_verdier = function(d_ugyldige) {
   }
 }
 
+
+regn_sumskaar = function(d, skaaringstabell) {
+
+}
+
 ################################# Midlertidig kode ################################
 
 #     if (godta_manglende) {
