@@ -233,3 +233,37 @@ test_that("oppsummer_ugyldige_verdier() gir ut korrekt melding hvis det ikke fin
     "Alle verdiene er gyldige"
   )
 })
+
+
+context("regn_sumskaar")
+
+# Eksempeldata med bare gyldige verdier (datasettet inneholder alle mulige verdier for hver variabel minst en gang)
+d_gyldig_alle_verdier = tibble::tribble(
+  ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2,
+  1, 2, 1, 10, 20,
+  2, 1, 2, 20, 10,
+  3, 1, 2, NA, 10
+)
+
+# Manuell utregning av sumskår for d_gyldig_alle_verdier
+sumskaar_total_rad1 = 0.2 + 0.3 + 0 + 0 + 0.018
+sumskaar_psykisk_rad1 = -2 + (-5) + 8
+sumskaar_total_rad2 = 0.4 + 0 + 0.35 + 0.025 + 0
+sumskaar_psykisk_rad2 = 0 + 5 + (-8)
+sumskaar_total_rad3 = 0.8 + 0 + 0.35 + (-0.01) + 0
+sumskaar_psykisk_rad3 = 2 + (-0.5) + (-8)
+
+# Tabell med utregnet sumskår for d_gyldig_alle_verdier
+sumskaar_tabell = tibble::tribble(
+  ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2, ~sumskaar_total, ~sumskaar_psykisk,
+  1, 2, 1, 10, 20, sumskaar_total_rad1, sumskaar_psykisk_rad1,
+  2, 1, 2, 20, 10, sumskaar_total_rad2, sumskaar_psykisk_rad2,
+  3, 1, 2, NA, 10, sumskaar_total_rad3, sumskaar_psykisk_rad3,
+)
+
+test_that("regn_sumskaar() regner ut korrekt sumskaar ved gyldige verdier", {
+  expect_identical(
+    regn_sumskaar(d_gyldig_alle_verdier, skaaringstabell_eks),
+    sumskaar_tabell
+  )
+})
