@@ -17,7 +17,7 @@ les_csv_oqr = function(adresse, spesifikasjon) {
 
   # !fixme - Oppdatere kilde når ny dokumentasjon kommer fra HNIKT.
   # !fixme - Lage funksjon for å generere formatspek
-  formatspek_oqr = list(
+  formatspek_oqr = lag_formatspek(
     skilletegn = ";", # (1)
     desimaltegn = ",", # (1) Skal være "." i følge dokumentasjon
     dato = "%Y-%m-%d", # (1) YYYY-MM-DD
