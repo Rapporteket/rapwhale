@@ -298,16 +298,85 @@ test_that("les_csv_base gir feilmelding hvis format på dato_kl i formatspek og 
 context("lag_formatspek")
 
 test_that("lag_formatspek gir feilmelding hvis desimaltegn og skilletegn ikke er tekst og av lengde 1", {
-  expect_error()
-  expect_error()
+  expect_error(lag_formatspek(
+    skilletegn = ";,",
+    desimaltegn = ",",
+    dato = "%Y-%m-%d",
+    klokkeslett = "%H:%M",
+    dato_kl = "%Y-%m-%d %H:%M:%OS",
+    tidssone = "Europe/Oslo",
+    filkoding = "UTF-8-BOM",
+    boolsk_sann = 1,
+    boolsk_usann = 0,
+    na_verdier = ""
+  ))
+
+  expect_error(lag_formatspek(
+    skilletegn = 1,
+    desimaltegn = ",",
+    dato = "%Y-%m-%d",
+    klokkeslett = "%H:%M",
+    dato_kl = "%Y-%m-%d %H:%M:%OS",
+    tidssone = "Europe/Oslo",
+    filkoding = "UTF-8-BOM",
+    boolsk_sann = 1,
+    boolsk_usann = 0,
+    na_verdier = ""
+  ))
 })
 
 test_that("lag_formatspek gir feilmelding om dato, klokkeslett eller dato_kl ikke er tekst", {
-  expect_error()
-  expect_error()
-  expect_error()
+  expect_error(lag_formatspek(
+    skilletegn = ";",
+    desimaltegn = ",",
+    dato = 19900110,
+    klokkeslett = "%H:%M",
+    dato_kl = "%Y-%m-%d %H:%M:%OS",
+    tidssone = "Europe/Oslo",
+    filkoding = "UTF-8-BOM",
+    boolsk_sann = 1,
+    boolsk_usann = 0,
+    na_verdier = ""
+  ))
+
+  expect_error(lag_formatspek(
+    skilletegn = ";",
+    desimaltegn = ",",
+    dato = "%Y-%m-%d",
+    klokkeslett = 0000,
+    dato_kl = "%Y-%m-%d %H:%M:%OS",
+    tidssone = "Europe/Oslo",
+    filkoding = "UTF-8-BOM",
+    boolsk_sann = 1,
+    boolsk_usann = 0,
+    na_verdier = ""
+  ))
+
+  expect_error(lag_formatspek(
+    skilletegn = ";",
+    desimaltegn = ",",
+    dato = "%Y-%m-%d",
+    klokkeslett = "%H:%M",
+    dato_kl = 199010101530,
+    tidssone = "Europe/Oslo",
+    filkoding = "UTF-8-BOM",
+    boolsk_sann = 1,
+    boolsk_usann = 0,
+    na_verdier = ""
+  ))
 })
 
 test_that("lag_formatspek gir feilmelding hvis det er overlapp mellom boolsk_sann og boolsk_usann", {
-  expect_error()
+  expect_error(lag_formatspek(
+    skilletegn = ";",
+    desimaltegn = ",",
+    dato = "%Y-%m-%d",
+    klokkeslett = "%H:%M",
+    dato_kl = "%Y-%m-%d %H:%M:%OS",
+    tidssone = "Europe/Oslo",
+    filkoding = "UTF-8-BOM",
+    boolsk_sann = c(1, 4),
+    boolsk_usann = c(0, 4),
+    na_verdier = ""
+  ))
 })
