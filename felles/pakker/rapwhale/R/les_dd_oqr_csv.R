@@ -158,7 +158,7 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
 # lag formatspek
 lag_formatspek = function(skilletegn, desimaltegn, dato, klokkeslett, dato_kl,
                           tidssone, filkoding, boolsk_sann, boolsk_usann,
-                          na_verdier, ...) {
+                          na_verdier) {
   formatspek = list(
     "skilletegn" = skilletegn,
     "desimaltegn" = desimaltegn,
