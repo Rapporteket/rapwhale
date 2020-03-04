@@ -293,3 +293,21 @@ test_that("les_csv_base gir feilmelding hvis format på dato_kl i formatspek og 
     formatspek = formatspek_dato_kl
   ))) # format: 2020.01.01 17:00
 })
+
+# lag_formatspek ----------------------------------------------------------
+context("lag_formatspek")
+
+test_that("lag_formatspek gir feilmelding hvis desimaltegn og skilletegn ikke er tekst og av lengde 1", {
+  expect_error()
+  expect_error()
+})
+
+test_that("lag_formatspek gir feilmelding om dato, klokkeslett eller dato_kl ikke er tekst", {
+  expect_error()
+  expect_error()
+  expect_error()
+})
+
+test_that("lag_formatspek gir feilmelding hvis det er overlapp mellom boolsk_sann og boolsk_usann", {
+  expect_error()
+})
