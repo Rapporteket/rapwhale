@@ -154,3 +154,29 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
 
   d
 }
+
+# lag formatspek
+lag_formatspek = function(skilletegn, desimaltegn, dato, klokkeslett, dato_kl,
+                          tidssone, filkoding, boolsk_sann, boolsk_usann,
+                          na_verdier, ...) {
+  formatspek = list(
+    "skilletegn" = skilletegn,
+    "desimaltegn" = desimaltegn,
+    "dato" = dato,
+    "klokkeslett" = klokkeslett,
+    "dato_kl" = dato_kl,
+    "tidssone" = tidssone,
+    "filkoding" = filkoding,
+    "boolsk_sann" = boolsk_sann,
+    "boolsk_usann" = boolsk_usann,
+    "na_verdier" = na_verdier
+  )
+
+  stopifnot(is.character(formatspek$skilletegn) && nchar(formatspek$skilletegn) == 1)
+  stopifnot(is.character(formatspek$desimaltegn) && nchar(formatspek$desimaltegn) == 1)
+  stopifnot(is.character(formatspek$dato))
+  stopifnot(is.character(formatspek$klokkeslett))
+  stopifnot(is.character(formatspek$dato_kl))
+  stopifnot(rlang::is_empty(intersect(formatspek$boolsk_sann, formatspek$boolsk_usann)))
+  formatspek
+}
