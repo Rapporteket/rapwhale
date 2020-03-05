@@ -262,7 +262,7 @@ sumskaar_tabell = tibble::tribble(
   sumskaar_total_rad3, sumskaar_psykisk_rad3
 )
 
-test_that("regn_sumskaar() regner ut korrekt sumskaar hvis alle verdiene finnes i skåringstabellen", {
+test_that("regn_sumskaar() regner ut korrekt sumskår hvis alle verdiene finnes i skåringstabellen", {
   expect_identical(
     regn_sumskaar(d_gyldig_alle_verdier, skaaringstabell_eks),
     sumskaar_tabell
@@ -293,9 +293,32 @@ sumskaar_na_tabell = tibble::tribble(
   sumskaar_na_total_rad3, sumskaar_na_psykisk_rad3
 )
 
-test_that("regn_sumskaar() gir ut NA som sumskaar ved NA-verdier uten tilknyttet koeffisient", {
+test_that("regn_sumskaar() gir ut NA som sumskår ved NA-verdier uten tilknyttet koeffisient", {
   expect_identical(
     regn_sumskaar(d_na_uten_koeffisient, skaaringstabell_eks),
     sumskaar_na_tabell
+  )
+})
+
+# Eksempeldata som bare inneholder 1 besvarelse
+d_1_besvarelse = tibble::tribble(
+  ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2,
+  2, 1, 2, 20, 10
+)
+
+# Manuell utregning av sumskår for d_1_besvarelse
+sumskaar_1_besvarelse_total = 0.4 + 0 + 0.35 + 0.025 + 0
+sumskaar_1_besvarelse_psykisk = 0 + 5 + (-8)
+
+# Utregnede sumskårer for d_1_besvarelse
+sumskaar_1_besvarelse_tabell = tibble::tribble(
+  ~sumskaar_total, ~sumskaar_psykisk,
+  sumskaar_1_besvarelse_total, sumskaar_1_besvarelse_psykisk
+)
+
+test_that("regn_sumskaar() regner ut korrekt sumskaar ved bare en besvarelse", {
+  expect_identical(
+    regn_sumskaar(d_1_besvarelse, skaaringstabell_eks),
+    sumskaar_1_besvarelse_tabell
   )
 })
