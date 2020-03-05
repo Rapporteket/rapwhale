@@ -237,7 +237,7 @@ test_that("oppsummer_ugyldige_verdier() gir ut korrekt melding hvis det ikke fin
 
 context("regn_sumskaar")
 
-# Eksempeldata som bare inneholder verdier som finnes i skaaringstabell_eks
+# Eksempeldata som bare inneholder verdier som finnes i skåringstabellen
 # (datasettet inneholder alle mulige verdier for hver variabel minst en gang)
 d_gyldig_alle_verdier = tibble::tribble(
   ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2,
@@ -262,9 +262,40 @@ sumskaar_tabell = tibble::tribble(
   sumskaar_total_rad3, sumskaar_psykisk_rad3
 )
 
-test_that("regn_sumskaar() regner ut korrekt sumskaar ved gyldige verdier", {
+test_that("regn_sumskaar() regner ut korrekt sumskaar hvis alle verdiene finnes i skåringstabellen", {
   expect_identical(
     regn_sumskaar(d_gyldig_alle_verdier, skaaringstabell_eks),
     sumskaar_tabell
+  )
+})
+
+# Eksempeldata som inneholder NA-verdier uten tilknyttet koeffisient
+d_na_uten_koeffisient = tibble::tribble(
+  ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2,
+  1, 2, NA, 10, 20,
+  NA, NA, 2, 20, NA,
+  3, 1, 2, NA, 10
+)
+
+# Manuell utregning av sumskår for d_na_uten_koeffisient
+sumskaar_na_total_rad1 = NA
+sumskaar_na_psykisk_rad1 = NA
+sumskaar_na_total_rad2 = NA
+sumskaar_na_psykisk_rad2 = NA
+sumskaar_na_total_rad3 = 0.8 + 0 + 0.35 + (-0.01) + 0
+sumskaar_na_psykisk_rad3 = 2 + (-0.5) + (-8)
+
+# Utregnede sumskårer for d_na_uten_koeffisient
+sumskaar_na_tabell = tibble::tribble(
+  ~sumskaar_total, ~sumskaar_psykisk,
+  sumskaar_na_total_rad1, sumskaar_na_psykisk_rad1,
+  sumskaar_na_total_rad2, sumskaar_na_psykisk_rad2,
+  sumskaar_na_total_rad3, sumskaar_na_psykisk_rad3
+)
+
+test_that("regn_sumskaar() gir ut NA som sumskaar ved NA-verdier uten tilknyttet koeffisient", {
+  expect_identical(
+    regn_sumskaar(d_na_uten_koeffisient, skaaringstabell_eks),
+    sumskaar_na_tabell
   )
 })
