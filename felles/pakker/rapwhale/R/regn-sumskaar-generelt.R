@@ -146,9 +146,45 @@ oppsummer_ugyldige_verdier = function(d_ugyldige) {
   }
 }
 
-
 regn_sumskaar = function(d, skaaringstabell) {
+  # Gjer om til éi rad per svar, med ein person-ID
+  # som seier kva rad svaret opphavleg kom frå
+  d_svar = d %>%
+    tibble::rowid_to_column("person_id") %>%
+    tidyr::pivot_longer(-person_id, names_to = "variabel", values_to = "verdi")
 
+  # For kvart svar, legg til tilhøyrande koeffisientar
+  # (kan vera fleire per svar, dersom det finst fleire delskalaar)
+  d_med_koeff = d_svar %>%
+    dplyr::left_join(skaaringstabell, by = c("variabel", "verdi"))
+
+  # Det kan vera nokon manglar svar (til og med på *alle* variablane).
+  # Passar derfor på at kvar pasient har ei rad for kvar moglege kombinasjon
+  # av delskala og variabel (med koeffisientverdi lik NA om nødvendig).
+  #
+  # Først treng me ei oversikt over *moglege* delskala/variabel-kombinasjonar
+  # (denne har i praksis berre ein effekt dersom *alle* pasientar manglar svar på ein delskala).
+  d_skaaringstabell_delskala_variabel_kombo = skaaringstabell %>%
+    distinct(delskala, variabel)
+  d_med_koeff_komplett = d_med_koeff %>%
+    dplyr::right_join(d_skaaringstabell_delskala_variabel_kombo,
+      by = c("delskala", "variabel")
+    ) %>% # Gjer at alle moglege delskala/variabel-komboar vert representerte
+    tidyr::complete(person_id, tidyr::nesting(delskala, variabel)) %>% # Gjer at kvar pasient har moglege slike komboar
+    filter(!is.na(delskala) & !is.na(person_id))
+
+  # Rekn ut sumskår for alle delskalaane, per pasient
+  d_med_skaarar = d_med_koeff_komplett %>%
+    group_by(person_id, delskala) %>%
+    summarise(skaar = sum(koeffisient)) %>%
+    tidyr::pivot_wider(names_from = "delskala", values_from = "skaar")
+
+  # For sikkerheits skuld, sorter etter opphavleg radnummer,
+  # og returner til slutt skårar for alle delskalaane
+  d_med_skaarar %>%
+    arrange(person_id) %>%
+    ungroup() %>%
+    select(-person_id)
 }
 
 ################################# Midlertidig kode ################################
