@@ -187,6 +187,10 @@ regn_sumskaar = function(d, skaaringstabell) {
     select(-person_id)
 }
 
+sjekk_skaaringstabell = function(skaaringstabell) {
+
+}
+
 ################################# Midlertidig kode ################################
 
 #     if (godta_manglende) {
