@@ -8,7 +8,7 @@ formatspek_ok_hel = list(
   klokkeslett = "%H:%M",
   dato_kl = "%d.%m.%Y %H:%M",
   tidssone = "Europe/Oslo",
-  filkoding = "UTF-8-BOM",
+  tegnkoding = "UTF-8-BOM",
   boolsk_sann = 1,
   boolsk_usann = 0,
   na_verdier = c("", "null")
@@ -297,7 +297,18 @@ test_that("les_csv_base gir feilmelding hvis format på dato_kl i formatspek og 
 # lag_formatspek ----------------------------------------------------------
 context("lag_formatspek")
 
-test_that("lag_formatspek gir feilmelding hvis desimaltegn og skilletegn ikke er tekst og av lengde 1", {
+# fixme: Manglar testar på at funksjonen faktisk *fungerer*, dvs. at han gjev
+#        ut det han skal når han får gyldige inndata!
+
+# fixme: Manglar testar på at «tidssone» og «tegnkoding» er tekst.
+
+# fixme (i les_csv_base()): Variabelen «tegnkoding» (tidlegare «filkoding»)
+#                           vert faktisk ikkje brukt til noko!
+
+# fixme: Ifølgje teksten skal også testa «desimaltegn», men det er ingen testar på det.
+#        (readr antar for øvrig at desimalteiknet er punktum eller komma,
+#         så ein kan kanskje vera like streng)
+test_that("lag_formatspek() gir feilmelding hvis desimaltegn og skilletegn ikke er tekst og av lengde 1", {
   expect_error(lag_formatspek(
     skilletegn = ";,",
     desimaltegn = ",",
@@ -305,7 +316,7 @@ test_that("lag_formatspek gir feilmelding hvis desimaltegn og skilletegn ikke er
     klokkeslett = "%H:%M",
     dato_kl = "%Y-%m-%d %H:%M:%OS",
     tidssone = "Europe/Oslo",
-    filkoding = "UTF-8-BOM",
+    tegnkoding = "UTF-8-BOM",
     boolsk_sann = 1,
     boolsk_usann = 0,
     na_verdier = ""
@@ -318,14 +329,14 @@ test_that("lag_formatspek gir feilmelding hvis desimaltegn og skilletegn ikke er
     klokkeslett = "%H:%M",
     dato_kl = "%Y-%m-%d %H:%M:%OS",
     tidssone = "Europe/Oslo",
-    filkoding = "UTF-8-BOM",
+    tegnkoding = "UTF-8-BOM",
     boolsk_sann = 1,
     boolsk_usann = 0,
     na_verdier = ""
   ))
 })
 
-test_that("lag_formatspek gir feilmelding om dato, klokkeslett eller dato_kl ikke er tekst", {
+test_that("lag_formatspek() gir feilmelding om dato, klokkeslett eller dato_kl ikke er tekst", {
   expect_error(lag_formatspek(
     skilletegn = ";",
     desimaltegn = ",",
@@ -333,7 +344,7 @@ test_that("lag_formatspek gir feilmelding om dato, klokkeslett eller dato_kl ikk
     klokkeslett = "%H:%M",
     dato_kl = "%Y-%m-%d %H:%M:%OS",
     tidssone = "Europe/Oslo",
-    filkoding = "UTF-8-BOM",
+    tegnkoding = "UTF-8-BOM",
     boolsk_sann = 1,
     boolsk_usann = 0,
     na_verdier = ""
@@ -346,7 +357,7 @@ test_that("lag_formatspek gir feilmelding om dato, klokkeslett eller dato_kl ikk
     klokkeslett = 0000,
     dato_kl = "%Y-%m-%d %H:%M:%OS",
     tidssone = "Europe/Oslo",
-    filkoding = "UTF-8-BOM",
+    tegnkoding = "UTF-8-BOM",
     boolsk_sann = 1,
     boolsk_usann = 0,
     na_verdier = ""
@@ -359,7 +370,7 @@ test_that("lag_formatspek gir feilmelding om dato, klokkeslett eller dato_kl ikk
     klokkeslett = "%H:%M",
     dato_kl = 199010101530,
     tidssone = "Europe/Oslo",
-    filkoding = "UTF-8-BOM",
+    tegnkoding = "UTF-8-BOM",
     boolsk_sann = 1,
     boolsk_usann = 0,
     na_verdier = ""
@@ -374,7 +385,7 @@ test_that("lag_formatspek gir feilmelding hvis det er overlapp mellom boolsk_san
     klokkeslett = "%H:%M",
     dato_kl = "%Y-%m-%d %H:%M:%OS",
     tidssone = "Europe/Oslo",
-    filkoding = "UTF-8-BOM",
+    tegnkoding = "UTF-8-BOM",
     boolsk_sann = c(1, 4),
     boolsk_usann = c(0, 4),
     na_verdier = ""

@@ -9,7 +9,7 @@ les_varnavn = function(adresse, formatspek) {
   stopifnot(is.character(adresse) & length(adresse) == 1)
 
   varnavn = scan(adresse,
-    fileEncoding = formatspek$filkoding,
+    fileEncoding = formatspek$tegnkoding,
     what = "character", sep = formatspek$skilletegn,
     nlines = 1, quiet = TRUE
   )
@@ -155,10 +155,19 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
   d
 }
 
+# fixme: Funksjonen manglar heilt dokumentasjon!
+#
 # lag formatspek
 lag_formatspek = function(skilletegn, desimaltegn, dato, klokkeslett, dato_kl,
-                          tidssone, filkoding, boolsk_sann, boolsk_usann,
+                          tidssone, tegnkoding, boolsk_sann, boolsk_usann,
                           na_verdier) {
+  stopifnot(is.character(skilletegn) && nchar(skilletegn) == 1)
+  stopifnot(is.character(desimaltegn) && nchar(desimaltegn) == 1)
+  stopifnot(is.character(dato))
+  stopifnot(is.character(klokkeslett))
+  stopifnot(is.character(dato_kl))
+  stopifnot(rlang::is_empty(intersect(boolsk_sann, boolsk_usann)))
+
   formatspek = list(
     "skilletegn" = skilletegn,
     "desimaltegn" = desimaltegn,
@@ -166,17 +175,11 @@ lag_formatspek = function(skilletegn, desimaltegn, dato, klokkeslett, dato_kl,
     "klokkeslett" = klokkeslett,
     "dato_kl" = dato_kl,
     "tidssone" = tidssone,
-    "filkoding" = filkoding,
+    "tegnkoding" = tegnkoding,
     "boolsk_sann" = boolsk_sann,
     "boolsk_usann" = boolsk_usann,
     "na_verdier" = na_verdier
   )
 
-  stopifnot(is.character(formatspek$skilletegn) && nchar(formatspek$skilletegn) == 1)
-  stopifnot(is.character(formatspek$desimaltegn) && nchar(formatspek$desimaltegn) == 1)
-  stopifnot(is.character(formatspek$dato))
-  stopifnot(is.character(formatspek$klokkeslett))
-  stopifnot(is.character(formatspek$dato_kl))
-  stopifnot(rlang::is_empty(intersect(formatspek$boolsk_sann, formatspek$boolsk_usann)))
   formatspek
 }
