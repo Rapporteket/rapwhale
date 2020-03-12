@@ -263,12 +263,11 @@ sumskaar_tabell = tibble::tribble(
 )
 
 test_that("regn_sumskaar() regner ut korrekt sumskår hvis alle verdiene finnes i skåringstabellen", {
-  expect_identical(
+  expect_equal(
     regn_sumskaar(d_gyldig_alle_verdier, skaaringstabell_eks),
     sumskaar_tabell
   )
 })
-
 
 # Eksempeldata som inneholder en NA-verdi uten tilknyttet koeffisient
 d_na = d_gyldig_alle_verdier
@@ -291,7 +290,7 @@ sumskaar_na_tabell = tibble::tribble(
 )
 
 test_that("regn_sumskaar() gir ut NA som sumskår ved NA-verdier uten tilknyttet koeffisient", {
-  expect_identical(
+  expect_equal(
     regn_sumskaar(d_na, skaaringstabell_eks),
     sumskaar_na_tabell
   )
@@ -318,7 +317,7 @@ sumskaar_1_besvarelse_bare_na_tabell = tibble::tribble(
 )
 
 test_that("regn_sumskaar() gir ut riktig sumskår hvis 1 av besvarelselse har NA-verdier på alle spørsmål", {
-  expect_identical(
+  expect_equal(
     regn_sumskaar(d_1_besvarelse_bare_na, skaaringstabell_eks),
     sumskaar_1_besvarelse_bare_na_tabell
   )
@@ -380,5 +379,71 @@ test_that("regn_sumskaar() regner ikke ut sumskår ved 0 besvarelser", {
   expect_identical(
     regn_sumskaar(d_0_besvarelser, skaaringstabell_eks),
     NULL
+  )
+})
+
+
+context("sjekk_skaaringstabell")
+
+test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen ikke har riktige kolonnenavn", {
+  expect_error(
+    sjekk_skaaringstabell(skaaringstabell_ugyldig_eks1),
+    "Skåringstabellen må inneholde kolonnene 'delskala', 'variabel' 'verdi' og 'koeffisient'"
+  )
+})
+
+# Eksempel på skåringstabell som har flere alternativ med samme verdi for samme spørsmål i samme delskala
+skaaringstabell_ugyldig_samme_verdi = skaaringstabell_eks
+skaaringstabell_ugyldig_samme_verdi[2, 3] = 1
+
+test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen har
+          flere alternativ med samme verdi for samme spørsmål i samme delskala", {
+  expect_error(
+    sjekk_skaaringstabell(skaaringstabell_ugyldig_samme_verdi),
+    "Skåringstabellen kan ikke inneholde flere alternativ
+               med samme verdi for samme spørsmål i samme delskala"
+  )
+})
+
+# Eksempel på skåringstabell hvor koeffisient-kolonnen inneholder NA-verdier
+skaaringstabell_ugyldig_na_koeffisient = skaaringstabell_eks
+skaaringstabell_ugyldig_samme_verdi[2, 4] = NA
+
+test_that("sjekk_skaaringstabell() gir feilmelding hvis koeffisient-kolonnen
+          i skåringstabellen inneholder NA-verdier", {
+  expect_error(
+    sjekk_skaaringstabell(skaaringstabell_ugyldig_eks1),
+    "Koeffisient-kolonnen i skåringstabellen kan ikke inneholde NA-verdier"
+  )
+})
+
+# Eksempel på skåringstabell hvor verdi-kolonnen ikke inneholder numeriske variabler
+skaaringstabell_ugyldig_verdi_kolonne = skaaringstabell_eks
+skaaringstabell_ugyldig_verdi_kolonne[3, 3] = "corona"
+
+# Eksempel på skåringstabell hvor koeffisient-kolonnen ikke inneholder numeriske variabler
+skaaringstabell_ugyldig_koeffisient_kolonne = skaaringstabell_eks
+skaaringstabell_ugyldig_koeffisient_kolonne[14, 4] = "hansa"
+
+# Eksempel på skåringstabell hvor variabel-kolonnen ikke inneholder tekst-variabler
+skaaringstabell_ugyldig_variabel_kolonne = skaaringstabell_eks
+skaaringstabell_ugyldig_variabel_kolonne[c(1:20), 2] = 2
+skaaringstabell_ugyldig_variabel_kolonne$variabel = as.numeric(skaaringstabell_ugyldig_variabel_kolonne$variabel)
+
+test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen innholder feil variabeltyper", {
+  expect_error(
+    sjekk_variabelverdier(skaaringstabell_ugyldig_verdi_kolonne),
+    "Verdi-kolonnen og koeffisient-kolonnen må bare inneholde numeriske variabler
+               og variabel-kolonnen bare inneholde tekst-variabler"
+  )
+  expect_error(
+    sjekk_variabelverdier(skaaringstabell_ugyldig_koeffisient_kolonne),
+    "Verdi-kolonnen og koeffisient-kolonnen må bare inneholde numeriske variabler
+               og variabel-kolonnen bare inneholde tekst-variabler"
+  )
+  expect_error(
+    sjekk_variabelverdier(skaaringstabell_ugyldig_variabel_kolonne),
+    "Verdi-kolonnen og koeffisient-kolonnen må bare inneholde numeriske variabler
+               og variabel-kolonnen bare inneholde tekst-variabler"
   )
 })
