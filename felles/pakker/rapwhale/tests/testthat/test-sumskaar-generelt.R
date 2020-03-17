@@ -385,6 +385,13 @@ test_that("regn_sumskaar() regner ikke ut sumskår ved 0 besvarelser", {
 
 context("sjekk_skaaringstabell")
 
+# fixme: Definisjon av eksempeltabell (skaaringstabell_ugyldig_eks1)
+#        står fleire *hundre* linjer frå der han blir brukt, så det er
+#        vanskeleg å sjå kva testen gjer. Bør flyttast inn i test_that().
+
+# fixme: Må vera fire testar («expect_error()»), éin for kvar variabel
+#        (no testar testen berre delar av det han skal testa).
+
 test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen ikke har riktige kolonnenavn", {
   expect_error(
     sjekk_skaaringstabell(skaaringstabell_ugyldig_eks1),
@@ -392,9 +399,11 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen ikke h
   )
 })
 
+# fixme: Variabelgenerering må flyttast inn i test_that().
+
 # Eksempel på skåringstabell som har flere alternativ med samme verdi for samme spørsmål i samme delskala
 skaaringstabell_ugyldig_samme_verdi = skaaringstabell_eks
-skaaringstabell_ugyldig_samme_verdi[2, 3] = 1
+skaaringstabell_ugyldig_samme_verdi[2, 3] = 1 # fixme: 2,3?! Dette er uforståeleg. Bruk skikkelege variabelnamn!
 
 test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen har
           flere alternativ med samme verdi for samme spørsmål i samme delskala", {
@@ -405,9 +414,11 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen har
   )
 })
 
+# fixme: Må flyttast inn i test_that().
+
 # Eksempel på skåringstabell hvor koeffisient-kolonnen inneholder NA-verdier
 skaaringstabell_ugyldig_na_koeffisient = skaaringstabell_eks
-skaaringstabell_ugyldig_samme_verdi[2, 4] = NA
+skaaringstabell_ugyldig_samme_verdi[2, 4] = NA # fixme: Igjen uforståelege indeksar! Kva er magisk med rad 2 kolonne 4?!
 
 test_that("sjekk_skaaringstabell() gir feilmelding hvis koeffisient-kolonnen
           i skåringstabellen inneholder NA-verdier", {
@@ -417,9 +428,11 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis koeffisient-kolonnen
   )
 })
 
+# fixme: Må flyttast inn i test_that(), og kvar blokk må stå ved tilhøyrande test.
+
 # Eksempel på skåringstabell hvor verdi-kolonnen ikke inneholder numeriske variabler
 skaaringstabell_ugyldig_verdi_kolonne = skaaringstabell_eks
-skaaringstabell_ugyldig_verdi_kolonne[3, 3] = "corona"
+skaaringstabell_ugyldig_verdi_kolonne[3, 3] = "corona" # fixme: Igjen uforståelege indeksar!
 
 # Eksempel på skåringstabell hvor koeffisient-kolonnen ikke inneholder numeriske variabler
 skaaringstabell_ugyldig_koeffisient_kolonne = skaaringstabell_eks
@@ -429,6 +442,8 @@ skaaringstabell_ugyldig_koeffisient_kolonne[14, 4] = "hansa"
 skaaringstabell_ugyldig_variabel_kolonne = skaaringstabell_eks
 skaaringstabell_ugyldig_variabel_kolonne[c(1:20), 2] = 2
 skaaringstabell_ugyldig_variabel_kolonne$variabel = as.numeric(skaaringstabell_ugyldig_variabel_kolonne$variabel)
+
+# fixme: Duplisert feilmeldingar. Skriv berre feilmeldinga éin gong.
 
 test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen innholder feil variabeltyper", {
   expect_error(
@@ -447,3 +462,7 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen innhol
                og variabel-kolonnen bare inneholde tekst-variabler"
   )
 })
+
+# fixme: Manglar det viktigaste, nemleg test på at funksjonen fungerer
+#        (ikkje gjev feilmelding, åtvaringar e.l.) på ein *gyldig* skåringstabell.
+#        Det bør testast først.
