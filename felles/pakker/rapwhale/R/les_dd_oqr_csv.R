@@ -122,7 +122,8 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
       decimal_mark = formatspek$desimaltegn,
       date_format = formatspek$dato,
       time_format = formatspek$klokkeslett,
-      tz = formatspek$tidssone
+      tz = formatspek$tidssone,
+      encoding = formatspek$tegnkoding
     ),
     col_types = std_koltype_til_readr_koltype(spesifikasjon$vartype),
     col_names = spesifikasjon$varnavn_resultat
@@ -155,9 +156,22 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
   d
 }
 
-# fixme: Funksjonen manglar heilt dokumentasjon!
-#
-# lag formatspek
+#' Lag formatspek
+#'
+#' \code{lag formatspek()} er en hjelpefunksjon som skal sikre at alle argumenter
+#' i formatspek angis i riktig format og med riktig navn. Formatspek spesifiserer
+#' hvilket format inndata er på og brukes i diverse innlesningsfunksjoner i rapwhale.
+#'
+#' @param skilletegn Angir hvilket tegn som brukes for å skille mellom kolonner i datafil
+#' @param desimaltegn Angir hvilket tegn som brukes som desimaltegn? Må være ',' eller '.'
+#' @param dato Angir hvilket dato-format som er brukt for datokolonner i inndata
+#' @param klokkeslett Angir hvilket format som er brukt for klokkeslett
+#' @param dato_kl Angir hvilket format som er brukt for variabler med både dato og klokkeslett
+#' @param tidssone Angir hvilken tidssone som brukes
+#' @param tegnkoding Angir tegnkodingen som brukes i inndata
+#' @param boolsk_sann Angir hvilke verdier som tolkes som TRUE for boolske variabler
+#' @param boolsk_usann Angir hvilke verdier som tolkes som FALSE for boolske variabler
+#' @param na_verdier Angir hvilke verdier som tolkes som NA
 lag_formatspek = function(skilletegn, desimaltegn, dato, klokkeslett, dato_kl,
                           tidssone, tegnkoding, boolsk_sann, boolsk_usann,
                           na_verdier) {
