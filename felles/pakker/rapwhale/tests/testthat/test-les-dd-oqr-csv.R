@@ -299,16 +299,27 @@ context("lag_formatspek")
 
 # fixme: Manglar testar på at funksjonen faktisk *fungerer*, dvs. at han gjev
 #        ut det han skal når han får gyldige inndata!
+test_that("lag_formatspek() fungerer med riktig inndata", {
+  expect_identical()
+})
 
 # fixme: Manglar testar på at «tidssone» og «tegnkoding» er tekst.
+test_that("lag_formatspek() gir feilmelding om tidssone ikke er tekst", {
+
+})
+
+test_that("lag_formatspek() gir feilmelding om tegnkoding ikke er tekst", {
+
+})
 
 # fixme (i les_csv_base()): Variabelen «tegnkoding» (tidlegare «filkoding»)
 #                           vert faktisk ikkje brukt til noko!
 
+
 # fixme: Ifølgje teksten skal også testa «desimaltegn», men det er ingen testar på det.
 #        (readr antar for øvrig at desimalteiknet er punktum eller komma,
 #         så ein kan kanskje vera like streng)
-test_that("lag_formatspek() gir feilmelding hvis desimaltegn og skilletegn ikke er tekst og av lengde 1", {
+test_that("lag_formatspek() gir feilmelding hvis skilletegn ikke er tekst og av lengde 1", {
   expect_error(lag_formatspek(
     skilletegn = ";,",
     desimaltegn = ",",
@@ -325,6 +336,20 @@ test_that("lag_formatspek() gir feilmelding hvis desimaltegn og skilletegn ikke 
   expect_error(lag_formatspek(
     skilletegn = 1,
     desimaltegn = ",",
+    dato = "%Y-%m-%d",
+    klokkeslett = "%H:%M",
+    dato_kl = "%Y-%m-%d %H:%M:%OS",
+    tidssone = "Europe/Oslo",
+    tegnkoding = "UTF-8-BOM",
+    boolsk_sann = 1,
+    boolsk_usann = 0,
+    na_verdier = ""
+  ))
+})
+test_that("lag_formatspek() gir feilmelding hvis desimaltegn ikke er '.' eller ','", {
+  expect_error(lag_formatspek(
+    skilletegn = ";",
+    desimaltegn = "-",
     dato = "%Y-%m-%d",
     klokkeslett = "%H:%M",
     dato_kl = "%Y-%m-%d %H:%M:%OS",
