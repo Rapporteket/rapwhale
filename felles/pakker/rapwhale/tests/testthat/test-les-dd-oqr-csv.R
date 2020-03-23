@@ -187,12 +187,23 @@ test_that("Funksjonen fungerer som forventet når inndata er med annen tegnkodin
     na_verdier = c("", "null")
   )
 
+  dd_ok_hel_win1252 = tibble::tibble(
+    Apple = c("Gruppe_1", "Gruppe_2", "Gruppe_2", "Gruppe_1"),
+    Beto = c("dette", "er", "en", "†"),
+    Gammo = c(0.5, 0.12, 0.73, 1.241),
+    Delto = c(1L, 5L, 3L, 2L),
+    Eple = c(TRUE, FALSE, NA, TRUE),
+    Zeppelin = lubridate::dmy_hm(c("01.01.2020 17:00", "05.10.2010 15:00", "03.02.2015 13:30", "05.05.2005 17:55")),
+    Estland = lubridate::dmy("12.05.2014", "13.09.1900", "15.01.2015", "15.10.2020"),
+    Theeta = hms::as_hms(c("17:00:00", "14:30:00", "12:00:00", "15:05:00"))
+  )
+
 
   expect_equal(les_csv_base(
     adresse = "dd_ok_hel_windows_1252.csv",
     spesifikasjon = specs_dd_ok_hel,
     formatspek = formatspek_alt_tegnkoding
-  ), dd_ok_hel)
+  ), dd_ok_hel_win1252)
 })
 
 # Konvertering av variabeltyper -------------------------------------------
