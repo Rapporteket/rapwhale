@@ -173,6 +173,28 @@ test_that("Funksjonen tolker ikke NA som manglende verdi med mindre den blir bed
   )
 })
 
+test_that("Funksjonen fungerer som forventet når inndata er med annen tegnkoding (windows-1252)", {
+  formatspek_alt_tegnkoding = list(
+    skilletegn = ";",
+    desimaltegn = ",",
+    dato = "%d.%m.%Y",
+    klokkeslett = "%H:%M",
+    dato_kl = "%d.%m.%Y %H:%M",
+    tidssone = "Europe/Oslo",
+    tegnkoding = "windows-1252",
+    boolsk_sann = 1,
+    boolsk_usann = 0,
+    na_verdier = c("", "null")
+  )
+
+
+  expect_equal(les_csv_base(
+    adresse = "dd_ok_hel_windows_1252.csv",
+    spesifikasjon = specs_dd_ok_hel,
+    formatspek = formatspek_alt_tegnkoding
+  ), dd_ok_hel)
+})
+
 # Testen klarer å tolke na-verdier:
 # readr-funksjonen må klare å ha ingen NA,
 # eller for eksempel c(NA, null) eller (null, "")
@@ -297,8 +319,6 @@ test_that("les_csv_base gir feilmelding hvis format på dato_kl i formatspek og 
 # lag_formatspek ----------------------------------------------------------
 context("lag_formatspek")
 
-# fixme: Manglar testar på at funksjonen faktisk *fungerer*, dvs. at han gjev
-#        ut det han skal når han får gyldige inndata!
 test_that("lag_formatspek() fungerer med riktig inndata", {
   formatspek_ok = list(
     skilletegn = ";",
@@ -327,7 +347,6 @@ test_that("lag_formatspek() fungerer med riktig inndata", {
   ), formatspek_ok)
 })
 
-# fixme: Manglar testar på at «tidssone» og «tegnkoding» er tekst.
 test_that("lag_formatspek() gir feilmelding om tidssone ikke er tekst", {
   expect_error(lag_formatspek(
     skilletegn = ";,",
@@ -361,9 +380,6 @@ test_that("lag_formatspek() gir feilmelding om tegnkoding ikke er tekst", {
 # fixme (i les_csv_base()): Variabelen «tegnkoding» (tidlegare «filkoding»)
 #                           vert faktisk ikkje brukt til noko!
 
-# fixme: Ifølgje teksten skal også testa «desimaltegn», men det er ingen testar på det.
-#        (readr antar for øvrig at desimalteiknet er punktum eller komma,
-#         så ein kan kanskje vera like streng)
 test_that("lag_formatspek() gir feilmelding hvis skilletegn ikke er tekst og av lengde 1", {
   expect_error(lag_formatspek(
     skilletegn = ";,",
