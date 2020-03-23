@@ -195,11 +195,6 @@ test_that("Funksjonen fungerer som forventet når inndata er med annen tegnkodin
   ), dd_ok_hel)
 })
 
-# Testen klarer å tolke na-verdier:
-# readr-funksjonen må klare å ha ingen NA,
-# eller for eksempel c(NA, null) eller (null, "")
-
-
 # Konvertering av variabeltyper -------------------------------------------
 context("konverter_boolske")
 
