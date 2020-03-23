@@ -349,12 +349,12 @@ test_that("lag_formatspek() fungerer med riktig inndata", {
 
 test_that("lag_formatspek() gir feilmelding om tidssone ikke er tekst", {
   expect_error(lag_formatspek(
-    skilletegn = ";,",
+    skilletegn = ";",
     desimaltegn = ",",
     dato = "%Y-%m-%d",
     klokkeslett = "%H:%M",
     dato_kl = "%Y-%m-%d %H:%M:%OS",
-    tidssone = "Europe/Oslo",
+    tidssone = 24,
     tegnkoding = "UTF-8",
     boolsk_sann = 1,
     boolsk_usann = 0,
@@ -364,21 +364,18 @@ test_that("lag_formatspek() gir feilmelding om tidssone ikke er tekst", {
 
 test_that("lag_formatspek() gir feilmelding om tegnkoding ikke er tekst", {
   expect_error(lag_formatspek(
-    skilletegn = ";,",
+    skilletegn = ";",
     desimaltegn = ",",
     dato = "%Y-%m-%d",
     klokkeslett = "%H:%M",
     dato_kl = "%Y-%m-%d %H:%M:%OS",
     tidssone = "Europe/Oslo",
-    tegnkoding = "UTF-8",
+    tegnkoding = 1252,
     boolsk_sann = 1,
     boolsk_usann = 0,
     na_verdier = ""
   ))
 })
-
-# fixme (i les_csv_base()): Variabelen «tegnkoding» (tidlegare «filkoding»)
-#                           vert faktisk ikkje brukt til noko!
 
 test_that("lag_formatspek() gir feilmelding hvis skilletegn ikke er tekst og av lengde 1", {
   expect_error(lag_formatspek(
