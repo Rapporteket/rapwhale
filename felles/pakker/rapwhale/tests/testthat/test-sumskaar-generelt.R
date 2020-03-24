@@ -392,23 +392,49 @@ context("sjekk_skaaringstabell")
 # fixme: Må vera fire testar («expect_error()»), éin for kvar variabel
 #        (no testar testen berre delar av det han skal testa).
 
+# fixme: Manglar det viktigaste, nemleg test på at funksjonen fungerer
+#        (ikkje gjev feilmelding, åtvaringar e.l.) på ein *gyldig* skåringstabell.
+#        Det bør testast først.
+
+# Testene for sjekk_skaaringstabell() tar utgangspunkt i den gyldige skåringstabellen
+# som er definert helt øverst i skriptet (skaaringstabell_eks)
+
+test_that("sjekk_skaaringstabell() gir ingen feilmelding hvis skåringstabellen er gyldig", {
+  expect_silent(sjekk_skaaringstabell(skaaringstabell_eks))
+})
+
 test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen ikke har riktige kolonnenavn", {
+  skaaringstabell_ugyldige_kolonnenavn = skaaringstabell_eks
+  skaaringstabell_ugyldige_kolonnenavn = dplyr::rename(skaaringstabell_ugyldige_kolonnenavn,
+    deelskala = delskala,
+    var = variabel, tallverdi = verdi, koeff = koeffisient
+  )
   expect_error(
-    sjekk_skaaringstabell(skaaringstabell_ugyldig_eks1),
-    "Skåringstabellen må inneholde kolonnene 'delskala', 'variabel' 'verdi' og 'koeffisient'"
+    sjekk_skaaringstabell(skaaringstabell_ugyldige_kolonnenavn),
+    "Skåringstabellen må inneholde kolonnen 'delskala'"
+  )
+  expect_error(
+    sjekk_skaaringstabell(skaaringstabell_ugyldige_kolonnenavn),
+    "Skåringstabellen må inneholde kolonnen 'variabel'"
+  )
+  expect_error(
+    sjekk_skaaringstabell(skaaringstabell_ugyldige_kolonnenavn),
+    "Skåringstabellen må inneholde kolonnen 'verdi'"
+  )
+  expect_error(
+    sjekk_skaaringstabell(skaaringstabell_ugyldige_kolonnenavn),
+    "Skåringstabellen må inneholde kolonnen 'koeffisient'"
   )
 })
 
 # fixme: Variabelgenerering må flyttast inn i test_that().
 
-# Eksempel på skåringstabell som har flere alternativ med samme verdi for samme spørsmål i samme delskala
-skaaringstabell_ugyldig_samme_verdi = skaaringstabell_eks
-skaaringstabell_ugyldig_samme_verdi[2, 3] = 1 # fixme: 2,3?! Dette er uforståeleg. Bruk skikkelege variabelnamn!
-
 test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen har
           flere alternativ med samme verdi for samme spørsmål i samme delskala", {
+  skaaringstabell_ugyldig_dupl_verdi = skaaringstabell_eks
+  skaaringstabell_ugyldig_dupl_verdi$verdi[c(1:3)] = 1 # fixme: 2,3?! Dette er uforståeleg. Bruk skikkelege variabelnamn!
   expect_error(
-    sjekk_skaaringstabell(skaaringstabell_ugyldig_samme_verdi),
+    sjekk_skaaringstabell(skaaringstabell_ugyldig_dupl_verdi),
     "Skåringstabellen kan ikke inneholde flere alternativ
                med samme verdi for samme spørsmål i samme delskala"
   )
@@ -416,53 +442,38 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen har
 
 # fixme: Må flyttast inn i test_that().
 
-# Eksempel på skåringstabell hvor koeffisient-kolonnen inneholder NA-verdier
-skaaringstabell_ugyldig_na_koeffisient = skaaringstabell_eks
-skaaringstabell_ugyldig_samme_verdi[2, 4] = NA # fixme: Igjen uforståelege indeksar! Kva er magisk med rad 2 kolonne 4?!
-
 test_that("sjekk_skaaringstabell() gir feilmelding hvis koeffisient-kolonnen
           i skåringstabellen inneholder NA-verdier", {
+  skaaringstabell_ugyldig_na_koeffisient = skaaringstabell_eks
+  skaaringstabell_ugyldig_na_koeffisient$koeffisient[c(1:3)] = NA # fixme: Igjen uforståelege indeksar! Kva er magisk med rad 2 kolonne 4?!
   expect_error(
-    sjekk_skaaringstabell(skaaringstabell_ugyldig_eks1),
+    sjekk_skaaringstabell(skaaringstabell_ugyldig_na_koeffisient),
     "Koeffisient-kolonnen i skåringstabellen kan ikke inneholde NA-verdier"
   )
 })
 
 # fixme: Må flyttast inn i test_that(), og kvar blokk må stå ved tilhøyrande test.
 
-# Eksempel på skåringstabell hvor verdi-kolonnen ikke inneholder numeriske variabler
-skaaringstabell_ugyldig_verdi_kolonne = skaaringstabell_eks
-skaaringstabell_ugyldig_verdi_kolonne[3, 3] = "corona" # fixme: Igjen uforståelege indeksar!
-
-# Eksempel på skåringstabell hvor koeffisient-kolonnen ikke inneholder numeriske variabler
-skaaringstabell_ugyldig_koeffisient_kolonne = skaaringstabell_eks
-skaaringstabell_ugyldig_koeffisient_kolonne[14, 4] = "hansa"
-
-# Eksempel på skåringstabell hvor variabel-kolonnen ikke inneholder tekst-variabler
-skaaringstabell_ugyldig_variabel_kolonne = skaaringstabell_eks
-skaaringstabell_ugyldig_variabel_kolonne[c(1:20), 2] = 2
-skaaringstabell_ugyldig_variabel_kolonne$variabel = as.numeric(skaaringstabell_ugyldig_variabel_kolonne$variabel)
-
 # fixme: Duplisert feilmeldingar. Skriv berre feilmeldinga éin gong.
 
 test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen innholder feil variabeltyper", {
+  skaaringstabell_ugyldig_verdi_kolonne = skaaringstabell_eks
+  skaaringstabell_ugyldig_verdi_kolonne$verdi = as.character(skaaringstabell_ugyldig_verdi_kolonne$verdi) # fixme: Igjen uforståelege indeksar!
   expect_error(
-    sjekk_variabelverdier(skaaringstabell_ugyldig_verdi_kolonne),
-    "Verdi-kolonnen og koeffisient-kolonnen må bare inneholde numeriske variabler
-               og variabel-kolonnen bare inneholde tekst-variabler"
+    sjekk_skaaringstabell(skaaringstabell_ugyldig_verdi_kolonne),
+    "Verdi-kolonnen må bare inneholde numeriske variabler"
   )
+  skaaringstabell_ugyldig_koeffisient_kolonne = skaaringstabell_eks
+  skaaringstabell_ugyldig_koeffisient_kolonne$koeffisient = as.character(skaaringstabell_ugyldig_koeffisient_kolonne$koeffisient)
   expect_error(
-    sjekk_variabelverdier(skaaringstabell_ugyldig_koeffisient_kolonne),
-    "Verdi-kolonnen og koeffisient-kolonnen må bare inneholde numeriske variabler
-               og variabel-kolonnen bare inneholde tekst-variabler"
+    sjekk_skaaringstabell(skaaringstabell_ugyldig_koeffisient_kolonne),
+    "Koeffisient-kolonnen må bare inneholde numeriske variabler"
   )
+  skaaringstabell_ugyldig_variabel_kolonne = skaaringstabell_eks
+  skaaringstabell_ugyldig_variabel_kolonne$variabel[c(1:20)] = 2
+  skaaringstabell_ugyldig_variabel_kolonne$variabel = as.numeric(skaaringstabell_ugyldig_variabel_kolonne$variabel)
   expect_error(
-    sjekk_variabelverdier(skaaringstabell_ugyldig_variabel_kolonne),
-    "Verdi-kolonnen og koeffisient-kolonnen må bare inneholde numeriske variabler
-               og variabel-kolonnen bare inneholde tekst-variabler"
+    sjekk_skaaringstabell(skaaringstabell_ugyldig_variabel_kolonne),
+    "Variabel-kolonnen må bare inneholde tekst-variabler"
   )
 })
-
-# fixme: Manglar det viktigaste, nemleg test på at funksjonen fungerer
-#        (ikkje gjev feilmelding, åtvaringar e.l.) på ein *gyldig* skåringstabell.
-#        Det bør testast først.
