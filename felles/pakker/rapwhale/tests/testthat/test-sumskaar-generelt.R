@@ -404,27 +404,23 @@ test_that("sjekk_skaaringstabell() gir ingen feilmelding hvis skåringstabellen 
 })
 
 test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen ikke har riktige kolonnenavn", {
-  skaaringstabell_ugyldige_kolonnenavn = skaaringstabell_eks
-  skaaringstabell_ugyldige_kolonnenavn = dplyr::rename(skaaringstabell_ugyldige_kolonnenavn,
-    deelskala = delskala,
-    var = variabel, tallverdi = verdi, koeff = koeffisient
-  )
-  expect_error(
-    sjekk_skaaringstabell(skaaringstabell_ugyldige_kolonnenavn),
-    "Skåringstabellen må inneholde kolonnen 'delskala'"
-  )
-  expect_error(
-    sjekk_skaaringstabell(skaaringstabell_ugyldige_kolonnenavn),
-    "Skåringstabellen må inneholde kolonnen 'variabel'"
-  )
-  expect_error(
-    sjekk_skaaringstabell(skaaringstabell_ugyldige_kolonnenavn),
-    "Skåringstabellen må inneholde kolonnen 'verdi'"
-  )
-  expect_error(
-    sjekk_skaaringstabell(skaaringstabell_ugyldige_kolonnenavn),
-    "Skåringstabellen må inneholde kolonnen 'koeffisient'"
-  )
+  feilmelding_kolonnenavn = "Skåringstabellen må inneholde kolonnene 'delskala', 'variabel', 'verdi' og 'koeffisient'"
+
+  skaaringstabell_ugyldig_navn_delskala = skaaringstabell_eks
+  skaaringstabell_ugyldig_navn_delskala = dplyr::rename(skaaringstabell_ugyldig_navn_delskala, deelskala = delskala)
+  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_navn_delskala), feilmelding_kolonnenavn)
+
+  skaaringstabell_ugyldig_navn_variabel = skaaringstabell_eks
+  skaaringstabell_ugyldig_navn_variabel = dplyr::rename(skaaringstabell_ugyldig_navn_variabel, var = variabel)
+  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_navn_variabel), feilmelding_kolonnenavn)
+
+  skaaringstabell_ugyldig_navn_verdi = skaaringstabell_eks
+  skaaringstabell_ugyldig_navn_verdi = dplyr::rename(skaaringstabell_ugyldig_navn_verdi, tallverdi = verdi)
+  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_navn_verdi), feilmelding_kolonnenavn)
+
+  skaaringstabell_ugyldig_navn_koeffisient = skaaringstabell_eks
+  skaaringstabell_ugyldig_navn_koeffisient = dplyr::rename(skaaringstabell_ugyldig_navn_koeffisient, koeff = koeffisient)
+  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_navn_koeffisient), feilmelding_kolonnenavn)
 })
 
 # fixme: Variabelgenerering må flyttast inn i test_that().
@@ -457,23 +453,18 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis koeffisient-kolonnen
 # fixme: Duplisert feilmeldingar. Skriv berre feilmeldinga éin gong.
 
 test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen innholder feil variabeltyper", {
+  feilmelding_kolonneformat = "Verdi-kolonnen og koeffisient-kolonnen må bare inneholde numeriske variabler og variabel-kolonnen må bare inneholde tekst-variabler"
+
   skaaringstabell_ugyldig_verdi_kolonne = skaaringstabell_eks
   skaaringstabell_ugyldig_verdi_kolonne$verdi = as.character(skaaringstabell_ugyldig_verdi_kolonne$verdi) # fixme: Igjen uforståelege indeksar!
-  expect_error(
-    sjekk_skaaringstabell(skaaringstabell_ugyldig_verdi_kolonne),
-    "Verdi-kolonnen må bare inneholde numeriske variabler"
-  )
+  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_verdi_kolonne), feilmelding_kolonneformat)
+
   skaaringstabell_ugyldig_koeffisient_kolonne = skaaringstabell_eks
   skaaringstabell_ugyldig_koeffisient_kolonne$koeffisient = as.character(skaaringstabell_ugyldig_koeffisient_kolonne$koeffisient)
-  expect_error(
-    sjekk_skaaringstabell(skaaringstabell_ugyldig_koeffisient_kolonne),
-    "Koeffisient-kolonnen må bare inneholde numeriske variabler"
-  )
+  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_koeffisient_kolonne), feilmelding_kolonneformat)
+
   skaaringstabell_ugyldig_variabel_kolonne = skaaringstabell_eks
   skaaringstabell_ugyldig_variabel_kolonne$variabel[c(1:20)] = 2
   skaaringstabell_ugyldig_variabel_kolonne$variabel = as.numeric(skaaringstabell_ugyldig_variabel_kolonne$variabel)
-  expect_error(
-    sjekk_skaaringstabell(skaaringstabell_ugyldig_variabel_kolonne),
-    "Variabel-kolonnen må bare inneholde tekst-variabler"
-  )
+  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_variabel_kolonne), feilmelding_kolonneformat)
 })
