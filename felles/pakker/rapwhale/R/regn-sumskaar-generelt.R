@@ -188,8 +188,22 @@ regn_sumskaar = function(d, skaaringstabell) {
 }
 
 sjekk_skaaringstabell = function(skaaringstabell) {
+  # Sjekker om skåringstabellen inneholder riktige kolonner/kolonnenavn.
   if (!all(hasName(skaaringstabell, c("delskala", "variabel", "verdi", "koeffisient")))) {
     stop("Skåringstabellen må inneholde kolonnene 'delskala', 'variabel', 'verdi' og 'koeffisient'")
+  }
+
+  # Lager en oversikt over hvilke variabler som har flere alternativ
+  # med samme verdi for samme spørsmål i samme delskala. I kolonnen 'ant_dupl'
+  # vises antall verdier som er ugyldige.
+  d_med_ant_dupl = skaaringstabell %>%
+    dplyr::group_by(delskala, variabel) %>%
+    dplyr::summarise(ant_dupl = length(verdi) - length(unique(verdi)))
+
+  # Hvis kolonnen 'ant_dupl' inneholder en eller flere verdier som er ulik 0 skal funksjonen
+  # stoppe og skrive ut en feilmelding.
+  if (any(d_med_ant_dupl$ant_dupl != 0)) {
+    stop("Skåringstabellen kan ikke inneholde flere alternativ med samme verdi for samme spørsmål i samme delskala")
   }
 }
 
