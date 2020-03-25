@@ -188,7 +188,9 @@ regn_sumskaar = function(d, skaaringstabell) {
 }
 
 sjekk_skaaringstabell = function(skaaringstabell) {
-
+  if (!all(hasName(skaaringstabell, c("delskala", "variabel", "verdi", "koeffisient")))) {
+    stop("Skåringstabellen må inneholde kolonnene 'delskala', 'variabel', 'verdi' og 'koeffisient'")
+  }
 }
 
 ################################# Midlertidig kode ################################
