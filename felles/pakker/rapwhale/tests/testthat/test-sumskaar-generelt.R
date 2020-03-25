@@ -431,8 +431,7 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen har
   skaaringstabell_ugyldig_dupl_verdi$verdi[c(1:3)] = 1 # fixme: 2,3?! Dette er uforståeleg. Bruk skikkelege variabelnamn!
   expect_error(
     sjekk_skaaringstabell(skaaringstabell_ugyldig_dupl_verdi),
-    "Skåringstabellen kan ikke inneholde flere alternativ
-               med samme verdi for samme spørsmål i samme delskala"
+    "Skåringstabellen kan ikke inneholde flere alternativ med samme verdi for samme spørsmål i samme delskala"
   )
 })
 
