@@ -200,10 +200,16 @@ sjekk_skaaringstabell = function(skaaringstabell) {
     dplyr::group_by(delskala, variabel) %>%
     dplyr::summarise(ant_dupl = length(verdi) - length(unique(verdi)))
 
-  # Hvis kolonnen 'ant_dupl' inneholder en eller flere verdier som er ulik 0 skal funksjonen
-  # stoppe og skrive ut en feilmelding.
+  # Hvis kolonnen 'ant_dupl' inneholder en eller flere verdier som er ulik 0
+  # skal funksjonen stoppe og skrive ut en feilmelding.
   if (any(d_med_ant_dupl$ant_dupl != 0)) {
     stop("Skåringstabellen kan ikke inneholde flere alternativ med samme verdi for samme spørsmål i samme delskala")
+  }
+
+  # Hvis koeffisient-kolonnen i skåringstabellen inneholder NA-verdier
+  # skal funksjonen stoppe og skrive ut en feilmelding.
+  if (any(is.na(skaaringstabell$koeffisient))) {
+    stop("Koeffisient-kolonnen i skåringstabellen kan ikke inneholde NA-verdier")
   }
 }
 
