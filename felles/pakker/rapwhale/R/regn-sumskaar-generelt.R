@@ -211,6 +211,13 @@ sjekk_skaaringstabell = function(skaaringstabell) {
   if (any(is.na(skaaringstabell$koeffisient))) {
     stop("Koeffisient-kolonnen i skåringstabellen kan ikke inneholde NA-verdier")
   }
+
+  # Hvis kolonnene i skåringstabellen ikke har riktig format skal funksjonen
+  # stoppe og skrive ut en feilmelding.
+  if (!(is.numeric(skaaringstabell$verdi) && is.numeric(skaaringstabell$koeffisient) &&
+    is.character(skaaringstabell$variabel))) {
+    stop("Verdi-kolonnen og koeffisient-kolonnen må bare inneholde numeriske variabler og variabel-kolonnen må bare inneholde tekst-variabler")
+  }
 }
 
 ################################# Midlertidig kode ################################
