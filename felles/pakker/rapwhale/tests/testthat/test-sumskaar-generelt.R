@@ -463,7 +463,7 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen innhol
   expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_koeffisient_kolonne), feilmelding_kolonneformat)
 
   skaaringstabell_ugyldig_variabel_kolonne = skaaringstabell_eks
-  skaaringstabell_ugyldig_variabel_kolonne$variabel[c(1:20)] = 2
+  skaaringstabell_ugyldig_variabel_kolonne$variabel[c(1:20)] = c(1:20)
   skaaringstabell_ugyldig_variabel_kolonne$variabel = as.numeric(skaaringstabell_ugyldig_variabel_kolonne$variabel)
   expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_variabel_kolonne), feilmelding_kolonneformat)
 })
