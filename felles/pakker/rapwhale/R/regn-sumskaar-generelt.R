@@ -203,7 +203,7 @@ sjekk_skaaringstabell = function(skaaringstabell) {
   # Hvis kolonnen 'ant_dupl' inneholder en eller flere verdier som er ulik 0
   # skal funksjonen stoppe og skrive ut en feilmelding.
   if (any(d_med_ant_dupl$ant_dupl != 0)) {
-    stop("Skåringstabellen kan ikke inneholde flere alternativ med samme verdi for samme spørsmål i samme delskala")
+    stop("Skåringstabellen kan ikke inneholde dupliserte verdier for en variabel innenfor samme delskala")
   }
 
   # Hvis koeffisient-kolonnen i skåringstabellen inneholder NA-verdier
