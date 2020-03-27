@@ -263,9 +263,10 @@ sumskaar_tabell = tibble::tribble(
 )
 
 test_that("regn_sumskaar() regner ut korrekt sumskår hvis alle verdiene finnes i skåringstabellen", {
+  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
   expect_equal(
-    regn_sumskaar(d_gyldig_alle_verdier, skaaringstabell_eks),
-    sumskaar_tabell
+    round(regn_sumskaar(d_gyldig_alle_verdier, skaaringstabell_eks), 5),
+    round(sumskaar_tabell, 5)
   )
 })
 
@@ -290,9 +291,10 @@ sumskaar_na_tabell = tibble::tribble(
 )
 
 test_that("regn_sumskaar() gir ut NA som sumskår ved NA-verdier uten tilknyttet koeffisient", {
+  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
   expect_equal(
-    regn_sumskaar(d_na, skaaringstabell_eks),
-    sumskaar_na_tabell
+    round(regn_sumskaar(d_na, skaaringstabell_eks), 5),
+    round(sumskaar_na_tabell, 5)
   )
 })
 
@@ -317,9 +319,10 @@ sumskaar_1_besvarelse_bare_na_tabell = tibble::tribble(
 )
 
 test_that("regn_sumskaar() gir ut riktig sumskår hvis 1 av besvarelselse har NA-verdier på alle spørsmål", {
+  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
   expect_equal(
-    regn_sumskaar(d_1_besvarelse_bare_na, skaaringstabell_eks),
-    sumskaar_1_besvarelse_bare_na_tabell
+    round(regn_sumskaar(d_1_besvarelse_bare_na, skaaringstabell_eks), 5),
+    round(sumskaar_1_besvarelse_bare_na_tabell, 5)
   )
 })
 
