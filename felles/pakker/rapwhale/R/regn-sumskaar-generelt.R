@@ -193,16 +193,14 @@ sjekk_skaaringstabell = function(skaaringstabell) {
     stop("Skåringstabellen må inneholde kolonnene 'delskala', 'variabel', 'verdi' og 'koeffisient'")
   }
 
-  # Lager en oversikt over hvilke variabler som har flere alternativ
-  # med samme verdi for samme spørsmål i samme delskala. I kolonnen 'ant_dupl'
-  # vises antall verdier som er ugyldige.
+  # Lager en oversikt over hvilke variabler som, innenfor delskala,
+  # har dupliserte 'verdi'-er.
   d_med_ant_dupl = skaaringstabell %>%
-    dplyr::group_by(delskala, variabel) %>%
-    dplyr::summarise(ant_dupl = length(verdi) - length(unique(verdi)))
+    dplyr::count(delskala, variabel, verdi, name = "n_rader")
 
   # Hvis kolonnen 'ant_dupl' inneholder en eller flere verdier som er ulik 0
   # skal funksjonen stoppe og skrive ut en feilmelding.
-  if (any(d_med_ant_dupl$ant_dupl != 0)) {
+  if (any(d_med_ant_dupl$n_rader != 1)) {
     stop("Skåringstabellen kan ikke inneholde dupliserte verdier for en variabel innenfor samme delskala")
   }
 
@@ -214,14 +212,9 @@ sjekk_skaaringstabell = function(skaaringstabell) {
 
   # Hvis kolonnene i skåringstabellen ikke har riktig format skal funksjonen
   # stoppe og skrive ut en feilmelding.
-  if (!(is.numeric(skaaringstabell$verdi) && is.numeric(skaaringstabell$koeffisient) &&
+  if (!(is.numeric(skaaringstabell$verdi) &&
+    is.numeric(skaaringstabell$koeffisient) &&
     is.character(skaaringstabell$variabel))) {
     stop("Verdi-kolonnen og koeffisient-kolonnen må bare inneholde numeriske variabler og variabel-kolonnen må bare inneholde tekst-variabler")
   }
 }
-
-################################# Midlertidig kode ################################
-
-#     if (godta_manglende) {
-#       verdier_koblingstabell = append(verdier_koblingstabell, NA)
-#     }
