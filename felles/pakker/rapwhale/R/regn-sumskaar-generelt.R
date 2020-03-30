@@ -11,7 +11,7 @@
 #'     skal skaaringstabell være et argument i denne funksjonen?
 
 skaar_datasett = function(d, variabelnavn, skaaringstabell) {
-  d = endre_variabelnavn(d, variabelnavn)
+  # d = endre_variabelnavn(d, variabelnavn)
   sjekk_skaaringstabell(skaaringstabell)
   sjekk_variabelnavn(d, variabelnavn = skaaringstabell$variabel)
   sjekk_variabelverdier(d, verditabell = select(skaaringstabell, variabel, verdi))

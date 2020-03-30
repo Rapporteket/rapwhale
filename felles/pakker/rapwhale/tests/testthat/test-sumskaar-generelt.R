@@ -447,3 +447,39 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen innhol
   skaaringstabell_ugyldig_variabel_kolonne$variabel = 1:nrow(skaaringstabell_ugyldig_variabel_kolonne)
   expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_variabel_kolonne), feilmelding_kolonneformat)
 })
+
+
+context("skaar_datasett")
+
+d_gyldig_alle_verdier = tibble::tribble(
+  ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2,
+  1, 2, 1, 10, 20,
+  2, 1, 2, 20, 10,
+  3, 1, 2, NA, 10
+)
+
+test_that("skaar_datasett() gir ut samme sumskår som skaar_datasett_uten_validering()", {
+  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
+  expect_equal(
+    round(skaar_datasett_uten_validering(d_gyldig_alle_verdier, skaaringstabell_eks), 5),
+    round(skaar_datasett(d_gyldig_alle_verdier, skaaringstabell = skaaringstabell_eks), 5)
+  )
+})
+
+test_that("skaar_datasett() gir ut feilmelding hvis skåringstabell, variabelnavn og/eller variabelverdier er ugyldige", {
+
+  # Skåringstabell som har en variabel med flere rader som har samme verdi innenfor samme delskala
+  ugyldig_skaaringstabell = skaaringstabell_eks
+  ugyldig_skaaringstabell$verdi[2:3] = 6
+  expect_error(skaar_datasett(d_gyldig_alle_verdier, skaaringstabell = ugyldig_skaaringstabell))
+
+  # Inndata med ugyldig variabelnavn
+  d_ugyldig_variabelnavn = d_gyldig_alle_verdier
+  d_ugyldig_variabelnavn = dplyr::rename(d_ugyldig_variabelnavn, fysisk1 = fys1)
+  expect_error(skaar_datasett(d_ugyldig_variabelnavn, skaaringstabell = skaaringstabell_eks))
+
+  # Inndata med ugyldig variabelverdi
+  d_ugyldig_variabelverdier = d_gyldig_alle_verdier
+  d_ugyldig_variabelverdier$psyk1[1] = 100
+  expect_error(skaar_datasett(d_ugyldig_variabelverdier, skaaringstabell = skaaringstabell_eks))
+})
