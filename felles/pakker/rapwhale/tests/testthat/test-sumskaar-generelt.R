@@ -190,7 +190,7 @@ ugyldighetstabell_na_feil = tibble(
   feilverdi = as.numeric(NA)
 )
 
-test_that("finn_ugyldige_verdier() gir ut korrekt feiloversikt hvis det finnes ugyldige verdier datasettet", {
+test_that("finn_ugyldige_verdier() gir ut korrekt feiloversikt hvis det finnes ugyldige verdier i datasettet", {
   expect_identical(
     finn_ugyldige_verdier(d_ugyldig_1_feil, skaaringstabell_eks),
     ugyldighetstabell_1_feil
@@ -235,7 +235,7 @@ test_that("oppsummer_ugyldige_verdier() gir ut korrekt melding hvis det ikke fin
 })
 
 
-context("regn_sumskaar")
+context("skaar_datasett_uten_validering")
 
 # Eksempeldata som bare inneholder verdier som finnes i skåringstabellen
 # (datasettet inneholder alle mulige verdier for hver variabel minst en gang)
@@ -262,10 +262,10 @@ sumskaar_tabell = tibble::tribble(
   sumskaar_psykisk_rad3, sumskaar_total_rad3
 )
 
-test_that("regn_sumskaar() regner ut korrekt sumskår hvis alle verdiene finnes i skåringstabellen", {
+test_that("skaar_datasett_uten_validering() regner ut korrekt sumskår hvis alle verdiene finnes i skåringstabellen", {
   # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
   expect_equal(
-    round(regn_sumskaar(d_gyldig_alle_verdier, skaaringstabell_eks), 5),
+    round(skaar_datasett_uten_validering(d_gyldig_alle_verdier, skaaringstabell_eks), 5),
     round(sumskaar_tabell, 5)
   )
 })
@@ -290,10 +290,10 @@ sumskaar_na_tabell = tibble::tribble(
   sumskaar_na_psykisk_rad3, sumskaar_na_total_rad3
 )
 
-test_that("regn_sumskaar() gir ut NA som sumskår ved NA-verdier uten tilknyttet koeffisient", {
+test_that("skaar_datasett_uten_validering() gir ut NA som sumskår ved NA-verdier uten tilknyttet koeffisient", {
   # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
   expect_equal(
-    round(regn_sumskaar(d_na, skaaringstabell_eks), 5),
+    round(skaar_datasett_uten_validering(d_na, skaaringstabell_eks), 5),
     round(sumskaar_na_tabell, 5)
   )
 })
@@ -318,10 +318,10 @@ sumskaar_1_besvarelse_bare_na_tabell = tibble::tribble(
   sumskaar_1_besvarelse_bare_na_psykisk_rad3, sumskaar_1_besvarelse_bare_na_total_rad3
 )
 
-test_that("regn_sumskaar() gir ut riktig sumskår hvis 1 av besvarelselse har NA-verdier på alle spørsmål", {
+test_that("skaar_datasett_uten_validering() gir ut riktig sumskår hvis 1 av besvarelselse har NA-verdier på alle spørsmål", {
   # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
   expect_equal(
-    round(regn_sumskaar(d_1_besvarelse_bare_na, skaaringstabell_eks), 5),
+    round(skaar_datasett_uten_validering(d_1_besvarelse_bare_na, skaaringstabell_eks), 5),
     round(sumskaar_1_besvarelse_bare_na_tabell, 5)
   )
 })
@@ -346,9 +346,9 @@ sumskaar_alle_besvarelser_bare_na_tabell = tibble::tribble(
   sumskaar_alle_besvarelser_bare_na_psykisk_rad3, sumskaar_alle_besvarelser_bare_na_total_rad3
 )
 
-test_that("regn_sumskaar() gir ut riktige sumskårer hvis alle besvarelsene har NA-verdier på alle spørsmål", {
+test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer hvis alle besvarelsene har NA-verdier på alle spørsmål", {
   expect_identical(
-    regn_sumskaar(d_alle_besvarelser_bare_na, skaaringstabell_eks),
+    skaar_datasett_uten_validering(d_alle_besvarelser_bare_na, skaaringstabell_eks),
     sumskaar_alle_besvarelser_bare_na_tabell
   )
 })
@@ -367,9 +367,9 @@ sumskaar_1_besvarelse_tabell = tibble::tribble(
   sumskaar_1_besvarelse_psykisk, sumskaar_1_besvarelse_total
 )
 
-test_that("regn_sumskaar() regner ut korrekt sumskår ved bare 1 besvarelse", {
+test_that("skaar_datasett_uten_validering() regner ut korrekt sumskår ved bare 1 besvarelse", {
   expect_identical(
-    regn_sumskaar(d_1_besvarelse, skaaringstabell_eks),
+    skaar_datasett_uten_validering(d_1_besvarelse, skaaringstabell_eks),
     sumskaar_1_besvarelse_tabell
   )
 })
@@ -378,9 +378,9 @@ test_that("regn_sumskaar() regner ut korrekt sumskår ved bare 1 besvarelse", {
 d_0_besvarelser = d_gyldig_alle_verdier
 d_0_besvarelser = d_gyldig_alle_verdier[-(1:3), ]
 
-test_that("regn_sumskaar() regner ikke ut sumskår ved 0 besvarelser", {
+test_that("skaar_datasett_uten_validering() regner ikke ut sumskår ved 0 besvarelser", {
   expect_identical(
-    regn_sumskaar(d_0_besvarelser, skaaringstabell_eks),
+    skaar_datasett_uten_validering(d_0_besvarelser, skaaringstabell_eks),
     NULL
   )
 })

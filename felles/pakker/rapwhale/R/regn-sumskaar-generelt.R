@@ -10,11 +10,12 @@
 #'     fixme: skal bare sumskår(er) returneres?
 #'     skal skaaringstabell være et argument i denne funksjonen?
 
-skaar = function(d, variabelnavn, skaaringstabell) {
+skaar_datasett = function(d, variabelnavn, skaaringstabell) {
   d = endre_variabelnavn(d, variabelnavn)
+  sjekk_skaaringstabell(skaaringstabell)
   sjekk_variabelnavn(d, variabelnavn = skaaringstabell$variabel)
   sjekk_variabelverdier(d, verditabell = select(skaaringstabell, variabel, verdi))
-  regn_sumskaar(d, skaaringstabell)
+  skaar_datasett_uten_validering(d, skaaringstabell)
 }
 
 #' Funksjon for å endre variabelnavn
@@ -146,7 +147,7 @@ oppsummer_ugyldige_verdier = function(d_ugyldige) {
   }
 }
 
-regn_sumskaar = function(d, skaaringstabell) {
+skaar_datasett_uten_validering = function(d, skaaringstabell) {
   # Gjer om til éi rad per svar, med ein person-ID
   # som seier kva rad svaret opphavleg kom frå
   d_svar = d %>%
