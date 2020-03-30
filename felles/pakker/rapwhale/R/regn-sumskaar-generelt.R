@@ -28,7 +28,8 @@ skaar_datasett = function(d, variabelnavn, skaaringstabell) {
 #' @return \code{d} med nøyaktig samme variabelnavn som i skåringstabellen. fixme: stemmer dette?
 
 endre_variabelnavn = function(d, variabelnavn) {
-
+  colnames(d) = variabelnavn
+  d
 }
 
 #' Funksjon for å sjekke variabelnavn
