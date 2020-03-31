@@ -212,7 +212,7 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
 #'
 #' Dette er berre ein intern hjelpefunksjon for å forenkla koden
 #' for skåring av datasett. Med slike `NA`-rader vert skåren utrekna
-#' med [rapwhale::skaar_datasett_uten_validering()] automatisk `NA` dersom
+#' med [skaar_datasett_uten_validering()] automatisk `NA` dersom
 #' minst éin av variablane som inngår, manglar verdi (altså er `NA`).
 #'
 #' @return Skåringstabellen med `NA`-rader lagde til.
