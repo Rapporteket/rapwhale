@@ -35,6 +35,7 @@ Imports:
     qicharts2,
     testthat
 RoxygenNote: 7.0.2
+Roxygen: list(markdown = TRUE)
 Suggests: 
     knitr,
     rmarkdown
