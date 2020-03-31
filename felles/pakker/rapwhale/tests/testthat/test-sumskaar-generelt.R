@@ -511,20 +511,46 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen innhol
 
 context("skaar_datasett")
 
+# Eksempel på inndata som inkluderer både basisvariabler og spørreskjema-variabler
+d_gyldig_inn = tibble::tribble(
+  ~pas_id, ~kjonn, ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2, ~dato,
+  1, 1, 1, 2, 1, 10, 20, "2020-01-10",
+  2, 2, 2, 1, 2, 20, 10, "2020-02-20",
+  3, 1, 3, 1, 2, NA, 10, "2020-03-30"
+)
+
+# Eksempel på utdata (skal være identisk til 'd_inn' og i tillegg inneholde
+# kolonner med sumskårer til høyre for spørreskjema-variablene)
+d_gyldig_ut = d_gyldig_inn
+d_gyldig_ut = tibble::add_column(d_gyldig_ut, psykisk = c(1, -3, -6.5), total = c(0.518, 0.775, 1.14), .after = "psyk2")
+
+test_that("skaar_datasett() gir ut det samme datasettet som blir tatt inn inkludert
+          kolonner med sumskårer til høyre for spørreskjema-variablene", {
+  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
+  expect_equal(
+    round(skaar_datasett(d_gyldig_inn, skaaringstabell = skaaringstabell_eks), 5),
+    round(d_gyldig_ut, 5)
+  )
+})
+
+test_that("skaar_datasett() gir ut det samme datasettet som blir tatt inn, med sumskårer
+          utregnet på nytt, hvis inndata allerede inneholder kolonner med sumskårer", {
+  # Eksempel på inndata hvor sumskårer allerede er inkludert (de to første er feil og den siste er riktig)
+  d_inn_inkl_sumskaarer = d_gyldig_inn
+  d_inn_inkl_sumskaarer = tibble::add_column(d_inn_inkl_sumskaarer, psykisk = c(4, -3, 9, -6.5), total = c(5, -0.7, 1.14), .after = "psyk2")
+  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
+  expect_equal(
+    round(skaar_datasett(d_inn_inkl_sumskaarer, skaaringstabell = skaaringstabell_eks), 5),
+    round(d_gyldig_ut, 5)
+  )
+})
+
 d_gyldig_alle_verdier = tibble::tribble(
   ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2,
   1, 2, 1, 10, 20,
   2, 1, 2, 20, 10,
   3, 1, 2, NA, 10
 )
-
-test_that("skaar_datasett() gir ut samme sumskår som skaar_datasett_uten_validering()", {
-  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
-  expect_equal(
-    round(skaar_datasett_uten_validering(d_gyldig_alle_verdier, skaaringstabell_eks), 5),
-    round(skaar_datasett(d_gyldig_alle_verdier, skaaringstabell = skaaringstabell_eks), 5)
-  )
-})
 
 test_that("skaar_datasett() gir ut feilmelding hvis skåringstabell, variabelnavn og/eller variabelverdier er ugyldige", {
 
