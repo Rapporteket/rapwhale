@@ -519,7 +519,7 @@ d_gyldig_inn = tibble::tribble(
   3, 1, 3, 1, 2, NA, 10, "2020-03-30"
 )
 
-# Eksempel på utdata (skal være identisk til 'd_inn' og i tillegg inneholde
+# Eksempel på utdata (skal være identisk til 'd_gyldig_inn' og i tillegg inneholde
 # kolonner med sumskårer til høyre for spørreskjema-variablene)
 d_gyldig_ut = d_gyldig_inn
 d_gyldig_ut = tibble::add_column(d_gyldig_ut, psykisk = c(1, -3, -6.5), total = c(0.518, 0.775, 1.14), .after = "psyk2")
@@ -543,6 +543,7 @@ test_that("skaar_datasett() gir ut det samme datasettet som blir tatt inn, med s
     round(skaar_datasett(d_inn_inkl_sumskaarer, skaaringstabell = skaaringstabell_eks), 5),
     round(d_gyldig_ut, 5)
   )
+  # fixme: skal gi advarsel
 })
 
 d_gyldig_alle_verdier = tibble::tribble(
