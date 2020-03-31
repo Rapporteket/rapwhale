@@ -374,14 +374,13 @@ test_that("skaar_datasett_uten_validering() regner ut korrekt sumskår ved bare 
   )
 })
 
-# Eksempeldata som inneholder 0 besvarelser
-d_0_besvarelser = d_gyldig_alle_verdier
-d_0_besvarelser = d_gyldig_alle_verdier[-(1:3), ]
 
-test_that("skaar_datasett_uten_validering() regner ikke ut sumskår ved 0 besvarelser", {
+test_that("skaar_datasett_uten_validering() gir ut 0-rads resultat med alle skårkolonnene når inndata har 0 rader", {
+  d_0_besvarelser = d_gyldig_alle_verdier[0, ]
+  sumskaar_0_besvarelser = tibble(total = double(), psykisk = double())
   expect_identical(
     skaar_datasett_uten_validering(d_0_besvarelser, skaaringstabell_eks),
-    NULL
+    sumskaar_0_besvarelser
   )
 })
 

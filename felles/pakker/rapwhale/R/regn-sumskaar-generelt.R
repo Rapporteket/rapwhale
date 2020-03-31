@@ -173,10 +173,25 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
     tidyr::pivot_wider(names_from = "delskala", values_from = "skaar")
 
   # For sikkerheits skuld, sorter etter opphavleg radnummer,
-  # og returner til slutt skårar for alle delskalaane
-  d_med_skaarar %>%
+  # og fjern så radnummeret
+  d_med_skaarar = d_med_skaarar %>%
     arrange(person_id) %>%
     select(-person_id)
+
+  # Inndata med 0 rader må handterast spesielt
+  if (nrow(d) == 0) {
+    # Brukar pivot_wider() også her, for å sikra at rekkjefølgja
+    # på sumskårkolonnane vert lik som for datasett *med* svar
+    # (jf. pivot_wider() si handtering av faktorvariablar)
+    d_med_skaarar = skaaringstabell %>%
+      dplyr::distinct(delskala, .keep_all = TRUE) %>%
+      select(delskala, koeffisient) %>% # Treng «koeffisient» for å få riktig variabeltype
+      tidyr::pivot_wider(names_from = "delskala", values_from = koeffisient) %>%
+      head(0)
+  }
+
+  # Returner ferdig skåra datasett
+  d_med_skaarar
 }
 
 
