@@ -189,6 +189,44 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
     select(-person_id)
 }
 
+
+
+#' Legg til NA-rader i skåringstabell
+#'
+#' @description
+#' Legg til rader med både `verdi` og `koeffisient` lik `NA`, for lettare
+#' skåring av datasett som har manglande verdiar.
+#'
+#' @param skaaringstabell Vanleg skåringstabell.
+#'
+#' @details
+#' For kvar eksisterande kombinasjon av `delskala` og `variabel` vert det lagt til
+#' ei rad med både `verdi` og `koeffisient` sett til `NA`.
+#' Dette vert berre gjort dersom ikkje alt finst ein `verdi` lik `NA` (uavhengig
+#' av kva tilhøyrande `koeffisient` er).
+#'
+#' Dette er berre ein intern hjelpefunksjon for å forenkla koden
+#' for skåring av datasett. Med slike `NA`-rader vert skåren utrekna
+#' med [rapwhale::skaar_datasett_uten_validering()] automatisk `NA` dersom
+#' minst éin av variablane som inngår, manglar verdi (altså er `NA`).
+#'
+#' @return Skåringstabellen med `NA`-rader lagde til.
+legg_til_na_i_skaaringstabell = function(skaaringstabell) {
+  # Legg til NA-rad viss det ikkje finst frå før
+  legg_til_na_rad = function(df) {
+    if (all(!is.na(df$verdi))) {
+      df = add_row(df, verdi = NA, koeffisient = NA)
+    }
+    df
+  }
+  skaaringstabell %>%
+    nest(data = c(verdi, koeffisient)) %>%
+    mutate(data = map(data, legg_til_na_rad)) %>%
+    unnest(cols = c(data))
+}
+
+
+
 sjekk_skaaringstabell = function(skaaringstabell) {
   # Sjekker om skåringstabellen inneholder riktige kolonner/kolonnenavn.
   if (!all(hasName(skaaringstabell, c("delskala", "variabel", "verdi", "koeffisient")))) {

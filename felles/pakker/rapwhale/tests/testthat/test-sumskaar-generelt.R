@@ -386,6 +386,67 @@ test_that("skaar_datasett_uten_validering() regner ikke ut sumskår ved 0 besvar
 })
 
 
+
+context("legg_til_na_i_skaaringstabell")
+
+test_that("legg_til_na_i_skaaringstabell() fungerer", {
+  # Original skåringstabell (merk at éi rad òg har NA-verdiar)
+  skaaringstabell_orig = tibble::tribble(
+    ~delskala, ~variabel, ~verdi, ~koeffisient,
+    "total", "var_a", 1, 5,
+    "total", "var_a", 2, 10,
+    "total", "var_b", 1, 3,
+    "total", "var_b", NA, NA,
+    "psykisk", "var_a", 1, 0
+  )
+
+  # Skåringstabell med NA fylt ut
+  skaaringstabell_med_na = tibble::tribble(
+    ~delskala, ~variabel, ~verdi, ~koeffisient,
+    "total", "var_a", 1, 5,
+    "total", "var_a", 2, 10,
+    "total", "var_a", NA, NA,
+    "total", "var_b", 1, 3,
+    "total", "var_b", NA, NA,
+    "psykisk", "var_a", 1, 0,
+    "psykisk", "var_a", NA, NA
+  )
+
+  # Funksjonen fungerer i enkelt tilfelle
+  expect_identical(
+    legg_til_na_i_skaaringstabell(skaaringstabell_orig),
+    skaaringstabell_med_na
+  )
+
+  # Ekstrasjekk på at funksjonen er idempotent
+  # (i praksis at han handterer NA-verdiar som finst frå før)
+  expect_identical(
+    legg_til_na_i_skaaringstabell(skaaringstabell_orig),
+    legg_til_na_i_skaaringstabell(legg_til_na_i_skaaringstabell(skaaringstabell_orig))
+  )
+  expect_identical(
+    legg_til_na_i_skaaringstabell(skaaringstabell_eks),
+    legg_til_na_i_skaaringstabell(legg_til_na_i_skaaringstabell(skaaringstabell_eks))
+  )
+})
+
+test_that("legg_til_na_i_skaaringstabell() overskriv ikkje eksisterande NA-verdiar", {
+  # Skåringstabell med NA-verdi som skal gje ut koeffisient som *ikkje* er NA
+  skaaringstabell_med_na = tibble::tribble(
+    ~delskala, ~variabel, ~verdi, ~koeffisient,
+    "total", "var_a", 1, 5,
+    "total", "var_a", NA, 10
+  )
+
+  # Her skal koeffisientverdien bevarast
+  expect_identical(
+    legg_til_na_i_skaaringstabell(skaaringstabell_med_na),
+    skaaringstabell_med_na
+  )
+})
+
+
+
 context("sjekk_skaaringstabell")
 
 test_that("sjekk_skaaringstabell() gir ingen feilmelding hvis skåringstabellen er gyldig", {
