@@ -169,13 +169,13 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
   d_med_skaarar = d_med_koeff %>%
     group_by(person_id, delskala) %>%
     summarise(skaar = sum(koeffisient)) %>%
+    ungroup() %>%
     tidyr::pivot_wider(names_from = "delskala", values_from = "skaar")
 
   # For sikkerheits skuld, sorter etter opphavleg radnummer,
   # og returner til slutt skårar for alle delskalaane
   d_med_skaarar %>%
     arrange(person_id) %>%
-    ungroup() %>%
     select(-person_id)
 }
 
