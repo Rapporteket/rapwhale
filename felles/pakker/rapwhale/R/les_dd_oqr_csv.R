@@ -8,11 +8,16 @@
 les_varnavn = function(adresse, formatspek) {
   stopifnot(is.character(adresse) & length(adresse) == 1)
 
-  varnavn = scan(adresse,
-    fileEncoding = formatspek$tegnkoding,
-    what = "character", sep = formatspek$skilletegn,
-    nlines = 1, quiet = TRUE
-  )
+  varnavn = read_delim(adresse,
+    delim = formatspek$skilletegn,
+    n_max = 1,
+    col_names = FALSE,
+    na = formatspek$na_verdier,
+    locale = readr::locale(encoding = formatspek$tegnkoding)
+  ) %>%
+    unlist(., use.names = FALSE) %>%
+    replace_na("")
+
   varnavn
 }
 
