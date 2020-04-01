@@ -15,6 +15,52 @@ les_kb_oqr_base = function(adresse) {
   # formatert (hvilke kolonner som behandles som tekst og tall etc.).
   # Sjekker at alle variabelnavn som skal være med er inkludert (via les_csv_oqr)
 
+  kb_spek_oqr = tibble::tribble(
+    ~varnavn_kilde, ~varnavn_resultat, ~vartype,
+    "skjemanavn", "skjemanavn", "tekst",
+    "navn_i_rapporteket", "navn_i_rapporteket", "tekst",
+    "ledetekst", "ledetekst", "tekst",
+    "obligatorisk", "obligatorisk", "tekst",
+    "type", "type", "tekst",
+    "listeverdier", "listeverdier", "tekst",
+    "listetekst", "listetekst", "tekst",
+    "normalintervall_start_numerisk", "normalintervall_start_numerisk", "tekst",
+    "normalintervall_slutt_numerisk", "normalintervall_slutt_numerisk", "tekst",
+    "maksintervall_start_numerisk", "maksintervall_start_numerisk", "tekst",
+    "maksintervall_slutt_numerisk", "maksintervall_slutt_numerisk", "tekst",
+    "normalintervall_start_dato", "normalintervall_start_dato", "tekst",
+    "normalintervall_slutt_dato", "normalintervall_slutt_dato", "tekst",
+    "maksintervall_start_dato", "maksintervall_start_dato", "tekst",
+    "maksintervall_slutt_dato", "maksintervall_slutt_dato", "tekst",
+    "antall_tegn", "antall_tegn", "heltall",
+    "lovlige_tegn", "lovlige_tegn", "tekst",
+    "desimaler", "desimaler", "heltall",
+    "aktiveringsspoersmaal", "aktiveringsspoersmaal", "tekst",
+    "underspoersmaal", "underspoersmaal", "tekst",
+    "innfoert_dato", "innfoert_dato", "tekst",
+    "utfaset_dato", "utfaset_dato", "tekst",
+    "tabell", "tabell", "tekst",
+    "fysisk_feltnavn", "fysisk_feltnavn", "tekst",
+    "kommentar", "kommentar", "tekst",
+    "variabel_id", "variabel_id", "tekst",
+    "hjelpetekst", "hjelpetekst", "tekst"
+  )
+
+  # Leser inn kodebok med angitt spesifikasjon
+  kb_oqr = les_csv_oqr(adresse, spesifikasjon = kb_spek_oqr)
+
+  # Håndtering av problematiske variabler.
+  # til_desimal = c("normalintervall_start_numerisk", "normalintervall_slutt_numerisk",
+  #                "maksintervall_start_numerisk", "maksintervall_slutt_numerisk")
+  # til_dato = c("normalintervall_start_dato", "normalintervall_slutt_dato",
+  #             "maksintervall_start_dato", "maksintervall_slutt_dato",
+  #             "innfoert_dato", "utfaset_dato")
+
+
+  # Tester for ikke-glissen kodebok.
+  # En del ting fra validering må skje her.
+
+
   # Teste for ulike verdier for samme variabler på flere skjema.
   # Se fixme l: 216 dformat
 
