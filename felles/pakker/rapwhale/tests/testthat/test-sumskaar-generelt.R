@@ -551,6 +551,44 @@ test_that("skaar_datasett() skal gi advarsel i de tilfellene sumskårer blir utr
   expect_warning(skaar_datasett(d_inn_inkl_sumskaarer, skaaringstabell = skaaringstabell_eks))
 })
 
+test_that("skaar_datasett() gir ut det samme datasettet som blir tatt inn inkludert
+          kolonner med sumskårer til høyre for spørreskjema-variablene hvis det oppgis
+          nye navn på en eller flere av spørreskjema-variablene", {
+  d_inn_feil_variabelnavn = d_gyldig_inn
+  d_inn_feil_variabelnavn = dplyr::rename(d_inn_feil_variabelnavn, fysisk1 = fys1, psykisk2 = psyk2)
+
+  nye_navn = tibble::tribble(
+    ~gamle_navn, ~nye_navn,
+    "fysisk1", "fys1",
+    "psykisk2", "psyk2"
+  )
+
+  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
+  expect_equal(
+    round(skaar_datasett(d_inn_feil_variabelnavn, nye_navn, skaaringstabell_eks), 5),
+    round(d_gyldig_ut, 5)
+  )
+})
+
+test_that("skaar_datasett() gir ut det samme datasettet som blir tatt inn inkludert
+          kolonner med sumskårer til høyre for spørreskjema-variablene hvis to av
+          kolonnene for spørreskjema-variablene har forvekslede navn", {
+  d_inn_omvendt_variabelnavn = d_gyldig_inn
+  d_inn_omvendt_variabelnavn = dplyr::rename(d_inn_omvendt_variabelnavn, fys1 = fys2, fys2 = fys1)
+
+  navn_omvendt = tibble::tribble(
+    ~gamle_navn, ~nye_navn,
+    "fys1", "fys2",
+    "fys2", "fys1"
+  )
+
+  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
+  expect_equal(
+    round(skaar_datasett(d_gyldig_inn, navn_omvendt, skaaringstabell_eks), 5),
+    round(d_gyldig_ut, 5)
+  )
+})
+
 d_gyldig_alle_verdier = tibble::tribble(
   ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2,
   1, 2, 1, 10, 20,
