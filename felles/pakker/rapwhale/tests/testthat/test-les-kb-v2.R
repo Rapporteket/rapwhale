@@ -14,16 +14,16 @@ test_that("Funksjonen leser inn kodebok og returnerer kolonner med forventet for
     ledetekst = c("PID", "Dato for innhenting av opplysninger", "Fødselsnummer"),
     obligatorisk = c("Ja", "Ja", "Ja"),
     type = c("Tekstvariabel", "Datovariabel", "Tekstvariabel"),
-    listeverdier = c(NA_integer_, NA_integer_, NA_integer_),
+    listeverdier = c(NA_character_, NA_character_, NA_character_),
     listetekst = c(NA_character_, NA_character_, NA_character_),
     normalintervall_start_numerisk = c(NA_real_, NA_real_, NA_real_),
     normalintervall_slutt_numerisk = c(NA_real_, NA_real_, NA_real_),
     maksintervall_start_numerisk = c(NA_real_, NA_real_, NA_real_),
     maksintervall_slutt_numerisk = c(NA_real_, NA_real_, NA_real_),
-    normalintervall_start_dato = as.Date(c(NA, NA, NA), format = "%d.%m.%Y"),
-    normalintervall_slutt_dato = as.Date(c(NA, NA, NA), format = "%d.%m.%Y"),
-    maksintervall_start_dato = as.Date(c(NA, "1980-01-01", NA), format = "%d.%m.%Y"),
-    maksintervall_slutt_dato = as.Date(c(NA, NA, NA), format = "%d.%m.%Y"),
+    normalintervall_start_dato = as.Date(c(NA, NA, NA), format = "%Y-%m-%d"),
+    normalintervall_slutt_dato = as.Date(c(NA, NA, NA), format = "%Y-%m-%d"),
+    maksintervall_start_dato = as.Date(c(NA, "1980-01-01", NA), format = "%Y-%m-%d"),
+    maksintervall_slutt_dato = as.Date(c(NA, NA, NA), format = "%Y-%m-%d"),
     antall_tegn = c(11L, NA_integer_, 11L),
     lovlige_tegn = c(
       "1234567890", NA_character_,
@@ -45,17 +45,18 @@ test_that("Funksjonen leser inn kodebok og returnerer kolonner med forventet for
   )
   kb_eksempel = as_tibble(kb_eksempel)
 
-  expect_identical(les_kb_oqr_base("oqr_kodebok.csv"), kb_eksempel)
+
+  expect_equal(les_kb_oqr_base("oqr_kodebok.csv"), kb_eksempel)
 })
 
-test_that("Datovariabler som inkluderer tekst (eksempel 'today') blir korrekt håndtert", {
-})
-
-test_that("Datovariabler med apostrof rundt dato (eksempel '1900-01-01') blir korrekt tolket", {
-})
-
-test_that("Heltallvariabler som inkluderer tekst (eksempel 'birthyear') blir korrekt håndtert", {
-})
+# test_that("Datovariabler som inkluderer tekst (eksempel 'today') blir korrekt håndtert", {
+# })
+#
+# test_that("Datovariabler med apostrof rundt dato (eksempel '1900-01-01') blir korrekt tolket", {
+# })
+#
+# test_that("Heltallvariabler som inkluderer tekst (eksempel 'birthyear') blir korrekt håndtert", {
+# })
 
 # kb_oqr_base_til_std -----------------------------------------------------
 
