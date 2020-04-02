@@ -47,25 +47,69 @@ les_kb_oqr_base = function(adresse) {
   )
 
   # Leser inn kodebok med angitt spesifikasjon
-  kb_oqr = les_csv_oqr(adresse, spesifikasjon = kb_spek_oqr)
+  d = les_csv_oqr(adresse, spesifikasjon = kb_spek_oqr)
 
   # Håndtering av problematiske variabler.
-  # til_desimal = c("normalintervall_start_numerisk", "normalintervall_slutt_numerisk",
-  #                "maksintervall_start_numerisk", "maksintervall_slutt_numerisk")
-  # til_dato = c("normalintervall_start_dato", "normalintervall_slutt_dato",
-  #             "maksintervall_start_dato", "maksintervall_slutt_dato",
-  #             "innfoert_dato", "utfaset_dato")
+  til_desimal = c(
+    "normalintervall_start_numerisk", "normalintervall_slutt_numerisk",
+    "maksintervall_start_numerisk", "maksintervall_slutt_numerisk"
+  )
+  til_dato = c(
+    "normalintervall_start_dato", "normalintervall_slutt_dato",
+    "maksintervall_start_dato", "maksintervall_slutt_dato",
+    "innfoert_dato", "utfaset_dato"
+  )
 
+
+  # FIXME - lage robust funksjon for konvertering av tekst til numerisk
+  # Konvertere tekst-verdier til numerisk verdi. Desimal siden det er
+  # oppgitt som desimaltall i SOReg.
+  d = mutate_at(
+    d, til_desimal,
+    ~ str_replace_all(.,
+      pattern = "^[A-Za-z]+$",
+      replacement = NA_character_
+    )
+  )
+  d = mutate_at(
+    d, til_desimal,
+    ~ as.numeric(.)
+  )
+
+  # Maksintervall_start_dato har formatet "'2020-02-02'", så vi må fjerne unødvendige apostrofer.
+  d = mutate_at(
+    d, "maksintervall_start_dato",
+    ~ str_remove_all(.,
+      pattern = "\'"
+    )
+  )
+
+  # Fjerner tekstverdier som for eksempel 'today' fra datovariabler og gjør de til NA
+  d = mutate_at(
+    d, til_dato,
+    ~ str_replace_all(.,
+      pattern = "^[A-Za-z]+$",
+      replacement = NA_character_
+    )
+  )
+
+  # Konverterer dato-variabler til datoformat
+  d = mutate_at(
+    d, til_dato,
+    ~ readr::parse_date(.,
+      format = "%Y-%m-%d",
+      na = ""
+    )
+  )
 
   # Tester for ikke-glissen kodebok.
   # En del ting fra validering må skje her.
-
 
   # Teste for ulike verdier for samme variabler på flere skjema.
   # Se fixme l: 216 dformat
 
   # Returnerer: fullstendig kodebok som en tibble. Gir ut riktig variabeltype for kb.
-  kb_oqr
+  d
 }
 
 kb_oqr_base_til_std = function(kodebok_validert, kb_kobling) {
