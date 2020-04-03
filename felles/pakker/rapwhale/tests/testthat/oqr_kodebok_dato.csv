@@ -1,0 +1,3 @@
+skjemanavn;navn_i_rapporteket;ledetekst;obligatorisk;type;listeverdier;listetekst;normalintervall_start_numerisk;normalintervall_slutt_numerisk;maksintervall_start_numerisk;maksintervall_slutt_numerisk;normalintervall_start_dato;normalintervall_slutt_dato;maksintervall_start_dato;maksintervall_slutt_dato;antall_tegn;lovlige_tegn;desimaler;aktiveringsspoersmaal;underspoersmaal;innfoert_dato;utfaset_dato;tabell;fysisk_feltnavn;kommentar;variabel_id;hjelpetekst
+;;;;;;;;;;;"2020-02-03";;"'2020-02-03'";birthYear;;;;;;;;;;;;
+;;;;;;;;;;;"1980-01-01";;"'1980-01-01'";today;;;;;;;;;;;;

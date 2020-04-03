@@ -111,6 +111,17 @@ test_that("funksjonen håndterer feil desimaltegn", {
   expect_equal(les_kb_oqr_base("oqr_kodebok_desimal_feil_format.csv"), kb_desimal)
 })
 
+test_that("funksjonen håndterer datovariabler", {
+  # i datafil er maksintervall_slutt_dato = c(birthYear, birthYear)
+  kb_dato = kb_tom %>%
+    add_row(
+      normalintervall_start_dato = c("2020-02-03", "1980-01-01"),
+      normalintervall_slutt_dato = c(NA, NA),
+      maksintervall_start_dato = c("2020-02-03", "1980-01-01"),
+      maksintervall_slutt_dato = c(NA, NA)
+    )
+  expect_equal(les_kb_oqr_base("oqr_kodebok_dato.csv"), kb_dato)
+})
 
 # Test at det gis feilmelding hvis det finnes avvik mellom listevariabler på ulike skjema
 test_that("Det gis feilmelding hvis en listevariabel har ulik listetekst på ulike skjema", {
