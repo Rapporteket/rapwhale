@@ -62,67 +62,56 @@ les_kb_oqr_base = function(adresse) {
 
 
   # FIXME - lage robust funksjon for konvertering av tekst til numerisk
-  # Konvertere tekst-verdier til numerisk verdi. Desimal siden det er
-  # oppgitt som desimaltall i SOReg.
-  d = mutate_at(
-    d, til_desimal,
-    ~ str_replace_all(.,
-      pattern = "^[A-Za-z]+$",
-      replacement = NA_character_
-    )
-  )
-  d = mutate_at(
-    d, til_desimal,
-    ~ as.numeric(.)
-  )
+  # Konvertere tekst-verdier til numerisk verdi.
+  d = mutate_at(d, til_desimal, ~ str_replace_all(.,
+    pattern = "^[A-Za-z]+$",
+    replacement = NA_character_
+  ))
+  d = mutate_at(d, til_desimal, ~ as.numeric(.))
 
   # Maksintervall_start_dato har formatet "'2020-02-02'", så vi må fjerne unødvendige apostrofer.
   d = mutate_at(
     d, "maksintervall_start_dato",
-    ~ str_remove_all(.,
-      pattern = "\'"
-    )
+    ~ str_remove_all(., pattern = "\'")
   )
 
   # Fjerner tekstverdier som for eksempel 'today' fra datovariabler og gjør de til NA
-  d = mutate_at(
-    d, til_dato,
-    ~ str_replace_all(.,
-      pattern = "^[A-Za-z]+$",
-      replacement = NA_character_
-    )
-  )
+  d = mutate_at(d, til_dato, ~ str_replace_all(.,
+    pattern = "^[A-Za-z]+$",
+    replacement = NA_character_
+  ))
 
   # Konverterer dato-variabler til datoformat
-  d = mutate_at(
-    d, til_dato,
-    ~ readr::parse_date(.,
-      format = "%Y-%m-%d",
-      na = ""
-    )
-  )
-
-  # Tester for ikke-glissen kodebok.
-  # En del ting fra validering må skje her.
-
-  # Teste for ulike verdier for samme variabler på flere skjema.
-  # Se fixme l: 216 dformat
+  d = mutate_at(d, til_dato, ~ readr::parse_date(.,
+    format = "%Y-%m-%d",
+    na = ""
+  ))
 
   # Returnerer: fullstendig kodebok som en tibble. Gir ut riktig variabeltype for kb.
   d
 }
+
 
 kb_oqr_base_til_std = function(kodebok_validert, kb_kobling) {
   # Tar inn en kodebok-tibble med riktige variabeltyper.
 
   # Må gjøre en del validering av inndata
   # I funksjonen har vi oppgitt format for standard kodebok vi vil bruke
+
   # kb_kobling brukes for å koble diverse kodebokformat til standard format.
 
   # Kalle på funksjon for å fikse variabelnavn
   # skifte varnavn, endre rekkefølge på rader og kolonner.
 
   # Må ha definert hva et standard kodebokformat skal være.
+
+  # Tester for å sjekke at alle variabeltyper er kjente fra før
+
+  # Fikser statusvariabler (legge til ekstra rader for hvert nivå (0,1,-1))
+  # Fikse obligatorisk
+  # Legg til eventuelle ekstra variabler (se funksjon under)
+  # Fikse skjemanavn
+  # Sorter kb etter skjemarekkefølge
 
   # Returnerer fullstendig kodebok på standard format
 }
