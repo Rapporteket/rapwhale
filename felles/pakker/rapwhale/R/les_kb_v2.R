@@ -87,6 +87,38 @@ les_kb_oqr_base = function(adresse) {
     na = ""
   ))
 
+
+  # For listevariabler er det viktig at variabler med flere nivåer har samme verdi-verditekst kombinasjon
+  # på tvers av skjema
+
+  # Henter ut variabelnavn for de som finnes i flere skjema
+  repeterte = d %>%
+    filter(type == "Listevariabel") %>%
+    group_by(fysisk_feltnavn) %>%
+    distinct(skjemanavn, .keep_all = TRUE) %>%
+    count(fysisk_feltnavn) %>%
+    arrange(desc(n)) %>%
+    filter(n > 1) %>%
+    pull(fysisk_feltnavn)
+
+  # Finner de variablene som har flere ulike listetekster for samme listeverdi
+  d_avvik = d %>%
+    filter(fysisk_feltnavn %in% repeterte) %>%
+    group_by(fysisk_feltnavn, listeverdier) %>%
+    summarise(n = n_distinct(listetekst, .keep_all = TRUE)) %>%
+    filter(n > 1)
+
+  # Stanser innlesning hvis det finnes avvik
+  if (!nrow(d_avvik) == 0) {
+    stop(error = paste0(
+      "Det finnes ",
+      nrow(d_avvik),
+      " avvik for listeverdi mellom skjema: \n Variabel  : ",
+      d_avvik$fysisk_feltnavn, "\n Listeverdi: ",
+      d_avvik$listeverdier
+    ))
+  }
+
   # Returnerer: fullstendig kodebok som en tibble. Gir ut riktig variabeltype for kb.
   d
 }
