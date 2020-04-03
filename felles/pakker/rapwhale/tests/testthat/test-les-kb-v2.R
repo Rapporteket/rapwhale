@@ -78,10 +78,6 @@
 
 test_that("Funksjonen leser inn kodebok og returnerer kolonner med forventet format", {
 
-
-
-
-
   # I oqr_kodebok finnes det:
   # tallvariabler som inneholder tekst (feks birthYear),
   # datovariabel med ekstra tødler
@@ -96,12 +92,13 @@ test_that("Det gis feilmelding hvis en listevariabel har ulik listetekst på uli
     add_row(
       skjemanavn = c("basereg", "basereg", "basereg", "op", "op", "op", "patient", "patient", "patient"),
       fysisk_feltnavn = c(rep("komplikasjon", 9)),
+      type = c(rep("Listevariabel")),
       listeverdier = c(1, 2, 3, 1, 2, 3, 1, 2, 3),
       listetekst = c("Ja", "Nei", "Ukjent", "Ja", "Nei", "Avvik", "Ja", "Nei", "Ukjent")
     )
   expect_error(
     les_kb_oqr_base("oqr_kodebok_avvik.csv"),
-    "feilmelding for variabel med ulike faktornivå på tvers av skjema"
+    "Det finnes 1 avvik for listeverdi mellom skjema: \n Variabel  : komplikasjon\n Listeverdi: 3"
   )
 })
 
