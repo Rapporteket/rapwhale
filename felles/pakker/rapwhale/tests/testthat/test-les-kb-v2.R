@@ -54,6 +54,12 @@ test_that("Funksjonen leser inn kodebok og returnerer kolonner med forventet for
   expect_equal(les_kb_oqr_base("oqr_kodebok.csv"), kb_eksempel)
 })
 
+# Test at det gis feilmelding hvis det finnes avvik mellom listevariabler på ulike skjema
+test_that("Det gis feilmelding hvis en listevariabel har ulik listetekst på ulike skjema", {
+  expect_error(les_kb_oqr_base(), "feilmelding for variabel med ulike faktornivå på tvers av skjema")
+})
+
+
 
 # kb_oqr_base_til_std -----------------------------------------------------
 
