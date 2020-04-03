@@ -1,10 +1,7 @@
 # tester for les_kb_v2.R
 
-
-# les_kb_oqr_base --------------------------------------------------------------
-
-test_that("Funksjonen leser inn kodebok og returnerer kolonner med forventet format", {
-
+# Kodebok-eksempel og tom kodebok for bruk i tester
+{
   # Lager en tom kodebok for å lettere kunne bygge kb for ulike tester.
   kb_tom = tibble(
     skjemanavn = character(),
@@ -76,6 +73,14 @@ test_that("Funksjonen leser inn kodebok og returnerer kolonner med forventet for
     )
   )
   kb_eksempel = as_tibble(kb_eksempel)
+}
+# les_kb_oqr_base --------------------------------------------------------------
+
+test_that("Funksjonen leser inn kodebok og returnerer kolonner med forventet format", {
+
+
+
+
 
   # I oqr_kodebok finnes det:
   # tallvariabler som inneholder tekst (feks birthYear),
