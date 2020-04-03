@@ -67,6 +67,10 @@ les_kb_oqr_base = function(adresse) {
     pattern = "^[A-Za-z]+$",
     replacement = NA_character_
   ))
+  d = mutate_at(d, til_desimal, ~ str_replace_all(.,
+    pattern = ",",
+    replacement = "."
+  ))
   d = mutate_at(d, til_desimal, ~ as.numeric(.))
 
   # Maksintervall_start_dato har formatet "'2020-02-02'", så vi må fjerne unødvendige apostrofer.
