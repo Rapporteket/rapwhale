@@ -5,6 +5,37 @@
 
 test_that("Funksjonen leser inn kodebok og returnerer kolonner med forventet format", {
 
+  # Lager en tom kodebok for å lettere kunne bygge kb for ulike tester.
+  kb_tom = tibble(
+    skjemanavn = character(),
+    navn_i_rapporteket = character(),
+    ledetekst = character(),
+    obligatorisk = character(),
+    type = character(),
+    listeverdier = character(),
+    listetekst = character(),
+    normalintervall_start_numerisk = numeric(),
+    normalintervall_slutt_numerisk = numeric(),
+    maksintervall_start_numerisk = numeric(),
+    maksintervall_slutt_numerisk = numeric(),
+    normalintervall_start_dato = as.Date(character()),
+    normalintervall_slutt_dato = as.Date(character()),
+    maksintervall_start_dato = as.Date(character()),
+    maksintervall_slutt_dato = as.Date(character()),
+    antall_tegn = integer(),
+    lovlige_tegn = character(),
+    desimaler = integer(),
+    aktiveringsspoersmaal = character(),
+    undersooersmaal = character(),
+    innfoert_dato = as.Date(character()),
+    utfaset_dato = as.Date(character()),
+    tabell = character(),
+    fysisk_feltnavn = character(),
+    kommentar = character(),
+    variabel_id = character(),
+    hjelpetekst = character()
+  )
+
   # kb_eksempel er de fire første linjene fra AblaNor kodebok.
   # Den inkluderer de kolonnene vi ønsker ut, og riktig kolonnetype for alle kolonner.
   kb_eksempel = data.frame(
@@ -56,9 +87,18 @@ test_that("Funksjonen leser inn kodebok og returnerer kolonner med forventet for
 
 # Test at det gis feilmelding hvis det finnes avvik mellom listevariabler på ulike skjema
 test_that("Det gis feilmelding hvis en listevariabel har ulik listetekst på ulike skjema", {
-  expect_error(les_kb_oqr_base(), "feilmelding for variabel med ulike faktornivå på tvers av skjema")
+  kb_avvik = kb_tom %>%
+    add_row(
+      skjemanavn = c("basereg", "basereg", "basereg", "op", "op", "op", "patient", "patient", "patient"),
+      fysisk_feltnavn = c(rep("komplikasjon", 9)),
+      listeverdier = c(1, 2, 3, 1, 2, 3, 1, 2, 3),
+      listetekst = c("Ja", "Nei", "Ukjent", "Ja", "Nei", "Avvik", "Ja", "Nei", "Ukjent")
+    )
+  expect_error(
+    les_kb_oqr_base("oqr_kodebok_avvik.csv"),
+    "feilmelding for variabel med ulike faktornivå på tvers av skjema"
+  )
 })
-
 
 
 # kb_oqr_base_til_std -----------------------------------------------------
