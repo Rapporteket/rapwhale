@@ -18,9 +18,10 @@ skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell) {
   }
   sjekk_skaaringstabell(skaaringstabell)
   sjekk_variabelnavn(d_navn_ok, variabelnavn = skaaringstabell$variabel)
-  # d_akt = select()
-  sjekk_variabelverdier(d_navn_ok, verditabell = select(skaaringstabell, variabel, verdi))
-  skaar_datasett_uten_validering(d_navn_ok, skaaringstabell)
+  d_akt = d_navn_ok %>%
+    select(unique(skaaringstabell$variabel))
+  sjekk_variabelverdier(d_akt, verditabell = select(skaaringstabell, variabel, verdi))
+  skaar_datasett_uten_validering(d_akt, skaaringstabell)
   # funksjon som legger til det som kommer ut skaar_datasett_uten_validering til d
 }
 
