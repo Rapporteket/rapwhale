@@ -522,7 +522,7 @@ d_gyldig_inn = tibble::tribble(
 # Eksempel på utdata (skal være identisk til 'd_gyldig_inn' og i tillegg inneholde
 # kolonner med sumskårer helt til høyre)
 d_gyldig_ut = d_gyldig_inn
-d_gyldig_ut = tibble::add_column(d_gyldig_ut, psykisk = NA, total = 8, .after = "dato")
+d_gyldig_ut = tibble::add_column(d_gyldig_ut, psykisk = c(1, -3, -6.5), total = c(0.518, 0.775, 1.14), .after = "dato")
 
 test_that("skaar_datasett() gir ut det samme datasettet som blir tatt inn inkludert
           kolonner med sumskårer helt til høyre", {
@@ -537,7 +537,7 @@ test_that("skaar_datasett() gir ut det samme datasettet som blir tatt inn inklud
 d_inn_inkl_sumskaarer = d_gyldig_inn
 d_inn_inkl_sumskaarer = tibble::add_column(d_inn_inkl_sumskaarer, psykisk = 5, total = NA, .after = "psyk2")
 
-test_that("skaar_datasett() fungerer hvis en eller flere sumskår-kolonner finnes fra før", {
+test_that("skaar_datasett() fungerer hvis begge sumskår-kolonnene finnes fra før", {
   d_ut_overskrevet_sumskaar = d_inn_inkl_sumskaarer
   d_ut_overskrevet_sumskaar$psykisk = c(1, -3, -6.5)
   d_ut_overskrevet_sumskaar$total = c(0.518, 0.775, 1.14)
@@ -545,6 +545,19 @@ test_that("skaar_datasett() fungerer hvis en eller flere sumskår-kolonner finne
   expect_equal(
     round(skaar_datasett(d_inn_inkl_sumskaarer, skaaringstabell = skaaringstabell_eks), 5),
     round(d_ut_overskrevet_sumskaar, 5)
+  )
+})
+
+test_that("skaar_datasett() fungerer hvis en av de to sumskår-kolonnene finnes fra før", {
+  d_inn_inkl_1_sumskaar = d_inn_inkl_sumskaarer
+  d_inn_inkl_1_sumskaar$psykisk = NULL
+  d_ut_inkl_1_ekstra_sumskaar = d_inn_inkl_1_sumskaar
+  d_ut_inkl_1_ekstra_sumskaar$total = c(0.518, 0.775, 1.14)
+  d_ut_inkl_1_ekstra_sumskaar = tibble::add_column(d_ut_inkl_1_ekstra_sumskaar, psykisk = c(1, -3, -6.5), .after = "dato")
+  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
+  expect_equal(
+    round(skaar_datasett(d_inn_inkl_1_sumskaar, skaaringstabell = skaaringstabell_eks), 5),
+    round(d_ut_inkl_1_ekstra_sumskaar, 5)
   )
 })
 
