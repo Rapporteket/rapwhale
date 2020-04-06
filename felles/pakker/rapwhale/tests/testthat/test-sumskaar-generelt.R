@@ -520,16 +520,12 @@ d_gyldig_inn = tibble::tribble(
 )
 
 # Eksempel på utdata (skal være identisk til 'd_gyldig_inn' og i tillegg inneholde
-# kolonner med sumskårer til høyre for spørreskjema-variablene)
+# kolonner med sumskårer helt til høyre)
 d_gyldig_ut = d_gyldig_inn
-d_gyldig_ut = tibble::add_column(d_gyldig_ut, psykisk = c(1, -3, -6.5), total = c(0.518, 0.775, 1.14), .after = "psyk2")
-
-# Eksempel på inndata hvor sumskårer allerede er inkludert (de to første er feil og den siste er riktig)
-d_inn_inkl_sumskaarer = d_gyldig_inn
-d_inn_inkl_sumskaarer = tibble::add_column(d_inn_inkl_sumskaarer, psykisk = c(4, -3.9, -6.5), total = c(5, -0.7, 1.14), .after = "psyk2")
+d_gyldig_ut = tibble::add_column(d_gyldig_ut, psykisk = NA, total = 8, .after = "dato")
 
 test_that("skaar_datasett() gir ut det samme datasettet som blir tatt inn inkludert
-          kolonner med sumskårer til høyre for spørreskjema-variablene", {
+          kolonner med sumskårer helt til høyre", {
   # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
   expect_equal(
     round(skaar_datasett(d_gyldig_inn, skaaringstabell = skaaringstabell_eks), 5),
@@ -537,23 +533,26 @@ test_that("skaar_datasett() gir ut det samme datasettet som blir tatt inn inklud
   )
 })
 
-test_that("skaar_datasett() gir ut det samme datasettet som blir tatt inn, med sumskårer
-          utregnet på nytt, hvis inndata allerede inneholder kolonner med sumskårer", {
+# Eksempel på inndata hvor sumskårer finnes fra før
+d_inn_inkl_sumskaarer = d_gyldig_inn
+d_inn_inkl_sumskaarer = tibble::add_column(d_inn_inkl_sumskaarer, psykisk = 5, total = NA, .after = "psyk2")
+
+test_that("skaar_datasett() fungerer hvis en eller flere sumskår-kolonner finnes fra før", {
+  d_ut_overskrevet_sumskaar = d_inn_inkl_sumskaarer
+  d_ut_overskrevet_sumskaar$psykisk = c(1, -3, -6.5)
+  d_ut_overskrevet_sumskaar$total = c(0.518, 0.775, 1.14)
   # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
   expect_equal(
     round(skaar_datasett(d_inn_inkl_sumskaarer, skaaringstabell = skaaringstabell_eks), 5),
-    round(d_gyldig_ut, 5)
+    round(d_ut_overskrevet_sumskaar, 5)
   )
 })
 
-test_that("skaar_datasett() skal gi advarsel i de tilfellene sumskårer blir utregnet på nytt.
-          Dette gjelder hvis datasettet som blir tatt inn allerede inneholder kolonner med sumskårer", {
+test_that("skaar_datasett() gir advarsel hvis en eller flere sumskår-kolonner finnes fra før", {
   expect_warning(skaar_datasett(d_inn_inkl_sumskaarer, skaaringstabell = skaaringstabell_eks))
 })
 
-test_that("skaar_datasett() gir ut det samme datasettet som blir tatt inn inkludert
-          kolonner med sumskårer til høyre for spørreskjema-variablene hvis det oppgis
-          nye navn på en eller flere av spørreskjema-variablene", {
+test_that("skaar_datasett() fungerer hvis man oppgir variabelnavn", {
   d_inn_feil_variabelnavn = d_gyldig_inn
   d_inn_feil_variabelnavn = dplyr::rename(d_inn_feil_variabelnavn, fysisk1 = fys1, psykisk2 = psyk2)
 
@@ -562,6 +561,8 @@ test_that("skaar_datasett() gir ut det samme datasettet som blir tatt inn inklud
     "fysisk1", "fys1",
     "psykisk2", "psyk2"
   )
+
+  # nye_navn = c(fys1 = "fysisk1", psyk2 = "psykisk2")
 
   # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
   expect_equal(
