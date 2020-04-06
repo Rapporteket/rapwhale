@@ -10,26 +10,18 @@
 #'     fixme: skal bare sumskår(er) returneres?
 #'     skal skaaringstabell være et argument i denne funksjonen?
 
-skaar_datasett = function(d, variabelnavn, skaaringstabell) {
-  # d = endre_variabelnavn(d, variabelnavn)
+skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell) {
+  if (!is.null(variabelnavn)) {
+    d_navn_ok = rename(d, variabelnavn)
+  } else {
+    d_navn_ok = d
+  }
   sjekk_skaaringstabell(skaaringstabell)
-  sjekk_variabelnavn(d, variabelnavn = skaaringstabell$variabel)
-  sjekk_variabelverdier(d, verditabell = select(skaaringstabell, variabel, verdi))
-  skaar_datasett_uten_validering(d, skaaringstabell)
-}
-
-#' Funksjon for å endre variabelnavn
-#'
-#' Skal ta inn et datasett og en vektor med variabelnavn.
-#'
-#' @param d Dataramme/tibble med en kolonne for hvert spørsmål.
-#' @param variabelnavn Vektor med gamle og nye variabelnavn. fixme: stemmer dette?
-#'
-#' @return \code{d} med nøyaktig samme variabelnavn som i skåringstabellen. fixme: stemmer dette?
-
-endre_variabelnavn = function(d, variabelnavn) {
-  colnames(d) = variabelnavn
-  d
+  sjekk_variabelnavn(d_navn_ok, variabelnavn = skaaringstabell$variabel)
+  # d_akt = select()
+  sjekk_variabelverdier(d_navn_ok, verditabell = select(skaaringstabell, variabel, verdi))
+  skaar_datasett_uten_validering(d_navn_ok, skaaringstabell)
+  # funksjon som legger til det som kommer ut skaar_datasett_uten_validering til d
 }
 
 #' Funksjon for å sjekke variabelnavn
