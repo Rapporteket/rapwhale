@@ -1,12 +1,17 @@
 library(tidyverse)
 
-lag_kb_format = function() {
-  # Funksjon tilsvarende lag_formatspek for å sikre trygg innlesning av kodebok
-  # Definerer kolonnespesifikasjon for kb.
+les_kb_oqr_v2 = function(adresse) {
+  # Tar inn filplassering for kodebok
 
-  # Her definerer vi de ulike formatene som brukes (OQR, MRS, etc.)
+  # Har i funksjonen oppgitt kb_spek for det spesifikke register/struktur (her kb_oqr_spek)
 
-  # Returnerer kb_spek
+  # Kaller på les_kodebok_oqr_base()
+  # Kaller på fikse_datatyper()
+  # Kaller på kb_oqr_base_til_std()
+  # Kaller på legg_til_variabler_kb()
+  # Kaller på valider_kodebok()
+
+  # Returnerer fullstendig kodebok for registeret. (Må inkludere varnavn_kilde, varnavn_resultat og vartype slik det er oppgitt i spesifikasjon i les_dd funksjoner)
 }
 
 les_kb_oqr_base = function(adresse) {
@@ -15,6 +20,7 @@ les_kb_oqr_base = function(adresse) {
   # formatert (hvilke kolonner som behandles som tekst og tall etc.).
   # Sjekker at alle variabelnavn som skal være med er inkludert (via les_csv_oqr)
 
+  # varnavn_resultat bør her være standard kodebokformat der det lar seg direkte "oversette".
   kb_spek_oqr = tibble::tribble(
     ~varnavn_kilde, ~varnavn_resultat, ~vartype,
     "skjemanavn", "skjemanavn", "tekst",
@@ -24,7 +30,7 @@ les_kb_oqr_base = function(adresse) {
     "type", "type", "tekst",
     "listeverdier", "listeverdier", "tekst",
     "listetekst", "listetekst", "tekst",
-    "normalintervall_start_numerisk", "normalintervall_start_numerisk", "tekst",
+    "normalintervall_start_numerisk", "normalintervall_start_numerisk", "tekst", # Kan være 'today' etc
     "normalintervall_slutt_numerisk", "normalintervall_slutt_numerisk", "tekst",
     "maksintervall_start_numerisk", "maksintervall_start_numerisk", "tekst",
     "maksintervall_slutt_numerisk", "maksintervall_slutt_numerisk", "tekst",
@@ -49,6 +55,15 @@ les_kb_oqr_base = function(adresse) {
   # Leser inn kodebok med angitt spesifikasjon
   d = les_csv_oqr(adresse, spesifikasjon = kb_spek_oqr)
 
+  d
+}
+
+# Funksjon for å fikse datatyper
+
+fiks_datatyper = function(kb_base) {
+  kb_base = konverter_tekst_til_tall(kb_base)
+  kb_base = konverter_tekst_til_dato(kb_base)
+
   # Håndtering av problematiske variabler.
   til_desimal = c(
     "normalintervall_start_numerisk", "normalintervall_slutt_numerisk",
@@ -63,15 +78,20 @@ les_kb_oqr_base = function(adresse) {
 
   # FIXME - lage robust funksjon for konvertering av tekst til numerisk
   # Konvertere tekst-verdier til numerisk verdi.
-  d = mutate_at(d, til_desimal, ~ str_replace_all(.,
-    pattern = "^[A-Za-z]+$",
-    replacement = NA_character_
-  ))
-  d = mutate_at(d, til_desimal, ~ str_replace_all(.,
-    pattern = ",",
-    replacement = "."
-  ))
-  d = mutate_at(d, til_desimal, ~ as.numeric(.))
+
+  # Trekke ut som en egen funksjon.
+  # Heller bare hente ut de verdiene jeg trenger.
+  # 'eventuelt (-), siffer, evt desimal og andre siffer' - resten til NA
+  # str_detect, str_extract - modify_if
+  # lage funksjon som sjekker om innholdet ser ut som tall.
+  tekst_til_tal = function(x) {
+    suppressWarnings(as.numeric(x))
+  }
+
+  d = mutate_at(d, til_desimal, tekst_til_tal)
+
+  # apostrofdato til dato.
+  # sjekke at format er 'YYYY-MM-DD', ser ut som dato = dato (parse_date, format)
 
   # Maksintervall_start_dato har formatet "'2020-02-02'", så vi må fjerne unødvendige apostrofer.
   d = mutate_at(
@@ -80,6 +100,7 @@ les_kb_oqr_base = function(adresse) {
   )
 
   # Fjerner tekstverdier som for eksempel 'today' fra datovariabler og gjør de til NA
+  # Kun godta 'YYYY-MM-DD' og sette resten til NA
   d = mutate_at(d, til_dato, ~ str_replace_all(.,
     pattern = "^[A-Za-z]+$",
     replacement = NA_character_
@@ -87,48 +108,21 @@ les_kb_oqr_base = function(adresse) {
 
   # Konverterer dato-variabler til datoformat
   d = mutate_at(d, til_dato, ~ readr::parse_date(.,
-    format = "%Y-%m-%d",
+    format = "'%Y-%m-%d'",
     na = ""
   ))
 
 
-  # For listevariabler er det viktig at variabler med flere nivåer har samme verdi-verditekst kombinasjon
-  # på tvers av skjema
 
-  # Henter ut variabelnavn for de som finnes i flere skjema
-  repeterte = d %>%
-    filter(type == "Listevariabel") %>%
-    group_by(fysisk_feltnavn) %>%
-    distinct(skjemanavn, .keep_all = TRUE) %>%
-    count(fysisk_feltnavn) %>%
-    arrange(desc(n)) %>%
-    filter(n > 1) %>%
-    pull(fysisk_feltnavn)
-
-  # Finner de variablene som har flere ulike listetekster for samme listeverdi
-  d_avvik = d %>%
-    filter(fysisk_feltnavn %in% repeterte) %>%
-    group_by(fysisk_feltnavn, listeverdier) %>%
-    summarise(n = n_distinct(listetekst, .keep_all = TRUE)) %>%
-    filter(n > 1)
-
-  # Stanser innlesning hvis det finnes avvik
-  if (!nrow(d_avvik) == 0) {
-    stop(error = paste0(
-      "Det finnes ",
-      nrow(d_avvik),
-      " avvik for listeverdi mellom skjema: \n Variabel  : ",
-      d_avvik$fysisk_feltnavn, "\n Listeverdi: ",
-      d_avvik$listeverdier
-    ))
-  }
-
-  # Returnerer: fullstendig kodebok som en tibble. Gir ut riktig variabeltype for kb.
-  d
+  # - konverter_tekst_til_tall()
+  # - konverter_tekst_til_dato()
+  # - Lage en generell funksjon for disse.
+  # tar inn en regex for hva som er gyldig,
+  # en parse_* funksjon for å tolke de som er gyldig
+  # tar inn et ekstra argument til parse_* funksjon (... = double => format, date => format)
 }
 
-
-kb_oqr_base_til_std = function(kodebok_validert, kb_kobling) {
+kb_oqr_base_til_std = function(kodebok, kb_kobling) {
   # Tar inn en kodebok-tibble med riktige variabeltyper.
 
   # Må gjøre en del validering av inndata
@@ -145,21 +139,10 @@ kb_oqr_base_til_std = function(kodebok_validert, kb_kobling) {
 
   # Fikser statusvariabler (legge til ekstra rader for hvert nivå (0,1,-1))
   # Fikse obligatorisk
-  # Legg til eventuelle ekstra variabler (se funksjon under)
   # Fikse skjemanavn
   # Sorter kb etter skjemarekkefølge
 
   # Returnerer fullstendig kodebok på standard format
-}
-
-valider_kodebok = function(kodebok) {
-  # Tar inn kodebok og gjennomfører komplett testing av innhold (min og max verdier)
-  # Sjekker at variabeltyper er blant de aksepterte typene.
-  # ++ tester fra kodebok-valider
-  # Test for duplikate kategoriske verdier
-
-  # Felles for OQR, MRS osv.
-  # Returner kodebok_validert
 }
 
 legg_til_variabler_kb = function(kb, ekstra_spek) {
@@ -167,15 +150,46 @@ legg_til_variabler_kb = function(kb, ekstra_spek) {
   # eventuelt om variabler skal fjernes.
 }
 
-les_kb_oqr_v2 = function(adresse) {
-  # Tar inn filplassering for kodebok
+valider_kodebok = function(kodebok) {
+  # Tar inn kodebok og gjennomfører komplett testing av innhold
 
-  # Har i funksjonen oppgitt kb_spek for det spesifikke register/struktur (her kb_oqr_spek)
+  # For listevariabler er det viktig at variabler med flere nivåer har samme verdi-verditekst kombinasjon
+  # på tvers av skjema
 
-  # Kaller på les_kodebok_base()
-  # Kaller på valider_kodebok()
-  # Kaller på legg_til_variabler_kb()
-  # Kaller på konverter kodebok()
+  # Ta ut som egen funksjon - lage generell + tester
+  # Må kunne brukes i flere sammenhenger. eksempel å se om en pasient har
+  # flere operasjoner på samme dato, flere 1-års oppfølginger eller lignende.
 
-  # Returnerer fullstendig kodebok for registeret. (Må inkludere varnavn_kilde, varnavn_resultat og vartype slik det er oppgitt i spesifikasjon i les_dd funksjoner)
+  # Finner de variablene som har flere ulike listetekster for samme listeverdi
+  d_avvik = d %>%
+    filter(type == "Listevariabel") %>%
+    #    filter(fysisk_feltnavn %in% repeterte) %>%
+    group_by(fysisk_feltnavn, listeverdier) %>%
+    summarise(antall_feil = n_distinct(listetekst, .keep_all = TRUE)) %>%
+    filter(n > 1)
+
+  # Stanser innlesning hvis det finnes avvik
+  # Gi ut d_avvik som feilmelding
+  # format(d_avvik)
+  if (nrow(d_avvik) > 0) {
+    stop(error = paste0(
+      "Det finnes ",
+      nrow(d_avvik),
+      " avvik for listeverdi mellom skjema: \n Variabel  : ",
+      d_avvik$fysisk_feltnavn, "\n Listeverdi: ",
+      d_avvik$listeverdier
+    ))
+  }
+
+  # Validering av variabler med flere nivå. Se over
+  # ikke duplikater av variabelnavn bla.
+  # Sjekke rekkefølge
+  # se i valideringsfunksjon
+  # Sjekker at variabeltyper er blant de aksepterte typene.
+  # ++ tester fra kodebok-valider
+  # Test for duplikate kategoriske verdier
+
+  # Felles for OQR, MRS osv.
+
+  # Returner kodebok_validert
 }
