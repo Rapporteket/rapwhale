@@ -74,6 +74,7 @@
   )
   kb_eksempel = as_tibble(kb_eksempel)
 }
+# les_kb_oqr_v2 -----------------------------------------------------------
 # les_kb_oqr_base --------------------------------------------------------------
 
 test_that("Funksjonen leser inn kodebok og returnerer kolonner med forventet format", {
@@ -97,7 +98,7 @@ test_that("funksjonen håndterer variabler med desimaltall", {
       maksintervall_slutt_numerisk = c(NA_real_, NA_real_)
     )
 
-  expect_equal(les_kb_oqr_base("oqr_kodebok_desimal.csv"), kb_desimal)
+  expect_identical(les_kb_oqr_base("oqr_kodebok_desimal.csv"), kb_desimal)
 })
 
 test_that("funksjonen håndterer feil desimaltegn", {
@@ -108,7 +109,7 @@ test_that("funksjonen håndterer feil desimaltegn", {
       maksintervall_start_numerisk = c(2, 3),
       maksintervall_slutt_numerisk = c(NA_real_, NA_real_)
     )
-  expect_equal(les_kb_oqr_base("oqr_kodebok_desimal_feil_format.csv"), kb_desimal)
+  expect_identical(les_kb_oqr_base("oqr_kodebok_desimal_feil_format.csv"), kb_desimal)
 })
 
 test_that("funksjonen håndterer datovariabler", {
@@ -120,7 +121,7 @@ test_that("funksjonen håndterer datovariabler", {
       maksintervall_start_dato = c("2020-02-03", "1980-01-01"),
       maksintervall_slutt_dato = c(NA, NA)
     )
-  expect_equal(les_kb_oqr_base("oqr_kodebok_dato.csv"), kb_dato)
+  expect_identical(les_kb_oqr_base("oqr_kodebok_dato.csv"), kb_dato)
 })
 
 # Test at det gis feilmelding hvis det finnes avvik mellom listevariabler på ulike skjema
@@ -140,13 +141,9 @@ test_that("Det gis feilmelding hvis en listevariabel har ulik listetekst på uli
 })
 
 
+# Konverter_tekstvariabel -----------------------------------------------------
 # kb_oqr_base_til_std -----------------------------------------------------
 
 
-# valider_kodebok ---------------------------------------------------------
-
-
 # legg_til_variabler_kb ---------------------------------------------------
-
-
-# les_kb_oqr_v2 -----------------------------------------------------------
+# valider_kodebok ---------------------------------------------------------
