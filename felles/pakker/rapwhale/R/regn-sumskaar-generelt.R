@@ -74,6 +74,8 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
   if (nrow(d_ugyldige_verdier) > 0) {
     oppsummering = oppsummer_ugyldige_verdier(d_ugyldige_verdier)
     stop(oppsummering)
+  } else {
+    "Alle verdiene er gyldige"
   }
 }
 
@@ -129,16 +131,12 @@ finn_ugyldige_verdier = function(d, verditabell, godta_manglende) {
 #'     "Alle verdiene er gyldige".
 
 oppsummer_ugyldige_verdier = function(d_ugyldige) {
-  if (nrow(d_ugyldige) > 0) {
-    oppsummert = d_ugyldige %>%
-      group_by(variabel) %>%
-      summarise(feil_verdier = paste0(feilverdi, collapse = ", ")) %>%
-      summarise(feil_variabler_verdier = paste0(variabel, ": ", feil_verdier, collapse = "\n")) %>%
-      summarise(feiltekst = paste0("Fant ", nrow(d_ugyldige), " ugyldige verdier:\n", feil_variabler_verdier))
-    pull(oppsummert, feiltekst)
-  } else {
-    "Alle verdiene er gyldige"
-  }
+  oppsummert = d_ugyldige %>%
+    group_by(variabel) %>%
+    summarise(feil_verdier = paste0(feilverdi, collapse = ", ")) %>%
+    summarise(feil_variabler_verdier = paste0(variabel, ": ", feil_verdier, collapse = "\n")) %>%
+    summarise(feiltekst = paste0("Fant ", nrow(d_ugyldige), " ugyldige verdier:\n", feil_variabler_verdier))
+  pull(oppsummert, feiltekst)
 }
 
 skaar_datasett_uten_validering = function(d, skaaringstabell) {
