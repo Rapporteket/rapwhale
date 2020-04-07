@@ -78,72 +78,59 @@
 # les_kb_oqr_base --------------------------------------------------------------
 
 test_that("Funksjonen leser inn kodebok og returnerer kolonner med forventet format", {
-
-  # I oqr_kodebok finnes det:
-  # tallvariabler som inneholder tekst (feks birthYear),
-  # datovariabel med ekstra tødler
-  # datovariabel med tekst (today)
-  # Testen sjekker at disse leses inn og konverteres til ønsket verdi og format
   expect_equal(les_kb_oqr_base("oqr_kodebok.csv"), kb_eksempel)
 })
 
-# Test konvertering til desimaltall
-# i datafil er maksintervall_slutt_numerisk == c(birthYear, birthYear)
-test_that("funksjonen håndterer variabler med desimaltall", {
-  kb_desimal = kb_tom %>%
-    add_row(
-      normalintervall_start_numerisk = c(1.2, 1.3),
-      normalintervall_slutt_numerisk = c(1, 5),
-      maksintervall_start_numerisk = c(2, 3),
-      maksintervall_slutt_numerisk = c(NA_real_, NA_real_)
-    )
 
-  expect_identical(les_kb_oqr_base("oqr_kodebok_desimal.csv"), kb_desimal)
-})
 
-test_that("funksjonen håndterer feil desimaltegn", {
-  kb_desimal = kb_tom %>%
-    add_row(
-      normalintervall_start_numerisk = c(1.2, 1.3),
-      normalintervall_slutt_numerisk = c(1, 5),
-      maksintervall_start_numerisk = c(2, 3),
-      maksintervall_slutt_numerisk = c(NA_real_, NA_real_)
-    )
-  expect_identical(les_kb_oqr_base("oqr_kodebok_desimal_feil_format.csv"), kb_desimal)
-})
 
-test_that("funksjonen håndterer datovariabler", {
-  # i datafil er maksintervall_slutt_dato = c(birthYear, birthYear)
-  kb_dato = kb_tom %>%
-    add_row(
-      normalintervall_start_dato = c("2020-02-03", "1980-01-01"),
-      normalintervall_slutt_dato = c(NA, NA),
-      maksintervall_start_dato = c("2020-02-03", "1980-01-01"),
-      maksintervall_slutt_dato = c(NA, NA)
-    )
-  expect_identical(les_kb_oqr_base("oqr_kodebok_dato.csv"), kb_dato)
-})
-
-# Test at det gis feilmelding hvis det finnes avvik mellom listevariabler på ulike skjema
-test_that("Det gis feilmelding hvis en listevariabel har ulik listetekst på ulike skjema", {
-  kb_avvik = kb_tom %>%
-    add_row(
-      skjemanavn = c("basereg", "basereg", "basereg", "op", "op", "op", "patient", "patient", "patient"),
-      fysisk_feltnavn = c(rep("komplikasjon", 9)),
-      type = c(rep("Listevariabel")),
-      listeverdier = c(1, 2, 3, 1, 2, 3, 1, 2, 3),
-      listetekst = c("Ja", "Nei", "Ukjent", "Ja", "Nei", "Avvik", "Ja", "Nei", "Ukjent")
-    )
-  expect_error(
-    les_kb_oqr_base("oqr_kodebok_avvik.csv"),
-    "Det finnes 1 avvik for listeverdi mellom skjema: \n Variabel  : komplikasjon\n Listeverdi: 3"
-  )
-})
 
 
 # Konverter_tekstvariabel -----------------------------------------------------
+# Test konvertering til desimaltall
+# i datafil er maksintervall_slutt_numerisk == c(birthYear, birthYear)
+# test_that("funksjonen håndterer variabler med desimaltall", {
+#   kb_desimal = kb_tom %>%
+#     add_row(normalintervall_start_numerisk = c(1.2,1.3),
+#             normalintervall_slutt_numerisk = c(1,5),
+#             maksintervall_start_numerisk = c(2,3),
+#             maksintervall_slutt_numerisk = c(NA_real_,NA_real_))
+#
+#   expect_identical(les_kb_oqr_base("oqr_kodebok_desimal.csv"), kb_desimal)
+# })
+#
+# test_that("funksjonen håndterer feil desimaltegn", {
+#   kb_desimal = kb_tom %>%
+#     add_row(normalintervall_start_numerisk = c(1.2,1.3),
+#             normalintervall_slutt_numerisk = c(1,5),
+#             maksintervall_start_numerisk = c(2,3),
+#             maksintervall_slutt_numerisk = c(NA_real_,NA_real_))
+#   expect_identical(les_kb_oqr_base("oqr_kodebok_desimal_feil_format.csv"), kb_desimal)
+# })
+#
+# test_that("funksjonen håndterer datovariabler", {
+#   # i datafil er maksintervall_slutt_dato = c(birthYear, birthYear)
+#   kb_dato = kb_tom %>%
+#     add_row(normalintervall_start_dato = c("2020-02-03", "1980-01-01"),
+#             normalintervall_slutt_dato = c(NA, NA),
+#             maksintervall_start_dato = c("2020-02-03", "1980-01-01"),
+#             maksintervall_slutt_dato = c(NA, NA))
+#   expect_identical(les_kb_oqr_base("oqr_kodebok_dato.csv"), kb_dato)
+# })
 # kb_oqr_base_til_std -----------------------------------------------------
 
 
 # legg_til_variabler_kb ---------------------------------------------------
 # valider_kodebok ---------------------------------------------------------
+# Test at det gis feilmelding hvis det finnes avvik mellom listevariabler på ulike skjema
+# test_that("Det gis feilmelding hvis en listevariabel har ulik listetekst på ulike skjema", {
+#   kb_avvik = kb_tom %>%
+#     add_row(skjemanavn = c("basereg", "basereg", "basereg", "op", "op", "op", "patient", "patient", "patient"),
+#             fysisk_feltnavn = c(rep("komplikasjon", 9)),
+#             type = c(rep("Listevariabel")),
+#             listeverdier = c(1,2,3,1,2,3,1,2,3),
+#             listetekst = c("Ja", "Nei", "Ukjent", "Ja", "Nei", "Avvik", "Ja", "Nei", "Ukjent"))
+#   expect_error(les_kb_oqr_base("oqr_kodebok_avvik.csv"),
+#                "Det finnes 1 avvik for listeverdi mellom skjema: \n Variabel  : komplikasjon\n Listeverdi: 3")
+#
+# })
