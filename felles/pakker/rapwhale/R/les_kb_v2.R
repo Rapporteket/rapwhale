@@ -14,6 +14,17 @@ les_kb_oqr_v2 = function(adresse) {
   # Returnerer fullstendig kodebok for registeret. (Må inkludere varnavn_kilde, varnavn_resultat og vartype slik det er oppgitt i spesifikasjon i les_dd funksjoner)
 }
 
+#' Les inn OQR-kodebok
+#'
+#' les_kb_oqr_base leser inn en base-versjon av OQR-kodebok. Det gjøres ingen
+#' validering eller korrektur på kodeboken her. Den leses inn slik den er.
+#' Eneste argument er adresse, som angir filplassering for kodebok.
+#'
+#' Returnerer en OQR-kodebok som inneholder alt av informasjon, men som har
+#' en del mangler. Variabeltyper er gjerne feil og tall- og  dato-kolonner
+#' kan inneholde tekst-verdier.
+#'
+#' @param adresse filplassering for kodebok.
 les_kb_oqr_base = function(adresse) {
   # Tar inn:
   # Filplassering for kodebok og kb_spek som angir hvordan kodebok er
