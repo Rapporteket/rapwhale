@@ -115,6 +115,13 @@ test_that("sjekk_variabelverdier() gjev feilmelding for datasett med ugyldige va
   expect_error(sjekk_variabelverdier(tibble(gen = c(200, 200, "blablabla", NA)), skaaringstabell_eks, godta_manglende = TRUE))
 })
 
+test_that("sjekk_variabelverdier() gir ut korrekt melding hvis det ikke finnes feilverdier", {
+  expect_identical(
+    sjekk_variabelverdier(d_gyldig_eks1, skaaringstabell_eks, godta_manglende = FALSE),
+    "Alle verdiene er gyldige"
+  )
+})
+
 
 context("finn_ugyldige_verdier")
 
@@ -224,13 +231,6 @@ test_that("oppsummer_ugyldige_verdier() presenterer korrekte feilverdier alfabet
   expect_identical(
     oppsummer_ugyldige_verdier(ugyldighetstabell_2_like_feil_samme_variabel),
     "Fant 3 ugyldige verdier:\ngen: 4, 4\npsyk2: NA"
-  )
-})
-
-test_that("oppsummer_ugyldige_verdier() gir ut korrekt melding hvis det ikke finnes feilverdier", {
-  expect_identical(
-    oppsummer_ugyldige_verdier(ugyldighetstabell_tom),
-    "Alle verdiene er gyldige"
   )
 })
 
