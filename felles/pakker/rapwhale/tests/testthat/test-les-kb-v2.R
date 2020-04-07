@@ -44,14 +44,14 @@
     type = c("Tekstvariabel", "Datovariabel", "Tekstvariabel", "Tallvariabel"),
     listeverdier = c(NA_character_, NA_character_, NA_character_, NA_character_),
     listetekst = c(NA_character_, NA_character_, NA_character_, NA_character_),
-    normalintervall_start_numerisk = c(NA_real_, NA_real_, NA_real_, NA_real_),
-    normalintervall_slutt_numerisk = c(NA_real_, NA_real_, NA_real_, NA_real_),
-    maksintervall_start_numerisk = c(NA_real_, NA_real_, NA_real_, NA_real_),
-    maksintervall_slutt_numerisk = c(NA_real_, NA_real_, NA_real_, NA_real_),
-    normalintervall_start_dato = as.Date(c(NA, NA, NA, NA), format = "%Y-%m-%d"),
-    normalintervall_slutt_dato = as.Date(c(NA, NA, NA, NA), format = "%Y-%m-%d"),
-    maksintervall_start_dato = as.Date(c(NA, "1980-01-01", NA, NA), format = "%Y-%m-%d"),
-    maksintervall_slutt_dato = as.Date(c(NA, NA, NA, NA), format = "%Y-%m-%d"),
+    normalintervall_start_numerisk = c(NA_real_, NA_real_, NA_real_, "birthYear"),
+    normalintervall_slutt_numerisk = c(NA_real_, NA_real_, NA_real_, "todayYear"),
+    maksintervall_start_numerisk = c(NA_real_, NA_real_, NA_real_, "birthYear"),
+    maksintervall_slutt_numerisk = c(NA_real_, NA_real_, NA_real_, "todayYear"),
+    normalintervall_start_dato = c(NA_character_, NA_character_, NA_character_, NA_character_),
+    normalintervall_slutt_dato = c(NA_character_, NA_character_, NA_character_, NA_character_),
+    maksintervall_start_dato = c(NA_character_, "'1980-01-01'", NA_character_, NA_character_),
+    maksintervall_slutt_dato = c(NA_character_, "today", NA_character_, NA_character_),
     antall_tegn = c(11L, NA_integer_, 11L, 4L),
     lovlige_tegn = c(
       "1234567890", NA_character_,
@@ -61,8 +61,8 @@
     desimaler = c(NA_integer_, NA_integer_, NA_integer_, 0L),
     aktiveringsspoersmaal = c("Nei", "Nei", "Nei", "Nei"),
     underspoersmaal = c("Nei", "Nei", "Nei", "Nei"),
-    innfoert_dato = as.Date(c("1980-01-01", "1980-01-01", "1980-01-01", "2017-04-25"), format = "%Y-%m-%d"),
-    utfaset_dato = as.Date(c(NA, NA, NA, NA), format = "%Y-%m-%d"),
+    innfoert_dato = c("1980-01-01", "1980-01-01", "1980-01-01", "2017-04-25"),
+    utfaset_dato = c(NA_character_, NA_character_, NA_character_, NA_character_),
     tabell = c("patient", "patient", "patient", "basereg"),
     fysisk_feltnavn = c("ID", "REGISTERED_DATE", "SSN", "DEBUT_ARYT_AAR"),
     kommentar = c(NA_character_, NA_character_, NA_character_, NA_character_),
@@ -80,10 +80,6 @@
 test_that("Funksjonen leser inn kodebok og returnerer kolonner med forventet format", {
   expect_equal(les_kb_oqr_base("oqr_kodebok.csv"), kb_eksempel)
 })
-
-
-
-
 
 
 # Konverter_tekstvariabel -----------------------------------------------------
