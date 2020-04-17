@@ -10,7 +10,7 @@
 #'     fixme: skal bare sumskår(er) returneres?
 #'     skal skaaringstabell være et argument i denne funksjonen?
 
-skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell) {
+skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell, godta_manglende = TRUE) {
   if (!is.null(variabelnavn)) {
     d_navn_ok = rename(d, variabelnavn)
   } else {
@@ -20,7 +20,7 @@ skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell) {
   sjekk_variabelnavn(d_navn_ok, variabelnavn = skaaringstabell$variabel)
   d_akt = d_navn_ok %>%
     select(unique(skaaringstabell$variabel))
-  sjekk_variabelverdier(d_akt, verditabell = select(skaaringstabell, variabel, verdi))
+  sjekk_variabelverdier(d_akt, verditabell = select(skaaringstabell, variabel, verdi), godta_manglende = godta_manglende)
   skaar_datasett_uten_validering(d_akt, skaaringstabell)
   # funksjon som legger til det som kommer ut skaar_datasett_uten_validering til d
 }
@@ -70,8 +70,13 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
     all(hasName(verditabell, c("variabel", "verdi"))))) {
     stop("Inndata må være tibble/data.frame og inneholde kolonnene 'variabel' og 'verdi'")
   }
-  d_ugyldige_verdier = finn_ugyldige_verdier(d, verditabell, godta_manglende)
-  if (nrow(d_ugyldige_verdier) > 0) {
+  d_ugyldige_verdier = finn_ugyldige_verdier(d, verditabell)
+
+  if (!godta_manglende && any(is.na(d_ugyldige_verdier$feilverdi))) {
+    stop("Det mangler verdier for en eller flere variabler")
+  }
+
+  if ((nrow(d_ugyldige_verdier) > 0) && any(!is.na(d_ugyldige_verdier$feilverdi))) {
     oppsummering = oppsummer_ugyldige_verdier(d_ugyldige_verdier)
     stop(oppsummering)
   } else {
@@ -91,7 +96,7 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 #' @return Dataramme/tibble som inneholder radnummer, variabelnavn og feilverdi for de ugyldige verdiene.
 #'     Sortert etter radnummer og så rekkefølge i \code{d}.
 
-finn_ugyldige_verdier = function(d, verditabell, godta_manglende) {
+finn_ugyldige_verdier = function(d, verditabell) {
   radnr_ugyldige = integer()
   variabler_ugyldige = character()
   verdier_ugyldige = numeric()
