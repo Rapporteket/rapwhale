@@ -1,14 +1,22 @@
 #' Overordnet sumskår-funksjon
 #'
-#' Skal ta inn et datasett, en vektor med variabelnavn og en skåringstabell.
+#' @description
+#' Validerer og regner ut sumskår for spørreskjema-variablene i et datasett.
 #'
-#' @param d Dataramme/tibble med en kolonne for hvert spørsmål.
-#' @param variabelnavn Vektor med gamle og nye variabelnavn. fixme: stemmer dette?
-#' @param skaaringstabell Skåringstabell med tre kolonner (variabel, verdi, koeffisient).
+#' @param d Dataramme/tibble som inneholder spørreskjema-variaber + ev. andre variabler.
+#' @param variabelnavn Vektor med nye og gamle variabelnavn.
+#' @param skaaringstabell Skåringstabell med fire kolonner (`delskala`, `variabel`, `verdi` og `koeffisient`).
+#' @param godta_manglende Bestemmer om manglende verdier i `d` skal godtas eller ikke.
 #'
-#' @return \code{d} utvidet med en eller flere kolonner som inneholder sumskår(er).
-#'     fixme: skal bare sumskår(er) returneres?
-#'     skal skaaringstabell være et argument i denne funksjonen?
+#' @details
+#' Funksjonen sjekker at variabler og verdier tilknyttet spørreskjemaet som skal skåres er
+#' gyldige. Det sjekkes også at skåringstabellen er gyldig. Funksjonen gir ut feilmelding hvis
+#' noe er ugyldig. Hvis `d` ikke inneholder noen sumskår-kolonner med identisk navn som i `skaaringstabell$delskala`,
+#' legges de til i alfabetisk rekkefølge til slutt i `d`. Hvis `d` inneholder en eller flere sumskår-kolonner med
+#' identisk navn som i `skaaringstabell$delskala` blir disse kolonnene stående samme sted, men sumskårene
+#' regnes ut på nytt. Sumskår-kolonner som ikke allerede finnes legges til i alfabetisk rekkefølge til slutt i `d`.
+#'
+#' @return `d` med sumskår(er).
 
 skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell, godta_manglende = TRUE) {
   if (!is.null(variabelnavn)) {
