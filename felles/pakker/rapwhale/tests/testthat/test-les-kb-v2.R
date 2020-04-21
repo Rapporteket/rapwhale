@@ -101,7 +101,8 @@ test_that("funksjonen håndterer konvertering til desimaltall", {
   expect_identical(
     konverter_tekst(tekst_til_tall_b,
       regex = "[-]?\\d{1,}\\,\\d{1,}",
-      parse_funksjon = parse_double
+      parse_funksjon = parse_double,
+      locale = locale(decimal_mark = ",")
     ),
     tekst_til_tall_resultat
   )
@@ -123,7 +124,8 @@ test_that("tekstverdier i en desimalvektor blir konvertert til NA", {
   expect_identical(
     konverter_tekst(tekst_til_tall_med_na_komma,
       regex = "[-]?\\d{1,}\\,\\d{1,}",
-      parse_funksjon = parse_double
+      parse_funksjon = parse_double,
+      locale = locale(decimal_mark = ",")
     ),
     tekst_til_tall_resultat
   )
