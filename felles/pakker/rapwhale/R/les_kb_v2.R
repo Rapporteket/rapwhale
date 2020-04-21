@@ -65,68 +65,25 @@ les_kb_oqr_base = function(adresse) {
   d
 }
 
-# Funksjon for å fikse datatyper
+#' Konverter tekstvariabel til desimal eller dato
+#'
+#' Funksjonen tar inn en tekst-vektor og konverterer til ønsket format.
+#' Må oppgi et regex-uttrykk for å vise hvordan tekst-strengene som skal endres ser ut.
+#' Funksjonen ser deretter etter mønsteret i tekst-vektoren og konverterer de det gjelder
+#' til ønsket format basert på hvilken parse-funksjon som er oppgitt.
+#' Verdier som ikke matcher regex vil endres til NA
+konverter_tekst = function(d, regex, parse_funksjon, ...) {
 
-fiks_datatyper = function(kb_base) {
-  kb_base = konverter_tekst_til_tall(kb_base)
-  kb_base = konverter_tekst_til_dato(kb_base)
+  # Sjekker om det finnes noen som skal konverteres basert på regex
+  if (any(str_detect(d, pattern = regex))) {
+    # Konverterer alle ikke-regex til NA
+    d[str_detect(d, pattern = regex, negate = TRUE)] = NA
 
-  # Håndtering av problematiske variabler.
-  til_desimal = c(
-    "normalintervall_start_numerisk", "normalintervall_slutt_numerisk",
-    "maksintervall_start_numerisk", "maksintervall_slutt_numerisk"
-  )
-  til_dato = c(
-    "normalintervall_start_dato", "normalintervall_slutt_dato",
-    "maksintervall_start_dato", "maksintervall_slutt_dato",
-    "innfoert_dato", "utfaset_dato"
-  )
-
-
-  # FIXME - lage robust funksjon for konvertering av tekst til numerisk
-  # Konvertere tekst-verdier til numerisk verdi.
-
-  # Trekke ut som en egen funksjon.
-  # Heller bare hente ut de verdiene jeg trenger.
-  # 'eventuelt (-), siffer, evt desimal og andre siffer' - resten til NA
-  # str_detect, str_extract - modify_if
-  # lage funksjon som sjekker om innholdet ser ut som tall.
-  tekst_til_tal = function(x) {
-    suppressWarnings(as.numeric(x))
+    # Leser inn resten med valgt parse-funksjon
+    d = parse_funksjon(d, ...)
   }
 
-  d = mutate_at(d, til_desimal, tekst_til_tal)
-
-  # apostrofdato til dato.
-  # sjekke at format er 'YYYY-MM-DD', ser ut som dato = dato (parse_date, format)
-
-  # Maksintervall_start_dato har formatet "'2020-02-02'", så vi må fjerne unødvendige apostrofer.
-  d = mutate_at(
-    d, "maksintervall_start_dato",
-    ~ str_remove_all(., pattern = "\'")
-  )
-
-  # Fjerner tekstverdier som for eksempel 'today' fra datovariabler og gjør de til NA
-  # Kun godta 'YYYY-MM-DD' og sette resten til NA
-  d = mutate_at(d, til_dato, ~ str_replace_all(.,
-    pattern = "^[A-Za-z]+$",
-    replacement = NA_character_
-  ))
-
-  # Konverterer dato-variabler til datoformat
-  d = mutate_at(d, til_dato, ~ readr::parse_date(.,
-    format = "'%Y-%m-%d'",
-    na = ""
-  ))
-
-
-
-  # - konverter_tekst_til_tall()
-  # - konverter_tekst_til_dato()
-  # - Lage en generell funksjon for disse.
-  # tar inn en regex for hva som er gyldig,
-  # en parse_* funksjon for å tolke de som er gyldig
-  # tar inn et ekstra argument til parse_* funksjon (... = double => format, date => format)
+  d
 }
 
 kb_oqr_base_til_std = function(kodebok, kb_kobling) {
