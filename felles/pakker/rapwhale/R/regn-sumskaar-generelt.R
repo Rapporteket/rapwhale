@@ -40,7 +40,7 @@ skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell, godta_manglen
 #' feilmelding hvis datasettet ikke inneholder alle variabelnavn i skåringstabellen.
 #'
 #' @param d Dataramme/tibble som inneholder spørreskjema-variaber + ev. andre variabler.
-#' @param variabelnavn Vektor som inneholder alle variabelnavnene i `skaaringstabell`.
+#' @param variabelnavn Vektor som inneholder alle unike variabelnavn i `skaaringstabell$variabel`.
 #'
 #' @return Skal gi feilmelding hvis `d` ikke inneholder alle variabelnavn
 #'     i skåringstabellen. Sumskår blir da ikke regnet ut. Funksjonen
@@ -56,23 +56,21 @@ sjekk_variabelnavn = function(d, variabelnavn) {
 
 #' Funksjon for å sjekke variabelverdier
 #'
+#' @description
 #' Skal ta inn et datasett, en verditabell og et argument som bestemmer om NA-verdier skal
-#' regnes som gyldige. Funksjonen gir feilmelding hvis verditabellen ikke er satt opp
-#' riktig og/eller hvis datasettet inneholder verdier som ikke finnes i verditabellen.
+#' regnes som gyldige. Funksjonen gir feilmelding hvis datasettet inneholder en eller flere
+#' ugyldige verdier.
 #'
-#' @param d Dataramme/tibble med nøyaktig samme variabelnavn som finnes i 'variabel'-kolonnen i \code{verditabell}.
-#' @param verditabell Dataramme/tibble med to kolonner ('variabel' og 'verdi'), som sier hvilke verdier
+#' @param d Dataramme/tibble som kun inneholder spørreskjema-variabler med identiske navn
+#'     som i `skaaringstabell$variabel`.
+#' @param verditabell Dataramme/tibble med to kolonner (`variabel` og `verdi`) som sier hvilke verdier
 #'     som er gyldige for hvilke variabler.
-#' @param godta_manglende Om NA-verdier skal regnes som gyldige (selv om de ikke er nevnt i \code{verditabell}).
+#' @param godta_manglende Bestemmer om manglende verdier i `d` skal godtas eller ikke.
 #'
-#' @return Skal gi feilmelding hvis \code{verditabell} ikke er tibble/data.frame
-#'     og/eller mangler en av / begge kolonnene 'variabel' og 'verdi'. Hvis alle verdiene
-#'     i \code{d} er gyldige skal funksjonen gi beskjed om dette, og hvis det finnes
-#'     ugyldige verdier i \code{d} skal funksjonen gi beskjed om hvilke variabler og
+#' @return Skal gi feilmelding hvis `verditabell` ikke er tibble/data.frame
+#'     og/eller mangler en av / begge kolonnene `variabel` og `verdi`. Hvis det finnes
+#'     ugyldige verdier i `d` skal funksjonen gi beskjed om hvilke variabler og
 #'     verdier dette gjelder. Sumskår blir da ikke regnet ut.
-#'     fixme: sjekk_variabelverdier må utvides slik at den gir beskjed om at alle verdier
-#'     er gyldige dersom dette er tilfellet og at den tar hensyn til om manglende verdier
-#'     skal bli godtatt eller ikke.
 
 sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
   if (!(is.data.frame(verditabell) &&
@@ -82,14 +80,14 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
   d_ugyldige_verdier = finn_ugyldige_verdier(d, verditabell)
 
   if (!godta_manglende && any(is.na(d_ugyldige_verdier$feilverdi))) {
-    stop("Det mangler verdier for en eller flere variabler")
+    stop("Det mangler verdier for en eller flere variabler") # fixme: Legge til "oppsummering" her?
   }
 
   if ((nrow(d_ugyldige_verdier) > 0) && any(!is.na(d_ugyldige_verdier$feilverdi))) {
     oppsummering = oppsummer_ugyldige_verdier(d_ugyldige_verdier)
     stop(oppsummering)
   } else {
-    "Alle verdiene er gyldige"
+    "Alle verdiene er gyldige" # fixme: Denne beskjeden skal skrives ut i oppsummer_ugyldige_verdier()
   }
 }
 
