@@ -93,7 +93,7 @@ test_that("funksjonen håndterer konvertering til desimaltall", {
   expect_identical(
     konverter_tekst(tekst_til_tall_a,
       regex = "[-]?\\d{1,}\\.\\d{1,}",
-      parse_funksjon = parse_double
+      parse_funksjon = readr::parse_double
     ),
     tekst_til_tall_resultat
   )
@@ -136,7 +136,7 @@ test_that("funksjonen håndterer konvertering til dato", {
   tekst_til_dato_b_resultat = readr::parse_date(tekst_til_dato_b, format = "%m-%d-%Y")
 
   expect_identical(konverter_tekst(tekst_til_dato_a,
-    regex = "\\d{4}\\-\\d{2\\}-\\d{2}",
+    regex = "\\d{4}\\-\\d{2}\\-\\d{2}",
     parse_funksjon = parse_date,
     format = "%Y-%m-%d"
   ), tekst_til_dato_a_resultat)
