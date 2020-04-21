@@ -10,7 +10,7 @@
 #'
 #' @details
 #' Funksjonen sjekker at variabler og verdier tilknyttet spørreskjemaet som skal skåres er
-#' gyldige. Det sjekkes også at skåringstabellen er gyldig. Funksjonen gir ut feilmelding hvis
+#' gyldige. Det sjekkes også at `skaaringstabell` er gyldig. Funksjonen gir ut feilmelding hvis
 #' noe er ugyldig. Hvis `d` ikke inneholder noen sumskår-kolonner med identisk navn som i `skaaringstabell$delskala`,
 #' legges de til i alfabetisk rekkefølge til slutt i `d`. Hvis `d` inneholder en eller flere sumskår-kolonner med
 #' identisk navn som i `skaaringstabell$delskala` blir disse kolonnene stående samme sted, men sumskårene
@@ -35,14 +35,15 @@ skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell, godta_manglen
 
 #' Funksjon for å sjekke variabelnavn
 #'
-#' Skal ta inn et datasett og en vektor som inneholder variabelnavnene i skåringstabellen.
-#' Funksjonen gir feilmelding hvis datasettet inneholder variabelnavn som ikke finnes i skåringstabellen.
+#' @description
+#' Skal ta inn et datasett og en vektor med gyldige variabelnavn. Funksjonen gir
+#' feilmelding hvis datasettet ikke inneholder alle variabelnavn i skåringstabellen.
 #'
-#' @param d Dataramme/tibble med en kolonne for hvert spørsmål.
-#' @param variabelnavn Vektor som inneholder variabelnavnene i skåringstabellen.
+#' @param d Dataramme/tibble som inneholder spørreskjema-variaber + ev. andre variabler.
+#' @param variabelnavn Vektor som inneholder alle variabelnavnene i `skaaringstabell`.
 #'
-#' @return Skal gi feilmelding hvis \code{d} inneholder variabelnavn som ikke
-#'     finnes i skåringstabellen. Sumskår blir da ikke regnet ut. Funksjonen
+#' @return Skal gi feilmelding hvis `d` ikke inneholder alle variabelnavn
+#'     i skåringstabellen. Sumskår blir da ikke regnet ut. Funksjonen
 #'     oppgir også hvilke variabelnavn som er ugyldige.
 
 sjekk_variabelnavn = function(d, variabelnavn) {
