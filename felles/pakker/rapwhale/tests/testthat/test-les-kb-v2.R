@@ -88,12 +88,14 @@ context("konverter_tekst")
 test_that("funksjonen håndterer konvertering til desimaltall", {
   tekst_til_tall_a = c("1.2", "1.3")
   tekst_til_tall_b = c("1,2", "1,3")
+  tekst_til_tall_c = c("1", "2")
   tekst_til_tall_resultat = c(1.2, 1.3)
+  tekst_til_tall_c_resultat = c(1, 2)
 
   expect_identical(
     konverter_tekst(tekst_til_tall_a,
       regex = "[-]?\\d{1,}\\.\\d{1,}",
-      parse_funksjon = readr::parse_double
+      parse_funksjon = parse_double
     ),
     tekst_til_tall_resultat
   )
@@ -105,6 +107,14 @@ test_that("funksjonen håndterer konvertering til desimaltall", {
       locale = locale(decimal_mark = ",")
     ),
     tekst_til_tall_resultat
+  )
+
+  expect_identical(
+    konverter_tekst(tekst_til_tall_c,
+      regex = "[-]?\\d{1,}[.]?[\\d{1,}]?",
+      parse_funksjon = parse_double
+    ),
+    tekst_til_tall_c_resultat
   )
 })
 
