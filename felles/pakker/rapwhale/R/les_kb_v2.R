@@ -26,12 +26,8 @@ les_kb_oqr_v2 = function(adresse) {
 #'
 #' @param adresse filplassering for kodebok.
 les_kb_oqr_base = function(adresse) {
-  # Tar inn:
-  # Filplassering for kodebok og kb_spek som angir hvordan kodebok er
-  # formatert (hvilke kolonner som behandles som tekst og tall etc.).
-  # Sjekker at alle variabelnavn som skal være med er inkludert (via les_csv_oqr)
 
-  # varnavn_resultat bør her være standard kodebokformat der det lar seg direkte "oversette".
+  # Spesifikasjon for OQR-kodebok
   kb_spek_oqr = tibble::tribble(
     ~varnavn_kilde, ~varnavn_resultat, ~vartype,
     "skjemanavn", "skjemanavn", "tekst",
@@ -42,13 +38,13 @@ les_kb_oqr_base = function(adresse) {
     "listeverdier", "listeverdier", "tekst",
     "listetekst", "listetekst", "tekst",
     "normalintervall_start_numerisk", "normalintervall_start_numerisk", "tekst", # Kan være 'today' etc
-    "normalintervall_slutt_numerisk", "normalintervall_slutt_numerisk", "tekst",
-    "maksintervall_start_numerisk", "maksintervall_start_numerisk", "tekst",
-    "maksintervall_slutt_numerisk", "maksintervall_slutt_numerisk", "tekst",
-    "normalintervall_start_dato", "normalintervall_start_dato", "tekst",
-    "normalintervall_slutt_dato", "normalintervall_slutt_dato", "tekst",
-    "maksintervall_start_dato", "maksintervall_start_dato", "tekst",
-    "maksintervall_slutt_dato", "maksintervall_slutt_dato", "tekst",
+    "normalintervall_slutt_numerisk", "normalintervall_slutt_numerisk", "tekst", # Kan være 'today' etc
+    "maksintervall_start_numerisk", "maksintervall_start_numerisk", "tekst", # Kan være 'today' etc
+    "maksintervall_slutt_numerisk", "maksintervall_slutt_numerisk", "tekst", # Kan være 'today' etc
+    "normalintervall_start_dato", "normalintervall_start_dato", "tekst", # Kan være 'today' etc
+    "normalintervall_slutt_dato", "normalintervall_slutt_dato", "tekst", # Kan være 'today' etc
+    "maksintervall_start_dato", "maksintervall_start_dato", "tekst", # Kan være 'today' etc
+    "maksintervall_slutt_dato", "maksintervall_slutt_dato", "tekst", # Kan være 'today' etc
     "antall_tegn", "antall_tegn", "heltall",
     "lovlige_tegn", "lovlige_tegn", "tekst",
     "desimaler", "desimaler", "heltall",
