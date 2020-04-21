@@ -151,7 +151,7 @@ test_that("funksjonen håndterer konvertering til dato", {
 test_that("funksjonen gir feilmelding ved feil datoformat", {
   tekst_til_dato_a = c("2020-01-15", "2014-03-10")
 
-  expect_error(konverter_tekst(tekst_til_dato_a,
+  expect_warning(konverter_tekst(tekst_til_dato_a,
     regex = "\\d{4}\\-\\d{2\\}-\\d{2}",
     parse_funksjon = parse_date,
     format = "%d-%m-%Y"
