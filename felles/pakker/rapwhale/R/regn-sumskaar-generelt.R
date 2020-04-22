@@ -1,7 +1,7 @@
 #' Overordnet sumskår-funksjon
 #'
 #' @description
-#' Validerer og regner ut sumskår for spørreskjema-variablene i et datasett.
+#' Validerer og regner ut sumskår(er) for spørreskjema-variablene i et datasett.
 #'
 #' @param d Dataramme/tibble som inneholder spørreskjema-variaber + ev. andre variabler.
 #' @param variabelnavn Vektor med nye og gamle variabelnavn.
@@ -61,8 +61,7 @@ sjekk_variabelnavn = function(d, variabelnavn) {
 #' regnes som gyldige. Funksjonen gir feilmelding hvis datasettet inneholder en eller flere
 #' ugyldige verdier.
 #'
-#' @param d Dataramme/tibble som kun inneholder spørreskjema-variabler med identiske navn
-#'     som i `skaaringstabell$variabel`.
+#' @param d Dataramme/tibble som kun inneholder variabler med identiske navn som i `verditabell$variabel`.
 #' @param verditabell Dataramme/tibble med to kolonner (`variabel` og `verdi`) som sier hvilke verdier
 #'     som er gyldige for hvilke variabler.
 #' @param godta_manglende Bestemmer om manglende verdier i `d` skal godtas eller ikke.
@@ -93,15 +92,24 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 
 #' Funksjon for å finne ugyldige verdier
 #'
-#' Gir ut oversikt over ugyldige verdier i et datasett.
+#' @description
+#' Gir ut oversikt over alle ugyldige verdier i datasettet som blir tatt inn. Hvis datasettet ikke
+#' inneholder noen ugyldige verdier gir funksjonen ut en dataramme/tibble som kun inneholder
+#' kolonnenavnene `radnr`, `variabel` og `feilverdi`.
 #'
-#' @param d Dataramme/tibble med nøyaktig samme variabelnavn som finnes i 'variabel'-kolonnen i \code{verditabell}.
-#' @param verditabell Dataramme/tibble med to kolonner ('variabel' og 'verdi'), som sier hvilke verdier som er gyldige
-#'     for hvilke variabler.
-#' @param godta_manglende Om NA-verdier skal regnes som gyldige (selv om de ikke er nevnt i \code{verditabell}).
+#' @param d Dataramme/tibble som kun inneholder variabler med identiske navn som i `verditabell$variabel`.
+#' @param verditabell Dataramme/tibble med to kolonner (`variabel` og `verdi`) som sier hvilke verdier
+#'     som er gyldige for hvilke variabler.
+#'
+#' @details
+#' Ved bruk av den overordnede funksjonen [skaar_datasett()] kalles denne funksjonen på etter at alle
+#' variabler som ikke inngår i sumskår-beregningene er filtrert vekk og variabelnavnene og skåringstabellen
+#' er validert.
 #'
 #' @return Dataramme/tibble som inneholder radnummer, variabelnavn og feilverdi for de ugyldige verdiene.
-#'     Sortert etter radnummer og så rekkefølge i \code{d}.
+#'     Sortert etter radnummer og så rekkefølge i `d`. Hvis datasettet ikke inneholder noen ugyldige
+#'     verdier gir funksjonen ut en dataramme/tibble som kun inneholder kolonnenavnene `radnr`, `variabel`
+#'     og `feilverdi`.
 
 finn_ugyldige_verdier = function(d, verditabell) {
   radnr_ugyldige = integer()
