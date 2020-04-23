@@ -162,6 +162,23 @@ oppsummer_ugyldige_verdier = function(d_ugyldige) {
   pull(oppsummert, feiltekst)
 }
 
+#' Funksjon for å regne ut sumskår
+#'
+#' @description
+#' Gir ut et datasett som inneholder en eller flere kolonner med sumskårer.
+#'
+#' @param d Dataramme/tibble som kun inneholder variabler med identiske navn som i `skaaringstabell$variabel`.
+#' @param skaaringstabell Skåringstabell med fire kolonner (`delskala`, `variabel`, `verdi` og `koeffisient`).
+#'
+#' @details
+#' Ved bruk av den overordnede funksjonen [skaar_datasett()] kalles denne funksjonen på etter at alle
+#' variabler som ikke inngår i sumskår-beregningene er filtrert vekk og variabelnavnene og skåringstabellen
+#' er validert.
+#'
+#' @return Et datasett som inneholder en eller flere kolonner med sumskårer. Rekkefølgen på sumskår-kolonnene
+#'     bestemmes av rekkefølgen på sumskårene i `skaaringstabell$delskala`. Hvis en rad i `d` mangler verdier  fixme: nå er rekkefølgen alfabetisk
+#'     for en eller flere variabler, og manglende verdier skal godtas, blir sumskåren for raden `NA`.
+
 skaar_datasett_uten_validering = function(d, skaaringstabell) {
   # Gjer om til éi rad per svar, med ein person-ID
   # som seier kva rad svaret opphavleg kom frå
