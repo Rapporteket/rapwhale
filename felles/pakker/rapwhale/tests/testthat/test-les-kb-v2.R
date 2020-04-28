@@ -32,6 +32,37 @@
     hjelpetekst = character()
   )
 
+  # Tom kodebok etter konvertering til standard navn
+  kb_tom_std = tibble(
+    skjema_id = character(),
+    skjemanavn = character(),
+    variabel_id = character(),
+    obligatorisk = character(),
+    variabeletikett = character(),
+    forklaring = character(),
+    variabeltype = character(),
+    verdi = character(),
+    verditekst = character(),
+    desimaler = integer(),
+    min = numeric(),
+    maks = numeric(),
+    min_rimelig = numeric(),
+    maks_rimelig = numeric(),
+    min_dato = as.Date(character()),
+    maks_dato = as.Date(character()),
+    min_rimelig_dato = as.Date(character()),
+    maks_rimelig_dato = as.Date(character()),
+    kommentar = character(),
+    kategori = character(),
+    innleiing = character(),
+    eining = character(),
+    unik = character(),
+    manglande = character(),
+    kommentar_rimeleg = character(),
+    utrekningsformel = character(),
+    logikk = character()
+  )
+
   # kb_eksempel er de fire første linjene fra AblaNor kodebok.
   # Den inkluderer de kolonnene vi ønsker ut, og riktig kolonnetype for alle kolonner.
   kb_eksempel = data.frame(
@@ -214,6 +245,29 @@ test_that("funksjonen gir feilmelding om inndata ikke er en tekstvektor", {
 })
 # kb_oqr_base_til_std -----------------------------------------------------
 context("kb_oqr_base_til_std")
+
+# Utvid_statusvariabel() ----------------------------------------------------------
+context("utvid_statusvariabel")
+
+test_that("funksjonen gir forventet resultat", {
+  kb_med_status = kb_tom_std %>%
+    add_row(variabeltype = c("Statusvariabel", "Tallvariabel"))
+  kb_med_status_resultat = kb_tom_std %>%
+    add_row(
+      variabeltype = c("Listevariabel", "Listevariabel", "Listevariabel", "Tallvariabel"),
+      verdi = c(-1, 0, 1, NA_character_),
+      verditekst = c("Opprettet", "Lagret", "Ferdigstilt", NA_character_)
+    )
+
+  expect_identical(utvid_statusvariabel(kb_med_status), kb_med_status_resultat)
+})
+
+test_that("funksjonen gir feilmelding hvis det er flere statusvariabler på et skjema", {
+  kb_flere_status = kb_tom_std %>%
+    add_row(variabeltype = c("Statusvariabel", "Statusvariabel"))
+
+  expect_error(utvid_statusvariabel(kb_flere_status))
+})
 
 # legg_til_variabler_kb ---------------------------------------------------
 context("legg_til_variabler_kb")
