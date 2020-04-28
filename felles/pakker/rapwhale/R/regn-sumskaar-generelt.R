@@ -78,15 +78,18 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
   }
   d_ugyldige_verdier = finn_ugyldige_verdier(d, verditabell)
 
-  if (!godta_manglende && any(is.na(d_ugyldige_verdier$feilverdi))) {
-    stop("Det mangler verdier for en eller flere variabler") # fixme: Legge til "oppsummering" her?
+  if (godta_manglende) {
+    d_ugyldige_verdier = na.omit(d_ugyldige_verdier)
   }
 
-  if ((nrow(d_ugyldige_verdier) > 0) && any(!is.na(d_ugyldige_verdier$feilverdi))) {
-    oppsummering = oppsummer_ugyldige_verdier(d_ugyldige_verdier)
+  oppsummering = oppsummer_ugyldige_verdier(d_ugyldige_verdier)
+
+  if (!godta_manglende && any(is.na(d_ugyldige_verdier$feilverdi))) {
+    stop("Det mangler verdier for en eller flere variabler\n", oppsummering)
+  }
+
+  if ((nrow(d_ugyldige_verdier) > 0)) {
     stop(oppsummering)
-  } else {
-    "Alle verdiene er gyldige" # fixme: Denne beskjeden skal skrives ut i oppsummer_ugyldige_verdier()
   }
 }
 
@@ -151,15 +154,19 @@ finn_ugyldige_verdier = function(d, verditabell) {
 #'
 #' @return Tekststreng som inneholder variabelnavn og tilhørende feilverdier (sortert alfabetisk
 #'     etter variabelnavn). Hvis det ikke finnes ugyldige verdier returneres tekststrengen
-#'     "Alle verdiene er gyldige". fixme: denne funksjonaliteten må flyttes fra sjekk_variabelverdier().
+#'     "Alle verdiene er gyldige".
 
 oppsummer_ugyldige_verdier = function(d_ugyldige) {
-  oppsummert = d_ugyldige %>%
-    group_by(variabel) %>%
-    summarise(feil_verdier = paste0(feilverdi, collapse = ", ")) %>%
-    summarise(feil_variabler_verdier = paste0(variabel, ": ", feil_verdier, collapse = "\n")) %>%
-    summarise(feiltekst = paste0("Fant ", nrow(d_ugyldige), " ugyldige verdier:\n", feil_variabler_verdier))
-  pull(oppsummert, feiltekst)
+  if (nrow(d_ugyldige) > 0) {
+    oppsummert = d_ugyldige %>%
+      group_by(variabel) %>%
+      summarise(feil_verdier = paste0(feilverdi, collapse = ", ")) %>%
+      summarise(feil_variabler_verdier = paste0(variabel, ": ", feil_verdier, collapse = "\n")) %>%
+      summarise(feiltekst = paste0("Fant ", nrow(d_ugyldige), " ugyldige verdier:\n", feil_variabler_verdier))
+    pull(oppsummert, feiltekst)
+  } else {
+    "Alle verdiene er gyldige"
+  }
 }
 
 #' Funksjon for å regne ut sumskår
