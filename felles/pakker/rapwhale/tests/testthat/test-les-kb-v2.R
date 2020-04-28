@@ -186,8 +186,33 @@ test_that("tekstverdier i datovektor blir konvertert til NA", {
   )
 })
 
-# kb_oqr_base_til_std -----------------------------------------------------
+# FIXME - Denne testen kan bli overflødig når JIRA-sak (https://issuetracker.helsenord.no/browse/ABN-372) er løst
+test_that("datovariabler med apostrof blir riktig konvertert", {
+  tekst_til_dato_med_apo = c("'2020-01-15'", "birthYear")
+  tekst_til_dato_res = c(readr::parse_date("2020-01-15",
+    format = "%Y-%m-%d"
+  ), NA)
 
+  expect_identical(
+    konverter_tekst(tekst_til_dato_med_apo,
+      regex = "\\d{4}\\-\\d{2}\\-\\d{2}",
+      parse_funksjon = parse_date,
+      format = "'%Y-%m-%d'"
+    ),
+    tekst_til_dato_res
+  )
+})
+
+
+test_that("funksjonen gir feilmelding om inndata ikke er en tekstvektor", {
+  inndata_numerisk = c(1.2, 1.3)
+
+  expect_error(konverter_tekst(inndata_numerisk,
+    regex = "[-]?\\d{1,}\\.\\d{1,}",
+    parse_funksjon = parse_double
+  ))
+})
+# kb_oqr_base_til_std -----------------------------------------------------
 context("kb_oqr_base_til_std")
 
 # legg_til_variabler_kb ---------------------------------------------------
