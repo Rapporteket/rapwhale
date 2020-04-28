@@ -73,15 +73,12 @@ les_kb_oqr_base = function(adresse) {
 #' til ønsket format basert på hvilken parse-funksjon som er oppgitt.
 #' Verdier som ikke matcher regex vil endres til NA
 konverter_tekst = function(d, regex, parse_funksjon, ...) {
+  stopifnot(is.character(d))
+  # Konverterer alle ikke-regex til NA
+  d[str_detect(d, pattern = regex, negate = TRUE)] = NA
 
-  # Sjekker om det finnes noen som skal konverteres basert på regex
-  if (any(str_detect(d, pattern = regex))) {
-    # Konverterer alle ikke-regex til NA
-    d[str_detect(d, pattern = regex, negate = TRUE)] = NA
-
-    # Leser inn resten med valgt parse-funksjon
-    d = parse_funksjon(d, ...)
-  }
+  # Leser inn resten med valgt parse-funksjon
+  d = parse_funksjon(d, ...)
 
   d
 }
