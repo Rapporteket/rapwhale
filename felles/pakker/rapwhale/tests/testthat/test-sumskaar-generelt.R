@@ -100,12 +100,12 @@ test_that("sjekk_variabelverdier() gir feilmelding hvis ikke begge de to aktuell
 })
 
 test_that("sjekk_variabelverdier() gjev inga feilmelding for datasett med gyldige variabelverdiar", {
-  expect_identical(sjekk_variabelverdier(d_gyldig_eks1, skaaringstabell_eks, godta_manglende = FALSE), "Alle verdiene er gyldige")
-  expect_identical(sjekk_variabelverdier(d_gyldig_eks2, skaaringstabell_eks, godta_manglende = TRUE), "Alle verdiene er gyldige")
+  expect_silent(sjekk_variabelverdier(d_gyldig_eks1, skaaringstabell_eks, godta_manglende = FALSE))
+  expect_silent(sjekk_variabelverdier(d_gyldig_eks2, skaaringstabell_eks, godta_manglende = TRUE))
 })
 
 test_that("sjekk_variabelverdier() gir ingen feilmelding for datasett med ugyldige NA-verdiar viss godta_manglende = TRUE", {
-  expect_identical(sjekk_variabelverdier(d_ugyldig_eks1, skaaringstabell_eks, godta_manglende = TRUE), "Alle verdiene er gyldige")
+  expect_silent(sjekk_variabelverdier(d_ugyldig_eks1, skaaringstabell_eks, godta_manglende = TRUE))
 })
 
 test_that("sjekk_variabelverdier() gjev feilmelding for datasett med ugyldige NA-verdiar viss godta_manglende = FALSE", {
@@ -114,9 +114,9 @@ test_that("sjekk_variabelverdier() gjev feilmelding for datasett med ugyldige NA
 
 test_that("sjekk_variabelverdier() gjev feilmelding for datasett med ugyldige variabelverdiar", {
   expect_error(sjekk_variabelverdier(tibble(gen = c(200, 200)), skaaringstabell_eks, godta_manglende = FALSE))
-  expect_error(sjekk_variabelverdier(tibble(gen = c(200, 200, "blablabla")), skaaringstabell_eks, godta_manglende = FALSE))
-  expect_error(sjekk_variabelverdier(tibble(gen = c(200, 200, "blablabla", NA)), skaaringstabell_eks, godta_manglende = FALSE))
-  expect_error(sjekk_variabelverdier(tibble(gen = c(200, 200, "blablabla", NA)), skaaringstabell_eks, godta_manglende = TRUE))
+  expect_error(sjekk_variabelverdier(tibble(gen = c(200, 200, "blablabla")), skaaringstabell_eks, godta_manglende = FALSE)) # Fjerne
+  expect_error(sjekk_variabelverdier(tibble(gen = c(200, 200, "blablabla", NA)), skaaringstabell_eks, godta_manglende = FALSE)) # Fjerne
+  expect_error(sjekk_variabelverdier(tibble(gen = c(200, 200, "blablabla", NA)), skaaringstabell_eks, godta_manglende = TRUE)) # Fjerne
 })
 
 
