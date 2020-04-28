@@ -111,6 +111,47 @@ kb_oqr_base_til_std = function(kodebok, kb_kobling) {
   # Returnerer fullstendig kodebok på standard format
 }
 
+#' Utvid statusvariabler til kategorisk
+#'
+#' Funksjonen tar statusvariabel fra OQR-register og konverterer den til en
+#' kategorisk variabel. I OQR-struktur har statusvariabel kun et nivå, men
+#' vi vil ha et nivå for hver listeverdi.
+#' Tar inn kodebok og returnerer kodebok med statusvariabler utvidet
+#'
+#' @param kb_std Kodebok på standardformat
+utvid_statusvariabel = function(kb_std) {
+
+  # Sjekker at det ingen tabeller har flere statusvariabler.
+  stopifnot(all(kb_std %>%
+    group_by(skjema_id) %>%
+    tally(variabeltype == "Statusvariabel") %>%
+    pull(n) <= 1))
+
+  while (any(kb_std$variabeltype == "Statusvariabel")) {
+    # Radnummeret til første (ubehandla) statusvariabel
+    ind = which(kb_std$variabeltype == "Statusvariabel")[1]
+
+    # Rada må bytast ut med tre rader, éi for kvar moglege verdi.
+    # Dette gjer me først ved å utvida kodeboka med to ekstra,
+    # identiske rader rett etter rada. Så set me inn rette verdiar.
+    #
+    # Gjenta aktuell rad tre gongar (når me gjer det slik,
+    # funkar det òg viss rada er første eller siste rad).
+    kb_std = kb_std[append(seq_len(nrow(kb_std)),
+      values = c(ind, ind),
+      after = ind
+    ), ]
+
+    # Legg rette verdiar inn i dei tre nye radene
+    nyind = c(ind, ind + 1, ind + 2)
+    kb_std$verdi[nyind] = -1:1
+    kb_std$verditekst[nyind] = c("Opprettet", "Lagret", "Ferdigstilt")
+    kb_std$variabeltype[nyind] = "Listevariabel"
+  }
+
+  kb_std
+}
+
 legg_til_variabler_kb = function(kb, ekstra_spek) {
   # Funksjon(er) for å håndtere ekstra variabler som skal legges til KB og
   # eventuelt om variabler skal fjernes.
