@@ -1,13 +1,48 @@
 library(tidyverse)
 
 les_kb_oqr_v2 = function(adresse) {
-  # Tar inn filplassering for kodebok
+  kb_oqr = les_kb_oqr_base(adresse)
 
-  # Har i funksjonen oppgitt kb_spek for det spesifikke register/struktur (her kb_oqr_spek)
+  # Variabler som må konverteres til desimal eller dato
+  til_desimal = c(
+    "normalintervall_start_numerisk", "normalintervall_slutt_numerisk",
+    "maksintervall_start_numerisk", "maksintervall_slutt_numerisk"
+  )
+  til_dato = c(
+    "normalintervall_start_dato", "normalintervall_slutt_dato",
+    "innfoert_dato", "utfaset_dato"
+  )
 
-  # Kaller på les_kodebok_oqr_base()
-  # Kaller på fikse_datatyper()
-  # Kaller på kb_oqr_base_til_std()
+  # FIXME! - Se JIRA-sak https://issuetracker.helsenord.no/browse/ABN-372 for hvordan dette løses fremover.
+  til_dato_apo = c("maksintervall_start_dato", "maksintervall_slutt_dato")
+
+  kb_oqr = mutate_at(kb_oqr,
+    til_desimal,
+    konverter_tekst,
+    regex = "[-]?\\d{1,}[.]?[\\d{1,}]?",
+    parse_double
+  )
+  kb_oqr = mutate_at(kb_oqr,
+    til_dato,
+    konverter_tekst,
+    regex = "\\d{4}\\-\\d{2}\\-\\d{2}",
+    parse_date,
+    format = "%Y-%m-%d"
+  )
+
+  # FIXME! - Denne bør revideres når vi får svar på JIRA-sak (https://issuetracker.helsenord.no/browse/ABN-372)
+  # Se også test som dekker dette.
+  kb_oqr = mutate_at(kb_oqr,
+    til_dato_apo,
+    konverter_tekst,
+    regex = "\\d{4}\\-\\d{2}\\-\\d{2}",
+    parse_date,
+    format = "'%Y-%m-%d'"
+  )
+
+  kb_std = kb_oqr_base_til_std(kb_oqr)
+
+  # kb_std = kb_oqr_base_til_std(kb_oqr)
   # Kaller på legg_til_variabler_kb()
   # Kaller på valider_kodebok()
 
