@@ -88,27 +88,56 @@ konverter_tekst = function(d, regex, parse_funksjon, ...) {
   d
 }
 
-kb_oqr_base_til_std = function(kodebok, kb_kobling) {
+kb_oqr_base_til_std = function(kb_oqr) {
   # Tar inn en kodebok-tibble med riktige variabeltyper.
 
-  # Må gjøre en del validering av inndata
-  # I funksjonen har vi oppgitt format for standard kodebok vi vil bruke
+  # Utkast til standardformat for kodebok. Dette må revideres.
+  kb_std = kb_oqr %>%
+    mutate(
+      skjema_id = tabell,
+      skjemanavn = skjemanavn,
+      variabel_id = str_to_lower(fysisk_feltnavn),
+      obligatorisk = str_to_lower(obligatorisk),
+      variabeletikett = ledetekst,
+      forklaring = hjelpetekst,
+      variabeltype = type,
+      verdi = listeverdier,
+      verditekst = listetekst,
+      desimaler = desimaler,
+      min = maksintervall_start_numerisk,
+      maks = maksintervall_slutt_numerisk,
+      min_rimelig = normalintervall_start_numerisk,
+      maks_rimelig = normalintervall_slutt_numerisk,
+      min_dato = maksintervall_start_dato,
+      maks_dato = maksintervall_slutt_dato,
+      min_rimelig_dato = normalintervall_start_dato,
+      maks_rimelig_dato = normalintervall_slutt_dato,
+      kommentar = kommentar,
+      kategori = NA_character_,
+      innleiing = NA_character_,
+      eining = NA_character_,
+      unik = NA_character_,
+      manglande = NA_character_,
+      kommentar_rimeleg = NA_character_,
+      utrekningsformel = NA_character_,
+      logikk = NA_character_
+    )
 
-  # kb_kobling brukes for å koble diverse kodebokformat til standard format.
-
-  # Kalle på funksjon for å fikse variabelnavn
-  # skifte varnavn, endre rekkefølge på rader og kolonner.
-
-  # Må ha definert hva et standard kodebokformat skal være.
+  # Endre rekkefølge på rader og kolonner.
 
   # Tester for å sjekke at alle variabeltyper er kjente fra før
-
+  # valider_original() # validering som gjøres på kodebok før konvertering
+  # Hva skal inn her?
+  kb_stb = utvid_status(kb_std)
+  # {
   # Fikser statusvariabler (legge til ekstra rader for hvert nivå (0,1,-1))
   # Fikse obligatorisk
   # Fikse skjemanavn
   # Sorter kb etter skjemarekkefølge
+  # }
 
   # Returnerer fullstendig kodebok på standard format
+  kb_std
 }
 
 #' Utvid statusvariabler til kategorisk
