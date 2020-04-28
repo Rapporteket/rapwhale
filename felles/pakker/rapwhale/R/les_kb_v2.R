@@ -72,6 +72,11 @@ les_kb_oqr_base = function(adresse) {
 #' Funksjonen ser deretter etter mønsteret i tekst-vektoren og konverterer de det gjelder
 #' til ønsket format basert på hvilken parse-funksjon som er oppgitt.
 #' Verdier som ikke matcher regex vil endres til NA
+#'
+#' @param d tekst-vektor som skal konverteres
+#' @param regex regex uttrykk for hvilke format det forventes at teksten innehar.
+#' @param parse_funksjon en parse_*-funksjon fra readr pakken. Foreløpig kun støtte for parse_double og parse_date.
+#' @export
 konverter_tekst = function(d, regex, parse_funksjon, ...) {
   stopifnot(is.character(d))
   # Konverterer alle ikke-regex til NA
