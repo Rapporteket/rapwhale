@@ -215,6 +215,24 @@ utvid_statusvariabel = function(kb_std) {
 
   kb_std
 }
+# FIXME! - Endre navn på kodebok som har fått endret navn fra kodebok_oqr men som
+# ikke er fullstendig konvertert til standardformat.
+
+#' Valider oqr-kodebok
+#'
+#' Funksjonen gjør enkel validering av kodebok på OQR-format før den konverteres
+#' til standardformat.
+#' Sjekker at det ikke finnes *nye* variabeltyper i OQR-kodebok.
+#' Endrer variabeltype fra OQR til standardnavn. for eksempel "Tekstvariabel" til "tekst"
+#' Definerer obligatorisk variabel basert på aktiveringsspørsmål og obligatorisk kolonne
+#' for å få riktig verdi for *skjulte* spørsmål som kun vises hvis et annet spørsmål
+#' er besvart.
+#' Returnerer kodebok på standardformat.
+#'
+#' @param kb_std kodebok med riktige kolonnenavn, men som ikke er fullstendig konvertert.
+valider_oqr_kb = function(kb_std) {
+
+}
 
 legg_til_variabler_kb = function(kb, ekstra_spek) {
   # Funksjon(er) for å håndtere ekstra variabler som skal legges til KB og
