@@ -308,7 +308,7 @@ test_that("funksjonen gir forventet verdi for obligatorisk", {
 
   kb_oblig_ok_ja = kb_obligatorisk %>%
     filter(obligatorisk == "Ja", aktiveringsspoersmaal == "Ja")
-  kb_oglig_ok_res = kb_tom_std %>%
+  kb_oblig_ok_res = kb_tom_std %>%
     add_row(obligatorisk = "Ja")
 
   kb_oblig_ok_nei = kb_obligatorisk %>%
