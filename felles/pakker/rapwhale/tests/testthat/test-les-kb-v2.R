@@ -338,17 +338,26 @@ test_that("funksjonen gir feilmelding ved ukjente variabeltyper", {
 
 test_that("funksjonen returnerer riktige navn for variabeltype etter konvertering", {
   kb_ok_navn = kb_tom_mellom %>%
-    add_row(variabeltype = c(
-      "Listevariabel", "Tekstvariabel", "Stor tekstvariabel",
-      "Avkrysningsboks", "Datovariabel", "Skjult variabel",
-      "Tallvariabel", "Tidsvariabel", "TIMESTAMP"
-    ))
+    add_row(
+      variabeltype = c(
+        "Listevariabel", "Tekstvariabel", "Stor tekstvariabel",
+        "Avkrysningsboks", "Datovariabel", "Skjult variabel",
+        "Tallvariabel", "Tidsvariabel", "TIMESTAMP"
+      ),
+      obligatorisk = "nei",
+      aktiveringsspoersmaal = "nei",
+      underspoersmaal = "nei"
+    )
   kb_ok_resultat = kb_tom_mellom %>%
-    add_row(variabeltype = c(
-      "kategorisk", "tekst", "tekst", "boolsk",
-      "dato", "tekst", "numerisk", "kl", "dato_kl"
-    )) %>%
-    mutate(obligatorisk = as.logical(obligatorisk))
+    add_row(
+      variabeltype = c(
+        "kategorisk", "tekst", "tekst", "boolsk",
+        "dato", "tekst", "numerisk", "kl", "dato_kl"
+      ),
+      obligatorisk = "nei",
+      aktiveringsspoersmaal = "nei",
+      underspoersmaal = "nei"
+    )
 
   expect_identical(valider_oqr_kb(kb_ok_navn), kb_ok_resultat)
 })
@@ -356,40 +365,66 @@ test_that("funksjonen returnerer riktige navn for variabeltype etter konverterin
 test_that("funksjonen gir forventet verdi for obligatorisk", {
   kb_obligatorisk = kb_tom_mellom %>%
     add_row(
-      obligatorisk = c("Ja", "Ja", "Nei", "Nei"),
-      aktiveringsspoersmaal = c("Ja", "Nei", "Ja", "Nei")
+      obligatorisk = c("ja", "ja", "nei", "nei"),
+      aktiveringsspoersmaal = c("ja", "nei", "ja", "nei"),
+      underspoersmaal = "nei"
     )
 
   kb_oblig_ok_ja = kb_obligatorisk %>%
-    filter(obligatorisk == "Ja", aktiveringsspoersmaal == "Ja")
+    filter(obligatorisk == "ja", aktiveringsspoersmaal == "ja")
   kb_oblig_ok_ja_res = kb_tom_mellom %>%
     add_row(
-      obligatorisk = "Ja",
-      aktiveringsspoersmaal = "Ja"
-    ) %>%
-    mutate(obligatorisk = as.logical(obligatorisk))
+      obligatorisk = "ja",
+      aktiveringsspoersmaal = "ja",
+      underspoersmaal = "nei"
+    )
 
   kb_oblig_ok_nei = kb_obligatorisk %>%
-    filter(obligatorisk == "Ja", aktiveringsspoersmaal == "Nei")
+    filter(obligatorisk == "ja", aktiveringsspoersmaal == "nei")
   kb_oblig_ok_nei_res = kb_tom_mellom %>%
     add_row(
-      obligatorisk = "Nei",
-      aktiveringsspoersmaal = "Nei"
-    ) %>%
-    mutate(obligatorisk = as.logical(obligatorisk))
+      obligatorisk = "nei",
+      aktiveringsspoersmaal = "nei",
+      underspoersmaal = "nei"
+    )
 
   kb_oblig_ok_nei_2 = kb_obligatorisk %>%
-    filter(obligatorisk == "Nei", aktiveringsspoersmaal == "Ja")
+    filter(obligatorisk == "nei", aktiveringsspoersmaal == "ja")
   kb_oblig_ok_nei_res_2 = kb_tom_mellom %>%
     add_row(
-      obligatorisk = "Nei",
-      aktiveringsspoersmaal = "Ja"
-    ) %>%
-    mutate(obligatorisk = as.logical(obligatorisk))
+      obligatorisk = "nei",
+      aktiveringsspoersmaal = "ja",
+      underspoersmaal = "nei"
+    )
 
   expect_identical(valider_oqr_kb(kb_oblig_ok_ja), kb_oblig_ok_ja_res)
   expect_identical(valider_oqr_kb(kb_oblig_ok_nei), kb_oblig_ok_nei_res)
   expect_identical(valider_oqr_kb(kb_oblig_ok_nei_2), kb_oblig_ok_nei_res_2)
+})
+
+test_that("funksjonen gir feilmelding hvis obligatorisk, aktiveringsspoersmaal eller underspoersmaal er NA", {
+  kb_oblig_NA = kb_tom_mellom %>%
+    add_row(
+      variabeltype = "Listevariabel",
+      aktiveringsspoersmaal = "nei",
+      underspoersmaal = "nei"
+    )
+  kb_aktiv_NA = kb_tom_mellom %>%
+    add_row(
+      variabeltype = "Listevariabel",
+      obligatorisk = "ja",
+      underspoersmaal = "nei"
+    )
+  kb_under_NA = kb_tom_mellom %>%
+    add_row(
+      variabeltype = "Listevariabel",
+      obligatorisk = "ja",
+      aktiveringsspoersmaal = "nei"
+    )
+
+  expect_error(valider_oqr_kb(kb_oblig_NA))
+  expect_error(valider_oqr_kb(kb_aktiv_NA))
+  expect_error(valider_oqr_kb(kb_under_NA))
 })
 
 # legg_til_variabler_kb ---------------------------------------------------
