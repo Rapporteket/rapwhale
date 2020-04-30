@@ -32,6 +32,60 @@
     hjelpetekst = character()
   )
 
+  # Tom kodebok etter konvertering til inklusive ekstra kolonner fra OQR
+  kb_tom_mellom = tibble(
+    skjemanavn = character(),
+    navn_i_rapporteket = character(),
+    ledetekst = character(),
+    obligatorisk = character(),
+    type = character(),
+    listeverdier = character(),
+    listetekst = character(),
+    normalintervall_start_numerisk = numeric(),
+    normalintervall_slutt_numerisk = numeric(),
+    maksintervall_start_numerisk = numeric(),
+    maksintervall_slutt_numerisk = numeric(),
+    normalintervall_start_dato = as.Date(character()),
+    normalintervall_slutt_dato = as.Date(character()),
+    maksintervall_start_dato = as.Date(character()),
+    maksintervall_slutt_dato = as.Date(character()),
+    antall_tegn = integer(),
+    lovlige_tegn = character(),
+    desimaler = integer(),
+    aktiveringsspoersmaal = character(),
+    underspoersmaal = character(),
+    innfoert_dato = as.Date(character()),
+    utfaset_dato = as.Date(character()),
+    tabell = character(),
+    fysisk_feltnavn = character(),
+    kommentar = character(),
+    variabel_id = character(),
+    hjelpetekst = character(),
+    skjema_id = character(),
+    skjemanamn = character(),
+    variabeletikett = character(),
+    forklaring = character(),
+    variabeltype = character(),
+    verdi = character(),
+    verditekst = character(),
+    desimalar = integer(),
+    min = numeric(),
+    maks = numeric(),
+    min_rimeleg = numeric(),
+    maks_rimeleg = numeric(),
+    min_dato = as.Date(character()),
+    maks_dato = as.Date(character()),
+    kategori = character(),
+    innleiing = character(),
+    eining = character(),
+    unik = character(),
+    manglande = character(),
+    kommentar_rimeleg = character(),
+    utrekningsformel = character(),
+    logikk = character()
+  )
+
+
   # Tom kodebok etter konvertering til standard navn
   kb_tom_std = tibble(
     skjema_id = character(),
@@ -250,9 +304,9 @@ context("kb_oqr_base_til_std")
 context("utvid_statusvariabel")
 
 test_that("funksjonen gir forventet resultat", {
-  kb_med_status = kb_tom_std %>%
+  kb_med_status = kb_tom_mellom %>%
     add_row(variabeltype = c("Statusvariabel", "Tallvariabel"))
-  kb_med_status_resultat = kb_tom_std %>%
+  kb_med_status_resultat = kb_tom_mellom %>%
     add_row(
       variabeltype = c("Listevariabel", "Listevariabel", "Listevariabel", "Tallvariabel"),
       verdi = c(-1, 0, 1, NA_character_),
@@ -263,7 +317,7 @@ test_that("funksjonen gir forventet resultat", {
 })
 
 test_that("funksjonen gir feilmelding hvis det er flere statusvariabler på et skjema", {
-  kb_flere_status = kb_tom_std %>%
+  kb_flere_status = kb_tom_mellom %>%
     add_row(variabeltype = c("Statusvariabel", "Statusvariabel"))
 
   expect_error(utvid_statusvariabel(kb_flere_status))
@@ -274,33 +328,33 @@ test_that("funksjonen gir feilmelding hvis det er flere statusvariabler på et s
 context("valider_oqr_kb")
 
 test_that("funksjonen gir feilmelding ved ukjente variabeltyper", {
-  kb_ny_vartype = kb_tom_std %>%
+  kb_ny_vartype = kb_tom_mellom %>%
     add_row(variabeltype = c("Listevariabel", "Statusvariabel", "Tellevariabel"))
 
   expect_error(valider_oqr_kb(kb_ny_vartype),
-    error = "Kodeboken inneholder ukjente variabeltyper:\n Tellevariabel"
+    error = "Kodeboka har variabeltypar me ikkje støttar / har standardnamn på: /n Tellevariabel"
   )
 })
 
 test_that("funksjonen returnerer riktige navn for variabeltype etter konvertering", {
-  kb_ok_navn = kb_tom_std %>%
+  kb_ok_navn = kb_tom_mellom %>%
     add_row(variabeltype = c(
       "Listevariabel", "Tekstvariabel", "Stor tekstvariabel",
       "Avkrysningsboks", "Datovariabel", "Skjult variabel",
       "Tallvariabel", "Tidsvariabel", "TIMESTAMP"
     ))
-  kb_ok_resultat = kb_tom_std %>%
+  kb_ok_resultat = kb_tom_mellom %>%
     add_row(variabeltype = c(
       "kategorisk", "tekst", "tekst", "boolsk",
       "dato", "tekst", "numerisk", "kl", "dato_kl"
-    ))
+    )) %>%
+    mutate(obligatorisk = as.logical(obligatorisk))
 
   expect_identical(valider_oqr_kb(kb_ok_navn), kb_ok_resultat)
 })
 
 test_that("funksjonen gir forventet verdi for obligatorisk", {
-  kb_obligatorisk = kb_tom_std %>%
-    add_column(aktiveringsspoersmaal = character()) %>% # Denne kolonnen vil være i inndata, men ikke i kb_tom_std
+  kb_obligatorisk = kb_tom_mellom %>%
     add_row(
       obligatorisk = c("Ja", "Ja", "Nei", "Nei"),
       aktiveringsspoersmaal = c("Ja", "Nei", "Ja", "Nei")
@@ -308,19 +362,32 @@ test_that("funksjonen gir forventet verdi for obligatorisk", {
 
   kb_oblig_ok_ja = kb_obligatorisk %>%
     filter(obligatorisk == "Ja", aktiveringsspoersmaal == "Ja")
-  kb_oblig_ok_res = kb_tom_std %>%
-    add_row(obligatorisk = "Ja")
+  kb_oblig_ok_ja_res = kb_tom_mellom %>%
+    add_row(
+      obligatorisk = "Ja",
+      aktiveringsspoersmaal = "Ja"
+    ) %>%
+    mutate(obligatorisk = as.logical(obligatorisk))
 
   kb_oblig_ok_nei = kb_obligatorisk %>%
     filter(obligatorisk == "Ja", aktiveringsspoersmaal == "Nei")
+  kb_oblig_ok_nei_res = kb_tom_mellom %>%
+    add_row(
+      obligatorisk = "Nei",
+      aktiveringsspoersmaal = "Nei"
+    ) %>%
+    mutate(obligatorisk = as.logical(obligatorisk))
+
   kb_oblig_ok_nei_2 = kb_obligatorisk %>%
     filter(obligatorisk == "Nei", aktiveringsspoersmaal == "Ja")
-  kb_oblig_ok_nei_res = kb_tom_std %>%
-    add_row(obligatorisk = "Nei")
-  kb_oblig_ok_nei_res_2 = kb_tom_std %>%
-    add_row(obligatorisk = "Nei")
+  kb_oblig_ok_nei_res_2 = kb_tom_mellom %>%
+    add_row(
+      obligatorisk = "Nei",
+      aktiveringsspoersmaal = "Ja"
+    ) %>%
+    mutate(obligatorisk = as.logical(obligatorisk))
 
-  expect_identical(valider_oqr_kb(kb_oblig_ok), kb_oblig_ok_res)
+  expect_identical(valider_oqr_kb(kb_oblig_ok_ja), kb_oblig_ok_ja_res)
   expect_identical(valider_oqr_kb(kb_oblig_ok_nei), kb_oblig_ok_nei_res)
   expect_identical(valider_oqr_kb(kb_oblig_ok_nei_2), kb_oblig_ok_nei_res_2)
 })
