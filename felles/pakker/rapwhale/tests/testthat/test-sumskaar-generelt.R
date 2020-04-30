@@ -593,6 +593,48 @@ test_that("skaar_datasett() fungerer hvis man bytter om to variabelnavn", {
   )
 })
 
+test_that("skaar_datasett() gir ut sumskårer i samme rekkefølge som i delskala-kolonnen i skåringstabellen", {
+  skaaringstabell_flere_delskalaer = tibble::tribble(
+    ~delskala, ~variabel, ~verdi, ~koeffisient,
+    "b", "fys", 1, 0.2,
+    "b", "fys", 2, 0.3,
+    "b", "psyk", 1, 0.4,
+    "b", "psyk", 2, 0.2,
+    "a", "fys", 1, 0.8,
+    "a", "fys", 2, 0,
+    "a", "psyk", 1, 0.9,
+    "a", "psyk", 2, 0,
+    "d", "fys", 1, 0.3,
+    "d", "fys", 2, 0,
+    "d", "psyk", 1, 0.6,
+    "d", "psyk", 2, 0,
+    "c", "fys", 1, 0.35,
+    "c", "fys", 2, -0.08,
+    "c", "psyk", 1, 0.55,
+    "c", "psyk", 2, -0.01,
+  )
+
+  d_enkelt_eks_inn = tibble::tribble(
+    ~pas_id, ~kjonn, ~fys, ~psyk, ~dato,
+    1, 1, 1, 2, "2020-01-10",
+    2, 2, 2, 1, "2020-02-20",
+    3, 1, 2, 1, "2020-03-30"
+  )
+
+  d_enkelt_eks_ut = tibble::tribble(
+    ~pas_id, ~kjonn, ~fys, ~psyk, ~dato, ~b, ~a, ~d, ~c,
+    1, 1, 1, 2, "2020-01-10", 0.4, 0.8, 0.3, 0.34,
+    2, 2, 2, 1, "2020-02-20", 0.7, 0.9, 0.6, 0.47,
+    3, 1, 2, 1, "2020-03-30", 0.7, 0.9, 0.6, 0.47
+  )
+
+  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
+  expect_equal(
+    round(skaar_datasett(d_enkelt_eks_inn, skaaringstabell = skaaringstabell_flere_delskalaer), 5),
+    round(d_enkelt_eks_ut, 5)
+  )
+})
+
 d_gyldig_alle_verdier = tibble::tribble(
   ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2,
   1, 2, 1, 10, 20,
