@@ -126,8 +126,9 @@ konverter_tekst = function(d, regex, parse_funksjon, ...) {
 kb_oqr_base_til_std = function(kb_oqr) {
   # Tar inn en kodebok-tibble med riktige variabeltyper.
 
-  # Utkast til standardformat for kodebok. Dette må revideres.
-  kb_std = kb_oqr %>%
+  # Utkast til standardformat for kodebok.
+  # FIXME - bli enige om hva som skal være inkludert i vårt standardformat
+  kb_mellom = kb_oqr %>%
     mutate(
       skjema_id = tabell,
       skjemanavn = skjemanavn,
@@ -141,12 +142,12 @@ kb_oqr_base_til_std = function(kb_oqr) {
       desimaler = desimaler,
       min = maksintervall_start_numerisk,
       maks = maksintervall_slutt_numerisk,
-      min_rimelig = normalintervall_start_numerisk,
-      maks_rimelig = normalintervall_slutt_numerisk,
+      min_rimeleg = normalintervall_start_numerisk,
+      maks_rimeleg = normalintervall_slutt_numerisk,
       min_dato = maksintervall_start_dato,
       maks_dato = maksintervall_slutt_dato,
-      min_rimelig_dato = normalintervall_start_dato,
-      maks_rimelig_dato = normalintervall_slutt_dato,
+      min_rimeleg_dato = normalintervall_start_dato,
+      maks_rimeleg_dato = normalintervall_slutt_dato,
       kommentar = kommentar,
       kategori = NA_character_,
       innleiing = NA_character_,
@@ -163,13 +164,12 @@ kb_oqr_base_til_std = function(kb_oqr) {
   # Tester for å sjekke at alle variabeltyper er kjente fra før
   # valider_original() # validering som gjøres på kodebok før konvertering
   # Hva skal inn her?
-  kb_stb = utvid_status(kb_std)
-  # {
+  kb_mellom = utvid_status(kb_mellom)
+
   # Fikser statusvariabler (legge til ekstra rader for hvert nivå (0,1,-1))
   # Fikse obligatorisk
   # Fikse skjemanavn
   # Sorter kb etter skjemarekkefølge
-  # }
 
   # Returnerer fullstendig kodebok på standard format
   kb_std
@@ -215,8 +215,6 @@ utvid_statusvariabel = function(kb_std) {
 
   kb_std
 }
-# FIXME! - Endre navn på kodebok som har fått endret navn fra kodebok_oqr men som
-# ikke er fullstendig konvertert til standardformat.
 
 #' Valider oqr-kodebok
 #'
