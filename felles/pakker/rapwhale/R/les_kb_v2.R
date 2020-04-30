@@ -277,9 +277,19 @@ valider_oqr_kb = function(kb_std) {
   kb_std
 }
 
-legg_til_variabler_kb = function(kb, ekstra_spek) {
-  # Funksjon(er) for å håndtere ekstra variabler som skal legges til KB og
-  # eventuelt om variabler skal fjernes.
+#' Legg til ekstra variabler i kodebok
+#'
+#' Funksjon for å legge til variabler i kodebok som finnes i datadump, men ikke
+#' er med i kodebok.
+#' Det er ikke nødvendigvis samme variabler som mangler i alle skjema, så det må
+#' kunne spesifiseres per skjema/variabel.
+#'
+#' @param kb_std kodebok på standardformat
+#' @param skjema Hvilket skjema det skal legges variabler til
+#' @param variabler Hvilke variabler som skal legges til skjema
+#' @param posisjon Hvor i skjema variablene skal ligge. Mulige valg er .before, .after eller en vektor med indeks av samme lengde som variabler. Default er .after.
+legg_til_variabler_kb = function(kb_std, skjema, variabler, posisjon) {
+
 }
 
 valider_kodebok = function(kodebok) {
