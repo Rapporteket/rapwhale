@@ -99,6 +99,15 @@ test_that("sjekk_variabelverdier() gir feilmelding hvis ikke begge de to aktuell
   )
 })
 
+test_that("sjekk_variabelverdier() gir feilmelding hvis verdiene ikke er tekstverdier eller numeriske verdier", {
+  d_feil_variabeltype = d_gyldig_eks1
+  d_feil_variabeltype$fys1 = as.factor(d_feil_variabeltype$fys1)
+  expect_error(
+    sjekk_variabelverdier(d_feil_variabeltype, skaaringstabell_eks, godta_manglende = FALSE),
+    "Datasettet inneholder verdier som ikke er tekstverdier eller numeriske verdier"
+  )
+})
+
 test_that("sjekk_variabelverdier() gjev inga feilmelding for datasett med gyldige variabelverdiar", {
   expect_silent(sjekk_variabelverdier(d_gyldig_eks1, skaaringstabell_eks, godta_manglende = FALSE))
   expect_silent(sjekk_variabelverdier(d_gyldig_eks2, skaaringstabell_eks, godta_manglende = TRUE))
@@ -607,4 +616,13 @@ test_that("skaar_datasett() gir ut feilmelding hvis skåringstabell, variabelnav
   d_ugyldig_variabelverdier = d_gyldig_alle_verdier
   d_ugyldig_variabelverdier$psyk1[1] = 100
   expect_error(skaar_datasett(d_ugyldig_variabelverdier, skaaringstabell = skaaringstabell_eks))
+})
+
+test_that("skaar_datasett() fungerer likt uavhengig om verdiene i datasettet er tekstverdier eller numeriske verdier", {
+  d_variabelverdier_tekst = d_gyldig_alle_verdier
+  d_variabelverdier_tekst$gen = as.character(d_variabelverdier_tekst$gen)
+  expect_identical(
+    skaar_datasett(d_variabelverdier_tekst, skaaringstabell = skaaringstabell_eks),
+    skaar_datasett(d_gyldig_alle_verdier, skaaringstabell = skaaringstabell_eks)
+  )
 })
