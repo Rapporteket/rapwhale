@@ -260,11 +260,15 @@ valider_oqr_kb = function(kb_std) {
     match(kb_std$variabeltype, vartype_oqr_standard$type_oqr)
   ]
 
-  # Kontrollere obligatoriske
+  # Kontrollere at obligatoriske, aktiveringsspoersmaal og underspoersmaal ikke er NA
+  stopifnot(all(!(is.na(kb_std$obligatorisk) |
+    is.na(kb_std$aktiveringsspoersmaal) |
+    is.na(kb_std$underspoersmaal))))
+
   kb_std = kb_std %>%
     mutate(
       obligatorisk =
-        as.logical(ifelse(aktiveringsspoersmaal == "ja" &
+        as.character(ifelse(aktiveringsspoersmaal == "ja" &
           obligatorisk == "ja",
         yes = "ja", no = "nei"
         ))
