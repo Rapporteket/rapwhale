@@ -27,7 +27,8 @@ skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell, godta_manglen
   sjekk_skaaringstabell(skaaringstabell)
   sjekk_variabelnavn(d_navn_ok, variabelnavn = skaaringstabell$variabel)
   d_akt = d_navn_ok %>%
-    select(unique(skaaringstabell$variabel))
+    select(unique(skaaringstabell$variabel)) %>%
+    mutate_if(is.character, as.numeric)
   sjekk_variabelverdier(d_akt, verditabell = select(skaaringstabell, variabel, verdi), godta_manglende = godta_manglende)
   skaar_datasett_uten_validering(d_akt, skaaringstabell)
   # funksjon som legger til det som kommer ut skaar_datasett_uten_validering til d
@@ -72,6 +73,10 @@ sjekk_variabelnavn = function(d, variabelnavn) {
 #'     verdier dette gjelder. Sumskår blir da ikke regnet ut.
 
 sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
+  if (!all(sapply(d, class) %in% c("character", "numeric"))) {
+    stop("Datasettet inneholder verdier som ikke er tekstverdier eller numeriske verdier")
+  }
+
   if (!(is.data.frame(verditabell) &&
     all(hasName(verditabell, c("variabel", "verdi"))))) {
     stop("Inndata må være tibble/data.frame og inneholde kolonnene 'variabel' og 'verdi'")
@@ -84,9 +89,9 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 
   oppsummering = oppsummer_ugyldige_verdier(d_ugyldige_verdier)
 
-  if (!godta_manglende && any(is.na(d_ugyldige_verdier$feilverdi))) {
-    stop("Det mangler verdier for en eller flere variabler\n", oppsummering)
-  }
+  # if (any(is.na(d_ugyldige_verdier$feilverdi))) {
+  #  stop("Det mangler verdier for en eller flere variabler\n", oppsummering)
+  # }
 
   if ((nrow(d_ugyldige_verdier) > 0)) {
     stop(oppsummering)
