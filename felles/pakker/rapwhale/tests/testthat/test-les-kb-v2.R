@@ -308,7 +308,10 @@ test_that("funksjonen gir forventet resultat", {
     add_row(variabeltype = c("Statusvariabel", "Tallvariabel"))
   kb_med_status_resultat = kb_tom_mellom %>%
     add_row(
-      variabeltype = c("Listevariabel", "Listevariabel", "Listevariabel", "Tallvariabel"),
+      variabeltype = c(
+        "Listevariabel", "Listevariabel",
+        "Listevariabel", "Tallvariabel"
+      ),
       verdi = c(-1, 0, 1, NA_character_),
       verditekst = c("Opprettet", "Lagret", "Ferdigstilt", NA_character_)
     )
@@ -348,6 +351,7 @@ test_that("funksjonen returnerer riktige navn for variabeltype etter konverterin
       aktiveringsspoersmaal = "nei",
       underspoersmaal = "nei"
     )
+
   kb_ok_resultat = kb_tom_mellom %>%
     add_row(
       variabeltype = c(
@@ -372,6 +376,7 @@ test_that("funksjonen gir forventet verdi for obligatorisk", {
 
   kb_oblig_ok_ja = kb_obligatorisk %>%
     filter(obligatorisk == "ja", aktiveringsspoersmaal == "ja")
+
   kb_oblig_ok_ja_res = kb_tom_mellom %>%
     add_row(
       obligatorisk = "ja",
@@ -381,6 +386,7 @@ test_that("funksjonen gir forventet verdi for obligatorisk", {
 
   kb_oblig_ok_nei = kb_obligatorisk %>%
     filter(obligatorisk == "ja", aktiveringsspoersmaal == "nei")
+
   kb_oblig_ok_nei_res = kb_tom_mellom %>%
     add_row(
       obligatorisk = "nei",
@@ -390,6 +396,7 @@ test_that("funksjonen gir forventet verdi for obligatorisk", {
 
   kb_oblig_ok_nei_2 = kb_obligatorisk %>%
     filter(obligatorisk == "nei", aktiveringsspoersmaal == "ja")
+
   kb_oblig_ok_nei_res_2 = kb_tom_mellom %>%
     add_row(
       obligatorisk = "nei",
