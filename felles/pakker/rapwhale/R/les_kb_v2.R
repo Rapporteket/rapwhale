@@ -166,6 +166,8 @@ kb_oqr_base_til_std = function(kb_oqr) {
   # Hva skal inn her?
   kb_mellom = utvid_status(kb_mellom)
 
+  kb_std = valider_oqr_kb(kb_mellom)
+
   # Fikser statusvariabler (legge til ekstra rader for hvert nivå (0,1,-1))
   # Fikse obligatorisk
   # Fikse skjemanavn
@@ -230,6 +232,45 @@ utvid_statusvariabel = function(kb_std) {
 #' @param kb_std kodebok med riktige kolonnenavn, men som ikke er fullstendig konvertert.
 valider_oqr_kb = function(kb_std) {
 
+  # Oversikt over variabeltypar i OQR og tilhøyrande standardnamn som me brukar
+  vartype_oqr_standard = tribble(
+    ~type_oqr, ~type_standard,
+    "Listevariabel", "kategorisk",
+    "Tekstvariabel", "tekst",
+    "Stor tekstvariabel", "tekst",
+    "Avkrysningsboks", "boolsk",
+    "Datovariabel", "dato",
+    "Skjult variabel", "tekst",
+    "Tallvariabel", "numerisk",
+    "Tidsvariabel", "kl",
+    "TIMESTAMP", "dato_kl"
+  )
+
+  # Stopp viss det dukkar opp variabeltypar me ikkje kjenner til
+  nye_vartypar = na.omit(setdiff(kb_std$variabeltype, vartype_oqr_standard$type_oqr))
+  if (length(nye_vartypar) > 0) {
+    stop(
+      "Kodeboka har variabeltypar me ikkje støttar / har standardnamn på: ",
+      str_c(nye_vartypar, collapse = ", ")
+    )
+  }
+
+  # Byt ut variabeltype-verdiane med våre standardiserte namn
+  kb_std$variabeltype = vartype_oqr_standard$type_standard[
+    match(kb_std$variabeltype, vartype_oqr_standard$type_oqr)
+  ]
+
+  # Kontrollere obligatoriske
+  kb_std = kb_std %>%
+    mutate(
+      obligatorisk =
+        as.logical(ifelse(aktiveringsspoersmaal == "ja" &
+          obligatorisk == "ja",
+        yes = "ja", no = "nei"
+        ))
+    )
+
+  kb_std
 }
 
 legg_til_variabler_kb = function(kb, ekstra_spek) {
