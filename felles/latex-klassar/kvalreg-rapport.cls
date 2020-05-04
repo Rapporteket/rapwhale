@@ -263,7 +263,7 @@
 \setlength{\smalmarg}{\evensidemargin}             % Breidd på høgremarg minus 1in
 \setlength{\breimarg}{\oddsidemargin}              % Breidd på venstremarg minus 1in
 \setlength{\margjuster}{-\breimarg+\smalmarg}      % Det som må justerast på brei venstremarg for å få smal venstremarg
-\setlength{\breitekst}{\stockwidth-2\smalmarg-2in} % Tekstbreidda viss me har smal marg på begge sider
+\setlength{\breitekst}{\stockwidth-\smalmarg-2in+2\marginparsep} % Tekstbreidda viss me har smal marg på begge sider
 \newcommand{\brukbreimarg}{% Bruk brei marg som standard
   \setlength{\evensidemargin}{\breimarg}%
   \setlength{\evensidemargin}{\breimarg}%
@@ -576,6 +576,7 @@
   \begin{figure}[#1]
   \begin{adjustwidth}{\margjuster}{0pt}
   \centerfloat
+  \setlength\hsize{\breitekst}%
   }{%
   \end{adjustwidth}
   \end{figure}
@@ -586,6 +587,7 @@
   \begin{table}[#1]
   \begin{adjustwidth}{\margjuster}{0pt}
   \centerfloat
+  \setlength\hsize{\breitekst}%
   }{%
   \end{adjustwidth}
   \end{table}
