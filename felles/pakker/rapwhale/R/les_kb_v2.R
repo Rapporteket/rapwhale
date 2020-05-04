@@ -308,7 +308,7 @@ valider_oqr_kb = function(kb_std) {
 #'
 #' @param kb_std kodebok på standardformat
 #' @param skjema Hvilket skjema det skal legges variabler til
-#' @param variabler Hvilke variabler som skal legges til skjema
+#' @param variabler Dataramme med variabler som skal legges til skjema. Må inneholde variabel_id, variabeletikett,        variabeltype, unik, obligatorisk og desimalar.
 #' @param posisjon Hvor i skjema variablene skal ligge. Mulige valg er .before, .after eller en vektor med indeks av samme lengde som variabler. Default er .after.
 legg_til_variabler_kb = function(kb_std, skjema, variabler, posisjon) {
 
