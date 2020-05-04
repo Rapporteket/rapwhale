@@ -46,7 +46,9 @@ les_kb_oqr_v2 = function(adresse) {
   # Kaller på legg_til_variabler_kb()
   # Kaller på valider_kodebok()
 
-  # Returnerer fullstendig kodebok for registeret. (Må inkludere varnavn_kilde, varnavn_resultat og vartype slik det er oppgitt i spesifikasjon i les_dd funksjoner)
+  # Returnerer fullstendig kodebok for registeret.
+  # (Må inkludere varnavn_kilde, varnavn_resultat og vartype slik det er
+  # oppgitt i spesifikasjon i les_dd funksjoner)
 }
 
 #' Les inn OQR-kodebok
@@ -171,8 +173,6 @@ kb_oqr_base_til_std = function(kb_oqr) {
 
   kb_std = valider_oqr_kb(kb_mellom)
 
-  # Fikse kolonne-rekkefølge
-
   # Fikse skjemanavn
   # Sorter rader i kb etter skjemarekkefølge
 
@@ -200,12 +200,6 @@ utvid_statusvariabel = function(kb_mellom) {
     # Radnummeret til første (ubehandla) statusvariabel
     ind = which(kb_mellom$variabeltype == "Statusvariabel")[1]
 
-    # Rada må bytast ut med tre rader, éi for kvar moglege verdi.
-    # Dette gjer me først ved å utvida kodeboka med to ekstra,
-    # identiske rader rett etter rada. Så set me inn rette verdiar.
-    #
-    # Gjenta aktuell rad tre gongar (når me gjer det slik,
-    # funkar det òg viss rada er første eller siste rad).
     kb_mellom = kb_mellom[append(seq_len(nrow(kb_mellom)),
       values = c(ind, ind),
       after = ind
@@ -234,8 +228,15 @@ utvid_statusvariabel = function(kb_mellom) {
 #'
 #' @param kb_std kodebok med riktige kolonnenavn, men som ikke er fullstendig konvertert.
 valider_oqr_kb = function(kb_std) {
+  kb_std = oqr_til_std_variabeltyper(kb_std)
+  kb_std = sjekk_obligatorisk(kb_std)
+  kb_std = velg_standardkolonner(kb_std)
+  kb_std = fiks_skjemanavn(kb_std)
 
-  # Oversikt over variabeltypar i OQR og tilhøyrande standardnamn som me brukar
+  kb_std
+}
+
+oqr_til_std_variabeltyper = function(kb_std) {
   vartype_oqr_standard = tribble(
     ~type_oqr, ~type_standard,
     "Listevariabel", "kategorisk",
@@ -263,6 +264,10 @@ valider_oqr_kb = function(kb_std) {
     match(kb_std$variabeltype, vartype_oqr_standard$type_oqr)
   ]
 
+  kb_std
+}
+
+sjekk_obligatorisk = function(kb_std) {
   # Kontrollere at obligatoriske, aktiveringsspoersmaal og underspoersmaal ikke er NA
   stopifnot(all(!(is.na(kb_std$obligatorisk) |
     is.na(kb_std$aktiveringsspoersmaal) |
@@ -276,7 +281,8 @@ valider_oqr_kb = function(kb_std) {
         yes = "ja", no = "nei"
         ))
     )
-
+}
+velg_standardkolonner = function(kb_std) {
   # Fikse rekkefølge på variabler i kb_std
   std_namn = c(
     "skjema_id", "skjemanavn", "kategori", "innleiing", "variabel_id",
@@ -291,12 +297,11 @@ valider_oqr_kb = function(kb_std) {
   # (Må stå etter legg_til_ekstravar(), sidan denne endrar rekkjefølgja)
   kb_std = kb_std %>%
     select(!!std_namn)
-
-  # Fikse skjemanavn()
+}
+fiks_skjemanavn = function(kb_std) {
   # Ordner skjemanavn til å samsvare med hvilken tabell variablene ligger i.
   # Sorterer også skjemarekkefølge slik at variablene ligger samlet etter skjema.
-
-  kb_std
+  # Fikser rekkefølge for tabeller i kodebok
 }
 
 #' Legg til ekstra variabler i kodebok

@@ -329,13 +329,13 @@ test_that("funksjonen gir feilmelding hvis det er flere statusvariabler på et s
 
 
 # valider_oqr_kb ----------------------------------------------------------
-context("valider_oqr_kb")
 
+context("oqr_til_std_variabeltyper")
 test_that("funksjonen gir feilmelding ved ukjente variabeltyper", {
   kb_ny_vartype = kb_tom_mellom %>%
     add_row(variabeltype = c("Listevariabel", "Statusvariabel", "Tellevariabel"))
 
-  expect_error(valider_oqr_kb(kb_ny_vartype),
+  expect_error(oqr_til_std_variabeltyper(kb_ny_vartype),
     error = "Kodeboka har variabeltypar me ikkje støttar / har standardnamn på: /n Tellevariabel"
   )
 })
@@ -353,18 +353,21 @@ test_that("funksjonen returnerer riktige navn for variabeltype etter konverterin
       underspoersmaal = "nei"
     )
 
-  kb_ok_resultat = kb_tom_std %>%
+  kb_ok_resultat = kb_tom_mellom %>%
     add_row(
       variabeltype = c(
         "kategorisk", "tekst", "tekst", "boolsk",
         "dato", "tekst", "numerisk", "kl", "dato_kl"
       ),
-      obligatorisk = "nei"
+      obligatorisk = "nei",
+      aktiveringsspoersmaal = "nei",
+      underspoersmaal = "nei"
     )
 
-  expect_identical(valider_oqr_kb(kb_ok_navn), kb_ok_resultat)
+  expect_identical(oqr_til_std_variabeltyper(kb_ok_navn), kb_ok_resultat)
 })
 
+context("sjekk_obligatorisk")
 test_that("funksjonen gir forventet verdi for obligatorisk", {
   kb_obligatorisk = kb_tom_mellom %>%
     add_row(
@@ -376,24 +379,36 @@ test_that("funksjonen gir forventet verdi for obligatorisk", {
   kb_oblig_ok_ja = kb_obligatorisk %>%
     filter(obligatorisk == "ja", aktiveringsspoersmaal == "ja")
 
-  kb_oblig_ok_ja_res = kb_tom_std %>%
-    add_row(obligatorisk = "ja")
+  kb_oblig_ok_ja_res = kb_tom_mellom %>%
+    add_row(
+      obligatorisk = "ja",
+      aktiveringsspoersmaal = "ja",
+      underspoersmaal = "nei"
+    )
 
   kb_oblig_ok_nei = kb_obligatorisk %>%
     filter(obligatorisk == "ja", aktiveringsspoersmaal == "nei")
 
-  kb_oblig_ok_nei_res = kb_tom_std %>%
-    add_row(obligatorisk = "nei")
+  kb_oblig_ok_nei_res = kb_tom_mellom %>%
+    add_row(
+      obligatorisk = "nei",
+      aktiveringsspoersmaal = "nei",
+      underspoersmaal = "nei"
+    )
 
   kb_oblig_ok_nei_2 = kb_obligatorisk %>%
     filter(obligatorisk == "nei", aktiveringsspoersmaal == "ja")
 
-  kb_oblig_ok_nei_res_2 = kb_tom_std %>%
-    add_row(obligatorisk = "nei")
+  kb_oblig_ok_nei_res_2 = kb_tom_mellom %>%
+    add_row(
+      obligatorisk = "nei",
+      aktiveringsspoersmaal = "ja",
+      underspoersmaal = "nei"
+    )
 
-  expect_identical(valider_oqr_kb(kb_oblig_ok_ja), kb_oblig_ok_ja_res)
-  expect_identical(valider_oqr_kb(kb_oblig_ok_nei), kb_oblig_ok_nei_res)
-  expect_identical(valider_oqr_kb(kb_oblig_ok_nei_2), kb_oblig_ok_nei_res_2)
+  expect_identical(sjekk_obligatorisk(kb_oblig_ok_ja), kb_oblig_ok_ja_res)
+  expect_identical(sjekk_obligatorisk(kb_oblig_ok_nei), kb_oblig_ok_nei_res)
+  expect_identical(sjekk_obligatorisk(kb_oblig_ok_nei_2), kb_oblig_ok_nei_res_2)
 })
 
 test_that("funksjonen gir feilmelding hvis obligatorisk, aktiveringsspoersmaal eller underspoersmaal er NA", {
@@ -420,6 +435,10 @@ test_that("funksjonen gir feilmelding hvis obligatorisk, aktiveringsspoersmaal e
   expect_error(valider_oqr_kb(kb_aktiv_NA))
   expect_error(valider_oqr_kb(kb_under_NA))
 })
+
+context("velg_standardkolonner")
+
+context("fiks_skjemanavn")
 
 # legg_til_variabler_kb ---------------------------------------------------
 context("legg_til_variabler_kb")
