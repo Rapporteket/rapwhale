@@ -22,6 +22,7 @@ les_kb_oqr_v2 = function(adresse) {
     regex = "[-]?\\d{1,}[.]?[\\d{1,}]?",
     parse_double
   )
+
   kb_oqr = mutate_at(kb_oqr,
     til_dato,
     konverter_tekst,
@@ -42,7 +43,6 @@ les_kb_oqr_v2 = function(adresse) {
 
   kb_std = kb_oqr_base_til_std(kb_oqr)
 
-  # kb_std = kb_oqr_base_til_std(kb_oqr)
   # Kaller på legg_til_variabler_kb()
   # Kaller på valider_kodebok()
 
@@ -159,19 +159,22 @@ kb_oqr_base_til_std = function(kb_oqr) {
       logikk = NA_character_
     )
 
-  # Endre rekkefølge på rader og kolonner.
+  # Fjerne duplikate variabler på samme skjema
+  # Data fra oppfølging lagres i samme tabell men kommer fra ulike skjema,
+  # så variabler for oppfølging 2 og oppfølging 3 er gitt egne rader i samme tabell.
+  # Dette må reduseres til å være en variabel. Trekker ut den første.
+  kb_mellom = kb_mellom %>%
+    distinct(skjema_id, variabel_id, verdi, verditekst, .keep_all = TRUE)
+  # FIXME - lage test(er) for å se at dette fungerer riktig.
 
-  # Tester for å sjekke at alle variabeltyper er kjente fra før
-  # valider_original() # validering som gjøres på kodebok før konvertering
-  # Hva skal inn her?
-  kb_mellom = utvid_status(kb_mellom)
+  kb_mellom = utvid_statusvariabel(kb_mellom)
 
   kb_std = valider_oqr_kb(kb_mellom)
 
-  # Fikser statusvariabler (legge til ekstra rader for hvert nivå (0,1,-1))
-  # Fikse obligatorisk
+  # Fikse kolonne-rekkefølge
+
   # Fikse skjemanavn
-  # Sorter kb etter skjemarekkefølge
+  # Sorter rader i kb etter skjemarekkefølge
 
   # Returnerer fullstendig kodebok på standard format
   kb_std
