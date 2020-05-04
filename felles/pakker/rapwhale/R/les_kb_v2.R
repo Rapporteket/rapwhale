@@ -188,17 +188,17 @@ kb_oqr_base_til_std = function(kb_oqr) {
 #' Tar inn kodebok og returnerer kodebok med statusvariabler utvidet
 #'
 #' @param kb_std Kodebok på standardformat
-utvid_statusvariabel = function(kb_std) {
+utvid_statusvariabel = function(kb_mellom) {
 
   # Sjekker at det ingen tabeller har flere statusvariabler.
-  stopifnot(all(kb_std %>%
+  stopifnot(all(kb_mellom %>%
     group_by(skjema_id) %>%
     tally(variabeltype == "Statusvariabel") %>%
     pull(n) <= 1))
 
-  while (any(kb_std$variabeltype == "Statusvariabel")) {
+  while (any(kb_mellom$variabeltype == "Statusvariabel")) {
     # Radnummeret til første (ubehandla) statusvariabel
-    ind = which(kb_std$variabeltype == "Statusvariabel")[1]
+    ind = which(kb_mellom$variabeltype == "Statusvariabel")[1]
 
     # Rada må bytast ut med tre rader, éi for kvar moglege verdi.
     # Dette gjer me først ved å utvida kodeboka med to ekstra,
@@ -206,19 +206,19 @@ utvid_statusvariabel = function(kb_std) {
     #
     # Gjenta aktuell rad tre gongar (når me gjer det slik,
     # funkar det òg viss rada er første eller siste rad).
-    kb_std = kb_std[append(seq_len(nrow(kb_std)),
+    kb_mellom = kb_mellom[append(seq_len(nrow(kb_mellom)),
       values = c(ind, ind),
       after = ind
     ), ]
 
     # Legg rette verdiar inn i dei tre nye radene
     nyind = c(ind, ind + 1, ind + 2)
-    kb_std$verdi[nyind] = -1:1
-    kb_std$verditekst[nyind] = c("Opprettet", "Lagret", "Ferdigstilt")
-    kb_std$variabeltype[nyind] = "Listevariabel"
+    kb_mellom$verdi[nyind] = -1:1
+    kb_mellom$verditekst[nyind] = c("Opprettet", "Lagret", "Ferdigstilt")
+    kb_mellom$variabeltype[nyind] = "Listevariabel"
   }
 
-  kb_std
+  kb_mellom
 }
 
 #' Valider oqr-kodebok
