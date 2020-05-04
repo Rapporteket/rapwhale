@@ -30,8 +30,8 @@ skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell, godta_manglen
     select(unique(skaaringstabell$variabel)) %>%
     mutate_if(is.character, as.numeric)
   sjekk_variabelverdier(d_akt, verditabell = select(skaaringstabell, variabel, verdi), godta_manglende = godta_manglende)
-  skaar_datasett_uten_validering(d_akt, skaaringstabell)
-  # funksjon som legger til det som kommer ut skaar_datasett_uten_validering til d
+  d_sumskaarer = skaar_datasett_uten_validering(d_akt, skaaringstabell)
+  legg_til_sumskaarer_i_d(d, d_sumskaarer)
 }
 
 #' Funksjon for å sjekke variabelnavn
@@ -318,4 +318,10 @@ sjekk_skaaringstabell = function(skaaringstabell) {
     is.character(skaaringstabell$variabel))) {
     stop("Verdi-kolonnen og koeffisient-kolonnen må bare inneholde numeriske variabler og variabel-kolonnen må bare inneholde tekst-variabler")
   }
+}
+
+
+# Legger til sumskårer til datasettet som blir tatt inn
+legg_til_sumskaarer_i_d = function(d, sumskaarer) {
+  dplyr::bind_cols(d, sumskaarer)
 }
