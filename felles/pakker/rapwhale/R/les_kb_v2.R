@@ -277,6 +277,25 @@ valider_oqr_kb = function(kb_std) {
         ))
     )
 
+  # Fikse rekkefølge på variabler i kb_std
+  std_namn = c(
+    "skjema_id", "skjemanavn", "kategori", "innleiing", "variabel_id",
+    "variabeletikett", "forklaring", "variabeltype", "eining", "unik",
+    "obligatorisk", "verdi", "verditekst", "manglande", "desimaler",
+    "min", "maks", "min_rimeleg", "maks_rimeleg", "min_dato", "maks_dato",
+    "min_rimeleg_dato", "maks_rimeleg_dato", "kommentar_rimeleg",
+    "utrekningsformel", "logikk", "kommentar"
+  )
+
+  # Bruk vidare berre standardkolonnne, og i standard/fornuftig rekkjefølgje
+  # (Må stå etter legg_til_ekstravar(), sidan denne endrar rekkjefølgja)
+  kb_std = kb_std %>%
+    select(!!std_namn)
+
+  # Fikse skjemanavn()
+  # Ordner skjemanavn til å samsvare med hvilken tabell variablene ligger i.
+  # Sorterer også skjemarekkefølge slik at variablene ligger samlet etter skjema.
+
   kb_std
 }
 
