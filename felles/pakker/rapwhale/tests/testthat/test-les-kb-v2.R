@@ -301,6 +301,55 @@ test_that("funksjonen gir feilmelding om inndata ikke er en tekstvektor", {
 # kb_oqr_base_til_std -----------------------------------------------------
 context("kb_oqr_base_til_std")
 
+test_that("funksjonen fjerner duplikate variabler i samme tabell, men godtar duplikat i ulike tabeller", {
+  kb_duplikate_variabler = kb_tom %>%
+    add_row(
+      tabell = c(
+        "pasreg", "pasreg", "pasreg",
+        "pasreg", "basereg", "basereg"
+      ),
+      skjemanavn = c(
+        "Oppfølging 1 år", "Oppfølging 1 år",
+        "Oppfølging 2 år", "Oppfølging 2 år",
+        "Basisregistrering", "Basisregistrering"
+      ),
+      fysisk_feltnavn = c("død", "død", "død", "død", "død", "død"),
+      type = c(
+        "Listevariabel", "Listevariabel", "Listevariabel",
+        "Listevariabel", "Listevariabel", "Listevariabel"
+      ),
+      listeverdier = c(1, 2, 1, 2, 1, 2),
+      obligatorisk = c(rep("nei", 6)),
+      aktiveringsspoersmaal = c(rep("nei", 6)),
+      underspoersmaal = c(rep("nei", 6)),
+      listetekst = c(
+        "ja", "nei", "ja",
+        "nei", "ja", "nei"
+      )
+    )
+
+  kb_duplikat_resultat = kb_tom_std %>%
+    add_row(
+      skjema_id = c(
+        "pasreg", "pasreg",
+        "basereg", "basereg"
+      ),
+      skjemanavn = c(
+        "Oppfølging 1 år", "Oppfølging 1 år",
+        "Basisregistrering", "Basisregistrering"
+      ),
+      variabel_id = c("død", "død", "død", "død"),
+      variabeltype = c(
+        "kategorisk", "kategorisk",
+        "kategorisk", "kategorisk"
+      ),
+      obligatorisk = c(rep("nei", 4)),
+      verdi = c(1, 2, 1, 2),
+      verditekst = c("ja", "nei", "ja", "nei")
+    )
+
+  expect_identical(kb_oqr_base_til_std(kb_duplikate_variabler), kb_duplikat_resultat)
+})
 # Utvid_statusvariabel() ----------------------------------------------------------
 context("utvid_statusvariabel")
 
