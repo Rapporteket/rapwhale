@@ -246,16 +246,6 @@ test_that("funksjonen håndterer konvertering til dato", {
   ), tekst_til_dato_b_resultat)
 })
 
-test_that("funksjonen gir feilmelding ved feil datoformat", {
-  tekst_til_dato_a = c("2020-01-15", "2014-03-10")
-
-  expect_warning(konverter_tekst(tekst_til_dato_a,
-    regex = "\\d{4}\\-\\d{2}\\-\\d{2}",
-    parse_funksjon = parse_date,
-    format = "%d-%m-%Y"
-  ))
-})
-
 test_that("verdier som ikke tolkes som dato blir konvertert til NA", {
   tekst_til_dato_med_na = c("2020-01-15", "birthYear")
   tekst_til_dato_res = c(readr::parse_date(tekst_til_dato_med_na[1],
@@ -524,6 +514,7 @@ test_that("funksjonen gir forventede skjemanavn", {
 
 # legg_til_variabler_kb ---------------------------------------------------
 context("legg_til_variabler_kb")
+
 # valider_kodebok ---------------------------------------------------------
 context("valider_kodebok")
 # Test at det gis feilmelding hvis det finnes avvik mellom listevariabler på ulike skjema
