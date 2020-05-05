@@ -227,10 +227,10 @@ utvid_statusvariabel = function(kb_mellom) {
 #' Returnerer kodebok på standardformat.
 #'
 #' @param kb_std kodebok med riktige kolonnenavn, men som ikke er fullstendig konvertert.
-valider_oqr_kb = function(kb_std) {
-  kb_std = oqr_til_std_variabeltyper(kb_std)
-  kb_std = sjekk_obligatorisk(kb_std)
-  kb_std = velg_standardkolonner(kb_std)
+valider_oqr_kb = function(kb_mellom) {
+  kb_mellom = oqr_til_std_variabeltyper(kb_mellom)
+  kb_mellom = sjekk_obligatorisk(kb_mellom)
+  kb_std = velg_standardkolonner(kb_mellom)
   kb_std = fiks_skjemanavn(kb_std)
 
   kb_std
@@ -282,8 +282,10 @@ sjekk_obligatorisk = function(kb_std) {
         ))
     )
 }
+
 velg_standardkolonner = function(kb_std) {
-  # Fikse rekkefølge på variabler i kb_std
+
+  # Fikse rekkefølge for og valg av variabler til kb_std
   std_namn = c(
     "skjema_id", "skjemanavn", "kategori", "innleiing", "variabel_id",
     "variabeletikett", "forklaring", "variabeltype", "eining", "unik",
@@ -293,11 +295,10 @@ velg_standardkolonner = function(kb_std) {
     "utrekningsformel", "logikk", "kommentar"
   )
 
-  # Bruk vidare berre standardkolonnne, og i standard/fornuftig rekkjefølgje
-  # (Må stå etter legg_til_ekstravar(), sidan denne endrar rekkjefølgja)
   kb_std = kb_std %>%
     select(!!std_namn)
 }
+
 fiks_skjemanavn = function(kb_std) {
   # Ordner skjemanavn til å samsvare med hvilken tabell variablene ligger i.
   # Sorterer også skjemarekkefølge slik at variablene ligger samlet etter skjema.
