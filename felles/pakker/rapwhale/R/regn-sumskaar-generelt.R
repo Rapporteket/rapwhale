@@ -31,7 +31,7 @@ skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell, godta_manglen
     mutate_if(is.character, as.numeric)
   sjekk_variabelverdier(d_akt, verditabell = select(skaaringstabell, variabel, verdi), godta_manglende = godta_manglende)
   d_sumskaarer = skaar_datasett_uten_validering(d_akt, skaaringstabell)
-  legg_til_sumskaarer_i_d(d, d_sumskaarer)
+  legg_til_eller_erstatt_kolonner(d, d_sumskaarer)
 }
 
 #' Funksjon for å sjekke variabelnavn
@@ -321,7 +321,13 @@ sjekk_skaaringstabell = function(skaaringstabell) {
 }
 
 
-# Legger til sumskårer til datasettet som blir tatt inn
-legg_til_sumskaarer_i_d = function(d, sumskaarer) {
-  dplyr::bind_cols(d, sumskaarer)
+# Legger til og/eller erstatter kolonner i datasettet som blir tatt inn
+legg_til_eller_erstatt_kolonner = function(d_orig, d_ekstrakol) {
+  navn_finst = intersect(names(d_ekstrakol), names(d_orig))
+
+  if (length(navn_finst) > 0) {
+    warning("En eller flere kolonner i datasettet vil bli overskrevet")
+  }
+
+  d_orig[names(d_ekstrakol)] = d_ekstrakol
 }
