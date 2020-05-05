@@ -305,8 +305,23 @@ velg_standardkolonner = function(kb_std) {
 
 fiks_skjemanavn = function(kb_std) {
   # Ordner skjemanavn til å samsvare med hvilken tabell variablene ligger i.
-  # Sorterer også skjemarekkefølge slik at variablene ligger samlet etter skjema.
-  # Fikser rekkefølge for tabeller i kodebok
+
+  # Lag ein omkodingstabell, frå tabell-ID til skjemanamn
+  kod_id = unique(kb_std$skjema_id)
+  kod_namn = character(length(kod_id)) # Tom vektor til å halda resultatet
+
+  # Sjå på alle observerte kombinasjonar av tabell-ID og skjemanamn (i naturleg rekkjefølgje)
+  komb = distinct(tibble(id = kb_std$skjema_id, namn = kb_std$skjemanavn))
+  for (i in seq_along(kod_id)) {
+    kandidatar = c(komb$namn[komb$id == kod_id[i]], kod_id[i])
+    kandidatar = setdiff(kandidatar, kod_namn) # Fjern allereie brukte skjemanamn
+    kod_namn[i] = kandidatar[1] # Bruk første *ledige* (vil alltid vera ein, utanom det patologiske tilfelle der skjemanamna er lik skjema-ID-ane, men ikkje med 1-1-samsvar)
+  }
+
+  # Bruk omkodingstabellen til gje ut rett namn på alle ID-ane
+  kb_std$skjemanavn = kod_namn[match(kb_std$skjema_id, kod_id)]
+
+  kb_std
 }
 
 #' Legg til ekstra variabler i kodebok
