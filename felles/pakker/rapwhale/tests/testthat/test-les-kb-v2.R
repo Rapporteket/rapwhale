@@ -486,6 +486,13 @@ test_that("funksjonen gir feilmelding hvis obligatorisk, aktiveringsspoersmaal e
 })
 
 context("velg_standardkolonner")
+test_that("funksjonen gir feilmelding hvis kolonne ikke finnes i inndata", {
+  kb_manglende = kb_tom_mellom %>%
+    select(-variabel_id)
+
+  expect_error(velg_standardkolonner(kb_manglende))
+})
+
 
 context("fiks_skjemanavn")
 
