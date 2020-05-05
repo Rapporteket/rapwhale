@@ -493,8 +493,34 @@ test_that("funksjonen gir feilmelding hvis kolonne ikke finnes i inndata", {
   expect_error(velg_standardkolonner(kb_manglende))
 })
 
-
 context("fiks_skjemanavn")
+test_that("funksjonen gir forventede skjemanavn", {
+  kb_skjemanavn = kb_tom_std %>%
+    add_row(
+      skjema_id = c(
+        "pasreg", "basereg", "basereg",
+        "pasreg", "op", "op", "ev", "basereg"
+      ),
+      skjemanavn = c(
+        "Pasient", "Basis", "Basis", "Opskjema",
+        "Pasient", "Opskjema", "Opskjema", "Basis"
+      )
+    )
+
+  kb_skjemanavn_res = kb_tom_std %>%
+    add_row(
+      skjema_id = c(
+        "pasreg", "basereg", "basereg",
+        "pasreg", "op", "op", "ev", "basereg"
+      ),
+      skjemanavn = c(
+        "Pasient", "Basis", "Basis", "Pasient",
+        "Opskjema", "Opskjema", "ev", "Basis"
+      )
+    )
+
+  expect_identical(fiks_skjemanavn(kb_skjemanavn), kb_skjemanavn_res)
+})
 
 # legg_til_variabler_kb ---------------------------------------------------
 context("legg_til_variabler_kb")
