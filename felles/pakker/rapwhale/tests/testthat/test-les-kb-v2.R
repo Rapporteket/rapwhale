@@ -353,29 +353,39 @@ test_that("funksjonen fjerner duplikate variabler i samme tabell, men godtar dup
 # Utvid_statusvariabel() ----------------------------------------------------------
 context("utvid_statusvariabel")
 
-test_that("funksjonen gir forventet resultat", {
-  kb_med_status = kb_tom_mellom %>%
-    add_row(variabeltype = c("Statusvariabel", "Tallvariabel"))
-  kb_med_status_resultat = kb_tom_mellom %>%
+test_that("funksjonen godtar flere statusvariabler når de er i ulike tabeller", {
+  kb_flere_status_ok = kb_tom_mellom %>%
     add_row(
-      variabeltype = c(
-        "Listevariabel", "Listevariabel",
-        "Listevariabel", "Tallvariabel"
-      ),
-      verdi = c(-1, 0, 1, NA_character_),
-      verditekst = c("Opprettet", "Lagret", "Ferdigstilt", NA_character_)
+      skjema_id = c("basereg", "pasient"),
+      variabeltype = c("Statusvariabel", "Statusvariabel")
     )
 
-  expect_identical(utvid_statusvariabel(kb_med_status), kb_med_status_resultat)
+  kb_flere_status_ok_res = kb_tom_mellom %>%
+    add_row(
+      skjema_id = c(rep("basereg", 3), rep("pasient", 3)),
+      variabeltype = c(
+        "Listevariabel", "Listevariabel", "Listevariabel",
+        "Listevariabel", "Listevariabel", "Listevariabel"
+      ),
+      verdi = c(-1, 0, 1, -1, 0, 1),
+      verditekst = c(
+        "Opprettet", "Lagret", "Ferdigstilt",
+        "Opprettet", "Lagret", "Ferdigstilt"
+      )
+    )
+
+  expect_identical(utvid_statusvariabel(kb_flere_status_ok), kb_flere_status_ok_res)
 })
 
-test_that("funksjonen gir feilmelding hvis det er flere statusvariabler på et skjema", {
-  kb_flere_status = kb_tom_mellom %>%
-    add_row(variabeltype = c("Statusvariabel", "Statusvariabel"))
+test_that("funksjonen gir feilmelding hvis det er flere statusvariabler i samme tabell", {
+  kb_flere_status_samme = kb_tom_mellom %>%
+    add_row(
+      skjema_id = c("basereg", "basereg", "pasient"),
+      variabeltype = c("Statusvariabel", "Statusvariabel", "Statusvariabel")
+    )
 
-  expect_error(utvid_statusvariabel(kb_flere_status))
+  expect_error(utvid_statusvariabel(kb_flere_status_samme))
 })
-
 
 # valider_oqr_kb ----------------------------------------------------------
 
