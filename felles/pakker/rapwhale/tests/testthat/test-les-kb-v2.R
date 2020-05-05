@@ -204,7 +204,7 @@ test_that("funksjonen håndterer konvertering til desimaltall", {
   )
 })
 
-test_that("tekstverdier i en desimalvektor blir konvertert til NA", {
+test_that("verdier som ikke tolkes som tall blir konvertert til NA", {
   tekst_til_tall_med_na = c("1.2", "birthYear")
   tekst_til_tall_med_na_komma = c("1,2", "birthYear")
   tekst_til_tall_resultat = c(1.2, NA_real_)
@@ -256,7 +256,7 @@ test_that("funksjonen gir feilmelding ved feil datoformat", {
   ))
 })
 
-test_that("tekstverdier i datovektor blir konvertert til NA", {
+test_that("verdier som ikke tolkes som dato blir konvertert til NA", {
   tekst_til_dato_med_na = c("2020-01-15", "birthYear")
   tekst_til_dato_res = c(readr::parse_date(tekst_til_dato_med_na[1],
     format = "%Y-%m-%d"
@@ -289,7 +289,6 @@ test_that("datovariabler med apostrof blir riktig konvertert", {
   )
 })
 
-
 test_that("funksjonen gir feilmelding om inndata ikke er en tekstvektor", {
   inndata_numerisk = c(1.2, 1.3)
 
@@ -298,6 +297,7 @@ test_that("funksjonen gir feilmelding om inndata ikke er en tekstvektor", {
     parse_funksjon = parse_double
   ))
 })
+
 # kb_oqr_base_til_std -----------------------------------------------------
 context("kb_oqr_base_til_std")
 
@@ -342,27 +342,17 @@ test_that("funksjonen gir feilmelding ved ukjente variabeltyper", {
 
 test_that("funksjonen returnerer riktige navn for variabeltype etter konvertering", {
   kb_ok_navn = kb_tom_mellom %>%
-    add_row(
-      variabeltype = c(
-        "Listevariabel", "Tekstvariabel", "Stor tekstvariabel",
-        "Avkrysningsboks", "Datovariabel", "Skjult variabel",
-        "Tallvariabel", "Tidsvariabel", "TIMESTAMP"
-      ),
-      obligatorisk = "nei",
-      aktiveringsspoersmaal = "nei",
-      underspoersmaal = "nei"
-    )
+    add_row(variabeltype = c(
+      "Listevariabel", "Tekstvariabel", "Stor tekstvariabel",
+      "Avkrysningsboks", "Datovariabel", "Skjult variabel",
+      "Tallvariabel", "Tidsvariabel", "TIMESTAMP"
+    ))
 
   kb_ok_resultat = kb_tom_mellom %>%
-    add_row(
-      variabeltype = c(
-        "kategorisk", "tekst", "tekst", "boolsk",
-        "dato", "tekst", "numerisk", "kl", "dato_kl"
-      ),
-      obligatorisk = "nei",
-      aktiveringsspoersmaal = "nei",
-      underspoersmaal = "nei"
-    )
+    add_row(variabeltype = c(
+      "kategorisk", "tekst", "tekst", "boolsk",
+      "dato", "tekst", "numerisk", "kl", "dato_kl"
+    ))
 
   expect_identical(oqr_til_std_variabeltyper(kb_ok_navn), kb_ok_resultat)
 })
