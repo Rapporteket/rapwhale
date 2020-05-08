@@ -689,14 +689,17 @@ test_that("legg_til_eller_erstatt_kolonner() gir ut det samme datasettet som bli
 })
 
 test_that("legg_til_eller_erstatt_kolonner() fungerer hvis begge sumskår-kolonnene finnes fra før", {
-  d_ut_overskrevet_sumskaar = d_inn_inkl_sumskaarer
-  d_ut_overskrevet_sumskaar$psykisk = c(1, -3, -6.5)
-  d_ut_overskrevet_sumskaar$total = c(0.518, 0.775, 1.14)
+  d_ut_overskrevet_sumskaar_fasit = d_inn_inkl_sumskaarer
+  d_ut_overskrevet_sumskaar_fasit$psykisk = c(1, -3, -6.5)
+  d_ut_overskrevet_sumskaar_fasit$total = c(0.518, 0.775, 1.14)
+
+  d_sumskaarer = skaar_datasett_uten_validering(d_gyldig_inn_filtrert, skaaringstabell_eks)
+  d_ut_funksjon = legg_til_eller_erstatt_kolonner(d_inn_inkl_sumskaarer, d_sumskaarer)
   # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
-  d_ut_funksjon = skaar_datasett(d_inn_inkl_sumskaarer, skaaringstabell = skaaringstabell_eks) # fixme: må tilpasses siden testen er flyttet
   d_ut_funksjon = dplyr::mutate_if(d_ut_funksjon, is.numeric, round, 5)
-  d_ut_overskrevet_sumskaar = dplyr::mutate_if(d_ut_overskrevet_sumskaar, is.numeric, round, 5)
-  expect_equal(d_ut_funksjon, d_ut_overskrevet_sumskaar)
+  d_ut_overskrevet_sumskaar_fasit = dplyr::mutate_if(d_ut_overskrevet_sumskaar_fasit, is.numeric, round, 5)
+
+  expect_identical(d_ut_funksjon, d_ut_overskrevet_sumskaar_fasit)
 })
 
 test_that("legg_til_eller_erstatt_kolonner() fungerer hvis en av de to sumskår-kolonnene finnes fra før", {
