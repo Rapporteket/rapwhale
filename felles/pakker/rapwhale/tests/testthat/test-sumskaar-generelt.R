@@ -41,31 +41,11 @@ d_gyldig_inn = tibble::tribble(
 d_gyldig_ut = d_gyldig_inn
 d_gyldig_ut = tibble::add_column(d_gyldig_ut, psykisk = c(1, -3, -6.5), total = c(0.518, 0.775, 1.14), .after = "dato")
 
-test_that("skaar_datasett() gir ut det samme datasettet som blir tatt inn inkludert
-          kolonner med sumskårer helt til høyre", {
-  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute. # flytt
-  d_ut_funksjon = skaar_datasett(d_gyldig_inn, skaaringstabell = skaaringstabell_eks)
-  d_ut_funksjon = dplyr::mutate_if(d_ut_funksjon, is.numeric, round, 5)
-  d_gyldig_ut = dplyr::mutate_if(d_gyldig_ut, is.numeric, round, 5)
-  expect_equal(d_ut_funksjon, d_gyldig_ut)
-})
-
 # Eksempel på inndata hvor sumskårer finnes fra før
 d_inn_inkl_sumskaarer = d_gyldig_inn
 d_inn_inkl_sumskaarer = tibble::add_column(d_inn_inkl_sumskaarer, psykisk = 5, total = NA, .after = "psyk2")
 
-test_that("skaar_datasett() fungerer hvis begge sumskår-kolonnene finnes fra før", { # flytt til legg_til_eller_erstatt_kolonner()
-  d_ut_overskrevet_sumskaar = d_inn_inkl_sumskaarer
-  d_ut_overskrevet_sumskaar$psykisk = c(1, -3, -6.5)
-  d_ut_overskrevet_sumskaar$total = c(0.518, 0.775, 1.14)
-  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
-  d_ut_funksjon = skaar_datasett(d_inn_inkl_sumskaarer, skaaringstabell = skaaringstabell_eks)
-  d_ut_funksjon = dplyr::mutate_if(d_ut_funksjon, is.numeric, round, 5)
-  d_ut_overskrevet_sumskaar = dplyr::mutate_if(d_ut_overskrevet_sumskaar, is.numeric, round, 5)
-  expect_equal(d_ut_funksjon, d_ut_overskrevet_sumskaar)
-})
-
-test_that("skaar_datasett() fungerer hvis en av de to sumskår-kolonnene finnes fra før", { # kopier til legg_til_eller_erstatt_kolonner()
+test_that("skaar_datasett() fungerer hvis en av de to sumskår-kolonnene finnes fra før", {
   d_inn_inkl_1_sumskaar = d_inn_inkl_sumskaarer
   d_inn_inkl_1_sumskaar$psykisk = NULL
   d_ut_inkl_1_ekstra_sumskaar = d_inn_inkl_1_sumskaar
@@ -101,49 +81,6 @@ test_that("skaar_datasett() fungerer hvis man bytter om to variabelnavn", {
   expect_equal(
     round(skaar_datasett(d_inn_omvendt_variabelnavn, navn_omvendt, skaaringstabell_eks), 5),
     round(d_gyldig_ut, 5)
-  )
-})
-
-test_that("skaar_datasett() gir ut sumskårer i samme rekkefølge som i delskala-kolonnen i skåringstabellen", { # flytt til skaar_datasett_uten_validering()
-
-  skaaringstabell_flere_delskalaer = tibble::tribble(
-    ~delskala, ~variabel, ~verdi, ~koeffisient,
-    "b", "fys", 1, 0.2,
-    "b", "fys", 2, 0.3,
-    "b", "psyk", 1, 0.4,
-    "b", "psyk", 2, 0.2,
-    "a", "fys", 1, 0.8,
-    "a", "fys", 2, 0,
-    "a", "psyk", 1, 0.9,
-    "a", "psyk", 2, 0,
-    "d", "fys", 1, 0.3,
-    "d", "fys", 2, 0,
-    "d", "psyk", 1, 0.6,
-    "d", "psyk", 2, 0,
-    "c", "fys", 1, 0.35,
-    "c", "fys", 2, -0.08,
-    "c", "psyk", 1, 0.55,
-    "c", "psyk", 2, -0.01,
-  )
-
-  d_enkelt_eks_inn = tibble::tribble(
-    ~pas_id, ~kjonn, ~fys, ~psyk, ~dato,
-    1, 1, 1, 2, "2020-01-10",
-    2, 2, 2, 1, "2020-02-20",
-    3, 1, 2, 1, "2020-03-30"
-  )
-
-  d_enkelt_eks_ut = tibble::tribble(
-    ~pas_id, ~kjonn, ~fys, ~psyk, ~dato, ~b, ~a, ~d, ~c,
-    1, 1, 1, 2, "2020-01-10", 0.4, 0.8, 0.3, 0.34,
-    2, 2, 2, 1, "2020-02-20", 0.7, 0.9, 0.6, 0.47,
-    3, 1, 2, 1, "2020-03-30", 0.7, 0.9, 0.6, 0.47
-  )
-
-  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
-  expect_equal(
-    round(skaar_datasett(d_enkelt_eks_inn, skaaringstabell = skaaringstabell_flere_delskalaer), 5),
-    round(d_enkelt_eks_ut, 5)
   )
 })
 
@@ -546,6 +483,47 @@ test_that("skaar_datasett_uten_validering() gir ut 0-rads resultat med alle skå
   )
 })
 
+test_that("skaar_datasett_uten_validering() gir ut sumskårer i samme rekkefølge som i delskala-kolonnen i skåringstabellen", {
+  skaaringstabell_flere_delskalaer = tibble::tribble(
+    ~delskala, ~variabel, ~verdi, ~koeffisient,
+    "b", "fys", 1, 0.2,
+    "b", "fys", 2, 0.3,
+    "b", "psyk", 1, 0.4,
+    "b", "psyk", 2, 0.2,
+    "a", "fys", 1, 0.8,
+    "a", "fys", 2, 0,
+    "a", "psyk", 1, 0.9,
+    "a", "psyk", 2, 0,
+    "d", "fys", 1, 0.3,
+    "d", "fys", 2, 0,
+    "d", "psyk", 1, 0.6,
+    "d", "psyk", 2, 0,
+    "c", "fys", 1, 0.35,
+    "c", "fys", 2, -0.08,
+    "c", "psyk", 1, 0.55,
+    "c", "psyk", 2, -0.01,
+  )
+
+  d_enkelt_eks_inn = tibble::tribble(
+    ~pas_id, ~kjonn, ~fys, ~psyk, ~dato,
+    1, 1, 1, 2, "2020-01-10",
+    2, 2, 2, 1, "2020-02-20",
+    3, 1, 2, 1, "2020-03-30"
+  )
+
+  d_enkelt_eks_ut = tibble::tribble(
+    ~pas_id, ~kjonn, ~fys, ~psyk, ~dato, ~b, ~a, ~d, ~c,
+    1, 1, 1, 2, "2020-01-10", 0.4, 0.8, 0.3, 0.34,
+    2, 2, 2, 1, "2020-02-20", 0.7, 0.9, 0.6, 0.47,
+    3, 1, 2, 1, "2020-03-30", 0.7, 0.9, 0.6, 0.47
+  )
+
+  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
+  expect_equal(
+    round(skaar_datasett(d_enkelt_eks_inn, skaaringstabell = skaaringstabell_flere_delskalaer), 5), # fixme: må tilpasses siden testen er flyttet
+    round(d_enkelt_eks_ut, 5)
+  )
+})
 
 
 context("legg_til_na_i_skaaringstabell")
@@ -668,4 +646,40 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen innhol
   skaaringstabell_ugyldig_variabel_kolonne = skaaringstabell_eks
   skaaringstabell_ugyldig_variabel_kolonne$variabel = 1:nrow(skaaringstabell_ugyldig_variabel_kolonne)
   expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_variabel_kolonne), feilmelding_kolonneformat)
+})
+
+
+context("legg_til_eller_erstatt_kolonner")
+
+test_that("legg_til_eller_erstatt_kolonner() gir ut det samme datasettet som blir tatt inn inkludert
+          kolonner med sumskårer helt til høyre", {
+  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
+  d_ut_funksjon = skaar_datasett(d_gyldig_inn, skaaringstabell = skaaringstabell_eks) # fixme: må tilpasses siden testen er flyttet
+  d_ut_funksjon = dplyr::mutate_if(d_ut_funksjon, is.numeric, round, 5)
+  d_gyldig_ut = dplyr::mutate_if(d_gyldig_ut, is.numeric, round, 5)
+  expect_equal(d_ut_funksjon, d_gyldig_ut)
+})
+
+test_that("legg_til_eller_erstatt_kolonner() fungerer hvis begge sumskår-kolonnene finnes fra før", {
+  d_ut_overskrevet_sumskaar = d_inn_inkl_sumskaarer
+  d_ut_overskrevet_sumskaar$psykisk = c(1, -3, -6.5)
+  d_ut_overskrevet_sumskaar$total = c(0.518, 0.775, 1.14)
+  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
+  d_ut_funksjon = skaar_datasett(d_inn_inkl_sumskaarer, skaaringstabell = skaaringstabell_eks) # fixme: må tilpasses siden testen er flyttet
+  d_ut_funksjon = dplyr::mutate_if(d_ut_funksjon, is.numeric, round, 5)
+  d_ut_overskrevet_sumskaar = dplyr::mutate_if(d_ut_overskrevet_sumskaar, is.numeric, round, 5)
+  expect_equal(d_ut_funksjon, d_ut_overskrevet_sumskaar)
+})
+
+test_that("legg_til_eller_erstatt_kolonner() fungerer hvis en av de to sumskår-kolonnene finnes fra før", {
+  d_inn_inkl_1_sumskaar = d_inn_inkl_sumskaarer
+  d_inn_inkl_1_sumskaar$psykisk = NULL
+  d_ut_inkl_1_ekstra_sumskaar = d_inn_inkl_1_sumskaar
+  d_ut_inkl_1_ekstra_sumskaar$total = c(0.518, 0.775, 1.14)
+  d_ut_inkl_1_ekstra_sumskaar = tibble::add_column(d_ut_inkl_1_ekstra_sumskaar, psykisk = c(1, -3, -6.5), .after = "dato")
+  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
+  expect_equal(
+    round(skaar_datasett(d_inn_inkl_1_sumskaar, skaaringstabell = skaaringstabell_eks), 5), # fixme: må tilpasses siden testen er flyttet
+    round(d_ut_inkl_1_ekstra_sumskaar, 5)
+  )
 })
