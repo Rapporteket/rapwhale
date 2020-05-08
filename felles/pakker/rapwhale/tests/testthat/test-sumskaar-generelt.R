@@ -651,13 +651,41 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen innhol
 
 context("legg_til_eller_erstatt_kolonner")
 
+# Eksempel på inndata som inkluderer både basisvariabler og spørreskjema-variabler
+d_gyldig_inn = tibble::tribble(
+  ~pas_id, ~kjonn, ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2, ~dato,
+  1, 1, 1, 2, 1, 10, 20, "2020-01-10",
+  2, 2, 2, 1, 2, 20, 10, "2020-02-20",
+  3, 1, 3, 1, 2, NA, 10, "2020-03-30"
+)
+
+# Eksempeldata som bare inneholder verdier som finnes i skåringstabellen
+# (datasettet inneholder alle mulige verdier for hver variabel minst en gang)
+d_gyldig_inn_filtrert = tibble::tribble(
+  ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2,
+  1, 2, 1, 10, 20,
+  2, 1, 2, 20, 10,
+  3, 1, 2, NA, 10
+)
+
+# Eksempel på utdata (skal være identisk til 'd_gyldig_inn' og i tillegg inneholde
+# kolonner med sumskårer helt til høyre)
+d_gyldig_ut = d_gyldig_inn
+d_gyldig_ut = tibble::add_column(d_gyldig_ut, total = c(0.518, 0.775, 1.14), psykisk = c(1, -3, -6.5), .after = "dato")
+
+# Eksempel på inndata hvor sumskårer finnes fra før
+d_inn_inkl_sumskaarer = d_gyldig_inn
+d_inn_inkl_sumskaarer = tibble::add_column(d_inn_inkl_sumskaarer, psykisk = 5, total = NA, .after = "psyk2")
+
 test_that("legg_til_eller_erstatt_kolonner() gir ut det samme datasettet som blir tatt inn inkludert
           kolonner med sumskårer helt til høyre", {
+  d_sumskaarer = skaar_datasett_uten_validering(d_gyldig_inn_filtrert, skaaringstabell_eks)
+  d_ut_funksjon = legg_til_eller_erstatt_kolonner(d_gyldig_inn, d_sumskaarer)
   # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
-  d_ut_funksjon = skaar_datasett(d_gyldig_inn, skaaringstabell = skaaringstabell_eks) # fixme: må tilpasses siden testen er flyttet
   d_ut_funksjon = dplyr::mutate_if(d_ut_funksjon, is.numeric, round, 5)
-  d_gyldig_ut = dplyr::mutate_if(d_gyldig_ut, is.numeric, round, 5)
-  expect_equal(d_ut_funksjon, d_gyldig_ut)
+  d_ut_fasit = dplyr::mutate_if(d_gyldig_ut, is.numeric, round, 5)
+
+  expect_identical(d_ut_funksjon, d_ut_fasit)
 })
 
 test_that("legg_til_eller_erstatt_kolonner() fungerer hvis begge sumskår-kolonnene finnes fra før", {
