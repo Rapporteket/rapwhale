@@ -515,6 +515,72 @@ test_that("funksjonen gir forventede skjemanavn", {
 # legg_til_variabler_kb ---------------------------------------------------
 context("legg_til_variabler_kb")
 
+kb_legg_til_base = kb_tom_std %>%
+  add_row(
+    skjema_id = "basereg",
+    skjemanavn = "basisregistrering",
+    variabel_id = c("a", "b", "c"),
+    variabeltype = "tekst",
+    variabeletikett = "normal",
+    unik = "nei",
+    obligatorisk = "ja",
+    desimaler = NA
+  )
+
+test_that("funksjonen legger til ekstra variabler som forventet", {
+  kb_legg_til_res = kb_legg_til_base %>%
+    add_row(
+      skjema_id = "basereg",
+      skjemanavn = "basisregistrering",
+      variabel_id = "d",
+      variabeltype = "tekst",
+      variabeletikett = "normal",
+      unik = "nei",
+      obligatorisk = "ja",
+      desimaler = NA
+    )
+
+  ekstra_variabler = tibble::tribble(
+    ~skjema_id, ~skjemanavn, ~variabel_id, ~variabeltype, ~variabeletikett, ~unik, ~obligatorisk, ~desimalar,
+    "basereg", "basisregistrering", "d", "tekst", "normal", "nei", "ja", NA
+  )
+
+  expect_identical(
+    legg_til_variabler_kb(kb_legg_til_base,
+      skjema = "basereg",
+      variabler = ekstra_variabler
+    ),
+    kb_legg_til_res
+  )
+})
+
+test_that("funksjonen gir feilmelding hvis variabel eksisterer fra før", {
+  duplikat_variabel = tibble::tribble(
+    ~skjema_id, ~skjemanavn, ~variabel_id, ~variabeltype, ~variabeletikett, ~unik, ~obligatorisk, ~desimalar,
+    "basereg", "basisregistrering", "a", "tekst", "normal", "nei", "ja", NA
+  )
+
+  expect_error(legg_til_variabler_kb(kb_legg_til_base,
+    skjema = "basereg",
+    variabler = duplikat_variabel
+  ),
+  error = "Variabelen:\n 'a' finnes i skjema fra før"
+  )
+})
+test_that("funksjonen gir feilmelding hvis ikke alle nødvendige verdier er inkludert", {
+  ingen_variabeltype = tibble::tribble(
+    ~skjema_id, ~skjemanavn, ~variabel_id, ~variabeletikett, ~unik, ~obligatorisk, ~desimalar,
+    "basereg", "basisregistrering", "a", "normal", "nei", "ja", NA
+  )
+
+  expect_error(legg_til_variabler_kb(kb_legg_til_base,
+    skjema = "basereg",
+    variabler = ingen_variabeltype
+  ),
+  error = "Det mangler kolonner for nye variabler:\n variabeltype"
+  )
+})
+
 # valider_kodebok ---------------------------------------------------------
 context("valider_kodebok")
 # Test at det gis feilmelding hvis det finnes avvik mellom listevariabler på ulike skjema
