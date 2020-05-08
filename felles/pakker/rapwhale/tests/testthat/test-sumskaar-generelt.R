@@ -505,22 +505,22 @@ test_that("skaar_datasett_uten_validering() gir ut sumskårer i samme rekkefølg
   )
 
   d_enkelt_eks_inn = tibble::tribble(
-    ~pas_id, ~kjonn, ~fys, ~psyk, ~dato,
-    1, 1, 1, 2, "2020-01-10",
-    2, 2, 2, 1, "2020-02-20",
-    3, 1, 2, 1, "2020-03-30"
+    ~fys, ~psyk,
+    1, 2,
+    2, 1,
+    2, 1
   )
 
   d_enkelt_eks_ut = tibble::tribble(
-    ~pas_id, ~kjonn, ~fys, ~psyk, ~dato, ~b, ~a, ~d, ~c,
-    1, 1, 1, 2, "2020-01-10", 0.4, 0.8, 0.3, 0.34,
-    2, 2, 2, 1, "2020-02-20", 0.7, 0.9, 0.6, 0.47,
-    3, 1, 2, 1, "2020-03-30", 0.7, 0.9, 0.6, 0.47
+    ~b, ~a, ~d, ~c,
+    0.4, 0.8, 0.3, 0.34,
+    0.7, 0.9, 0.6, 0.47,
+    0.7, 0.9, 0.6, 0.47
   )
 
   # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
-  expect_equal(
-    round(skaar_datasett(d_enkelt_eks_inn, skaaringstabell = skaaringstabell_flere_delskalaer), 5), # fixme: må tilpasses siden testen er flyttet
+  expect_identical(
+    round(skaar_datasett_uten_validering(d_enkelt_eks_inn, skaaringstabell = skaaringstabell_flere_delskalaer), 5),
     round(d_enkelt_eks_ut, 5)
   )
 })
