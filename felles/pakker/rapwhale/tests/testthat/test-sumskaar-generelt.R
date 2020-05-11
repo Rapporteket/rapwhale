@@ -39,23 +39,26 @@ d_gyldig_inn = tibble::tribble(
 # Eksempel på utdata (skal være identisk til 'd_gyldig_inn' og i tillegg inneholde
 # kolonner med sumskårer helt til høyre)
 d_gyldig_ut = d_gyldig_inn
-d_gyldig_ut = tibble::add_column(d_gyldig_ut, psykisk = c(1, -3, -6.5), total = c(0.518, 0.775, 1.14), .after = "dato")
+d_gyldig_ut = tibble::add_column(d_gyldig_ut, total = c(0.518, 0.775, 1.14), psykisk = c(1, -3, -6.5), .after = "dato")
 
 # Eksempel på inndata hvor sumskårer finnes fra før
 d_inn_inkl_sumskaarer = d_gyldig_inn
-d_inn_inkl_sumskaarer = tibble::add_column(d_inn_inkl_sumskaarer, psykisk = 5, total = NA, .after = "psyk2")
+d_inn_inkl_sumskaarer = tibble::add_column(d_inn_inkl_sumskaarer, total = NA, psykisk = 5, .after = "psyk2")
 
 test_that("skaar_datasett() fungerer hvis en av de to sumskår-kolonnene finnes fra før", {
   d_inn_inkl_1_sumskaar = d_inn_inkl_sumskaarer
   d_inn_inkl_1_sumskaar$psykisk = NULL
-  d_ut_inkl_1_ekstra_sumskaar = d_inn_inkl_1_sumskaar
-  d_ut_inkl_1_ekstra_sumskaar$total = c(0.518, 0.775, 1.14)
-  d_ut_inkl_1_ekstra_sumskaar = tibble::add_column(d_ut_inkl_1_ekstra_sumskaar, psykisk = c(1, -3, -6.5), .after = "dato")
+
+  d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit = d_inn_inkl_1_sumskaar
+  d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit$total = c(0.518, 0.775, 1.14)
+  d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit = tibble::add_column(d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit, psykisk = c(1, -3, -6.5), .after = "dato")
+
+  d_ut_funksjon = skaar_datasett(d_inn_inkl_1_sumskaar, skaaringstabell = skaaringstabell_eks)
   # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
-  expect_equal(
-    round(skaar_datasett(d_inn_inkl_1_sumskaar, skaaringstabell = skaaringstabell_eks), 5),
-    round(d_ut_inkl_1_ekstra_sumskaar, 5)
-  )
+  d_ut_funksjon = dplyr::mutate_if(d_ut_funksjon, is.numeric, round, 5)
+  d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit = dplyr::mutate_if(d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit, is.numeric, round, 5)
+
+  expect_identical(d_ut_funksjon, d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit)
 })
 
 test_that("skaar_datasett() gir advarsel hvis en eller flere sumskår-kolonner finnes fra før", {
