@@ -172,23 +172,23 @@ test_that("Funksjonen leser inn kodebok og returnerer kolonner med forventet for
 context("konverter_tekst")
 
 test_that("funksjonen håndterer konvertering til desimaltall", {
-  tekst_til_tall_a = c("1.2", "1.3")
-  tekst_til_tall_b = c("1,2", "1,3")
-  tekst_til_tall_c = c("1", "2")
+  tekst_til_tall_punktum = c("1.2", "1.3")
+  tekst_til_tall_komma = c("1,2", "1,3")
+  tekst_til_tall_heltall = c("1", "2")
   tekst_til_tall_resultat = c(1.2, 1.3)
-  tekst_til_tall_c_resultat = c(1, 2)
+  tekst_til_tall_heltall_resultat = c(1, 2)
 
   expect_identical(
-    konverter_tekst(tekst_til_tall_a,
-      regex = "[-]?\\d{1,}\\.\\d{1,}",
+    konverter_tekst(tekst_til_tall_punktum,
+      regex = "^[-]?\\d+[.]?\\d*$",
       parse_funksjon = parse_double
     ),
     tekst_til_tall_resultat
   )
 
   expect_identical(
-    konverter_tekst(tekst_til_tall_b,
-      regex = "[-]?\\d{1,}\\,\\d{1,}",
+    konverter_tekst(tekst_til_tall_komma,
+      regex = "^[-]?\\d+[,]?\\d*$",
       parse_funksjon = parse_double,
       locale = locale(decimal_mark = ",")
     ),
@@ -196,22 +196,22 @@ test_that("funksjonen håndterer konvertering til desimaltall", {
   )
 
   expect_identical(
-    konverter_tekst(tekst_til_tall_c,
-      regex = "[-]?\\d{1,}[.]?[\\d{1,}]?",
+    konverter_tekst(tekst_til_tall_heltall,
+      regex = "^[-]?\\d+[.]?\\d*?$",
       parse_funksjon = parse_double
     ),
-    tekst_til_tall_c_resultat
+    tekst_til_tall_heltall_resultat
   )
 })
 
 test_that("verdier som ikke tolkes som tall blir konvertert til NA", {
-  tekst_til_tall_med_na = c("1.2", "birthYear")
+  tekst_til_tall_med_na_punktum = c("1.2", "birthYear")
   tekst_til_tall_med_na_komma = c("1,2", "birthYear")
   tekst_til_tall_resultat = c(1.2, NA_real_)
 
   expect_identical(
-    konverter_tekst(tekst_til_tall_med_na,
-      regex = "[-]?\\d{1,}\\.\\d{1,}",
+    konverter_tekst(tekst_til_tall_med_na_punktum,
+      regex = "^[-]?\\d+[.]?\\d*$",
       parse_funksjon = parse_double
     ),
     tekst_til_tall_resultat
@@ -219,7 +219,7 @@ test_that("verdier som ikke tolkes som tall blir konvertert til NA", {
 
   expect_identical(
     konverter_tekst(tekst_til_tall_med_na_komma,
-      regex = "[-]?\\d{1,}\\,\\d{1,}",
+      regex = "^[-]?\\d+[,]?\\d*$",
       parse_funksjon = parse_double,
       locale = locale(decimal_mark = ",")
     ),
@@ -228,22 +228,14 @@ test_that("verdier som ikke tolkes som tall blir konvertert til NA", {
 })
 
 test_that("funksjonen håndterer konvertering til dato", {
-  tekst_til_dato_a = c("2020-01-15", "2014-03-10")
-  tekst_til_dato_b = c("01-05-2020", "01-15-2020")
-  tekst_til_dato_a_resultat = readr::parse_date(tekst_til_dato_a, format = "%Y-%m-%d")
-  tekst_til_dato_b_resultat = readr::parse_date(tekst_til_dato_b, format = "%m-%d-%Y")
+  tekst_til_dato = c("2020-01-15", "2014-03-10")
+  tekst_til_dato_resultat = readr::parse_date(tekst_til_dato, format = "%Y-%m-%d")
 
-  expect_identical(konverter_tekst(tekst_til_dato_a,
-    regex = "\\d{4}\\-\\d{2}\\-\\d{2}",
+  expect_identical(konverter_tekst(tekst_til_dato,
+    regex = "^\\d{4}-\\d{2}-\\d{2}$",
     parse_funksjon = parse_date,
     format = "%Y-%m-%d"
-  ), tekst_til_dato_a_resultat)
-
-  expect_identical(konverter_tekst(tekst_til_dato_b,
-    regex = "\\d{2}\\-\\d{2}\\-\\d{4}",
-    parse_funksjon = parse_date,
-    format = "%m-%d-%Y"
-  ), tekst_til_dato_b_resultat)
+  ), tekst_til_dato_resultat)
 })
 
 test_that("verdier som ikke tolkes som dato blir konvertert til NA", {
@@ -254,7 +246,7 @@ test_that("verdier som ikke tolkes som dato blir konvertert til NA", {
 
   expect_identical(
     konverter_tekst(tekst_til_dato_med_na,
-      regex = "\\d{4}\\-\\d{2}\\-\\d{2}",
+      regex = "^\\d{4}-\\d{2}-\\d{2}$",
       parse_funksjon = parse_date,
       format = "%Y-%m-%d"
     ),
@@ -264,18 +256,18 @@ test_that("verdier som ikke tolkes som dato blir konvertert til NA", {
 
 # FIXME - Denne testen kan bli overflødig når JIRA-sak (https://issuetracker.helsenord.no/browse/ABN-372) er løst
 test_that("datovariabler med apostrof blir riktig konvertert", {
-  tekst_til_dato_med_apo = c("'2020-01-15'", "birthYear")
-  tekst_til_dato_res = c(readr::parse_date("2020-01-15",
+  tekst_til_dato_med_apostrof = c("'2020-01-15'", "birthYear")
+  tekst_til_dato_med_apostrof_res = c(readr::parse_date("2020-01-15",
     format = "%Y-%m-%d"
   ), NA)
 
   expect_identical(
-    konverter_tekst(tekst_til_dato_med_apo,
-      regex = "\\d{4}\\-\\d{2}\\-\\d{2}",
+    konverter_tekst(tekst_til_dato_med_apostrof,
+      regex = "^[']\\d{4}-\\d{2}-\\d{2}[']$",
       parse_funksjon = parse_date,
       format = "'%Y-%m-%d'"
     ),
-    tekst_til_dato_res
+    tekst_til_dato_med_apostrof_res
   )
 })
 
@@ -283,7 +275,7 @@ test_that("funksjonen gir feilmelding om inndata ikke er en tekstvektor", {
   inndata_numerisk = c(1.2, 1.3)
 
   expect_error(konverter_tekst(inndata_numerisk,
-    regex = "[-]?\\d{1,}\\.\\d{1,}",
+    regex = "^[-]?\\d+[.]\\d*$",
     parse_funksjon = parse_double
   ))
 })
