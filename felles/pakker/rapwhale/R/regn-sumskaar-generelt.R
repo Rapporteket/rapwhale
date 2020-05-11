@@ -188,7 +188,7 @@ oppsummer_ugyldige_verdier = function(d_ugyldige) {
 #' er validert.
 #'
 #' @return Et datasett som inneholder en eller flere kolonner med sumskårer. Rekkefølgen på sumskår-kolonnene
-#'     bestemmes av rekkefølgen på sumskårene i `skaaringstabell$delskala`. Hvis en rad i `d` mangler verdier  fixme: nå er rekkefølgen alfabetisk
+#'     bestemmes av rekkefølgen på sumskårene i `skaaringstabell$delskala`. Hvis en rad i `d` mangler verdier
 #'     for en eller flere variabler, og manglende verdier skal godtas, blir sumskåren for raden `NA`.
 
 skaar_datasett_uten_validering = function(d, skaaringstabell) {
@@ -232,6 +232,10 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
       tidyr::pivot_wider(names_from = "delskala", values_from = koeffisient) %>%
       head(0)
   }
+
+  # Rekkefølgen til sumskår-kolonnene skal tilsvare
+  # rekkefølgen i delskala-kolonnen i skåringstabellen
+  d_med_skaarar = d_med_skaarar[, unique(skaaringstabell$delskala)]
 
   # Returner ferdig skåra datasett
   d_med_skaarar
@@ -326,8 +330,10 @@ legg_til_eller_erstatt_kolonner = function(d_orig, d_ekstrakol) {
   navn_finst = intersect(names(d_ekstrakol), names(d_orig))
 
   if (length(navn_finst) > 0) {
-    warning("En eller flere kolonner i datasettet vil bli overskrevet")
+    warning("En eller flere kolonner i datasettet vil bli overskrevet") # legge til hvilke kolonner det gjelder
   }
 
   d_orig[names(d_ekstrakol)] = d_ekstrakol
+
+  d_orig
 }
