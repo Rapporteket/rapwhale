@@ -227,6 +227,19 @@ test_that("verdier som ikke tolkes som tall blir konvertert til NA", {
   )
 })
 
+test_that("funksjonen skiller mellom *ekte* tall, og tall som er del av en tekststreng", {
+  tall_i_tekst = c("1.2", "birth in 1.2 Year")
+  tall_i_tekst_resultat = c(1.2, NA_real_)
+
+  expect_identical(
+    konverter_tekst(tall_i_tekst,
+      regex = "^[-]?\\d+[.]?\\d*$",
+      parse_funksjon = parse_double
+    ),
+    tall_i_tekst_resultat
+  )
+})
+
 test_that("funksjonen håndterer konvertering til dato", {
   tekst_til_dato = c("2020-01-15", "2014-03-10")
   tekst_til_dato_resultat = readr::parse_date(tekst_til_dato, format = "%Y-%m-%d")
@@ -251,6 +264,20 @@ test_that("verdier som ikke tolkes som dato blir konvertert til NA", {
       format = "%Y-%m-%d"
     ),
     tekst_til_dato_res
+  )
+})
+
+test_that("funksjonen skiller mellom *ekte* dato, og dato som er del av en tekststreng", {
+  dato_i_tekst = c("2020-01-15", "birthdate is 2020-01-15")
+  dato_i_tekst_res = c(readr::parse_date(dato_i_tekst[1]), NA)
+
+  expect_identical(
+    konverter_tekst(dato_i_tekst,
+      regex = "^\\d{4}-\\d{2}-\\d{2}$",
+      parse_funksjon = parse_date,
+      format = "%Y-%m-%d"
+    ),
+    dato_i_tekst_res
   )
 })
 
