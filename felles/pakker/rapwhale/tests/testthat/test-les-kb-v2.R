@@ -492,6 +492,16 @@ test_that("funksjonen gir feilmelding hvis obligatorisk, aktiveringsspoersmaal e
 })
 
 context("velg_standardkolonner")
+test_that("funksjonen fungerer som forventet med riktig input og ekstra kolonner", {
+  kb_ekstra = kb_tom_mellom %>%
+    add_column(ekstra = character(), ekstra2 = numeric(), ekstra3 = logical()) %>%
+    select(ekstra, variabel_id, desimaler, ekstra2, everything())
+  kb_ekstra_resultat = kb_tom_std
+
+  expect_identical(velg_standardkolonner(kb_ekstra), kb_ekstra_resultat)
+})
+
+
 test_that("funksjonen gir feilmelding hvis kolonne ikke finnes i inndata", {
   kb_manglende = kb_tom_mellom %>%
     select(-variabel_id)
