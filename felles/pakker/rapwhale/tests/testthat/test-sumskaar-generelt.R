@@ -439,10 +439,10 @@ sumskaar_alle_besvarelser_bare_na_psykisk_rad3 = NA_real_
 
 # Utregnede sumskårer for eksempeldata hvor alle besvarelsene har NA-verdier på alle spørsmål
 sumskaar_alle_besvarelser_bare_na_tabell = tibble::tribble(
-  ~psykisk, ~total,
-  sumskaar_alle_besvarelser_bare_na_psykisk_rad1, sumskaar_alle_besvarelser_bare_na_total_rad1,
-  sumskaar_alle_besvarelser_bare_na_psykisk_rad2, sumskaar_alle_besvarelser_bare_na_total_rad2,
-  sumskaar_alle_besvarelser_bare_na_psykisk_rad3, sumskaar_alle_besvarelser_bare_na_total_rad3
+  ~total, ~psykisk,
+  sumskaar_alle_besvarelser_bare_na_total_rad1, sumskaar_alle_besvarelser_bare_na_psykisk_rad1,
+  sumskaar_alle_besvarelser_bare_na_total_rad2, sumskaar_alle_besvarelser_bare_na_psykisk_rad2,
+  sumskaar_alle_besvarelser_bare_na_total_rad3, sumskaar_alle_besvarelser_bare_na_psykisk_rad3
 )
 
 test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer hvis alle besvarelsene har NA-verdier på alle spørsmål", {
@@ -462,8 +462,8 @@ sumskaar_1_besvarelse_psykisk = sumskaar_psykisk_rad2
 
 # Utregnede sumskårer for eksempeldata som bare inneholder 1 besvarelse
 sumskaar_1_besvarelse_tabell = tibble::tribble(
-  ~psykisk, ~total,
-  sumskaar_1_besvarelse_psykisk, sumskaar_1_besvarelse_total
+  ~total, ~psykisk,
+  sumskaar_1_besvarelse_total, sumskaar_1_besvarelse_psykisk
 )
 
 test_that("skaar_datasett_uten_validering() regner ut korrekt sumskår ved bare 1 besvarelse", {
