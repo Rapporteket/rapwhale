@@ -394,14 +394,6 @@ test_that("funksjonen gir feilmelding hvis det er flere statusvariabler i samme 
 # valider_oqr_kb ----------------------------------------------------------
 
 context("oqr_til_std_variabeltyper")
-test_that("funksjonen gir feilmelding ved ukjente variabeltyper", {
-  kb_ny_vartype = kb_tom_mellom %>%
-    add_row(variabeltype = c("Listevariabel", "Statusvariabel", "Tellevariabel"))
-
-  expect_error(oqr_til_std_variabeltyper(kb_ny_vartype),
-    error = "Kodeboka har variabeltypar me ikkje støttar / har standardnamn på: /n Tellevariabel"
-  )
-})
 
 test_that("funksjonen returnerer riktige navn for variabeltype etter konvertering", {
   kb_ok_navn = kb_tom_mellom %>%
@@ -418,6 +410,16 @@ test_that("funksjonen returnerer riktige navn for variabeltype etter konverterin
     ))
 
   expect_identical(oqr_til_std_variabeltyper(kb_ok_navn), kb_ok_resultat)
+})
+
+test_that("funksjonen gir feilmelding ved ukjente variabeltyper", {
+  kb_ny_vartype = kb_tom_mellom %>%
+    add_row(variabeltype = c("Listevariabel", "Tekstvariabel", "Tellevariabel"))
+
+  expect_error(
+    oqr_til_std_variabeltyper(kb_ny_vartype),
+    "Kodeboka har variabeltypar me ikkje støttar / har standardnamn på:\nTellevariabel"
+  )
 })
 
 context("sjekk_obligatorisk")
