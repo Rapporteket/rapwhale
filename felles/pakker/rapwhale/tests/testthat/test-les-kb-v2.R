@@ -501,7 +501,6 @@ test_that("funksjonen fungerer som forventet med riktig input og ekstra kolonner
   expect_identical(velg_standardkolonner(kb_ekstra), kb_ekstra_resultat)
 })
 
-
 test_that("funksjonen gir feilmelding hvis kolonne ikke finnes i inndata", {
   kb_manglende = kb_tom_mellom %>%
     select(-variabel_id)
@@ -509,7 +508,8 @@ test_that("funksjonen gir feilmelding hvis kolonne ikke finnes i inndata", {
   expect_error(velg_standardkolonner(kb_manglende))
 })
 
-context("fiks_skjemanavn")
+context("tildel_unike_skjemanavn_fra_skjema_id")
+
 test_that("funksjonen gir forventede skjemanavn", {
   kb_skjemanavn = kb_tom_std %>%
     add_row(
@@ -535,7 +535,20 @@ test_that("funksjonen gir forventede skjemanavn", {
       )
     )
 
-  expect_identical(fiks_skjemanavn(kb_skjemanavn), kb_skjemanavn_res)
+  expect_identical(tildel_unike_skjemanavn_fra_skjema_id(kb_skjemanavn), kb_skjemanavn_res)
+})
+
+test_that("funksjonen gir feilmelding hvis skjemanavn og skjema_id er overlappende uten 1-1 samsvar mellom de to", {
+  kb_skjema = kb_tom_std %>%
+    add_row(
+      skjema_id = c("a", "b", "c"),
+      skjemanavn = c("a", "c", "c")
+    )
+
+  expect_error(
+    tildel_unike_skjemanavn_fra_skjema_id(kb_skjema2),
+    "Det finnes overlappende skjemanavn og skjema_id, og det er ikke 1-1 forhold mellom navnene"
+  )
 })
 
 # legg_til_variabler_kb ---------------------------------------------------
