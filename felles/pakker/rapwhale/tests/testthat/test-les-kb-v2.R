@@ -546,7 +546,7 @@ test_that("funksjonen gir feilmelding hvis skjemanavn og skjema_id er overlappen
     )
 
   expect_error(
-    tildel_unike_skjemanavn_fra_skjema_id(kb_skjema2),
+    tildel_unike_skjemanavn_fra_skjema_id(kb_skjema),
     "Det finnes overlappende skjemanavn og skjema_id, og det er ikke 1-1 forhold mellom navnene"
   )
 })
@@ -619,6 +619,9 @@ test_that("funksjonen gir feilmelding hvis ikke alle nødvendige verdier er inkl
   error = "Det mangler kolonner for nye variabler:\n variabeltype"
   )
 })
+
+# Tester for å legge inn ekstra variabler - kan IKKE legge inn kolonner som ikke eksisterer fra før.
+# Kan legge inn kolonner som ikke er obligatorisk men som er i inndata.
 
 # valider_kodebok ---------------------------------------------------------
 context("valider_kodebok")
