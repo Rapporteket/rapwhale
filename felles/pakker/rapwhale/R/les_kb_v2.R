@@ -19,14 +19,14 @@ les_kb_oqr_v2 = function(adresse) {
   kb_oqr = mutate_at(kb_oqr,
     til_desimal,
     konverter_tekst,
-    regex = "[-]?\\d{1,}[.]?[\\d{1,}]?",
+    regex = "^[-]?\\d+[.]?\\d*$",
     parse_double
   )
 
   kb_oqr = mutate_at(kb_oqr,
     til_dato,
     konverter_tekst,
-    regex = "\\d{4}\\-\\d{2}\\-\\d{2}",
+    regex = "^\\d{4}-\\d{2}-\\d{2}$",
     parse_date,
     format = "%Y-%m-%d"
   )
@@ -36,7 +36,7 @@ les_kb_oqr_v2 = function(adresse) {
   kb_oqr = mutate_at(kb_oqr,
     til_dato_apo,
     konverter_tekst,
-    regex = "\\d{4}\\-\\d{2}\\-\\d{2}",
+    regex = "^\\d{4}-\\d{2}-\\d{2}$",
     parse_date,
     format = "'%Y-%m-%d'"
   )
