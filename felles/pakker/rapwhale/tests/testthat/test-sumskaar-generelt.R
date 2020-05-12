@@ -69,11 +69,14 @@ test_that("skaar_datasett() fungerer hvis man oppgir variabelnavn", {
   d_inn_feil_variabelnavn = d_gyldig_inn
   d_inn_feil_variabelnavn = dplyr::rename(d_inn_feil_variabelnavn, fysisk1 = fys1, psykisk2 = psyk2)
   nye_navn = c(fys1 = "fysisk1", psyk2 = "psykisk2")
+
+  d_ut_funksjon = skaar_datasett(d_inn_feil_variabelnavn, variabelnavn = nye_navn, skaaringstabell = skaaringstabell_eks)
+  d_gyldig_ut = dplyr::rename(d_gyldig_ut, fysisk1 = fys1, psykisk2 = psyk2)
   # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
-  expect_equal(
-    round(skaar_datasett(d_inn_feil_variabelnavn, nye_navn, skaaringstabell_eks), 5),
-    round(d_gyldig_ut, 5)
-  )
+  d_ut_funksjon = dplyr::mutate_if(d_ut_funksjon, is.numeric, round, 5)
+  d_gyldig_ut = dplyr::mutate_if(d_gyldig_ut, is.numeric, round, 5)
+
+  expect_equal(d_ut_funksjon, d_gyldig_ut)
 })
 
 test_that("skaar_datasett() fungerer hvis man bytter om to variabelnavn", {
