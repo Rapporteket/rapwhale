@@ -20,7 +20,7 @@
 
 skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell, godta_manglende = FALSE) {
   if (!is.null(variabelnavn)) {
-    d_navn_ok = rename(d, variabelnavn)
+    d_navn_ok = rename(d, !!variabelnavn)
   } else {
     d_navn_ok = d
   }
