@@ -161,23 +161,29 @@ kb_oqr_base_til_std = function(kb_oqr) {
       logikk = NA_character_
     )
 
-  # Fjerne duplikate variabler på samme skjema
-  # Data fra oppfølging lagres i samme tabell men kommer fra ulike skjema,
-  # så variabler for oppfølging 2 og oppfølging 3 er gitt egne rader i samme tabell.
-  # Dette må reduseres til å være en variabel. Trekker ut den første.
+  kb_mellom = reduser_duplikate_variabler(kb_mellom)
+  kb_mellom = utvid_statusvariabel(kb_mellom)
+  kb_mellom = sjekk_obligatorisk(kb_mellom)
+  kb_std = konverter_oqr_kb(kb_mellom)
+
+  kb_std
+}
+
+#' Reduser duplikate variabler
+#'
+#' Funksjon for å trekke ut unike variabler innenfor et skjema.
+#' Foreløpig er denne funksjonen laget spesifikt for les_kb_v2.R, men den kan kanskje
+#' utvides til å dekke mer generelle tilfeller.
+#' Tar inn en kodebok i på mellomformat og returnerer en kodebok på mellomformat
+#' som har unike variabler innenfor hver tabell.
+#' Grunnen til at vi gjør det er at enkelte OQR-register har flere skjema som registreres
+#' i samme tabell, for eksempel oppfølging 1år, oppfølging 2år osv.
+#' Vi vil kun ha en variabel som gjelder for alle disse skjema innen samme tabell.
+#'
+#' @param kb_mellom kodebok på mellomformat
+reduser_duplikate_variabler = function(kb_mellom) {
   kb_mellom = kb_mellom %>%
     distinct(skjema_id, variabel_id, verdi, verditekst, .keep_all = TRUE)
-  # FIXME - lage test(er) for å se at dette fungerer riktig.
-
-  kb_mellom = utvid_statusvariabel(kb_mellom)
-
-  kb_std = valider_oqr_kb(kb_mellom)
-
-  # Fikse skjemanavn
-  # Sorter rader i kb etter skjemarekkefølge
-
-  # Returnerer fullstendig kodebok på standard format
-  kb_std
 }
 
 #' Utvid statusvariabler til kategorisk
