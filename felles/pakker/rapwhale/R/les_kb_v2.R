@@ -195,7 +195,7 @@ reduser_duplikate_variabler = function(kb_mellom) {
 #'
 #' @param kb_std Kodebok på standardformat
 utvid_statusvariabel = function(kb_mellom) {
-
+  # FIXME - Se om vi kan bruke insert_rows, update_rows eller upsert_rows i nye dplyr.
   # Sjekker at det ingen tabeller har flere statusvariabler.
   stopifnot(all(kb_mellom %>%
     group_by(skjema_id) %>%
@@ -221,23 +221,10 @@ utvid_statusvariabel = function(kb_mellom) {
   kb_mellom
 }
 
-#' Valider oqr-kodebok
-#'
-#' Funksjonen gjør enkel validering av kodebok på OQR-format før den konverteres
-#' til standardformat.
-#' Sjekker at det ikke finnes *nye* variabeltyper i OQR-kodebok.
-#' Endrer variabeltype fra OQR til standardnavn. for eksempel "Tekstvariabel" til "tekst"
-#' Definerer obligatorisk variabel basert på aktiveringsspørsmål og obligatorisk kolonne
-#' for å få riktig verdi for *skjulte* spørsmål som kun vises hvis et annet spørsmål
-#' er besvart.
-#' Returnerer kodebok på standardformat.
-#'
-#' @param kb_std kodebok med riktige kolonnenavn, men som ikke er fullstendig konvertert.
-valider_oqr_kb = function(kb_mellom) {
+konverter_oqr_kb = function(kb_mellom) {
   kb_mellom = oqr_til_std_variabeltyper(kb_mellom)
-  kb_mellom = sjekk_obligatorisk(kb_mellom)
   kb_std = velg_standardkolonner(kb_mellom)
-  kb_std = fiks_skjemanavn(kb_std)
+  kb_std = tildel_unike_skjemanavn_fra_skjema_id(kb_std)
 
   # Ordne rekkefølge for variabler slik variabler fra samme tabell kommer samlet
   kb_std = kb_std %>%
@@ -264,7 +251,7 @@ oqr_til_std_variabeltyper = function(kb_std) {
   nye_vartypar = na.omit(setdiff(kb_std$variabeltype, vartype_oqr_standard$type_oqr))
   if (length(nye_vartypar) > 0) {
     stop(
-      "Kodeboka har variabeltypar me ikkje støttar / har standardnamn på: ",
+      "Kodeboka har variabeltypar me ikkje støttar / har standardnamn på:\n",
       str_c(nye_vartypar, collapse = ", ")
     )
   }
@@ -278,18 +265,19 @@ oqr_til_std_variabeltyper = function(kb_std) {
 }
 
 sjekk_obligatorisk = function(kb_std) {
+  # Splitte for å validere og for å endre
   # Kontrollere at obligatoriske, aktiveringsspoersmaal og underspoersmaal ikke er NA
   stopifnot(all(!(is.na(kb_std$obligatorisk) |
     is.na(kb_std$aktiveringsspoersmaal) |
     is.na(kb_std$underspoersmaal))))
 
-  kb_std = kb_std %>%
+  kb_std %>%
     mutate(
       obligatorisk =
-        as.character(ifelse(aktiveringsspoersmaal == "ja" &
+        if_else(aktiveringsspoersmaal == "ja" &
           obligatorisk == "ja",
-        yes = "ja", no = "nei"
-        ))
+        true = "ja", false = "nei"
+        )
     )
 }
 
@@ -307,9 +295,10 @@ velg_standardkolonner = function(kb_std) {
 
   kb_std = kb_std %>%
     select(!!std_namn)
+  kb_std
 }
 
-fiks_skjemanavn = function(kb_std) {
+tildel_unike_skjemanavn_fra_skjema_id = function(kb_std) {
   # Ordner skjemanavn til å samsvare med hvilken tabell variablene ligger i.
 
   # Lag ein omkodingstabell, frå tabell-ID til skjemanamn
@@ -322,6 +311,9 @@ fiks_skjemanavn = function(kb_std) {
     kandidatar = c(komb$namn[komb$id == kod_id[i]], kod_id[i])
     kandidatar = setdiff(kandidatar, kod_namn) # Fjern allereie brukte skjemanamn
     kod_namn[i] = kandidatar[1] # Bruk første *ledige* (vil alltid vera ein, utanom det patologiske tilfelle der skjemanamna er lik skjema-ID-ane, men ikkje med 1-1-samsvar)
+  }
+  if (any(is.na(kod_namn))) {
+    stop(error = "Det finnes overlappende skjemanavn og skjema_id, og det er ikke 1-1 forhold mellom navnene")
   }
 
   # Bruk omkodingstabellen til gje ut rett namn på alle ID-ane
