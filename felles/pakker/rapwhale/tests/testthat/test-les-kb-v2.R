@@ -620,8 +620,38 @@ test_that("funksjonen gir feilmelding hvis ikke alle nødvendige verdier er inkl
   )
 })
 
-# Tester for å legge inn ekstra variabler - kan IKKE legge inn kolonner som ikke eksisterer fra før.
-# Kan legge inn kolonner som ikke er obligatorisk men som er i inndata.
+test_that("det går an å legge inn ekstra kolonner som ikke er obligatorisk,
+          men som er i inndata", {
+  kb_legg_til_base
+
+  ekstra_variabler_ok = tibble::tribble(
+    ~skjema_id, ~skjemanavn, ~variabel_id,
+    ~variabeltype, ~variabeletikett, ~unik,
+    ~obligatorisk, ~desimaler, ~maks_rimeleg,
+    ~maks, ~verdi,
+    "basereg", "basisregistrering", "hoyde", "numerisk", "cm", "nei", "ja", 0, 200, 267, "verdi"
+  )
+
+  ekstra_variabler_ok_res = kb_legg_til_base %>%
+    add_row(
+      skjema_id = "basereg", skjemanavn = "basisregistrering",
+      variabel_id = "hoyde", variabeltype = "tekst",
+      variabeletikett = "cm", unik = "nei",
+      obligatorisk = "ja", desimaler = 0,
+      maks_rimeleg = 200, maks = 267, verdi = "verdi"
+    )
+
+  ekstra_variabler_ikke_ok = tibble::tribble(
+    ~skjema_id, ~skjemanavn, ~variabel_id,
+    ~variabeltype, ~variabeletikett, ~unik,
+    ~obligatorisk, ~desimaler, ~ikke_lov,
+    "basereg", "basisregistrering", "hoyde", "numerisk", "cm", "nei", "ja", 0, "ulovlig variabel"
+  )
+  feilmelding = "Det er kolonner i ekstra_data som ikke eksisterer i kodebok fra før:\n'ikke_lov'"
+
+  expect_identical(legg_til_variabler_kb(kb_std = kb_legg_til_base, ekstra_data = ekstra_variabler_ok), ekstra_variabler_ok_res)
+  expect_error(legg_til_variabler_kb(kb_std = kb_legg_til_base, ekstra_data = ekstra_variabler_ikke_ok), feilmelding)
+})
 
 # valider_kodebok ---------------------------------------------------------
 context("valider_kodebok")
