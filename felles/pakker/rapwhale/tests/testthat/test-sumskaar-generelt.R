@@ -121,10 +121,8 @@ test_that("skaar_datasett() gir ut feilmelding hvis skåringstabell, variabelnav
 test_that("skaar_datasett() fungerer likt uavhengig om verdiene i datasettet er tekstverdier eller numeriske verdier", {
   d_variabelverdier_tekst = d_gyldig_alle_verdier
   d_variabelverdier_tekst$gen = as.character(d_variabelverdier_tekst$gen)
-  expect_identical(
-    skaar_datasett(d_variabelverdier_tekst, skaaringstabell = skaaringstabell_eks),
-    skaar_datasett(d_gyldig_alle_verdier, skaaringstabell = skaaringstabell_eks)
-  )
+  expect_silent(skaar_datasett(d_gyldig_alle_verdier, skaaringstabell = skaaringstabell_eks))
+  expect_silent(skaar_datasett(d_variabelverdier_tekst, skaaringstabell = skaaringstabell_eks))
 })
 
 
