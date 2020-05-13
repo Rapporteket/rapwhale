@@ -328,9 +328,10 @@ sjekk_skaaringstabell = function(skaaringstabell) {
 # Legger til og/eller erstatter kolonner i datasettet som blir tatt inn
 legg_til_eller_erstatt_kolonner = function(d_orig, d_ekstrakol) {
   navn_finst = intersect(names(d_ekstrakol), names(d_orig))
+  navn_finst_tekst = paste0(navn_finst, collapse = ", ")
 
   if (length(navn_finst) > 0) {
-    warning("En eller flere kolonner i datasettet vil bli overskrevet") # legge til hvilke kolonner det gjelder
+    warning("Følgende kolonne(r) i datasettet har blitt overskrevet: ", navn_finst_tekst) # legge til hvilke kolonner det gjelder
   }
 
   d_orig[names(d_ekstrakol)] = d_ekstrakol
