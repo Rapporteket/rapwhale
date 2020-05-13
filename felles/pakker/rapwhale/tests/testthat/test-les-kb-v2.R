@@ -580,22 +580,19 @@ test_that("funksjonen legger til ekstra variabler som forventet", {
     )
 
   ekstra_variabler = tibble::tribble(
-    ~skjema_id, ~skjemanavn, ~variabel_id, ~variabeltype, ~variabeletikett, ~unik, ~obligatorisk, ~desimalar,
+    ~skjema_id, ~skjemanavn, ~variabel_id, ~variabeltype, ~variabeletikett, ~unik, ~obligatorisk, ~desimaler,
     "basereg", "basisregistrering", "d", "tekst", "normal", "nei", "ja", NA
   )
 
   expect_identical(
-    legg_til_variabler_kb(kb_legg_til_base,
-      skjema = "basereg",
-      variabler = ekstra_variabler
-    ),
+    legg_til_variabler_kb(kb_legg_til_base, ekstra_data = ekstra_variabler),
     kb_legg_til_res
   )
 })
 
 test_that("funksjonen gir feilmelding hvis variabel eksisterer fra før", {
   duplikat_variabel = tibble::tribble(
-    ~skjema_id, ~skjemanavn, ~variabel_id, ~variabeltype, ~variabeletikett, ~unik, ~obligatorisk, ~desimalar,
+    ~skjema_id, ~skjemanavn, ~variabel_id, ~variabeltype, ~variabeletikett, ~unik, ~obligatorisk, ~desimaler,
     "basereg", "basisregistrering", "a", "tekst", "normal", "nei", "ja", NA
   )
 
@@ -608,7 +605,7 @@ test_that("funksjonen gir feilmelding hvis variabel eksisterer fra før", {
 })
 test_that("funksjonen gir feilmelding hvis ikke alle nødvendige verdier er inkludert", {
   ingen_variabeltype = tibble::tribble(
-    ~skjema_id, ~skjemanavn, ~variabel_id, ~variabeletikett, ~unik, ~obligatorisk, ~desimalar,
+    ~skjema_id, ~skjemanavn, ~variabel_id, ~variabeletikett, ~unik, ~obligatorisk, ~desimaler,
     "basereg", "basisregistrering", "a", "normal", "nei", "ja", NA
   )
 
@@ -622,8 +619,6 @@ test_that("funksjonen gir feilmelding hvis ikke alle nødvendige verdier er inkl
 
 test_that("det går an å legge inn ekstra kolonner som ikke er obligatorisk,
           men som er i inndata", {
-  kb_legg_til_base
-
   ekstra_variabler_ok = tibble::tribble(
     ~skjema_id, ~skjemanavn, ~variabel_id,
     ~variabeltype, ~variabeletikett, ~unik,
@@ -635,7 +630,7 @@ test_that("det går an å legge inn ekstra kolonner som ikke er obligatorisk,
   ekstra_variabler_ok_res = kb_legg_til_base %>%
     add_row(
       skjema_id = "basereg", skjemanavn = "basisregistrering",
-      variabel_id = "hoyde", variabeltype = "tekst",
+      variabel_id = "hoyde", variabeltype = "numerisk",
       variabeletikett = "cm", unik = "nei",
       obligatorisk = "ja", desimaler = 0,
       maks_rimeleg = 200, maks = 267, verdi = "verdi"
