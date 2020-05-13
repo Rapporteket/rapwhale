@@ -725,3 +725,8 @@ test_that("legg_til_eller_erstatt_kolonner() fungerer hvis en av de to sumskår-
 
   expect_identical(d_ut_funksjon, d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit)
 })
+
+test_that("legg_til_eller_erstatt_kolonner() gir advarsel hvis en eller flere sumskår-kolonner finnes fra før", {
+  d_sumskaarer = skaar_datasett_uten_validering(d_gyldig_inn_filtrert, skaaringstabell_eks)
+  expect_warning(legg_til_eller_erstatt_kolonner(d_inn_inkl_sumskaarer, d_sumskaarer))
+})
