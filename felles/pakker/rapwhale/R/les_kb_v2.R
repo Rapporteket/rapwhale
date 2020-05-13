@@ -326,14 +326,12 @@ tildel_unike_skjemanavn_fra_skjema_id = function(kb_std) {
 #'
 #' Funksjon for å legge til variabler i kodebok som finnes i datadump, men ikke
 #' er med i kodebok.
-#' Det er ikke nødvendigvis samme variabler som mangler i alle skjema, så det må
-#' kunne spesifiseres per skjema/variabel.
+#' Kolonnene skjema_id, skjemanavn, variabel_id, variabeletikett, variabeltype, unik, obligatorisk og desimaler er obligatorisk.
+#' Det er mulig å legge inn flere verdier gitt at det er gyldige kolonner som er i kodebok fra før.
 #'
 #' @param kb_std kodebok på standardformat
-#' @param skjema Hvilket skjema det skal legges variabler til
-#' @param variabler Dataramme med variabler som skal legges til skjema. Må inneholde variabel_id, variabeletikett,        variabeltype, unik, obligatorisk og desimalar.
-#' @param posisjon Hvor i skjema variablene skal ligge. Mulige valg er .before, .after eller en vektor med indeks av samme lengde som variabler. Default er .after.
-legg_til_variabler_kb = function(kb_std, skjema, variabler, posisjon) {
+#' @param ekstra_data Dataramme med variabler som skal legges til skjema. Må inneholde skjema_id, skjemanavn, variabel_id, variabeletikett, variabeltype, unik, obligatorisk og desimaler.
+legg_til_variabler_kb = function(kb_std, ekstra_data) {
 
 }
 
