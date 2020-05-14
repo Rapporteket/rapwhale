@@ -556,36 +556,39 @@ context("legg_til_variabler_kb")
 
 kb_legg_til_base = kb_tom_std %>%
   add_row(
-    skjema_id = "basereg",
-    skjemanavn = "basisregistrering",
-    variabel_id = c("a", "b", "c"),
-    variabeltype = "tekst",
-    variabeletikett = "normal",
-    unik = "nei",
+    skjema_id = c(rep("basereg", 3), "pasreg"),
+    skjemanavn = c(rep("basisregistrering", 3), "pasientskjema"),
+    variabel_id = c("a", "b", "c", "pasientId"),
+    variabeltype = c(rep("tekst", 3), "numerisk"),
+    variabeletikett = c(rep("normal", 3), "id"),
+    unik = c(rep("nei", 3), "ja"),
     obligatorisk = "ja",
-    desimaler = NA
+    desimaler = c(rep(NA, 3), 0L)
   )
 
 test_that("funksjonen legger til ekstra variabler som forventet", {
   kb_legg_til_res = kb_legg_til_base %>%
     add_row(
-      skjema_id = "basereg",
-      skjemanavn = "basisregistrering",
-      variabel_id = "d",
-      variabeltype = "tekst",
-      variabeletikett = "normal",
-      unik = "nei",
-      obligatorisk = "ja",
-      desimaler = NA
-    )
+      skjema_id = c("basereg", "pasreg", "basereg"),
+      skjemanavn = c("basisregistrering", "pasientskjema", "basisregistrering"),
+      variabel_id = c("d", "navn", "hoyde"),
+      variabeltype = c("tekst", "tekst", "numerisk"),
+      variabeletikett = c("normal", "fornavn", "cm"),
+      unik = c("nei", "nei", "nei"),
+      obligatorisk = c("ja", "nei", "nei"),
+      desimaler = c(NA, NA, 0L)
+    ) %>%
+    arrange(forcats::fct_inorder(skjema_id))
 
-  ekstra_variabler = tibble::tribble(
+  ekstra_data = tibble::tribble(
     ~skjema_id, ~skjemanavn, ~variabel_id, ~variabeltype, ~variabeletikett, ~unik, ~obligatorisk, ~desimaler,
-    "basereg", "basisregistrering", "d", "tekst", "normal", "nei", "ja", NA
+    "basereg", "basisregistrering", "d", "tekst", "normal", "nei", "ja", NA,
+    "basereg", "basisregistrering", "hoyde", "numerisk", "cm", "nei", "nei", 0L,
+    "pasreg", "pasientskjema", "navn", "tekst", "fornavn", "nei", "nei", NA
   )
 
   expect_identical(
-    legg_til_variabler_kb(kb_legg_til_base, ekstra_data = ekstra_variabler),
+    legg_til_variabler_kb(kb_legg_til_base, ekstra_data = ekstra_data),
     kb_legg_til_res
   )
 })
@@ -619,7 +622,7 @@ test_that("funksjonen gir feilmelding hvis ikke alle nødvendige verdier er inkl
 
 test_that("det går an å legge inn ekstra kolonner som ikke er obligatorisk,
           men som er i inndata", {
-  ekstra_variabler_ok = tibble::tribble(
+  ekstra_data_ok = tibble::tribble(
     ~skjema_id, ~skjemanavn, ~variabel_id,
     ~variabeltype, ~variabeletikett, ~unik,
     ~obligatorisk, ~desimaler, ~maks_rimeleg,
@@ -627,26 +630,40 @@ test_that("det går an å legge inn ekstra kolonner som ikke er obligatorisk,
     "basereg", "basisregistrering", "hoyde", "numerisk", "cm", "nei", "ja", 0, 200, 267, "verdi"
   )
 
-  ekstra_variabler_ok_res = kb_legg_til_base %>%
+  ekstra_data_ok_res = kb_legg_til_base %>%
     add_row(
       skjema_id = "basereg", skjemanavn = "basisregistrering",
       variabel_id = "hoyde", variabeltype = "numerisk",
       variabeletikett = "cm", unik = "nei",
       obligatorisk = "ja", desimaler = 0,
       maks_rimeleg = 200, maks = 267, verdi = "verdi"
-    )
+    ) %>%
+    arrange(forcats::fct_inorder(skjema_id))
 
-  ekstra_variabler_ikke_ok = tibble::tribble(
+  ekstra_data_ikke_ok = tibble::tribble(
     ~skjema_id, ~skjemanavn, ~variabel_id,
     ~variabeltype, ~variabeletikett, ~unik,
-    ~obligatorisk, ~desimaler, ~ikke_lov,
-    "basereg", "basisregistrering", "hoyde", "numerisk", "cm", "nei", "ja", 0, "ulovlig variabel"
+    ~obligatorisk, ~desimaler, ~ikke_lov, ~basket,
+    "basereg", "basisregistrering", "hoyde", "numerisk", "cm", "nei", "ja", 0, "ulovlig variabel", "ball"
   )
-  feilmelding = "Det er kolonner i ekstra_data som ikke eksisterer i kodebok fra før:\n'ikke_lov'"
+  feilmelding = "Det er kolonner i ekstra_data som ikke eksisterer i kodebok fra før:\nikke_lov, basket"
 
-  expect_identical(legg_til_variabler_kb(kb_std = kb_legg_til_base, ekstra_data = ekstra_variabler_ok), ekstra_variabler_ok_res)
-  expect_error(legg_til_variabler_kb(kb_std = kb_legg_til_base, ekstra_data = ekstra_variabler_ikke_ok), feilmelding)
+  expect_identical(legg_til_variabler_kb(kb_std = kb_legg_til_base, ekstra_data = ekstra_data_ok), ekstra_data_ok_res)
+  expect_error(legg_til_variabler_kb(kb_std = kb_legg_til_base, ekstra_data = ekstra_data_ikke_ok), feilmelding)
 })
+
+test_that("funksjonen gir feilmelding om du prøver å legge til en variabel som allerede eksisterer", {
+  duplikat = tibble::tribble(
+    ~skjema_id, ~skjemanavn, ~variabel_id, ~variabeltype, ~variabeletikett, ~unik, ~obligatorisk, ~desimaler,
+    "basereg", "basisregistrering", "a", "tekst", "normal", "nei", "ja", NA
+  )
+
+  expect_error(
+    legg_til_variabler_kb(kb_std = kb_legg_til_base, ekstra_data = duplikat),
+    "Variabel i ekstra_data eksisterer i skjema fra før:\na"
+  )
+})
+
 
 # valider_kodebok ---------------------------------------------------------
 context("valider_kodebok")
