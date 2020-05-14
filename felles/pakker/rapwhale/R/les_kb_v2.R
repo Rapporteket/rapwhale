@@ -334,9 +334,24 @@ tildel_unike_skjemanavn_fra_skjema_id = function(kb_std) {
 legg_til_variabler_kb = function(kb_std, ekstra_data) {
 
   # Se om kolonner i ekstra data finnes i kodebok fra før
-  ekstra_kol = colnames(ekstra_data)[which(!colnames(ekstra_data) %in% colnames(kb_std))]
+  ekstra_kol = colnames(ekstra_data)[!colnames(ekstra_data) %in% colnames(kb_std)]
   if (length(ekstra_kol) > 0) {
-    stop(error = "Det er kolonner i ekstra_data som ikke eksisterer i kodebok fra før:\n", str_c(ekstra_kol, collapse = ", "))
+    stop(
+      error = "Det er kolonner i ekstra_data som ikke eksisterer i kodebok fra før:\n",
+      str_c(ekstra_kol, collapse = ", ")
+    )
+  }
+
+  # Se om variabler i ekstra_data finnes i kb fra før:
+  overlapp = dplyr::intersect(
+    kb_std %>% select(skjema_id, variabel_id),
+    ekstra_data %>% select(skjema_id, variabel_id)
+  )
+  if (nrow(overlapp) > 0) {
+    stop(
+      error = "Variabel i ekstra_data eksisterer i skjema fra før:\n",
+      str_c(overlapp$variabel_id, collapse = ", ")
+    )
   }
 
   kb_std = kb_std %>%
