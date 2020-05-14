@@ -333,6 +333,17 @@ tildel_unike_skjemanavn_fra_skjema_id = function(kb_std) {
 #' @param ekstra_data Dataramme med variabler som skal legges til skjema. Må inneholde skjema_id, skjemanavn, variabel_id, variabeletikett, variabeltype, unik, obligatorisk og desimaler.
 legg_til_variabler_kb = function(kb_std, ekstra_data) {
 
+  # Se om kolonner i ekstra data finnes i kodebok fra før
+  ekstra_kol = colnames(ekstra_data)[which(!colnames(ekstra_data) %in% colnames(kb_std))]
+  if (length(ekstra_kol) > 0) {
+    stop(error = "Det er kolonner i ekstra_data som ikke eksisterer i kodebok fra før:\n", str_c(ekstra_kol, collapse = ", "))
+  }
+
+  kb_std = kb_std %>%
+    bind_rows(ekstra_data) %>%
+    arrange(forcats::fct_inorder(skjema_id))
+
+  kb_std
 }
 
 valider_kodebok = function(kodebok) {
