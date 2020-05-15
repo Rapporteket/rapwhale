@@ -76,7 +76,7 @@ test_that("skaar_datasett() fungerer hvis man oppgir variabelnavn", {
   d_ut_funksjon = dplyr::mutate_if(d_ut_funksjon, is.numeric, round, 5)
   d_gyldig_ut = dplyr::mutate_if(d_gyldig_ut, is.numeric, round, 5)
 
-  expect_equal(d_ut_funksjon, d_gyldig_ut)
+  expect_identical(d_ut_funksjon, d_gyldig_ut)
 })
 
 test_that("skaar_datasett() fungerer hvis man bytter om to variabelnavn", {
@@ -90,7 +90,7 @@ test_that("skaar_datasett() fungerer hvis man bytter om to variabelnavn", {
   d_ut_funksjon = dplyr::mutate_if(d_ut_funksjon, is.numeric, round, 5)
   d_gyldig_ut = dplyr::mutate_if(d_gyldig_ut, is.numeric, round, 5)
 
-  expect_equal(d_ut_funksjon, d_gyldig_ut)
+  expect_identical(d_ut_funksjon, d_gyldig_ut)
 })
 
 d_gyldig_alle_verdier = tibble::tribble(
@@ -118,11 +118,18 @@ test_that("skaar_datasett() gir ut feilmelding hvis skåringstabell, variabelnav
   expect_error(skaar_datasett(d_ugyldig_variabelverdier, skaaringstabell = skaaringstabell_eks))
 })
 
-test_that("skaar_datasett() fungerer likt uavhengig om verdiene i datasettet er tekstverdier eller numeriske verdier", {
-  d_variabelverdier_tekst = d_gyldig_alle_verdier
-  d_variabelverdier_tekst$gen = as.character(d_variabelverdier_tekst$gen)
-  expect_silent(skaar_datasett(d_gyldig_alle_verdier, skaaringstabell = skaaringstabell_eks))
-  expect_silent(skaar_datasett(d_variabelverdier_tekst, skaaringstabell = skaaringstabell_eks))
+test_that("skaar_datasett() gir ut like sumskårer uavhengig om verdiene i datasettet er tekstverdier eller numeriske verdier", {
+  d_gyldig_alle_verdier_tekst = d_gyldig_alle_verdier
+  d_gyldig_alle_verdier_tekst$psyk1 = as.character(d_gyldig_alle_verdier_tekst$psyk1)
+
+  expect_identical(
+    skaar_datasett(d_gyldig_alle_verdier, skaaringstabell = skaaringstabell_eks)$total,
+    skaar_datasett(d_gyldig_alle_verdier_tekst, skaaringstabell = skaaringstabell_eks)$total
+  )
+  expect_identical(
+    skaar_datasett(d_gyldig_alle_verdier, skaaringstabell = skaaringstabell_eks)$psykisk,
+    skaar_datasett(d_gyldig_alle_verdier_tekst, skaaringstabell = skaaringstabell_eks)$psykisk
+  )
 })
 
 
@@ -658,7 +665,7 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen innhol
 
 context("legg_til_eller_erstatt_kolonner")
 
-# Eksempel på inndata som inkluderer både basisvariabler og spørreskjema-variabler
+# Eksempel på inndata som inkluderer både basisvariabler og spørreskjema-variabler # fixme: forenkle disse testene, kan bruke tomme datarammer
 d_gyldig_inn = tibble::tribble(
   ~pas_id, ~kjonn, ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2, ~dato,
   1, 1, 1, 2, 1, 10, 20, "2020-01-10",
@@ -686,7 +693,7 @@ d_inn_inkl_sumskaarer = tibble::add_column(d_inn_inkl_sumskaarer, psykisk = 5, t
 
 test_that("legg_til_eller_erstatt_kolonner() gir ut det samme datasettet som blir tatt inn inkludert
           kolonner med sumskårer helt til høyre", {
-  d_sumskaarer = skaar_datasett_uten_validering(d_gyldig_inn_filtrert, skaaringstabell_eks)
+  d_sumskaarer = skaar_datasett_uten_validering(d_gyldig_inn_filtrert, skaaringstabell_eks) # fixme: bruke denne funksjonen også for testene for skaar_datasett()
   d_ut_funksjon = legg_til_eller_erstatt_kolonner(d_gyldig_inn, d_sumskaarer)
   # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
   d_ut_funksjon = dplyr::mutate_if(d_ut_funksjon, is.numeric, round, 5)
