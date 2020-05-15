@@ -249,7 +249,7 @@ test_that("finn_ugyldige_verdier() gir ut en dataramme (med kun kolonnenavn) hvi
   expect_identical(finn_ugyldige_verdier(d_gyldig_eks1, skaaringstabell_eks), ugyldighetstabell_tom)
 })
 
-# Eksempeldata med 1 feil
+# Eksempeldata med 1 feil # fixme: bør d_gyldig_eks_1 vises her?
 d_ugyldig_1_feil = d_gyldig_eks1
 d_ugyldig_1_feil$fys1[1] = 13
 
@@ -347,6 +347,14 @@ test_that("oppsummer_ugyldige_verdier() presenterer korrekte feilverdier alfabet
   )
 })
 
+test_that("oppsummer_ugyldige_verdier() gir ut det samme uavhengig av rekkefølgen til radene i datarammen", {
+  ugyldighetstabell_2_feil_samme_variabel_annen_radrekkefolge = ugyldighetstabell_2_feil_samme_variabel
+  ugyldighetstabell_2_feil_samme_variabel_annen_radrekkefolge = ugyldighetstabell_2_feil_samme_variabel_annen_radrekkefolge[c(2, 1, 3), ]
+  expect_identical(
+    oppsummer_ugyldige_verdier(ugyldighetstabell_2_feil_samme_variabel),
+    oppsummer_ugyldige_verdier(ugyldighetstabell_2_feil_samme_variabel_annen_radrekkefolge)
+  )
+})
 
 context("skaar_datasett_uten_validering")
 
