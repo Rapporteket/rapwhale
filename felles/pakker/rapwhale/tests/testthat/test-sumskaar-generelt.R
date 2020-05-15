@@ -670,9 +670,9 @@ d_eks_inkl_sumskaar = tibble::tribble(
   1, 2, 3, "2020-05-15", 4, 5
 )
 
-test_that("legg_til_eller_erstatt_kolonner() fungerer hvis ingen, noen eller alle sumskårer finnes fra før", {
+test_that("legg_til_eller_erstatt_kolonner() fungerer hvis ingen, noen eller alle sumskår-kolonner finnes fra før", {
 
-  # Ingen sumskårer finnes fra før
+  # Ingen sumskår-kolonner finnes fra før
   expect_identical(
     legg_til_eller_erstatt_kolonner(
       d_orig = select(d_eks_inkl_sumskaar, -c(sumskaar_total, sumskaar_psykisk)),
@@ -681,7 +681,7 @@ test_that("legg_til_eller_erstatt_kolonner() fungerer hvis ingen, noen eller all
     d_eks_inkl_sumskaar
   )
 
-  # 1 av 2 sumskårer finnes fra før
+  # 1 av 2 sumskår-kolonner finnes fra før
   d_eks_sumskaar_total_til_hoyre = subset(d_eks_inkl_sumskaar, select = c(pas_id:dato, sumskaar_psykisk, sumskaar_total))
   expect_identical(
     suppressWarnings(legg_til_eller_erstatt_kolonner(
@@ -691,7 +691,7 @@ test_that("legg_til_eller_erstatt_kolonner() fungerer hvis ingen, noen eller all
     d_eks_sumskaar_total_til_hoyre
   )
 
-  # Begge sumskårene finnes fra før
+  # Begge sumskår-kolonner finnes fra før
   expect_identical(
     suppressWarnings(legg_til_eller_erstatt_kolonner(
       d_orig = d_eks_inkl_sumskaar,
