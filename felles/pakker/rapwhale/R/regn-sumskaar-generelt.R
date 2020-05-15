@@ -31,7 +31,8 @@ skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell, godta_manglen
     mutate_if(is.character, as.numeric)
   sjekk_variabelverdier(d_akt, verditabell = select(skaaringstabell, variabel, verdi), godta_manglende = godta_manglende)
   d_sumskaarer = skaar_datasett_uten_validering(d_akt, skaaringstabell)
-  legg_til_eller_erstatt_kolonner(d, d_sumskaarer)
+  d_orig_inkl_sumskaar = legg_til_eller_erstatt_kolonner(d, d_sumskaarer)
+  d_orig_inkl_sumskaar
 }
 
 #' Funksjon for å sjekke variabelnavn
