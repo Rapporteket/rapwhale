@@ -3,18 +3,25 @@
 #' @description
 #' Validerer og regner ut sumskår(er) for spørreskjema-variablene i et datasett.
 #'
-#' @param d Dataramme/tibble som inneholder spørreskjema-variaber + ev. andre variabler.
-#' @param variabelnavn Vektor med nye og gamle variabelnavn.
-#' @param skaaringstabell Skåringstabell med fire kolonner (`delskala`, `variabel`, `verdi` og `koeffisient`).
-#' @param godta_manglende Bestemmer om manglende verdier i `d` skal godtas eller ikke.
+#' @param d Dataramme/tibble som inneholder spørreskjema-variabler + ev. andre variabler.
+#'     Spørreskjema-variablene må være numeriske variabler eller tekstvariabler.
+#' @param variabelnavn Vektor med nye og gamle variabelnavn
+#'     (`c(nytt_navn_1 = "gammelt_navn_1", nytt_navn_2 = "gammelt_navn_2")`).
+#'     Nye navn skal kun oppgis for spørreskjema-variabler som ikke har identiske navn
+#'     som i skåringstabellen.
+#' @param skaaringstabell Dataramme/tibble med fire kolonner (`delskala`, `variabel`, `verdi` og `koeffisient`).
+#'     Verdi-kolonnen og koeffisient-kolonnen må bare inneholde numeriske variabler og
+#'     variabel-kolonnen må bare inneholde tekst-variabler.
+#' @param godta_manglende Bestemmer om manglende verdier for spørreskjema-variablene i `d` skal godtas eller ikke.
+#'     Standardinnstilling er FALSE.
 #'
 #' @details
 #' Funksjonen sjekker at variabler og verdier tilknyttet spørreskjemaet som skal skåres er
 #' gyldige. Det sjekkes også at `skaaringstabell` er gyldig. Funksjonen gir ut feilmelding hvis
-#' noe er ugyldig. Hvis `d` ikke inneholder noen sumskår-kolonner med identisk navn som i `skaaringstabell$delskala`,
-#' legges de til i alfabetisk rekkefølge til slutt i `d`. Hvis `d` inneholder en eller flere sumskår-kolonner med
+#' noe er ugyldig. Hvis `d` inneholder en eller flere sumskår-kolonner med
 #' identisk navn som i `skaaringstabell$delskala` blir disse kolonnene stående samme sted, men sumskårene
 #' regnes ut på nytt. Sumskår-kolonner som ikke allerede finnes legges til i alfabetisk rekkefølge til slutt i `d`.
+#' Funksjonen endrer ikke navn eller plassering på kolonner i `d`.
 #'
 #' @return `d` med sumskår(er).
 
@@ -25,12 +32,12 @@ skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell, godta_manglen
     d_navn_ok = d
   }
   sjekk_skaaringstabell(skaaringstabell)
-  sjekk_variabelnavn(d_navn_ok, variabelnavn = skaaringstabell$variabel)
+  sjekk_variabelnavn(d = d_navn_ok, variabelnavn = skaaringstabell$variabel)
   d_akt = d_navn_ok %>%
     select(unique(skaaringstabell$variabel)) %>%
     mutate_if(is.character, as.numeric)
-  sjekk_variabelverdier(d_akt, verditabell = select(skaaringstabell, variabel, verdi), godta_manglende = godta_manglende)
-  d_sumskaarer = skaar_datasett_uten_validering(d_akt, skaaringstabell)
+  sjekk_variabelverdier(d = d_akt, verditabell = select(skaaringstabell, variabel, verdi), godta_manglende = godta_manglende)
+  d_sumskaarer = skaar_datasett_uten_validering(d = d_akt, skaaringstabell)
   d_orig_inkl_sumskaar = legg_til_eller_erstatt_kolonner(d, d_sumskaarer)
   d_orig_inkl_sumskaar
 }
@@ -39,10 +46,10 @@ skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell, godta_manglen
 #'
 #' @description
 #' Skal ta inn et datasett og en vektor med gyldige variabelnavn. Funksjonen gir
-#' feilmelding hvis datasettet ikke inneholder alle variabelnavn i skåringstabellen.
+#' feilmelding hvis datasettet ikke inneholder alle variabelnavnene i skåringstabellen.
 #'
-#' @param d Dataramme/tibble som inneholder spørreskjema-variaber + ev. andre variabler.
-#' @param variabelnavn Vektor som inneholder alle unike variabelnavn i `skaaringstabell$variabel`.
+#' @param d Dataramme/tibble som inneholder spørreskjema-variabler + ev. andre variabler.
+#' @param variabelnavn Vektor som inneholder alle variabelnavn i `skaaringstabell$variabel`.
 #'
 #' @return Skal gi feilmelding hvis `d` ikke inneholder alle variabelnavn
 #'     i skåringstabellen. Sumskår blir da ikke regnet ut. Funksjonen
