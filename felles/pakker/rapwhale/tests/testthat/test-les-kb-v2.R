@@ -667,6 +667,54 @@ test_that("funksjonen gir feilmelding om du prøver å legge til en variabel som
 
 # valider_kodebok ---------------------------------------------------------
 context("valider_kodebok")
+
+# Deler valider kodebok opp i ulike grupper som vil inneholde egne funksjoner.
+# Tenker 3 eller 4 nivå.
+# - Valider kb_stuktur - Kanskje overflødig gitt at utdata fra les_kb_*funksjoner er på standardformat.
+# - Valider kb_skjema - Tester på skjemanivå
+# - Valider kb_kolonner - Tester på kolonnenivå
+# - Valider kb_variabler - Tester på variabelnivå
+
+context("valider kb_struktur")
+# KB-struktur: (Alle disse er kanskje sånne som kan forventes å være OK basert på les_kb_*-funksjonene)
+# Sjekke at standardkolonner er inkludert
+# Sjekke rekkefølge for standard kolonner
+# Sjekke at alle kolonner har riktig format
+# Håndtere standard-fyll for kolonner (hvis disse mangler, eventuelt sjekke)
+# Håndtere glisne kolonner?
+# Sjekke at struktur er riktig (skjema henger sammen, variabler henger sammen)
+
+context("valider kb_skjema")
+# skjema-nivå:
+# Sjekke at skjemanavn er unikt innenfor skjemaid
+# Tester for situasjoner hvor 'kategorier' brukes
+# Alle skjema skal ha minst én kategori
+# Kategorioversikt i første rad
+
+context("valider kb_kolonner")
+# kolonne-nivå:
+# Sjekke at alle variabeltyper er kjent og akseptert
+# Sjekke obligatoriske (også tvinge til character)
+# Sjekke manglende
+# Sjekke desimaler, - desimaler er >= 0 og heltall
+# Sjekke eining (Enten NA eller gyldig verdi)
+# Sjekke at JA/NEI kolonner kun er JA eller NEI
+# Sjekk at variabelnavn er gyldige
+
+context("valider kb_variabler")
+# Variabelnivå:
+# Sjekke at alle variabler har unike variabeltyper, variabeletikett etc på tvers av skjema.
+# variabel "alder" kan ikke være numerisk OG tekst feks
+# Sjekke unike verditekster for verdi på tvers av skjema.
+# Sjekke at boolske ikke har obligatorisk = "Nei" eller Unik = "Ja"
+# Sjekke kategoriske, -Unike verdier og ingen NA, -minimum 2 svaralternativ
+# Sjekke at variabler ikke har informasjon i kolonner som ikke er relevant for variabeltypen
+# Ikke-kategoriske variabler kan ikke ha manglende = "JA"
+# Sjekke relasjoner mellom størrelser
+# Sjekke kommentar rimelig mot min_rimelig og maks_rimelig
+
+#####
+
 # Test at det gis feilmelding hvis det finnes avvik mellom listevariabler på ulike skjema
 # test_that("Det gis feilmelding hvis en listevariabel har ulik listetekst på ulike skjema", {
 #   kb_avvik = kb_tom %>%
