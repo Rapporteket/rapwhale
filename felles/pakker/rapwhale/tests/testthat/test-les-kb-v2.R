@@ -688,17 +688,44 @@ context("valider kb_skjema")
 # skjema-nivå:
 
 # Sjekke at skjemanavn er unikt innenfor skjemaid
-test_that("funksjonen gir feilmelding hvis en skjemaid har flere skjemanavn", {})
+test_that("funksjonen gir feilmelding hvis en skjemaid har flere skjemanavn", {
+  kb_samme_navn = kb_tom_std %>%
+    add_row(
+      skjema_id = c("base", "base", "pasient", "pasient"),
+      skjemanavn = c("basisregistrering", "basisregistrering", "pasient", "pasientregistrering")
+    )
+
+  expect_error(
+    valider_kb_skjema(kb_samme_navn),
+    "skjema_id har ikke entydig skjemanavn:\nskjema_id: pasient\nskjemanavn: pasient, pasientregistrering"
+  )
+})
 
 # Tester for situasjoner hvor 'kategorier' brukes
 # Alle skjema skal ha minst én kategori
 test_that("funksjonen gir feilmelding hvis det finnes kategorier,
-          men ikke for alle skjema", {})
+          men ikke for alle skjema", {
+  kb_manglende_kategori = kb_tom_std %>%
+    add_row(
+      skjema_id = c("base", "pasient", "tredje"),
+      kategori = c("basiskategori", "pasientkategori", NA_character_)
+    )
+
+  expect_error(
+    valider_kb_skjema(kb_manglende_kategori),
+    "Alle skjema må ha tilhørende kategori hvis kategorier brukes. Følgende skjema_id mangler kategori:\ntredje"
+  )
+})
 
 # Kategorioversikt i første rad
 test_that("funksjonen gir feilmelding hvis kategorier brukes,
-          men det ikke er kategorioversikt i første rad på alle skjema", {})
-
+          men det ikke er oppgitt kategori i første rad på alle skjema", {
+  kb_manglende_kategori_rad_1 = kb_tom_std %>%
+    add_row(
+      skjema_id = c("base", "base", "base", "pasient", "pasient"),
+      kategori = c(NA_character_, "basiskategori", "basiskategori", "pasientkategori", NA_character_)
+    )
+})
 
 context("valider kb_kolonner")
 # Sjekke at alle variabeltyper er kjent og akseptert
