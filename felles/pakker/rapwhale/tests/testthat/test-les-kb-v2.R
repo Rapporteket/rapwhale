@@ -686,32 +686,63 @@ context("valider kb_struktur")
 
 context("valider kb_skjema")
 # skjema-nivå:
+
 # Sjekke at skjemanavn er unikt innenfor skjemaid
+test_that("funksjonen gir feilmelding hvis en skjemaid har flere skjemanavn", {})
+
 # Tester for situasjoner hvor 'kategorier' brukes
 # Alle skjema skal ha minst én kategori
+test_that("funksjonen gir feilmelding hvis det finnes kategorier,
+          men ikke for alle skjema", {})
+
 # Kategorioversikt i første rad
+test_that("funksjonen gir feilmelding hvis kategorier brukes,
+          men det ikke er kategorioversikt i første rad på alle skjema", {})
+
 
 context("valider kb_kolonner")
-# kolonne-nivå:
 # Sjekke at alle variabeltyper er kjent og akseptert
-# Sjekke obligatoriske (også tvinge til character)
-# Sjekke manglende
-# Sjekke desimaler, - desimaler er >= 0 og heltall
-# Sjekke eining (Enten NA eller gyldig verdi)
-# Sjekke at JA/NEI kolonner kun er JA eller NEI
-# Sjekk at variabelnavn er gyldige
+test_that("funksjonen gir feilmelding hvis det finnes variabeltyper som ikke er i standardsett", {})
+
+# Sjekke obligatorisk-kolonnen
+test_that("funksjonen gir feilmelding hvis obligatorisk kolonnen ikke er tekstformat", {})
+
+# Sjekke Ja/Nei kolonner
+test_that("funksjonen gir feilmelding hvis Ja/nei kolonner inneholder noe annet enn 'ja' og 'nei'", {})
+
+# Sjekke desimaler-kolonnen
+test_that("funksjonen gir feilmelding hvis desimalkolonnen inneholder verdier mindre enn null", {})
+test_that("funksjonen gir feilmelding hvis desimalkolonnen ikke er heltall", {})
+
+# Sjekke eining-kolonnen
+test_that("funksjonen gir feilmelding hvis eining ikke er NA eller gyldig verdi", {})
+
+# Sjekke variabelnavn
+test_that("funksjonen gir feilmelding hvis variabelnavn ikke starter med en bokstav, eller inneholder annet enn tall, bokstaver og '_'", {})
 
 context("valider kb_variabler")
+
 # Variabelnivå:
-# Sjekke at alle variabler har unike variabeltyper, variabeletikett etc på tvers av skjema.
-# variabel "alder" kan ikke være numerisk OG tekst feks
-# Sjekke unike verditekster for verdi på tvers av skjema.
-# Sjekke at boolske ikke har obligatorisk = "Nei" eller Unik = "Ja"
-# Sjekke kategoriske, -Unike verdier og ingen NA, -minimum 2 svaralternativ
+test_that("funksjonen gir feilmelding hvis en variabel har flere variabeltyper", {})
+test_that("funksjonen gir feilmelding hvis en variabel har flere variabeletiketter", {})
+test_that("funksjonen gir feilmelding hvis en faktor har ulike verditekster for samme verdi på tvers av skjema", {})
+test_that("funksjonen gir feilmelding hvis en boolsk variabel har 'Obligatorisk' = Nei, eller 'Unik' = Ja", {})
+test_that("funksjonen gir feilmelding hvis en kategorisk variabel har duplikate verdier", {})
+test_that("funksjonen gir feilmelding hvis en kategorisk variabel har NA-verdier", {})
+test_that("funksjonen gir feilmelding hvis en kategorisk variabel har færre enn to svaralternativ", {})
+
+test_that("funksjonen gir feilmelding hvis en numerisk variabel har noe annet enn NA i kolonnene: ", {})
+
 # Sjekke at variabler ikke har informasjon i kolonner som ikke er relevant for variabeltypen
-# Ikke-kategoriske variabler kan ikke ha manglende = "JA"
+test_that("funksjonen gir feilmelding hvis en tekstvariabel har noe annet enn NA i kolonnene: ", {})
+test_that("funksjonen gir feilmelding hvis en kategorisk variabel har noe annet enn NA i kolonnene: ", {})
+test_that("funksjonen gir feilmelding hvis en ikke-kategorisk variabel har manglende = Ja", {})
+
 # Sjekke relasjoner mellom størrelser
-# Sjekke kommentar rimelig mot min_rimelig og maks_rimelig
+test_that("funskjonen gir feilmelding hvis en min-verdi er større enn en maks-verdi", {})
+test_that("funskjonen gir feilmelding hvis en maks-verdi er større enn en min-verdi", {})
+
+test_that("funksjonen gir feilmelding hvis kommentar_rimelig finnes, men ingen av min_rimelig eller maks_rimelig", {})
 
 #####
 
