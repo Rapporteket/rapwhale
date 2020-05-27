@@ -732,6 +732,11 @@ test_that("funksjonen gir feilmelding hvis kategorier brukes,
         NA_character_
       )
     )
+
+  expect_error(
+    valider_kb_skjema(kb_manglende_kategori_rad_1),
+    "Hvis kategorier brukes må det være oppgitt kategori i første rad for alle skjema"
+  )
 })
 
 context("valider kb_kolonner")
