@@ -52,8 +52,8 @@ skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell, godta_manglen
 #' @param variabelnavn Vektor som inneholder alle variabelnavn i `skaaringstabell$variabel`.
 #'
 #' @return Skal gi feilmelding hvis `d` ikke inneholder alle variabelnavn
-#'     i skåringstabellen. Sumskår blir da ikke regnet ut. Funksjonen
-#'     oppgir også hvilke variabelnavn som er ugyldige.
+#'     i `skaaringstabell$variabel`. Sumskår blir da ikke regnet ut. Funksjonen
+#'     oppgir også hvilke variabelnavn som mangler i `d`.
 
 sjekk_variabelnavn = function(d, variabelnavn) {
   var_mangler = unique(variabelnavn[!(variabelnavn %in% names(d))])
