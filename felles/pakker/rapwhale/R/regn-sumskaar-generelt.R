@@ -78,6 +78,11 @@ sjekk_variabelnavn = function(d, variabelnavn) {
 #' @param godta_manglende Bestemmer om manglende verdier for variablene i `d` skal godtas eller ikke.
 #'     Standardinnstilling er FALSE.
 #'
+#' @details
+#' Ved bruk av den overordnede funksjonen [skaar_datasett()] kalles denne funksjonen på etter at alle
+#' variabler som ikke inngår i sumskår-beregningene er filtrert vekk og variabelnavnene og skåringstabellen
+#' er validert.
+#'
 #' @return Gir feilmelding hvis `d` inneholder verdier som ikke er numeriske.
 #'     Gir også feilmelding hvis `verditabell` ikke er tibble/data.frame
 #'     og/eller mangler en av / begge kolonnene `variabel` og `verdi`. Hvis det finnes
@@ -129,7 +134,7 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 #' er validert.
 #'
 #' @return Dataramme/tibble som inneholder tre kolonner (`radnr`, `variabel` og `feilverdi`).
-#'     Sortert etter radnummer og så rekkefølge i `d`. Hvis datasettet ikke inneholder noen ugyldige
+#'     Sortert etter radnummer og så rekkefølge i `d`. Hvis `d` ikke inneholder noen ugyldige
 #'     verdier gir funksjonen ut en tom dataramme/tibble som kun inneholder kolonnenavnene `radnr`, `variabel`
 #'     og `feilverdi`.
 
@@ -166,13 +171,14 @@ finn_ugyldige_verdier = function(d, verditabell) {
 #' @description
 #' Gir ut en oversiktlig fremstilling av datarammen som returneres av [finn_ugyldige_verdier()].
 #'
-#' @param d_ugyldige Dataramme/tibble som inneholder radnummer, variabelnavn og feilverdi for de ugyldige
-#'     verdiene. Sortert etter radnummer og så rekkefølge i `d`. Hvis datasettet ikke inneholder noen
-#'     ugyldige verdier skal det være en dataramme/tibble som kun inneholder kolonnenavnene `radnr`,
-#'     `variabel` og `feilverdi`.
+#' @param d_ugyldige Datarammen som returneres av [finn_ugyldige_verdier()].
+#'     Skal inneholde tre kolonner (`radnr`, `variabel` og `feilverdi`) sortert etter radnummer
+#'     og så rekkefølge i `d`. Hvis `d` ikke inneholder noen ugyldige
+#'     verdier skal argumentet være en tom dataramme/tibble som kun inneholder kolonnenavnene
+#'     `radnr`, `variabel` og `feilverdi`.
 #'
 #' @return Tekststreng som inneholder variabelnavn og tilhørende feilverdier (sortert alfabetisk
-#'     etter variabelnavn). Hvis det ikke finnes ugyldige verdier returneres tekststrengen
+#'     etter variabelnavn og så rekkefølge i `d`). Hvis det ikke finnes ugyldige verdier returneres tekststrengen
 #'     "Alle verdiene er gyldige".
 
 oppsummer_ugyldige_verdier = function(d_ugyldige) {
