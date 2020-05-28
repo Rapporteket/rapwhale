@@ -701,7 +701,7 @@ test_that("funksjonen gir feilmelding hvis en skjemaid har flere skjemanavn", {
 
   expect_error(
     valider_kb_skjema(kb_samme_navn),
-    "skjema_id har ikke entydig skjemanavn:\nskjema_id: pasient\nskjemanavn: pasient, pasientregistrering"
+    "skjema_id har ikke entydig skjemanavn\nskjema_id: pasient"
   )
 })
 
