@@ -206,12 +206,12 @@ test_that("sjekk_variabelverdier() gir feilmelding hvis ikke begge de to aktuell
   )
 })
 
-test_that("sjekk_variabelverdier() gir feilmelding hvis verdiene ikke er tekstverdier eller numeriske verdier", {
+test_that("sjekk_variabelverdier() gir feilmelding hvis verdiene ikke er numeriske", {
   d_feil_variabeltype = d_gyldig_eks1
   d_feil_variabeltype$fys1 = as.factor(d_feil_variabeltype$fys1)
   expect_error(
     sjekk_variabelverdier(d_feil_variabeltype, skaaringstabell_eks, godta_manglende = FALSE),
-    "Datasettet inneholder verdier som ikke er tekstverdier eller numeriske verdier"
+    "Datasettet inneholder verdier som ikke er numeriske"
   )
 })
 
@@ -355,6 +355,7 @@ test_that("oppsummer_ugyldige_verdier() gir ut det samme uavhengig av rekkefølg
     oppsummer_ugyldige_verdier(ugyldighetstabell_2_feil_samme_variabel_annen_radrekkefolge)
   )
 })
+
 
 context("skaar_datasett_uten_validering")
 
