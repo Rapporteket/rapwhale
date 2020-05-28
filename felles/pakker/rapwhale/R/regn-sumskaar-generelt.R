@@ -10,8 +10,7 @@
 #'     Nye navn skal kun oppgis for spørreskjema-variabler som ikke har identiske navn
 #'     som i skåringstabellen.
 #' @param skaaringstabell Dataramme/tibble med fire kolonner (`delskala`, `variabel`, `verdi` og `koeffisient`).
-#'     Verdi-kolonnen og koeffisient-kolonnen må bare inneholde numeriske variabler og
-#'     variabel-kolonnen må bare inneholde tekst-variabler.
+#'     Variabel-kolonnen må være av typen tekst og verdi-kolonnen og koeffisient-kolonnen må være numeriske.
 #' @param godta_manglende Bestemmer om manglende verdier for spørreskjema-variablene i `d` skal godtas eller ikke.
 #'     Standardinnstilling er FALSE.
 #'
@@ -51,9 +50,10 @@ skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell, godta_manglen
 #' @param d Dataramme/tibble som inneholder spørreskjema-variabler + ev. andre variabler.
 #' @param variabelnavn Vektor som inneholder alle variabelnavn i `skaaringstabell$variabel`.
 #'
-#' @return Skal gi feilmelding hvis `d` ikke inneholder alle variabelnavn
-#'     i `skaaringstabell$variabel`. Sumskår blir da ikke regnet ut. Funksjonen
-#'     oppgir også hvilke variabelnavn som mangler i `d`.
+#' @return Gir feilmelding hvis `d` ikke inneholder alle variabelnavn
+#'     i `skaaringstabell$variabel`. Sumskår blir da ikke regnet ut hvis man benytter den
+#'     overordnede funksjonen [skaar_datasett()].
+#'     Funksjonen oppgir også hvilke variabelnavn som mangler i `d`.
 
 sjekk_variabelnavn = function(d, variabelnavn) {
   var_mangler = unique(variabelnavn[!(variabelnavn %in% names(d))])
@@ -70,19 +70,24 @@ sjekk_variabelnavn = function(d, variabelnavn) {
 #' regnes som gyldige. Funksjonen gir feilmelding hvis datasettet inneholder en eller flere
 #' ugyldige verdier.
 #'
-#' @param d Dataramme/tibble som kun inneholder variabler med identiske navn som i `verditabell$variabel`.
+#' @param d Dataramme/tibble som kun inneholder kolonner med identiske navn som i `verditabell$variabel`.
+#'     Alle kolonnene må inneholde numeriske verdier.
 #' @param verditabell Dataramme/tibble med to kolonner (`variabel` og `verdi`) som sier hvilke verdier
 #'     som er gyldige for hvilke variabler.
-#' @param godta_manglende Bestemmer om manglende verdier i `d` skal godtas eller ikke.
+#'     Variabel-kolonnen må være av typen tekst og verdi-kolonnen må være numerisk.
+#' @param godta_manglende Bestemmer om manglende verdier for variablene i `d` skal godtas eller ikke.
+#'     Standardinnstilling er FALSE.
 #'
-#' @return Skal gi feilmelding hvis `verditabell` ikke er tibble/data.frame
+#' @return Gir feilmelding hvis `d` inneholder verdier som ikke er numeriske.
+#'     Gir også feilmelding hvis `verditabell` ikke er tibble/data.frame
 #'     og/eller mangler en av / begge kolonnene `variabel` og `verdi`. Hvis det finnes
-#'     ugyldige verdier i `d` skal funksjonen gi beskjed om hvilke variabler og
-#'     verdier dette gjelder. Sumskår blir da ikke regnet ut.
+#'     ugyldige verdier i `d` gir funksjonen ut oversikt over antall ugyldige verdier,
+#'     samt hvilke variabler og verdier dette gjelder. Sumskår blir da ikke regnet ut
+#'     hvis man benytter den overordnede funksjonen [skaar_datasett()].
 
 sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
-  if (!all(sapply(d, class) %in% c("character", "numeric"))) {
-    stop("Datasettet inneholder verdier som ikke er tekstverdier eller numeriske verdier")
+  if (!all(sapply(d, class) %in% c("numeric"))) {
+    stop("Datasettet inneholder verdier som ikke er numeriske")
   }
 
   if (!(is.data.frame(verditabell) &&
