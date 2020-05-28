@@ -115,21 +115,22 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 #'
 #' @description
 #' Gir ut oversikt over alle ugyldige verdier i datasettet som blir tatt inn. Hvis datasettet ikke
-#' inneholder noen ugyldige verdier gir funksjonen ut en dataramme/tibble som kun inneholder
-#' kolonnenavnene `radnr`, `variabel` og `feilverdi`.
+#' inneholder noen ugyldige verdier gir funksjonen ut en tom dataramme/tibble.
 #'
-#' @param d Dataramme/tibble som kun inneholder variabler med identiske navn som i `verditabell$variabel`.
+#' @param d Dataramme/tibble som kun inneholder kolonner med identiske navn som i `verditabell$variabel`.
+#'     Alle kolonnene må inneholde numeriske verdier.
 #' @param verditabell Dataramme/tibble med to kolonner (`variabel` og `verdi`) som sier hvilke verdier
 #'     som er gyldige for hvilke variabler.
+#'     Variabel-kolonnen må være av typen tekst og verdi-kolonnen må være numerisk.
 #'
 #' @details
 #' Ved bruk av den overordnede funksjonen [skaar_datasett()] kalles denne funksjonen på etter at alle
 #' variabler som ikke inngår i sumskår-beregningene er filtrert vekk og variabelnavnene og skåringstabellen
 #' er validert.
 #'
-#' @return Dataramme/tibble som inneholder radnummer, variabelnavn og feilverdi for de ugyldige verdiene.
+#' @return Dataramme/tibble som inneholder tre kolonner (`radnr`, `variabel` og `feilverdi`).
 #'     Sortert etter radnummer og så rekkefølge i `d`. Hvis datasettet ikke inneholder noen ugyldige
-#'     verdier gir funksjonen ut en dataramme/tibble som kun inneholder kolonnenavnene `radnr`, `variabel`
+#'     verdier gir funksjonen ut en tom dataramme/tibble som kun inneholder kolonnenavnene `radnr`, `variabel`
 #'     og `feilverdi`.
 
 finn_ugyldige_verdier = function(d, verditabell) {
