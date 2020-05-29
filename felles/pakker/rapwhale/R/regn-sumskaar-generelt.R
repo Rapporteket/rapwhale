@@ -202,19 +202,22 @@ oppsummer_ugyldige_verdier = function(d_ugyldige) {
 #' Funksjon for å regne ut sumskår
 #'
 #' @description
-#' Gir ut et datasett som inneholder en eller flere kolonner med sumskårer.
+#' Gir ut en dataramme/tibble som inneholder en eller flere kolonner med sumskårer.
 #'
-#' @param d Dataramme/tibble som kun inneholder variabler med identiske navn som i `skaaringstabell$variabel`.
-#' @param skaaringstabell Skåringstabell med fire kolonner (`delskala`, `variabel`, `verdi` og `koeffisient`).
+#' @param d Dataramme/tibble som kun inneholder kolonner med identiske navn som i `verditabell$variabel`.
+#'     Alle kolonnene må inneholde numeriske verdier.
+#' @param skaaringstabell Dataramme/tibble med fire kolonner (`delskala`, `variabel`, `verdi` og `koeffisient`).
+#'     Variabel-kolonnen må være av typen tekst og verdi-kolonnen og koeffisient-kolonnen må være numeriske.
 #'
 #' @details
 #' Ved bruk av den overordnede funksjonen [skaar_datasett()] kalles denne funksjonen på etter at alle
-#' variabler som ikke inngår i sumskår-beregningene er filtrert vekk og variabelnavnene og skåringstabellen
+#' variabler som ikke inngår i sumskår-beregningene er filtrert vekk og variabelnavnene, variabelverdiene og skåringstabellen
 #' er validert.
 #'
-#' @return Et datasett som inneholder en eller flere kolonner med sumskårer. Rekkefølgen på sumskår-kolonnene
-#'     bestemmes av rekkefølgen på sumskårene i `skaaringstabell$delskala`. Hvis en rad i `d` mangler verdier
-#'     for en eller flere variabler, og manglende verdier skal godtas, blir sumskåren for raden `NA`.
+#' @return Dataramme/tibble som inneholder en eller flere kolonner med sumskårer. Rekkefølgen på sumskår-kolonnene
+#'     bestemmes av rekkefølgen i `skaaringstabell$delskala`. Hvis en rad i `d` mangler verdier
+#'     for en eller flere variabler hvor `NA` ikke er en gyldig verdi, og manglende verdier skal godtas, blir sumskåren
+#'     for raden `NA`.
 
 skaar_datasett_uten_validering = function(d, skaaringstabell) {
   # Gjer om til éi rad per svar, med ein person-ID
