@@ -311,14 +311,15 @@ legg_til_na_i_skaaringstabell = function(skaaringstabell) {
 #' @description
 #' Gir feilmelding hvis skåringstabellen er ugyldig.
 #'
-#' @param skaaringstabell Skåringstabell med fire kolonner (`delskala`, `variabel`, `verdi` og `koeffisient`).
+#' @param skaaringstabell Dataramme/tibble med fire kolonner (`delskala`, `variabel`, `verdi` og `koeffisient`).
+#'     Variabel-kolonnen må være av typen tekst og verdi-kolonnen og koeffisient-kolonnen må være numeriske.
 #'
 #' @details
-#' Sjekker at skåringstabellen inneholder riktige kolonner og riktige variabeltyper. Sjekker også
+#' Sjekker at `skaaringstabell` inneholder riktige kolonner og riktige variabeltyper. Sjekker også
 #' at den ikke inneholder dupliserte verdier for en variabel innenfor samme delskala og at
 #' koeffisient-kolonnen ikke inneholder NA-verdier.
 #'
-#' @return Skal gi feilmelding hvis skåringstabellen er ugyldig. Sumskår blir da ikke regnet ut.
+#' @return Skal gi feilmelding hvis `skaaringstabell` er ugyldig. Sumskår blir da ikke regnet ut.
 
 sjekk_skaaringstabell = function(skaaringstabell) {
   # Sjekker om skåringstabellen inneholder riktige kolonner/kolonnenavn.
