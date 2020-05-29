@@ -50,6 +50,11 @@ skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell, godta_manglen
 #' @param d Dataramme/tibble som inneholder spørreskjema-variabler + ev. andre variabler.
 #' @param variabelnavn Vektor som inneholder alle variabelnavn i `skaaringstabell$variabel`.
 #'
+#' @details
+#' Ved bruk av den overordnede funksjonen [skaar_datasett()] kalles denne funksjonen på etter at
+#' skåringstabellen er validert og ev. nye navn for en eller flere spørreskjema-variabler har
+#' blitt oppgitt.
+#'
 #' @return Gir feilmelding hvis `d` ikke inneholder alle variabelnavn
 #'     i `skaaringstabell$variabel`. Sumskår blir da ikke regnet ut hvis man benytter den
 #'     overordnede funksjonen [skaar_datasett()].
