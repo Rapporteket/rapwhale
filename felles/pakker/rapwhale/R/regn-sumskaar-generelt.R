@@ -319,7 +319,8 @@ legg_til_na_i_skaaringstabell = function(skaaringstabell) {
 #' at den ikke inneholder dupliserte verdier for en variabel innenfor samme delskala og at
 #' koeffisient-kolonnen ikke inneholder NA-verdier.
 #'
-#' @return Skal gi feilmelding hvis `skaaringstabell` er ugyldig. Sumskår blir da ikke regnet ut.
+#' @return Skal gi feilmelding hvis `skaaringstabell` er ugyldig. Sumskår blir da ikke regnet ut
+#'     hvis man benytter den overordnede funksjonen [skaar_datasett()].
 
 sjekk_skaaringstabell = function(skaaringstabell) {
   # Sjekker om skåringstabellen inneholder riktige kolonner/kolonnenavn.
@@ -354,13 +355,25 @@ sjekk_skaaringstabell = function(skaaringstabell) {
 }
 
 
-# Legger til og/eller erstatter kolonner i datasettet som blir tatt inn
+#' Funksjon for å legge til eller erstatte kolonner i det originale datasettet
+#'
+#' @description
+#' Gir ut originalt datasett med en eller flere erstattede kolonner og/eller
+#' en eller flere ekstra kolonner lagt til helt til høyre.
+#'
+#' @param d_orig Originalt datasett (dataramme/tibble).
+#' @param d_ekstrakol Dataramme/tibble som inneholder en eller flere kolonner og samme antall
+#'     rader som `d_orig`.
+#'
+#' @return Originalt datasett med en eller flere erstattede kolonner og/eller
+#'     en eller flere ekstra kolonner lagt til helt til høyre.
+
 legg_til_eller_erstatt_kolonner = function(d_orig, d_ekstrakol) {
   navn_finst = intersect(names(d_ekstrakol), names(d_orig))
   navn_finst_tekst = paste0(navn_finst, collapse = ", ")
 
   if (length(navn_finst) > 0) {
-    warning("Følgende kolonne(r) i datasettet har blitt overskrevet: ", navn_finst_tekst) # legge til hvilke kolonner det gjelder
+    warning("Følgende kolonne(r) i datasettet har blitt overskrevet: ", navn_finst_tekst)
   }
 
   d_orig[names(d_ekstrakol)] = d_ekstrakol
