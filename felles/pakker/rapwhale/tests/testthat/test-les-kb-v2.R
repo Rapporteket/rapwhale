@@ -309,7 +309,6 @@ test_that("funksjonen gir feilmelding om inndata ikke er en tekstvektor", {
 
 # kb_oqr_base_til_std -----------------------------------------------------
 context("kb_oqr_base_til_std")
-# FIXME - Flytte til tester for egen funksjon når det er klart.
 
 test_that("funksjonen fjerner duplikate variabler i samme tabell, men godtar duplikat i ulike tabeller", {
   kb_duplikate_variabler = kb_tom %>%
@@ -325,7 +324,7 @@ test_that("funksjonen fjerner duplikate variabler i samme tabell, men godtar dup
       ),
       fysisk_feltnavn = "død",
       type = "Listevariabel",
-      listeverdier = c(1, 2, 1, 2, 1, 2),
+      listeverdier = c("1", "2", "1", "2", "1", "2"),
       obligatorisk = "nei",
       aktiveringsspoersmaal = "nei",
       underspoersmaal = "nei",
@@ -348,7 +347,7 @@ test_that("funksjonen fjerner duplikate variabler i samme tabell, men godtar dup
       variabel_id = "død",
       variabeltype = "kategorisk",
       obligatorisk = "nei",
-      verdi = c(1, 2, 1, 2),
+      verdi = c("1", "2", "1", "2"),
       verditekst = c("ja", "nei", "ja", "nei")
     )
 
@@ -371,7 +370,7 @@ test_that("funksjonen godtar flere statusvariabler når de er i ulike tabeller",
         "Listevariabel", "Listevariabel", "Listevariabel",
         "Listevariabel", "Listevariabel", "Listevariabel"
       ),
-      verdi = c(-1, 0, 1, -1, 0, 1),
+      verdi = c("-1", "0", "1", "-1", "0", "1"),
       verditekst = c(
         "Opprettet", "Lagret", "Ferdigstilt",
         "Opprettet", "Lagret", "Ferdigstilt"
