@@ -88,7 +88,7 @@ specs_dd_ok_hel = tibble::tribble(
 
 # Gir forventet format for ulike variabeltyper.
 test_that("Funksjonen leser inn datasett og gir ut forventet format", {
-  expect_equal(les_csv_base(
+  expect_equivalent(les_csv_base(
     adresse = "dd_ok_hel.csv",
     spesifikasjon = specs_dd_ok_hel,
     formatspek = formatspek_ok_hel
@@ -96,7 +96,7 @@ test_that("Funksjonen leser inn datasett og gir ut forventet format", {
 })
 
 test_that("Funksjonen håndterer NA for alle variabeltyper", {
-  expect_equal(les_csv_base(
+  expect_equivalent(les_csv_base(
     adresse = "dd_ok_hel_na.csv",
     spesifikasjon = specs_dd_ok_hel,
     formatspek = formatspek_ok_hel
@@ -199,7 +199,7 @@ test_that("Funksjonen fungerer som forventet når inndata er med annen tegnkodin
   )
 
 
-  expect_equal(les_csv_base(
+  expect_equivalent(les_csv_base(
     adresse = "dd_ok_hel_windows_1252.csv",
     spesifikasjon = specs_dd_ok_hel,
     formatspek = formatspek_alt_tegnkoding
