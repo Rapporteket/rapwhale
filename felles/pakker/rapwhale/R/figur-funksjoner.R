@@ -55,11 +55,11 @@ fjern_y_ticks = theme(axis.ticks.y = element_blank())
 # over seg, altså asymmetriske expand-verdiar. Her er ein
 # variabel som definerer dette, og som ein kan mata til
 # expand-argumentet til skaladefinisjonar.
-expand_soyle = expand_scale(mult = c(0.0, .05), add = 0)
+expand_soyle = expansion(mult = c(0.0, .05), add = 0)
 
 # I noen tilfeller er det ikke tilstrekkelig plass for tekst-label i plot.
 # Da kan vi bruke expand-argumentet under.
-expand_soyle_str_fig = expand_scale(mult = c(0.0, .09), add = 0)
+expand_soyle_str_fig = expansion(mult = c(0.0, .09), add = 0)
 
 # Fjern luft til venstre for y-akseteksten og legg
 # til ekstra luft til høgre for han, fjern luft under
