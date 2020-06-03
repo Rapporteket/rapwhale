@@ -1,3 +1,8 @@
+#' @import dplyr
+#' @importFrom tibble tibble rowid_to_column add_row
+#' @importFrom magrittr %>%
+#' @importFrom tidyr pivot_longer pivot_wider nest unnest
+NULL
 #' Overordnet sumskår-funksjon
 #'
 #' @description
@@ -223,8 +228,8 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
   # Gjer om til éi rad per svar, med ein person-ID
   # som seier kva rad svaret opphavleg kom frå
   d_svar = d %>%
-    tibble::rowid_to_column("person_id") %>%
-    tidyr::pivot_longer(-person_id, names_to = "variabel", values_to = "verdi")
+    rowid_to_column("person_id") %>%
+    pivot_longer(-person_id, names_to = "variabel", values_to = "verdi")
 
   # Legg til rader med NA-verdiar i skåringstabellen, slik at
   # datasettrader med manglande verdiar for ein variabel
@@ -234,14 +239,14 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
   # For kvart svar, legg til tilhøyrande koeffisientar
   # (kan vera fleire per svar, dersom det finst fleire delskalaar)
   d_med_koeff = d_svar %>%
-    dplyr::left_join(skaaringstabell, by = c("variabel", "verdi"))
+    left_join(skaaringstabell, by = c("variabel", "verdi"))
 
   # Rekn ut sumskår for alle delskalaane, per pasient
   d_med_skaarar = d_med_koeff %>%
     group_by(person_id, delskala) %>%
     summarise(skaar = sum(koeffisient)) %>%
     ungroup() %>%
-    tidyr::pivot_wider(names_from = "delskala", values_from = "skaar")
+    pivot_wider(names_from = "delskala", values_from = "skaar")
 
   # For sikkerheits skuld, sorter etter opphavleg radnummer,
   # og fjern så radnummeret
@@ -255,9 +260,9 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
     # på sumskårkolonnane vert lik som for datasett *med* svar
     # (jf. pivot_wider() si handtering av faktorvariablar)
     d_med_skaarar = skaaringstabell %>%
-      dplyr::distinct(delskala, .keep_all = TRUE) %>%
+      distinct(delskala, .keep_all = TRUE) %>%
       select(delskala, koeffisient) %>% # Treng «koeffisient» for å få riktig variabeltype
-      tidyr::pivot_wider(names_from = "delskala", values_from = koeffisient) %>%
+      pivot_wider(names_from = "delskala", values_from = koeffisient) %>%
       head(0)
   }
 
@@ -331,7 +336,7 @@ sjekk_skaaringstabell = function(skaaringstabell) {
   # Lager en oversikt over hvilke variabler som, innenfor delskala,
   # har dupliserte 'verdi'-er.
   d_med_ant_dupl = skaaringstabell %>%
-    dplyr::count(delskala, variabel, verdi, name = "n_rader")
+    count(delskala, variabel, verdi, name = "n_rader")
 
   # Hvis kolonnen 'ant_dupl' inneholder en eller flere verdier som er ulik 0
   # skal funksjonen stoppe og skrive ut en feilmelding.
