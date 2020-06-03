@@ -2,7 +2,7 @@
 # Kodebok-eksempel og tom kodebok for bruk i tester
 {
   # Lager en tom kodebok for å lettere kunne bygge kb for ulike tester.
-  kb_tom = tibble(
+  kb_tom = tibble::tibble(
     skjemanavn = character(),
     navn_i_rapporteket = character(),
     ledetekst = character(),
@@ -33,7 +33,7 @@
   )
 
   # Tom kodebok etter konvertering til inklusive ekstra kolonner fra OQR
-  kb_tom_mellom = tibble(
+  kb_tom_mellom = tibble::tibble(
     skjemanavn = character(),
     navn_i_rapporteket = character(),
     ledetekst = character(),
@@ -88,7 +88,7 @@
   )
 
   # Tom kodebok etter konvertering til standard navn
-  kb_tom_std = tibble(
+  kb_tom_std = tibble::tibble(
     skjema_id = character(),
     skjemanavn = character(),
     kategori = character(),
@@ -165,7 +165,7 @@ context("les_kb_oqr_v2")
 context("les_kb_oqr_base")
 
 test_that("Funksjonen leser inn kodebok og returnerer kolonner med forventet format", {
-  expect_equal(les_kb_oqr_base("oqr_kodebok.csv"), kb_eksempel)
+  expect_equivalent(les_kb_oqr_base("oqr_kodebok.csv"), kb_eksempel)
 })
 
 # konverter_tekst() -----------------------------------------------------
@@ -181,7 +181,7 @@ test_that("funksjonen håndterer konvertering til desimaltall", {
   expect_identical(
     konverter_tekst(tekst_til_tall_punktum,
       regex = "^[-]?\\d+[.]?\\d*$",
-      parse_funksjon = parse_double
+      parse_funksjon = readr::parse_double
     ),
     tekst_til_tall_resultat
   )
@@ -189,8 +189,8 @@ test_that("funksjonen håndterer konvertering til desimaltall", {
   expect_identical(
     konverter_tekst(tekst_til_tall_komma,
       regex = "^[-]?\\d+[,]?\\d*$",
-      parse_funksjon = parse_double,
-      locale = locale(decimal_mark = ",")
+      parse_funksjon = readr::parse_double,
+      locale = readr::locale(decimal_mark = ",")
     ),
     tekst_til_tall_resultat
   )
@@ -198,7 +198,7 @@ test_that("funksjonen håndterer konvertering til desimaltall", {
   expect_identical(
     konverter_tekst(tekst_til_tall_heltall,
       regex = "^[-]?\\d+[.]?\\d*?$",
-      parse_funksjon = parse_double
+      parse_funksjon = readr::parse_double
     ),
     tekst_til_tall_heltall_resultat
   )
@@ -212,7 +212,7 @@ test_that("verdier som ikke tolkes som tall blir konvertert til NA", {
   expect_identical(
     konverter_tekst(tekst_til_tall_med_na_punktum,
       regex = "^[-]?\\d+[.]?\\d*$",
-      parse_funksjon = parse_double
+      parse_funksjon = readr::parse_double
     ),
     tekst_til_tall_resultat
   )
@@ -220,8 +220,8 @@ test_that("verdier som ikke tolkes som tall blir konvertert til NA", {
   expect_identical(
     konverter_tekst(tekst_til_tall_med_na_komma,
       regex = "^[-]?\\d+[,]?\\d*$",
-      parse_funksjon = parse_double,
-      locale = locale(decimal_mark = ",")
+      parse_funksjon = readr::parse_double,
+      locale = readr::locale(decimal_mark = ",")
     ),
     tekst_til_tall_resultat
   )
@@ -234,7 +234,7 @@ test_that("funksjonen skiller mellom *ekte* tall, og tall som er del av en tekst
   expect_identical(
     konverter_tekst(tall_i_tekst,
       regex = "^[-]?\\d+[.]?\\d*$",
-      parse_funksjon = parse_double
+      parse_funksjon = readr::parse_double
     ),
     tall_i_tekst_resultat
   )
@@ -246,7 +246,7 @@ test_that("funksjonen håndterer konvertering til dato", {
 
   expect_identical(konverter_tekst(tekst_til_dato,
     regex = "^\\d{4}-\\d{2}-\\d{2}$",
-    parse_funksjon = parse_date,
+    parse_funksjon = readr::parse_date,
     format = "%Y-%m-%d"
   ), tekst_til_dato_resultat)
 })
@@ -260,7 +260,7 @@ test_that("verdier som ikke tolkes som dato blir konvertert til NA", {
   expect_identical(
     konverter_tekst(tekst_til_dato_med_na,
       regex = "^\\d{4}-\\d{2}-\\d{2}$",
-      parse_funksjon = parse_date,
+      parse_funksjon = readr::parse_date,
       format = "%Y-%m-%d"
     ),
     tekst_til_dato_res
@@ -274,7 +274,7 @@ test_that("funksjonen skiller mellom *ekte* dato, og dato som er del av en tekst
   expect_identical(
     konverter_tekst(dato_i_tekst,
       regex = "^\\d{4}-\\d{2}-\\d{2}$",
-      parse_funksjon = parse_date,
+      parse_funksjon = readr::parse_date,
       format = "%Y-%m-%d"
     ),
     dato_i_tekst_res
@@ -291,7 +291,7 @@ test_that("datovariabler med apostrof blir riktig konvertert", {
   expect_identical(
     konverter_tekst(tekst_til_dato_med_apostrof,
       regex = "^[']\\d{4}-\\d{2}-\\d{2}[']$",
-      parse_funksjon = parse_date,
+      parse_funksjon = readr::parse_date,
       format = "'%Y-%m-%d'"
     ),
     tekst_til_dato_med_apostrof_res
@@ -303,7 +303,7 @@ test_that("funksjonen gir feilmelding om inndata ikke er en tekstvektor", {
 
   expect_error(konverter_tekst(inndata_numerisk,
     regex = "^[-]?\\d+[.]\\d*$",
-    parse_funksjon = parse_double
+    parse_funksjon = readr::parse_double
   ))
 })
 
@@ -312,7 +312,7 @@ context("kb_oqr_base_til_std")
 
 test_that("funksjonen fjerner duplikate variabler i samme tabell, men godtar duplikat i ulike tabeller", {
   kb_duplikate_variabler = kb_tom %>%
-    add_row(
+    tibble::add_row(
       tabell = c(
         "pasreg", "pasreg", "pasreg",
         "pasreg", "basereg", "basereg"
@@ -335,7 +335,7 @@ test_that("funksjonen fjerner duplikate variabler i samme tabell, men godtar dup
     )
 
   kb_duplikat_resultat = kb_tom_std %>%
-    add_row(
+    tibble::add_row(
       skjema_id = c(
         "pasreg", "pasreg",
         "basereg", "basereg"
@@ -358,13 +358,13 @@ context("utvid_statusvariabel")
 
 test_that("funksjonen godtar flere statusvariabler når de er i ulike tabeller", {
   kb_flere_status_ok = kb_tom_mellom %>%
-    add_row(
+    tibble::add_row(
       skjema_id = c("basereg", "pasient"),
       variabeltype = c("Statusvariabel", "Statusvariabel")
     )
 
   kb_flere_status_ok_res = kb_tom_mellom %>%
-    add_row(
+    tibble::add_row(
       skjema_id = c(rep("basereg", 3), rep("pasient", 3)),
       variabeltype = c(
         "Listevariabel", "Listevariabel", "Listevariabel",
@@ -382,7 +382,7 @@ test_that("funksjonen godtar flere statusvariabler når de er i ulike tabeller",
 
 test_that("funksjonen gir feilmelding hvis det er flere statusvariabler i samme tabell", {
   kb_flere_status_samme = kb_tom_mellom %>%
-    add_row(
+    tibble::add_row(
       skjema_id = c("basereg", "basereg", "pasient"),
       variabeltype = c("Statusvariabel", "Statusvariabel", "Statusvariabel")
     )
@@ -396,14 +396,14 @@ context("oqr_til_std_variabeltyper")
 
 test_that("funksjonen returnerer riktige navn for variabeltype etter konvertering", {
   kb_ok_navn = kb_tom_mellom %>%
-    add_row(variabeltype = c(
+    tibble::add_row(variabeltype = c(
       "Listevariabel", "Tekstvariabel", "Stor tekstvariabel",
       "Avkrysningsboks", "Datovariabel", "Skjult variabel",
       "Tallvariabel", "Tidsvariabel", "TIMESTAMP"
     ))
 
   kb_ok_resultat = kb_tom_mellom %>%
-    add_row(variabeltype = c(
+    tibble::add_row(variabeltype = c(
       "kategorisk", "tekst", "tekst", "boolsk",
       "dato", "tekst", "numerisk", "kl", "dato_kl"
     ))
@@ -413,7 +413,7 @@ test_that("funksjonen returnerer riktige navn for variabeltype etter konverterin
 
 test_that("funksjonen gir feilmelding ved ukjente variabeltyper", {
   kb_ny_vartype = kb_tom_mellom %>%
-    add_row(variabeltype = c("Listevariabel", "Tekstvariabel", "Tellevariabel"))
+    tibble::add_row(variabeltype = c("Listevariabel", "Tekstvariabel", "Tellevariabel"))
 
   expect_error(
     oqr_til_std_variabeltyper(kb_ny_vartype),
@@ -424,37 +424,37 @@ test_that("funksjonen gir feilmelding ved ukjente variabeltyper", {
 context("sjekk_obligatorisk")
 test_that("funksjonen gir forventet verdi for obligatorisk", {
   kb_obligatorisk = kb_tom_mellom %>%
-    add_row(
+    tibble::add_row(
       obligatorisk = c("ja", "ja", "nei", "nei"),
       aktiveringsspoersmaal = c("ja", "nei", "ja", "nei"),
       underspoersmaal = "nei"
     )
 
   kb_oblig_ok_ja = kb_obligatorisk %>%
-    filter(obligatorisk == "ja", aktiveringsspoersmaal == "ja")
+    dplyr::filter(obligatorisk == "ja", aktiveringsspoersmaal == "ja")
 
   kb_oblig_ok_ja_res = kb_tom_mellom %>%
-    add_row(
+    tibble::add_row(
       obligatorisk = "ja",
       aktiveringsspoersmaal = "ja",
       underspoersmaal = "nei"
     )
 
   kb_oblig_ok_nei = kb_obligatorisk %>%
-    filter(obligatorisk == "ja", aktiveringsspoersmaal == "nei")
+    dplyr::filter(obligatorisk == "ja", aktiveringsspoersmaal == "nei")
 
   kb_oblig_ok_nei_res = kb_tom_mellom %>%
-    add_row(
+    tibble::add_row(
       obligatorisk = "nei",
       aktiveringsspoersmaal = "nei",
       underspoersmaal = "nei"
     )
 
   kb_oblig_ok_nei_2 = kb_obligatorisk %>%
-    filter(obligatorisk == "nei", aktiveringsspoersmaal == "ja")
+    dplyr::filter(obligatorisk == "nei", aktiveringsspoersmaal == "ja")
 
   kb_oblig_ok_nei_res_2 = kb_tom_mellom %>%
-    add_row(
+    tibble::add_row(
       obligatorisk = "nei",
       aktiveringsspoersmaal = "ja",
       underspoersmaal = "nei"
@@ -467,19 +467,19 @@ test_that("funksjonen gir forventet verdi for obligatorisk", {
 
 test_that("funksjonen gir feilmelding hvis obligatorisk, aktiveringsspoersmaal eller underspoersmaal er NA", {
   kb_oblig_NA = kb_tom_mellom %>%
-    add_row(
+    tibble::add_row(
       variabeltype = "Listevariabel",
       aktiveringsspoersmaal = "nei",
       underspoersmaal = "nei"
     )
   kb_aktiv_NA = kb_tom_mellom %>%
-    add_row(
+    tibble::add_row(
       variabeltype = "Listevariabel",
       obligatorisk = "ja",
       underspoersmaal = "nei"
     )
   kb_under_NA = kb_tom_mellom %>%
-    add_row(
+    tibble::add_row(
       variabeltype = "Listevariabel",
       obligatorisk = "ja",
       aktiveringsspoersmaal = "nei"
@@ -493,8 +493,8 @@ test_that("funksjonen gir feilmelding hvis obligatorisk, aktiveringsspoersmaal e
 context("velg_standardkolonner")
 test_that("funksjonen fungerer som forventet med riktig input og ekstra kolonner", {
   kb_ekstra = kb_tom_mellom %>%
-    add_column(ekstra = character(), ekstra2 = numeric(), ekstra3 = logical()) %>%
-    select(ekstra, variabel_id, desimaler, ekstra2, everything())
+    tibble::add_column(ekstra = character(), ekstra2 = numeric(), ekstra3 = logical()) %>%
+    dplyr::select(ekstra, variabel_id, desimaler, ekstra2, everything())
   kb_ekstra_resultat = kb_tom_std
 
   expect_identical(velg_standardkolonner(kb_ekstra), kb_ekstra_resultat)
@@ -502,7 +502,7 @@ test_that("funksjonen fungerer som forventet med riktig input og ekstra kolonner
 
 test_that("funksjonen gir feilmelding hvis kolonne ikke finnes i inndata", {
   kb_manglende = kb_tom_mellom %>%
-    select(-variabel_id)
+    dplyr::select(-variabel_id)
 
   expect_error(velg_standardkolonner(kb_manglende))
 })
@@ -511,7 +511,7 @@ context("tildel_unike_skjemanavn_fra_skjema_id")
 
 test_that("funksjonen gir forventede skjemanavn", {
   kb_skjemanavn = kb_tom_std %>%
-    add_row(
+    tibble::add_row(
       skjema_id = c(
         "pasreg", "basereg", "basereg",
         "pasreg", "op", "op", "ev", "basereg"
@@ -523,7 +523,7 @@ test_that("funksjonen gir forventede skjemanavn", {
     )
 
   kb_skjemanavn_res = kb_tom_std %>%
-    add_row(
+    tibble::add_row(
       skjema_id = c(
         "pasreg", "basereg", "basereg",
         "pasreg", "op", "op", "ev", "basereg"
@@ -539,7 +539,7 @@ test_that("funksjonen gir forventede skjemanavn", {
 
 test_that("funksjonen gir feilmelding hvis skjemanavn og skjema_id er overlappende uten 1-1 samsvar mellom de to", {
   kb_skjema = kb_tom_std %>%
-    add_row(
+    tibble::add_row(
       skjema_id = c("a", "b", "c"),
       skjemanavn = c("a", "c", "c")
     )
@@ -554,7 +554,7 @@ test_that("funksjonen gir feilmelding hvis skjemanavn og skjema_id er overlappen
 context("legg_til_variabler_kb")
 
 kb_legg_til_base = kb_tom_std %>%
-  add_row(
+  tibble::add_row(
     skjema_id = c(rep("basereg", 3), "pasreg"),
     skjemanavn = c(rep("basisregistrering", 3), "pasientskjema"),
     variabel_id = c("a", "b", "c", "pasientId"),
@@ -567,7 +567,7 @@ kb_legg_til_base = kb_tom_std %>%
 
 test_that("funksjonen legger til ekstra variabler som forventet", {
   kb_legg_til_res = kb_legg_til_base %>%
-    add_row(
+    tibble::add_row(
       skjema_id = c("basereg", "pasreg", "basereg"),
       skjemanavn = c("basisregistrering", "pasientskjema", "basisregistrering"),
       variabel_id = c("d", "navn", "hoyde"),
@@ -577,7 +577,7 @@ test_that("funksjonen legger til ekstra variabler som forventet", {
       obligatorisk = c("ja", "nei", "nei"),
       desimaler = c(NA, NA, 0L)
     ) %>%
-    arrange(forcats::fct_inorder(skjema_id))
+    dplyr::arrange(forcats::fct_inorder(skjema_id))
 
   ekstra_data = tibble::tribble(
     ~skjema_id, ~skjemanavn, ~variabel_id, ~variabeltype, ~variabeletikett, ~unik, ~obligatorisk, ~desimaler,
@@ -630,14 +630,14 @@ test_that("det går an å legge inn ekstra kolonner som ikke er obligatorisk,
   )
 
   ekstra_data_ok_res = kb_legg_til_base %>%
-    add_row(
+    tibble::add_row(
       skjema_id = "basereg", skjemanavn = "basisregistrering",
       variabel_id = "hoyde", variabeltype = "numerisk",
       variabeletikett = "cm", unik = "nei",
       obligatorisk = "ja", desimaler = 0,
       maks_rimeleg = 200, maks = 267, verdi = "verdi"
     ) %>%
-    arrange(forcats::fct_inorder(skjema_id))
+    dplyr::arrange(forcats::fct_inorder(skjema_id))
 
   ekstra_data_ikke_ok = tibble::tribble(
     ~skjema_id, ~skjemanavn, ~variabel_id,
@@ -693,7 +693,7 @@ context("valider kb_skjema")
 # Sjekke at skjemanavn er unikt innenfor skjemaid
 test_that("funksjonen gir feilmelding hvis en skjemaid har flere skjemanavn", {
   kb_samme_navn = kb_tom_std %>%
-    add_row(
+    tibble::add_row(
       skjema_id = c("base", "base", "pasient", "pasient"),
       skjemanavn = c("basisregistrering", "basisregistrering", "pasient", "pasientregistrering")
     )
@@ -709,7 +709,7 @@ test_that("funksjonen gir feilmelding hvis en skjemaid har flere skjemanavn", {
 test_that("funksjonen gir feilmelding hvis det finnes kategorier,
           men ikke for alle skjema", {
   kb_manglende_kategori = kb_tom_std %>%
-    add_row(
+    tibble::add_row(
       skjema_id = c("base", "pasient", "tredje"),
       kategori = c("basiskategori", "pasientkategori", NA_character_)
     )
@@ -724,7 +724,7 @@ test_that("funksjonen gir feilmelding hvis det finnes kategorier,
 test_that("funksjonen gir feilmelding hvis kategorier brukes,
           men det ikke er oppgitt kategori i første rad på alle skjema", {
   kb_manglende_kategori_rad_1 = kb_tom_std %>%
-    add_row(
+    tibble::add_row(
       skjema_id = c(
         "base", "base", "base",
         "pasient", "pasient"
