@@ -69,20 +69,21 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   # henter inn fil som har en kolonne for skjema_id-ene i ark-navnene,
   # og en kolonne for skjema_id-ene i filnavnene til datadumpene, slik at vi vet hvilken som samsvarer med hvilken.
   # Denne er laget på forhånd, manuelt, men skal alltid legges i den nyeste mappen med datadumper v/ ny innhenting av data.
-  adresse_skjema_id = paste0(mappe_dd, "/", dato, "/skjema_id_kobling.csv")
+  adresse_skjema_id = paste0(mappe_dd, dato, "\\skjema_id_kobling.csv")
   d_skjema_id = readr::read_delim(
     adresse_skjema_id,
     delim = ";",
     locale = locale(encoding = "windows-1252"),
     col_types = cols(
       skjema_id_datadump = col_character(),
-      skjema_id_kodebok = col_character()
+      skjema_id_kodebok = col_character(),
+      skjema_id_kodebok_ny = col_character()
     )
   )
 
   # legger til "riktige" skjema_id
   kb_mrs = kb_mrs %>%
-    left_join(d_skjema_id, by = c("skjema_id" = "skjema_id_kodebok")) %>%
+    left_join(d_skjema_id, by = c("skjema_id" = "skjema_id_kodebok_ny")) %>%
     mutate(skjema_id = skjema_id_datadump) %>%
     select(-skjema_id_datadump)
 
