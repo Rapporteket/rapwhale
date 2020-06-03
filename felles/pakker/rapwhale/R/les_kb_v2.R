@@ -1,5 +1,7 @@
-library(tidyverse)
-
+#' @import dplyr
+#' @importFrom tibble tribble tibble
+#' @importFrom stringr str_detect str_c str_to_lower
+NULL
 les_kb_oqr_v2 = function(adresse) {
   kb_oqr = les_kb_oqr_base(adresse)
 
@@ -65,7 +67,7 @@ les_kb_oqr_v2 = function(adresse) {
 les_kb_oqr_base = function(adresse) {
 
   # Spesifikasjon for OQR-kodebok
-  kb_spek_oqr = tibble::tribble(
+  kb_spek_oqr = tribble(
     ~varnavn_kilde, ~varnavn_resultat, ~vartype,
     "skjemanavn", "skjemanavn", "tekst",
     "navn_i_rapporteket", "navn_i_rapporteket", "tekst",
@@ -113,7 +115,6 @@ les_kb_oqr_base = function(adresse) {
 #' @param d tekst-vektor som skal konverteres
 #' @param regex regex uttrykk for hvilke format det forventes at teksten innehar.
 #' @param parse_funksjon en parse_*-funksjon fra readr pakken. Foreløpig kun støtte for parse_double og parse_date.
-#' @export
 konverter_tekst = function(d, regex, parse_funksjon, ...) {
   stopifnot(is.character(d))
   # Konverterer alle ikke-regex til NA
@@ -343,7 +344,7 @@ legg_til_variabler_kb = function(kb_std, ekstra_data) {
   }
 
   # Se om variabler i ekstra_data finnes i kb fra før:
-  overlapp = dplyr::intersect(
+  overlapp = intersect(
     kb_std %>% select(skjema_id, variabel_id),
     ekstra_data %>% select(skjema_id, variabel_id)
   )
