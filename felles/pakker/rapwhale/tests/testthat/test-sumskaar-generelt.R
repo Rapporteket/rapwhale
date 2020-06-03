@@ -55,8 +55,8 @@ test_that("skaar_datasett() fungerer hvis en av de to sumskår-kolonnene finnes 
 
   d_ut_funksjon = suppressWarnings(skaar_datasett(d_inn_inkl_1_sumskaar, skaaringstabell = skaaringstabell_eks))
   # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
-  d_ut_funksjon = dplyr::mutate_if(d_ut_funksjon, is.numeric, round, 5)
-  d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit = dplyr::mutate_if(d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit, is.numeric, round, 5)
+  d_ut_funksjon = mutate_if(d_ut_funksjon, is.numeric, round, 5)
+  d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit = mutate_if(d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit, is.numeric, round, 5)
 
   expect_identical(d_ut_funksjon, d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit)
 })
@@ -67,28 +67,28 @@ test_that("skaar_datasett() gir advarsel hvis en eller flere sumskår-kolonner f
 
 test_that("skaar_datasett() fungerer hvis man oppgir variabelnavn", {
   d_inn_feil_variabelnavn = d_gyldig_inn
-  d_inn_feil_variabelnavn = dplyr::rename(d_inn_feil_variabelnavn, fysisk1 = fys1, psykisk2 = psyk2)
+  d_inn_feil_variabelnavn = rename(d_inn_feil_variabelnavn, fysisk1 = fys1, psykisk2 = psyk2)
   nye_navn = c(fys1 = "fysisk1", psyk2 = "psykisk2")
 
   d_ut_funksjon = skaar_datasett(d_inn_feil_variabelnavn, variabelnavn = nye_navn, skaaringstabell = skaaringstabell_eks)
-  d_gyldig_ut = dplyr::rename(d_gyldig_ut, fysisk1 = fys1, psykisk2 = psyk2)
+  d_gyldig_ut = rename(d_gyldig_ut, fysisk1 = fys1, psykisk2 = psyk2)
   # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
-  d_ut_funksjon = dplyr::mutate_if(d_ut_funksjon, is.numeric, round, 5)
-  d_gyldig_ut = dplyr::mutate_if(d_gyldig_ut, is.numeric, round, 5)
+  d_ut_funksjon = mutate_if(d_ut_funksjon, is.numeric, round, 5)
+  d_gyldig_ut = mutate_if(d_gyldig_ut, is.numeric, round, 5)
 
   expect_identical(d_ut_funksjon, d_gyldig_ut)
 })
 
 test_that("skaar_datasett() fungerer hvis man bytter om to variabelnavn", {
   d_inn_omvendt_variabelnavn = d_gyldig_inn
-  d_inn_omvendt_variabelnavn = dplyr::rename(d_inn_omvendt_variabelnavn, fys1 = fys2, fys2 = fys1)
+  d_inn_omvendt_variabelnavn = rename(d_inn_omvendt_variabelnavn, fys1 = fys2, fys2 = fys1)
   navn_omvendt = c(fys2 = "fys1", fys1 = "fys2")
 
   d_ut_funksjon = skaar_datasett(d_inn_omvendt_variabelnavn, variabelnavn = navn_omvendt, skaaringstabell = skaaringstabell_eks)
-  d_gyldig_ut = dplyr::rename(d_gyldig_ut, fys1 = fys2, fys2 = fys1)
+  d_gyldig_ut = rename(d_gyldig_ut, fys1 = fys2, fys2 = fys1)
   # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
-  d_ut_funksjon = dplyr::mutate_if(d_ut_funksjon, is.numeric, round, 5)
-  d_gyldig_ut = dplyr::mutate_if(d_gyldig_ut, is.numeric, round, 5)
+  d_ut_funksjon = mutate_if(d_ut_funksjon, is.numeric, round, 5)
+  d_gyldig_ut = mutate_if(d_gyldig_ut, is.numeric, round, 5)
 
   expect_identical(d_ut_funksjon, d_gyldig_ut)
 })
@@ -109,7 +109,7 @@ test_that("skaar_datasett() gir ut feilmelding hvis skåringstabell, variabelnav
 
   # Inndata med ugyldig variabelnavn
   d_ugyldig_variabelnavn = d_gyldig_alle_verdier
-  d_ugyldig_variabelnavn = dplyr::rename(d_ugyldig_variabelnavn, fysisk1 = fys1)
+  d_ugyldig_variabelnavn = rename(d_ugyldig_variabelnavn, fysisk1 = fys1)
   expect_error(skaar_datasett(d_ugyldig_variabelnavn, skaaringstabell = skaaringstabell_eks))
 
   # Inndata med ugyldig variabelverdi
@@ -182,7 +182,7 @@ d_ugyldig_eks2$fys1[c(1, 3)] = c(NA, 26)
 d_ugyldig_eks2$psyk1[c(2, 3)] = c(43, NA)
 
 # Eksempel på skåringstabell med ugyldige kolonnenavn
-skaaringstabell_ugyldig_eks1 = dplyr::rename(skaaringstabell_eks, tullball = variabel, ballball = verdi)
+skaaringstabell_ugyldig_eks1 = rename(skaaringstabell_eks, tullball = variabel, ballball = verdi)
 
 # Eksempel på skåringstabell med ugyldig format
 skaaringstabell_ugyldig_eks2 = table(skaaringstabell_eks)
@@ -619,19 +619,19 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen ikke h
   feilmelding_kolonnenavn = "Skåringstabellen må inneholde kolonnene 'delskala', 'variabel', 'verdi' og 'koeffisient'"
 
   skaaringstabell_ugyldig_navn_delskala = skaaringstabell_eks
-  skaaringstabell_ugyldig_navn_delskala = dplyr::rename(skaaringstabell_ugyldig_navn_delskala, deelskala = delskala)
+  skaaringstabell_ugyldig_navn_delskala = rename(skaaringstabell_ugyldig_navn_delskala, deelskala = delskala)
   expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_navn_delskala), feilmelding_kolonnenavn)
 
   skaaringstabell_ugyldig_navn_variabel = skaaringstabell_eks
-  skaaringstabell_ugyldig_navn_variabel = dplyr::rename(skaaringstabell_ugyldig_navn_variabel, var = variabel)
+  skaaringstabell_ugyldig_navn_variabel = rename(skaaringstabell_ugyldig_navn_variabel, var = variabel)
   expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_navn_variabel), feilmelding_kolonnenavn)
 
   skaaringstabell_ugyldig_navn_verdi = skaaringstabell_eks
-  skaaringstabell_ugyldig_navn_verdi = dplyr::rename(skaaringstabell_ugyldig_navn_verdi, tallverdi = verdi)
+  skaaringstabell_ugyldig_navn_verdi = rename(skaaringstabell_ugyldig_navn_verdi, tallverdi = verdi)
   expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_navn_verdi), feilmelding_kolonnenavn)
 
   skaaringstabell_ugyldig_navn_koeffisient = skaaringstabell_eks
-  skaaringstabell_ugyldig_navn_koeffisient = dplyr::rename(skaaringstabell_ugyldig_navn_koeffisient, koeff = koeffisient)
+  skaaringstabell_ugyldig_navn_koeffisient = rename(skaaringstabell_ugyldig_navn_koeffisient, koeff = koeffisient)
   expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_navn_koeffisient), feilmelding_kolonnenavn)
 })
 
