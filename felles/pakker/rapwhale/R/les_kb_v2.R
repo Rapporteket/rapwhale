@@ -363,45 +363,70 @@ legg_til_variabler_kb = function(kb_std, ekstra_data) {
 }
 
 valider_kodebok = function(kodebok) {
-  # Tar inn kodebok og gjennomfører komplett testing av innhold
 
-  # For listevariabler er det viktig at variabler med flere nivåer har samme verdi-verditekst kombinasjon
-  # på tvers av skjema
+  # Planlagt struktur
+  kodebok = valider_kb_struktur(kodebok)
+  kodebok = valider_kb_skjema(kodebok)
+  kodebok = valider_kb_kolonne(kodebok)
+  kodebok = valider_kb_variabel(kodebok)
 
-  # Ta ut som egen funksjon - lage generell + tester
-  # Må kunne brukes i flere sammenhenger. eksempel å se om en pasient har
-  # flere operasjoner på samme dato, flere 1-års oppfølginger eller lignende.
+  kodebok
+}
 
-  # Finner de variablene som har flere ulike listetekster for samme listeverdi
-  d_avvik = d %>%
-    filter(type == "Listevariabel") %>%
-    #    filter(fysisk_feltnavn %in% repeterte) %>%
-    group_by(fysisk_feltnavn, listeverdier) %>%
-    summarise(antall_feil = n_distinct(listetekst, .keep_all = TRUE)) %>%
-    filter(n > 1)
+valider_kb_struktur = function(kodebok) {}
 
-  # Stanser innlesning hvis det finnes avvik
-  # Gi ut d_avvik som feilmelding
-  # format(d_avvik)
-  if (nrow(d_avvik) > 0) {
-    stop(error = paste0(
-      "Det finnes ",
-      nrow(d_avvik),
-      " avvik for listeverdi mellom skjema: \n Variabel  : ",
-      d_avvik$fysisk_feltnavn, "\n Listeverdi: ",
-      d_avvik$listeverdier
-    ))
+valider_kb_skjema = function(kodebok) {
+
+  # Sjekk at skjema_id ikke har flere skjemanavn
+  skjemaid_navn_kombinasjoner = kodebok %>%
+    distinct(skjema_id, skjemanavn) %>%
+    nrow()
+
+  n_skjemaid = kodebok %>%
+    distinct(skjema_id) %>%
+    nrow()
+
+  if (skjemaid_navn_kombinasjoner != n_skjemaid) {
+    skjema_id_duplikat = kodebok %>%
+      distinct(skjema_id, skjemanavn) %>%
+      filter(duplicated(skjema_id)) %>%
+      pull(skjema_id)
+    stop(paste0("skjema_id har ikke entydig skjemanavn\nskjema_id: ", skjema_id_duplikat))
   }
 
-  # Validering av variabler med flere nivå. Se over
-  # ikke duplikater av variabelnavn bla.
-  # Sjekke rekkefølge
-  # se i valideringsfunksjon
-  # Sjekker at variabeltyper er blant de aksepterte typene.
-  # ++ tester fra kodebok-valider
-  # Test for duplikate kategoriske verdier
+  if (any(!is.na(kodebok$kategori))) {
 
-  # Felles for OQR, MRS osv.
+    # Sjekker om alle skjema har minst én kategori
+    skjema_id = kodebok %>%
+      distinct(skjema_id) %>%
+      pull(skjema_id)
 
-  # Returner kodebok_validert
+    skjema_id_kategori = kodebok %>%
+      filter(!is.na(kategori)) %>%
+      distinct(skjema_id) %>%
+      pull(skjema_id)
+
+    mangler_kategori = setdiff(skjema_id, skjema_id_kategori)
+
+    if (length(mangler_kategori) > 0) {
+      stop(paste0("Alle skjema må ha tilhørende kategori hvis kategorier brukes. Følgende skjema_id mangler kategori:\n", mangler_kategori))
+    }
+  }
+
+  # Sjekker at alle skjema har kategori i første rad
+  mangler_kat_rad_en = kodebok %>%
+    group_by(skjema_id) %>%
+    slice(1) %>%
+    filter(is.na(kategori)) %>%
+    pull(skjema_id)
+
+  if (length(mangler_kat_rad_en) > 0) {
+    stop(paste0("Hvis kategorier brukes må det være oppgitt kategori i første rad for alle skjema"))
+  }
+}
+
+valider_kb_kolonner = function(kodebok) {
+}
+
+valider_kb_variabel = function(kodebok) {
 }
