@@ -31,8 +31,16 @@ lag_ano_funk = function(x, startnr = 1001) {
   ano_funk
 }
 
-# Hjelpefunksjonen anonymiser() vil vera tidsbesparande dersom ein berre har eitt datasett.
-# Funksjonen gjer at ein slepp å kalla anonymiseringsfunksjonen på det same datasettet to gonger.
+#' Anonymiseringsfunksjon
+#'
+#' Hjelpefunksjon for lag_ano_funk() som kan brukes hvis det bare er ett datasett som skal anonymiseres.
+#' Funksjonen gjør at du slipper å kalle anonymiseringsfunksjonen på det samme datasettet to ganger.
+#' Tar inn en vektor med ID'er og returnerer en vektor med ny numerisk id.
+#'
+#' @param x vektor med ID'er som skal anonymiseres.
+#' @param startnr løpenummer for ny ID. Starnr definerer første nummer i rekken.
+#'
+#' @export
 anonymiser = function(x, startnr = 1001) {
   lag_ano_funk(x, startnr = startnr)(x)
 }
