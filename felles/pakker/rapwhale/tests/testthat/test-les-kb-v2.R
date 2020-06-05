@@ -743,78 +743,119 @@ test_that("funksjonen gir feilmelding hvis kategorier brukes,
 })
 
 
-# # Valider_kb_kolonner ---------------------------------------------
-# context("valider kb_kolonner")
-# # Sjekke at alle variabeltyper er kjent og akseptert
-# test_that("funksjonen gir feilmelding hvis det finnes variabeltyper som ikke er i standardsett",{
-#   kb_ny_vartype = kb_tom_std %>%
-#     add_row(variabeltype = c("tekst", "numerisk", "farge"))
-#
-# expect_error(valider_kb_kolonner(kb_ny_vartype),
-#              "Det finnes variabeltyper som ikke er støttet:\nfarge")
-# })
-#
-# # Sjekke obligatorisk-kolonnen
-# test_that("funksjonen gir feilmelding hvis obligatorisk kolonnen ikke er tekstformat",{
-#   kb_obligatorisk_logisk = kb_tom_std %>%
-#     mutate(obligatorisk = as.logical(obligatorisk))
-#
-# expect_error(valider_kb_kolonner(kb_obligatorisk_logisk),
-#              "Obligatorisk må ha variabeltype 'tekst'")
-# })
-#
-# # Sjekke Ja/Nei kolonner
-# test_that("funksjonen gir feilmelding hvis Ja/nei kolonner inneholder noe annet enn 'ja' og 'nei'",{
-#   kb_ja_nei = kb_tom_std %>%
-#     add_row(obligatorisk = c("niks", "nei", "ja"),
-#             unik = c("nei", "ikke", "ja"),
-#             manglande = c("ja", "ja", "nope"))
-# feilmelding_ja_nei = "Kolonnene obligatorisk, unik og manglande kan bare inneholde 'ja' eller 'nei'"
-#
-#
-# expect_error(valider_kb_kolonner(kb_ja_nei %>% slice(1)),
-#              feilmelding_ja_nei)
-# expect_error(valider_kb_kolonner(kb_ja_nei %>% slice(2)),
-#              feilmelding_ja_nei)
-# expect_error(valider_kb_kolonner(kb_ja_nei %>% slice(3)),
-#              feilmelding_ja_nei)
-# })
-#
-# # Sjekke desimaler-kolonnen
-# test_that("funksjonen gir feilmelding hvis desimalkolonnen inneholder verdier mindre enn null",{
-#   kb_desimal_negativ = kb_tom_std %>%
-#     add_row(desimaler = c(-1L, 0L, 3L))
-#
-#   kb_desimal_ikke_heltall = kb_tom_std %>%
-#     add_row(desimaler = c(2,3,4.0))
-#
-# feilmelding_desimal = "Desimalkolonnen må være et ikke-negativt heltall"
-#
-# expect_error(valider_kb_kolonner(kb_desimal_negativ),
-#              feilmelding_desimal)
-# expect_error(valider_kb_kolonner(kb_desimal_ikke_heltall),
-#              feilmelding_desimal)
-# })
-#
-# # Sjekke eining-kolonnen
-# test_that("funksjonen gir feilmelding hvis eining ikke er NA eller gyldig verdi",{
-#   kb_feil_eining = kb_tom_std %>%
-#     add_row(eining = c(NA_character_, "liter", "kilo", ""))
-#
-# expect_error(valider_kb_kolonner(kb_feil_eining),
-#              "Eining kan ikke være en tom tekststreng")
-# })
-#
-# # Sjekke variabelnavn
-# test_that("funksjonen gir feilmelding hvis variabelnavn ikke starter med en bokstav, eller inneholder annet enn tall, bokstaver og '_'",{
-#   kb_feil_variabel_id = kb_tom_std %>%
-#     add_row(variabel_id = c("vekt", "høyde_i_cm", "2_ukers_vekt", "SUPER!"))
-#
-# expect_error(valider_kb_kolonner(kb_feil_variabel_id),
-#              "Det finnes ugyldige variabelnavn:\n2_ukers_vekt, SUPER!")
-# })
-#
-#
+# Valider_kb_kolonner ---------------------------------------------
+context("valider kb_kolonner")
+# Sjekke at alle variabeltyper er kjent og akseptert
+test_that("funksjonen gir feilmelding hvis det finnes variabeltyper som ikke er i standardsett", {
+  kb_ny_vartype = kb_tom_std %>%
+    add_row(variabeltype = c("tekst", "numerisk", "farge"))
+
+  expect_error(
+    valider_kb_kolonner(kb_ny_vartype),
+    "Det finnes variabeltyper som ikke er støttet:\nfarge"
+  )
+})
+
+# Sjekke obligatorisk-kolonnen
+test_that("funksjonen gir feilmelding hvis obligatorisk kolonnen ikke er tekstformat", {
+  kb_obligatorisk_logisk = kb_tom_std %>%
+    mutate(obligatorisk = as.logical(obligatorisk))
+
+  expect_error(valider_kb_kolonner(kb_obligatorisk_logisk))
+})
+
+# Sjekke Ja/Nei kolonner
+test_that("funksjonen gir feilmelding hvis Ja/nei kolonner inneholder noe annet enn 'ja' og 'nei'", {
+  kb_ja_nei = kb_tom_std %>%
+    add_row(
+      variabeltype = "tekst",
+      obligatorisk = c("niks", "nei", "ja"),
+      unik = c("nei", "ikke", "ja"),
+      manglande = c("ja", "ja", "nope")
+    )
+  feilmelding_ja_nei = "Kolonnene obligatorisk, unik og manglande kan bare inneholde 'ja' eller 'nei'"
+
+
+  expect_error(
+    valider_kb_kolonner(kb_ja_nei %>% slice(1)),
+    feilmelding_ja_nei
+  )
+  expect_error(
+    valider_kb_kolonner(kb_ja_nei %>% slice(2)),
+    feilmelding_ja_nei
+  )
+  expect_error(
+    valider_kb_kolonner(kb_ja_nei %>% slice(3)),
+    feilmelding_ja_nei
+  )
+})
+
+# Sjekke desimaler-kolonnen
+test_that("funksjonen gir feilmelding hvis desimalkolonnen inneholder verdier mindre enn null", {
+  kb_desimal_negativ = kb_tom_std %>%
+    add_row(
+      variabeltype = "numerisk",
+      obligatorisk = "nei",
+      unik = "nei",
+      manglande = "nei",
+      desimaler = c(-1L, 0L, 3L)
+    )
+
+  kb_desimal_ikke_heltall = kb_tom_std %>%
+    add_row(
+      variabeltype = "numerisk",
+      obligatorisk = "nei",
+      unik = "nei",
+      manglande = "nei",
+      desimaler = c(2, 3, 4.0)
+    )
+
+  feilmelding_desimal = "Desimalkolonnen må være et ikke-negativt heltall"
+
+  expect_error(
+    valider_kb_kolonner(kb_desimal_negativ),
+    feilmelding_desimal
+  )
+  expect_error(
+    valider_kb_kolonner(kb_desimal_ikke_heltall),
+    feilmelding_desimal
+  )
+})
+
+# Sjekke eining-kolonnen
+test_that("funksjonen gir feilmelding hvis eining er en tom tekststreng", {
+  kb_feil_eining = kb_tom_std %>%
+    add_row(
+      variabeltype = "tekst",
+      obligatorisk = "nei",
+      unik = "nei",
+      manglande = "nei",
+      eining = c(NA_character_, "liter", "kilo", "")
+    )
+
+  expect_error(
+    valider_kb_kolonner(kb_feil_eining),
+    "Eining kan ikke være en tom tekststreng"
+  )
+})
+
+# Sjekke variabelnavn
+test_that("funksjonen gir feilmelding hvis variabelnavn ikke starter med en bokstav, eller inneholder annet enn tall, bokstaver og '_'", {
+  kb_feil_variabel_id = kb_tom_std %>%
+    add_row(
+      variabel_id = c("vekt", "høyde_i_cm", "2_ukers_vekt", "SUPER!"),
+      variabeltype = "tekst",
+      obligatorisk = "nei",
+      unik = "nei",
+      manglande = "nei"
+    )
+
+  expect_error(
+    valider_kb_kolonner(kb_feil_variabel_id),
+    "Det finnes ugyldige variabelnavn:\n2_ukers_vekt, SUPER!"
+  )
+})
+
 # # Valider_kb_variabler --------------------------------------------
 # context("valider kb_variabler")
 #
