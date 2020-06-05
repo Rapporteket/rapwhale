@@ -426,6 +426,51 @@ valider_kb_skjema = function(kodebok) {
 }
 
 valider_kb_kolonner = function(kodebok) {
+  aksepterte_variabeltyper = c(
+    "kategorisk", "tekst", "boolsk",
+    "dato", "numerisk", "kl", "dato_kl"
+  )
+
+  # sjekk at alle variabeltyper er godkjent
+  ny_vartype = kodebok$variabeltype[
+    !kodebok$variabeltype %in% aksepterte_variabeltyper
+  ]
+  if (length(ny_vartype) > 0) {
+    stop(
+      "Det finnes variabeltyper som ikke er støttet:\n",
+      str_c(ny_vartype, ", ")
+    )
+  }
+
+  # sjekk at obligatorisk kolonne er tekstformat
+  stopifnot(is.character(kodebok$obligatorisk))
+
+  # sjekk at kolonnene obligatorisk, unik og manglende kun
+  # inneholder "ja" eller "nei".
+  if (any(!kodebok$obligatorisk %in% c("ja", "nei")) |
+    any(!kodebok$unik %in% c("ja", "nei")) |
+    any(!kodebok$manglande %in% c("ja", "nei"))) {
+    stop("Kolonnene obligatorisk, unik og manglande kan bare inneholde 'ja' eller 'nei'")
+  }
+
+  # sjekk at desimaler er positivt heltall hvis det er inkludert
+  if (any(!is.na(kodebok$desimaler)) & (!is.integer(kodebok$desimaler) | any(kodebok$desimaler > 0))) {
+    stop("Desimalkolonnen må være et ikke-negativt heltall")
+  }
+
+  # sjekk at eining ikke er en tom streng
+  if (any(kodebok$eining == "", na.rm = TRUE)) {
+    stop("Eining kan ikke være en tom tekststreng")
+  }
+
+  # sjekk at variabel_id kun er tall, bokstaver og _. må begynne med en bokstav
+  ugyldig_varnavn = kodebok$variabel_id[str_detect(kodebok$variabel_id,
+    pattern = "^[a-zæøå]([0-9a-z_æøå]*[0-9a-zæøå])?$", negate = TRUE
+  )]
+
+  if (length(ugyldig_varnavn > 0)) {
+    stop("Det finnes ugyldige variabelnavn:\n", str_c(ugyldig_varnavn, ", "))
+  }
 }
 
 valider_kb_variabel = function(kodebok) {
