@@ -378,10 +378,10 @@ sumskaar_psykisk_rad3 = 2 + (-0.5) + (-8)
 
 # Utregnede sumskårer for d_gyldig_alle_verdier
 sumskaar_tabell = tibble::tribble(
-  ~psykisk, ~total,
-  sumskaar_psykisk_rad1, sumskaar_total_rad1,
-  sumskaar_psykisk_rad2, sumskaar_total_rad2,
-  sumskaar_psykisk_rad3, sumskaar_total_rad3
+  ~total, ~psykisk,
+  sumskaar_total_rad1, sumskaar_psykisk_rad1,
+  sumskaar_total_rad2, sumskaar_psykisk_rad2,
+  sumskaar_total_rad3, sumskaar_psykisk_rad3
 )
 
 test_that("skaar_datasett_uten_validering() regner ut korrekt sumskår hvis alle verdiene finnes i skåringstabellen", {
@@ -406,10 +406,10 @@ sumskaar_na_psykisk_rad3 = sumskaar_psykisk_rad3
 
 # Utregnede sumskårer for eksempeldata som inneholder en NA-verdi uten tilknyttet koeffisient
 sumskaar_na_tabell = tibble::tribble(
-  ~psykisk, ~total,
-  sumskaar_na_psykisk_rad1, sumskaar_na_total_rad1,
-  sumskaar_na_psykisk_rad2, sumskaar_na_total_rad2,
-  sumskaar_na_psykisk_rad3, sumskaar_na_total_rad3
+  ~total, ~psykisk,
+  sumskaar_na_total_rad1, sumskaar_na_psykisk_rad1,
+  sumskaar_na_total_rad2, sumskaar_na_psykisk_rad2,
+  sumskaar_na_total_rad3, sumskaar_na_psykisk_rad3
 )
 
 test_that("skaar_datasett_uten_validering() gir ut NA som sumskår ved NA-verdier uten tilknyttet koeffisient", {
@@ -434,10 +434,10 @@ sumskaar_1_besvarelse_bare_na_psykisk_rad3 = sumskaar_psykisk_rad3
 
 # Utregnede sumskårer eksempeldata hvor 1 av besvarelsene har NA-verdier på alle spørsmål
 sumskaar_1_besvarelse_bare_na_tabell = tibble::tribble(
-  ~psykisk, ~total,
-  sumskaar_1_besvarelse_bare_na_psykisk_rad1, sumskaar_1_besvarelse_bare_na_total_rad1,
-  sumskaar_1_besvarelse_bare_na_psykisk_rad2, sumskaar_1_besvarelse_bare_na_total_rad2,
-  sumskaar_1_besvarelse_bare_na_psykisk_rad3, sumskaar_1_besvarelse_bare_na_total_rad3
+  ~total, ~psykisk,
+  sumskaar_1_besvarelse_bare_na_total_rad1, sumskaar_1_besvarelse_bare_na_psykisk_rad1,
+  sumskaar_1_besvarelse_bare_na_total_rad2, sumskaar_1_besvarelse_bare_na_psykisk_rad2,
+  sumskaar_1_besvarelse_bare_na_total_rad3, sumskaar_1_besvarelse_bare_na_psykisk_rad3
 )
 
 test_that("skaar_datasett_uten_validering() gir ut riktig sumskår hvis 1 av besvarelselse har NA-verdier på alle spørsmål", {
