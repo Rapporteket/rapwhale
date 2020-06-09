@@ -54,11 +54,8 @@ test_that("skaar_datasett() fungerer hvis en av de to sumskår-kolonnene finnes 
   d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit = tibble::add_column(d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit, psykisk = c(1, -3, -6.5), .after = "dato")
 
   d_ut_funksjon = suppressWarnings(skaar_datasett(d_inn_inkl_1_sumskaar, skaaringstabell = skaaringstabell_eks))
-  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
-  d_ut_funksjon = mutate_if(d_ut_funksjon, is.numeric, round, 5)
-  d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit = mutate_if(d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit, is.numeric, round, 5)
 
-  expect_identical(d_ut_funksjon, d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit)
+  expect_equal(d_ut_funksjon, d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit)
 })
 
 test_that("skaar_datasett() gir advarsel hvis en eller flere sumskår-kolonner finnes fra før", {
@@ -72,11 +69,8 @@ test_that("skaar_datasett() fungerer hvis man oppgir variabelnavn", {
 
   d_ut_funksjon = skaar_datasett(d_inn_feil_variabelnavn, variabelnavn = nye_navn, skaaringstabell = skaaringstabell_eks)
   d_gyldig_ut = rename(d_gyldig_ut, fysisk1 = fys1, psykisk2 = psyk2)
-  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
-  d_ut_funksjon = mutate_if(d_ut_funksjon, is.numeric, round, 5)
-  d_gyldig_ut = mutate_if(d_gyldig_ut, is.numeric, round, 5)
 
-  expect_identical(d_ut_funksjon, d_gyldig_ut)
+  expect_equal(d_ut_funksjon, d_gyldig_ut)
 })
 
 test_that("skaar_datasett() fungerer hvis man bytter om to variabelnavn", {
@@ -86,11 +80,8 @@ test_that("skaar_datasett() fungerer hvis man bytter om to variabelnavn", {
 
   d_ut_funksjon = skaar_datasett(d_inn_omvendt_variabelnavn, variabelnavn = navn_omvendt, skaaringstabell = skaaringstabell_eks)
   d_gyldig_ut = rename(d_gyldig_ut, fys1 = fys2, fys2 = fys1)
-  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
-  d_ut_funksjon = mutate_if(d_ut_funksjon, is.numeric, round, 5)
-  d_gyldig_ut = mutate_if(d_gyldig_ut, is.numeric, round, 5)
 
-  expect_identical(d_ut_funksjon, d_gyldig_ut)
+  expect_equal(d_ut_funksjon, d_gyldig_ut)
 })
 
 d_gyldig_alle_verdier = tibble::tribble(
@@ -385,10 +376,9 @@ sumskaar_tabell = tibble::tribble(
 )
 
 test_that("skaar_datasett_uten_validering() regner ut korrekt sumskår hvis alle verdiene finnes i skåringstabellen", {
-  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
   expect_equal(
-    round(skaar_datasett_uten_validering(d_gyldig_alle_verdier, skaaringstabell_eks), 5),
-    round(sumskaar_tabell, 5)
+    skaar_datasett_uten_validering(d_gyldig_alle_verdier, skaaringstabell_eks),
+    sumskaar_tabell
   )
 })
 
@@ -413,10 +403,9 @@ sumskaar_na_tabell = tibble::tribble(
 )
 
 test_that("skaar_datasett_uten_validering() gir ut NA som sumskår ved NA-verdier uten tilknyttet koeffisient", {
-  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
   expect_equal(
-    round(skaar_datasett_uten_validering(d_na, skaaringstabell_eks), 5),
-    round(sumskaar_na_tabell, 5)
+    skaar_datasett_uten_validering(d_na, skaaringstabell_eks),
+    sumskaar_na_tabell
   )
 })
 
@@ -441,10 +430,9 @@ sumskaar_1_besvarelse_bare_na_tabell = tibble::tribble(
 )
 
 test_that("skaar_datasett_uten_validering() gir ut riktig sumskår hvis 1 av besvarelselse har NA-verdier på alle spørsmål", {
-  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
   expect_equal(
-    round(skaar_datasett_uten_validering(d_1_besvarelse_bare_na, skaaringstabell_eks), 5),
-    round(sumskaar_1_besvarelse_bare_na_tabell, 5)
+    skaar_datasett_uten_validering(d_1_besvarelse_bare_na, skaaringstabell_eks),
+    sumskaar_1_besvarelse_bare_na_tabell
   )
 })
 
@@ -506,7 +494,7 @@ test_that("skaar_datasett_uten_validering() gir ut 0-rads resultat med alle skå
   )
 })
 
-test_that("skaar_datasett_uten_validering() gir ut sumskårer i samme rekkefølge som i delskala-kolonnen i skåringstabellen", {
+test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer i samme rekkefølge som i delskala-kolonnen i skåringstabellen", {
   skaaringstabell_flere_delskalaer = tibble::tribble(
     ~delskala, ~variabel, ~verdi, ~koeffisient,
     "b", "fys", 1, 0.2,
@@ -541,10 +529,9 @@ test_that("skaar_datasett_uten_validering() gir ut sumskårer i samme rekkefølg
     0.7, 0.9, 0.6, 0.47
   )
 
-  # fixme: round() er berre for å omgå feil i dplyr 0.8.5. Fjern når dplyr 1.0.0 er ute.
-  expect_identical(
-    round(skaar_datasett_uten_validering(d_enkelt_eks_inn, skaaringstabell = skaaringstabell_flere_delskalaer), 5),
-    round(d_enkelt_eks_ut, 5)
+  expect_equal(
+    skaar_datasett_uten_validering(d_enkelt_eks_inn, skaaringstabell = skaaringstabell_flere_delskalaer),
+    d_enkelt_eks_ut
   )
 })
 
