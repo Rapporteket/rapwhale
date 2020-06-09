@@ -124,6 +124,71 @@ test_that("skaar_datasett() gir ut like sumskårer uavhengig om verdiene i datas
 })
 
 
+context("sjekk_skaaringstabell")
+
+test_that("sjekk_skaaringstabell() gir ingen feilmelding hvis skåringstabellen er gyldig", {
+  expect_silent(sjekk_skaaringstabell(skaaringstabell_eks))
+})
+
+test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen ikke har riktige kolonnenavn", {
+  feilmelding_kolonnenavn = "Skåringstabellen må inneholde kolonnene 'delskala', 'variabel', 'verdi' og 'koeffisient'"
+
+  skaaringstabell_ugyldig_navn_delskala = skaaringstabell_eks
+  skaaringstabell_ugyldig_navn_delskala = rename(skaaringstabell_ugyldig_navn_delskala, deelskala = delskala)
+  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_navn_delskala), feilmelding_kolonnenavn)
+
+  skaaringstabell_ugyldig_navn_variabel = skaaringstabell_eks
+  skaaringstabell_ugyldig_navn_variabel = rename(skaaringstabell_ugyldig_navn_variabel, var = variabel)
+  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_navn_variabel), feilmelding_kolonnenavn)
+
+  skaaringstabell_ugyldig_navn_verdi = skaaringstabell_eks
+  skaaringstabell_ugyldig_navn_verdi = rename(skaaringstabell_ugyldig_navn_verdi, tallverdi = verdi)
+  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_navn_verdi), feilmelding_kolonnenavn)
+
+  skaaringstabell_ugyldig_navn_koeffisient = skaaringstabell_eks
+  skaaringstabell_ugyldig_navn_koeffisient = rename(skaaringstabell_ugyldig_navn_koeffisient, koeff = koeffisient)
+  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_navn_koeffisient), feilmelding_kolonnenavn)
+})
+
+test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen har
+          en variabel med flere rader som har samme verdi innenfor samme delskala", {
+  skaaringstabell_ugyldig_dupl_verdi = skaaringstabell_eks
+  skaaringstabell_ugyldig_dupl_verdi$verdi[1:2] = 1
+
+  expect_error(
+    sjekk_skaaringstabell(skaaringstabell_ugyldig_dupl_verdi),
+    "Skåringstabellen kan ikke inneholde dupliserte verdier for en variabel innenfor samme delskala"
+  )
+})
+
+test_that("sjekk_skaaringstabell() gir feilmelding hvis koeffisient-kolonnen
+          i skåringstabellen inneholder NA-verdier", {
+  skaaringstabell_ugyldig_na_koeffisient = skaaringstabell_eks
+  skaaringstabell_ugyldig_na_koeffisient$koeffisient[2] = NA
+
+  expect_error(
+    sjekk_skaaringstabell(skaaringstabell_ugyldig_na_koeffisient),
+    "Koeffisient-kolonnen i skåringstabellen kan ikke inneholde NA-verdier"
+  )
+})
+
+test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen innholder feil variabeltyper", {
+  feilmelding_kolonneformat = "Verdi-kolonnen og koeffisient-kolonnen må bare inneholde numeriske variabler og variabel-kolonnen må bare inneholde tekst-variabler"
+
+  skaaringstabell_ugyldig_verdi_kolonne = skaaringstabell_eks
+  skaaringstabell_ugyldig_verdi_kolonne$verdi = as.character(skaaringstabell_ugyldig_verdi_kolonne$verdi)
+  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_verdi_kolonne), feilmelding_kolonneformat)
+
+  skaaringstabell_ugyldig_koeffisient_kolonne = skaaringstabell_eks
+  skaaringstabell_ugyldig_koeffisient_kolonne$koeffisient = as.character(skaaringstabell_ugyldig_koeffisient_kolonne$koeffisient)
+  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_koeffisient_kolonne), feilmelding_kolonneformat)
+
+  skaaringstabell_ugyldig_variabel_kolonne = skaaringstabell_eks
+  skaaringstabell_ugyldig_variabel_kolonne$variabel = 1:nrow(skaaringstabell_ugyldig_variabel_kolonne)
+  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_variabel_kolonne), feilmelding_kolonneformat)
+})
+
+
 context("sjekk_variabelnavn")
 
 test_that("sjekk_variabelnavn() gjev inga feilmelding for gyldige datasett", {
@@ -592,70 +657,6 @@ test_that("legg_til_na_i_skaaringstabell() overskriv ikkje eksisterande NA-verdi
     legg_til_na_i_skaaringstabell(skaaringstabell_med_na),
     skaaringstabell_med_na
   )
-})
-
-
-
-context("sjekk_skaaringstabell")
-
-test_that("sjekk_skaaringstabell() gir ingen feilmelding hvis skåringstabellen er gyldig", {
-  expect_silent(sjekk_skaaringstabell(skaaringstabell_eks))
-})
-
-test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen ikke har riktige kolonnenavn", {
-  feilmelding_kolonnenavn = "Skåringstabellen må inneholde kolonnene 'delskala', 'variabel', 'verdi' og 'koeffisient'"
-
-  skaaringstabell_ugyldig_navn_delskala = skaaringstabell_eks
-  skaaringstabell_ugyldig_navn_delskala = rename(skaaringstabell_ugyldig_navn_delskala, deelskala = delskala)
-  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_navn_delskala), feilmelding_kolonnenavn)
-
-  skaaringstabell_ugyldig_navn_variabel = skaaringstabell_eks
-  skaaringstabell_ugyldig_navn_variabel = rename(skaaringstabell_ugyldig_navn_variabel, var = variabel)
-  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_navn_variabel), feilmelding_kolonnenavn)
-
-  skaaringstabell_ugyldig_navn_verdi = skaaringstabell_eks
-  skaaringstabell_ugyldig_navn_verdi = rename(skaaringstabell_ugyldig_navn_verdi, tallverdi = verdi)
-  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_navn_verdi), feilmelding_kolonnenavn)
-
-  skaaringstabell_ugyldig_navn_koeffisient = skaaringstabell_eks
-  skaaringstabell_ugyldig_navn_koeffisient = rename(skaaringstabell_ugyldig_navn_koeffisient, koeff = koeffisient)
-  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_navn_koeffisient), feilmelding_kolonnenavn)
-})
-
-test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen har
-          en variabel med flere rader som har samme verdi innenfor samme delskala", {
-  skaaringstabell_ugyldig_dupl_verdi = skaaringstabell_eks
-  skaaringstabell_ugyldig_dupl_verdi$verdi[1:2] = 1
-  expect_error(
-    sjekk_skaaringstabell(skaaringstabell_ugyldig_dupl_verdi),
-    "Skåringstabellen kan ikke inneholde dupliserte verdier for en variabel innenfor samme delskala"
-  )
-})
-
-test_that("sjekk_skaaringstabell() gir feilmelding hvis koeffisient-kolonnen
-          i skåringstabellen inneholder NA-verdier", {
-  skaaringstabell_ugyldig_na_koeffisient = skaaringstabell_eks
-  skaaringstabell_ugyldig_na_koeffisient$koeffisient[2] = NA
-  expect_error(
-    sjekk_skaaringstabell(skaaringstabell_ugyldig_na_koeffisient),
-    "Koeffisient-kolonnen i skåringstabellen kan ikke inneholde NA-verdier"
-  )
-})
-
-test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen innholder feil variabeltyper", {
-  feilmelding_kolonneformat = "Verdi-kolonnen og koeffisient-kolonnen må bare inneholde numeriske variabler og variabel-kolonnen må bare inneholde tekst-variabler"
-
-  skaaringstabell_ugyldig_verdi_kolonne = skaaringstabell_eks
-  skaaringstabell_ugyldig_verdi_kolonne$verdi = as.character(skaaringstabell_ugyldig_verdi_kolonne$verdi)
-  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_verdi_kolonne), feilmelding_kolonneformat)
-
-  skaaringstabell_ugyldig_koeffisient_kolonne = skaaringstabell_eks
-  skaaringstabell_ugyldig_koeffisient_kolonne$koeffisient = as.character(skaaringstabell_ugyldig_koeffisient_kolonne$koeffisient)
-  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_koeffisient_kolonne), feilmelding_kolonneformat)
-
-  skaaringstabell_ugyldig_variabel_kolonne = skaaringstabell_eks
-  skaaringstabell_ugyldig_variabel_kolonne$variabel = 1:nrow(skaaringstabell_ugyldig_variabel_kolonne)
-  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_variabel_kolonne), feilmelding_kolonneformat)
 })
 
 
