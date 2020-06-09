@@ -46,6 +46,54 @@ skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell, godta_manglen
   d_orig_inkl_sumskaar
 }
 
+#' Funksjon for å sjekke skåringstabellen
+#'
+#' @description
+#' Gir feilmelding hvis skåringstabellen er ugyldig.
+#'
+#' @param skaaringstabell Dataramme/tibble med fire kolonner (`delskala`, `variabel`, `verdi` og `koeffisient`).
+#'     Variabel-kolonnen må være av typen tekst og verdi-kolonnen og koeffisient-kolonnen må være numeriske.
+#'
+#' @details
+#' Sjekker at `skaaringstabell` inneholder riktige kolonner og riktige variabeltyper. Sjekker også
+#' at den ikke inneholder dupliserte verdier for en variabel innenfor samme delskala og at
+#' koeffisient-kolonnen ikke inneholder NA-verdier.
+#'
+#' @return Skal gi feilmelding hvis `skaaringstabell` er ugyldig. Sumskår blir da ikke regnet ut
+#'     hvis man benytter den overordnede funksjonen [skaar_datasett()].
+
+sjekk_skaaringstabell = function(skaaringstabell) {
+  # Sjekker om skåringstabellen inneholder riktige kolonner/kolonnenavn.
+  if (!all(hasName(skaaringstabell, c("delskala", "variabel", "verdi", "koeffisient")))) {
+    stop("Skåringstabellen må inneholde kolonnene 'delskala', 'variabel', 'verdi' og 'koeffisient'")
+  }
+
+  # Lager en oversikt over hvilke variabler som, innenfor delskala,
+  # har dupliserte 'verdi'-er.
+  d_med_ant_dupl = skaaringstabell %>%
+    count(delskala, variabel, verdi, name = "n_rader")
+
+  # Hvis kolonnen 'ant_dupl' inneholder en eller flere verdier som er ulik 0
+  # skal funksjonen stoppe og skrive ut en feilmelding.
+  if (any(d_med_ant_dupl$n_rader != 1)) {
+    stop("Skåringstabellen kan ikke inneholde dupliserte verdier for en variabel innenfor samme delskala")
+  }
+
+  # Hvis koeffisient-kolonnen i skåringstabellen inneholder NA-verdier
+  # skal funksjonen stoppe og skrive ut en feilmelding.
+  if (any(is.na(skaaringstabell$koeffisient))) {
+    stop("Koeffisient-kolonnen i skåringstabellen kan ikke inneholde NA-verdier")
+  }
+
+  # Hvis kolonnene i skåringstabellen ikke har riktig format skal funksjonen
+  # stoppe og skrive ut en feilmelding.
+  if (!(is.numeric(skaaringstabell$verdi) &&
+    is.numeric(skaaringstabell$koeffisient) &&
+    is.character(skaaringstabell$variabel))) {
+    stop("Verdi-kolonnen og koeffisient-kolonnen må bare inneholde numeriske variabler og variabel-kolonnen må bare inneholde tekst-variabler")
+  }
+}
+
 #' Funksjon for å sjekke variabelnavn
 #'
 #' @description
@@ -308,55 +356,6 @@ legg_til_na_i_skaaringstabell = function(skaaringstabell) {
     nest(data = c(verdi, koeffisient)) %>%
     mutate(data = map(data, legg_til_na_rad)) %>%
     unnest(cols = c(data))
-}
-
-
-#' Funksjon for å sjekke skåringstabellen
-#'
-#' @description
-#' Gir feilmelding hvis skåringstabellen er ugyldig.
-#'
-#' @param skaaringstabell Dataramme/tibble med fire kolonner (`delskala`, `variabel`, `verdi` og `koeffisient`).
-#'     Variabel-kolonnen må være av typen tekst og verdi-kolonnen og koeffisient-kolonnen må være numeriske.
-#'
-#' @details
-#' Sjekker at `skaaringstabell` inneholder riktige kolonner og riktige variabeltyper. Sjekker også
-#' at den ikke inneholder dupliserte verdier for en variabel innenfor samme delskala og at
-#' koeffisient-kolonnen ikke inneholder NA-verdier.
-#'
-#' @return Skal gi feilmelding hvis `skaaringstabell` er ugyldig. Sumskår blir da ikke regnet ut
-#'     hvis man benytter den overordnede funksjonen [skaar_datasett()].
-
-sjekk_skaaringstabell = function(skaaringstabell) {
-  # Sjekker om skåringstabellen inneholder riktige kolonner/kolonnenavn.
-  if (!all(hasName(skaaringstabell, c("delskala", "variabel", "verdi", "koeffisient")))) {
-    stop("Skåringstabellen må inneholde kolonnene 'delskala', 'variabel', 'verdi' og 'koeffisient'")
-  }
-
-  # Lager en oversikt over hvilke variabler som, innenfor delskala,
-  # har dupliserte 'verdi'-er.
-  d_med_ant_dupl = skaaringstabell %>%
-    count(delskala, variabel, verdi, name = "n_rader")
-
-  # Hvis kolonnen 'ant_dupl' inneholder en eller flere verdier som er ulik 0
-  # skal funksjonen stoppe og skrive ut en feilmelding.
-  if (any(d_med_ant_dupl$n_rader != 1)) {
-    stop("Skåringstabellen kan ikke inneholde dupliserte verdier for en variabel innenfor samme delskala")
-  }
-
-  # Hvis koeffisient-kolonnen i skåringstabellen inneholder NA-verdier
-  # skal funksjonen stoppe og skrive ut en feilmelding.
-  if (any(is.na(skaaringstabell$koeffisient))) {
-    stop("Koeffisient-kolonnen i skåringstabellen kan ikke inneholde NA-verdier")
-  }
-
-  # Hvis kolonnene i skåringstabellen ikke har riktig format skal funksjonen
-  # stoppe og skrive ut en feilmelding.
-  if (!(is.numeric(skaaringstabell$verdi) &&
-    is.numeric(skaaringstabell$koeffisient) &&
-    is.character(skaaringstabell$variabel))) {
-    stop("Verdi-kolonnen og koeffisient-kolonnen må bare inneholde numeriske variabler og variabel-kolonnen må bare inneholde tekst-variabler")
-  }
 }
 
 
