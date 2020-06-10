@@ -90,7 +90,7 @@ sjekk_skaaringstabell = function(skaaringstabell) {
   if (!(is.numeric(skaaringstabell$verdi) &&
     is.numeric(skaaringstabell$koeffisient) &&
     is.character(skaaringstabell$variabel))) {
-    stop("Verdi-kolonnen og koeffisient-kolonnen må bare inneholde numeriske variabler og variabel-kolonnen må bare inneholde tekst-variabler")
+    stop("Verdi-kolonnen og koeffisient-kolonnen må være numeriske og variabel-kolonnen må være av typen tekst")
   }
 }
 

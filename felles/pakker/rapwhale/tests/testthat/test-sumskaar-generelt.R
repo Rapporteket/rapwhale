@@ -168,7 +168,7 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis koeffisient-kolonnen
 })
 
 test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen innholder feil variabeltyper", {
-  feilmelding_kolonneformat = "Verdi-kolonnen og koeffisient-kolonnen må bare inneholde numeriske variabler og variabel-kolonnen må bare inneholde tekst-variabler"
+  feilmelding_kolonneformat = "Verdi-kolonnen og koeffisient-kolonnen må være numeriske og variabel-kolonnen må være av typen tekst"
 
   skaaringstabell_ugyldig_verdi_kolonne = skaaringstabell_eks
   skaaringstabell_ugyldig_verdi_kolonne$verdi = as.character(skaaringstabell_ugyldig_verdi_kolonne$verdi)
