@@ -603,6 +603,7 @@ test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer i samme re
 context("legg_til_na_i_skaaringstabell")
 
 test_that("legg_til_na_i_skaaringstabell() fungerer", {
+
   # Original skåringstabell (merk at éi rad òg har NA-verdiar)
   skaaringstabell_orig = tibble::tribble(
     ~delskala, ~variabel, ~verdi, ~koeffisient,
@@ -644,6 +645,7 @@ test_that("legg_til_na_i_skaaringstabell() fungerer", {
 })
 
 test_that("legg_til_na_i_skaaringstabell() overskriv ikkje eksisterande NA-verdiar", {
+
   # Skåringstabell med NA-verdi som skal gje ut koeffisient som *ikkje* er NA
   skaaringstabell_med_na = tibble::tribble(
     ~delskala, ~variabel, ~verdi, ~koeffisient,
