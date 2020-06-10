@@ -210,8 +210,8 @@ test_that("sjekk_variabelnavn() gjev feilmelding viss variablar manglar", {
 context("sjekk_variabelverdier")
 
 # Ved å benytte den overordnede funksjonen skaar_datasett() vil alle variabler i datasettet
-# som ikke er spørreskjema-variabler bli filtrert vekk før sjekk_variabelverdier() kalles på.
-# Derfor inneholder eksempel-data for disse testene kun spørreskjema-variabler.
+# som ikke finnes i skåringstabellen bli filtrert vekk før sjekk_variabelverdier() kalles på.
+# Derfor inneholder eksempeldata for disse testene kun variabler som finnes i skåringstabellen.
 
 # Eksempeldata med bare gyldige tallverdier
 d_gyldig_eks1 = tibble::tribble(
@@ -284,7 +284,7 @@ test_that("sjekk_variabelverdier() gjev feilmelding for datasett med ugyldige va
 
 context("finn_ugyldige_verdier")
 
-# For disse testene benyttes det samme eksempel-datasettet ('d_gyldig_eks1') som
+# For disse testene benyttes det samme eksempeldata ('d_gyldig_eks1') som
 # er definert i starten av testene for sjekk_variabelverdier().
 
 d_gyldig_eks1 = tibble::tribble(
@@ -548,7 +548,6 @@ test_that("skaar_datasett_uten_validering() regner ut korrekt sumskår ved bare 
     sumskaar_1_besvarelse_tabell
   )
 })
-
 
 test_that("skaar_datasett_uten_validering() gir ut 0-rads resultat med alle skårkolonnene når inndata har 0 rader", {
   d_0_besvarelser = d_gyldig_alle_verdier[0, ]
