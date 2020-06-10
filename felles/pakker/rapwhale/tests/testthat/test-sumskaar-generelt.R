@@ -209,6 +209,10 @@ test_that("sjekk_variabelnavn() gjev feilmelding viss variablar manglar", {
 
 context("sjekk_variabelverdier")
 
+# Ved å benytte den overordnede funksjonen skaar_datasett() vil alle variabler i datasettet
+# som ikke er spørreskjema-variabler bli filtrert vekk før sjekk_variabelverdier() kalles på.
+# Derfor inneholder eksempel-data for disse testene kun spørreskjema-variabler.
+
 # Eksempeldata med bare gyldige tallverdier
 d_gyldig_eks1 = tibble::tribble(
   ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2,
@@ -225,12 +229,6 @@ d_gyldig_eks2$psyk1[3] = NA
 d_ugyldig_eks1 = d_gyldig_eks1
 d_ugyldig_eks1$gen[3] = NA
 d_ugyldig_eks1$fys1[1] = NA
-
-# Eksempel på inndata med både ugyldige tallverdier (26 og 43) og ugyldige NA-verdier (for "gen" og "fys1")
-d_ugyldig_eks2 = d_gyldig_eks1
-d_ugyldig_eks2$gen[3] = NA
-d_ugyldig_eks2$fys1[c(1, 3)] = c(NA, 26)
-d_ugyldig_eks2$psyk1[c(2, 3)] = c(43, NA)
 
 # Eksempel på skåringstabell med ugyldige kolonnenavn
 skaaringstabell_ugyldig_eks1 = rename(skaaringstabell_eks, tullball = variabel, ballball = verdi)
@@ -281,9 +279,6 @@ test_that("sjekk_variabelverdier() gjev feilmelding for datasett med ugyldige NA
 
 test_that("sjekk_variabelverdier() gjev feilmelding for datasett med ugyldige variabelverdiar", {
   expect_error(sjekk_variabelverdier(tibble(gen = c(200, 200)), skaaringstabell_eks, godta_manglende = FALSE))
-  expect_error(sjekk_variabelverdier(tibble(gen = c(200, 200, "blablabla")), skaaringstabell_eks, godta_manglende = FALSE)) # Fjerne
-  expect_error(sjekk_variabelverdier(tibble(gen = c(200, 200, "blablabla", NA)), skaaringstabell_eks, godta_manglende = FALSE)) # Fjerne
-  expect_error(sjekk_variabelverdier(tibble(gen = c(200, 200, "blablabla", NA)), skaaringstabell_eks, godta_manglende = TRUE)) # Fjerne
 })
 
 
