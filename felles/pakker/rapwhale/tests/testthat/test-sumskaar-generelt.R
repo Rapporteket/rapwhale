@@ -284,6 +284,16 @@ test_that("sjekk_variabelverdier() gjev feilmelding for datasett med ugyldige va
 
 context("finn_ugyldige_verdier")
 
+# For disse testene benyttes det samme eksempel-datasettet ('d_gyldig_eks1') som
+# er definert i starten av testene for sjekk_variabelverdier().
+
+d_gyldig_eks1 = tibble::tribble(
+  ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2,
+  1, 1, 1, 10, 10,
+  2, 2, 2, 20, 20,
+  3, 1, 2, 20, 10
+)
+
 # Tom dataramme med spesifiserte variabeltyper
 ugyldighetstabell_tom = tibble(
   radnr = integer(),
@@ -295,7 +305,7 @@ test_that("finn_ugyldige_verdier() gir ut en dataramme (med kun kolonnenavn) hvi
   expect_identical(finn_ugyldige_verdier(d_gyldig_eks1, skaaringstabell_eks), ugyldighetstabell_tom)
 })
 
-# Eksempeldata med 1 feil # fixme: bør d_gyldig_eks_1 vises her?
+# Eksempeldata med 1 feil
 d_ugyldig_1_feil = d_gyldig_eks1
 d_ugyldig_1_feil$fys1[1] = 13
 
