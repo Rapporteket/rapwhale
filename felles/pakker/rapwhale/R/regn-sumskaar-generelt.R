@@ -165,10 +165,6 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 
   oppsummering = oppsummer_ugyldige_verdier(d_ugyldige_verdier)
 
-  # if (any(is.na(d_ugyldige_verdier$feilverdi))) {
-  #  stop("Det mangler verdier for en eller flere variabler\n", oppsummering)
-  # }
-
   if ((nrow(d_ugyldige_verdier) > 0)) {
     stop(oppsummering)
   }
