@@ -273,14 +273,12 @@ oqr_til_std_variabeltyper = function(kb_std) {
   kb_std
 }
 
-sjekk_obligatorisk = function(kb_std) {
-  # Splitte for å validere og for å endre
-  # Kontrollere at obligatoriske, aktiveringsspoersmaal og underspoersmaal ikke er NA
-  stopifnot(all(!(is.na(kb_std$obligatorisk) |
-    is.na(kb_std$aktiveringsspoersmaal) |
-    is.na(kb_std$underspoersmaal))))
+sjekk_obligatorisk = function(kb_mellom) {
+  stopifnot(all(!(is.na(kb_mellom$obligatorisk) |
+    is.na(kb_mellom$aktiveringsspoersmaal) |
+    is.na(kb_mellom$underspoersmaal))))
 
-  kb_std %>%
+  kb_mellom = kb_mellom %>%
     mutate(
       obligatorisk =
         if_else(aktiveringsspoersmaal == "ja" &
