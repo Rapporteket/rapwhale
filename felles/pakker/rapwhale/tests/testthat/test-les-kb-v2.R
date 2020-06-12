@@ -856,258 +856,250 @@ test_that("funksjonen gir feilmelding hvis variabelnavn ikke starter med en boks
   )
 })
 
-# # Valider_kb_variabler --------------------------------------------
-# context("valider kb_variabler")
-#
-#
-# # Variabelnivå:
-# test_that("funksjonen gir feilmelding hvis en variabel har flere variabeltyper",{
-#   kb_flere_variabeltyper = kb_tom_std %>%
-#     add_row(skjema_id = c("base", "pasient"),
-#             variabel_id = "vekt",
-#             variabeltype = c("tekst", "numerisk"))
-#
-# expect_error(valider_kb_variabler(kb_flere_variabeltyper),
-#              "Variabler må ha entydige variabeltyper:\nvekt")
-#
-# })
-# test_that("funksjonen gir feilmelding hvis en variabel har flere variabeletiketter",{
-#   kb_flere_variabeletiketter = kb_tom_std %>%
-#     add_row(skjema_id = c("base","pasient"),
-#             variabel_id = "vekt",
-#             variabeltype = "numerisk",
-#             variabeletikett = c("vekt i kg", "vekt i gram"))
-#
-# expect_error(valider_kb_variabler(kb_flere_variabeletiketter),
-#              "En variabel kan ikke ha flere ulike variabeletiketter")
-# })
-#
-# test_that("funksjonen gir feilmelding hvis en faktor har ulike verditekster for samme verdi på tvers av skjema",{
-#   kb_ulike_faktornivaa = kb_tom_std %>%
-#     add_row(skjema_id = c("base", "base", "base", "pasient", "pasient", "pasient"),
-#             variabel_id = "komplikasjon",
-#             variabeltype = "kategorisk",
-#             verdi = c(1,2,3,1,2,3),
-#             verditekst = c("hoste", "svette", "grining", "hoste", "svette", "latterkrampe"))
-#
-# expect_error(valider_kb_variabler(kb_ulike_faktornivaa),
-#              "Variabler må ha samsvar for verdi og verditekst på tvers av skjema:\nvariabel: komplikasjon")
-# })
-#
-# test_that("funksjonen gir feilmelding hvis en boolsk variabel har 'Obligatorisk' = Nei, eller 'Unik' = Ja",{
-#   kb_boolsk_feil = kb_tom_std %>%
-#     add_row(variabel_id = "død",
-#             variabeltype = "boolsk",
-#             obligatorisk = c("Nei", "Ja"),
-#             unik = c("Ja", "Nei"))
-#
-# expect_error(valider_kb_variabler(kb_boolsk_feil %>% slice(1)),
-#              "Boolske variabler kan ikke ha Obligatorisk = 'Nei' eller Unik = 'Ja'")
-# expect_error(valider_kb_variabler(kb_boolsk_feil %>% slice(2)),
-#              "Boolske variabler kan ikke ha Obligatorisk = 'Nei' eller Unik = 'Ja'")
-# })
-#
-# test_that("funksjonen gir feilmelding hvis en kategorisk variabel har duplikate verdier",{
-#   kb_kategorisk_feil = kb_tom_std %>%
-#     add_row(variabel_id = "komplikasjon",
-#             variabeltype = "kategorisk",
-#             verdi = c(1,1,2, NA_integer_),
-#             verditekst = c("hevelse", "mini hevelse", "hoste", "skjelving"))
-#
-# expect_error(valider_kb_variabler(kb_kategorisk_feil %>% slice(1:3)),
-#              "Kategoriske variabler må ha unike verdier")
-# expect_error(valider_kb_variabler(kb_kategorisk_feil %>% slice(2:4)),
-#              "Kategoriske variabler kan ikke ha NA som verdi")
-# expect_error(valider_kb_variabler(kb_kategorisk_feil %>% slice(1)),
-#              "Kategoriske variabler må ha minst to svaralternativ")
-# })
-#
-# # Tester for at kolonner ikke har informasjon i kolloner som ikke er relevant for variabeltypen:
-# test_that("funksjonen gir feilmelding hvis en numerisk variabel har noe annet enn NA i kolonnene:
-#           verdi, verditekst, min_dato, maks_dato, min_rimeleg_dato, maks_rimeleg_dato",{
-# kb_numerisk_feil = kb_tom_std %>%
-#   add_row(variabeltype = "numerisk",
-#           verdi = c(1, rep(NA_character_,5)),
-#           verditekst = c(NA_character_, "tekst", rep(NA_character_, 4)),
-#           min_dato = c(rep(NA_character_, 2), "10-01-2020", rep(NA_character_, 3)),
-#           maks_dato = c(rep(NA_character_, 3), "10-01-2020", rep(NA_character_, 2)),
-#           min_rimeleg_dato = c(rep(NA_character_, 4), "10-01-2020", NA_character_),
-#           maks_rimeleg_dato = c(rep(NA_character_,5), "10-10-2020"))
-#
-# feilmelding_numeriske = "Numeriske variabler kan ikke ha informasjon i kolonnene:\nverdi, verditekst, min_dato, maks_dato, min_rimeleg_dato, maks_rimeleg_dato"
-#
-# for(i in 1:6){
-# expect_error(valider_kb_variabler(kb_numerisk_feil %>% slice(i)), feilmelding_numeriske)
-# }
-# })
-#
-# # Sjekke at variabler ikke har informasjon i kolonner som ikke er relevant for variabeltypen
-# test_that("funksjonen gir feilmelding hvis en tekstvariabel har noe annet enn NA i kolonnene:
-#           verdi, verditekst, desimaler, eining, min, maks, min_rimeleg, maks_rimeleg,
-#           min_dato, maks_dato, min_rimeleg_dato, maks_rimeleg_dato, kommentar_rimeleg, utrekningsformel, logikk",{
-# kb_tekst_feil = kb_tom_std %>%
-#   add_row(variabeltype = "tekst",
-#           verdi = c(1, rep(NA_character_, 14)),
-#           verditekst = c(rep(NA_character_, 1), "tekst", rep(NA_character_, 13)),
-#           desimaler = c(rep(NA_integer_, 2), 1, rep(NA_integer_, 12)),
-#           eining = c(rep(NA_character_, 3), "kilo", rep(NA_character_, 11)),
-#           min = c(rep(NA_real_, 4), 3.5, rep(NA_real_, 10)),
-#           maks = c(rep(NA_real_, 5), 4.5, rep(NA_real_, 9)),
-#           min_rimeleg  = c(rep(NA_real_, 6), 3.7, rep(NA_real_, 8)) ,
-#           maks_rimeleg = c(rep(NA_real_, 7), 4.3, rep(NA_real_, 7)),
-#           min_dato = c(rep(NA_character_, 8), "01-01-2020" , rep(NA_character_, 6)),
-#           maks_dato = c(rep(NA_character_, 9),"01-01-2020" , rep(NA_character_, 5)),
-#           min_rimeleg_dato = c(rep(NA_character_, 10), "01-01-2020",  rep(NA_character_, 4)),
-#           maks_rimeleg_dato = c(rep(NA_character_, 11), "01-01-2020",  rep(NA_character_, 3)),
-#           kommentar_rimeleg = c(rep(NA_character_, 12), "rimelige resultat",  rep(NA_character_, 2)),
-#           utrekningsformel = c(rep(NA_character_, 13), "a + b", rep(NA_character_, 1)),
-#           logikk = c(rep(NA_character_, 14), "logikk"))
-#
-# feilmelding_tekst = "Tekstvariabler kan ikke inneholde informasjon i
-# kolonnene:\nverdi, verditekst, desimaler, eining, min, maks, min_rimeleg,
-# maks_rimeleg, min_dato, maks_dato, min_rimeleg_dato, maks_rimeleg_dato,
-# kommentar_rimeleg, utrekningsformel, logikk"
-#
-#
-# for(i in 1:15){
-# expect_error(valider_kb_variabler(kb_tekst_feil %>% slice(i), feilmelding_tekst))
-# }
-# })
-#
-# test_that("funksjonen gir feilmelding hvis en kategorisk variabel har noe annet enn NA i kolonnene:
-#           eining, desimaler, min, maks, min_rimeleg, maks_rimeleg, min_dato, maks_dato,
-#           min_rimeleg_dato, maks_rimeleg_dato, kommentar_rimeleg, utrekningsformel, logikk",{
-# kb_feil_kategorisk = kb_tom_std %>%
-#   add_row(variabeltype = "kategorisk",
-#           desimaler = c(1, rep(NA_integer_, 12)),
-#           eining = c(rep(NA_character_, 1), "kilo", rep(NA_character_, 11)),
-#           min = c(rep(NA_real_, 2), 3.5, rep(NA_real_, 10)),
-#           maks = c(rep(NA_real_, 3), 4.5, rep(NA_real_, 9)),
-#           min_rimeleg  = c(rep(NA_real_, 4), 3.7, rep(NA_real_, 8)) ,
-#           maks_rimeleg = c(rep(NA_real_, 5), 4.3, rep(NA_real_, 7)),
-#           min_dato = c(rep(NA_character_, 6), "01-01-2020" , rep(NA_character_, 6)),
-#           maks_dato = c(rep(NA_character_, 7),"01-01-2020" , rep(NA_character_, 5)),
-#           min_rimeleg_dato = c(rep(NA_character_, 8), "01-01-2020",  rep(NA_character_, 4)),
-#           maks_rimeleg_dato = c(rep(NA_character_, 9), "01-01-2020",  rep(NA_character_, 3)),
-#           kommentar_rimeleg = c(rep(NA_character_, 10), "rimelige resultat",  rep(NA_character_, 2)),
-#           utrekningsformel = c(rep(NA_character_, 11), "a + b", rep(NA_character_, 1)),
-#           logikk = c(rep(NA_character_, 12), "logikk"))
-#
-# feilmelding_kategorisk = "Kategoriske variabler kan ikke ha informasjon i kolonnene:
-# eining, desimaler, min, maks, min_rimeleg, maks_rimeleg, min_dato, maks_dato,
-#           min_rimeleg_dato, maks_rimeleg_dato, kommentar_rimeleg, utrekningsformel, logikk"
-#
-# for(i in 1:13){
-# expect_error(valider_kb_variabler(kb_feil_kategorisk %>% slice(i)),
-#              feilmelding_kategorisk)}
-# })
-#
-# test_that("funksjonen gir feilmelding hvis en ikke-kategorisk variabel har manglende = Ja",{
-#   kb_ikke_kat_manglende = kb_tom_std %>%
-#     add_row(variabeltype = c("tekst", "numerisk", "kategorisk"),
-#             manglende = "Ja")
-#
-#   feilmelding_ikke_kategorisk_manglende = "Ikke-kategoriske variabler kan ikke ha manglende = 'Ja'"
-#
-# for(i in 1:3){
-# expect_error(valider_kb_variabler(kb_ikke_kat_manglende %>% slice(i)),
-#              feilmelding_ikke_kategorisk_manglende)
-# }
-# })
-#
-# # Sjekke relasjoner mellom størrelser
-# test_that("funskjonen gir feilmelding hvis relasjoner mellom minimumverdier og maksverdier er feil",{
-#   kb_min_maks_feil = kb_tom_std %>%
-#     add_row(variabeltype = c("numerisk", "numerisk", "dato", "dato"),
-#             variabel_id = c("vekt", "vekt", "dato_en", "dato_to"),
-#             min = c(10,NA_real_, NA_real_, NA_real_),
-#             maks = c(5, NA_real_, NA_real_, NA_real_),
-#             min_rimeleg = c(NA_real_, 10, NA_real_, NA_real_),
-#             maks_rimeleg = c(NA_real_, 5, NA_real_, NA_real_),
-#             min_dato = as.Date(c(NA_character_, NA_character_, "10-01-2020", NA_character_)),
-#             maks_dato = as.Date(c(NA_character_, NA_character_, "01-01-2020", NA_character_)),
-#             min_rimeleg_dato = as.Date(c(NA_character_, NA_character_, NA_character_, "10-01-2020")),
-#             maks_rimeleg_dato = as.Date(c(NA_character_, NA_character_, NA_character_, "01-01-2020")))
-#
-# feilmelding_relasjon = "Relasjon mellom minimum og maksimum kolonner er ikke ivaretatt:\n"
-#
-# expect_error(valider_kb_variabler(kb_min_maks_feil %>% slice(1)),
-#              "Relasjon mellom minimum og maksimum verdier er ikke ivaretatt\n
-#              variabel_id: vekt")
-# expect_error(valider_kb_variabler(kb_min_maks_feil %>% slice(2)),
-#              "Relasjon mellom minimum og maksimum verdier er ikke ivaretatt\n
-#              variabel_id: vekt")
-# expect_error(valider_kb_variabler(kb_min_maks_feil %>% slice(3)),
-#              "Relasjon mellom minimum og maksimum verdier er ikke ivaretatt\n
-#              variabel_id: dato_en")
-# expect_error(valider_kb_variabler(kb_min_maks_feil %>% slice(4)),
-#              "Relasjon mellom minimum og maksimum verdier er ikke ivaretatt\n
-#              variabel_id: dato_to")
-#
-# })
-#
-# test_that("funksjonen gir feilmelding hvis rimelige verdier er utenfor min/maks verdier",{
-#   kb_rimelig_feil = kb_tom_std %>%
-#     add_row(variabel_id = c("vekt", "vekt", "dato_en", "dato_to"),
-#             variabeltype = c("numerisk", "numerisk", "dato", "dato"),
-#             min = c(10, 10, NA_real_, NA_real_),
-#             maks = c(20, 20, NA_real_, NA_real_),
-#             min_rimeleg = c(5, 12, NA_real_, NA_real_),
-#             maks_rimeleg = c(18, 22, NA_real_, NA_real_),
-#             min_dato = as.Date(c(NA_character_, NA_character_, "01-01-2020", "01-01-2020")),
-#             maks_dato = as.Date(c(NA_character_, NA_character_, "10-01-2020", "10-01-2020")),
-#             min_rimeleg_dato = as.Date(c(NA_character_, NA_character_, "01-01-2019", "05-01-2020")),
-#             maks_rimeleg_dato = as.Date(c(NA_character_, NA_character_, "15-01-2020", "15-01-2020")))
-#
-# expect_error(valider_kb_variabler(kb_rimelig_feil %>% slice(1)),
-#              "Relasjon mellom rimelige verdier og min/maks verdier er ikke ivaretatt\n
-#              variabel_id: vekt")
-# expect_error(valider_kb_variabler(kb_rimelig_feil %>% slice(2)),
-#              "Relasjon mellom rimelige verdier og min/maks verdier er ikke ivaretatt\n
-#              variabel_id: vekt")
-# expect_error(valider_kb_variabler(kb_rimelig_feil %>% slice(3)),
-#              "Relasjon mellom rimelige verdier og min/maks verdier er ikke ivaretatt\n
-#              variabel_id: dato_en")
-# expect_error(valider_kb_variabler(kb_rimelig_feil %>% slice(4)),
-#              "Relasjon mellom rimelige verdier og min/maks verdier er ikke ivaretatt\n
-#              variabel_id: dato_to")
-# })
-#
-# test_that("funksjonen gir feilmelding hvis kommentar_rimelig finnes, men ingen av min_rimelig eller maks_rimelig",{
-#   kb_kommentar_rimelig_feil = kb_tom_std %>%
-#     add_row(variabel_id = c("vekt1", "vekt2", "vekt3", "dato1", "dato2", "dato3"),
-#             variabeltype = c("numerisk", "numerisk", "numerisk", "dato","dato", "dato"),
-#             min = c(rep(10,3), rep(NA_real_, 3)),
-#             maks = c(rep(100,3), rep(NA_real_, 3)),
-#             min_rimeleg = c(50, rep(NA_real_,5)),
-#             maks_rimeleg = c(NA_real_,80, rep(NA_real_, 4)),
-#             min_dato = as.Date(c(rep(NA_character_, 3),"01-01-2020", "01-01-2020", "01-01-2020")),
-#             maks_dato = as.Date(c(rep(NA_character_, 3),"10-01-2020", "10-01-2020", "10-01-2020")),
-#             min_rimeleg_dato = as.Date(c(rep(NA_character_, 3),"01-01-2020", NA_character_, NA_character_)),
-#             maks_rimeleg_dato = as.Date(c(rep(NA_character_, 4), "01-01-2020", NA_character_)),
-#             kommentar_rimeleg = "kommentar")
-#
-# expect_error(valider_kb_variabler(kb_kommentar_rimelig_feil %>% slice(1:3)),
-#              "Kommentar_rimeleg er fylt ut, men det finnes ingen min_rimeleg eller maks_rimeleg\n
-#              variabel_id: vekt3")
-# expect_error(valider_kb_variabler(kb_kommentar_rimelig_feil %>% slice(4:6)),
-#              "kommentar_rimeleg er fyly ut, men det finnes ingen min_rimeleg eller maks_rimeleg\n
-#              variabel_id: dato3")
-#   })
-#
-# #####
-#
-# # Test at det gis feilmelding hvis det finnes avvik mellom listevariabler på ulike skjema
-# # test_that("Det gis feilmelding hvis en listevariabel har ulik listetekst på ulike skjema", {
-# #   kb_avvik = kb_tom %>%
-# #     add_row(skjemanavn = c("basereg", "basereg", "basereg", "op", "op", "op", "patient", "patient", "patient"),
-# #             fysisk_feltnavn = c(rep("komplikasjon", 9)),
-# #             type = c(rep("Listevariabel")),
-# #             listeverdier = c(1,2,3,1,2,3,1,2,3),
-# #             listetekst = c("Ja", "Nei", "Ukjent", "Ja", "Nei", "Avvik", "Ja", "Nei", "Ukjent"))
-# #   expect_error(les_kb_oqr_base("oqr_kodebok_avvik.csv"),
-# #                "Det finnes 1 avvik for listeverdi mellom skjema: \n Variabel  : komplikasjon\n Listeverdi: 3")
-# #
-# # })
-#
-#
+# Valider_kb_variabler --------------------------------------------
+context("valider kb_variabler")
+
+# Variabelnivå:
+test_that("funksjonen gir feilmelding hvis en variabel har flere variabeltyper", {
+  kb_flere_variabeltyper = kb_tom_std %>%
+    add_row(
+      skjema_id = c("base", "base", "pasient", "pasient"),
+      variabel_id = c("vekt", "høyde", "vekt", "høyde"),
+      variabeltype = c("tekst", "numerisk", "numerisk", "numerisk")
+    )
+
+  expect_error(
+    valider_kb_variabler(kb_flere_variabeltyper),
+    "Variabler må ha entydige variabeltyper:\nvekt"
+  )
+})
+test_that("funksjonen gir feilmelding hvis en variabel har flere variabeletiketter", {
+  kb_flere_variabeletiketter = kb_tom_std %>%
+    add_row(
+      skjema_id = c("base", "pasient"),
+      variabel_id = "vekt",
+      variabeltype = "numerisk",
+      variabeletikett = c("vekt i kg", "vekt i gram")
+    )
+
+  expect_error(
+    valider_kb_variabler(kb_flere_variabeletiketter),
+    "En variabel kan ikke ha flere ulike variabeletiketter:\nvekt"
+  )
+})
+
+test_that("funksjonen gir feilmelding hvis en faktor har ulike verditekster for samme verdi på tvers av skjema", {
+  kb_ulike_faktornivaa = kb_tom_std %>%
+    add_row(
+      skjema_id = c("base", "base", "base", "pasient", "pasient", "pasient"),
+      variabel_id = "komplikasjon",
+      variabeltype = "kategorisk",
+      verdi = c("1", "2", "3", "1", "2", "3"),
+      verditekst = c("hoste", "svette", "grining", "hoste", "svette", "latterkrampe")
+    )
+
+  expect_error(
+    valider_kb_variabler(kb_ulike_faktornivaa),
+    "Det finnes 1 avvik for listeverdi mellom skjema:\nVariabel: komplikasjon\nVerdi: 3"
+  )
+})
+
+test_that("funksjonen gir feilmelding hvis en boolsk variabel har 'Obligatorisk' = Nei, eller 'Unik' = Ja", {
+  kb_boolsk_feil = kb_tom_std %>%
+    add_row(
+      variabel_id = c("oblig_feil", "unik_feil", "ok"),
+      variabeltype = "boolsk",
+      obligatorisk = c("nei", "ja", "ja"),
+      unik = c("nei", "ja", "nei")
+    )
+
+  expect_error(
+    valider_kb_variabler(kb_boolsk_feil %>% slice(1)),
+    "Boolske variabler kan ikke ha Obligatorisk = 'nei' eller Unik = 'ja'\nVariabel: oblig_feil"
+  )
+  expect_error(
+    valider_kb_variabler(kb_boolsk_feil %>% slice(2)),
+    "Boolske variabler kan ikke ha Obligatorisk = 'nei' eller Unik = 'ja'\nVariabel: unik_feil"
+  )
+})
+
+test_that("funksjonen gir feilmelding hvis en kategorisk variabel har duplikate verdier", {
+  kb_kategorisk_feil = kb_tom_std %>%
+    add_row(
+      variabel_id = "komplikasjon",
+      variabeltype = "kategorisk",
+      verdi = c("1", "1", "2", NA_character_),
+      verditekst = c("hevelse", "hevelse", "hoste", "skjelving")
+    )
+
+  expect_error(
+    valider_kb_variabler(kb_kategorisk_feil %>% slice(1:3)),
+    "Kategoriske variabler må ha unike verdier\nVariabel: komplikasjon"
+  )
+  expect_error(
+    valider_kb_variabler(kb_kategorisk_feil %>% slice(2:4)),
+    "Kategoriske variabler kan ikke ha NA som verdi\nVariabel: komplikasjon"
+  )
+  expect_error(
+    valider_kb_variabler(kb_kategorisk_feil %>% slice(1)),
+    "Kategoriske variabler må ha minst to svaralternativ\nVariabel: komplikasjon"
+  )
+})
+
+test_that("funksjonen gir feilmelding hvis en numerisk variabel har noe annet enn NA i kolonnene:
+          verdi, verditekst, min_dato, maks_dato, min_rimeleg_dato, maks_rimeleg_dato", {
+  kb_numerisk_feil = kb_tom_std %>%
+    add_row(
+      variabeltype = "numerisk",
+      verdi = c("1", rep(NA_character_, 5)),
+      verditekst = c(NA_character_, "tekst", rep(NA_character_, 4)),
+      min_dato = as.Date(c(rep(NA_character_, 2), "10-01-2020", rep(NA_character_, 3))),
+      maks_dato = as.Date(c(rep(NA_character_, 3), "10-01-2020", rep(NA_character_, 2))),
+      min_rimeleg_dato = as.Date(c(rep(NA_character_, 4), "10-01-2020", NA_character_)),
+      maks_rimeleg_dato = as.Date(c(rep(NA_character_, 5), "10-10-2020"))
+    )
+
+  feilmelding_numeriske = "Numeriske variabler kan ikke ha informasjon i kolonnene:\nverdi, verditekst, min_dato, maks_dato, min_rimeleg_dato, maks_rimeleg_dato"
+
+  for (i in 1:6) {
+    expect_error(valider_kb_variabler(kb_numerisk_feil %>% slice(i)), feilmelding_numeriske)
+  }
+})
+
+test_that("funksjonen gir feilmelding hvis en tekstvariabel har noe annet enn NA i kolonnene:
+          verdi, verditekst, desimaler, eining, min, maks, min_rimeleg, maks_rimeleg,
+          min_dato, maks_dato, min_rimeleg_dato, maks_rimeleg_dato, kommentar_rimeleg, utrekningsformel, logikk", {
+  kb_tekst_feil = kb_tom_std %>%
+    add_row(
+      variabeltype = "tekst",
+      verdi = c("1", rep(NA_character_, 14)),
+      verditekst = c(rep(NA_character_, 1), "tekst", rep(NA_character_, 13)),
+      desimaler = c(rep(NA_integer_, 2), 1, rep(NA_integer_, 12)),
+      eining = c(rep(NA_character_, 3), "kilo", rep(NA_character_, 11)),
+      min = c(rep(NA_real_, 4), 3.5, rep(NA_real_, 10)),
+      maks = c(rep(NA_real_, 5), 4.5, rep(NA_real_, 9)),
+      min_rimeleg = c(rep(NA_real_, 6), 3.7, rep(NA_real_, 8)),
+      maks_rimeleg = c(rep(NA_real_, 7), 4.3, rep(NA_real_, 7)),
+      min_dato = as.Date(c(rep(NA_character_, 8), "01-01-2020", rep(NA_character_, 6))),
+      maks_dato = as.Date(c(rep(NA_character_, 9), "01-01-2020", rep(NA_character_, 5))),
+      min_rimeleg_dato = as.Date(c(rep(NA_character_, 10), "01-01-2020", rep(NA_character_, 4))),
+      maks_rimeleg_dato = as.Date(c(rep(NA_character_, 11), "01-01-2020", rep(NA_character_, 3))),
+      kommentar_rimeleg = c(rep(NA_character_, 12), "rimelige resultat", rep(NA_character_, 2)),
+      utrekningsformel = c(rep(NA_character_, 13), "a + b", rep(NA_character_, 1)),
+      logikk = c(rep(NA_character_, 14), "logikk")
+    )
+
+  feilmelding_tekst = "Tekstvariabler kan ikke inneholde informasjon i
+kolonnene:\nverdi, verditekst, desimaler, eining, min, maks, min_rimeleg,
+maks_rimeleg, min_dato, maks_dato, min_rimeleg_dato, maks_rimeleg_dato,
+kommentar_rimeleg, utrekningsformel, logikk"
+
+  for (i in 1:15) {
+    expect_error(valider_kb_variabler(kb_tekst_feil %>% slice(i)), feilmelding_tekst)
+  }
+})
+
+test_that("funksjonen gir feilmelding hvis en kategorisk variabel har noe annet enn NA i kolonnene:
+          eining, desimaler, min, maks, min_rimeleg, maks_rimeleg, min_dato, maks_dato,
+          min_rimeleg_dato, maks_rimeleg_dato, kommentar_rimeleg, utrekningsformel, logikk", {
+  kb_feil_kategorisk = kb_tom_std %>%
+    add_row(
+      variabel_id = c(rep("komplikasjon", 26)),
+      variabeltype = "kategorisk",
+      verdi = c(rep(c("hoste", "oppkast"), 13)),
+      desimaler = c(1, rep(NA_integer_, 25)),
+      eining = c(rep(NA_character_, 2), "kilo", rep(NA_character_, 23)),
+      min = c(rep(NA_real_, 4), 3.5, rep(NA_real_, 21)),
+      maks = c(rep(NA_real_, 6), 4.5, rep(NA_real_, 19)),
+      min_rimeleg = c(rep(NA_real_, 8), 3.7, rep(NA_real_, 17)),
+      maks_rimeleg = c(rep(NA_real_, 10), 4.3, rep(NA_real_, 15)),
+      min_dato = as.Date(c(rep(NA_character_, 12), "01-01-2020", rep(NA_character_, 13))),
+      maks_dato = as.Date(c(rep(NA_character_, 14), "01-01-2020", rep(NA_character_, 11))),
+      min_rimeleg_dato = as.Date(c(rep(NA_character_, 16), "01-01-2020", rep(NA_character_, 9))),
+      maks_rimeleg_dato = as.Date(c(rep(NA_character_, 18), "01-01-2020", rep(NA_character_, 7))),
+      kommentar_rimeleg = c(rep(NA_character_, 20), "rimelige resultat", rep(NA_character_, 5)),
+      utrekningsformel = c(rep(NA_character_, 22), "a + b", rep(NA_character_, 3)),
+      logikk = c(rep(NA_character_, 24), "logikk", NA_character_)
+    )
+
+  feilmelding_kategorisk = "Kategoriske variabler kan ikke ha informasjon i kolonnene:\n
+eining, desimaler, min, maks, min_rimeleg, maks_rimeleg, min_dato, maks_dato,min_rimeleg_dato, maks_rimeleg_dato,kommentar_rimeleg, utrekningsformel, logikk"
+
+  for (i in seq(from = 1, to = 25, by = 2)) {
+    expect_error(valider_kb_variabler(kb_feil_kategorisk %>% slice(c(i, i + 1))), feilmelding_kategorisk)
+  }
+})
+
+test_that("funksjonen gir feilmelding hvis en ikke-kategorisk variabel har manglende = Ja", {
+  kb_ikke_kat_manglande = kb_tom_std %>%
+    add_row(
+      variabel_id = c("navn", "vekt", "gladsak", "gladsak"),
+      variabeltype = c("tekst", "numerisk", "kategorisk", "kategorisk"),
+      verdi = c(NA_character_, NA_character_, "1", "2"),
+      verditekst = c(NA_character_, NA_character_, "ja", "nei"),
+      manglande = c("ja", "nei", "nei", "nei")
+    )
+
+  feilmelding_ikke_kategorisk_manglande = "Ikke-kategoriske variabler kan ikke ha manglende = 'ja'\nvariabel_id: navn"
+
+  expect_error(
+    valider_kb_variabler(kb_ikke_kat_manglande %>% slice(1)),
+    feilmelding_ikke_kategorisk_manglande
+  )
+})
+
+test_that("funskjonen gir feilmelding hvis relasjoner mellom minimumverdier og maksverdier er feil", {
+  kb_min_maks_feil = kb_tom_std %>%
+    add_row(
+      variabeltype = c(rep("numerisk", 4), rep("dato", 4)),
+      variabel_id = c(rep("vekt", 4), rep("dato", 4)),
+      min = c(10, 10, rep(NA_real_, 6)),
+      maks = c(5, rep(NA_real_, 2), 5, rep(NA_real_, 4)),
+      min_rimeleg = c(NA_real_, 5, 10, rep(NA_real_, 5)),
+      maks_rimeleg = c(rep(NA_real_, 2), 5, 10, rep(NA_real_, 4)),
+      min_dato = as.Date(c(rep(NA_character_, 4), "2020-01-10", "2020-01-10", rep(NA_character_, 2))),
+      maks_dato = as.Date(c(rep(NA_character_, 4), "2020-01-01", rep(NA_character_, 2), "2020-01-01")),
+      min_rimeleg_dato = as.Date(c(rep(NA_character_, 5), "2020-01-01", "2020-01-10", NA_character_)),
+      maks_rimeleg_dato = as.Date(c(rep(NA_character_, 6), "2020-01-01", "2020-01-10"))
+    )
+
+  for (i in 1:4) {
+    expect_error(
+      valider_kb_variabler(kb_min_maks_feil %>% slice(i)),
+      "Relasjon mellom minimum og maksimum verdier er ikke ivaretatt\nvariabel_id: vekt"
+    )
+  }
+  for (i in 5:8) {
+    expect_error(
+      valider_kb_variabler(kb_min_maks_feil %>% slice(i)),
+      "Relasjon mellom minimum og maksimum verdier er ikke ivaretatt\nvariabel_id: dato"
+    )
+  }
+})
+
+test_that("funksjonen gir feilmelding hvis kommentar_rimelig finnes,
+          men ingen av min_rimelig eller maks_rimelig", {
+  kb_kommentar_rimeleg_feil = kb_tom_std %>%
+    add_row(
+      variabel_id = c("vekt1", "vekt2", "vekt3", "dato1", "dato2", "dato3"),
+      variabeltype = c("numerisk", "numerisk", "numerisk", "dato", "dato", "dato"),
+      min = c(rep(10, 3), rep(NA_real_, 3)),
+      maks = c(rep(100, 3), rep(NA_real_, 3)),
+      min_rimeleg = c(50, rep(NA_real_, 5)),
+      maks_rimeleg = c(NA_real_, 80, rep(NA_real_, 4)),
+      min_dato = as.Date(c(rep(NA_character_, 3), "01-01-2020", "01-01-2020", "01-01-2020")),
+      maks_dato = as.Date(c(rep(NA_character_, 3), "10-01-2020", "10-01-2020", "10-01-2020")),
+      min_rimeleg_dato = as.Date(c(rep(NA_character_, 3), "01-01-2020", NA_character_, NA_character_)),
+      maks_rimeleg_dato = as.Date(c(rep(NA_character_, 4), "01-01-2020", NA_character_)),
+      kommentar_rimeleg = "kommentar"
+    )
+
+  expect_error(
+    valider_kb_variabler(kb_kommentar_rimeleg_feil %>% slice(1:3)),
+    "Kommentar_rimeleg er fylt ut, men det finnes ingen min_rimeleg eller maks_rimeleg\nvariabel_id: vekt3"
+  )
+  expect_error(
+    valider_kb_variabler(kb_kommentar_rimeleg_feil %>% slice(4:6)),
+    "Kommentar_rimeleg er fylt ut, men det finnes ingen min_rimeleg eller maks_rimeleg\nvariabel_id: dato3"
+  )
+})
