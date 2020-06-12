@@ -521,11 +521,11 @@ valider_kb_variabler = function(kodebok) {
     ))
   }
 
-  # sjekk at boolske variabler ikke har Obligatorisk = Nei eller Unik = Ja
+  # sjekk at boolske variabler ikke har Obligatorisk = Nei og Unik = Ja
   feil_boolsk = kodebok %>%
     filter(
       variabeltype == "boolsk",
-      obligatorisk == "nei" | unik == "ja"
+      obligatorisk == "nei" & unik == "ja"
     ) %>%
     pull(variabel_id)
 
