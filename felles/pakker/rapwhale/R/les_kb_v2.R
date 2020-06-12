@@ -2,7 +2,7 @@
 #' @importFrom tibble tribble tibble
 #' @importFrom stringr str_detect str_c str_to_lower
 NULL
-les_kb_oqr_v2 = function(adresse) {
+les_kb_oqr_v2 = function(adresse, valider = TRUE) {
   kb_oqr = les_kb_oqr_base(adresse)
 
   # Variabler som må konverteres til desimal eller dato
@@ -43,14 +43,22 @@ les_kb_oqr_v2 = function(adresse) {
     format = "'%Y-%m-%d'"
   )
 
+  # Endrer "Ja" og "Nei" til lower_case
+  kb_oqr = kb_oqr %>%
+    mutate(
+      aktiveringsspoersmaal = str_to_lower(aktiveringsspoersmaal),
+      underspoersmaal = str_to_lower(underspoersmaal)
+    )
+
   kb_std = kb_oqr_base_til_std(kb_oqr)
 
   # Kaller på legg_til_variabler_kb()
-  # Kaller på valider_kodebok()
 
-  # Returnerer fullstendig kodebok for registeret.
-  # (Må inkludere varnavn_kilde, varnavn_resultat og vartype slik det er
-  # oppgitt i spesifikasjon i les_dd funksjoner)
+  if (valider) {
+    valider_kodebok(kb_std)
+  }
+
+  kb_std
 }
 
 #' Les inn OQR-kodebok
@@ -411,17 +419,17 @@ valider_kb_skjema = function(kodebok) {
     if (length(mangler_kategori) > 0) {
       stop(paste0("Alle skjema må ha tilhørende kategori hvis kategorier brukes. Følgende skjema_id mangler kategori:\n", mangler_kategori))
     }
-  }
 
-  # Sjekker at alle skjema har kategori i første rad
-  mangler_kat_rad_en = kodebok %>%
-    group_by(skjema_id) %>%
-    slice(1) %>%
-    filter(is.na(kategori)) %>%
-    pull(skjema_id)
+    # Sjekker at alle skjema har kategori i første rad
+    mangler_kat_rad_en = kodebok %>%
+      group_by(skjema_id) %>%
+      slice(1) %>%
+      filter(is.na(kategori)) %>%
+      pull(skjema_id)
 
-  if (length(mangler_kat_rad_en) > 0) {
-    stop(paste0("Hvis kategorier brukes må det være oppgitt kategori i første rad for alle skjema"))
+    if (length(mangler_kat_rad_en) > 0) {
+      stop(paste0("Hvis kategorier brukes må det være oppgitt kategori i første rad for alle skjema"))
+    }
   }
 }
 
