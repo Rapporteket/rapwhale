@@ -373,8 +373,8 @@ valider_kodebok = function(kodebok) {
   # Planlagt struktur
   # valider_kb_struktur(kodebok)
   valider_kb_skjema(kodebok)
-  valider_kb_kolonne(kodebok)
-  valider_kb_variabel(kodebok)
+  valider_kb_kolonner(kodebok)
+  valider_kb_variabler(kodebok)
 }
 
 valider_kb_struktur = function(kodebok) {}
