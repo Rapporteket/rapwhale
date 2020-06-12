@@ -473,5 +473,181 @@ valider_kb_kolonner = function(kodebok) {
   }
 }
 
-valider_kb_variabel = function(kodebok) {
+valider_kb_variabler = function(kodebok) {
+
+  # sjekke at variabeltyper er entydige
+  ulike_vartyper = kodebok %>%
+    group_by(variabel_id) %>%
+    summarise(antall_ulike = n_distinct(variabeltype)) %>%
+    filter(antall_ulike > 1) %>%
+    pull(variabel_id)
+
+  if (length(ulike_vartyper) > 0) {
+    stop("Variabler må ha entydige variabeltyper:\n", str_c(ulike_vartyper, collapse = ", "))
+  }
+
+  # sjekk at variabeletiketter er entydige
+  ulike_variabeletiketter = kodebok %>%
+    group_by(variabel_id) %>%
+    summarise(antall_ulike = n_distinct(variabeletikett)) %>%
+    filter(antall_ulike > 1) %>%
+    pull(variabel_id)
+
+  if (length(ulike_variabeletiketter > 0)) {
+    stop("En variabel kan ikke ha flere ulike variabeletiketter:\n", str_c(ulike_variabeletiketter, collapse = ", "))
+  }
+
+  # sjekk at kategoriske variabler har tilsvarende verditekst for hver verdi på tvers av skjema
+  flere_verditekster = kodebok %>%
+    filter(variabeltype == "kategorisk") %>%
+    group_by(variabel_id, verdi) %>%
+    summarise(antall_verditekst = n_distinct(verditekst, .keep_all = TRUE)) %>%
+    filter(antall_verditekst > 1)
+
+  if (nrow(flere_verditekster) > 0) {
+    stop(error = paste0(
+      "Det finnes ",
+      nrow(flere_verditekster),
+      " avvik for listeverdi mellom skjema:\nVariabel: ",
+      flere_verditekster$variabel_id, "\nVerdi: ",
+      flere_verditekster$verdi
+    ))
+  }
+
+  # sjekk at boolske variabler ikke har Obligatorisk = Nei eller Unik = Ja
+  feil_boolsk = kodebok %>%
+    filter(
+      variabeltype == "boolsk",
+      obligatorisk == "nei" | unik == "ja"
+    ) %>%
+    pull(variabel_id)
+
+  if (length(feil_boolsk) > 0) {
+    stop("Boolske variabler kan ikke ha Obligatorisk = 'nei' eller Unik = 'ja'\nVariabel: ", str_c(feil_boolsk, collapse = ", "))
+  }
+
+  # sjekke diverse ting med kategoriske variabler
+  duplikat_verdi = kodebok %>%
+    filter(variabeltype == "kategorisk") %>%
+    group_by(variabel_id) %>%
+    add_count(verdi, name = "antall_av_verdi") %>%
+    filter(antall_av_verdi > 1) %>%
+    distinct(variabel_id) %>%
+    pull(variabel_id)
+
+  na_verdi = kodebok %>%
+    filter(
+      variabeltype == "kategorisk",
+      is.na(verdi)
+    ) %>%
+    pull(variabel_id)
+
+  antall_alternativ = kodebok %>%
+    filter(variabeltype == "kategorisk") %>%
+    group_by(variabel_id) %>%
+    summarise(antall_alternativ = n()) %>%
+    filter(antall_alternativ < 2) %>%
+    pull(variabel_id)
+
+  if (length(duplikat_verdi > 0)) {
+    stop(
+      "Kategoriske variabler må ha unike verdier\nVariabel: ",
+      str_c(duplikat_verdi, collapse = ", ")
+    )
+  }
+
+  if (length(na_verdi) > 0) {
+    stop(
+      "Kategoriske variabler kan ikke ha NA som verdi\nVariabel: ",
+      str_c(na_verdi, collapse = ", ")
+    )
+  }
+
+  if (length(antall_alternativ) > 0) {
+    stop(
+      "Kategoriske variabler må ha minst to svaralternativ\nVariabel: ",
+      str_c(antall_alternativ, collapse = ", ")
+    )
+  }
+
+  # sjekker at variabler ikke har informasjon i kolonner som ikke er relevant for variabeltypen:
+  feil_info_numerisk = kodebok %>%
+    filter(variabeltype == "numerisk") %>%
+    filter(!is.na(verdi) | !is.na(verditekst) |
+      !is.na(min_dato) | !is.na(maks_dato) |
+      !is.na(min_rimeleg_dato) | !is.na(maks_rimeleg_dato))
+
+  if (nrow(feil_info_numerisk) > 0) {
+    stop("Numeriske variabler kan ikke ha informasjon i kolonnene:\nverdi, verditekst, min_dato, maks_dato, min_rimeleg_dato, maks_rimeleg_dato")
+  }
+
+  feil_info_tekst = kodebok %>%
+    filter(variabeltype == "tekst") %>%
+    filter(!is.na(verdi) | !is.na(verditekst) | !is.na(desimaler) | !is.na(eining) |
+      !is.na(min) | !is.na(maks) | !is.na(min_rimeleg) |
+      !is.na(maks_rimeleg) | !is.na(min_dato) | !is.na(maks_dato) |
+      !is.na(min_rimeleg_dato) | !is.na(maks_rimeleg_dato) |
+      !is.na(kommentar_rimeleg) | !is.na(utrekningsformel) | !is.na(logikk))
+
+  if (nrow(feil_info_tekst) > 0) {
+    stop("Tekstvariabler kan ikke inneholde informasjon i
+kolonnene:\nverdi, verditekst, desimaler, eining, min, maks, min_rimeleg,
+maks_rimeleg, min_dato, maks_dato, min_rimeleg_dato, maks_rimeleg_dato,
+kommentar_rimeleg, utrekningsformel, logikk")
+  }
+
+  feil_info_kategorisk = kodebok %>%
+    filter(variabeltype == "kategorisk") %>%
+    filter(!is.na(eining) | !is.na(desimaler) | !is.na(min) | !is.na(maks) |
+      !is.na(min_rimeleg) | !is.na(maks_rimeleg) | !is.na(min_dato) |
+      !is.na(maks_dato) | !is.na(min_rimeleg_dato) |
+      !is.na(maks_rimeleg_dato) | !is.na(kommentar_rimeleg) |
+      !is.na(utrekningsformel) | !is.na(logikk))
+
+  if (nrow(feil_info_kategorisk) > 0) {
+    stop("Kategoriske variabler kan ikke ha informasjon i kolonnene:\n
+eining, desimaler, min, maks, min_rimeleg, maks_rimeleg, min_dato, maks_dato,min_rimeleg_dato, maks_rimeleg_dato,kommentar_rimeleg, utrekningsformel, logikk")
+  }
+
+  # sjekke at ikke-kategoriske variabler ikke har manglende = 'ja'
+  ikke_kat_manglande = kodebok %>%
+    filter(
+      variabeltype != "kategorisk",
+      manglande == "ja"
+    ) %>%
+    pull(variabel_id)
+
+  if (length(ikke_kat_manglande) > 0) {
+    stop(
+      "Ikke-kategoriske variabler kan ikke ha manglende = 'ja'\nvariabel_id: ",
+      str_c(ikke_kat_manglande, collapse = ", ")
+    )
+  }
+
+  # sjekke for feil i relasjon mellom min og maks-verdier
+  feil_relasjon = kodebok %>%
+    filter(min > maks |
+      min_rimeleg < min |
+      min_rimeleg > maks_rimeleg |
+      maks_rimeleg > maks |
+      lubridate::ymd(min_dato) > lubridate::ymd(maks_dato) |
+      lubridate::ymd(min_rimeleg_dato) < lubridate::ymd(min_dato) |
+      lubridate::ymd(min_rimeleg_dato) > lubridate::ymd(maks_rimeleg_dato) |
+      lubridate::ymd(maks_rimeleg_dato) > lubridate::ymd(maks_dato)) %>%
+    pull(variabel_id)
+
+  if (length(feil_relasjon) > 0) {
+    stop("Relasjon mellom minimum og maksimum verdier er ikke ivaretatt\nvariabel_id: ", str_c(feil_relasjon, collapse = ", "))
+  }
+
+  # sjekke at rimeleg-verdier finnes hvis kommentar_rimeleg finnes
+  kommentar_uten_verdier = kodebok %>%
+    filter(!is.na(kommentar_rimeleg) &
+      (is.na(min_rimeleg) & is.na(maks_rimeleg) &
+        is.na(min_rimeleg_dato) & is.na(maks_rimeleg_dato))) %>%
+    pull(variabel_id)
+
+  if (length(kommentar_uten_verdier) > 0) {
+    stop("Kommentar_rimeleg er fylt ut, men det finnes ingen min_rimeleg eller maks_rimeleg\nvariabel_id: ", str_c(kommentar_uten_verdier, collapse = ", "))
+  }
 }
