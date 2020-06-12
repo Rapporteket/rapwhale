@@ -536,7 +536,7 @@ valider_kb_variabler = function(kodebok) {
   # sjekke diverse ting med kategoriske variabler
   duplikat_verdi = kodebok %>%
     filter(variabeltype == "kategorisk") %>%
-    group_by(variabel_id) %>%
+    group_by(skjema_id, variabel_id) %>%
     add_count(verdi, name = "antall_av_verdi") %>%
     filter(antall_av_verdi > 1) %>%
     distinct(variabel_id) %>%
