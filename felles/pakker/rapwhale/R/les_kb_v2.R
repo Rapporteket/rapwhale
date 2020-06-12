@@ -438,7 +438,7 @@ valider_kb_kolonner = function(kodebok) {
   if (length(ny_vartype) > 0) {
     stop(
       "Det finnes variabeltyper som ikke er støttet:\n",
-      str_c(ny_vartype, ", ")
+      str_c(ny_vartype, collapse = ", ")
     )
   }
 
@@ -469,7 +469,7 @@ valider_kb_kolonner = function(kodebok) {
   )]
 
   if (length(ugyldig_varnavn > 0)) {
-    stop("Det finnes ugyldige variabelnavn:\n", str_c(ugyldig_varnavn, ", "))
+    stop("Det finnes ugyldige variabelnavn:\n", str_c(ugyldig_varnavn, collapse = ", "))
   }
 }
 
