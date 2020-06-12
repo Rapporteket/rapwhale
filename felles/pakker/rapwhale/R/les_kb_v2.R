@@ -458,8 +458,11 @@ valider_kb_kolonner = function(kodebok) {
   }
 
   # sjekk at desimaler er positivt heltall hvis det er inkludert
-  if (any(!is.na(kodebok$desimaler)) & (!is.integer(kodebok$desimaler) | any(kodebok$desimaler > 0))) {
-    stop("Desimalkolonnen må være et ikke-negativt heltall")
+  stopifnot(is.integer(kodebok$desimaler))
+  if (any(!is.na(kodebok$desimaler))) {
+    if (any(kodebok$desimaler < 0L, na.rm = TRUE)) {
+      stop("Desimalkolonnen må være et ikke-negativt heltall")
+    }
   }
 
   # sjekk at eining ikke er en tom streng

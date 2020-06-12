@@ -816,10 +816,7 @@ test_that("funksjonen gir feilmelding hvis desimalkolonnen inneholder verdier mi
     valider_kb_kolonner(kb_desimal_negativ),
     feilmelding_desimal
   )
-  expect_error(
-    valider_kb_kolonner(kb_desimal_ikke_heltall),
-    feilmelding_desimal
-  )
+  expect_error(valider_kb_kolonner(kb_desimal_ikke_heltall))
 })
 
 # Sjekke eining-kolonnen
