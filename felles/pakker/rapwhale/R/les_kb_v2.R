@@ -371,12 +371,10 @@ legg_til_variabler_kb = function(kb_std, ekstra_data) {
 valider_kodebok = function(kodebok) {
 
   # Planlagt struktur
-  kodebok = valider_kb_struktur(kodebok)
-  kodebok = valider_kb_skjema(kodebok)
-  kodebok = valider_kb_kolonne(kodebok)
-  kodebok = valider_kb_variabel(kodebok)
-
-  kodebok
+  # valider_kb_struktur(kodebok)
+  valider_kb_skjema(kodebok)
+  valider_kb_kolonne(kodebok)
+  valider_kb_variabel(kodebok)
 }
 
 valider_kb_struktur = function(kodebok) {}
