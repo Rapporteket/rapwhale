@@ -230,7 +230,7 @@ reduser_duplikate_variabler = function(kb_mellom) {
 #' vi vil ha et nivå for hver listeverdi.
 #' Tar inn kodebok og returnerer kodebok med statusvariabler utvidet
 #'
-#' @param kb_std Kodebok på standardformat
+#' @param kb_mellom Kodebok på mellomformat
 utvid_statusvariabel = function(kb_mellom) {
   # FIXME - Se om vi kan bruke insert_rows, update_rows eller upsert_rows i nye dplyr.
   # Sjekker at det ingen tabeller har flere statusvariabler.
