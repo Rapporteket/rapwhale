@@ -347,6 +347,8 @@ test_that("funksjonen fjerner duplikate variabler i samme tabell, men godtar dup
       variabel_id = "død",
       variabeltype = "kategorisk",
       obligatorisk = "nei",
+      unik = "nei",
+      manglande = "nei",
       verdi = c("1", "2", "1", "2"),
       verditekst = c("ja", "nei", "ja", "nei")
     )
@@ -901,22 +903,18 @@ test_that("funksjonen gir feilmelding hvis en faktor har ulike verditekster for 
   )
 })
 
-test_that("funksjonen gir feilmelding hvis en boolsk variabel har 'Obligatorisk' = Nei, eller 'Unik' = Ja", {
+test_that("funksjonen gir feilmelding hvis en boolsk variabel har 'Obligatorisk' = Nei, og 'Unik' = Ja", {
   kb_boolsk_feil = kb_tom_std %>%
     add_row(
-      variabel_id = c("oblig_feil", "unik_feil", "ok"),
+      variabel_id = "oblig_feil",
       variabeltype = "boolsk",
-      obligatorisk = c("nei", "ja", "ja"),
-      unik = c("nei", "ja", "nei")
+      obligatorisk = "nei",
+      unik = "ja"
     )
 
   expect_error(
     valider_kb_variabler(kb_boolsk_feil %>% slice(1)),
-    "Boolske variabler kan ikke ha Obligatorisk = 'nei' eller Unik = 'ja'\nVariabel: oblig_feil"
-  )
-  expect_error(
-    valider_kb_variabler(kb_boolsk_feil %>% slice(2)),
-    "Boolske variabler kan ikke ha Obligatorisk = 'nei' eller Unik = 'ja'\nVariabel: unik_feil"
+    "Boolske variabler kan ikke ha Obligatorisk = 'nei' og Unik = 'ja'\nVariabel: oblig_feil"
   )
 })
 
