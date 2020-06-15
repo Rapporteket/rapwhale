@@ -322,6 +322,13 @@ oqr_til_std_variabeltyper = function(kb_mellom) {
   kb_mellom
 }
 
+#' sjekker at obligatoriske variabler er synlige for bruker
+#'
+#' Enkel sjekk for om obligatoriske variabler er aktiveringsspørsmål.
+#' Hvis en obligatorisk variabel ikke er et aktiveringsspørsmål settes
+#' obligatorisk til nei.
+#'
+#' @param kb_mellom Kodebok på mellomformat
 sjekk_obligatorisk = function(kb_mellom) {
   stopifnot(all(!(is.na(kb_mellom$obligatorisk) |
     is.na(kb_mellom$aktiveringsspoersmaal) |
