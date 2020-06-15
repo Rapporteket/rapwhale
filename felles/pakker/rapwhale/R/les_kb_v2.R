@@ -367,6 +367,12 @@ velg_standardkolonner = function(kb_mellom) {
   kb_std
 }
 
+#' Tildel unike skjemanavn fra tabellnavn
+#'
+#' Gir nye skjemanavn som samsvarer med tabellen variablene ligger i.
+#' Velger første *ledige* navn blant tilgjengelige skjema-id'er.
+#'
+#' @param kb_std Kodebok på standardformat
 tildel_unike_skjemanavn_fra_skjema_id = function(kb_std) {
   # Ordner skjemanavn til å samsvare med hvilken tabell variablene ligger i.
 
