@@ -282,7 +282,16 @@ konverter_oqr_kb = function(kb_mellom) {
   kb_std
 }
 
-oqr_til_std_variabeltyper = function(kb_std) {
+
+#' konverter navn for variabeltyper fra OQR til standard
+#'
+#' Endrer navn for variabeltyper fra OQR-navn til standardnavn.
+#' Sjekker også at det ikke er ukjente variabeltyper i kodebok.
+#'
+#' @param kb_mellom Kodebok på mellomformat
+#'
+#' @return kodebok på mellomformat, men med standardnavn for variabeltyper
+oqr_til_std_variabeltyper = function(kb_mellom) {
   vartype_oqr_standard = tribble(
     ~type_oqr, ~type_standard,
     "Listevariabel", "kategorisk",
