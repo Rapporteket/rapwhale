@@ -558,7 +558,7 @@ valider_kb_variabler = function(kodebok) {
     pull(variabel_id)
 
   if (length(feil_boolsk) > 0) {
-    stop("Boolske variabler kan ikke ha Obligatorisk = 'nei' eller Unik = 'ja'\nVariabel: ", str_c(feil_boolsk, collapse = ", "))
+    stop("Boolske variabler kan ikke ha Obligatorisk = 'nei' og Unik = 'ja'\nVariabel: ", str_c(feil_boolsk, collapse = ", "))
   }
 
   # sjekke diverse ting med kategoriske variabler
