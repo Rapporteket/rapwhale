@@ -436,6 +436,12 @@ legg_til_variabler_kb = function(kb_std, ekstra_data) {
   kb_std
 }
 
+#' Valider kodebok
+#'
+#' Funksjon for å validere kodebok for å sikre at den er i henhold til vårt standardformat.
+#' Tar inn kodebok og returnerer ingenting gitt at kodeboken oppfyller kravene til standardformat.
+#'
+#' @param kodebok Kodebok på standardformat
 valider_kodebok = function(kodebok) {
 
   # Planlagt struktur
@@ -447,6 +453,11 @@ valider_kodebok = function(kodebok) {
 
 valider_kb_struktur = function(kodebok) {}
 
+#' Valider skjema
+#'
+#' Et sett med tester for å validere kodebok på skjemanivå.
+#'
+#' @param kodebok kodebok på standard format.
 valider_kb_skjema = function(kodebok) {
 
   # Sjekk at skjema_id ikke har flere skjemanavn
@@ -497,6 +508,11 @@ valider_kb_skjema = function(kodebok) {
   }
 }
 
+#' Valider kolonner
+#'
+#' Et sett med tester for å validere kodebok på kolonnenivå.
+#'
+#' @param kodebok kodebok på standard format
 valider_kb_kolonner = function(kodebok) {
   aksepterte_variabeltyper = c(
     "kategorisk", "tekst", "boolsk",
@@ -548,6 +564,11 @@ valider_kb_kolonner = function(kodebok) {
   }
 }
 
+#' Valider variabler
+#'
+#' Et sett med tester for å valider kodebok på variabelnivå.
+#'
+#' @param kodebok kodebok på standardformat
 valider_kb_variabler = function(kodebok) {
 
   # sjekke at variabeltyper er entydige
