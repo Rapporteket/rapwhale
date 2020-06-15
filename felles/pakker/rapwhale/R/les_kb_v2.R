@@ -344,7 +344,13 @@ sjekk_obligatorisk = function(kb_mellom) {
     )
 }
 
-velg_standardkolonner = function(kb_std) {
+#' Velg standardkolonner
+#'
+#' Velger ut standardkolonner tilsvarende vårt standardformat. Kolonnene
+#' hentes ut i standard rekkefølge.
+#'
+#' @param kb_mellom Kodebok på mellomformat
+velg_standardkolonner = function(kb_mellom) {
 
   # Fikse rekkefølge for og valg av variabler til kb_std
   std_namn = c(
@@ -356,7 +362,7 @@ velg_standardkolonner = function(kb_std) {
     "utrekningsformel", "logikk", "kommentar"
   )
 
-  kb_std = kb_std %>%
+  kb_std = kb_mellom %>%
     select(!!std_namn)
   kb_std
 }
