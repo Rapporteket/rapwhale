@@ -3,7 +3,6 @@
 #' @importFrom stringr str_detect str_c str_to_lower
 NULL
 
-
 #' Funksjon for å lese inn kodebok for OQR-register
 #'
 #' Hovedfunksjon for å lese inn kodebok for OQR-register.
@@ -146,6 +145,23 @@ konverter_tekst = function(d, regex, parse_funksjon, ...) {
   d
 }
 
+#' Konverter OQR kodebok fra basisformat til standard format.
+#'
+#' Ved bruk av les_kb_oqr_base får vi inn en kodebok på et format som må endres
+#' litt for å kunne brukes til å lese inn datadump.
+#' Denne funksjonen gjør følgende endringer:
+#' Kolonnenavn endres til våre standardnavn
+#' Duplikate variabler reduseres innen hvert skjema
+#' Statusvariabler utvides til å inneholde alle nivå
+#' Obligatoriske variabler sjekkes for å se om de er aktiveringsspørsmål
+#' Navn for variabeltyper konverteres til standardnavn
+#' Standardkolonner velges ut
+#' Unike skjemanavn tildeles basert på skjemaid
+#' Se de underliggende funksjonene for mer detaljerte beskrivelser.
+#'
+#' @param kb_oqr Tar inn en kodebok på basisformat slik det leses inn fra les_kb_oqr_base
+#'
+#' @export
 kb_oqr_base_til_std = function(kb_oqr) {
   # Tar inn en kodebok-tibble med riktige variabeltyper.
 
