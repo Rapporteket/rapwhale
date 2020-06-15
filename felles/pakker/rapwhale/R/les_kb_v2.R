@@ -1,6 +1,7 @@
 #' @import dplyr
 #' @importFrom tibble tribble tibble
 #' @importFrom stringr str_detect str_c str_to_lower
+#' @importFrom lubridate ymd
 NULL
 
 #' Funksjon for å lese inn kodebok for OQR-register
@@ -726,10 +727,10 @@ eining, desimaler, min, maks, min_rimeleg, maks_rimeleg, min_dato, maks_dato,min
       min_rimeleg < min |
       min_rimeleg > maks_rimeleg |
       maks_rimeleg > maks |
-      lubridate::ymd(min_dato) > lubridate::ymd(maks_dato) |
-      lubridate::ymd(min_rimeleg_dato) < lubridate::ymd(min_dato) |
-      lubridate::ymd(min_rimeleg_dato) > lubridate::ymd(maks_rimeleg_dato) |
-      lubridate::ymd(maks_rimeleg_dato) > lubridate::ymd(maks_dato)) %>%
+      ymd(min_dato) > ymd(maks_dato) |
+      ymd(min_rimeleg_dato) < ymd(min_dato) |
+      ymd(min_rimeleg_dato) > ymd(maks_rimeleg_dato) |
+      ymd(maks_rimeleg_dato) > ymd(maks_dato)) %>%
     pull(variabel_id)
 
   if (length(feil_relasjon) > 0) {
