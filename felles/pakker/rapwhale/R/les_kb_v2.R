@@ -306,7 +306,7 @@ oqr_til_std_variabeltyper = function(kb_mellom) {
   )
 
   # Stopp viss det dukkar opp variabeltypar me ikkje kjenner til
-  nye_vartypar = na.omit(setdiff(kb_std$variabeltype, vartype_oqr_standard$type_oqr))
+  nye_vartypar = na.omit(setdiff(kb_mellom$variabeltype, vartype_oqr_standard$type_oqr))
   if (length(nye_vartypar) > 0) {
     stop(
       "Kodeboka har variabeltypar me ikkje støttar / har standardnamn på:\n",
@@ -315,11 +315,11 @@ oqr_til_std_variabeltyper = function(kb_mellom) {
   }
 
   # Byt ut variabeltype-verdiane med våre standardiserte namn
-  kb_std$variabeltype = vartype_oqr_standard$type_standard[
-    match(kb_std$variabeltype, vartype_oqr_standard$type_oqr)
+  kb_mellom$variabeltype = vartype_oqr_standard$type_standard[
+    match(kb_mellom$variabeltype, vartype_oqr_standard$type_oqr)
   ]
 
-  kb_std
+  kb_mellom
 }
 
 sjekk_obligatorisk = function(kb_mellom) {
