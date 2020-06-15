@@ -2,6 +2,18 @@
 #' @importFrom tibble tribble tibble
 #' @importFrom stringr str_detect str_c str_to_lower
 NULL
+
+
+#' Funksjon for å lese inn kodebok for OQR-register
+#'
+#' Hovedfunksjon for å lese inn kodebok for OQR-register.
+#' Tar inn filplassering for kodebok og argumentet valider som angir om det skal
+#' gjøres validering av kodebok ved innlesning.
+#'
+#' @param adresse en tekststreng for filplassering for kodebok.
+#' @param valider TRUE eller FALSE for å velge om kodebok skal valideres ved innlesning.
+#'
+#' @export
 les_kb_oqr_v2 = function(adresse, valider = TRUE) {
   kb_oqr = les_kb_oqr_base(adresse)
 
@@ -64,7 +76,7 @@ les_kb_oqr_v2 = function(adresse, valider = TRUE) {
 #' Les inn OQR-kodebok
 #'
 #' les_kb_oqr_base leser inn en base-versjon av OQR-kodebok. Det gjøres ingen
-#' validering eller korrektur på kodeboken her. Den leses inn slik den er.
+#' validering eller korreksjoner på kodeboken her. Den leses inn slik den er.
 #' Eneste argument er adresse, som angir filplassering for kodebok.
 #'
 #' Returnerer en OQR-kodebok som inneholder alt av informasjon, men som har
