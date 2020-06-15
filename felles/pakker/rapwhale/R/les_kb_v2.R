@@ -258,6 +258,18 @@ utvid_statusvariabel = function(kb_mellom) {
   kb_mellom
 }
 
+
+#' Hjelpefunksjon for konvertering av kodebok fra OQR-format til standardformat
+#'
+#' Tar inn kodebok på mellomformat og konverterer til standardformat.
+#' Endrer navn på variabeltyper til standard navn
+#' Velger standardkolonner som alle kodebøker skal ha på standardformat.
+#' Tildeler unike skjemanavn for tabellene basert på skjemaid.
+#'
+#' @param kb_mellom kodebok på mellomformat
+#'
+#' @return kodebok på standardformat
+#' @export
 konverter_oqr_kb = function(kb_mellom) {
   kb_mellom = oqr_til_std_variabeltyper(kb_mellom)
   kb_std = velg_standardkolonner(kb_mellom)
