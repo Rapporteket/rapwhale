@@ -211,7 +211,7 @@ kb_oqr_base_til_std = function(kb_oqr) {
 #' Funksjon for å trekke ut unike variabler innenfor et skjema.
 #' Foreløpig er denne funksjonen laget spesifikt for les_kb_v2.R, men den kan kanskje
 #' utvides til å dekke mer generelle tilfeller.
-#' Tar inn en kodebok i på mellomformat og returnerer en kodebok på mellomformat
+#' Tar inn en kodebok på mellomformat og returnerer en kodebok på mellomformat
 #' som har unike variabler innenfor hver tabell.
 #' Grunnen til at vi gjør det er at enkelte OQR-register har flere skjema som registreres
 #' i samme tabell, for eksempel oppfølging 1år, oppfølging 2år osv.
