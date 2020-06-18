@@ -606,8 +606,7 @@ valider_kb_variabler = function(kodebok) {
       "Det finnes ",
       nrow(flere_verditekster),
       " avvik for listeverdi mellom skjema:\nVariabel: ",
-      flere_verditekster$variabel_id, "\nVerdi: ",
-      flere_verditekster$verdi
+      str_c(unique(flere_verditekster$variabel_id), collapse = ", ")
     ))
   }
 
