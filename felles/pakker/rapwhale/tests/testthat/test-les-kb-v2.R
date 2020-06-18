@@ -899,7 +899,7 @@ test_that("funksjonen gir feilmelding hvis en faktor har ulike verditekster for 
 
   expect_error(
     valider_kb_variabler(kb_ulike_faktornivaa),
-    "Det finnes 1 avvik for listeverdi mellom skjema:\nVariabel: komplikasjon\nVerdi: 3"
+    "Det finnes 1 avvik for listeverdi mellom skjema:\nVariabel: komplikasjon"
   )
 })
 
