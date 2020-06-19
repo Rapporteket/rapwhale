@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{kvalreg-rapport}[2020/05/04 Rapportar for kvalitetsregister]
+\ProvidesClass{kvalreg-rapport}[2020/06/19 Rapportar for kvalitetsregister]
 
 % Krev bruk av LuaLaTeX
 \RequirePackage{ifluatex}
@@ -66,7 +66,12 @@
 
 
 % Støtte for fargar
+% «luacolor» hindrar at fargar i overskrifter fører til
+% unødvendige linjeskift. Dette vert gjort ved at 
+% fargar vert definerte som attributt i staden for som
+% «whatsit»-element (jf. https://tex.stackexchange.com/a/101643).
 \RequirePackage{xcolor}
+\RequirePackage{luacolor}
 
 % Fargar frå profilmanualen her:
 % https://www.regjeringen.no/no/tema/helse-og-omsorg/sykehus/styringsdokumenter1/nasjonalt-profilprogram-for-helseforetak/id650208/
@@ -156,18 +161,12 @@
 % Definer formatering for overskrifter på ulike nivå
 \chapterstyle{section}
 % Fargelagde overskrifter med fin skrift.
-% Det logiske ville vore \color, ikkje \textcolor her, men det kan
-% (i sjeldne tilfelle) føra til sideskift mellom to overskrifter,
-% av grunnen forklart her: https://tex.stackexchange.com/a/101643
-% Ved å bruka \textcolor i staden for, omgår me problemet
-% (merk at \overskrift då alltid må vera sistargument).
-\newcommand{\overskrift}{\altskrift\textcolor{PrimCol}}
-\newcommand{\overskriftColor}{\altskrift\color{PrimCol}} % Alternativ variant som må brukast for kapitteloverskrifter
+\newcommand{\overskrift}{\altskrift\color{PrimCol}}
 \renewcommand*{\partnamefont}{\Huge\bfseries\overskrift}
 \renewcommand*{\partnumfont}{\Huge\bfseries\overskrift}
 \renewcommand*{\parttitlefont}{\Huge\mdseries\overskrift}
 \renewcommand*{\chapterheadstart}{\noindent\hspace*{\margjuster}}
-\renewcommand*{\chapnumfont}{\huge\bfseries\raggedright\overskriftColor}
+\renewcommand*{\chapnumfont}{\huge\bfseries\raggedright\overskrift}
 \renewcommand{\printchapternum}{\chapnumfont \thechapter\space\space}
 \renewcommand*{\chaptitlefont}{\huge\bfseries\overskrift}
 \setsecheadstyle{\Large\bfseries\raggedright\overskrift}
