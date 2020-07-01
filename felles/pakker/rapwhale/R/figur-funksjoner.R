@@ -279,3 +279,28 @@ lag_fig_soyle = function(d, x, y, farge = ColPrim[3], facet = FALSE, facet_grupp
   }
   plott
 }
+
+#' Lag histogram
+#'
+#' Funksjon for å lage histogram. Med default-verdier vil farger og
+#' utseende tilsvare det vi bruker i årsrapporter.
+#'
+#' @param d datasett som inkluderer variabelen som skal brukes i histogrammet
+#' @param x variabel som skal brukes på x-aksen
+#' @param binwidth instilling for intervallbredde per søyle
+#' @param akse_label_bredde instilling for mellomrom mellom akselabels
+#' @param farge hvilken farge som skal brukes som fyll og kantlinje for histogram.
+#' Default verdi er standardfarge for SKDE-årsrapport.
+#' @export
+lag_fig_histogram = function(d, x, binwidth = 1, akse_label_bredde = 10, farge = colPrim[3]) {
+  x_var = rlang::enexpr(x)
+
+  ggplot2::ggplot(d, aes(x = !!x_var)) +
+    geom_histogram(
+      fill = farge, color = farge,
+      binwidth = binwidth, boundary = 0
+    ) +
+    scale_x_continuous(breaks = scales::breaks_width(akse_label_bredde)) +
+    scale_y_continuous(expand = expansion(mult = c(0.0, .05), add = 0)) +
+    fjern_x
+}
