@@ -8,7 +8,7 @@
 les_varnavn = function(adresse, formatspek) {
   stopifnot(is.character(adresse) & length(adresse) == 1)
 
-  varnavn = read_delim(adresse,
+  varnavn = readr::read_delim(adresse,
     delim = formatspek$skilletegn,
     n_max = 1,
     col_names = FALSE,
@@ -16,7 +16,7 @@ les_varnavn = function(adresse, formatspek) {
     locale = readr::locale(encoding = formatspek$tegnkoding)
   ) %>%
     unlist(., use.names = FALSE) %>%
-    replace_na("")
+    tidyr::replace_na("")
 
   varnavn
 }
@@ -88,7 +88,7 @@ std_koltype_til_readr_koltype = function(vartype) {
     stop("Ukjent variabeltype: ", vartype_mangler)
   }
 
-  koltype = str_c(koblingstabell$koltype[ind], collapse = "")
+  koltype = stringr::str_c(koblingstabell$koltype[ind], collapse = "")
   koltype
 }
 
@@ -140,7 +140,7 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
   # fixme: Fjern denne og oppdater std_koltype_til_readr_koltype() når
   #        https://github.com/tidyverse/readr/issues/642 er fiksa
   varnavn_dato_kl = spesifikasjon$varnavn_resultat[spesifikasjon$vartype == "dato_kl"]
-  d = mutate_at(
+  d = dplyr::mutate_at(
     d, varnavn_dato_kl,
     ~ readr::stop_for_problems(
       readr::parse_datetime(.,
@@ -152,7 +152,7 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
 
   # Konverter boolske
   varnavn_boolske = spesifikasjon$varnavn_resultat[spesifikasjon$vartype == "boolsk"]
-  d = mutate_at(d, varnavn_boolske,
+  d = dplyr::mutate_at(d, varnavn_boolske,
     konverter_boolske,
     boolsk_usann = formatspek$boolsk_usann,
     boolsk_sann = formatspek$boolsk_sann
