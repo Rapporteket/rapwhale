@@ -138,11 +138,18 @@ regn_ki_univar = function(x, bootstrap = FALSE, antall, ...) {
 }
 
 
-
-# For å lage pene LaTeX-tabeller i et standardisert format for alle årsrapporter,
-# med mulighet for å gjøre den stor nok til hele siden (wide = TRUE).
-# optional arguments inkluderer colheads=c() og caption = paste0("").
-
+#' Lag LaTeX-tabell
+#'
+#' For å lage pene LaTeX-tabeller i et standardisert format for alle årsrapporter,
+#' med mulighet for å gjøre den stor nok til hele siden (wide = TRUE).
+#' optional arguments inkluderer colheads=c() og caption = paste0("").
+#'
+#' @param dataframe dataramme som inneholder data som skal vises i tabell
+#' @param label label for tabellen som brukes for å lage referanser i teksten
+#' @param caption forklaringstekst for tabellen
+#' @param wide valgmulighet for om tabellen skal være breiere enn standard tekstbredde. Må være TRUE eller FALSE, default er FALSE
+#' @param ... Ytterligere argumenter som kan gis til Hmisc::latex funksjon
+#' @export
 lag_tab_latex = function(dataframe, label, caption, wide = FALSE, ...) {
 
   # Viss dataramma ikkje har nokon radar, bryt latex()-funksjonen
@@ -171,7 +178,7 @@ lag_tab_latex = function(dataframe, label, caption, wide = FALSE, ...) {
       where = "htbp", booktabs = TRUE, numeric.dollar = FALSE, ...
     ))
     if (wide) {
-      tabell %<>% str_replace("^\\\\(begin|end)\\{table\\}", "\\\\\\1\\{widetable\\}") # Superrobust ... ;)
+      tabell %<>% stringr::str_replace("^\\\\(begin|end)\\{table\\}", "\\\\\\1\\{widetable\\}") # Superrobust ... ;)
     }
     tabell = paste0(tabell, sep = "\n")
   }
