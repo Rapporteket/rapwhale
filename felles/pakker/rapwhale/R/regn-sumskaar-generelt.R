@@ -63,17 +63,16 @@ NULL
 #' skaar_datasett(d_eks, skaaringstabell = skaaringstabell_eks)
 skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell, godta_manglende = FALSE) {
   if (!is.null(variabelnavn)) {
-    d_navn_ok = rename(d, !!variabelnavn)
+    d_std_navn = rename(d, !!variabelnavn)
   } else {
-    d_navn_ok = d
+    d_std_navn = d
   }
   sjekk_skaaringstabell(skaaringstabell)
-  sjekk_variabelnavn(d = d_navn_ok, variabelnavn = skaaringstabell$variabel)
-  d_akt = d_navn_ok %>%
-    select(unique(skaaringstabell$variabel)) %>%
-    mutate_if(is.character, as.numeric)
-  sjekk_variabelverdier(d = d_akt, verditabell = select(skaaringstabell, variabel, verdi), godta_manglende = godta_manglende)
-  d_sumskaarer = skaar_datasett_uten_validering(d = d_akt, skaaringstabell)
+  sjekk_variabelnavn(d_std_navn, variabelnavn = skaaringstabell$variabel)
+  d_akt = d_std_navn %>%
+    select(unique(skaaringstabell$variabel))
+  sjekk_variabelverdier(d_akt, verditabell = select(skaaringstabell, variabel, verdi), godta_manglende = godta_manglende)
+  d_sumskaarer = skaar_datasett_uten_validering(d_akt, skaaringstabell)
   d_orig_inkl_sumskaar = legg_til_eller_erstatt_kolonner(d, d_sumskaarer)
   d_orig_inkl_sumskaar
 }
