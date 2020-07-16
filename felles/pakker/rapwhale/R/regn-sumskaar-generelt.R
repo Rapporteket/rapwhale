@@ -97,7 +97,6 @@ skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell,
 #' er ugyldig.
 #'
 #' @return `NULL`
-
 sjekk_skaaringstabell = function(skaaringstabell) {
   if (!all(hasName(skaaringstabell, c(
     "delskala", "variabel", "verdi",
@@ -127,25 +126,23 @@ sjekk_skaaringstabell = function(skaaringstabell) {
   }
 }
 
-#' Funksjon for å sjekke variabelnavn
+#' Sjekk at oppgitte variabler finnes i datasettet
 #'
 #' @description
-#' Skal ta inn et datasett og en vektor med gyldige variabelnavn. Funksjonen gir
-#' feilmelding hvis datasettet ikke inneholder alle variabelnavnene i skåringstabellen.
+#' Skal ta inn et datasett og en vektor med variabelnavn. Funksjonen gir
+#' feilmelding hvis datasettet ikke inneholder alle variabelnavnene i
+#' skåringstabellen.
 #'
-#' @param d Dataramme/tibble som inneholder spørreskjema-variabler + ev. andre variabler.
-#' @param variabelnavn Vektor som inneholder alle variabelnavn i `skaaringstabell$variabel`.
+#' @param d Dataramme/tibble.
+#' @param variabelnavn Vektor med variabelnavn (som skal sjekkes om
+#'     finnes i `d`).
 #'
 #' @details
-#' Ved bruk av den overordnede funksjonen [skaar_datasett()] kalles denne funksjonen på etter at
-#' skåringstabellen er validert og ev. nye navn for en eller flere spørreskjema-variabler har
-#' blitt oppgitt.
+#' Gir feilmelding hvis `d` ikke inneholder alle variabelnavn
+#' i skåringstabellen. Funksjonen oppgir også hvilke variabelnavn som
+#' ev. mangler i `d`.
 #'
-#' @return Gir feilmelding hvis `d` ikke inneholder alle variabelnavn
-#'     i `skaaringstabell$variabel`. Sumskår blir da ikke regnet ut hvis man benytter den
-#'     overordnede funksjonen [skaar_datasett()].
-#'     Funksjonen oppgir også hvilke variabelnavn som mangler i `d`.
-
+#' @return `NULL`
 sjekk_variabelnavn = function(d, variabelnavn) {
   var_mangler = unique(variabelnavn[!(variabelnavn %in% names(d))])
   var_mangler_tekst = paste0(var_mangler, collapse = ", ")
