@@ -61,7 +61,8 @@ NULL
 #' )
 #'
 #' skaar_datasett(d_eks, skaaringstabell = skaaringstabell_eks)
-skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell, godta_manglende = FALSE) {
+skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell,
+                          godta_manglende = FALSE) {
   if (!is.null(variabelnavn)) {
     d_std_navn = rename(d, !!variabelnavn)
   } else {
@@ -71,31 +72,37 @@ skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell, godta_manglen
   sjekk_variabelnavn(d_std_navn, variabelnavn = skaaringstabell$variabel)
   d_akt = d_std_navn %>%
     select(unique(skaaringstabell$variabel))
-  sjekk_variabelverdier(d_akt, verditabell = select(skaaringstabell, variabel, verdi), godta_manglende = godta_manglende)
+  sjekk_variabelverdier(d_akt,
+    verditabell = select(skaaringstabell, variabel, verdi),
+    godta_manglende = godta_manglende
+  )
   d_sumskaarer = skaar_datasett_uten_validering(d_akt, skaaringstabell)
   d_orig_inkl_sumskaar = legg_til_eller_erstatt_kolonner(d, d_sumskaarer)
   d_orig_inkl_sumskaar
 }
 
-#' Funksjon for å sjekke skåringstabellen
+#' Sjekk om skåringstabellen er gyldig
 #'
 #' @description
-#' Gir feilmelding hvis skåringstabellen er ugyldig.
+#' Gir feilmelding hvis skåringstabellen ikke er gyldig.
 #'
-#' @param skaaringstabell Dataramme/tibble med fire kolonner (`delskala`, `variabel`, `verdi` og `koeffisient`).
-#'     Variabel-kolonnen må være av typen tekst og verdi-kolonnen og koeffisient-kolonnen må være numeriske.
+#' @param skaaringstabell Dataramme/tibble med fire kolonner
+#'     (`delskala`, `variabel`, `verdi` og `koeffisient`).
 #'
 #' @details
-#' Sjekker at `skaaringstabell` inneholder riktige kolonner og riktige variabeltyper. Sjekker også
-#' at den ikke inneholder dupliserte verdier for en variabel innenfor samme delskala og at
-#' koeffisient-kolonnen ikke inneholder NA-verdier.
+#' Sjekker at `skaaringstabell` inneholder riktige kolonner og riktige
+#' variabeltyper. Sjekker også at den ikke inneholder dupliserte verdier
+#' for en variabel innenfor samme delskala og at koeffisient-kolonnen
+#' ikke inneholder NA-verdier. Skal gi feilmelding hvis `skaaringstabell`
+#' er ugyldig.
 #'
-#' @return Skal gi feilmelding hvis `skaaringstabell` er ugyldig. Sumskår blir da ikke regnet ut
-#'     hvis man benytter den overordnede funksjonen [skaar_datasett()].
+#' @return `NULL`
 
 sjekk_skaaringstabell = function(skaaringstabell) {
-  # Sjekker om skåringstabellen inneholder riktige kolonner/kolonnenavn.
-  if (!all(hasName(skaaringstabell, c("delskala", "variabel", "verdi", "koeffisient")))) {
+  if (!all(hasName(skaaringstabell, c(
+    "delskala", "variabel", "verdi",
+    "koeffisient"
+  )))) {
     stop("Skåringstabellen må inneholde kolonnene 'delskala', 'variabel', 'verdi' og 'koeffisient'")
   }
 
@@ -104,24 +111,19 @@ sjekk_skaaringstabell = function(skaaringstabell) {
   d_med_ant_dupl = skaaringstabell %>%
     count(delskala, variabel, verdi, name = "n_rader")
 
-  # Hvis kolonnen 'ant_dupl' inneholder en eller flere verdier som er ulik 0
-  # skal funksjonen stoppe og skrive ut en feilmelding.
   if (any(d_med_ant_dupl$n_rader != 1)) {
     stop("Skåringstabellen kan ikke inneholde dupliserte verdier for en variabel innenfor samme delskala")
   }
 
-  # Hvis koeffisient-kolonnen i skåringstabellen inneholder NA-verdier
-  # skal funksjonen stoppe og skrive ut en feilmelding.
   if (any(is.na(skaaringstabell$koeffisient))) {
     stop("Koeffisient-kolonnen i skåringstabellen kan ikke inneholde NA-verdier")
   }
 
-  # Hvis kolonnene i skåringstabellen ikke har riktig format skal funksjonen
-  # stoppe og skrive ut en feilmelding.
-  if (!(is.numeric(skaaringstabell$verdi) &&
-    is.numeric(skaaringstabell$koeffisient) &&
-    is.character(skaaringstabell$variabel))) {
-    stop("Verdi-kolonnen og koeffisient-kolonnen må være numeriske og variabel-kolonnen må være av typen tekst")
+  if (!(is.character(skaaringstabell$delskala) &&
+    is.character(skaaringstabell$variabel) &&
+    is.numeric(skaaringstabell$verdi) &&
+    is.numeric(skaaringstabell$koeffisient))) {
+    stop("Delskala-kolonnen og variabel-kolonnen må være av typen tekst og verdi-kolonnen og koeffisient-kolonnen må være numeriske.")
   }
 }
 
