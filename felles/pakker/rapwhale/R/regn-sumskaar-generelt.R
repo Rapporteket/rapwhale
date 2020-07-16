@@ -3,32 +3,64 @@
 #' @importFrom magrittr %>%
 #' @importFrom tidyr pivot_longer pivot_wider nest unnest
 NULL
-#' Overordnet sumskår-funksjon
+#' Skår spørreskjema ved hjelp av verditabell
 #'
 #' @description
-#' Validerer og regner ut sumskår(er) for spørreskjema-variablene i et datasett.
+#' Regner ut sumskår(er) og validerer spørreskjema-variablene i et
+#' datasett.
 #'
-#' @param d Dataramme/tibble som inneholder spørreskjema-variabler + ev. andre variabler.
-#'     Spørreskjema-variablene må være numeriske variabler eller tekstvariabler.
-#' @param variabelnavn Vektor med nye og gamle variabelnavn
-#'     (`c(nytt_navn_1 = "gammelt_navn_1", nytt_navn_2 = "gammelt_navn_2")`).
-#'     Nye navn skal kun oppgis for spørreskjema-variabler som ikke har identiske navn
-#'     som i skåringstabellen.
-#' @param skaaringstabell Dataramme/tibble med fire kolonner (`delskala`, `variabel`, `verdi` og `koeffisient`).
-#'     Variabel-kolonnen må være av typen tekst og verdi-kolonnen og koeffisient-kolonnen må være numeriske.
-#' @param godta_manglende Bestemmer om manglende verdier for spørreskjema-variablene i `d` skal godtas eller ikke.
-#'     Standardinnstilling er FALSE.
+#' @param d Dataramme/tibble som inneholder spørreskjema-variabler + ev.
+#'     andre variabler. Spørreskjema-variablene må være numeriske.
+#' @param variabelnavn Ev. navn på variabler i datasettet som ikke er
+#'     identiske med de standardiserte navnene i skåringstabellen. Bruk
+#'     syntaksen:
+#'     `c(std_navn_1 = "dd_navn_1", std_navn_2 = "dd_navn_2")`
+#'     Nye navn trenger kun oppgis for spørreskjema-variabler som har
+#'     avvikende navn fra skåringstabellen.
+#' @param skaaringstabell Dataramme/tibble med fire kolonner
+#'     (`delskala`, `variabel`, `verdi` og `koeffisient`).
+#'     Delskala-kolonnen og variabel-kolonnen må være av typen tekst og
+#'     verdi-kolonnen og koeffisient-kolonnen må være numeriske.
+#' @param godta_manglende Skal manglende verdier for
+#'     spørreskjema-variablene i `d` godtas? Hvis ikke, blir det gitt ut
+#'     en feilmelding om det finnes manglende verdier.
+#'     Standardverdi: `FALSE`
 #'
 #' @details
-#' Funksjonen sjekker at variabler og verdier tilknyttet spørreskjemaet som skal skåres er
-#' gyldige. Det sjekkes også at `skaaringstabell` er gyldig. Funksjonen gir ut feilmelding hvis
-#' noe er ugyldig. Hvis `d` inneholder en eller flere sumskår-kolonner med
-#' identisk navn som i `skaaringstabell$delskala` blir disse kolonnene stående samme sted, men sumskårene
-#' regnes ut på nytt. Sumskår-kolonner som ikke allerede finnes legges til i alfabetisk rekkefølge til slutt i `d`.
-#' Funksjonen endrer ikke navn eller plassering på kolonner i `d`.
+#' Funksjonen regner ut sumskårer ved hjelp av en skåringstabell. Hvert
+#' svaralternativ for hvert spørsmål i hver delskala har en tilhørende
+#' koeffisient i skåringstabellen. Aktuelle koeffisienter blir summert
+#' sammen for å finne sumskåren. Funksjonen sjekker i tillegg om
+#' variabler og verdier tilknyttet spørreskjemaet som skal skåres er
+#' gyldige. Det sjekkes også om `skaaringstabell` er gyldig. Funksjonen
+#' gir ut feilmelding hvis noe er ugyldig. Hvis `d` inneholder en eller
+#' flere sumskår-kolonner med identisk navn som i
+#' `skaaringstabell$delskala` blir disse kolonnene stående samme sted,
+#' men sumskårene regnes ut på nytt. Sumskår-kolonner som ikke allerede
+#' finnes legges til i samme rekkefølge som i `skaaringstabell$delskala`
+#' helt til høyre i `d`. Funksjonen endrer ikke navn eller plassering på
+#' kolonner i `d`.
 #'
 #' @return `d` med sumskår(er).
-
+#' @export
+#'
+#' @examples
+#' d_eks = tibble::tribble(
+#'   ~pas_id, ~var_a, ~var_b, ~dato,
+#'   146, 1, 2, "2020-05-15"
+#' )
+#'
+#' skaaringstabell_eks = tibble::tribble(
+#'   ~delskala, ~variabel, ~verdi, ~koeffisient,
+#'   "total", "var_a", 1, 5,
+#'   "total", "var_a", NA, 10,
+#'   "total", "var_b", 1, 4,
+#'   "total", "var_b", 2, 5,
+#'   "psykisk", "var_a", 1, 3,
+#'   "psykisk", "var_a", NA, 2
+#' )
+#'
+#' skaar_datasett(d_eks, skaaringstabell = skaaringstabell_eks)
 skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell, godta_manglende = FALSE) {
   if (!is.null(variabelnavn)) {
     d_navn_ok = rename(d, !!variabelnavn)
