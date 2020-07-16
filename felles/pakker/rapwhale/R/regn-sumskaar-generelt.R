@@ -151,33 +151,33 @@ sjekk_variabelnavn = function(d, variabelnavn) {
   }
 }
 
-#' Funksjon for å sjekke variabelverdier
+#' Sjekk at verdier i datasettet er gyldige
 #'
 #' @description
-#' Skal ta inn et datasett, en verditabell og et argument som bestemmer om NA-verdier skal
-#' regnes som gyldige. Funksjonen gir feilmelding hvis datasettet inneholder en eller flere
-#' ugyldige verdier.
+#' Skal ta inn et datasett, en verditabell og et argument som bestemmer
+#' om NA-verdier skal regnes som gyldige. Funksjonen gir feilmelding
+#' hvis datasettet inneholder en eller flere ugyldige verdier.
 #'
-#' @param d Dataramme/tibble som kun inneholder kolonner med identiske navn som i `verditabell$variabel`.
-#'     Alle kolonnene må inneholde numeriske verdier.
-#' @param verditabell Dataramme/tibble med to kolonner (`variabel` og `verdi`) som sier hvilke verdier
-#'     som er gyldige for hvilke variabler.
-#'     Variabel-kolonnen må være av typen tekst og verdi-kolonnen må være numerisk.
-#' @param godta_manglende Bestemmer om manglende verdier for variablene i `d` skal godtas eller ikke.
-#'     Standardinnstilling er FALSE.
+#' @param d Dataramme/tibble som kun inneholder kolonner med identiske
+#'     navn som i `verditabell$variabel`.
+#' @param verditabell Dataramme/tibble med to kolonner (`variabel`
+#'     og `verdi`) som sier hvilke verdier som er gyldige for hvilke
+#'     variabler. Variabel-kolonnen må være av typen tekst og
+#'     verdi-kolonnen må være numerisk.
+#' @param godta_manglende Skal manglende verdier for
+#'     spørreskjema-variablene i `d` godtas? Hvis ikke, blir det gitt ut
+#'     en feilmelding om det finnes manglende verdier.
+#'     Standardverdi: `FALSE`
 #'
 #' @details
-#' Ved bruk av den overordnede funksjonen [skaar_datasett()] kalles denne funksjonen på etter at alle
-#' variabler som ikke inngår i sumskår-beregningene er filtrert vekk og variabelnavnene og skåringstabellen
-#' er validert.
+#' Gir feilmelding hvis `d` inneholder verdier som ikke er numeriske.
+#' Gir også feilmelding hvis `verditabell` ikke er tibble/data.frame
+#' og/eller mangler en av / begge kolonnene `variabel` og `verdi`. Hvis
+#' det finnes ugyldige verdier i `d` gir funksjonen ut oversikt over
+#' antall ugyldige verdier, samt hvilke variabler og verdier dette
+#' gjelder.
 #'
-#' @return Gir feilmelding hvis `d` inneholder verdier som ikke er numeriske.
-#'     Gir også feilmelding hvis `verditabell` ikke er tibble/data.frame
-#'     og/eller mangler en av / begge kolonnene `variabel` og `verdi`. Hvis det finnes
-#'     ugyldige verdier i `d` gir funksjonen ut oversikt over antall ugyldige verdier,
-#'     samt hvilke variabler og verdier dette gjelder. Sumskår blir da ikke regnet ut
-#'     hvis man benytter den overordnede funksjonen [skaar_datasett()].
-
+#' @return `NULL`
 sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
   if (!all(sapply(d, class) %in% c("numeric"))) {
     stop("Datasettet inneholder verdier som ikke er numeriske")
