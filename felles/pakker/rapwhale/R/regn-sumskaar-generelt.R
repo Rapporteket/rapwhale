@@ -179,7 +179,7 @@ sjekk_variabelnavn = function(d, variabelnavn) {
 #'
 #' @return `NULL`
 sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
-  if (!all(sapply(d, class) %in% c("numeric"))) {
+  if (!all(sapply(d, is.numeric))) {
     stop("Datasettet inneholder verdier som ikke er numeriske")
   }
 
@@ -187,10 +187,11 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
     all(hasName(verditabell, c("variabel", "verdi"))))) {
     stop("Inndata må være tibble/data.frame og inneholde kolonnene 'variabel' og 'verdi'")
   }
+
   d_ugyldige_verdier = finn_ugyldige_verdier(d, verditabell)
 
   if (godta_manglende) {
-    d_ugyldige_verdier = na.omit(d_ugyldige_verdier)
+    d_ugyldige_verdier = filter(d_ugyldige_verdier, !is.na(feilverdi))
   }
 
   oppsummering = oppsummer_ugyldige_verdier(d_ugyldige_verdier)
