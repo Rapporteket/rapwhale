@@ -376,21 +376,19 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
   d_med_skaarar
 }
 
-
-
 #' Legg til NA-rader i skåringstabell
 #'
 #' @description
-#' Legg til rader med både `verdi` og `koeffisient` lik `NA`, for lettare
-#' skåring av datasett som har manglande verdiar.
+#' Legg til rader med både `verdi` og `koeffisient` lik `NA`, for
+#' lettare skåring av datasett som har manglande verdiar.
 #'
 #' @param skaaringstabell Vanleg skåringstabell.
 #'
 #' @details
-#' For kvar eksisterande kombinasjon av `delskala` og `variabel` vert det lagt til
-#' ei rad med både `verdi` og `koeffisient` sett til `NA`.
-#' Dette vert berre gjort dersom ikkje alt finst ein `verdi` lik `NA` (uavhengig
-#' av kva tilhøyrande `koeffisient` er).
+#' For kvar eksisterande kombinasjon av `delskala` og `variabel` vert
+#' det lagt til ei rad med både `verdi` og `koeffisient` sett til `NA`.
+#' Dette vert berre gjort dersom ikkje alt finst ein `verdi` lik `NA`
+#' (uavhengig av kva tilhøyrande `koeffisient` er).
 #'
 #' Dette er berre ein intern hjelpefunksjon for å forenkla koden
 #' for skåring av datasett. Med slike `NA`-rader vert skåren utrekna
@@ -411,7 +409,6 @@ legg_til_na_i_skaaringstabell = function(skaaringstabell) {
     mutate(data = map(data, legg_til_na_rad)) %>%
     unnest(cols = c(data))
 }
-
 
 #' Funksjon for å legge til eller erstatte kolonner i det originale datasettet
 #'
