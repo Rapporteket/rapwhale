@@ -201,28 +201,32 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
   }
 }
 
-#' Funksjon for å finne ugyldige verdier
+#' Finn ugyldige verdier i datasettet
 #'
 #' @description
-#' Gir ut oversikt over alle ugyldige verdier i datasettet som blir tatt inn. Hvis datasettet ikke
-#' inneholder noen ugyldige verdier gir funksjonen ut en tom dataramme/tibble.
+#' Gir ut en tibble med oversikt over alle ugyldige verdier i datasettet
+#' som blir tatt inn. Hvis datasettet ikke inneholder noen ugyldige
+#' verdier, gir funksjonen ut en tibble med null rader.
 #'
-#' @param d Dataramme/tibble som kun inneholder kolonner med identiske navn som i `verditabell$variabel`.
-#'     Alle kolonnene må inneholde numeriske verdier.
-#' @param verditabell Dataramme/tibble med to kolonner (`variabel` og `verdi`) som sier hvilke verdier
-#'     som er gyldige for hvilke variabler.
-#'     Variabel-kolonnen må være av typen tekst og verdi-kolonnen må være numerisk.
+#' @param d Dataramme/tibble som kun inneholder kolonner med identiske
+#'     navn som i `verditabell$variabel`. Alle kolonnene må inneholde
+#'     numeriske verdier.
+#' @param verditabell Dataramme/tibble med to kolonner (`variabel` og
+#'     `verdi`) som sier hvilke verdier som er gyldige for hvilke
+#'     variabler. Variabel-kolonnen må være av typen tekst og
+#'     verdi-kolonnen må være numerisk.
 #'
 #' @details
-#' Ved bruk av den overordnede funksjonen [skaar_datasett()] kalles denne funksjonen på etter at alle
-#' variabler som ikke inngår i sumskår-beregningene er filtrert vekk og variabelnavnene og skåringstabellen
-#' er validert.
+#' Ved bruk av den overordnede funksjonen [skaar_datasett()] kalles
+#' denne funksjonen på etter at skåringstabellen og variabelnavnene er
+#' validert og alle variabler som har navn som ikke finnes i
+#' `verditabell$variabel` er filtrert vekk.
 #'
-#' @return Dataramme/tibble som inneholder tre kolonner (`radnr`, `variabel` og `feilverdi`).
-#'     Sortert etter radnummer og så rekkefølge i `d`. Hvis `d` ikke inneholder noen ugyldige
-#'     verdier gir funksjonen ut en tom dataramme/tibble som kun inneholder kolonnenavnene `radnr`, `variabel`
-#'     og `feilverdi`.
-
+#' @return Tibble som inneholder tre kolonner (`radnr`, `variabel` og
+#'     `feilverdi`). Sortert etter radnummer og så rekkefølge i `d`.
+#'     Hvis `d` ikke inneholder noen ugyldige verdier, vil tibble-en ha
+#'     null rader.
+#' @seealso [oppsummer_ugyldige_verdier]
 finn_ugyldige_verdier = function(d, verditabell) {
   radnr_ugyldige = integer()
   variabler_ugyldige = character()
@@ -236,8 +240,16 @@ finn_ugyldige_verdier = function(d, verditabell) {
     if (length(verdier_d_ugyldige) > 0) {
       indeks_ugyldige = which(verdier_d %in% verdier_d_ugyldige)
       radnr_ugyldige = append(radnr_ugyldige, indeks_ugyldige)
-      variabler_ugyldige = append(variabler_ugyldige, rep(var_d, times = length(indeks_ugyldige)))
-      verdier_ugyldige = append(verdier_ugyldige, verdier_d[indeks_ugyldige])
+      variabler_ugyldige = append(
+        variabler_ugyldige,
+        rep(var_d,
+          times = length(indeks_ugyldige)
+        )
+      )
+      verdier_ugyldige = append(
+        verdier_ugyldige,
+        verdier_d[indeks_ugyldige]
+      )
     }
   }
   oversikt_ugyldige = arrange(
