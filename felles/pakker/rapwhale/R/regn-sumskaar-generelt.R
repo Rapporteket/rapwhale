@@ -242,9 +242,7 @@ finn_ugyldige_verdier = function(d, verditabell) {
       radnr_ugyldige = append(radnr_ugyldige, indeks_ugyldige)
       variabler_ugyldige = append(
         variabler_ugyldige,
-        rep(var_d,
-          times = length(indeks_ugyldige)
-        )
+        rep(var_d, times = length(indeks_ugyldige))
       )
       verdier_ugyldige = append(
         verdier_ugyldige,
@@ -263,32 +261,38 @@ finn_ugyldige_verdier = function(d, verditabell) {
   oversikt_ugyldige
 }
 
-#' Funksjon for å presentere ugyldige verdier på en god måte
+#' Presenter ugyldige verdier i datasettet på en god måte
 #'
 #' @description
-#' Gir ut en oversiktlig fremstilling av datarammen som returneres av [finn_ugyldige_verdier()].
+#' Gir ut en oversiktlig fremstilling av tibble-en som returneres av
+#' [finn_ugyldige_verdier()].
 #'
-#' @param d_ugyldige Datarammen som returneres av [finn_ugyldige_verdier()].
-#'     Skal inneholde tre kolonner (`radnr`, `variabel` og `feilverdi`) sortert etter radnummer
-#'     og så rekkefølge i `d`. Hvis `d` ikke inneholder noen ugyldige
-#'     verdier skal argumentet være en tom dataramme/tibble som kun inneholder kolonnenavnene
-#'     `radnr`, `variabel` og `feilverdi`.
+#' @param d_ugyldige Tibble på formatet gitt ut av
+#'     [finn_ugyldige_verdier()].
 #'
-#' @return Tekststreng som inneholder variabelnavn og tilhørende feilverdier (sortert alfabetisk
-#'     etter variabelnavn og så rekkefølge i `d`). Hvis det ikke finnes ugyldige verdier returneres tekststrengen
-#'     "Alle verdiene er gyldige".
-
+#' @return Tekststreng som inneholder variabelnavn og tilhørende
+#'     feilverdier (sortert alfabetisk etter variabelnavn og så
+#'     rekkefølge i `d_ugyldige$radnr`). Hvis det ikke finnes ugyldige
+#'     verdier returneres tekststrengen "Alle verdiene er gyldige".
 oppsummer_ugyldige_verdier = function(d_ugyldige) {
   if (nrow(d_ugyldige) > 0) {
     oppsummert = d_ugyldige %>%
       group_by(variabel) %>%
       summarise(feil_verdier = paste0(feilverdi, collapse = ", ")) %>%
-      summarise(feil_variabler_verdier = paste0(variabel, ": ", feil_verdier, collapse = "\n")) %>%
-      summarise(feiltekst = paste0("Fant ", nrow(d_ugyldige), " ugyldige verdier:\n", feil_variabler_verdier))
-    pull(oppsummert, feiltekst)
+      summarise(feil_variabler_verdier = paste0(variabel, ": ",
+        feil_verdier,
+        collapse = "\n"
+      )) %>%
+      summarise(feiltekst = paste0(
+        "Fant ", nrow(d_ugyldige),
+        " ugyldige verdier:\n",
+        feil_variabler_verdier
+      ))
+    oppsummert = pull(oppsummert, feiltekst)
   } else {
-    "Alle verdiene er gyldige"
+    oppsummert = "Alle verdiene er gyldige"
   }
+  oppsummert
 }
 
 #' Funksjon for å regne ut sumskår
