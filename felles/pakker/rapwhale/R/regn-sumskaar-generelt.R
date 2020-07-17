@@ -410,28 +410,33 @@ legg_til_na_i_skaaringstabell = function(skaaringstabell) {
     unnest(cols = c(data))
 }
 
-#' Funksjon for å legge til eller erstatte kolonner i det originale datasettet
+#' Legg til / erstatt variabler i ett datasett med variabler i et annet
 #'
 #' @description
-#' Gir ut originalt datasett med en eller flere erstattede kolonner og/eller
-#' en eller flere ekstra kolonner lagt til helt til høyre.
+#' Legger variabler fra et datasett til et annet datasett (med
+#' overskriving av variabler som finnes i begge).
 #'
 #' @param d_orig Originalt datasett (dataramme/tibble).
-#' @param d_ekstrakol Dataramme/tibble som inneholder en eller flere kolonner og samme antall
-#'     rader som `d_orig`.
+#' @param d_ekstrakol Dataramme/tibble som inneholder en eller flere
+#'     kolonner og samme antall rader som `d_orig`.
 #'
-#' @return Originalt datasett med en eller flere erstattede kolonner og/eller
-#'     en eller flere ekstra kolonner lagt til helt til høyre.
-
+#' @details
+#' Variabler som finnes i `d_orig` fra før blir erstattet, nye blir lagt
+#' til helt til høyre. Det kommer advarsel hvis en eller flere variabler
+#' finnes fra før.
+#'
+#' @return Originalt datasett med ekstra kolonner lagt til / erstattet.
 legg_til_eller_erstatt_kolonner = function(d_orig, d_ekstrakol) {
   navn_finst = intersect(names(d_ekstrakol), names(d_orig))
   navn_finst_tekst = paste0(navn_finst, collapse = ", ")
 
   if (length(navn_finst) > 0) {
-    warning("Følgende kolonne(r) i datasettet har blitt overskrevet: ", navn_finst_tekst)
+    warning(
+      "Følgende kolonne(r) i datasettet har blitt overskrevet: ",
+      navn_finst_tekst
+    )
   }
 
   d_orig[names(d_ekstrakol)] = d_ekstrakol
-
   d_orig
 }
