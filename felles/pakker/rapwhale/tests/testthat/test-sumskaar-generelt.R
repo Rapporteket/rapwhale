@@ -580,7 +580,8 @@ test_that("oppsummer_ugyldige_verdier() gir ut det samme uavhengig av
 context("skaar_datasett_uten_validering")
 
 # Eksempeldata som bare inneholder verdier som finnes i skåringstabellen
-# (datasettet inneholder alle mulige verdier for hver variabel minst en gang)
+# (datasettet inneholder alle mulige verdier for hver variabel minst en
+# gang)
 d_gyldig_alle_verdier = tibble::tribble(
   ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2,
   1, 2, 1, 10, 20,
@@ -604,9 +605,13 @@ sumskaar_tabell = tibble::tribble(
   sumskaar_total_rad3, sumskaar_psykisk_rad3
 )
 
-test_that("skaar_datasett_uten_validering() regner ut korrekt sumskår hvis alle verdiene finnes i skåringstabellen", {
+test_that("skaar_datasett_uten_validering() regner ut korrekt sumskår
+          hvis alle verdiene finnes i skåringstabellen", {
   expect_equal(
-    skaar_datasett_uten_validering(d_gyldig_alle_verdier, skaaringstabell_eks),
+    skaar_datasett_uten_validering(
+      d_gyldig_alle_verdier,
+      skaaringstabell_eks
+    ),
     sumskaar_tabell
   )
 })
@@ -615,7 +620,8 @@ test_that("skaar_datasett_uten_validering() regner ut korrekt sumskår hvis alle
 d_na = d_gyldig_alle_verdier
 d_na[1, 3] = NA
 
-# Manuell utregning av sumskår for eksempeldata som inneholder en NA-verdi uten tilknyttet koeffisient
+# Manuell utregning av sumskår for eksempeldata som inneholder en
+# NA-verdi uten tilknyttet koeffisient
 sumskaar_na_total_rad1 = NA_real_
 sumskaar_na_psykisk_rad1 = sumskaar_psykisk_rad1
 sumskaar_na_total_rad2 = sumskaar_total_rad2
@@ -623,7 +629,8 @@ sumskaar_na_psykisk_rad2 = sumskaar_psykisk_rad2
 sumskaar_na_total_rad3 = sumskaar_total_rad3
 sumskaar_na_psykisk_rad3 = sumskaar_psykisk_rad3
 
-# Utregnede sumskårer for eksempeldata som inneholder en NA-verdi uten tilknyttet koeffisient
+# Utregnede sumskårer for eksempeldata som inneholder en NA-verdi uten
+# tilknyttet koeffisient
 sumskaar_na_tabell = tibble::tribble(
   ~total, ~psykisk,
   sumskaar_na_total_rad1, sumskaar_na_psykisk_rad1,
@@ -631,7 +638,8 @@ sumskaar_na_tabell = tibble::tribble(
   sumskaar_na_total_rad3, sumskaar_na_psykisk_rad3
 )
 
-test_that("skaar_datasett_uten_validering() gir ut NA som sumskår ved NA-verdier uten tilknyttet koeffisient", {
+test_that("skaar_datasett_uten_validering() gir ut NA som sumskår ved
+          NA-verdier uten tilknyttet koeffisient", {
   expect_equal(
     skaar_datasett_uten_validering(d_na, skaaringstabell_eks),
     sumskaar_na_tabell
@@ -642,7 +650,8 @@ test_that("skaar_datasett_uten_validering() gir ut NA som sumskår ved NA-verdie
 d_1_besvarelse_bare_na = d_gyldig_alle_verdier
 d_1_besvarelse_bare_na[1, ] = NA
 
-# Manuell utregning av sumskår for eksempeldata hvor 1 av besvarelsene har NA-verdier på alle spørsmål
+# Manuell utregning av sumskår for eksempeldata hvor 1 av besvarelsene
+# har NA-verdier på alle spørsmål
 sumskaar_1_besvarelse_bare_na_total_rad1 = NA_real_
 sumskaar_1_besvarelse_bare_na_psykisk_rad1 = NA_real_
 sumskaar_1_besvarelse_bare_na_total_rad2 = sumskaar_total_rad2
@@ -650,7 +659,8 @@ sumskaar_1_besvarelse_bare_na_psykisk_rad2 = sumskaar_psykisk_rad2
 sumskaar_1_besvarelse_bare_na_total_rad3 = sumskaar_total_rad3
 sumskaar_1_besvarelse_bare_na_psykisk_rad3 = sumskaar_psykisk_rad3
 
-# Utregnede sumskårer eksempeldata hvor 1 av besvarelsene har NA-verdier på alle spørsmål
+# Utregnede sumskårer eksempeldata hvor 1 av besvarelsene har NA-verdier
+# på alle spørsmål
 sumskaar_1_besvarelse_bare_na_tabell = tibble::tribble(
   ~total, ~psykisk,
   sumskaar_1_besvarelse_bare_na_total_rad1, sumskaar_1_besvarelse_bare_na_psykisk_rad1,
@@ -658,9 +668,13 @@ sumskaar_1_besvarelse_bare_na_tabell = tibble::tribble(
   sumskaar_1_besvarelse_bare_na_total_rad3, sumskaar_1_besvarelse_bare_na_psykisk_rad3
 )
 
-test_that("skaar_datasett_uten_validering() gir ut riktig sumskår hvis 1 av besvarelselse har NA-verdier på alle spørsmål", {
+test_that("skaar_datasett_uten_validering() gir ut riktig sumskår hvis 1
+          av besvarelselse har NA-verdier på alle spørsmål", {
   expect_equal(
-    skaar_datasett_uten_validering(d_1_besvarelse_bare_na, skaaringstabell_eks),
+    skaar_datasett_uten_validering(
+      d_1_besvarelse_bare_na,
+      skaaringstabell_eks
+    ),
     sumskaar_1_besvarelse_bare_na_tabell
   )
 })
@@ -669,7 +683,8 @@ test_that("skaar_datasett_uten_validering() gir ut riktig sumskår hvis 1 av bes
 d_alle_besvarelser_bare_na = d_gyldig_alle_verdier
 d_alle_besvarelser_bare_na[] = NA
 
-# Manuell utregning av sumskår for eksempeldata hvor alle besvarelsene har NA-verdier på alle spørsmål
+# Manuell utregning av sumskår for eksempeldata hvor alle besvarelsene
+# har NA-verdier på alle spørsmål
 sumskaar_alle_besvarelser_bare_na_total_rad1 = NA_real_
 sumskaar_alle_besvarelser_bare_na_psykisk_rad1 = NA_real_
 sumskaar_alle_besvarelser_bare_na_total_rad2 = NA_real_
@@ -677,7 +692,8 @@ sumskaar_alle_besvarelser_bare_na_psykisk_rad2 = NA_real_
 sumskaar_alle_besvarelser_bare_na_total_rad3 = NA_real_
 sumskaar_alle_besvarelser_bare_na_psykisk_rad3 = NA_real_
 
-# Utregnede sumskårer for eksempeldata hvor alle besvarelsene har NA-verdier på alle spørsmål
+# Utregnede sumskårer for eksempeldata hvor alle besvarelsene har
+# NA-verdier på alle spørsmål
 sumskaar_alle_besvarelser_bare_na_tabell = tibble::tribble(
   ~total, ~psykisk,
   sumskaar_alle_besvarelser_bare_na_total_rad1, sumskaar_alle_besvarelser_bare_na_psykisk_rad1,
@@ -685,9 +701,13 @@ sumskaar_alle_besvarelser_bare_na_tabell = tibble::tribble(
   sumskaar_alle_besvarelser_bare_na_total_rad3, sumskaar_alle_besvarelser_bare_na_psykisk_rad3
 )
 
-test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer hvis alle besvarelsene har NA-verdier på alle spørsmål", {
+test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer
+          hvis alle besvarelsene har NA-verdier på alle spørsmål", {
   expect_identical(
-    skaar_datasett_uten_validering(d_alle_besvarelser_bare_na, skaaringstabell_eks),
+    skaar_datasett_uten_validering(
+      d_alle_besvarelser_bare_na,
+      skaaringstabell_eks
+    ),
     sumskaar_alle_besvarelser_bare_na_tabell
   )
 })
@@ -696,7 +716,8 @@ test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer hvis alle 
 d_1_besvarelse = d_gyldig_alle_verdier
 d_1_besvarelse = d_1_besvarelse[-c(1, 3), ]
 
-# Manuell utregning av sumskår for eksempeldata som bare inneholder 1 besvarelse
+# Manuell utregning av sumskår for eksempeldata som bare inneholder 1
+# besvarelse
 sumskaar_1_besvarelse_total = sumskaar_total_rad2
 sumskaar_1_besvarelse_psykisk = sumskaar_psykisk_rad2
 
@@ -706,23 +727,32 @@ sumskaar_1_besvarelse_tabell = tibble::tribble(
   sumskaar_1_besvarelse_total, sumskaar_1_besvarelse_psykisk
 )
 
-test_that("skaar_datasett_uten_validering() regner ut korrekt sumskår ved bare 1 besvarelse", {
+test_that("skaar_datasett_uten_validering() regner ut korrekt sumskår
+          ved bare 1 besvarelse", {
   expect_identical(
-    skaar_datasett_uten_validering(d_1_besvarelse, skaaringstabell_eks),
+    skaar_datasett_uten_validering(
+      d_1_besvarelse,
+      skaaringstabell_eks
+    ),
     sumskaar_1_besvarelse_tabell
   )
 })
 
-test_that("skaar_datasett_uten_validering() gir ut 0-rads resultat med alle skårkolonnene når inndata har 0 rader", {
+test_that("skaar_datasett_uten_validering() gir ut 0-rads resultat med
+          alle skårkolonnene når inndata har 0 rader", {
   d_0_besvarelser = d_gyldig_alle_verdier[0, ]
   sumskaar_0_besvarelser = tibble(total = double(), psykisk = double())
   expect_identical(
-    skaar_datasett_uten_validering(d_0_besvarelser, skaaringstabell_eks),
+    skaar_datasett_uten_validering(
+      d_0_besvarelser,
+      skaaringstabell_eks
+    ),
     sumskaar_0_besvarelser
   )
 })
 
-test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer i samme rekkefølge som i delskala-kolonnen i skåringstabellen", {
+test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer i
+          samme rekkefølge som i delskala-kolonnen i skåringstabellen", {
   skaaringstabell_flere_delskalaer = tibble::tribble(
     ~delskala, ~variabel, ~verdi, ~koeffisient,
     "b", "fys", 1, 0.2,
@@ -758,7 +788,9 @@ test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer i samme re
   )
 
   expect_equal(
-    skaar_datasett_uten_validering(d_enkelt_eks_inn, skaaringstabell = skaaringstabell_flere_delskalaer),
+    skaar_datasett_uten_validering(d_enkelt_eks_inn,
+      skaaringstabell = skaaringstabell_flere_delskalaer
+    ),
     d_enkelt_eks_ut
   )
 })
