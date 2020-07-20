@@ -840,9 +840,11 @@ test_that("legg_til_na_i_skaaringstabell() fungerer", {
   )
 })
 
-test_that("legg_til_na_i_skaaringstabell() overskriv ikkje eksisterande NA-verdiar", {
+test_that("legg_til_na_i_skaaringstabell() overskriv ikkje eksisterande
+          NA-verdiar", {
 
-  # Skåringstabell med NA-verdi som skal gje ut koeffisient som *ikkje* er NA
+  # Skåringstabell med NA-verdi som skal gje ut koeffisient som *ikkje*
+  # er NA
   skaaringstabell_med_na = tibble::tribble(
     ~delskala, ~variabel, ~verdi, ~koeffisient,
     "total", "var_a", 1, 5,
@@ -864,23 +866,51 @@ d_eks_inkl_sumskaar = tibble::tribble(
   1, 2, 3, "2020-05-15", 4, 5
 )
 
-test_that("legg_til_eller_erstatt_kolonner() fungerer hvis ingen, noen eller alle sumskår-kolonner finnes fra før", {
+test_that("legg_til_eller_erstatt_kolonner() fungerer hvis ingen, noen
+          eller alle sumskår-kolonner finnes fra før", {
 
   # Ingen sumskår-kolonner finnes fra før
   expect_identical(
     legg_til_eller_erstatt_kolonner(
-      d_orig = select(d_eks_inkl_sumskaar, -c(sumskaar_total, sumskaar_psykisk)),
-      d_ekstrakol = select(d_eks_inkl_sumskaar, c(sumskaar_total, sumskaar_psykisk))
+      d_orig = select(
+        d_eks_inkl_sumskaar,
+        -c(
+          sumskaar_total,
+          sumskaar_psykisk
+        )
+      ),
+      d_ekstrakol = select(
+        d_eks_inkl_sumskaar,
+        c(
+          sumskaar_total,
+          sumskaar_psykisk
+        )
+      )
     ),
     d_eks_inkl_sumskaar
   )
 
   # 1 av 2 sumskår-kolonner finnes fra før
-  d_eks_sumskaar_total_til_hoyre = subset(d_eks_inkl_sumskaar, select = c(pas_id:dato, sumskaar_psykisk, sumskaar_total))
+  d_eks_sumskaar_total_til_hoyre = subset(d_eks_inkl_sumskaar,
+    select = c(
+      pas_id:dato,
+      sumskaar_psykisk,
+      sumskaar_total
+    )
+  )
   expect_identical(
     suppressWarnings(legg_til_eller_erstatt_kolonner(
-      d_orig = select(d_eks_inkl_sumskaar, -sumskaar_total),
-      d_ekstrakol = select(d_eks_inkl_sumskaar, c(sumskaar_total, sumskaar_psykisk))
+      d_orig = select(
+        d_eks_inkl_sumskaar,
+        -sumskaar_total
+      ),
+      d_ekstrakol = select(
+        d_eks_inkl_sumskaar,
+        c(
+          sumskaar_total,
+          sumskaar_psykisk
+        )
+      )
     )),
     d_eks_sumskaar_total_til_hoyre
   )
@@ -889,14 +919,27 @@ test_that("legg_til_eller_erstatt_kolonner() fungerer hvis ingen, noen eller all
   expect_identical(
     suppressWarnings(legg_til_eller_erstatt_kolonner(
       d_orig = d_eks_inkl_sumskaar,
-      d_ekstrakol = select(d_eks_inkl_sumskaar, c(sumskaar_total, sumskaar_psykisk))
+      d_ekstrakol = select(
+        d_eks_inkl_sumskaar,
+        c(
+          sumskaar_total,
+          sumskaar_psykisk
+        )
+      )
     )),
     d_eks_inkl_sumskaar
   )
 })
 
-test_that("legg_til_eller_erstatt_kolonner() gir advarsel hvis en eller flere sumskår-kolonner finnes fra før", {
+test_that("legg_til_eller_erstatt_kolonner() gir advarsel hvis en eller
+          flere sumskår-kolonner finnes fra før", {
   expect_warning(legg_til_eller_erstatt_kolonner(d_eks_inkl_sumskaar,
-    d_ekstrakol = select(d_eks_inkl_sumskaar, c(sumskaar_total, sumskaar_psykisk))
+    d_ekstrakol = select(
+      d_eks_inkl_sumskaar,
+      c(
+        sumskaar_total,
+        sumskaar_psykisk
+      )
+    )
   ))
 })
