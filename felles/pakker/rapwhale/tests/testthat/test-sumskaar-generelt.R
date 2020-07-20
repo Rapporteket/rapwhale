@@ -554,7 +554,8 @@ test_that("finn_ugyldige_verdier() gir ut korrekt feiloversikt hvis det
 
 context("oppsummer_ugyldige_verdier")
 
-test_that("oppsummer_ugyldige_verdier() presenterer korrekte feilverdier alfabetisk etter variabelnavn", {
+test_that("oppsummer_ugyldige_verdier() presenterer korrekte feilverdier
+          alfabetisk etter variabelnavn", {
   expect_identical(
     oppsummer_ugyldige_verdier(ugyldighetstabell_2_feil_samme_variabel),
     "Fant 3 ugyldige verdier:\ngen: 9, 6\npsyk2: NA"
@@ -565,7 +566,8 @@ test_that("oppsummer_ugyldige_verdier() presenterer korrekte feilverdier alfabet
   )
 })
 
-test_that("oppsummer_ugyldige_verdier() gir ut det samme uavhengig av rekkefølgen til radene i datarammen", {
+test_that("oppsummer_ugyldige_verdier() gir ut det samme uavhengig av
+          rekkefølgen til radene i datarammen", {
   ugyldighetstabell_2_feil_samme_variabel_annen_radrekkefolge = ugyldighetstabell_2_feil_samme_variabel
   ugyldighetstabell_2_feil_samme_variabel_annen_radrekkefolge = ugyldighetstabell_2_feil_samme_variabel_annen_radrekkefolge[c(2, 1, 3), ]
   expect_identical(
