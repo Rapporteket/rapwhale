@@ -104,20 +104,6 @@ test_that("skaar_datasett() gir ut feilmelding hvis skåringstabell, variabelnav
   expect_error(skaar_datasett(d_ugyldig_variabelverdier, skaaringstabell = skaaringstabell_eks))
 })
 
-test_that("skaar_datasett() gir ut like sumskårer uavhengig om verdiene i datasettet er tekstverdier eller numeriske verdier", {
-  d_gyldig_inn_tekst = d_gyldig_inn
-  d_gyldig_inn_tekst$psyk1 = as.character(d_gyldig_inn_tekst$psyk1)
-
-  expect_identical(
-    skaar_datasett(d_gyldig_inn, skaaringstabell = skaaringstabell_eks)$total,
-    skaar_datasett(d_gyldig_inn_tekst, skaaringstabell = skaaringstabell_eks)$total
-  )
-  expect_identical(
-    skaar_datasett(d_gyldig_inn, skaaringstabell = skaaringstabell_eks)$psykisk,
-    skaar_datasett(d_gyldig_inn_tekst, skaaringstabell = skaaringstabell_eks)$psykisk
-  )
-})
-
 
 context("sjekk_skaaringstabell")
 
