@@ -300,9 +300,11 @@ test_that("sjekk_variabelnavn() gjev feilmelding viss variablar
 
 context("sjekk_variabelverdier")
 
-# Ved å benytte den overordnede funksjonen skaar_datasett() vil alle variabler i datasettet
-# som ikke finnes i skåringstabellen bli filtrert vekk før sjekk_variabelverdier() kalles på.
-# Derfor inneholder eksempeldata for disse testene kun variabler som finnes i skåringstabellen.
+# Ved å benytte den overordnede funksjonen skaar_datasett() vil alle
+# variabler i datasettet som ikke finnes i skåringstabellen bli filtrert
+# vekk før sjekk_variabelverdier() kalles på. Derfor inneholder
+# eksempeldata for disse testene kun variabler som finnes i
+# skåringstabellen.
 
 # Eksempeldata med bare gyldige tallverdier
 d_gyldig_eks1 = tibble::tribble(
@@ -322,54 +324,89 @@ d_ugyldig_na$gen[3] = NA
 d_ugyldig_na$fys1[1] = NA
 
 # Eksempel på skåringstabell med ugyldige kolonnenavn
-skaaringstabell_ugyldige_kolonnenavn = rename(skaaringstabell_eks, tullball = variabel, ballball = verdi)
+skaaringstabell_ugyldige_kolonnenavn = rename(skaaringstabell_eks,
+  tullball = variabel,
+  ballball = verdi
+)
 
 # Eksempel på skåringstabell med ugyldig format
 skaaringstabell_ugyldig_format = table(skaaringstabell_eks)
 
-# Eksempel på skåringstabell med både ugyldige kolonnenavn og ugyldig format
-skaaringstabell_ugyldige_kolonnenavn_og_ugyldig_format = table(skaaringstabell_ugyldige_kolonnenavn)
+# Eksempel på skåringstabell med både ugyldige kolonnenavn og ugyldig
+# format
+skaaringstabell_ugyldige_kolonnenavn_og_ugyldig_format = table(
+  skaaringstabell_ugyldige_kolonnenavn
+)
 
-test_that("sjekk_variabelverdier() gir feilmelding hvis ikke begge de to aktuelle variablene
-          ('variabel' og 'verdi') er i koblingstabellen og/eller den ikke er en tibble/data.frame", {
+test_that("sjekk_variabelverdier() gir feilmelding hvis ikke begge de to
+          aktuelle variablene ('variabel' og 'verdi') er i
+          koblingstabellen og/eller den ikke er en tibble/data.frame", {
   expect_error(
-    sjekk_variabelverdier(d_gyldig_eks1, skaaringstabell_ugyldige_kolonnenavn),
+    sjekk_variabelverdier(
+      d_gyldig_eks1,
+      skaaringstabell_ugyldige_kolonnenavn
+    ),
     "Inndata må være tibble/data.frame og inneholde kolonnene 'variabel' og 'verdi'"
   )
   expect_error(
-    sjekk_variabelverdier(d_gyldig_eks1, skaaringstabell_ugyldig_format),
+    sjekk_variabelverdier(
+      d_gyldig_eks1,
+      skaaringstabell_ugyldig_format
+    ),
     "Inndata må være tibble/data.frame og inneholde kolonnene 'variabel' og 'verdi'"
   )
   expect_error(
-    sjekk_variabelverdier(d_gyldig_eks1, skaaringstabell_ugyldige_kolonnenavn_og_ugyldig_format),
+    sjekk_variabelverdier(
+      d_gyldig_eks1,
+      skaaringstabell_ugyldige_kolonnenavn_og_ugyldig_format
+    ),
     "Inndata må være tibble/data.frame og inneholde kolonnene 'variabel' og 'verdi'"
   )
 })
 
-test_that("sjekk_variabelverdier() gir feilmelding hvis verdiene ikke er numeriske", {
+test_that("sjekk_variabelverdier() gir feilmelding hvis verdiene ikke er
+          numeriske", {
   d_feil_variabeltype = d_gyldig_eks1
   d_feil_variabeltype$fys1 = as.factor(d_feil_variabeltype$fys1)
   expect_error(
-    sjekk_variabelverdier(d_feil_variabeltype, skaaringstabell_eks, godta_manglende = FALSE),
+    sjekk_variabelverdier(d_feil_variabeltype,
+      skaaringstabell_eks,
+      godta_manglende = FALSE
+    ),
     "Datasettet inneholder verdier som ikke er numeriske"
   )
 })
 
-test_that("sjekk_variabelverdier() gjev inga feilmelding for datasett med gyldige variabelverdiar", {
-  expect_silent(sjekk_variabelverdier(d_gyldig_eks1, skaaringstabell_eks, godta_manglende = FALSE))
-  expect_silent(sjekk_variabelverdier(d_gyldig_eks2, skaaringstabell_eks, godta_manglende = FALSE))
+test_that("sjekk_variabelverdier() gjev inga feilmelding for datasett
+          med gyldige variabelverdiar", {
+  expect_silent(sjekk_variabelverdier(d_gyldig_eks1, skaaringstabell_eks,
+    godta_manglende = FALSE
+  ))
+  expect_silent(sjekk_variabelverdier(d_gyldig_eks2, skaaringstabell_eks,
+    godta_manglende = FALSE
+  ))
 })
 
-test_that("sjekk_variabelverdier() gir ingen feilmelding for datasett med ugyldige NA-verdiar viss godta_manglende = TRUE", {
-  expect_silent(sjekk_variabelverdier(d_ugyldig_na, skaaringstabell_eks, godta_manglende = TRUE))
+test_that("sjekk_variabelverdier() gir ingen feilmelding for datasett
+          med ugyldige NA-verdiar viss godta_manglende = TRUE", {
+  expect_silent(sjekk_variabelverdier(d_ugyldig_na, skaaringstabell_eks,
+    godta_manglende = TRUE
+  ))
 })
 
-test_that("sjekk_variabelverdier() gjev feilmelding for datasett med ugyldige NA-verdiar viss godta_manglende = FALSE", {
-  expect_error(sjekk_variabelverdier(d_ugyldig_na, skaaringstabell_eks, godta_manglende = FALSE))
+test_that("sjekk_variabelverdier() gjev feilmelding for datasett med
+          ugyldige NA-verdiar viss godta_manglende = FALSE", {
+  expect_error(sjekk_variabelverdier(d_ugyldig_na, skaaringstabell_eks,
+    godta_manglende = FALSE
+  ))
 })
 
-test_that("sjekk_variabelverdier() gjev feilmelding for datasett med ugyldige variabelverdiar", {
-  expect_error(sjekk_variabelverdier(tibble(gen = c(200, 200)), skaaringstabell_eks, godta_manglende = FALSE))
+test_that("sjekk_variabelverdier() gjev feilmelding for datasett med
+          ugyldige variabelverdiar", {
+  expect_error(sjekk_variabelverdier(tibble(gen = c(200, 200)),
+    skaaringstabell_eks,
+    godta_manglende = FALSE
+  ))
 })
 
 
