@@ -1,4 +1,4 @@
-# Testing av generelle sumskårfunksjonar ----------------------------------
+# Testing av generelle sumskårfunksjonar -------------------------------
 
 # Eksempel på gyldig skåringstabell
 skaaringstabell_eks = tibble::tribble(
@@ -28,7 +28,8 @@ skaaringstabell_eks = tibble::tribble(
 
 context("skaar_datasett")
 
-# Eksempel på inndata som inkluderer både basisvariabler og spørreskjema-variabler
+# Eksempel på inndata som inkluderer både basisvariabler og
+# spørreskjema-variabler
 d_gyldig_inn = tibble::tribble(
   ~pas_id, ~kjonn, ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2, ~dato,
   1, 1, 1, 2, 1, 10, 20, "2020-01-10",
@@ -36,14 +37,21 @@ d_gyldig_inn = tibble::tribble(
   3, 1, 3, 1, 2, NA, 10, "2020-03-30"
 )
 
-# Eksempel på utdata (skal være identisk til 'd_gyldig_inn' og i tillegg inneholde
-# kolonner med sumskårer helt til høyre)
+# Eksempel på utdata (skal være identisk til 'd_gyldig_inn' og i tillegg
+# inneholde kolonner med sumskårer helt til høyre)
 d_gyldig_ut = d_gyldig_inn
-d_gyldig_ut = tibble::add_column(d_gyldig_ut, total = c(0.518, 0.775, 1.14), psykisk = c(1, -3, -6.5), .after = "dato")
+d_gyldig_ut = tibble::add_column(d_gyldig_ut,
+  total = c(0.518, 0.775, 1.14),
+  psykisk = c(1, -3, -6.5),
+  .after = "dato"
+)
 
 # Eksempel på inndata hvor sumskår-kolonner finnes fra før
 d_inn_inkl_sumskaarer = d_gyldig_inn
-d_inn_inkl_sumskaarer = tibble::add_column(d_inn_inkl_sumskaarer, total = NA, psykisk = 5, .after = "psyk2")
+d_inn_inkl_sumskaarer = tibble::add_column(d_inn_inkl_sumskaarer,
+  total = NA, psykisk = 5,
+  .after = "psyk2"
+)
 
 test_that("skaar_datasett() fungerer hvis en av de to sumskår-kolonnene finnes fra før", {
   d_inn_inkl_1_sumskaar = d_inn_inkl_sumskaarer
@@ -51,25 +59,40 @@ test_that("skaar_datasett() fungerer hvis en av de to sumskår-kolonnene finnes 
 
   d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit = d_inn_inkl_1_sumskaar
   d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit$total = c(0.518, 0.775, 1.14)
-  d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit = tibble::add_column(d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit,
+  d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit = tibble::add_column(
+    d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit,
     psykisk = c(1, -3, -6.5), .after = "dato"
   )
 
-  d_ut_funksjon = suppressWarnings(skaar_datasett(d_inn_inkl_1_sumskaar, skaaringstabell = skaaringstabell_eks))
+  d_ut_funksjon = suppressWarnings(
+    skaar_datasett(d_inn_inkl_1_sumskaar,
+      skaaringstabell = skaaringstabell_eks
+    )
+  )
 
-  expect_equal(d_ut_funksjon, d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit)
+  expect_equal(
+    d_ut_funksjon,
+    d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit
+  )
 })
 
 test_that("skaar_datasett() gir advarsel hvis en eller flere sumskår-kolonner finnes fra før", {
-  expect_warning(skaar_datasett(d_inn_inkl_sumskaarer, skaaringstabell = skaaringstabell_eks))
+  expect_warning(skaar_datasett(d_inn_inkl_sumskaarer,
+    skaaringstabell = skaaringstabell_eks
+  ))
 })
 
 test_that("skaar_datasett() fungerer hvis man oppgir variabelnavn", {
   d_inn_feil_variabelnavn = d_gyldig_inn
-  d_inn_feil_variabelnavn = rename(d_inn_feil_variabelnavn, fysisk1 = fys1, psykisk2 = psyk2)
+  d_inn_feil_variabelnavn = rename(d_inn_feil_variabelnavn,
+    fysisk1 = fys1, psykisk2 = psyk2
+  )
   nye_navn = c(fys1 = "fysisk1", psyk2 = "psykisk2")
 
-  d_ut_funksjon = skaar_datasett(d_inn_feil_variabelnavn, variabelnavn = nye_navn, skaaringstabell = skaaringstabell_eks)
+  d_ut_funksjon = skaar_datasett(d_inn_feil_variabelnavn,
+    variabelnavn = nye_navn,
+    skaaringstabell = skaaringstabell_eks
+  )
   d_gyldig_ut = rename(d_gyldig_ut, fysisk1 = fys1, psykisk2 = psyk2)
 
   expect_equal(d_ut_funksjon, d_gyldig_ut)
@@ -77,10 +100,15 @@ test_that("skaar_datasett() fungerer hvis man oppgir variabelnavn", {
 
 test_that("skaar_datasett() fungerer hvis man bytter om to variabelnavn", {
   d_inn_omvendt_variabelnavn = d_gyldig_inn
-  d_inn_omvendt_variabelnavn = rename(d_inn_omvendt_variabelnavn, fys1 = fys2, fys2 = fys1)
+  d_inn_omvendt_variabelnavn = rename(d_inn_omvendt_variabelnavn,
+    fys1 = fys2, fys2 = fys1
+  )
   navn_omvendt = c(fys2 = "fys1", fys1 = "fys2")
 
-  d_ut_funksjon = skaar_datasett(d_inn_omvendt_variabelnavn, variabelnavn = navn_omvendt, skaaringstabell = skaaringstabell_eks)
+  d_ut_funksjon = skaar_datasett(d_inn_omvendt_variabelnavn,
+    variabelnavn = navn_omvendt,
+    skaaringstabell = skaaringstabell_eks
+  )
   d_gyldig_ut = rename(d_gyldig_ut, fys1 = fys2, fys2 = fys1)
 
   expect_equal(d_ut_funksjon, d_gyldig_ut)
@@ -88,20 +116,27 @@ test_that("skaar_datasett() fungerer hvis man bytter om to variabelnavn", {
 
 test_that("skaar_datasett() gir ut feilmelding hvis skåringstabell, variabelnavn og/eller variabelverdier er ugyldige", {
 
-  # Skåringstabell som har en variabel med flere rader som har samme verdi innenfor samme delskala
+  # Skåringstabell som har en variabel med flere rader som har samme
+  # verdi innenfor samme delskala
   ugyldig_skaaringstabell = skaaringstabell_eks
   ugyldig_skaaringstabell$verdi[2:3] = 6
-  expect_error(skaar_datasett(d_gyldig_inn, skaaringstabell = ugyldig_skaaringstabell))
+  expect_error(skaar_datasett(d_gyldig_inn,
+    skaaringstabell = ugyldig_skaaringstabell
+  ))
 
   # Inndata med ugyldig variabelnavn
   d_ugyldig_variabelnavn = d_gyldig_inn
   d_ugyldig_variabelnavn = rename(d_ugyldig_variabelnavn, fysisk1 = fys1)
-  expect_error(skaar_datasett(d_ugyldig_variabelnavn, skaaringstabell = skaaringstabell_eks))
+  expect_error(skaar_datasett(d_ugyldig_variabelnavn,
+    skaaringstabell = skaaringstabell_eks
+  ))
 
   # Inndata med ugyldig variabelverdi
   d_ugyldig_variabelverdier = d_gyldig_inn
   d_ugyldig_variabelverdier$psyk1[1] = 100
-  expect_error(skaar_datasett(d_ugyldig_variabelverdier, skaaringstabell = skaaringstabell_eks))
+  expect_error(skaar_datasett(d_ugyldig_variabelverdier,
+    skaaringstabell = skaaringstabell_eks
+  ))
 })
 
 
