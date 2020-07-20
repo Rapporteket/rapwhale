@@ -124,7 +124,7 @@ sjekk_skaaringstabell = function(skaaringstabell) {
     is.character(skaaringstabell$variabel) &&
     is.numeric(skaaringstabell$verdi) &&
     is.numeric(skaaringstabell$koeffisient))) {
-    stop("Delskala-kolonnen og variabel-kolonnen må være av typen tekst og verdi-kolonnen og koeffisient-kolonnen må være numeriske.")
+    stop("Delskala-kolonnen og variabel-kolonnen må være av typen tekst og verdi-kolonnen og koeffisient-kolonnen må være numeriske")
   }
 }
 
