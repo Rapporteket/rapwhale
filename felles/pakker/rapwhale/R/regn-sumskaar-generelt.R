@@ -96,6 +96,8 @@ skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell,
 #' ikke inneholder NA-verdier. Skal gi feilmelding hvis `skaaringstabell`
 #' er ugyldig.
 #'
+#' @keywords internal
+#'
 #' @return `NULL`
 sjekk_skaaringstabell = function(skaaringstabell) {
   if (!all(hasName(skaaringstabell, c(
@@ -142,6 +144,8 @@ sjekk_skaaringstabell = function(skaaringstabell) {
 #' i skåringstabellen. Funksjonen oppgir også hvilke variabelnavn som
 #' ev. mangler i `d`.
 #'
+#' @keywords internal
+#'
 #' @return `NULL`
 sjekk_variabelnavn = function(d, variabelnavn) {
   var_mangler = unique(variabelnavn[!(variabelnavn %in% names(d))])
@@ -176,6 +180,8 @@ sjekk_variabelnavn = function(d, variabelnavn) {
 #' det finnes ugyldige verdier i `d` gir funksjonen ut oversikt over
 #' antall ugyldige verdier, samt hvilke variabler og verdier dette
 #' gjelder.
+#'
+#' @keywords internal
 #'
 #' @return `NULL`
 sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
@@ -221,6 +227,8 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 #' denne funksjonen på etter at skåringstabellen og variabelnavnene er
 #' validert og alle variabler som har navn som ikke finnes i
 #' `verditabell$variabel` er filtrert vekk.
+#'
+#' @keywords internal
 #'
 #' @return Tibble som inneholder tre kolonner (`radnr`, `variabel` og
 #'     `feilverdi`). Sortert etter radnummer og så rekkefølge i `d`.
@@ -269,6 +277,8 @@ finn_ugyldige_verdier = function(d, verditabell) {
 #'
 #' @param d_ugyldige Tibble på formatet gitt ut av
 #'     [finn_ugyldige_verdier()].
+#'
+#' @keywords internal
 #'
 #' @return Tekststreng som inneholder variabelnavn og tilhørende
 #'     feilverdier (sortert alfabetisk etter variabelnavn og så
@@ -319,6 +329,8 @@ oppsummer_ugyldige_verdier = function(d_ugyldige) {
 #' (ved hjelp av [sjekk_skaaringstabell()], [sjekk_variabelnavn()] og
 #' [sjekk_variabelverdier()]) og alle variabler som har navn som ikke
 #' finnes i `skaaringstabell$variabel` er filtrert vekk.
+#'
+#' @keywords internal
 #'
 #' @return Dataramme/tibble som inneholder en eller flere kolonner med
 #'     sumskårer. Rekkefølgen på sumskår-kolonnene bestemmes av
@@ -395,6 +407,8 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
 #' med [skaar_datasett_uten_validering()] automatisk `NA` dersom
 #' minst éin av variablane som inngår, manglar verdi (altså er `NA`).
 #'
+#' @keywords internal
+#'
 #' @return Skåringstabellen med `NA`-rader lagde til.
 legg_til_na_i_skaaringstabell = function(skaaringstabell) {
   # Legg til NA-rad viss det ikkje finst frå før
@@ -424,6 +438,8 @@ legg_til_na_i_skaaringstabell = function(skaaringstabell) {
 #' Variabler som finnes i `d_orig` fra før blir erstattet, nye blir lagt
 #' til helt til høyre. Det kommer advarsel hvis en eller flere variabler
 #' finnes fra før.
+#'
+#' @keywords internal
 #'
 #' @return Originalt datasett med ekstra kolonner lagt til / erstattet.
 legg_til_eller_erstatt_kolonner = function(d_orig, d_ekstrakol) {
