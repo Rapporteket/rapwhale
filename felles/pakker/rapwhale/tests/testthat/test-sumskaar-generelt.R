@@ -412,8 +412,8 @@ test_that("sjekk_variabelverdier() gjev feilmelding for datasett med
 
 context("finn_ugyldige_verdier")
 
-# For disse testene benyttes det samme eksempeldata ('d_gyldig_eks1') som
-# er definert i starten av testene for sjekk_variabelverdier().
+# For disse testene benyttes det samme eksempeldata ('d_gyldig_eks1')
+# som er definert i starten av testene for sjekk_variabelverdier().
 
 d_gyldig_eks1 = tibble::tribble(
   ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2,
@@ -429,8 +429,15 @@ ugyldighetstabell_tom = tibble(
   feilverdi = numeric()
 )
 
-test_that("finn_ugyldige_verdier() gir ut en dataramme (med kun kolonnenavn) hvis inndata er gyldig", {
-  expect_identical(finn_ugyldige_verdier(d_gyldig_eks1, skaaringstabell_eks), ugyldighetstabell_tom)
+test_that("finn_ugyldige_verdier() gir ut en dataramme
+          (med kun kolonnenavn) hvis inndata er gyldig", {
+  expect_identical(
+    finn_ugyldige_verdier(
+      d_gyldig_eks1,
+      skaaringstabell_eks
+    ),
+    ugyldighetstabell_tom
+  )
 })
 
 # Eksempeldata med 1 feil
@@ -453,7 +460,11 @@ d_ugyldig_2_feil_samme_variabel$psyk2[2] = NA
 # Ugyldighetstabell for d_ugyldig_2_feil_samme_variabel
 ugyldighetstabell_2_feil_samme_variabel = tibble(
   radnr = c(1L, 2L, 3L),
-  variabel = c("gen", "psyk2", "gen"),
+  variabel = c(
+    "gen",
+    "psyk2",
+    "gen"
+  ),
   feilverdi = c(9, NA, 6)
 )
 
@@ -466,7 +477,10 @@ d_ugyldig_2_feil_samme_rad$psyk2[1] = NA
 # Ugyldighetstabell for d_ugyldig_2_feil_samme_rad
 ugyldighetstabell_2_feil_samme_rad = tibble(
   radnr = c(1L, 1L, 2L),
-  variabel = c("gen", "psyk2", "fys1"),
+  variabel = c(
+    "gen", "psyk2",
+    "fys1"
+  ),
   feilverdi = c(9, NA, 10)
 )
 
@@ -479,7 +493,11 @@ d_ugyldig_2_like_feil_samme_variabel$psyk2[2] = NA
 # Ugyldighetstabell for d_ugyldig_2_like_feil_samme_variabel
 ugyldighetstabell_2_like_feil_samme_variabel = tibble(
   radnr = c(1L, 2L, 3L),
-  variabel = c("gen", "psyk2", "gen"),
+  variabel = c(
+    "gen",
+    "psyk2",
+    "gen"
+  ),
   feilverdi = c(4, NA, 4)
 )
 
@@ -494,25 +512,41 @@ ugyldighetstabell_na_feil = tibble(
   feilverdi = as.numeric(NA)
 )
 
-test_that("finn_ugyldige_verdier() gir ut korrekt feiloversikt hvis det finnes ugyldige verdier i datasettet", {
+test_that("finn_ugyldige_verdier() gir ut korrekt feiloversikt hvis det
+          finnes ugyldige verdier i datasettet", {
   expect_identical(
-    finn_ugyldige_verdier(d_ugyldig_1_feil, skaaringstabell_eks),
+    finn_ugyldige_verdier(
+      d_ugyldig_1_feil,
+      skaaringstabell_eks
+    ),
     ugyldighetstabell_1_feil
   )
   expect_identical(
-    finn_ugyldige_verdier(d_ugyldig_2_feil_samme_variabel, skaaringstabell_eks),
+    finn_ugyldige_verdier(
+      d_ugyldig_2_feil_samme_variabel,
+      skaaringstabell_eks
+    ),
     ugyldighetstabell_2_feil_samme_variabel
   )
   expect_identical(
-    finn_ugyldige_verdier(d_ugyldig_2_feil_samme_rad, skaaringstabell_eks),
+    finn_ugyldige_verdier(
+      d_ugyldig_2_feil_samme_rad,
+      skaaringstabell_eks
+    ),
     ugyldighetstabell_2_feil_samme_rad
   )
   expect_identical(
-    finn_ugyldige_verdier(d_ugyldig_2_like_feil_samme_variabel, skaaringstabell_eks),
+    finn_ugyldige_verdier(
+      d_ugyldig_2_like_feil_samme_variabel,
+      skaaringstabell_eks
+    ),
     ugyldighetstabell_2_like_feil_samme_variabel
   )
   expect_identical(
-    finn_ugyldige_verdier(d_ugyldig_na_feil, skaaringstabell_eks),
+    finn_ugyldige_verdier(
+      d_ugyldig_na_feil,
+      skaaringstabell_eks
+    ),
     ugyldighetstabell_na_feil
   )
 })
