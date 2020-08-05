@@ -282,25 +282,53 @@ lag_fig_soyle = function(d, x, y, farge = ColPrim[3], facet = FALSE, facet_grupp
 
 #' Lag histogram
 #'
-#' Funksjon for å lage histogram. Med default-verdier vil farger og
-#' utseende tilsvare det vi bruker i årsrapporter.
+#' @description
+#' Lager et ggplot2-basert histogram for valgt variabel,
+#' med fornuftige standardverdier.
 #'
-#' @param d datasett som inkluderer variabelen som skal brukes i histogrammet
-#' @param x variabel som skal brukes på x-aksen
-#' @param binwidth instilling for intervallbredde per søyle
-#' @param akse_label_bredde instilling for mellomrom mellom akselabels
-#' @param farge hvilken farge som skal brukes som fyll og kantlinje for histogram.
-#' Default verdi er standardfarge for SKDE-årsrapport.
+#' @details
+#' Tilsvarer et vanlig histogram laget med [ggplot2::ggplot()]
+#' og [ggplot2::geom_histogram()],men med mer nyttige standardverdier
+#' og enkelte visuelle forbedringer:
+#'
+#' - `boundary`-argumentet er som standard satt til 0, slik at
+#'   søyler med heltallig `binwidth` alltid vil starte på et heltall.
+#' - Søylene starter helt nede ved *x*-aksen (og har 5 % luft over seg).
+#' - En kan enkelt velge avstanden som skal være mellom aksetallene
+#'   (`aksetall_avstand`).
+#' - Søylefargen er som standard lik standard årsrapportfarge.
+#' - Vannrette akselinjer blir ikke vist.
+#'
+#' @param d Datasett som innholder variabelen som skal brukes i histogrammet.
+#' @param x Variabelnavn (rånavn, ikke tekststreng) som skal brukes på *x*-aksen.
+#' @param binwidth Søylebredde (som i [ggplot2::geom_histogram()]).
+#' @param boundary Justeringsgrense for venstre søylekant
+#'   (som i [ggplot2::geom_histogram()]). Bør vanligvis være 0.
+#' @param fill Søylefarge (som i [ggplot2::geom_histogram()]).
+#' @param aksetall_avstand Avstand/mellomrom som skal brukes mellom
+#'   hvert aksetall. Hvis `NULL`, blir en fornuftig standardverdi brukt.
+#' @param ... Eventuelle andre argument som skal videresendes til
+#'   [ggplot2::geom_histogram()].
+#'
+#' @return
+#' Et ggplot-objekt.
+#'
 #' @export
-lag_fig_histogram = function(d, x, binwidth = 1, akse_label_bredde = 10, farge = colPrim[3]) {
-  x_var = rlang::enexpr(x)
-
-  ggplot2::ggplot(d, aes(x = !!x_var)) +
-    geom_histogram(
-      fill = farge, color = farge,
-      binwidth = binwidth, boundary = 0
-    ) +
-    scale_x_continuous(breaks = scales::breaks_width(akse_label_bredde)) +
+#' @examples
+#' lag_fig_histogram(iris, Petal.Length,
+#'   binwidth = .25, aksetall_avstand = .5
+#' )
+lag_fig_histogram = function(d, x, binwidth = 1, boundary = 0,
+                             fill = NULL, aksetall_avstand = NULL, ...) {
+  if (is.null(fill)) {
+    fill = colPrim[3] # fixme: Ikkje bruk ikkje-anonym global variabel!
+  }
+  p = ggplot2::ggplot(d, aes(x = {{ x }})) +
+    geom_histogram(binwidth = binwidth, boundary = boundary, fill = fill, ...) +
     scale_y_continuous(expand = expansion(mult = c(0.0, .05), add = 0)) +
-    fjern_x
+    fjern_x # fixme: Ikkje bruk ikkje-anonym global variabel!
+  if (!is.null(aksetall_avstand)) {
+    p = p + scale_x_continuous(breaks = scales::breaks_width(aksetall_avstand))
+  }
+  p
 }
