@@ -305,6 +305,7 @@ lag_fig_soyle = function(d, x, y, farge = ColPrim[3], facet = FALSE, facet_grupp
 #' @param boundary Justeringsgrense for venstre søylekant
 #'   (som i [ggplot2::geom_histogram()]). Bør vanligvis være 0.
 #' @param fill Søylefarge (som i [ggplot2::geom_histogram()]).
+#'   Hvis `NULL`, blir standard årsrapportfarge brukt.
 #' @param aksetall_avstand Avstand/mellomrom som skal brukes mellom
 #'   hvert aksetall. Hvis `NULL`, blir en fornuftig standardverdi brukt.
 #' @param ... Eventuelle andre argument som skal videresendes til
