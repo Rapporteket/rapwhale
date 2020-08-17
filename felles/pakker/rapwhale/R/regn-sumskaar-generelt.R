@@ -172,13 +172,13 @@ sjekk_skaaringstabell = function(skaaringstabell) {
 #'     finnes i `d`).
 #'
 #' @details
-#' Gir feilmelding hvis `d` ikke inneholder alle variabelnavn
-#' i skåringstabellen. Funksjonen oppgir også hvilke variabelnavn som
-#' ev. mangler i `d`.
+#' Gir feilmelding hvis `d` ikke inneholder alle variabelnavnene
+#' i `variabelnavn`. Feilmeldingen oppgir hvilke variabelnavn som
+#' eventuelt mangler.
 #'
 #' @keywords internal
 #'
-#' @return `NULL`
+#' @return `NULL` (usynlig).
 sjekk_variabelnavn = function(d, variabelnavn) {
   var_mangler = unique(variabelnavn[!(variabelnavn %in% names(d))])
   var_mangler_tekst = paste0(var_mangler, collapse = ", ")
