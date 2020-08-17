@@ -42,8 +42,12 @@ NULL
 #' `variabel`.
 #'
 #' Merk at `verdi` også *kan* være `NA`. Da blir manglende svar
-#' (dvs. `NA-verdier`) for tilhørende variabel og delskala regnet som et
-#' gyldig svar, og har en tilhørende `koeffisient` (som ikke er `NA`).
+#' (dvs. `NA-verdier`) for tilhørende variabel og delskala regnet som
+#' gyldig svar og har en tilhørende `koeffisient` (som ikke er `NA`).
+#' Dette kan være nyttig i tilfeller hvor svaralternativ som «Vet ikke»
+#' og manglende svar begge blir kodet som `NA` (men slik koding er
+#' generelt en dårlig idé!).
+#'
 #' Hvis argumentet `godta_manglende` er satt til `FALSE`, vil en få
 #' feilmelding dersom det finnes `NA`-verdier i datasettet som *ikke* har
 #' en `verdi` lik `NA` i skåringstabellen for alle delskalene.
