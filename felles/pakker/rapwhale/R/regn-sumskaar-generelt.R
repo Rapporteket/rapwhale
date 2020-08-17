@@ -267,37 +267,11 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 #'     null rader.
 #' @seealso [sjekk_variabelverdier()], [oppsummer_ugyldige_verdier()]
 finn_ugyldige_verdier = function(d, verditabell) {
-  radnr_ugyldige = integer()
-  variabler_ugyldige = character()
-  verdier_ugyldige = numeric()
-  for (var_d in names(d)) {
-    verdier_d = d[[var_d]]
-    mulige_verdier = verditabell %>%
-      filter(variabel == !!var_d) %>%
-      pull(verdi)
-    verdier_d_ugyldige = setdiff(verdier_d, mulige_verdier)
-    if (length(verdier_d_ugyldige) > 0) {
-      indeks_ugyldige = which(verdier_d %in% verdier_d_ugyldige)
-      radnr_ugyldige = append(radnr_ugyldige, indeks_ugyldige)
-      variabler_ugyldige = append(
-        variabler_ugyldige,
-        rep(var_d, times = length(indeks_ugyldige))
-      )
-      verdier_ugyldige = append(
-        verdier_ugyldige,
-        verdier_d[indeks_ugyldige]
-      )
-    }
-  }
-  oversikt_ugyldige = arrange(
-    tibble(
-      radnr = radnr_ugyldige,
-      variabel = variabler_ugyldige,
-      feilverdi = verdier_ugyldige
-    ),
-    radnr
-  )
-  oversikt_ugyldige
+  d %>%
+    rowid_to_column("radnr") %>%
+    pivot_longer(-radnr, names_to = "variabel", values_to = "feilverdi") %>%
+    anti_join(verditabell, by = c("variabel", feilverdi = "verdi")) %>%
+    arrange(radnr)
 }
 
 #' Presenter ugyldige verdier i datasettet på en god måte
