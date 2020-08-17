@@ -9,39 +9,55 @@ NULL
 #' Regner ut sumskår(er) og validerer spørreskjema-variablene i et
 #' datasett.
 #'
-#' @param d Dataramme/tibble som inneholder spørreskjema-variabler + ev.
-#'     andre variabler. Spørreskjema-variablene må være numeriske.
-#' @param variabelnavn Ev. navn på variabler i datasettet som ikke er
+#' @param d Dataramme/tibble som inneholder spørreskjema-variabler +
+#'     eventuelt andre variabler. Spørreskjema-variablene må være
+#'     numeriske.
+#' @param variabelnavn Navn på variabler i datasettet som ikke er
 #'     identiske med de standardiserte navnene i skåringstabellen. Bruk
-#'     syntaksen:
-#'     `c(std_navn_1 = "dd_navn_1", std_navn_2 = "dd_navn_2")`
+#'     syntaksen
+#'     `c(std_navn_1 = "dd_navn_1", std_navn_2 = "dd_navn_2")`.
 #'     Nye navn trenger kun oppgis for spørreskjema-variabler som har
-#'     avvikende navn fra skåringstabellen.
-#' @param skaaringstabell Dataramme/tibble med fire kolonner
-#'     (`delskala`, `variabel`, `verdi` og `koeffisient`).
-#'     Delskala-kolonnen og variabel-kolonnen må være av typen tekst og
-#'     verdi-kolonnen og koeffisient-kolonnen må være numeriske.
-#' @param godta_manglende Skal manglende verdier for
-#'     spørreskjema-variablene i `d` godtas? Hvis ikke, blir det gitt ut
+#'     avvikende navn fra skåringstabellen. Hvis `NULL`, blir
+#'     det antatt at alle navnene er i samsvar med skåringstabellen.
+#' @param skaaringstabell Dataramme/tibble med som sier hvordan
+#'     `d` skal skåres. Må ha fire kolonner,
+#'     `delskala` (tekst), `variabel` (tekst), `verdi` (numerisk) og
+#'     `koeffisient` (numerisk), og det kan bare finnes én rad
+#'     per kombinasjon av av `delskala`, `variabel` og `verdi`.
+#'     Se detaljer nedenfor.
+#' @param godta_manglende Skal manglende verdier i
+#'     spørreskjema-variablene i `d` godtas (som standard nei)?
+#'     Hvis ikke, blir det gitt ut
 #'     en feilmelding om det finnes manglende verdier.
-#'     Standardverdi: `FALSE`
+#'     Se detaljer nedenfor.
 #'
 #' @details
-#' Funksjonen regner ut sumskårer ved hjelp av en skåringstabell. Hvert
-#' svaralternativ for hvert spørsmål i hver delskala har en tilhørende
-#' koeffisient i skåringstabellen. Aktuelle koeffisienter blir summert
-#' sammen for å finne sumskåren. Funksjonen sjekker i tillegg om
-#' variabler og verdier tilknyttet spørreskjemaet som skal skåres er
-#' gyldige. Det sjekkes også om `skaaringstabell` er gyldig. Funksjonen
-#' gir ut feilmelding hvis noe er ugyldig. Hvis `d` inneholder en eller
-#' flere sumskår-kolonner med identisk navn som i
-#' `skaaringstabell$delskala` blir disse kolonnene stående samme sted,
-#' men sumskårene regnes ut på nytt. Sumskår-kolonner som ikke allerede
-#' finnes legges til i samme rekkefølge som i `skaaringstabell$delskala`
-#' helt til høyre i `d`. Funksjonen endrer ikke navn eller plassering på
-#' kolonner i `d`.
+#' Funksjonen regner ut vektede sumskårer ved hjelp av en skåringstabell.
+#' Skåringstabellen sier hvordan de ulike svaralternativene for variablene
+#' i `d` skal inngå i sumskårene. Et spørreskjema kan ha flere
+#' sumskårer, som vi kaller *delskalaer*. (For eksempel kan et skjema for
+#' livskvalitet ha én delskala for fysisk livskvalitet og én for psykisk
+#' livskvalitet.) Sumskåren for delskalaen `delskala` er summen av de tallene
+#' i `koeffisient` som svarer til svaralternativ `verdi` for variabelen
+#' `variabel`.
 #'
-#' @return `d` med sumskår(er).
+#' Merk at `verdi` også *kan* være `NA`. Da blir manglende svar
+#' (dvs. `NA-verdier`) for tilhørende variabel og delskala regnet som et
+#' gyldig svar, og har en tilhørende `koeffisient` (som ikke er `NA`).
+#' Hvis argumentet `godta_manglende` er satt til `FALSE`, vil en få
+#' feilmelding dersom det finnes `NA`-verdier i datasettet som *ikke* har
+#' en `verdi` lik `NA` i skåringstabellen for alle delskalene.
+#'
+#' Funksjonen sjekker at alle verdier for variabler i `d` som skal skåres,
+#' er gyldige. Det sjekkes også om `skaaringstabell` er gyldig. Feilmelding
+#' blir gitt dersom noe er ugyldig.
+#'
+#' @return Datasett likt `d`, men med sumskår(er) lagt til, eventuelt
+#'   erstattet. Nye sumskår-kolonner blir i utgangspunktet lagt til på
+#'   slutten av av `d`, i samme rekkefølge som i `skaaringstabell$delskala`.
+#'   Men hvis `d` alt innholder variabler med samme navn som en `delskala`,
+#'   blir disse variablene stående der de er, men overskrevet med
+#'   nyutregnede sumskårer. Det blir i så fall gitt ut en advarsel.
 #' @export
 #'
 #' @examples
