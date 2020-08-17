@@ -220,7 +220,7 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis
 
 test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen
           innholder feil variabeltyper", {
-  feilmelding_kolonneformat = "Delskala-kolonnen og variabel-kolonnen må være av typen tekst og verdi-kolonnen og koeffisient-kolonnen må være numeriske"
+  feilmelding_kolonneformat = "'delskala' og 'variabel' må være tekstvariabler og 'verdi' og 'koeffisient' må være numeriske"
 
   skaaringstabell_ugyldig_verdi_kolonne = skaaringstabell_eks
   skaaringstabell_ugyldig_verdi_kolonne$verdi = as.character(
