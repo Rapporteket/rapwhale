@@ -63,17 +63,21 @@ NULL
 #' @examples
 #' d_eks = tibble::tribble(
 #'   ~pas_id, ~var_a, ~var_b, ~dato,
-#'   146, 1, 2, "2020-05-15"
+#'   146, 1, 2, "2020-05-15",
+#'   211, NA, 3, "2020-08-17"
 #' )
 #'
 #' skaaringstabell_eks = tibble::tribble(
 #'   ~delskala, ~variabel, ~verdi, ~koeffisient,
 #'   "total", "var_a", 1, 5,
-#'   "total", "var_a", NA, 10,
-#'   "total", "var_b", 1, 4,
-#'   "total", "var_b", 2, 5,
-#'   "psykisk", "var_a", 1, 3,
-#'   "psykisk", "var_a", NA, 2
+#'   "total", "var_a", 2, 10,
+#'   "total", "var_a", NA, 7.5,
+#'   "total", "var_b", 1, 2,
+#'   "total", "var_b", 2, 3,
+#'   "total", "var_b", 3, 7,
+#'   "psykisk", "var_a", 1, 0,
+#'   "psykisk", "var_a", 2, 100,
+#'   "psykisk", "var_a", NA, 50
 #' )
 #'
 #' skaar_datasett(d_eks, skaaringstabell = skaaringstabell_eks)
