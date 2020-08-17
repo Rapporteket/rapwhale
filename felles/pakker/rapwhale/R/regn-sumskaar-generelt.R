@@ -92,15 +92,17 @@ skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell,
   } else {
     d_std_navn = d
   }
+
   sjekk_skaaringstabell(skaaringstabell)
-  sjekk_variabelnavn(d_std_navn, variabelnavn = skaaringstabell$variabel)
-  d_akt = d_std_navn %>%
+  d_std_navn = d_std_navn %>%
     select(unique(skaaringstabell$variabel))
-  sjekk_variabelverdier(d_akt,
+  sjekk_variabelnavn(d_std_navn, variabelnavn = skaaringstabell$variabel)
+  sjekk_variabelverdier(d_std_navn,
     verditabell = select(skaaringstabell, variabel, verdi),
     godta_manglende = godta_manglende
   )
-  d_sumskaarer = skaar_datasett_uten_validering(d_akt, skaaringstabell)
+
+  d_sumskaarer = skaar_datasett_uten_validering(d_std_navn, skaaringstabell)
   d_orig_inkl_sumskaar = legg_til_eller_erstatt_kolonner(d, d_sumskaarer)
   d_orig_inkl_sumskaar
 }
