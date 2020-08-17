@@ -187,12 +187,12 @@ sjekk_variabelnavn = function(d, variabelnavn) {
   }
 }
 
-#' Sjekk at verdier i datasettet er gyldige
+#' Sjekk at verdier i et datasett er gyldige
 #'
 #' @description
-#' Skal ta inn et datasett, en verditabell og et argument som bestemmer
-#' om NA-verdier skal regnes som gyldige. Funksjonen gir feilmelding
-#' hvis datasettet inneholder en eller flere ugyldige verdier.
+#' Gir feilmelding dersom verdiene i datasettet ikke er i samsvar
+#' med en verditabell som sier hvile verdier som er gyldige for
+#' hvilke variabler.
 #'
 #' @param d Dataramme/tibble som kun inneholder kolonner med identiske
 #'     navn som i `verditabell$variabel`.
@@ -200,22 +200,24 @@ sjekk_variabelnavn = function(d, variabelnavn) {
 #'     og `verdi`) som sier hvilke verdier som er gyldige for hvilke
 #'     variabler. Variabel-kolonnen må være av typen tekst og
 #'     verdi-kolonnen må være numerisk.
-#' @param godta_manglende Skal manglende verdier for
-#'     spørreskjema-variablene i `d` godtas? Hvis ikke, blir det gitt ut
-#'     en feilmelding om det finnes manglende verdier.
-#'     Standardverdi: `FALSE`
+#' @param godta_manglende Skal manglende verdier i
+#'     i `d` godtas (standard `FALSE`)?
+#'     Hvis ikke, blir det gitt ut
+#'     en feilmelding dersom det finnes manglende verdier.
 #'
 #' @details
-#' Gir feilmelding hvis `d` inneholder verdier som ikke er numeriske.
-#' Gir også feilmelding hvis `verditabell` ikke er tibble/data.frame
-#' og/eller mangler en av / begge kolonnene `variabel` og `verdi`. Hvis
-#' det finnes ugyldige verdier i `d` gir funksjonen ut oversikt over
-#' antall ugyldige verdier, samt hvilke variabler og verdier dette
-#' gjelder.
+#' Gir feilmelding hvis `d` inneholder en verdi som ikke har
+#' tilhørende oppføring av `variabel` og `verdi` i `verditabell`.
+#' Feilmeldingen inneholder oversikt over antall ugyldige verdier,
+#' samt hvilke variabler og verdier dette gjelder.
+#'
+#' Gir også feilmelding hvis `verditabell` ikke er `tibble`/`data.frame`
+#' og/eller mangler minst én av kolonnene `variabel` og `verdi`,
+#' eller hvis `d` inneholder verdier som ikke er numeriske.
 #'
 #' @keywords internal
 #'
-#' @return `NULL`
+#' @return `NULL` (usynlig).
 sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
   if (!all(sapply(d, is.numeric))) {
     stop("Datasettet inneholder verdier som ikke er numeriske")
