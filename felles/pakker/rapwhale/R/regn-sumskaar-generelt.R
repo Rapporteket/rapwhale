@@ -370,7 +370,7 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
   d_med_koeff = d_svar %>%
     left_join(skaaringstabell, by = c("variabel", "verdi"))
 
-  # Rekn ut sumskår for alle delskalaane, per pasient
+  # Rekn ut sumskår for alle delskalaane, per person
   d_med_skaarar = d_med_koeff %>%
     group_by(person_id, delskala) %>%
     summarise(skaar = sum(koeffisient)) %>%
