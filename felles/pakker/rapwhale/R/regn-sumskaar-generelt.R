@@ -310,38 +310,48 @@ oppsummer_ugyldige_verdier = function(d_ugyldige) {
   oppsummert
 }
 
-#' Regn sumskår
+#' Skår garantert gyldig spørreskjema ved hjelp av verditabell
 #'
 #' @description
-#' Skårer et datasett og gir ut en dataramme/tibble som inneholder en
-#' eller flere kolonner med sumskårer.
+#' Skårer et datasett som må være i samsvar med oppgitt verditabell og
+#' gir ut en dataramme/tibble som bare inneholder sumskårene.
 #'
-#' @param d Dataramme/tibble som kun inneholder kolonner med identiske
+#' @param d Dataramme/tibble som inneholder kun kolonner med identiske
 #'     navn som i `skaaringstabell$variabel`. Alle kolonnene må
 #'     inneholde numeriske verdier.
-#' @param skaaringstabell Dataramme/tibble med fire kolonner
-#'     (`delskala`, `variabel`, `verdi` og `koeffisient`).
-#'     Delskala-kolonnen og variabel-kolonnen må være av typen tekst og
-#'     verdi-kolonnen og koeffisient-kolonnen må være numeriske.
+#' @inheritParams skaar_datasett
 #'
 #' @details
-#' Funksjonen regner ut sumskårer ved hjelp av en skåringstabell. Hvert
-#' svaralternativ for hvert spørsmål i hver delskala har en tilhørende
-#' koeffisient i skåringstabellen. Aktuelle koeffisienter blir summert
-#' sammen for å finne sumskåren. Ved bruk av den overordnede funksjonen
+#' Se [skaar_datasett()] for informasjon om hvordan `d` blir skåret
+#' og om hvordan `skaaringstabell` skal defineres.
+#' Forskjellen fra den funksjonen er at:
+#'
+#' - `d` skal *bare* inneholde variablene nevnt i `skaaringstabell$variabel`
+#'   (ikke ekstravariabler)
+#' - `d` *må* være i samsvar med `skaaringstabell`
+#' - `skaaringstabell` *må* være gyldig
+#' - utdata fra funksjonen inneholder bare sumskårene, ikke de opphavlige
+#'   variablene
+#'
+#' Ved bruk av den overordnede funksjonen
 #' [skaar_datasett()] kalles denne funksjonen på etter at
+#' variabler har fått nye namn basert på `variabelnavn`-argumentet
+#' i den funksjonen,
 #' skåringstabellen, variabelnavnene og variabelverdiene er validert
 #' (ved hjelp av [sjekk_skaaringstabell()], [sjekk_variabelnavn()] og
-#' [sjekk_variabelverdier()]) og alle variabler som har navn som ikke
+#' [sjekk_variabelverdier()]) og alle variabler som ikke
 #' finnes i `skaaringstabell$variabel` er filtrert vekk.
+#'
+#' Dette er altså funksjonen som gjør *hovedarbeidet* med skåring av
+#' et datasett, etter at alt «bokholderiet» er unnagjort.
 #'
 #' @keywords internal
 #'
-#' @return Dataramme/tibble som inneholder en eller flere kolonner med
+#' @return Tibble som inneholder én eller flere kolonner med
 #'     sumskårer. Rekkefølgen på sumskår-kolonnene bestemmes av
 #'     rekkefølgen i `skaaringstabell$delskala` og rekkefølgen på radene
-#'     er lik som i `d`. Hvis en variabel i `d` har `NA-verdier` (uten
-#'     tilhørende koeffisient i skåringstabellen), blir sumskåren(e) for
+#'     er lik som i `d`. Hvis en variabel i `d` har `NA-verdier` uten
+#'     tilhørende koeffisient i skåringstabellen, blir sumskåren(e) for
 #'     tilhørende delskala(er) satt lik `NA`.
 skaar_datasett_uten_validering = function(d, skaaringstabell) {
   # Gjer om til éi rad per svar, med ein person-ID
