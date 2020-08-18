@@ -55,6 +55,25 @@ test_that("skaar_datasett() fungerer på uproblematiske inndata", {
   )
 })
 
+test_that("skaar_datasett() fungerer riktig hvis inndatasett er gruppert", {
+  expect_equal(
+    skaar_datasett(group_by(d_gyldig_inn, kjonn),
+      skaaringstabell = skaaringstabell_eks
+    ),
+    d_gyldig_ut
+  )
+})
+
+test_that("skaar_datasett() fungerer riktig hvis skåringstabellen er gruppert", {
+  expect_equal(
+    skaar_datasett(d_gyldig_inn,
+      skaaringstabell =
+        group_by(skaaringstabell_eks, verdi)
+    ),
+    d_gyldig_ut
+  )
+})
+
 # Eksempel på inndata hvor sumskår-kolonner finnes fra før
 d_inn_inkl_sumskaarer = d_gyldig_inn
 d_inn_inkl_sumskaarer = tibble::add_column(d_inn_inkl_sumskaarer,
