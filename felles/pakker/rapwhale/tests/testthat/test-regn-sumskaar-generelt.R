@@ -60,8 +60,8 @@ test_that("skaar_datasett() fungerer riktig hvis inndatasett er gruppert", {
     skaar_datasett(group_by(d_gyldig_inn, kjonn),
       skaaringstabell = skaaringstabell_eks
     ),
-    d_gyldig_ut
-  )
+    group_by(d_gyldig_ut, kjonn)
+  ) # Skal bevara grupperinga i utdataa
 })
 
 test_that("skaar_datasett() fungerer riktig hvis skåringstabellen er gruppert", {
