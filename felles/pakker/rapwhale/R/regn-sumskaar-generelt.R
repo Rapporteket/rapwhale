@@ -443,21 +443,20 @@ legg_til_na_i_skaaringstabell = function(skaaringstabell) {
 #' Legg til / erstatt variabler i ett datasett med variabler i et annet
 #'
 #' @description
-#' Legger variabler fra et datasett til et annet datasett (med
+#' Legger variabler fra ett datasett til et annet datasett (med
 #' overskriving av variabler som finnes i begge).
 #'
 #' @param d_orig Originalt datasett (dataramme/tibble).
-#' @param d_ekstrakol Dataramme/tibble som inneholder en eller flere
+#' @param d_ekstrakol Dataramme/tibble som inneholder én eller flere
 #'     kolonner og samme antall rader som `d_orig`.
 #'
 #' @details
-#' Variabler som finnes i `d_orig` fra før blir erstattet, nye blir lagt
-#' til helt til høyre. Det kommer advarsel hvis en eller flere variabler
-#' finnes fra før.
+#' Variabler som finnes i `d_orig` fra før blir erstattet (med advarsel),
+#' og nye blir lagt til helt til høyre.
 #'
 #' @keywords internal
 #'
-#' @return Originalt datasett med ekstra kolonner lagt til / erstattet.
+#' @return Originalt datasett med ekstra kolonner lagt til / erstattet.
 legg_til_eller_erstatt_kolonner = function(d_orig, d_ekstrakol) {
   navn_finst = intersect(names(d_ekstrakol), names(d_orig))
   navn_finst_tekst = paste0(navn_finst, collapse = ", ")
