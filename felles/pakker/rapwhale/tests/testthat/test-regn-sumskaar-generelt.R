@@ -46,6 +46,15 @@ d_gyldig_ut = tibble::add_column(d_gyldig_ut,
   .after = "dato"
 )
 
+test_that("skaar_datasett() fungerer på uproblematiske inndata", {
+  expect_equal(
+    skaar_datasett(d_gyldig_inn,
+      skaaringstabell = skaaringstabell_eks
+    ),
+    d_gyldig_ut
+  )
+})
+
 # Eksempel på inndata hvor sumskår-kolonner finnes fra før
 d_inn_inkl_sumskaarer = d_gyldig_inn
 d_inn_inkl_sumskaarer = tibble::add_column(d_inn_inkl_sumskaarer,
