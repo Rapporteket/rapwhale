@@ -409,7 +409,8 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
 #' Legg til rader med både `verdi` og `koeffisient` lik `NA`, for
 #' lettare skåring av datasett som har manglande verdiar.
 #'
-#' @param skaaringstabell Vanleg skåringstabell.
+#' @param skaaringstabell Vanleg skåringstabell. Sjå definisjon
+#'   i [skaar_datasett()].
 #'
 #' @details
 #' For kvar eksisterande kombinasjon av `delskala` og `variabel` vert
@@ -418,8 +419,8 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
 #' (uavhengig av kva tilhøyrande `koeffisient` er).
 #'
 #' Dette er berre ein intern hjelpefunksjon for å forenkla koden
-#' for skåring av datasett. Med slike `NA`-rader vert skåren utrekna
-#' med [skaar_datasett_uten_validering()] automatisk `NA` dersom
+#' for skåring av datasett. Med slike `NA`-rader vert skåren som vert
+#' utrekna med [skaar_datasett_uten_validering()] automatisk til `NA` dersom
 #' minst éin av variablane som inngår, manglar verdi (altså er `NA`).
 #'
 #' @keywords internal
