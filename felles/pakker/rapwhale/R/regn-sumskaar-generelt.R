@@ -274,7 +274,7 @@ finn_ugyldige_verdier = function(d, verditabell) {
     arrange(radnr)
 }
 
-#' Presenter ugyldige verdier i datasettet på en god måte
+#' Presenter ugyldige verdier i et datasett på en god måte
 #'
 #' @description
 #' Gir ut en oversiktlig fremstilling av tibble-en som returneres av
