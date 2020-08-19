@@ -242,7 +242,8 @@ sjekk_variabelnavn = function(d, variabelnavn) {
 #' @param godta_manglende Skal manglende verdier i
 #'     i `d` godtas (standard `FALSE`)?
 #'     Hvis ikke, blir det gitt ut
-#'     en feilmelding dersom det finnes manglende verdier.
+#'     en feilmelding dersom det finnes manglende verdier (`NA`-verdier)
+#'     som ikke har tilhørende oppføring i `verditabell`.
 #'
 #' @details
 #' Gir feilmelding hvis `d` inneholder en verdi som ikke har
