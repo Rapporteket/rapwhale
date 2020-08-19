@@ -3,11 +3,12 @@
 #' @importFrom magrittr %>%
 #' @importFrom tidyr pivot_longer pivot_wider nest unnest
 NULL
-#' Skår spørreskjema ved hjelp av verditabell
+#' Skår spørreskjema basert på skåringstabell
 #'
 #' @description
-#' Regner ut sumskår(er) og validerer spørreskjema-variablene i et
-#' datasett.
+#' Regner ut sumskår(er) i et datasett basert på en skåringstabell.
+#' Sjekker også at alle verdiene i datasettet er i samsvar med
+#' skåringstabellen.
 #'
 #' @param d Dataramme/tibble som inneholder spørreskjema-variabler +
 #'     eventuelt andre variabler. Spørreskjema-variablene må være
@@ -19,13 +20,13 @@ NULL
 #'     Nye navn trenger kun oppgis for spørreskjema-variabler som har
 #'     avvikende navn fra skåringstabellen. Hvis `NULL`, blir
 #'     det antatt at alle navnene er i samsvar med skåringstabellen.
-#' @param skaaringstabell Dataramme/tibble med som sier hvordan
+#' @param skaaringstabell Dataramme/tibble som sier hvordan
 #'     `d` skal skåres. Må ha fire kolonner,
 #'     `delskala` (tekst), `variabel` (tekst), `verdi` (numerisk) og
 #'     `koeffisient` (numerisk), og det kan bare finnes én rad
 #'     per kombinasjon av av `delskala`, `variabel` og `verdi`.
 #'     Se detaljer nedenfor.
-#' @param godta_manglende Skal manglende verdier i
+#' @param godta_manglende Skal manglende verdier (`NA`-verdier) i
 #'     spørreskjema-variablene i `d` godtas (som standard nei)?
 #'     Hvis ikke, blir det gitt ut
 #'     en feilmelding om det finnes manglende verdier.
@@ -33,13 +34,14 @@ NULL
 #'
 #' @details
 #' Funksjonen regner ut vektede sumskårer ved hjelp av en skåringstabell.
-#' Skåringstabellen sier hvordan de ulike svaralternativene for variablene
-#' i `d` skal inngå i sumskårene. Et spørreskjema kan ha flere
+#' Skåringstabellen sier hvordan de ulike svaralternativene skal inngå i
+#' sumskårene. Et spørreskjema kan ha flere
 #' sumskårer, som vi kaller *delskalaer*. (For eksempel kan et skjema for
 #' livskvalitet ha én delskala for fysisk livskvalitet og én for psykisk
-#' livskvalitet.) Sumskåren for delskalaen `delskala` er summen av de tallene
-#' i `koeffisient` som svarer til svaralternativ `verdi` for variabelen
-#' `variabel`.
+#' livskvalitet.) For hver rad i `d` og hver `delskala` i `skaaringstabell`
+#' blir sumskåren `delskala` i `d` lik summen av de tallene i `koeffisient`
+#' der `verdi` for variabelen `variabel` i skåringstabellen er lik
+#' verdien av tilhørende variabel i `d`.
 #'
 #' Merk at `verdi` også *kan* være `NA`. Da blir manglende svar
 #' (dvs. `NA-verdier`) for tilhørende variabel og delskala regnet som
@@ -52,16 +54,15 @@ NULL
 #' feilmelding dersom det finnes `NA`-verdier i datasettet som *ikke* har
 #' en `verdi` lik `NA` i skåringstabellen for alle delskalene.
 #'
-#' Funksjonen sjekker at alle verdier for variabler i `d` som skal skåres,
-#' er gyldige. Det sjekkes også om `skaaringstabell` er gyldig. Feilmelding
-#' blir gitt dersom noe er ugyldig.
+#' Funksjonen gir feilmelding dersom noen av verdiene i `d` ikke er i
+#' samsvar med skåringstabellen eller dersom skåringstabellen er ugyldig.
 #'
 #' @return Datasett likt `d`, men med sumskår(er) lagt til, eventuelt
 #'   erstattet. Nye sumskår-kolonner blir i utgangspunktet lagt til på
 #'   slutten av av `d`, i samme rekkefølge som i `skaaringstabell$delskala`.
-#'   Men hvis `d` alt innholder variabler med samme navn som en `delskala`,
-#'   blir disse variablene stående der de er, men overskrevet med
-#'   nyutregnede sumskårer. Det blir i så fall gitt ut en advarsel.
+#'   Hvis `d` imidlertid alt innholder en variabel med samme navn som en
+#'   `delskala`, blir denne denne stående der den er, men overskrevet med
+#'   nyutregnet sumskår. Det blir i så fall gitt ut en advarsel.
 #' @export
 #'
 #' @examples
