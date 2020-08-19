@@ -389,7 +389,7 @@ oppsummer_ugyldige_verdier = function(d_ugyldige) {
 #'
 #' @return Tibble som inneholder én eller flere kolonner med
 #'     sumskårer. Rekkefølgen på sumskår-kolonnene bestemmes av
-#'     rekkefølgen i `skaaringstabell$delskala` og rekkefølgen på radene
+#'     rekkefølgen i `skaaringstabell$delskala`, og rekkefølgen på radene
 #'     er lik som i `d`. Hvis en variabel i `d` har `NA-verdier` uten
 #'     tilhørende koeffisient i skåringstabellen, blir sumskåren(e) for
 #'     tilhørende delskala(er) satt lik `NA`.
