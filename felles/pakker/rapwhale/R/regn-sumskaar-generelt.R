@@ -204,7 +204,7 @@ sjekk_skaaringstabell = function(skaaringstabell) {
 #' @description
 #' Skal ta inn et datasett og en vektor med variabelnavn. Funksjonen gir
 #' feilmelding hvis datasettet ikke inneholder alle variabelnavnene i
-#' skåringstabellen.
+#' datasettet.
 #'
 #' @param d Dataramme/tibble.
 #' @param variabelnavn Vektor med variabelnavn (som skal sjekkes om
