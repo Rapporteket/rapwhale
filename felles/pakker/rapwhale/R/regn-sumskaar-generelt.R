@@ -291,8 +291,8 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 #'     numeriske verdier.
 #' @param verditabell Dataramme/tibble med to kolonner (`variabel` og
 #'     `verdi`) som sier hvilke verdier som er gyldige for hvilke
-#'     variabler. Variabel-kolonnen må være av typen tekst og
-#'     verdi-kolonnen må være numerisk.
+#'     variabler. Kolonnen `variabel` må være av typen tekst og
+#'     `verdi` må være numerisk.
 #'
 #' @details
 #' Blir brukt av [sjekk_variabelverdier()], men kan også
@@ -328,7 +328,7 @@ finn_ugyldige_verdier = function(d, verditabell) {
 #' @return Tekststreng som inneholder variabelnavn og tilhørende
 #'     feilverdier (sortert alfabetisk etter variabelnavn og så
 #'     rekkefølge i `d_ugyldige$radnr`). Hvis det ikke finnes ugyldige
-#'     verdier returneres tekststrengen "Alle verdiene er gyldige".
+#'     verdier, returneres tekststrengen `"Alle verdiene er gyldige"`.
 oppsummer_ugyldige_verdier = function(d_ugyldige) {
   if (nrow(d_ugyldige) > 0) {
     oppsummert = d_ugyldige %>%
