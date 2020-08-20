@@ -17,7 +17,7 @@ NULL
 #'     `d` skal skåres. Må ha fire kolonner,
 #'     `delskala` (tekst), `variabel` (tekst), `verdi` (numerisk) og
 #'     `koeffisient` (numerisk), og det kan bare finnes én rad
-#'     per kombinasjon av av `delskala`, `variabel` og `verdi`.
+#'     per kombinasjon av `delskala`, `variabel` og `verdi`.
 #'     Se detaljer nedenfor.
 #' @param variabelnavn Navn på variabler i datasettet som ikke er
 #'     identiske med de standardiserte navnene i skåringstabellen. Bruk
