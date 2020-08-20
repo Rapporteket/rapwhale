@@ -13,6 +13,12 @@ NULL
 #' @param d Dataramme/tibble som inneholder spørreskjema-variabler +
 #'     eventuelt andre variabler. Spørreskjema-variablene må være
 #'     numeriske.
+#' @param skaaringstabell Dataramme/tibble som sier hvordan
+#'     `d` skal skåres. Må ha fire kolonner,
+#'     `delskala` (tekst), `variabel` (tekst), `verdi` (numerisk) og
+#'     `koeffisient` (numerisk), og det kan bare finnes én rad
+#'     per kombinasjon av av `delskala`, `variabel` og `verdi`.
+#'     Se detaljer nedenfor.
 #' @param variabelnavn Navn på variabler i datasettet som ikke er
 #'     identiske med de standardiserte navnene i skåringstabellen. Bruk
 #'     syntaksen
@@ -20,12 +26,6 @@ NULL
 #'     Nye navn trenger kun oppgis for spørreskjema-variabler som har
 #'     avvikende navn fra skåringstabellen. Hvis `NULL`, blir
 #'     det antatt at alle navnene er i samsvar med skåringstabellen.
-#' @param skaaringstabell Dataramme/tibble som sier hvordan
-#'     `d` skal skåres. Må ha fire kolonner,
-#'     `delskala` (tekst), `variabel` (tekst), `verdi` (numerisk) og
-#'     `koeffisient` (numerisk), og det kan bare finnes én rad
-#'     per kombinasjon av av `delskala`, `variabel` og `verdi`.
-#'     Se detaljer nedenfor.
 #' @param godta_manglende Skal manglende verdier (`NA`-verdier) i
 #'     spørreskjema-variablene i `d` godtas (som standard nei)?
 #'     Hvis ikke, blir det gitt ut
@@ -86,7 +86,7 @@ NULL
 #' )
 #'
 #' skaar_datasett(d_eks, skaaringstabell = skaaringstabell_eks)
-skaar_datasett = function(d, variabelnavn = NULL, skaaringstabell,
+skaar_datasett = function(d, skaaringstabell, variabelnavn = NULL,
                           godta_manglende = FALSE) {
   if (!is.null(variabelnavn)) {
     d_std_navn = rename(d, !!variabelnavn)
