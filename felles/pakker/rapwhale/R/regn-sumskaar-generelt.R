@@ -52,8 +52,9 @@ NULL
 #' svaralternativ bør ha eksplisitte verdier.
 #'
 #' Hvis argumentet `godta_manglende` er satt til `FALSE`, vil en få
-#' feilmelding dersom det finnes `NA`-verdier i datasettet som *ikke* har
-#' en `verdi` lik `NA` i skåringstabellen for alle delskalene.
+#' feilmelding dersom det finnes noen `NA`-verdier i datasettet som *ikke*
+#' har en `verdi` lik `NA` i skåringstabellen (for alle delskalene
+#' som variabelen inngår i).
 #'
 #' Funksjonen gir feilmelding dersom noen av verdiene i `d` ikke er i
 #' samsvar med skåringstabellen eller dersom skåringstabellen er ugyldig.
