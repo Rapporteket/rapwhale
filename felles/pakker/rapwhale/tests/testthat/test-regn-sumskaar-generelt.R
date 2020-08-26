@@ -235,6 +235,33 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen
   )
 })
 
+# Eksempel på ugyldig skåringstabell hvor en variabel
+# mangler en oppføring for en verdi i en delskala
+skaaringstabell_manglende_oppforinger_i_delskala = tibble::tribble(
+  ~delskala, ~variabel, ~verdi, ~koeffisient,
+  "fys", "var_a", 1, 0,
+  "fys", "var_a", 2, 0,
+  "psyk", "var_a", 1, 0,
+  "pysk", "var_b", 3, 0
+)
+
+test_that("sjekk_skaaringstabell() gir feilmelding hvis en variabel
+          mangler oppføringer for enkelte verdier i en delskala som den
+          har verdier for i annen delskala", {
+  expect_error(
+    sjekk_skaaringstabell(skaaringstabell_manglende_oppforinger_i_delskala),
+    "Skåringstabellen kan ikke inneholde en variabel som mangler oppføringer for enkelte verdier i en delskala som den har verdier for i annen delskala"
+  )
+})
+
+test_that("sjekk_skaaringstabell() gir ingen feilmelding hvis en variabel
+          har verdien NA i en delskala, men ikke i andre delskalaer", {
+  skaaringstabell_na_i_1_delskala = skaaringstabell_manglende_oppforinger_i_delskala
+  skaaringstabell_na_i_1_delskala$verdi[2] = NA
+
+  expect_silent(sjekk_skaaringstabell(skaaringstabell_na_i_1_delskala))
+})
+
 test_that("sjekk_skaaringstabell() gir feilmelding hvis
           koeffisient-kolonnen i skåringstabellen inneholder NA-verdier", {
   skaaringstabell_ugyldig_na_koeffisient = skaaringstabell_eks
