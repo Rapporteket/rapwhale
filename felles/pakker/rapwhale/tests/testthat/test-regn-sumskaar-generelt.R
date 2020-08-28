@@ -248,9 +248,9 @@ skaaringstabell_manglende_oppforinger_i_delskala = tibble::tribble(
 test_that("sjekk_skaaringstabell() gir feilmelding hvis en variabel
           mangler oppføringer for enkelte verdier i en delskala som den
           har verdier for i annen delskala", {
-  expect_error(
+  expect_identical(
     sjekk_skaaringstabell(skaaringstabell_manglende_oppforinger_i_delskala),
-    "Skåringstabellen kan ikke inneholde en variabel som mangler oppføringer for enkelte verdier i en delskala som den har verdier for i annen delskala"
+    "Følgende kombinasjoner av 'delskala', 'variabel' og 'verdi' mangler i skåringstabellen:\npsyk, var_a, 2"
   )
 })
 
