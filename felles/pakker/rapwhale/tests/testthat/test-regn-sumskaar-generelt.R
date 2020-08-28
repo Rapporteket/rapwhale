@@ -250,7 +250,7 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis en variabel
           har verdier for i annen delskala", {
   expect_identical(
     sjekk_skaaringstabell(skaaringstabell_manglende_oppforinger_i_delskala),
-    "Følgende kombinasjoner av 'delskala', 'variabel' og 'verdi' mangler i skåringstabellen:\npsyk, var_a, 2"
+    "Fant 1 manglende oppføring(er):\nvar_a i psyk: 2"
   )
 })
 
