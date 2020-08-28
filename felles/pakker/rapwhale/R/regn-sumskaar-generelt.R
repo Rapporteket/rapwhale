@@ -169,17 +169,20 @@ sjekk_skaaringstabell = function(skaaringstabell) {
   # Variabler med tilhørende verdier
   d_var_verdi = skaaringstabell %>%
     group_by(variabel) %>%
-    distinct(verdi)
+    distinct(verdi) %>%
+    filter(!is.na(verdi))
 
   # Kombinerer d_delskala_var og d_var_verdi
   d_delskala_var_verdi = d_delskala_var %>%
     full_join(d_var_verdi, by = "variabel")
 
-  # Sjekker om de finnes manglende kombinasjoner av 'delskala', 'variabel' og 'verdi'
+  # Sjekker om de finnes manglende manglende
+  # verdier for en variabel i en delskala
   d_komb_mangl = d_delskala_var_verdi %>%
     anti_join(skaaringstabell, by = c("delskala", "variabel", "verdi"))
 
-  # Gir ut feilmelding hvis det finnes manglende kombinasjoner
+  # Gir ut feilmelding hvis det finnes manglende
+  # verdier for en variabel i en delskala
   if (nrow(d_komb_mangl) > 0) {
     oversikt_komb_mangl = d_komb_mangl %>%
       group_by(delskala, variabel) %>%
@@ -200,40 +203,6 @@ sjekk_skaaringstabell = function(skaaringstabell) {
 
     stop(oversikt_komb_mangl)
   }
-
-
-  # fixme (QA):
-  #
-  # sjekk_skaaringstabell() godtek at ein variabel manglar
-  # oppføringar for enkelte verdiar i ein delskala som han
-  # *har* verdiar for i ein annan delskala. Dette er ein feil.
-  # Slike skåringstabellar skal ikkje reknast som gyldige.
-  # Enkelt eksempel:
-  #
-  #   stab = tribble(~delskala, ~variabel, ~verdi, ~koeffisient,
-  #                  "fys", "var_a", 1, 0,
-  #                  "fys", "var_a", 2, 0,
-  #                  "psyk", "var_a", 1, 0,
-  #                  "pysk", "var_b", 3, 0)
-  #
-  #
-  # Variabelen `var_a` kan ta verdiane 1 og 2 for delskalaen
-  # `fys`. Då må han òg kunna ta begge verdiane for andre delskalaar
-  # *som inneheld han*, her altså `psyk`. Men for `psyk` kan
-  # han berre ta verdien 1, så skåringstabellen skal reknast
-  # som ugyldig.
-  #
-  # Men merk at variabelen `var_b`, som kan ta verdien 3
-  # for `psyk`, *ikkje* treng å ta verdien `3` for `fys`,
-  # sidan han ikkje er *definert* for denne delskalaen.
-  #
-  # Verdiane `NA` er spesialtilfelle. At ein variabel kan ta
-  # verdien `NA` for éin delskala, skal ikkje vera til hinder
-  # for at han *ikkje* skal kunna ta han for andre delskalaar.
-  # Viss for eksempel verdien 2 ovanfor vart erstatta med `NA`,
-  # skal skåringstabellen reknast som gyldig.
-  # (Viss ein observasjon har `var_a` lik `NA`, vil sumskåren for `psyk`
-  # naturlegvis verta `NA`.)
 
   if (any(is.na(skaaringstabell$koeffisient))) {
     stop("Koeffisient-kolonnen i skåringstabellen kan ikke inneholde NA-verdier")
