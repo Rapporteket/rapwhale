@@ -161,6 +161,47 @@ sjekk_skaaringstabell = function(skaaringstabell) {
     stop("Skåringstabellen kan ikke inneholde dupliserte verdier for en variabel innenfor samme delskala")
   }
 
+  # Delskalaer med tilhørende variabler
+  d_delskala_var = skaaringstabell %>%
+    group_by(delskala) %>%
+    distinct(variabel)
+
+  # Variabler med tilhørende verdier
+  d_var_verdi = skaaringstabell %>%
+    group_by(variabel) %>%
+    distinct(verdi)
+
+  # Kombinerer d_delskala_var og d_var_verdi
+  d_delskala_var_verdi = d_delskala_var %>%
+    full_join(d_var_verdi, by = "variabel")
+
+  # Sjekker om de finnes manglende kombinasjoner av 'delskala', 'variabel' og 'verdi'
+  d_komb_mangl = d_delskala_var_verdi %>%
+    anti_join(skaaringstabell, by = c("delskala", "variabel", "verdi"))
+
+  # Gir ut feilmelding hvis det finnes manglende kombinasjoner
+  if (nrow(d_komb_mangl) > 0) {
+    oversikt_komb_mangl = d_komb_mangl %>%
+      group_by(delskala, variabel) %>%
+      summarise(verdier_mangl = paste0(verdi, collapse = ", ")) %>%
+      summarise(komb_mangl = paste0(variabel, " i ",
+        delskala, ": ",
+        verdier_mangl,
+        collapse = "\n"
+      )) %>%
+      summarise(komb_mangl_samlet = paste0(komb_mangl, collapse = "\n")) %>%
+      summarise(komb_mangl_feiltekst = paste0(
+        "Fant ", nrow(d_komb_mangl),
+        " manglende oppføringer:\n",
+        komb_mangl_samlet
+      ))
+
+    oversikt_komb_mangl = pull(oversikt_komb_mangl, komb_mangl_feiltekst)
+
+    stop(oversikt_komb_mangl)
+  }
+
+
   # fixme (QA):
   #
   # sjekk_skaaringstabell() godtek at ein variabel manglar
