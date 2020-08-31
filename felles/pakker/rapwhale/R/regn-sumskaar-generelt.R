@@ -127,11 +127,13 @@ skaar_datasett = function(d, skaaringstabell, variabelnavn = NULL,
 #' variabeltyper. En gyldig skåringstabell skal ha fire kolonner,
 #' `delskala` (tekst), `variabel` (tekst), `verdi` (numerisk) og
 #' `koeffisient` (numerisk), og det skal bare finnes én rad
-#' per kombinasjon av av `delskala`, `variabel` og `verdi`.
-#' Skåringstabellen er ugyldig hvis en variabel mangler oppføringer for
-#' enkelte verdier i en delskala som den har verdier for i en annen
-#' delskala (gjelder ikke `NA`-verdier).
+#' per kombinasjon av `delskala`, `variabel` og `verdi`.
 #' Kolonnen `koeffisient` kan ikke ha `NA`-verdier.
+#'
+#' I tillegg må hver variabel som inngår i en gitt delskala,
+#' ha oppføringer for alle ikke-`NA`-verdiene som variabelen
+#' kan ta i de *andre* delskalaene den inngår i
+#' (det vil si, har minst én ikke-`NA`-verdi i).
 #'
 #' Gir ut feilmelding hvis `skaaringstabell` er ugyldig.
 #'
