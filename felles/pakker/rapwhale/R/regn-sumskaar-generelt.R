@@ -165,32 +165,24 @@ sjekk_skaaringstabell = function(skaaringstabell) {
   }
 
   # Kombinasjoner av 'delskala' og 'variabel' som mangler
-  # 'verdi'-er som variabelen har for andre delskalaer
+  # 'verdi'-er som variabelen har for *andre* delskalaer
   skaaringstabell_uten_na = filter(skaaringstabell, !is.na(verdi))
   d_delskala_var = distinct(skaaringstabell_uten_na, delskala, variabel)
   d_var_verdi = distinct(skaaringstabell_uten_na, variabel, verdi)
   d_komb_mangl = d_delskala_var %>%
     full_join(d_var_verdi, by = "variabel") %>%
     anti_join(skaaringstabell, by = c("delskala", "variabel", "verdi"))
-
   if (nrow(d_komb_mangl) > 0) {
-    oversikt_komb_mangl = d_komb_mangl %>%
-      group_by(delskala, variabel) %>%
-      summarise(verdier_mangl = paste0(verdi, collapse = ", ")) %>%
-      summarise(komb_mangl = paste0(variabel, " i ",
-        delskala, ": ",
-        verdier_mangl,
-        collapse = "\n"
-      )) %>%
-      summarise(komb_mangl_samlet = paste0(komb_mangl, collapse = "\n")) %>%
-      summarise(komb_mangl_feiltekst = paste0(
-        "Fant ", nrow(d_komb_mangl),
-        " manglende oppføringer:\n",
-        komb_mangl_samlet
-      ))
-
-    oversikt_komb_mangl = pull(oversikt_komb_mangl, komb_mangl_feiltekst)
-
+    oversikt_komb_mangl =
+      paste0(
+        "Finnes variabler som mangler koeffisienter for enkelte verdier\n",
+        "(som de har koeffisienter for i andre delskalaer):\n",
+        paste0(d_komb_mangl$delskala, ": ",
+          d_komb_mangl$variabel, ": ",
+          d_komb_mangl$verdi,
+          collapse = "\n"
+        )
+      )
     stop(oversikt_komb_mangl)
   }
 
