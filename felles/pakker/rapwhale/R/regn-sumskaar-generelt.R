@@ -128,6 +128,9 @@ skaar_datasett = function(d, skaaringstabell, variabelnavn = NULL,
 #' `delskala` (tekst), `variabel` (tekst), `verdi` (numerisk) og
 #' `koeffisient` (numerisk), og det skal bare finnes én rad
 #' per kombinasjon av av `delskala`, `variabel` og `verdi`.
+#' Skåringstabellen er ugyldig hvis en variabel mangler oppføringer for
+#' enkelte verdier i en delskala som den har verdier for i en annen
+#' delskala (gjelder ikke `NA`-verdier).
 #' Kolonnen `koeffisient` kan ikke ha `NA`-verdier.
 #'
 #' Gir ut feilmelding hvis `skaaringstabell` er ugyldig.

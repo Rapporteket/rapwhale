@@ -242,7 +242,7 @@ skaaringstabell_manglende_oppforinger_i_delskala = tibble::tribble(
   "fys", "var_a", 1, 0,
   "fys", "var_a", 2, 0,
   "psyk", "var_a", 1, 0,
-  "pysk", "var_b", 3, 0
+  "psyk", "var_b", 3, 0
 )
 
 test_that("sjekk_skaaringstabell() gir feilmelding hvis en variabel
