@@ -164,28 +164,15 @@ sjekk_skaaringstabell = function(skaaringstabell) {
     stop("Skåringstabellen kan ikke inneholde dupliserte verdier for en variabel innenfor samme delskala")
   }
 
-  # Delskalaer med tilhørende variabler
-  d_delskala_var = skaaringstabell %>%
-    group_by(delskala) %>%
-    distinct(variabel)
-
-  # Variabler med tilhørende verdier
-  d_var_verdi = skaaringstabell %>%
-    group_by(variabel) %>%
-    distinct(verdi) %>%
-    filter(!is.na(verdi))
-
-  # Kombinerer d_delskala_var og d_var_verdi
-  d_delskala_var_verdi = d_delskala_var %>%
-    full_join(d_var_verdi, by = "variabel")
-
-  # Sjekker om de finnes manglende manglende
-  # verdier for en variabel i en delskala
-  d_komb_mangl = d_delskala_var_verdi %>%
+  # Kombinasjoner av 'delskala' og 'variabel' som mangler
+  # 'verdi'-er som variabelen har for andre delskalaer
+  skaaringstabell_uten_na = filter(skaaringstabell, !is.na(verdi))
+  d_delskala_var = distinct(skaaringstabell_uten_na, delskala, variabel)
+  d_var_verdi = distinct(skaaringstabell_uten_na, variabel, verdi)
+  d_komb_mangl = d_delskala_var %>%
+    full_join(d_var_verdi, by = "variabel") %>%
     anti_join(skaaringstabell, by = c("delskala", "variabel", "verdi"))
 
-  # Gir ut feilmelding hvis det finnes manglende
-  # verdier for en variabel i en delskala
   if (nrow(d_komb_mangl) > 0) {
     oversikt_komb_mangl = d_komb_mangl %>%
       group_by(delskala, variabel) %>%
