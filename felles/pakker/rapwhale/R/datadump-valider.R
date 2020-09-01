@@ -141,14 +141,17 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   #-----------------------------------------desimaler-------------------------------------------------
 
   # Lager "rules" som tester at variablene har riktig antall desimaler
-  sjekk_des = kb_des %>%
-    pmap(function(varnamn, gverdi) {
-      new_function(
-        alist(df = ),
-        expr(transmute_at(df, vars(foo = !!varnamn), rules(des_ok = is.na(.) | (round(., gverdi) == .))))
-      )
-    }) %>%
-    setNames(paste0("des_", kb_des$varnamn))
+  sjekk_des = list()
+  if (nrow(kb_des) > 0) {
+    sjekk_des = kb_des %>%
+      pmap(function(varnamn, gverdi) {
+        new_function(
+          alist(df = ),
+          expr(transmute_at(df, vars(foo = !!varnamn), rules(des_ok = is.na(.) | (round(., gverdi) == .))))
+        )
+      }) %>%
+      setNames(paste0("des_", kb_des$varnamn))
+  }
 
   # lager en cell-pack med des-sjekkene
   har_riktig_ant_des = cell_packs(sjekk_des)
