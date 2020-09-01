@@ -29,7 +29,7 @@ NULL
 lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
 
   # for å lage regler må kodeboka ha følgende kolonner:
-  nodvar = c("variabel_id", "variabeltype", "min", "maks", "desimalar", "verdi", "verditekst")
+  nodvar = c("variabel_id", "variabeltype", "min", "maks", "desimalar", "verdi", "verditekst", "obligatorisk")
   # kolonner i kodebok
   kol = names(kodebok)
 
