@@ -36,10 +36,8 @@ d_inn_inkl_sumskaarer = tibble::tibble(d_inn_eks, d_sumskaarer_oblique)
 
 test_that("skaar_rand12() gir ut det originale datasettet inkludert
           riktig utregnede sumskårer hvis sumskårer ikke finnes fra før", {
-  expect_identical(
-    skaar_rand12(d_inn_eks,
-      godta_manglende = TRUE
-    ),
+  expect_equal(
+    skaar_rand12(d_inn_eks, godta_manglende = TRUE),
     d_inn_inkl_sumskaarer
   )
 })
@@ -49,10 +47,10 @@ test_that("skaar_rand12() gir ut det originale datasettet inkludert
   d_inn_inkl_feil_sumskaarer = d_inn_inkl_sumskaarer
   d_inn_inkl_feil_sumskaarer$PCSC12 = 1
 
-  expect_identical(
-    skaar_rand12(d_inn_inkl_feil_sumskaarer,
+  expect_equal(
+    suppressWarnings(skaar_rand12(d_inn_inkl_feil_sumskaarer,
       godta_manglende = TRUE
-    ),
+    )),
     d_inn_inkl_sumskaarer
   )
 })
@@ -64,18 +62,24 @@ test_that("skaar_rand12() fungerer hvis man oppgir variabelnavn", {
     r_e_3 = RE3
   )
 
-  expect_identical(skaar_rand12(d_inn_eks_feil_varnavn,
-    variabelnavn = c(
-      GH1 = "g_h_1",
-      RE3 = "r_e_3"
+  d_inn_eks_feil_varnavn_inkl_sumskaarer = tibble::tibble(
+    d_inn_eks_feil_varnavn,
+    d_sumskaarer_oblique
+  )
+
+  expect_equal(
+    skaar_rand12(d_inn_eks_feil_varnavn,
+      variabelnavn = c(
+        GH1 = "g_h_1",
+        RE3 = "r_e_3"
+      ),
+      godta_manglende = TRUE
     ),
-    godta_manglende = TRUE
-  ))
+    d_inn_eks_feil_varnavn_inkl_sumskaarer
+  )
 })
 
 test_that("skaar_rand12() gir feilmelding ved manglende verdier hvis
           godta_manglende = FALSE", {
-  expect_error(skaar_rand12(d_inn_eks,
-    godta_manglende = FALSE
-  ))
+  expect_error(skaar_rand12(d_inn_eks, godta_manglende = FALSE))
 })
