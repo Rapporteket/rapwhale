@@ -3,7 +3,7 @@
 # Eksempel på inndata (inneholder besvarelser som gir max- og min
 # sumskår + tilfeldige besvarelser)
 d_inn_eks = tibble::tribble(
-  ~GH1, ~PF02, ~PF04, ~RP2, ~RP3, ~RE2, ~RE3, ~BP2, ~MH3, ~VT2, ~MH4, ~SF2,
+  ~rand_1, ~rand_2a, ~rand_2b, ~rand_3a, ~rand_3b, ~rand_4a, ~rand_4b, ~rand_5, ~rand_6a, ~rand_6b, ~rand_6c, ~rand_7,
   1, 3, 3, 2, 2, 2, 2, 1, 1, 1, 6, 5, # max PCS12
   5, 1, 1, 1, 1, 1, 1, 5, 6, 6, 1, 2, # min PCS12
   1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 6, 5, # max MCS12
@@ -18,7 +18,7 @@ d_inn_eks = tibble::tribble(
 
 # Sumskårer for d_inn_eks (regnet ut ved hjelp av SPSS-syntaksen)
 d_sumskaarer_oblique = tibble::tribble(
-  ~PCSC12, ~MCSC12,
+  ~rand12_pcs, ~rand12_mcs,
   62.37966, 65.38813,
   17.67266, 10.81346000000001,
   55.48371, 65.73092,
@@ -45,7 +45,7 @@ test_that("skaar_rand12() gir ut det originale datasettet inkludert
 test_that("skaar_rand12() gir ut det originale datasettet inkludert
           riktig utregnede sumskårer hvis sumskårer finnes fra før", {
   d_inn_inkl_feil_sumskaarer = d_inn_inkl_sumskaarer
-  d_inn_inkl_feil_sumskaarer$PCSC12 = 1
+  d_inn_inkl_feil_sumskaarer$rand12_pcs = 1
 
   expect_equal(
     suppressWarnings(skaar_rand12(d_inn_inkl_feil_sumskaarer,
@@ -58,8 +58,8 @@ test_that("skaar_rand12() gir ut det originale datasettet inkludert
 test_that("skaar_rand12() fungerer hvis man oppgir variabelnavn", {
   d_inn_eks_feil_varnavn = d_inn_eks
   d_inn_eks_feil_varnavn = rename(d_inn_eks_feil_varnavn,
-    g_h_1 = GH1,
-    r_e_3 = RE3
+    g_h_1 = rand_1,
+    r_e_3 = rand_4b
   )
 
   d_inn_eks_feil_varnavn_inkl_sumskaarer = tibble::tibble(
@@ -70,8 +70,8 @@ test_that("skaar_rand12() fungerer hvis man oppgir variabelnavn", {
   expect_equal(
     skaar_rand12(d_inn_eks_feil_varnavn,
       variabelnavn = c(
-        GH1 = "g_h_1",
-        RE3 = "r_e_3"
+        rand_1 = "g_h_1",
+        rand_4b = "r_e_3"
       ),
       godta_manglende = TRUE
     ),
