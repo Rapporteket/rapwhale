@@ -319,7 +319,7 @@
 % Å sjå denne åvaringa i loggen og andre plassar
 % er irriterande, so me gøymer ho.
 \RequirePackage{silence}
-\WarningFilter*{memoir}{You are using the caption package with the memoir class}
+\WarningFilter*{memoir}{For the caption package to function properly with memoir}
 \usepackage[format=hang,justification=raggedright,%
             font={sf,color=PrimCol},labelfont=sc]{caption}
 \usepackage[font={sf,color=PrimCol},labelfont=sf]{subfig}
