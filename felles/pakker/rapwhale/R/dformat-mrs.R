@@ -367,7 +367,7 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
   kol_typar = str_c(spek_innlesing$csv_bokstav, collapse = "")
   lokale_mrs = readr::locale(
     decimal_mark = ",", grouping_mark = "",
-    date_format = "%d.%m.%Y", time_format = "%H:%M"
+    date_format = "%d.%m.%Y", time_format = "%H:%M:%S"
   )
   d = readr::read_delim(adresse_dd,
     delim = ";", quote = "\"", trim_ws = FALSE, na = "",
@@ -429,7 +429,7 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
     filter(variabeltype == "dato_kl") %>%
     pull(variabel_id)
   d = d %>%
-    mutate_at(tid_var, readr::parse_datetime, format = "%d.%m.%Y %H:%M")
+    mutate_at(tid_var, readr::parse_datetime, format = "%d.%m.%Y %H:%M:%S")
 
   # Fila har (ved ein feil) ekstra semikolon på slutten, som fører
   # til ekstra kolonne som har tomt namn (men får prefikset mrs_).
