@@ -7,8 +7,8 @@
 #' (og håndterer NA-verdier fint, og gir alltid ut TRUE eller FALSE,
 #' aldri NA)
 #'
-#' @param a
-#' @param b
+#' @param a Variabel som hvis sann impliserer at variabel 'b' er sann.
+#' @param b Variabel som er sann hvis 'a' er sann.
 #'
 #' @return TRUE eller FALSE
 #' @export
@@ -23,8 +23,10 @@ impl = function(a, b) {
 #' (og håndterer NA-verdier fint, og gir alltid ut TRUE eller FALSE,
 #' aldri NA)
 #'
-#' @param a
-#' @param b
+#' @param a Variabel som hvis sann impliserer at variabel 'b' er sann,
+#'     og som er sann hvis variabel 'b' er sann.
+#' @param b Variabel som er sann hvis 'a' er sann, og som hvis sann
+#'     impliserer at variabel 'a' er sann.
 #'
 #' @return TRUE eller FALSE
 #' @export
