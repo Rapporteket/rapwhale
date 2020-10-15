@@ -3,48 +3,54 @@ NULL
 #' Skår RAND-12-spørreskjema
 #'
 #' @description
-#' Regner ut sumskårer (`rand12_pcs` og `rand12_mcs`) for RAND-12-spørreskjema i
-#' et datasett basert på en RAND-12-spesifikk skåringstabell. Sjekker
-#' også at alle verdiene i datasettet er i samsvar med skåringstabellen.
+#' Regner ut fysisk og psykisk sumskår (`rand12_pcs` og `rand12_mcs`)
+#' for RAND-12-spørreskjema basert på en RAND-12-spesifikk
+#' skåringstabell. Sjekker også at alle variabelnavnene og
+#' verdiene/besvarelsene er gyldige.
 #'
-#' @param d Dataramme/tibble som inneholder RAND-12-spørreskjema-
-#'     variabler + eventuelt andre variabler. Spørreskjema-variablene må
-#'     være numeriske.
+#' @param d Dataramme/tibble som inneholder
+#'     RAND-12-spørreskjema-variabler + eventuelt andre variabler.
+#'     Spørreskjema-variablene må være numeriske.
 #' @param variabelnavn Navn på RAND-12-spørreskjema-variabler i
-#'     datasettet som ikke er identiske med navnene i den RAND-12-
-#'     spesifikke skåringstabellen. Bruk syntaksen
+#'     datasettet som ikke er identiske med navnene i den
+#'     RAND-12-spesifikke skåringstabellen. Bruk syntaksen
 #'     `c(std_navn_1 = "dd_navn_1", std_navn_2 = "dd_navn_2")`.
 #'     Nye navn trenger kun oppgis for spørreskjema-variabler som har
-#'     avvikende navn fra skåringstabellen. Hvis `NULL`, blir
-#'     det antatt at alle navnene er i samsvar med skåringstabellen.
+#'     avvikende navn fra skåringstabellen. Hvis `NULL`, blir det antatt
+#'     at alle navnene er i samsvar med skåringstabellen.
+#'     Gyldige variabelnavn:
+#'     `rand_1`, `rand_2a`, `rand_2b`, `rand_3a`, `rand_3b`, `rand_4a`,
+#'     `rand_4b`, `rand_5`, `rand_6a`, `rand_6b`, `rand_6c` og `rand_7`
+#'
 #' @param metode Metode for skåring. Standard er "farivar_2007_oblique",
-#'     foreløpig er det ikke mulig å velge andre skåringsmetoder.
+#'     se [https://pubmed.ncbi.nlm.nih.gov/17825096/] for informasjon om
+#'     metoden. Foreløpig er det ikke mulig å velge andre
+#'     skåringsmetoder.
 #' @param godta_manglende Skal manglende verdier (`NA`-verdier) i
 #'     spørreskjema-variablene i `d` godtas (som standard nei)? Hvis
 #'     ikke, blir det gitt ut en feilmelding om det finnes manglende
 #'     verdier.
 #'
 #' @details
-#' Funksjonen baserer seg på [skaar_datasett()]. Den RAND-12-spesifikke
-#' skåringstabellen blir definert i funksjonen. Datasettet som blir
-#' returnert av [skaar_datasett()] inneholder sumskår-kolonnene
-#' `rand12_pcs` og `rand12_mcs`. For alle verdier i `rand12_pcs`(ikke NA-verdier)
-#' blir konstantleddet 62.37966 lagt til, mens for alle verdier i
-#' `rand12_mcs` blir konstantleddet 65.38813 lagt til.
+#' RAND-12-skjema med tilhørende koder / gyldige svaralternativ finnes
+#' her: [https://www.kvalitetsregistre.no/sites/default/files/attachments/norsk_rand-12_m_koder.pdf]
+#' For spørsmålene `rand_1`, `rand_5`, `rand_6a` og `rand_6b` tilsvarer
+#' lav verdi god helse, mens for resten av spørsmålene tilsvarer lav
+#' verdi dårlig helse.
 #'
-#' Funksjonen gir feilmelding dersom noen av verdiene i `d` ikke er i
-#' samsvar med skåringstabellen.
+#' Funksjonen gir feilmelding hvis noen av variabelnavnene eller
+#' verdiene/besvarelsene ikke er gyldige.
 #'
-#' Se [skaar_datasett()] og underfunksjoner for detaljer
-#' om funksjonalitet.
+#' Se [skaar_datasett()] og underfunksjoner for detaljer om
+#' funksjonalitet.
 #'
-#' @return Datasett likt `d`, men med sumskårene `rand12_pcs` og `rand12_mcs`
-#'   lagt til, eventuelt erstattet. Sumskår-kolonnene blir i
-#'   utgangspunktet lagt til på slutten av `d`, `rand12_pcs` først og så
-#'   `rand12_mcs`. Hvis `d` imidlertid alt innholder en variabel med navnet
-#'   `rand12_pcs` eller `rand12_mcs`, blir denne denne stående der den er, men
-#'   overskrevet med nyutregnet sumskår. Det blir i så fall gitt ut en
-#'   advarsel.
+#' @return Datasett likt `d`, men med sumskårene `rand12_pcs` og
+#'   `rand12_mcs` lagt til, eventuelt erstattet. Sumskår-kolonnene blir
+#'   i utgangspunktet lagt til på slutten av `d`, `rand12_pcs` først og
+#'   så `rand12_mcs`. Hvis `d` imidlertid alt innholder en variabel med
+#'   navnet `rand12_pcs` eller `rand12_mcs`, blir denne denne stående
+#'   der den er, men overskrevet med nyutregnet sumskår. Det blir i så
+#'   fall gitt ut en advarsel.
 #' @export
 skaar_rand12 = function(d, variabelnavn = NULL,
                         metode = "farivar_2007_oblique",
