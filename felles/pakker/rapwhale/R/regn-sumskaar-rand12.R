@@ -1,56 +1,80 @@
 #' @importFrom tibble tibble tribble
+#' @importFrom Rdpack reprompt
 NULL
-#' Skår RAND-12-spørreskjema
+#' Skår RAND-12-/SF-12-spørreskjema
 #'
 #' @description
-#' Regner ut fysisk og psykisk sumskår (`rand12_pcs` og `rand12_mcs`)
-#' for RAND-12-spørreskjema basert på en RAND-12-spesifikk
-#' skåringstabell. Sjekker også at alle variabelnavnene og
+#' Regner ut fysisk og psykisk sumskår (PCS og MCS)
+#' for RAND-12-/SF-12-spørreskjema basert valgfri skåringsmetode.
+#' Sjekker også at alle variabelnavnene og
 #' verdiene/besvarelsene er gyldige.
 #'
 #' @param d Dataramme/tibble som inneholder
-#'     RAND-12-spørreskjema-variabler + eventuelt andre variabler.
-#'     Spørreskjema-variablene må være numeriske.
-#' @param variabelnavn Navn på RAND-12-spørreskjema-variabler i
-#'     datasettet som ikke er identiske med navnene i den
-#'     RAND-12-spesifikke skåringstabellen. Bruk syntaksen
-#'     `c(std_navn_1 = "dd_navn_1", std_navn_2 = "dd_navn_2")`.
-#'     Nye navn trenger kun oppgis for spørreskjema-variabler som har
-#'     avvikende navn fra skåringstabellen. Hvis `NULL`, blir det antatt
-#'     at alle navnene er i samsvar med skåringstabellen.
-#'     Gyldige variabelnavn:
+#'     spørreskjema-variabler + eventuelt andre variabler.
+#'     Variabelnavnene for de tolv spørsmålene skal i utgangspunktet være
 #'     `rand_1`, `rand_2a`, `rand_2b`, `rand_3a`, `rand_3b`, `rand_4a`,
 #'     `rand_4b`, `rand_5`, `rand_6a`, `rand_6b`, `rand_6c` og `rand_7`
-#'
-#' @param metode Metode for skåring. Standard er "farivar_2007_oblique",
-#'     se [https://pubmed.ncbi.nlm.nih.gov/17825096/] for informasjon om
-#'     metoden. Foreløpig er det ikke mulig å velge andre
-#'     skåringsmetoder.
+#'     (se `variabelnavn`).
+#'     Se detaljer nedenfor for informasjon om koding.
+#' @param variabelnavn Hvis `d` ikke bruker standard variabelnavn,
+#'     kan du her oppgi kobling mellom standard variabelnavn (se ovenfor)
+#'     og de brukte variabelnavnene. Bruk syntaksen
+#'     `c(std_navn_1 = "brukt_navn_1", std_navn_2 = "brukt_navn_2")`.
+#'     Navnekobling trenger kun oppgis for de variablene som ikke har
+#'     standardnavn. Sett til `NULL` hvis alle har standardnavn.
+#' @param metode Metode for skåring av spørreskjemaet.
+#'     Foreløpig er det bare mulig å velge `"farivar_2007_oblique"`,
+#'     som gir sumskårer basert på en korrelert (skrå/«oblique»)
+#'     faktormodell som definert i
+#'     \insertCite{Farivar2007;textual}{rapwhale}.
 #' @param godta_manglende Skal manglende verdier (`NA`-verdier) i
 #'     spørreskjema-variablene i `d` godtas (som standard nei)? Hvis
 #'     ikke, blir det gitt ut en feilmelding om det finnes manglende
 #'     verdier.
 #'
 #' @details
-#' RAND-12-skjema med tilhørende koder / gyldige svaralternativ finnes
-#' her: [https://www.kvalitetsregistre.no/sites/default/files/attachments/norsk_rand-12_m_koder.pdf]
+#' Funksjonen regner ut både fysisk og psykisk sumskår (PCS og MCS)
+#' for RAND-12- eller SF-12-spørreskjema og legger disse til datasettet.
+#' Den sjekker også at alle variabelnavnene og verdiene/besvarelsene
+#' er kodet riktig.
+#'
+#' Skjemavariablene skal kodes slik at første svaralternativ for hvert
+#' spørsmål har tallkoden 1, andre svaralternativ har tallkoden 2 osv.
 #' For spørsmålene `rand_1`, `rand_5`, `rand_6a` og `rand_6b` tilsvarer
-#' lav verdi god helse, mens for resten av spørsmålene tilsvarer lav
+#' altså lav verdi god helse, mens for resten av spørsmålene tilsvarer lav
 #' verdi dårlig helse.
 #'
-#' Funksjonen gir feilmelding hvis noen av variabelnavnene eller
-#' verdiene/besvarelsene ikke er gyldige.
+#' Skåringsmetoden i \insertCite{Farivar2007;textual}{rapwhale} er basert på
+#' engelsk versjon av SF-12 versjon 1 (med amerikansk referansepopulasjon),
+#' men den kan også brukes for (og er foreløpig det beste alternativet for)
+#' RAND-12 norsk versjon 1 og SF-12 norsk versjon 1.1 og 1.2.
 #'
-#' Se [skaar_datasett()] og underfunksjoner for detaljer om
-#' funksjonalitet.
+#' @note Funksjonen kan *ikke* brukes for skåring av versjon 2 av SF-12
+#' (dette skjemaet har for noen spørsmål flere mulige svaralternativer).
+#'
+#' @seealso Se [skaar_datasett()] og underfunksjoner for skåring
+#' av generelle spørreskjemaer.
+#'
+#' @references
+#' \insertAllCited{}
 #'
 #' @return Datasett likt `d`, men med sumskårene `rand12_pcs` og
 #'   `rand12_mcs` lagt til, eventuelt erstattet. Sumskår-kolonnene blir
-#'   i utgangspunktet lagt til på slutten av `d`, `rand12_pcs` først og
-#'   så `rand12_mcs`. Hvis `d` imidlertid alt innholder en variabel med
+#'   i utgangspunktet lagt til på slutten av `d`.
+#'   Hvis `d` imidlertid alt innholder en variabel med
 #'   navnet `rand12_pcs` eller `rand12_mcs`, blir denne denne stående
 #'   der den er, men overskrevet med nyutregnet sumskår. Det blir i så
 #'   fall gitt ut en advarsel.
+#' @examples
+#' d_eks = tibble::tribble(
+#'   ~rand_1, ~rand_2a, ~rand_2b, ~rand_3a, ~rand_3b, ~rand_4a, ~rand_4b, ~rand_5, ~rand_6a, ~rand_6b, ~rand_6c, ~rand_7,
+#'   5, 1, 1, 1, 1, 1, 1, 5, 6, 6, 1, 2, # Min PCS12
+#'   1, 3, 3, 2, 2, 2, 2, 1, 1, 1, 6, 5, # Maks PCS12
+#'   5, 3, 3, 1, 1, 1, 1, 5, 6, 6, 1, 2, # Min MCS12
+#'   1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 6, 5, # Maks MCS12
+#'   5, 1, 1, 1, 1, 1, 1, 5, 6, 6, 1, 1
+#' ) # Mest negativt svar på alle enkeltspørsmål
+#' skaar_rand12(d_eks, metode = "farivar_2007_oblique")
 #' @export
 skaar_rand12 = function(d, variabelnavn = NULL,
                         metode = "farivar_2007_oblique",
