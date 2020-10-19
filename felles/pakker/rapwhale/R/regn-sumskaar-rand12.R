@@ -77,7 +77,7 @@ NULL
 #' skaar_rand12(d_eks, metode = "farivar_2007_oblique")
 #' @export
 skaar_rand12 = function(d, variabelnavn = NULL,
-                        metode = "farivar_2007_oblique",
+                        metode,
                         godta_manglende = TRUE) {
   stopifnot(metode == "farivar_2007_oblique")
 
