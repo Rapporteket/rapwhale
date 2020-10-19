@@ -91,3 +91,8 @@ test_that("skaar_rand12() gir feilmelding ved manglende verdier hvis
     godta_manglende = FALSE
   ))
 })
+
+test_that("skaar_rand12() gir feilmelding ved manglende/feil skåringsalgoritme", {
+  expect_error(skaar_rand12(d_inn_eks))
+  expect_error(skaar_rand12(d_inn_eks, algoritme = "tullealgoritme"))
+})
