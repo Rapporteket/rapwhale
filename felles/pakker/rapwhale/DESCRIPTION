@@ -33,7 +33,9 @@ Imports:
     binom,
     scales,
     qicharts2,
-    testthat
+    testthat,
+    Rdpack
+RdMacros: Rdpack
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
 Suggests: 
