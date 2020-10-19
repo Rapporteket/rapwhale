@@ -65,7 +65,6 @@ test_that("skaar_rand12() fungerer hvis man oppgir variabelnavn", {
     g_h_1 = rand_1,
     r_e_3 = rand_4b
   )
-
   d_inn_eks_feil_varnavn_inkl_sumskaarer = tibble::tibble(
     d_inn_eks_feil_varnavn,
     d_sumskaarer_oblique
