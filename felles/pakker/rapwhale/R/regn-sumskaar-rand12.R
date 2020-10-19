@@ -5,7 +5,7 @@ NULL
 #'
 #' @description
 #' Regner ut fysisk og psykisk sumskår (PCS og MCS)
-#' for RAND-12-/SF-12-spørreskjema basert valgfri skåringsmetode.
+#' for RAND-12-/SF-12-spørreskjema basert valgfri skåringsalgoritme.
 #' Sjekker også at alle variabelnavnene og
 #' verdiene/besvarelsene er gyldige.
 #'
@@ -22,7 +22,7 @@ NULL
 #'     `c(std_navn_1 = "brukt_navn_1", std_navn_2 = "brukt_navn_2")`.
 #'     Navnekobling trenger kun oppgis for de variablene som ikke har
 #'     standardnavn. Sett til `NULL` hvis alle har standardnavn.
-#' @param metode Metode for skåring av spørreskjemaet.
+#' @param algoritme Algoritme for skåring av spørreskjemaet.
 #'     Foreløpig er det bare mulig å velge `"farivar_2007_oblique"`,
 #'     som gir sumskårer basert på en korrelert (skrå/«oblique»)
 #'     faktormodell som definert i
@@ -44,7 +44,7 @@ NULL
 #' altså lav verdi god helse, mens for resten av spørsmålene tilsvarer lav
 #' verdi dårlig helse.
 #'
-#' Skåringsmetoden i \insertCite{Farivar2007;textual}{rapwhale} er basert på
+#' Skåringsalgoritmen i \insertCite{Farivar2007;textual}{rapwhale} er basert på
 #' engelsk versjon av SF-12 versjon 1 (med amerikansk referansepopulasjon),
 #' men den kan også brukes for (og er foreløpig det beste alternativet for)
 #' RAND-12 norsk versjon 1 og SF-12 norsk versjon 1.1 og 1.2.
@@ -74,12 +74,12 @@ NULL
 #'   1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 6, 5, # Maks MCS12
 #'   5, 1, 1, 1, 1, 1, 1, 5, 6, 6, 1, 1
 #' ) # Mest negativt svar på alle enkeltspørsmål
-#' skaar_rand12(d_eks, metode = "farivar_2007_oblique")
+#' skaar_rand12(d_eks, algoritme = "farivar_2007_oblique")
 #' @export
 skaar_rand12 = function(d, variabelnavn = NULL,
-                        metode,
+                        algoritme,
                         godta_manglende = TRUE) {
-  stopifnot(metode == "farivar_2007_oblique")
+  stopifnot(algoritme == "farivar_2007_oblique")
 
   skaaringstabell = tribble(
     ~delskala, ~variabel, ~verdi, ~koeffisient,
