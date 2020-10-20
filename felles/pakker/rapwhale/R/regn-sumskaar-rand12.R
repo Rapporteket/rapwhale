@@ -185,8 +185,10 @@ skaar_rand12 = function(d, variabelnavn = NULL,
   )
 
   # Legger til konstantledd i sumskår-kolonnene hvor det ikke er NA-verdier
-  d_orig_inkl_sumskaarer$rand12_pcs = d_orig_inkl_sumskaarer$rand12_pcs + 62.37966
-  d_orig_inkl_sumskaarer$rand12_mcs = d_orig_inkl_sumskaarer$rand12_mcs + 65.38813
+  d_orig_inkl_sumskaarer = dplyr::mutate(d_orig_inkl_sumskaarer,
+    rand12_pcs = rand12_pcs + 62.37966,
+    rand12_mcs = rand12_mcs + 65.38813
+  )
 
   d_orig_inkl_sumskaarer
 }
