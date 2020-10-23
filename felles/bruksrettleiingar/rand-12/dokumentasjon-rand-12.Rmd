@@ -13,8 +13,8 @@ editor_options:
 
 # Innledning
 
-PROM-senteret har utarbeidet en manual/SPSS-syntaks for skåring av norsk versjon
-av RAND-12/SF-12 (versjon 1.1 og 1.2). Dette dokumentet er ment som et 
+PROM-senteret har utarbeidet en manual/SPSS-syntaks for skåring av 
+RAND-12 norsk versjon 1 og SF-12 norsk versjon 1.1 og 1.2. Dette dokumentet er ment som et 
 «gå-til-dokument» når man lurer på noe om RAND-12/RAND-36/SF-12/SF-36 i 
 kvalitetsregistersammenheng, da hovedsaklig når man skal benytte denne 
 manualen/SPSS-syntaksen, men også for generell informasjon om spørreskjemaene. 
@@ -31,7 +31,7 @@ opprinnelig fra Medical Outcomes Study (MOS) utført av den amerikanske
 organisasjonen RAND Corporation. Spørreskjemaene SF-12 og SF-36 har samme 
 spørsmål som RAND-12 og RAND-36, men de er lisensbelagte. Skjemaene har også noe 
 ulike anbefalte skåringsalgoritmer. SPSS-syntaksen som omtales i dette dokumentet 
-kan brukes for skåring av både RAND-12 og SF-12 (norsk versjon 1.1 og 1.2).
+kan brukes for skåring av både RAND-12 norsk versjon 1 og SF-12 norsk versjon 1.1 og 1.2.
 
 Det finnes to versjoner (versjon 1.0 og versjon 2.0)av SF-12/SF-36, mens det 
 finnes kun en versjon (versjon 1.0) av RAND-12/RAND-36. Dette betyr at for 
