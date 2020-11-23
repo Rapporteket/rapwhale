@@ -409,8 +409,7 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
   # Rekn ut sumskår for alle delskalaane, per person
   d_med_skaarar = d_med_koeff %>%
     group_by(person_id, delskala) %>%
-    summarise(skaar = sum(koeffisient)) %>%
-    ungroup() %>%
+    summarise(skaar = sum(koeffisient), .groups = "drop") %>%
     pivot_wider(names_from = "delskala", values_from = "skaar")
 
   # For sikkerheits skuld, sorter etter opphavleg radnummer,
