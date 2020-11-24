@@ -11,6 +11,16 @@
 #' @param b Variabel som er sann hvis 'a' er sann.
 #'
 #' @return TRUE eller FALSE
+#' @examples
+#' d_gyldig_eks = tibble::tribble(
+#'   ~pas_id, ~bosted_by, ~bosted_bydel,
+#'   1, "Bergen", "Åsane",
+#'   2, "Bergen", "Landås",
+#'   3, "Oslo", "Tjuvholmen",
+#'   4, "Bergen", "Fana",
+#'   5, "Oslo", "Haugenstua"
+#' )
+#' impl(d_gyldig_eks$bosted_bydel == "Åsane", d_gyldig_eks$bosted_by == "Bergen")
 #' @export
 impl = function(a, b) {
   (is.na(a) | !a) | tidyr::replace_na(b, FALSE) # eg. (!a | b), men håndterer NA
@@ -27,6 +37,16 @@ impl = function(a, b) {
 #' @param b Variabel som hvis sann ekvivalerer at variabel 'a' er sann.
 #'
 #' @return TRUE eller FALSE
+#' @examples
+#' d_gyldig_eks = tibble::tribble(
+#'   ~pas_id, ~operert, ~komplikasjoner,
+#'   1, "Ja", "Nei",
+#'   2, "Ja", "Nei",
+#'   3, "Nei", NA,
+#'   4, "Nei", NA,
+#'   5, "Ja", "Ja"
+#' )
+#' ekviv(d_gyldig_eks$operert == "Ja", !is.na(d_gyldig_eks$komplikasjoner))
 #' @export
 ekviv = function(a, b) {
   impl(a, b) & impl(b, a)
