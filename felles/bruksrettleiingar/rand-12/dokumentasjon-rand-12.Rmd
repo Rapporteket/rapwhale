@@ -1,5 +1,5 @@
 ---
-title: "Dokumentasjon syntaks for RAND-12/SF-12-skåring"
+title: "Bruksdokumentasjon for skåring av RAND-12/SF-12"
 author: "Stian Tufte Veisene"
 output:
   html_document:
@@ -69,7 +69,7 @@ Ware JE, Kosinski M, Turner-Bowker DM, Gandek B: How to Score Version 2 of the
 SF-12 Health Survey (With a Supplement Documenting Version 1). Lincoln, RI: 
 QualityMetric Incorporated; 2002.)
 
-# Manual/SPSS-syntaks
+# Skåring ved bruk av SPSS-syntaks
 
 Under «Generelle instrument» på nettsiden 
 [https://www.kvalitetsregistre.no/pasientrapporterte-data#skaring-av-rand-12sf-12] 
@@ -119,6 +119,33 @@ ikke-korrelerte regresjonskoeffisientene (vektene) for hver variabel.
 
 Det skal nevnes at syntaksen er under utbedring i disse dager, og flere av problemene
 vil dermed bli rettet opp.
+
+# Skåring ved bruk av R-funksjonen skaar_rand12()
+
+Funksjonen skaar_rand12() er en del av R-pakken Rapwhale som er 
+utabeidet av Fagsenter for medisinske kvalitetsregister i Helse Vest. 
+Funksjonen regner ut både fysisk og psykisk sumskår (PCS og MCS) for 
+RAND-12- eller SF-12-spørreskjema og legger disse til datasettet som
+inneholder RAND-12- eller SF-12-besvarelsene. Funksjonen sjekker også at 
+alle variabelnavnene og verdiene/besvarelsene er kodet riktig.
+
+Skjemavariablene skal kodes slik at første svaralternativ for hvert
+spørsmål har tallkoden 1, andre svaralternativ har tallkoden 2 osv.
+For spørsmålene `rand_1`, `rand_5`, `rand_6a` og `rand_6b` tilsvarer 
+altså lav verdi god helse, mens for resten av spørsmålene tilsvarer lav 
+verdi dårlig helse.
+
+Det finnes ulike algoritmer for skåring av RAND-12/SF-12, men foreløpig 
+er det bare mulig å velge `"farivar_2007_oblique"` i skaar_rand12().
+Denne algoritmen gir sumskårer basert på en korrelert (skrå/«oblique»)
+faktormodell og er basert på engelsk versjon av SF-12 versjon 1 (med 
+amerikansk referansepopulasjon), men den kan også brukes for (og er 
+foreløpig det beste alternativet for) RAND-12 norsk versjon 1 og SF-12 
+norsk versjon 1.1 og 1.2. Funksjonen kan *ikke* brukes for skåring av 
+versjon 2 av SF-12 (dette skjemaet har for noen spørsmål flere mulige 
+svaralternativer).
+
+# SPSS-syntaksen vs. skaar_rand12()
 
 # Deskriptiv skåring-statistikk
 
