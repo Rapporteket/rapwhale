@@ -23,10 +23,6 @@ om RAND-12/RAND-36/SF-12/SF-36 i kvalitetsregistersammenheng, da
 hovedsaklig når man skal benytte enten SPSS-syntaksen eller 
 R-funksjonen, men også for generell informasjon om spørreskjemaene. 
 
-På PROM-senterets starside finner man nyttig informasjon hvis man har
-tenkt å benytte SPSS-synktaksen. Link til siden:
-https://www.kvalitetsregistre.no/pasientrapporterte-data#skaring-av-rand-12sf-12
-
 # RAND-12/RAND-36/SF-12/SF-36
 
 RAND-12/SF-12 er spørreskjema med 12 spørsmål som måler livskvalitet - både
@@ -55,24 +51,28 @@ Acute Forms)». Boken beskriver også hvordan «versjon 1.0-skårer» direkte sk
 kunne sammenlignes med «versjon 2.0-skårer». Utfyllende informasjon om SF-36 
 versjon 1.0 finnes i boken «SF-36 Health Survey Manual & Interpretaion Guide».
 
-Link til norsk RAND-12 i PDF-format: 
-[https://www.kvalitetsregistre.no/sites/default/files/https-/www.fhi.no/globalassets/dokumenterfiler/tema/brukererfaring/norsk-rand-12.pdf]
+På PROM-senterets startside (under «generelle instrument») finner man 
+mer informasjon spørreskjemane. Link til siden:
+https://www.kvalitetsregistre.no/pasientrapporterte-data#skaring-av-rand-12sf-12
 
-Andre kilder for mer informasjon:
+Link til RAND-12 norsk versjon 1 i PDF-format: 
+https://www.kvalitetsregistre.no/sites/default/files/https-/www.fhi.no/globalassets/dokumenterfiler/tema/brukererfaring/norsk-rand-12.pdf
+
+Andre relevante artikler:
 
 SF-36 - «Conceptual framework and item selection».
-[https://pdfs.semanticscholar.org/06cb/0076e310136d0ca8b56cc8585ec2bf43e029.pdf]
+https://pdfs.semanticscholar.org/06cb/0076e310136d0ca8b56cc8585ec2bf43e029.pdf
 
 Oppsummering av forskjeller mellom RAND-36-skåring og SF-36-skåring:
-[https://onlinelibrary.wiley.com/doi/abs/10.1002/hec.4730020305]
+https://onlinelibrary.wiley.com/doi/abs/10.1002/hec.4730020305
 
 «The results suggest that where two summary scores of health status are adequate 
 than the SF-12 may be the instrument of choice».
-[https://www.researchgate.net/publication/13977335_A_Shorter_Form_Health_Survey_Can_the_SF-12_Replicate_Results_from_the_SF-36_in_Longitudinal_Studies]
+https://www.researchgate.net/publication/13977335_A_Shorter_Form_Health_Survey_Can_the_SF-12_Replicate_Results_from_the_SF-36_in_Longitudinal_Studies
 
 Ware JE, Kosinski M, Turner-Bowker DM, Gandek B: How to Score Version 2 of the 
 SF-12 Health Survey (With a Supplement Documenting Version 1). Lincoln, RI: 
-QualityMetric Incorporated; 2002.)
+QualityMetric Incorporated; 2002.
 
 # Skåring ved bruk av SPSS-syntaks
 
