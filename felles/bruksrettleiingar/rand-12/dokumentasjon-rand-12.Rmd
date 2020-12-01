@@ -15,13 +15,17 @@ editor_options:
 # Innledning
 
 PROM-senteret har utarbeidet en manual/SPSS-syntaks for skåring av 
-RAND-12 norsk versjon 1 og SF-12 norsk versjon 1.1 og 1.2. Dette dokumentet er ment som et 
-«gå-til-dokument» når man lurer på noe om RAND-12/RAND-36/SF-12/SF-36 i 
-kvalitetsregistersammenheng, da hovedsaklig når man skal benytte denne 
-manualen/SPSS-syntaksen, men også for generell informasjon om spørreskjemaene. 
+RAND-12 norsk versjon 1 og SF-12 norsk versjon 1.1 og 1.2. Fagsenter for
+medisinske kvalitetsregister i Helse Vest har også utarbeidet en 
+R-funksjon for skåring av de samme spørreskjemaene. 
+Dette dokumentet er ment som et «gå-til-dokument» når man lurer på noe 
+om RAND-12/RAND-36/SF-12/SF-36 i kvalitetsregistersammenheng, da
+hovedsaklig når man skal benytte enten SPSS-syntaksen eller 
+R-funksjonen, men også for generell informasjon om spørreskjemaene. 
 
-Link til PROM-senterets startside:
-[https://www.kvalitetsregistre.no/pasientrapporterte-data#skaring-av-rand-12sf-12]
+På PROM-senterets starside finner man nyttig informasjon hvis man har
+tenkt å benytte SPSS-synktaksen. Link til siden:
+https://www.kvalitetsregistre.no/pasientrapporterte-data#skaring-av-rand-12sf-12
 
 # RAND-12/RAND-36/SF-12/SF-36
 
