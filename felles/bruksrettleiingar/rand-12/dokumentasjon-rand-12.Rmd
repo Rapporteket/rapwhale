@@ -77,17 +77,20 @@ QualityMetric Incorporated; 2002.
 # Skåring ved bruk av SPSS-syntaks
 
 Under «Generelle instrument» på nettsiden 
-[https://www.kvalitetsregistre.no/pasientrapporterte-data#skaring-av-rand-12sf-12] 
-ligger manualen for skåring av RAND-12/SF-12. SPSS-syntaksen finnes her 
-[https://www.kvalitetsregistre.no/sites/default/files/rand12_script.txt].
+https://www.kvalitetsregistre.no/pasientrapporterte-data#skaring-av-rand-12sf-12 
+ligger manualen for skåring av RAND-12/SF-12. Selve SPSS-syntaksen 
+finner man her: 
+https://www.kvalitetsregistre.no/sites/default/files/rand12_skript.txt.
 
-For at skriptet skal fungere må variabelnavnene i SPSS-datafilen være de samme som 
-i skriptet (GH1, PF02, PF04, RP2, RP3, RE2, RE3, BP2, MH3, VT2, MH4, SF2). Det er 
-valgfritt om man velger å bruke små eller store bokstaver. 
+For at skriptet skal fungere må variabelnavnene i SPSS-datafilen være de 
+samme som i skriptet (RAND12_1, RAND12_2a, RAND12_2b, RAND12_3a, 
+RAND12_3b, RAND12_4a, RAND12_4b, RAND12_5, RAND12_6a, RAND12_6b, 
+RAND12_6c, RAND12_7). Det er valgfritt om man velger å bruke små eller 
+store bokstaver. 
 
 For spørsmålene 1, 5, 6a og 6b tilsvarer lav verdi god helse, mens for resten av 
 spørsmålene tilsvarer lav verdi dårlig helse. På grunn av dette inverteres 
-disse 4 variablene i starten på SPSS-skriptet slik at lav verdi tilsvarer dårlig 
+disse 4 variablene i SPSS-skriptet (punkt 3) slik at lav verdi tilsvarer dårlig 
 helse for alle 12 variablene.
 
 SPSS-Syntaksen regner ut både PCS12 (Physical Component Summary score) og MCS12 
