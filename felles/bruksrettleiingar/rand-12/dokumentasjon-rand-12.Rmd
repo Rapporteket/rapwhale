@@ -94,25 +94,20 @@ disse 4 variablene i SPSS-skriptet (punkt 3) slik at lav verdi tilsvarer dårlig
 helse for alle 12 variablene.
 
 SPSS-Syntaksen regner ut både PCS12 (Physical Component Summary score) og MCS12 
-(Mental Component Summary score). Sumskårene blir bare regnet ut hvis det er fylt 
-inn en verdi for alle 12 spørsmål. Selve skriptet har ingen test / gir ingen advarsel ved 
+(Mental Component Summary score). Sumskårene blir bare regnet ut hvis  
+alle 12 spørsmålene er besvart. Selve skriptet har ingen test / gir ingen advarsel ved 
 ugyldige verdier, men det står kommentert i starten av skriptet at dette må 
-sjekkes og korrigeres før skriptet kjøres. (Se 
-[https://www.kvalitetsregistre.no/sites/default/files/attachments/norsk_rand-12_m_koder.pdf]
-for mulige/gyldige verdier.) Om man ikke sjekker dette før skriptet kjøres, og det 
-finnes ugyldige verdier, vil det føre til at det blir regnet ut en sumskår som 
-sannsynligvis er høyere enn den skal være. Dette er fordi SPSS-syntaksen
-alltid vil betrakte en ugyldig verdi som om det er krysset av på det 
-svaralternativet som tilsvarer best helse. Det samme problemet oppstår hvis det 
-benyttes brukerdefinerte koder som sier hvorfor et spørsmål ikke er besvart 
-(f.eks. verdi 99 - «Pasienten ønsket ikke å svare»). Det står forklart hvorfor 
-dette er tilfellet i neste avsnitt.
+sjekkes og korrigeres før skriptet kjøres (se 
+https://www.kvalitetsregistre.no/sites/default/files/attachments/norsk_rand-12_m_koder.pdf
+for mulige/gyldige verdier). Om man ikke sjekker dette før skriptet kjøres, og det 
+finnes ugyldige verdier, vil det ikke bli regnet ut sumskår for raden(e)
+som innholder ugyldige verdier.
 
 I syntaksen opprettes det en ny variabel for hvert svaralternativ 
 (utenom for det alternativet med høyest verdi) i de 12 spørsmålene. F.eks. for
-spørsmål 2a betyr dette at det opprettes 2 nye variabler, hvor den første (PF02_1) 
+spørsmål 2a betyr dette at det opprettes 2 nye variabler, hvor den første (PF2_1) 
 får verdien 1 dersom det er krysset av på første svaralternativ («Ja, begrenser meg 
-mye»), og verdien 0 ellers. Den andre variabelen (PF02_2) får verdien 1 dersom det 
+mye»), og verdien 0 ellers. Den andre variabelen (PF2_2) får verdien 1 dersom det 
 er krysset av på andre svaralternativ («Ja, begrenser meg litt»), og verdien 0 
 ellers. Grunnen til at disse nye variablene opprettes er at hvert svaralternativ 
 påvirker sumskåren med ulike vekter (svaralternativene med høyest verdi trekker 
@@ -124,9 +119,6 @@ dette dokumentet er basert på at PCS12 og MCS12 kan være fritt korrelert
 «oblique model». Artikkelen oppgir også vektene for det motsatte tilfellet 
 («orthogonal model»). Tabell 5 i artikkelen viser både de korrelerte og 
 ikke-korrelerte regresjonskoeffisientene (vektene) for hver variabel.
-
-Det skal nevnes at syntaksen er under utbedring i disse dager, og flere av problemene
-vil dermed bli rettet opp.
 
 # Skåring ved bruk av R-funksjonen skaar_rand12()
 
