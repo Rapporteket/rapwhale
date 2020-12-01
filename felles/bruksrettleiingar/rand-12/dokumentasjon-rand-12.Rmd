@@ -2,11 +2,12 @@
 title: "Bruksdokumentasjon for skåring av RAND-12/SF-12"
 author: "Stian Tufte Veisene"
 output:
-  html_document:
-   css: H:\kvalreg\felles\latex-klassar\markdown-stilsett\kvalreg-stilsett.css
-   theme: flatly
-   toc: yes
-  word_document: default
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Bruksdokumentasjon for skåring av RAND-12/SF-12}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   chunk_output_type: console
 ---
@@ -33,7 +34,7 @@ spørsmål som RAND-12 og RAND-36, men de er lisensbelagte. Skjemaene har også 
 ulike anbefalte skåringsalgoritmer. SPSS-syntaksen som omtales i dette dokumentet 
 kan brukes for skåring av både RAND-12 norsk versjon 1 og SF-12 norsk versjon 1.1 og 1.2.
 
-Det finnes to versjoner (versjon 1.0 og versjon 2.0)av SF-12/SF-36, mens det 
+Det finnes to versjoner (versjon 1.0 og versjon 2.0) av SF-12/SF-36, mens det 
 finnes kun en versjon (versjon 1.0) av RAND-12/RAND-36. Dette betyr at for 
 å kunne benytte den nyeste versjonen (hvor det har blitt gjort noen 
 utbedringer), må det betales lisens. Det finnes tre norske versjoner av 
