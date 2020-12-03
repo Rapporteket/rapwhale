@@ -22,6 +22,44 @@ NULL
 #' @param ... Ytterligere argumenter.
 #' @param suffiks Suffiks for variabelnavn som kobles på det opprinnelige variabelnavnet. Default er "_tekst".
 #' @export
+#' @examples
+#' # eksempel kodebok
+#' kb = tibble::tribble(
+#'   ~variabel_id, ~verdi, ~verditekst,
+#'   "kjonn", 1, "mann",
+#'   "kjonn", 2, "kvinne",
+#'   "med", 1, "antibac",
+#'   "med", 2, "insulin",
+#'   "med", 3, "ibux",
+#'   "med", 4, "globoid",
+#'   "gensp", 1, "Misfornøyd",
+#'   "gensp", 2, "Både og",
+#'   "gensp", 3, "Fornøyd"
+#' )
+#'
+#' # Eksempeldatasett
+#' d = tibble::tribble(
+#'   ~pasid, ~kjonn, ~alder, ~med, ~prem,
+#'   101, 2, 18, 3, 2,
+#'   102, 1, 37, 4, 2,
+#'   103, 1, 17, 1, 3
+#' )
+#'
+#' # Fyll in verditekst for alle variabler i kodebok
+#' d %>%
+#'   kb_fyll(kb)
+#'
+#' # Hvis det kun skal hentes verditekst for en gitt variabel
+#' d %>%
+#'   kb_fyll(kb, kjonn)
+#'
+#' # Variabler kan kobles mot variabel_id med annet navn i kodebok
+#' d %>%
+#'   kb_fyll(kb, kjonn, prem = "gensp")
+#'
+#' # Suffiks kan endres fra default "_tekst"
+#' d %>%
+#'   kb_fyll(kb, med, .suffiks = "_hei")
 kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
 
   # Stopp viss kodeboka ikkje inneheld dei tre nødvendige kolonnane
