@@ -150,6 +150,14 @@ Det planlegges for at R-funksjonen på sikt skal kunne støtte
 andre algoritmer for skåring av RAND-12/SF-12, men foreløpig er 
 det bare mulig å velge `"farivar_2007_oblique"`.
 
+Fordelen med å bruke R-funksjonen er at den innholder mange 
+tester som gir intuitive advarsler eller feilmeldinger hvis det 
+er feil i datasettet som skal skåres.
+
+Det er kontrollert at SPSS-skriptet og R-funksjonen gir samme
+svar for samme datasett. Se neste avsnitt for deskriptiv 
+skåring-statistikk. 
+
 # Deskriptiv skåring-statistikk
 
 Hvis man inkluderer «NA» som et mulig svaralternativ på hvert av de 12 spørsmålene 
