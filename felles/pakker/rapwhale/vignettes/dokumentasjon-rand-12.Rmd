@@ -12,6 +12,20 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r pakkelasting, include = FALSE}
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(rapwhale)
+})
+```
+
 # Innledning
 
 PROM-senteret har utarbeidet en manual/SPSS-syntaks for skåring av 
@@ -128,6 +142,32 @@ For spørsmålene `rand_1`, `rand_5`, `rand_6a` og `rand_6b` tilsvarer
 altså lav verdi god helse, mens for resten av spørsmålene tilsvarer lav 
 verdi dårlig helse.
 
+Under vises eksempler på bruk, både når datasettet innholder gyldige og 
+ugyldige variabelnavn.
+
+```{r eks-sumskaarberegninger}
+d_eks_gyld_varnavn = tibble::tribble(
+  ~rand_1, ~rand_2a, ~rand_2b, ~rand_3a, ~rand_3b, ~rand_4a, ~rand_4b, ~rand_5, ~rand_6a, ~rand_6b, ~rand_6c, ~rand_7,
+  5, 1, 1, 1, 1, 1, 1, 5, 6, 6, 1, 2,
+  1, 3, 3, 2, 2, 2, 2, 1, 1, 1, 6, 5,
+  5, 3, 3, 1, 1, 1, 1, 5, 6, 6, 1, 2,
+  1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 6, 5,
+  5, 1, 1, 1, 1, 1, 1, 5, 6, 6, 1, 1
+)
+skaar_rand12(d_eks_gyld_varnavn, algoritme = "farivar_2007_oblique")
+
+d_eks_ugyld_varnavn = d_eks_gyld_varnavn
+d_eks_ugyld_varnavn = rename(d_eks_ugyld_varnavn,
+  g_h_1 = rand_1,
+  r_e_3 = rand_4b
+)
+# Merk at skaar_rand12() gir ut de opprinnelige variabelnavnene
+skaar_rand12(d_eks_ugyld_varnavn,
+  variabelnavn = c(rand_1 = "g_h_1", rand_4b = "r_e_3"),
+  algoritme = "farivar_2007_oblique"
+)
+```
+
 # SPSS-syntaksen vs. skaar_rand12()
 
 Både SPSS-skriptet og R-funksjonen er basert på artikkelen 
@@ -169,10 +209,10 @@ besvart). For PCS12 er median sumskår 40,49 og gjennomsnittlig sumskår 40,46 (
 er like sannsynlige og vil derfor ikke være representative for en pasientgruppe.
 Figurene under viser fordelingen for PCS12 og MCS12.
 
-```{r fordeling-pcs, echo=FALSE, fig.cap="Fordeling PCS12", out.width = '100%'}
-knitr::include_graphics("histogram-utregnet-pc.png")
-```
+#```{r fordeling-pcs, echo=FALSE, fig.cap="Fordeling PCS12", out.width = '100%'}
+#knitr::include_graphics("histogram-utregnet-pc.png")
+#```
 
-```{r fordeling-mcs, echo=FALSE, fig.cap="Fordeling MCS12", out.width = '100%'}
-knitr::include_graphics("histogram-utregnet-mc.png")
-```
+#```{r fordeling-mcs, echo=FALSE, fig.cap="Fordeling MCS12", out.width = '100%'}
+#knitr::include_graphics("histogram-utregnet-mc.png")
+#```
