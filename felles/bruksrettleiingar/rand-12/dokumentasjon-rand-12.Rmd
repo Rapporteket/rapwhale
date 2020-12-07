@@ -113,13 +113,6 @@ ellers. Grunnen til at disse nye variablene opprettes er at hvert svaralternativ
 påvirker sumskåren med ulike vekter (svaralternativene med høyest verdi trekker 
 ikke ned sumskåren). 
 
-Artikkelen som SPSS-syntaksen er basert på finnes her 
-[https://www.ncbi.nlm.nih.gov/pubmed/17825096]. SPSS-syntaksen som omtales i 
-dette dokumentet er basert på at PCS12 og MCS12 kan være fritt korrelert 
-«oblique model». Artikkelen oppgir også vektene for det motsatte tilfellet 
-(«orthogonal model»). Tabell 5 i artikkelen viser både de korrelerte og 
-ikke-korrelerte regresjonskoeffisientene (vektene) for hver variabel.
-
 # Skåring ved bruk av R-funksjonen skaar_rand12()
 
 Funksjonen skaar_rand12() er en del av R-pakken Rapwhale som er 
@@ -135,17 +128,27 @@ For spørsmålene `rand_1`, `rand_5`, `rand_6a` og `rand_6b` tilsvarer
 altså lav verdi god helse, mens for resten av spørsmålene tilsvarer lav 
 verdi dårlig helse.
 
-Det finnes ulike algoritmer for skåring av RAND-12/SF-12, men foreløpig 
-er det bare mulig å velge `"farivar_2007_oblique"` i skaar_rand12().
-Denne algoritmen gir sumskårer basert på en korrelert (skrå/«oblique»)
-faktormodell og er basert på engelsk versjon av SF-12 versjon 1 (med 
-amerikansk referansepopulasjon), men den kan også brukes for (og er 
-foreløpig det beste alternativet for) RAND-12 norsk versjon 1 og SF-12 
-norsk versjon 1.1 og 1.2. Funksjonen kan *ikke* brukes for skåring av 
-versjon 2 av SF-12 (dette skjemaet har for noen spørsmål flere mulige 
-svaralternativer).
-
 # SPSS-syntaksen vs. skaar_rand12()
+
+Både SPSS-skriptet og R-funksjonen er basert på artikkelen 
+[https://www.ncbi.nlm.nih.gov/pubmed/17825096] og gir sumskårer 
+basert på en korrelert (skrå/«oblique») faktormodell. Artikkelen
+baserer seg på engelsk versjon av SF-12 versjon 1 (med amerikansk 
+referansepopulasjon), men algoritmen som er benyttet i både
+SPSS-skriptet og R-funksjonen kan brukes for (og er foreløpig det 
+beste alternativet for) RAND-12 norsk versjon 1 og SF-12 norsk 
+versjon 1.1 og 1.2. Tabell 5 i artikkelen viser både de 
+korrelerte («oblique model») og ikke-korrelerte 
+(«orthogonal model») regresjonskoeffisientene (vektene) for hver 
+variabel.
+
+SPSS-skriptet og R-funksjonen kan *ikke* brukes for skåring av 
+versjon 2 av SF-12 (dette skjemaet har for noen spørsmål flere 
+mulige svaralternativer).
+
+Det planlegges for at R-funksjonen på sikt skal kunne støtte 
+andre algoritmer for skåring av RAND-12/SF-12, men foreløpig er 
+det bare mulig å velge `"farivar_2007_oblique"`.
 
 # Deskriptiv skåring-statistikk
 
