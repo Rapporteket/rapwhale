@@ -207,12 +207,3 @@ besvart). For PCS12 er median sumskår 40,49 og gjennomsnittlig sumskår 40,46 (
 17,67 og max 62,38). For MCS12 er median sumskår 38,95 og gjennomsnittlig sumskår 
 38,82 (min 10,47 og max 65,73). Disse tallene er basert på at alle svarkombinasjoner 
 er like sannsynlige og vil derfor ikke være representative for en pasientgruppe.
-Figurene under viser fordelingen for PCS12 og MCS12.
-
-#```{r fordeling-pcs, echo=FALSE, fig.cap="Fordeling PCS12", out.width = '100%'}
-#knitr::include_graphics("histogram-utregnet-pc.png")
-#```
-
-#```{r fordeling-mcs, echo=FALSE, fig.cap="Fordeling MCS12", out.width = '100%'}
-#knitr::include_graphics("histogram-utregnet-mc.png")
-#```
