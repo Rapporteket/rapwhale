@@ -45,7 +45,7 @@ er de opprinnelige versjonene med 36 spørsmål). RAND-36 og SF-36 stammer
 opprinnelig fra Medical Outcomes Study (MOS) utført av den amerikanske 
 organisasjonen RAND Corporation. Spørreskjemaene SF-12 og SF-36 har samme 
 spørsmål som RAND-12 og RAND-36, men de er lisensbelagte. Skjemaene har også noe 
-ulike anbefalte skåringsalgoritmer. SPSS-syntaksen som omtales i dette dokumentet 
+ulike anbefalte skåringsalgoritmer. SPSS-syntaksen og R-funksjonen som omtales i dette dokumentet 
 kan brukes for skåring av både RAND-12 norsk versjon 1 og SF-12 norsk versjon 1.1 og 1.2.
 
 Det finnes to versjoner (versjon 1.0 og versjon 2.0) av SF-12/SF-36, mens det 
@@ -96,15 +96,15 @@ ligger manualen for skåring av RAND-12/SF-12. Selve SPSS-syntaksen
 finner man her: 
 https://www.kvalitetsregistre.no/sites/default/files/rand12_skript.txt.
 
-For at skriptet skal fungere må variabelnavnene i SPSS-datafilen være de 
-samme som i skriptet (RAND12_1, RAND12_2a, RAND12_2b, RAND12_3a, 
+For at syntaksen skal fungere må variabelnavnene i SPSS-datafilen være de 
+samme som i syntaksen (RAND12_1, RAND12_2a, RAND12_2b, RAND12_3a, 
 RAND12_3b, RAND12_4a, RAND12_4b, RAND12_5, RAND12_6a, RAND12_6b, 
 RAND12_6c, RAND12_7). Det er valgfritt om man velger å bruke små eller 
 store bokstaver. 
 
 For spørsmålene 1, 5, 6a og 6b tilsvarer lav verdi god helse, mens for resten av 
 spørsmålene tilsvarer lav verdi dårlig helse. På grunn av dette inverteres 
-disse 4 variablene i SPSS-skriptet (punkt 3) slik at lav verdi tilsvarer dårlig 
+disse 4 variablene i SPSS-syntaksen (punkt 3) slik at lav verdi tilsvarer dårlig 
 helse for alle 12 variablene.
 
 SPSS-Syntaksen regner ut både PCS12 (Physical Component Summary score) og MCS12 
@@ -168,21 +168,21 @@ skaar_rand12(d_eks_ugyld_varnavn,
 )
 ```
 
-# SPSS-syntaksen vs. skaar_rand12()
+# SPSS-syntaksen vs. R-funksjonen
 
-Både SPSS-skriptet og R-funksjonen er basert på artikkelen 
+Både SPSS-syntaksen og R-funksjonen er basert på artikkelen 
 [https://www.ncbi.nlm.nih.gov/pubmed/17825096] og gir sumskårer 
 basert på en korrelert (skrå/«oblique») faktormodell. Artikkelen
 baserer seg på engelsk versjon av SF-12 versjon 1 (med amerikansk 
 referansepopulasjon), men algoritmen som er benyttet i både
-SPSS-skriptet og R-funksjonen kan brukes for (og er foreløpig det 
+SPSS-syntaksen og R-funksjonen kan brukes for (og er foreløpig det 
 beste alternativet for) RAND-12 norsk versjon 1 og SF-12 norsk 
 versjon 1.1 og 1.2. Tabell 5 i artikkelen viser både de 
 korrelerte («oblique model») og ikke-korrelerte 
 («orthogonal model») regresjonskoeffisientene (vektene) for hver 
 variabel.
 
-SPSS-skriptet og R-funksjonen kan *ikke* brukes for skåring av 
+SPSS-syntaksen og R-funksjonen kan *ikke* brukes for skåring av 
 versjon 2 av SF-12 (dette skjemaet har for noen spørsmål flere 
 mulige svaralternativer).
 
@@ -194,9 +194,8 @@ Fordelen med å bruke R-funksjonen er at den innholder mange
 tester som gir intuitive advarsler eller feilmeldinger hvis det 
 er feil i datasettet som skal skåres.
 
-Det er kontrollert at SPSS-skriptet og R-funksjonen gir samme
-svar for samme datasett. Se neste avsnitt for deskriptiv 
-skåring-statistikk. 
+Det er kontrollert at SPSS-syntaksen og R-funksjonen gir samme
+svar for samme datasett.
 
 # Deskriptiv skåring-statistikk
 
