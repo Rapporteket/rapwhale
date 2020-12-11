@@ -90,29 +90,16 @@ num = function(x, desimalar, tabell = FALSE) {
   x_form
 }
 
+# FIXME -Fjerne akse_prosent funksjon når alle rapporter er oppdatert til å bruke
+# akse_prosent_format.
 
-### Prosent med norsk stavemåte i aksenotasjoner
-
-# fixme: Bør rydda opp i prosentfunksjonane slik at dei alle
-#        tar same argument og elles er meir gjennomtenkte
-#        (krev gjerne endringar i filene som brukar dei).
-
-#' Vis desimaltal som prosent
-#'
-#' Tar inn eit desimaltal og viser det som prosent,
-#' med mellomrom før prosentteiknet (slik det skal vera
-#' på norsk), eks. 0.5 --> "50 %", og med komma
-#' som desimalteikn. Som standard vert tala viste
-#' med éin desimal, men dette kan ein endra ved
-#' å spesifisera «accuracy», for eksempel «accuracy = 0.1»
-#' for éin desimal eller «accuracy = .05» for å runda av til
-#' næraste halve promille. Bruk «accuracy = NULL» for
-#' automatisk/«smart» val av desimalar (vanlegvis ikkje tilrådd).
+#' Vis desimaltall som prosent
 #'
 #' @param x Tallet som skal skrives som prosent.
 #' @param accuracy Antall desimaler som skal benyttes.
-#' @param decimal.mark Skal desimalskille være "," eller "." Standard er ",".
+#' @param decimal.mark desimaltegn.
 #' @param ... Ytterligere argumenter.
+#'
 #' @export
 akse_prosent = function(x, accuracy = 1, decimal.mark = ",", ...) {
   scales::percent(x,
@@ -120,6 +107,67 @@ akse_prosent = function(x, accuracy = 1, decimal.mark = ",", ...) {
     accuracy = accuracy, decimal.mark = decimal.mark, ...
   )
 }
+
+
+### Prosent med norsk stavemåte i aksenotasjoner
+
+# fixme: Bør rydda opp i prosentfunksjonane slik at dei alle
+#        tar same argument og elles er meir gjennomtenkte
+#        (krev gjerne endringar i filene som brukar dei).
+
+#' Formater akse med prosentformat
+#'
+#' Funksjonen brukes i ggplot-kall og konverterer akselabels til å vise
+#' prosent med riktig format. Standard er mellomrom før prosenttegnet
+#' (slik det skal være på norsk), eks. 0.5 --> "50 %", og med komma
+#' som desimaltegn. Som standard blir tallene vist
+#' med én desimal, men dette kan endres ved å spesifisere `antall_desimaler`.
+#'
+#' @param antall_desimaler Antall desimaler skal vises.
+#' @param decimal.mark Instilling for desimaltall. Standard er ",".
+#' @param ... Ytterligere argumenter.
+#' @export
+#' @examples
+#' ggplot(iris, aes(x = Sepal.Length, y = Petal.Width)) +
+#'   geom_point() +
+#'   scale_y_continuous(labels = akse_prosent_format(antall_desimaler = 2))
+akse_prosent_format = function(antall_desimaler = 1, decimal.mark = ",", ...) {
+  accuracy = 1 / (10^antall_desimaler)
+
+  scales::percent_format(
+    suffix = " %",
+    accuracy = accuracy, decimal.mark = decimal.mark, ...
+  )
+}
+
+
+#' Formater akser med tallformat
+#'
+#' Funksjonen brukes i ggplot-kall og konverterer akselabels til å vise tall
+#' med tusenskille (standard er " ") og ønsket antall desimaler (standard er 2).
+#'
+#' @param antall_desimaler Hvor mange desimaler skal vises.
+#' @param decimal.mark Instilling for desimaltegn. Standard er ",".
+#' @param big.mark Instilling for tusenskille. Standard er " ".
+#' @param ... Ytterligere argumenter.
+#' @export
+#' @examples
+#' a = tibble::tibble(
+#'   x = rnorm(100, 7500, 1000),
+#'   y = runif(100, 0, 1)
+#' )
+#'
+#' ggplot(a, aes(x = x, y = y)) +
+#'   geom_point() +
+#'   scale_x_continuous(labels = akse_tall_format(antall_desimaler = 0)) +
+#'   scale_y_continuous(labels = akse_prosent_format(antall_desimaler = 1))
+akse_tall_format = function(antall_desimaler = 2, decimal.mark = ",", big.mark = " ", ...) {
+  accuracy = 1 / (10^antall_desimaler)
+
+  scales::number_format(accuracy = accuracy, big.mark = big.mark, decimal.mark = decimal.mark)
+}
+
+
 # Liknande funksjon for formatering av prosentverdiar som LaTeX-tekst.
 
 #' Vis prosent-verdi som LaTeX-tekst
