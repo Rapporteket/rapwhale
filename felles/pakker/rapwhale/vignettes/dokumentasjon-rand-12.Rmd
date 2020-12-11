@@ -72,16 +72,19 @@ https://www.kvalitetsregistre.no/pasientrapporterte-data#skaring-av-rand-12sf-12
 Link til RAND-12 norsk versjon 1 i PDF-format: 
 https://www.kvalitetsregistre.no/sites/default/files/https-/www.fhi.no/globalassets/dokumenterfiler/tema/brukererfaring/norsk-rand-12.pdf
 
+Link til mulige/gyldige verdier for RAND-12 norsk versjon 1:
+https://www.kvalitetsregistre.no/sites/default/files/attachments/norsk_rand-12_m_koder.pdf
+
 Andre relevante artikler:
 
-SF-36 - «Conceptual framework and item selection».
+SF-36 - «Conceptual framework and item selection»:
 https://pdfs.semanticscholar.org/06cb/0076e310136d0ca8b56cc8585ec2bf43e029.pdf
 
 Oppsummering av forskjeller mellom RAND-36-skåring og SF-36-skåring:
 https://onlinelibrary.wiley.com/doi/abs/10.1002/hec.4730020305
 
 «The results suggest that where two summary scores of health status are adequate 
-than the SF-12 may be the instrument of choice».
+than the SF-12 may be the instrument of choice»:
 https://www.researchgate.net/publication/13977335_A_Shorter_Form_Health_Survey_Can_the_SF-12_Replicate_Results_from_the_SF-36_in_Longitudinal_Studies
 
 Ware JE, Kosinski M, Turner-Bowker DM, Gandek B: How to Score Version 2 of the 
@@ -108,14 +111,12 @@ disse 4 variablene i SPSS-syntaksen (punkt 3) slik at lav verdi tilsvarer dårli
 helse for alle 12 variablene.
 
 SPSS-Syntaksen regner ut både PCS12 (Physical Component Summary score) og MCS12 
-(Mental Component Summary score). Sumskårene blir bare regnet ut hvis  
+(Mental Component Summary score). Sumskårene blir bare regnet ut hvis 
 alle 12 spørsmålene er besvart. Selve skriptet har ingen test / gir ingen advarsel ved 
 ugyldige verdier, men det står kommentert i starten av skriptet at dette må 
-sjekkes og korrigeres før skriptet kjøres (se 
-https://www.kvalitetsregistre.no/sites/default/files/attachments/norsk_rand-12_m_koder.pdf
-for mulige/gyldige verdier). Om man ikke sjekker dette før skriptet kjøres, og det 
-finnes ugyldige verdier, vil det ikke bli regnet ut sumskår for raden(e)
-som innholder ugyldige verdier.
+sjekkes og korrigeres før skriptet kjøres. Om man ikke sjekker dette før 
+skriptet kjøres, og det finnes ugyldige verdier, vil det ikke bli regnet 
+ut sumskår for raden(e) som innholder ugyldige verdier.
 
 I syntaksen opprettes det en ny variabel for hvert svaralternativ 
 (utenom for det alternativet med høyest verdi) i de 12 spørsmålene. F.eks. for
@@ -133,8 +134,10 @@ Funksjonen skaar_rand12() er en del av R-pakken Rapwhale som er
 utabeidet av Fagsenter for medisinske kvalitetsregister i Helse Vest. 
 Funksjonen regner ut både fysisk og psykisk sumskår (PCS og MCS) for 
 RAND-12- eller SF-12-spørreskjema og legger disse til datasettet som
-inneholder RAND-12- eller SF-12-besvarelsene. Funksjonen sjekker også at 
-alle variabelnavnene og verdiene/besvarelsene er kodet riktig.
+inneholder RAND-12- eller SF-12-besvarelsene. Datasettet kan inneholde
+andre variabler i tillegg til spørreskjema-variablene. Funksjonen 
+sjekker også at alle variabelnavn og tilhørende verdier/besvarelser for
+spørreskjema-variablene er kodet riktig.
 
 Skjemavariablene skal kodes slik at første svaralternativ for hvert
 spørsmål har tallkoden 1, andre svaralternativ har tallkoden 2 osv.
