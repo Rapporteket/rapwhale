@@ -2,14 +2,37 @@
 #' @importFrom tidyr replace_na
 #' @importFrom dplyr summarise mutate select groups
 NULL
-#' Regn ut Kvalitetsindikator - Andel:
+#' Regn ut Kvalitetsindikator - Gjennomsnitt:
 #'
-#' Funksjon for å regne ut kvalitetsindikatorer for andeler.
-#' Tar inn et datasett på 101-format, og returnerer et estimert resultat
+#' Funksjon for å regne ut kvalitetsindikatorer for gjennomsnitt.
+#' Tar inn et datasett som inkluderer variablene ki_x og ki_aktuell,
+#' og returnerer en summering av datasettet for kvalitetsindikatoren.
+#' ki_x er tallet det skal regnes gjennomsnitt for, og ki_aktuell er en indikator
+#' for om pasienten skal være med i utregningen eller ikke. Utdata inkluderer snittverdi,
+#' antall aktuelle, og nedre og øvre konfidensintervall.
+#' Hvis inndata er gruppert vil funksjonen regne ut verdiene på gruppenivå.
 #'
-#' @param d_ki_ind Inndata på 101-format
+#' @param d_ki_ind Inndata som inkluderer ki_x og ki_aktuell.
 #' @param alfa Verdi for å bestemme bredde på konfidensintervall, standardverdi er 0.05
 #' @export
+#' @examples
+#' # Eksempeldata
+#' d = tibble::tibble(
+#'   pasid = 1:50,
+#'   sykehus = sample(c("Haukeland", "Haugesund", "Voss"), size = 50, replace = TRUE),
+#'   ki_aktuell = sample(c(TRUE, FALSE), size = 50, replace = TRUE),
+#'   ki_x = rnorm(n = 50, mean = 55, sd = 2)
+#' )
+#'
+#' # Viser resultat for alle rader i inndata
+#' d %>%
+#'   aggreger_ki_snitt()
+#'
+#' # Resultat kan grupperes. Her er det gruppert på sykehusnivå, og
+#' # konfidensintervallet er justert til 90 % ved å endre på alfa.
+#' d %>%
+#'   group_by(sykehus) %>%
+#'   aggreger_ki_snitt(alfa = 0.1)
 aggreger_ki_snitt = function(d_ki_ind, alfa = 0.05) {
 
   # Teste inndata
