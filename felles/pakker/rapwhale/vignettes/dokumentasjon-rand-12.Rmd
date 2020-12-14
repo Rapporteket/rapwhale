@@ -97,9 +97,9 @@ ligger manualen for skåring av RAND-12/SF-12. Her finnes man også
 [SPSS-syntaksen](https://www.kvalitetsregistre.no/sites/default/files/rand12_skript.txt).
 
 For at syntaksen skal fungere må variabelnavnene i SPSS-datafilen være de 
-samme som i syntaksen (RAND12_1, RAND12_2a, RAND12_2b, RAND12_3a, 
-RAND12_3b, RAND12_4a, RAND12_4b, RAND12_5, RAND12_6a, RAND12_6b, 
-RAND12_6c, RAND12_7). Det er valgfritt om man velger å bruke små eller 
+samme som i syntaksen (`RAND12_1`, `RAND12_2a`, `RAND12_2b`, `RAND12_3a`, 
+`RAND12_3b`, `RAND12_4a`, `RAND12_4b`, `RAND12_5`, `RAND12_6a`, `RAND12_6b`, 
+`RAND12_6c`, `RAND12_7`). Det er valgfritt om man velger å bruke små eller 
 store bokstaver. 
 
 For spørsmålene 1, 5, 6a og 6b tilsvarer lav verdi god helse, mens for resten av 
@@ -107,7 +107,7 @@ spørsmålene tilsvarer lav verdi dårlig helse. På grunn av dette inverteres
 disse 4 variablene i SPSS-syntaksen (punkt 3) slik at lav verdi tilsvarer dårlig 
 helse for alle 12 variablene.
 
-SPSS-Syntaksen regner ut både PCS12 (Physical Component Summary score) og MCS12 
+SPSS-Syntaksen regner ut både `PCS12` (Physical Component Summary score) og `MCS12` 
 (Mental Component Summary score). Sumskårene blir bare regnet ut hvis 
 alle 12 spørsmålene er besvart. Selve skriptet har ingen test / gir ingen advarsel ved 
 ugyldige verdier, men det står kommentert i starten av skriptet at dette må 
@@ -117,9 +117,9 @@ ut sumskår for raden(e) som innholder ugyldige verdier.
 
 I syntaksen opprettes det en ny variabel for hvert svaralternativ 
 (utenom for det alternativet med høyest verdi) i de 12 spørsmålene. F.eks. for
-spørsmål 2a betyr dette at det opprettes 2 nye variabler, hvor den første (PF2_1) 
+spørsmål 2a betyr dette at det opprettes 2 nye variabler, hvor den første (`PF2_1`) 
 får verdien 1 dersom det er krysset av på første svaralternativ («Ja, begrenser meg 
-mye»), og verdien 0 ellers. Den andre variabelen (PF2_2) får verdien 1 dersom det 
+mye»), og verdien 0 ellers. Den andre variabelen (`PF2_2`) får verdien 1 dersom det 
 er krysset av på andre svaralternativ («Ja, begrenser meg litt»), og verdien 0 
 ellers. Grunnen til at disse nye variablene opprettes er at hvert svaralternativ 
 påvirker sumskåren med ulike vekter (svaralternativene med høyest verdi trekker 
@@ -127,9 +127,9 @@ ikke ned sumskåren).
 
 # Skåring ved bruk av R-funksjonen skaar_rand12()
 
-Funksjonen skaar_rand12() er en del av R-pakken Rapwhale som er 
+Funksjonen `skaar_rand12()` er en del av R-pakken Rapwhale som er 
 utabeidet av Fagsenter for medisinske kvalitetsregister i Helse Vest. 
-Funksjonen regner ut både fysisk og psykisk sumskår (PCS og MCS) for 
+Funksjonen regner ut både fysisk og psykisk sumskår (`rand12_pcs` og `rand12_mcs`) for 
 RAND-12- eller SF-12-spørreskjema og legger disse til datasettet som
 inneholder RAND-12- eller SF-12-besvarelsene. Datasettet kan inneholde
 andre variabler i tillegg til spørreskjema-variablene. Funksjonen 
