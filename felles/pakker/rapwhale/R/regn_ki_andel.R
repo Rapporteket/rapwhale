@@ -5,11 +5,32 @@ NULL
 #' Regn ut Kvalitetsindikator - Andel:
 #'
 #' Funksjon for å regne ut kvalitetsindikatorer for andeler.
-#' Tar inn et datasett på 101-format, og returnerer et estimert resultat
+#' Tar inn et datasett som inkluderer variablene ki_krit_teller og ki_krit_nevner,
+#' og returnerer en summering av datasettet for kvalitetsindikatoren. Utdata inkluderer andel,
+#' antall i nevner, antall i teller i tillegg til øvre og nedre konfidensintervall.
+#' Hvis inndata er gruppert vil funksjonen regne ut verdiene på gruppenivå.
 #'
-#' @param d_ki_ind Inndata på 101-format
+#' @param d_ki_ind Inndata som inkluderer ki_krit_teller og ki_krit_nevner
 #' @param alfa Verdi for å bestemme bredde på konfidensintervall, standardverid er 0.05
 #' @export
+#' @examples
+#' # Eksempeldata
+#' d = tibble::tibble(
+#'   pasid = 1:10,
+#'   sykehus = sample(c("Haukeland", "Haugesund", "Voss"), size = 10, replace = TRUE),
+#'   ki_krit_teller = sample(c(TRUE, FALSE), size = 10, replace = TRUE),
+#'   ki_krit_nevner = TRUE
+#' )
+#'
+#' # Viser resultat for alle rader i inndata
+#' d %>%
+#'   aggreger_ki_prop()
+#'
+#' # Resultat kan grupperes. Her er det gruppert på sykehusnivå, og
+#' # konfidensintervallet er justert til 90 % ved å endre på alfa.
+#' d %>%
+#'   group_by(sykehus) %>%
+#'   aggreger_ki_prop(alfa = 0.1)
 aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
   # Teste inndata
   if (!(is.data.frame(d_ki_ind) && all(hasName(d_ki_ind, c("ki_krit_teller", "ki_krit_nevner"))))) {
