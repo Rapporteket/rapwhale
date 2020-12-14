@@ -109,10 +109,10 @@ helse for alle 12 variablene.
 
 SPSS-Syntaksen regner ut både `PCS12` (Physical Component Summary score) og `MCS12` 
 (Mental Component Summary score). Sumskårene blir bare regnet ut hvis 
-alle 12 spørsmålene er besvart. Selve skriptet har ingen test / gir ingen advarsel ved 
-ugyldige verdier, men det står kommentert i starten av skriptet at dette må 
-sjekkes og korrigeres før skriptet kjøres. Om man ikke sjekker dette før 
-skriptet kjøres, og det finnes ugyldige verdier, vil det ikke bli regnet 
+alle 12 spørsmålene er besvart. Selve syntaksen har ingen test / gir ingen advarsel ved 
+ugyldige verdier, men det står kommentert i starten av syntaksen at dette må 
+sjekkes og korrigeres før syntaksen kjøres. Om man ikke sjekker dette før 
+syntaksen kjøres, og det finnes ugyldige verdier, vil det ikke bli regnet 
 ut sumskår for raden(e) som innholder ugyldige verdier.
 
 I syntaksen opprettes det en ny variabel for hvert svaralternativ 
