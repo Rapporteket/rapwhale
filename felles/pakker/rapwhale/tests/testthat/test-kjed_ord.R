@@ -6,15 +6,19 @@ test_that("Gjev ut rett resultat for vektor med 1, 2, 3 eller 4/fleire element",
 })
 
 test_that("Gjev ut rett resultat med valt «skiljeteikn»-argument", {
-  expect_identical(kjed_ord(c("Per", "Kari", "Ola", "Sakhwa"), skiljeteikn = "/"),
-                   "Per/Kari/Ola og Sakhwa")
-}
+  expect_identical(
+    kjed_ord(c("Per", "Kari", "Ola", "Sakhwa"), skiljeteikn = "/"),
+    "Per/Kari/Ola og Sakhwa"
+  )
+})
 
 test_that("Gjev ut rett resultat med valt «og»-argument", {
   expect_identical(kjed_ord(c("Per", "Kari"), og = "/"), "Per/Kari")
   expect_identical(kjed_ord(c("Per", "Kari"), og = " & "), "Per & Kari")
-  expect_identical(kjed_ord(c("Per", "Kari", "Ola", "Sakhwa"), og = " & "),
-                   "Per, Kari, Ola & Sakhwa")
+  expect_identical(
+    kjed_ord(c("Per", "Kari", "Ola", "Sakhwa"), og = " & "),
+    "Per, Kari, Ola & Sakhwa"
+  )
 })
 
 test_that("Ved tom vektor inn får ein tom tekstvektor ut", {
