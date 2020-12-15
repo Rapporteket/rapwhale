@@ -2,7 +2,6 @@
 # (og noen, uunnværlige) i registersammenheng og i andre sammenheng.
 
 #' @importFrom magrittr %>%
-#' @importFrom colorspace coords
 #' @importFrom rlang enexpr syms eval_bare maybe_missing
 #' @importFrom qicharts2 qic
 #' @import ggplot2

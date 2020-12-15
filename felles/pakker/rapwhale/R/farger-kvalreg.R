@@ -1,3 +1,5 @@
+#' @importFrom colorspace coords
+NULL
 #' Farger for bruk i figurer
 #'
 #' @description
