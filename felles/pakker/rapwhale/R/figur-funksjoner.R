@@ -4,7 +4,6 @@
 #' @importFrom magrittr %>%
 #' @importFrom colorspace coords
 #' @importFrom rlang enexpr syms eval_bare maybe_missing
-#' @importFrom lubridate is.Date
 #' @importFrom qicharts2 qic
 #' @import ggplot2
 NULL
@@ -38,7 +37,6 @@ expand_soyle_str_fig = expansion(mult = c(0.0, .09), add = 0)
 
 
 # Graffunksjoner ----------------------------------------------------------
-
 
 #' Flytt-opp funksjon.
 #'
@@ -132,7 +130,7 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
   qic_n = enexpr(nevner)
   qic_facet = enexpr(gruppe)
 
-  if (is.Date(d[[qic_x]])) {
+  if (lubridate::is.Date(d[[qic_x]])) {
     skal_flippes = FALSE
   } else {
     skal_flippes = TRUE
@@ -152,7 +150,7 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
   if (figtype == "p") { # hvis det er p-chart ønsker vi norske prosenter fra funksjon i dette r-skriptet
     plot = plot + scale_y_continuous(labels = akse_prosent)
   }
-  if (is.Date(d[[qic_x]])) { # hvis det er en tidsvisning trenger vi en dot for punktene i linjediagrammet
+  if (lubridate::is.Date(d[[qic_x]])) { # hvis det er en tidsvisning trenger vi en dot for punktene i linjediagrammet
     plot = plot + geom_point()
   }
   plot
