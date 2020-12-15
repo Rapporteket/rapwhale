@@ -23,13 +23,38 @@ les_varnavn = function(adresse, formatspek) {
 
 #' Konverter en variabel til logisk variabel
 #'
-#' \code{konverter_boolske()} tar inn en vektor som skal konverteres, i tillegg til vektorer
-#' som beskriver hva som skal regnes som TRUE og FALSE.
+#' Konverterer en vektor med verdier til en vektor som kun inneholder
+#' TRUE, FALSE eller NA
 #'
 #' @param x Vektor med verdier som skal konverteres til en logisk vektor.
 #' @param boolsk_usann Hvilke verdier skal konverteres til FALSE? Kan inneholde flere verdier.
 #' @param boolsk_sann Hvilke verdier skal konverteres til TRUE? Kan inneholde flere verdier.
 #' @param na_verdier Hvilke verdier skal betraktes som NA? Kan inneholde flere verdier.
+#'
+#' @details
+#' Tar inn en vektor som skal konverteres, i tillegg til vektorer som
+#' beskriver hva som skal regnes som TRUE, FALSE og NA.
+#'
+#' @return
+#'   En vektor som kun inneholder TRUE, FALSE eller NA.
+#' @examples
+#' tallvektor = c(-1, 0, 1)
+#' konverter_boolske(tallvektor,
+#'   boolsk_usann = 0, boolsk_sann = 1,
+#'   na_verdier = -1
+#' )
+#'
+#' tekstvektor = c("Ukjent", "Nei", "Ja")
+#' konverter_boolske(tekstvektor,
+#'   boolsk_usann = "Nei",
+#'   boolsk_sann = "Ja", na_verdier = "Ukjent"
+#' )
+#'
+#' tekstvektor_flere_alt = c(NA, "Nei", "Ja", "-1", "0", "false")
+#' konverter_boolske(tekstvektor_flere_alt,
+#'   boolsk_usann = c("Nei", "0", "false"),
+#'   boolsk_sann = c("Ja"), na_verdier = c(NA, "-1")
+#' )
 konverter_boolske = function(x, boolsk_usann, boolsk_sann, na_verdier = NA) {
 
   # Sjekk først at det berre er gyldige verdiar
