@@ -50,20 +50,31 @@ NULL
 #' I tillegg vil det være kolonner for alle grupperingsvariablene.
 #' @export
 #' @examples
+#' # Pakke for bruk av rør-teiknet
+#' library(dplyr)
+#'
 #' # Eksempeldata
-#' d = tibble::tibble(
-#'   pasid = 1:10,
-#'   sykehus = sample(c("Haukeland", "Haugesund", "Voss"), size = 10, replace = TRUE),
-#'   ki_krit_teller = sample(c(TRUE, FALSE), size = 10, replace = TRUE),
-#'   ki_krit_nevner = TRUE
+#' d = tibble(
+#'   pasid = 1:8,
+#'   sykehus = rep(c("Haukeland", "Førde", "Voss"), times = c(3, 2, 3)),
+#'   ki_krit_teller = c(TRUE, FALSE, TRUE, TRUE, FALSE, TRUE, TRUE, FALSE),
+#'   ki_krit_nevner = c(TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, FALSE)
 #' )
 #'
-#' # Viser resultat for alle rader i inndata
-#' d %>%
-#'   aggreger_ki_prop()
+#' # Utregnet kvalitetsindikator for hele datasettet
+#' aggreger_ki_prop(d)
 #'
-#' # Resultat kan grupperes. Her er det gruppert på sykehusnivå, og
-#' # konfidensintervallet er justert til 90 % ved å endre på alfa.
+#' # Gruppert på sykehusnivå og med 90 %-konfidensintervall
+#' d %>%
+#'   group_by(sykehus) %>%
+#'   aggreger_ki_prop(alfa = 0.1)
+#'
+#' # Merk at sykehusene ovenfor blir vist i alfabetisk rekkefølge,
+#' # siden grupperingsvariabelen «sykehus» var en tekstvariabel.
+#' # Hvis du vil ha en annen rekkefølge, gjør de om til faktor først.
+#' d = mutate(d, sykehus = factor(sykehus,
+#'   levels = c("Haukeland", "Førde", "Voss")
+#' ))
 #' d %>%
 #'   group_by(sykehus) %>%
 #'   aggreger_ki_prop(alfa = 0.1)
