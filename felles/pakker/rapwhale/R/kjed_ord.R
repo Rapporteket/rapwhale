@@ -32,9 +32,9 @@ kjed_ord = function(ord, skiljeteikn = ", ", og = " og ") {
   } else if (n == 1) {
     tekst = ord
   } else if (n == 2) {
-    tekst = str_flatten(ord, collapse = og)
+    tekst = paste0(ord, collapse = og)
   } else if (n > 2) {
-    tekst = paste0(str_flatten(ord[1:n - 1], collapse = skiljeteikn), og, ord[n])
+    tekst = paste0(paste0(ord[1:n - 1], collapse = skiljeteikn), og, ord[n])
   }
   tekst
 }
