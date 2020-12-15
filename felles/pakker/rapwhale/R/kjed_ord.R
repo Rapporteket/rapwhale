@@ -15,6 +15,8 @@
 #' handterar ulike typar inndata, som tekst, tal og dato. Manglande verdiar
 #' vert gjort om til teksten "NA".
 #'
+#' @return Ein tekststreng med eitt element, der alle elementa frå `ord` er lista opp
+#'
 #' @examples
 #' kjed_ord(c("Per", "Kari"))
 #'
