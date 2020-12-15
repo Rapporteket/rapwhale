@@ -2,16 +2,52 @@
 #' @importFrom tibble as_tibble
 #' @importFrom dplyr group_by summarise case_when bind_cols groups
 NULL
-#' Regn ut Kvalitetsindikator - Andel:
+#' Regn ut kvalitetsindikator for andeler
 #'
-#' Funksjon for å regne ut kvalitetsindikatorer for andeler.
-#' Tar inn et datasett som inkluderer variablene ki_krit_teller og ki_krit_nevner,
-#' og returnerer en summering av datasettet for kvalitetsindikatoren. Utdata inkluderer andel,
-#' antall i nevner, antall i teller i tillegg til øvre og nedre konfidensintervall.
-#' Hvis inndata er gruppert vil funksjonen regne ut verdiene på gruppenivå.
+#' Regner ut kvalitetsindikator for andeler (teller delt på nevner)
+#' basert på et standard datasett for binomiske data / andelsdata.
+#' Gir også ut konfidensintervall for andelene.
 #'
-#' @param d_ki_ind Inndata som inkluderer ki_krit_teller og ki_krit_nevner
-#' @param alfa Verdi for å bestemme bredde på konfidensintervall, standardverid er 0.05
+#' @param d_ki_ind Datasett som gitt ut av en standard KI-funksjon
+#'   for binomiske data / andelsdata / proporsjonsdata.
+#'   Se detaljer nedenfor.
+#' @param alfa Én minus nivået til konfidensintervallet.
+#'   Standardverdi er 0.05, som tilsvarer et 95 %-konfidensintervall.
+#'
+#' @details
+#' Inndatasettet må inneholde minst de to logiske variablene
+#' `ki_krit_nevner` og `ki_krit_teller`, der `ki_krit_nevner`
+#' sier om raden (for eksempel pasienten eller forløpet) oppfyller
+#' kriteriet for å inngå i *nevneren* i indikatoren,
+#' og `ki_teller` sier om den oppfyller kriteriet for å inngå i
+#' *telleren* (dvs. skal regnes som en «suksess»). Se vignetten
+#' for kvalitetsindikatorar
+#' ({\code{vignette("ki-funksjonar", package = "rapwhale")})
+#' for mer detaljert informasjon, både om krav til gyldige inndata
+#' og om bruk.
+#'
+#' Funksjonen gir ut aggregert datasett med teller, nevner, estimatet
+#' teller/nevner og konfidensintervall for estimatet, alt bare for
+#' de radene der `ki_krit_nevner` er sann. Dersom ingen `ki_krit_nevner`
+#' er sann, vil estimatet og tilhørende konfidensgrenser være `NA`.
+#' Hvis inndataene er gruppert, blir resultatet regnet ut gruppenivå,
+#' med én rad per gruppe.
+#'
+#' @note
+#' Funksjonen kan også brukes for teller/nevner-data som ikke oppfyller
+#' antagelsen om binomiske data, men da kan man naturlegvis ikke stole på
+#' konfidensintervallane som en får ut.
+#'
+#' @return
+#' Tibble eller `data.frame` (avhengig av inndataene) med følgende
+#' kolonner:
+#' \item{est}{Kvalitetsindikatoren, dvs. estimert andel (`ki_teller`/`ki_nevner`).}
+#' \item{ki_teller}{Telleren i indikatoren (antall sanne `ki_krit_teller`
+#'                  der `ki_krit_nevner` er sann).}
+#' \item{ki_nevner}{Nevneren i indikatoren (antall sanne `ki_krit_nevner`).}
+#' \item{konf_int_nedre}{Nedre konfidensgrense for `est`.}
+#' \item{konf_int_ovre}{Øvre konfidensgrense for `est`.}
+#' I tillegg vil det være kolonner for alle grupperingsvariablene.
 #' @export
 #' @examples
 #' # Eksempeldata
