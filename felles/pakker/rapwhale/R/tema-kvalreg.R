@@ -40,3 +40,30 @@ tema_kvalreg = function() {
 
   tema
 }
+
+# Fjern vannrette eller loddrette rutenett
+fjern_x = theme(
+  panel.grid.major.x = element_blank(),
+  panel.grid.minor.x = element_blank()
+)
+fjern_y = theme(
+  panel.grid.major.y = element_blank(),
+  panel.grid.minor.y = element_blank()
+)
+
+# Fjern strekmarkeringar for viste tal/kategoriar
+# (tilsvarer «major breaks» på aksen).
+# Dette er nyttig for søylediagram med kategoriske
+# verdiar, der strekmarkeringane er unødvendige/stygge.
+fjern_x_ticks = theme(axis.ticks.x = element_blank())
+fjern_y_ticks = theme(axis.ticks.y = element_blank())
+
+# Søyler skal i starta heilt inn til aksen, men ha litt luft
+# over seg, altså asymmetriske expand-verdiar. Her er ein
+# variabel som definerer dette, og som ein kan mata til
+# expand-argumentet til skaladefinisjonar.
+expand_soyle = expansion(mult = c(0.0, .05), add = 0)
+
+# I noen tilfeller er det ikke tilstrekkelig plass for tekst-label i plot.
+# Da kan vi bruke expand-argumentet under.
+expand_soyle_str_fig = expansion(mult = c(0.0, .09), add = 0)
