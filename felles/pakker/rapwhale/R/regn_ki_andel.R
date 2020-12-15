@@ -22,7 +22,7 @@ NULL
 #' og `ki_teller` sier om den oppfyller kriteriet for å inngå i
 #' *telleren* (dvs. skal regnes som en «suksess»). Se vignetten
 #' for kvalitetsindikatorar
-#' ({\code{vignette("ki-funksjonar", package = "rapwhale")})
+#' (\code{vignette("ki-funksjonar", package = "rapwhale")})
 #' for mer detaljert informasjon, både om krav til gyldige inndata
 #' og om bruk.
 #'
