@@ -82,32 +82,6 @@ tema_kvalreg = function() {
 
 # Graffunksjoner ----------------------------------------------------------
 
-#' Funksjonal for breaks-argument i ggplot2
-#'
-#' Funksjon som lager funksjon som tar inn to tall
-#' og lager aritmetisk tallfølge med valgfri
-#' intervallbredde slik at alle tall i følgen er
-#' multiplum av intervallbredden og de to tallene
-#' er innenfor range() av følgen (puh!).
-#' Eks. er breaks_bredde(5)(c(9,16)) lik c(5,10,15,20).
-#' Nyttig til bruk i breaks- og minor-breaks-argument
-#' i ggplot2, eks. breaks = breaks_bredde(10)
-#' Viss min eller maks er definert, bruk dette
-#' i stedet for verdiene fra lims
-#' @param bredde Valgt bredde, standard er 5
-#' @param min Minste mulige verdi
-#' @param maks Største mulige verdi
-#' @export
-sett_avkutningspunkt_bredde = function(bredde = 5, min = NULL, maks = NULL) {
-  function(lims) {
-    lims = c(max(min, lims[1]), min(maks, lims[2]))
-    seq(round_any(lims[1], bredde, floor),
-      round_any(lims[2], bredde, ceiling),
-      by = bredde
-    )
-  }
-}
-
 
 #' Flytt-opp funksjon.
 #'
