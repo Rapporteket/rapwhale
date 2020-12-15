@@ -3,16 +3,17 @@
 #' Tek inn ein vektor, kjedar saman elementa og returnerar
 #' dei som ein tekststreng.
 #'
-#' @param ord Ein vektor med dei orda som skal kjedast saman.
-#' @param skiljeteikn Skiljeteikn mellom orda. Standard er ", ".
-#' @param og Ord som vert sett inn mellom dei to siste orda. Standard er " og ".
+#' @param ord Ein vektor med dei elementa som skal kjedast saman.
+#' @param skiljeteikn Skiljeteikn mellom elementa. Standard er ", ".
+#' @param og Tekst som vert sett inn mellom dei to siste elementa. Standard er " og ".
 #' @export
 #'
 #' @details
 #' Funksjonen tek inn ein vektor, og kjedar saman elementa med `skiljeteikn`
 #' mellom kvart av dei, utanom dei to siste, som vert skilde med `og`.
-#' Resultatet vert returnert som ein tekststreng med eitt element. Manglande
-#' verdiar vert gjort om til teksten "NA".
+#' Resultatet vert returnert som ein tekststreng med eitt element. Funksjonen
+#' handterar ulike typar inndata, som tekst, tal og dato. Manglande verdiar
+#' vert gjort om til teksten "NA".
 #'
 #' @examples
 #' kjed_ord(c("Per", "Kari"))
@@ -34,7 +35,10 @@ kjed_ord = function(ord, skiljeteikn = ", ", og = " og ") {
   } else if (n == 2) {
     tekst = paste0(ord, collapse = og)
   } else if (n > 2) {
-    tekst = paste0(paste0(ord[1:n - 1], collapse = skiljeteikn), og, ord[n])
+    tekst = paste0(
+      paste0(ord[1:n - 1], collapse = skiljeteikn),
+      og, ord[n]
+    )
   }
   tekst
 }
