@@ -1,38 +1,39 @@
-#' Kople saman tekst
+#' Kjede saman element
 #'
-#' Funksjon som tek inn ein vektor, kjedar saman elementa og returnerar
+#' Tek inn ein vektor, kjedar saman elementa og returnerar
 #' dei som ein tekststreng.
 #'
 #' @param ord Ein vektor med dei orda som skal kjedast saman.
-#' @param skiljeteikn Skiljeteikn mellom orda. Standard er ",".
-#' @param og Ord som vert sett inn mellom dei to siste orda. Standard er "og".
+#' @param skiljeteikn Skiljeteikn mellom orda. Standard er ", ".
+#' @param og Ord som vert sett inn mellom dei to siste orda. Standard er " og ".
 #' @export
+#'
+#' @details
+#' Funksjonen tek inn ein vektor, og kjedar saman elementa med `skiljeteikn`
+#' mellom kvart av dei, utanom dei to siste, som vert skilde med `og`.
+#' Resultatet vert returnert som ein tekststreng med eitt element. Manglande
+#' verdiar vert gjort om til teksten "NA".
 #'
 #' @examples
 #' kjed_ord(c("Per", "Kari"))
-#' kjed_ord(c("Per", "Kari", "Pål"))
+#'
+#' kjed_ord(c("Per", "Kari", "Ola"))
+#'
+#' kjed_ord(c("Per", "Kari", "Ola"), og = " & ")
+#'
+#' kjed_ord(c("Per", "Kari"), skiljeteikn = "/")
 kjed_ord = function(ord, skiljeteikn = ", ", og = " og ") {
-
-  # gjør om missing til "NA" som tekststreng
   ord = stringr::str_replace_na(ord)
 
-  # antall ord
   n = length(ord)
 
-  # hvis det er er ingenting i objektet, returnes...ingenting
   if (n == 0) {
-    tekst = paste0("")
-    warning("")
-  }
-  if (n == 1) {
+    tekst = character(0)
+  } else if (n == 1) {
     tekst = ord
-  } # Hvis det er 2 ord, bindes ordene sammen med " og ", men dette kan også endres i argumentet og.
-  # F.eks om du vil bruke &-teignet
-  if (n == 2) {
+  } else if (n == 2) {
     tekst = str_flatten(ord, og)
-  }
-  # hvis det er flere enn 2 ord, bindes ordene sammen med skiljeteiknet, her komma, bortsett fra siste ord som får " og ".
-  if (n > 2) {
+  } else if (n > 2) {
     tekst = paste0(str_flatten(ord[1:n - 1], skiljeteikn), og, ord[n])
   }
   tekst
