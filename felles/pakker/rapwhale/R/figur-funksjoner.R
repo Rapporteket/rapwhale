@@ -4,7 +4,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom rlang enexpr syms eval_bare maybe_missing
 #' @importFrom qicharts2 qic
-#' @import ggplot2
+#' @importFrom ggplot2 scale_x_continuous scale_y_continuous
 NULL
 
 # Graffunksjoner ----------------------------------------------------------
@@ -50,34 +50,34 @@ lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab
   # Legg ev. til referanselinje(r)
   if (!is.null(refline)) {
     if (is.null(refline_df)) {
-      grafdel = append(grafdel, list(geom_hline(yintercept = refline, col = colPrim[6], size = 2)))
+      grafdel = append(grafdel, list(ggplot2::geom_hline(yintercept = refline, col = colPrim[6], size = 2)))
     } else {
-      grafdel = append(grafdel, list(geom_hline(
+      grafdel = append(grafdel, list(ggplot2::geom_hline(
         data = refline_df,
-        mapping = aes_string(yintercept = refline),
+        mapping = ggplot2::aes_string(yintercept = refline),
         col = colPrim[6], size = 2
       )))
     }
   }
   # Legg ev. til konfidensintervall (bak alt anna)
   if (konfint) {
-    grafdel = append(grafdel, geom_linerange(size = .5, colour = colPrim[5]))
+    grafdel = append(grafdel, ggplot2::geom_linerange(size = .5, colour = colPrim[5]))
   }
   # Legg til resten
   grafdel = append(
     grafdel,
     list(
-      geom_line(colour = colPrim[3], size = 1), # Linjer over tid
-      geom_point(size = point_size, colour = colPrim[2]), # Punkt
+      ggplot2::geom_line(colour = colPrim[3], size = 1), # Linjer over tid
+      ggplot2::geom_point(size = point_size, colour = colPrim[2]), # Punkt
       xlab(xlab),
       ylab(ylab),
-      fjern_x
+      fjern_x()
     )
   )
   if (angle) {
-    grafdel = append(grafdel, list(theme(
+    grafdel = append(grafdel, list(ggplot2::theme(
       axis.text.x =
-        element_text(angle = 45, vjust = 0.5)
+        ggplot2::element_text(angle = 45, vjust = 0.5)
     )))
   }
   grafdel
@@ -113,16 +113,16 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
     title = tittel, xlab = x_navn, ylab = y_navn, show.labels = FALSE, x.period = periode, facets = ~ (!!qic_facet),
     flip = skal_flippes
   ))) +
-    fjern_x +
+    fjern_x() +
     fjern_y +
-    theme(legend.position = "none")
+    ggplot2::theme(legend.position = "none")
 
   # legger på ekstra tema under visse forhold
   if (figtype == "p") { # hvis det er p-chart ønsker vi norske prosenter fra funksjon i dette r-skriptet
     plot = plot + scale_y_continuous(labels = akse_prosent)
   }
   if (lubridate::is.Date(d[[qic_x]])) { # hvis det er en tidsvisning trenger vi en dot for punktene i linjediagrammet
-    plot = plot + geom_point()
+    plot = plot + ggplot2::geom_point()
   }
   plot
 }
@@ -209,9 +209,9 @@ lag_fig_histogram = function(d, x, binwidth = 1, boundary = 0,
     fill = colPrim[3] # fixme: Ikkje bruk ikkje-anonym global variabel!
   }
   p = ggplot2::ggplot(d, aes(x = {{ x }})) +
-    geom_histogram(binwidth = binwidth, boundary = boundary, fill = fill, ...) +
+    ggplot2::geom_histogram(binwidth = binwidth, boundary = boundary, fill = fill, ...) +
     scale_y_continuous(expand = expansion(mult = c(0.0, .05), add = 0)) +
-    fjern_x # fixme: Ikkje bruk ikkje-anonym global variabel!
+    fjern_x()
   if (!is.null(aksetall_avstand)) {
     p = p + scale_x_continuous(breaks = scales::breaks_width(aksetall_avstand))
   }

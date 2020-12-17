@@ -79,7 +79,7 @@ tema
 #' fjern_y_ticks()
 #' 
 #' @export
-fjern_x_ny  = function() {
+fjern_x = function() {
 fjern_x = theme(panel.grid.major.x = element_blank(),
                 panel.grid.minor.x = element_blank())
 }
@@ -149,10 +149,6 @@ expand_soyle_ny = function() {
 expand_soyle_str_fig_ny = function() {
   expand_soyle_str_fig = expansion(mult = c(0.0, .09), add = 0)
 }
-
-
-fjern_x = theme(panel.grid.major.x = element_blank(),
-                panel.grid.minor.x = element_blank())
 
 fjern_y = theme(panel.grid.major.y = element_blank(),
                 panel.grid.minor.y = element_blank())
