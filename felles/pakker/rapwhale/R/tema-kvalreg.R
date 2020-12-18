@@ -99,7 +99,7 @@ fjern_x_ticks = theme(axis.ticks.x = element_blank())
 
 #' @rdname fjern_x
 #' @export
-fjern_y_ticks_ny = function() {
+fjern_y_ticks = function() {
 fjern_y_ticks = theme(axis.ticks.y = element_blank())
 }
 
@@ -150,8 +150,6 @@ expand_soyle_str_fig_ny = function() {
   expand_soyle_str_fig = expansion(mult = c(0.0, .09), add = 0)
 }
 
-# fjern_y_ticks = theme(axis.ticks.y = element_blank())
-# 
 # expand_soyle = expansion(mult = c(0.0, .05), add = 0)
 # 
 # expand_soyle_str_fig = expansion(mult = c(0.0, .09), add = 0)

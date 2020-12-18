@@ -150,7 +150,7 @@ lag_fig_soyle = function(d, x, y, farge = ColPrim[3], facet = FALSE, facet_grupp
     ylab(NULL) +
     fjern_y() +
     scale_x_continuous(expand = expand_soyle) +
-    fjern_y_ticks
+    fjern_y_ticks()
   if (facet) {
     facet_gruppe = syms(facet_gruppe)[[1]]
     plott = plott + facet_wrap(vars(!!facet_gruppe))
