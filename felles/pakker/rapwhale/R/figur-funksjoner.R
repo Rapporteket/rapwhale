@@ -114,7 +114,7 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
     flip = skal_flippes
   ))) +
     fjern_x() +
-    fjern_y +
+    fjern_y() +
     ggplot2::theme(legend.position = "none")
 
   # legger på ekstra tema under visse forhold
@@ -148,7 +148,7 @@ lag_fig_soyle = function(d, x, y, farge = ColPrim[3], facet = FALSE, facet_grupp
     geom_barh(stat = "identity", fill = farge, width = 2 / 3) +
     xlab(NULL) +
     ylab(NULL) +
-    fjern_y +
+    fjern_y() +
     scale_x_continuous(expand = expand_soyle) +
     fjern_y_ticks
   if (facet) {
