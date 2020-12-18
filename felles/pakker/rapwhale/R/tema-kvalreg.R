@@ -136,7 +136,7 @@ fjern_y_ticks = theme(axis.ticks.y = element_blank())
 #' geom_text(stat = 'count', aes(x = cyl, label =..count..), vjust=-1)
 #' 
 #' p
-#' p + scale_y_continuous(expand = expand_soyle_str_fig)
+#' p + scale_y_continuous(expand = expand_soyle_str_fig())
 #' @export
 expand_soyle = function() {
   expand_soyle = expansion(mult = c(0.0, .05), add = 0)
@@ -146,8 +146,6 @@ expand_soyle = function() {
 # Da kan vi bruke expand-argumentet under.
 #' @rdname expand_soyle
 #' @export
-expand_soyle_str_fig_ny = function() {
+expand_soyle_str_fig = function() {
   expand_soyle_str_fig = expansion(mult = c(0.0, .09), add = 0)
 }
-
-# expand_soyle_str_fig = expansion(mult = c(0.0, .09), add = 0)
