@@ -138,7 +138,7 @@ fjern_y_ticks = theme(axis.ticks.y = element_blank())
 #' p
 #' p + scale_y_continuous(expand = expand_soyle_str_fig)
 #' @export
-expand_soyle_ny = function() {
+expand_soyle = function() {
   expand_soyle = expansion(mult = c(0.0, .05), add = 0)
 }
 
@@ -150,6 +150,4 @@ expand_soyle_str_fig_ny = function() {
   expand_soyle_str_fig = expansion(mult = c(0.0, .09), add = 0)
 }
 
-# expand_soyle = expansion(mult = c(0.0, .05), add = 0)
-# 
 # expand_soyle_str_fig = expansion(mult = c(0.0, .09), add = 0)

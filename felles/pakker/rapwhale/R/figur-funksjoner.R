@@ -149,7 +149,7 @@ lag_fig_soyle = function(d, x, y, farge = ColPrim[3], facet = FALSE, facet_grupp
     xlab(NULL) +
     ylab(NULL) +
     fjern_y() +
-    scale_x_continuous(expand = expand_soyle) +
+    scale_x_continuous(expand = expand_soyle()) +
     fjern_y_ticks()
   if (facet) {
     facet_gruppe = syms(facet_gruppe)[[1]]
@@ -158,7 +158,7 @@ lag_fig_soyle = function(d, x, y, farge = ColPrim[3], facet = FALSE, facet_grupp
   }
   if (prosent) {
     plott = plott +
-      scale_x_continuous(labels = akse_prosent, limits = c(NA, 1), breaks = breaks_bredde(0.1), expand = expand_soyle)
+      scale_x_continuous(labels = akse_prosent, limits = c(NA, 1), breaks = breaks_bredde(0.1), expand = expand_soyle())
     plott
   }
   plott
