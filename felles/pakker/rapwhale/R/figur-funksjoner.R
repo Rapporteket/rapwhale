@@ -71,7 +71,7 @@ lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab
       ggplot2::geom_point(size = point_size, colour = colPrim[2]), # Punkt
       xlab(xlab),
       ylab(ylab),
-      fjern_x()
+      fjern_x = fjern_x()
     )
   )
   if (angle) {
