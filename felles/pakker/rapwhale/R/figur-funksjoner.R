@@ -206,7 +206,7 @@ lag_fig_soyle = function(d, x, y, farge = ColPrim[3], facet = FALSE, facet_grupp
 lag_fig_histogram = function(d, x, binwidth = 1, boundary = 0,
                              fill = NULL, aksetall_avstand = NULL, ...) {
   if (is.null(fill)) {
-    fill = colPrim[3] # fixme: Ikkje bruk ikkje-anonym global variabel!
+    fill = farger_kvalreg()$farger_hoved[3]
   }
   p = ggplot2::ggplot(d, aes(x = {{ x }})) +
     ggplot2::geom_histogram(binwidth = binwidth, boundary = boundary, fill = fill, ...) +
