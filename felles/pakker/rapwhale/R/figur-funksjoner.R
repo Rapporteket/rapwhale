@@ -44,6 +44,12 @@ flytt_opp = function(y, tekst, hoyde = .015) {
 #' @param angle viss sann, vis verdiane på x-aksen på skrå (for å få plass til fleire)
 #' @param konfint Legg til konfidensintervall på kvar punkt
 #' @export
+#' @examples
+#' p = data.frame("År" = c(2016, 2017, 2018), "Andel" = c(0.25, 0.5, 0.6)) %>%
+#'   ggplot(aes(x = År, y = Andel))
+#'
+#' p + lag_fig_linje(konfint = FALSE, ylab = "Andel")
+#' p + lag_fig_linje(refline = 0.55, konfint = FALSE, ylab = "Andel")
 lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab = NULL,
                          angle = TRUE, konfint = TRUE, point_size = 2) {
   grafdel = list()
