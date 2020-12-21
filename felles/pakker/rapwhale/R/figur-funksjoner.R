@@ -47,6 +47,8 @@ flytt_opp = function(y, tekst, hoyde = .015) {
 lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab = NULL,
                          angle = TRUE, konfint = TRUE, point_size = 2) {
   grafdel = list()
+  colPrim = farger_kvalreg()$farger_hoved
+
   # Legg ev. til referanselinje(r)
   if (!is.null(refline)) {
     if (is.null(refline_df)) {
