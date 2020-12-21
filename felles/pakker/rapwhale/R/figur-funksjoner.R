@@ -200,9 +200,8 @@ lag_fig_soyle = function(d, x, y, farge = ColPrim[3], facet = FALSE, facet_grupp
 #'
 #' @export
 #' @examples
-#' lag_fig_histogram(iris, Petal.Length,
-#'   binwidth = .25, aksetall_avstand = .5
-#' )
+#' lag_fig_histogram(iris, Petal.Length, binwidth = .25, aksetall_avstand = .5)
+#' lag_fig_histogram(iris, Petal.Width, binwidth = .2, aksetall_avstand = .4, fill = "#737373")
 lag_fig_histogram = function(d, x, binwidth = 1, boundary = 0,
                              fill = NULL, aksetall_avstand = NULL, ...) {
   if (is.null(fill)) {
