@@ -154,18 +154,22 @@ d_eks_gyld_varnavn = tibble::tribble(
   1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 6, 5,
   5, 1, 1, 1, 1, 1, 1, 5, 6, 6, 1, 1
 )
-skaar_rand12(d_eks_gyld_varnavn, algoritme = "farivar_2007_oblique")
+
+d_med_res = skaar_rand12(d_eks_gyld_varnavn, algoritme = "farivar_2007_oblique")
+print(d_med_res, width = Inf)
 
 d_eks_ugyld_varnavn = d_eks_gyld_varnavn
 d_eks_ugyld_varnavn = rename(d_eks_ugyld_varnavn,
   g_h_1 = rand_1,
   r_e_3 = rand_4b
 )
+
 # Merk at skaar_rand12() gir ut de opprinnelige variabelnavnene
-skaar_rand12(d_eks_ugyld_varnavn,
+d_med_res = skaar_rand12(d_eks_ugyld_varnavn,
   variabelnavn = c(rand_1 = "g_h_1", rand_4b = "r_e_3"),
   algoritme = "farivar_2007_oblique"
 )
+print(d_med_res, width = Inf)
 ```
 
 # SPSS-syntaksen vs. R-funksjonen
