@@ -46,10 +46,11 @@ flytt_opp = function(y, tekst, hoyde = .015) {
 #' @export
 #' @examples
 #' p = data.frame("År" = c(2016, 2017, 2018), "Andel" = c(0.25, 0.5, 0.6)) %>%
-#'   ggplot(aes(x = År, y = Andel))
+#'   ggplot(aes(x = År, y = Andel, ymin = c(0.2, 0.4, 0.5), ymax = c(0.3, 0.6, 0.7)))
 #'
 #' p + lag_fig_linje(konfint = FALSE, ylab = "Andel")
 #' p + lag_fig_linje(refline = 0.55, konfint = FALSE, ylab = "Andel")
+#' p + lag_fig_linje(refline = 0.55, konfint = TRUE, ylab = "Andel")
 lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab = NULL,
                          angle = TRUE, konfint = TRUE, point_size = 2) {
   grafdel = list()
