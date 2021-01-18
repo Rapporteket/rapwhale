@@ -36,7 +36,7 @@ NULL
 #' @note
 #' Funksjonen kan også brukes for teller/nevner-data som ikke oppfyller
 #' antagelsen om binomiske data, men da kan man naturlegvis ikke stole på
-#' konfidensintervallane som en får ut.
+#' konfidensintervallene som en får ut.
 #'
 #' @return
 #' Tibble eller `data.frame` (avhengig av inndataene) med følgende
