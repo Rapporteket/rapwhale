@@ -29,3 +29,7 @@ d_vld = tibble(
   vld_verdi_intern_dato = as.Date(c(NA, NA, NA, "2020-08-13", NA, NA, NA, NA)),
   vld_verdi_ekstern_dato = as.Date(c(NA, NA, NA, "2020-08-13", NA, NA, NA, NA))
 )
+
+test_that("Returnerer TRUE på gyldige valideringsdatasett", {
+  expect_true(er_valideringsdatasett_gyldig(d_vld))
+})
