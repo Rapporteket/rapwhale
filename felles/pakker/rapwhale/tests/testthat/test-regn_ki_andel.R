@@ -8,7 +8,7 @@ test_that("Feilmelding hvis ikke tibble/data.frame med nødvendige kolonner", {
   d_uten_begge = tibble::tibble(foo = 1:3)
   liste = list(ki_krit_teller = c(FALSE, TRUE, TRUE), ki_krit_nevner = c(TRUE, TRUE, TRUE))
 
-  feilmelding_kol = "Inndata må være tibble/data.frame med kolonnene 'ki_krit_teller' og 'ki_krit_nevner'"
+  feilmelding_kol = "Inndata må være tibble/data.frame med kolonnene «ki_krit_teller» og «ki_krit_nevner»"
   expect_error(aggreger_ki_prop(liste), feilmelding_kol)
   expect_error(aggreger_ki_prop(d_uten_nevner), feilmelding_kol)
   expect_error(aggreger_ki_prop(d_uten_teller), feilmelding_kol)
