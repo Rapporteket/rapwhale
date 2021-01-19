@@ -30,7 +30,7 @@ NULL
 #' teller/nevner og konfidensintervall for estimatet, alt bare for
 #' de radene der `ki_krit_nevner` er sann. Dersom ingen `ki_krit_nevner`
 #' er sann, vil estimatet og tilhørende konfidensgrenser være `NA`.
-#' Hvis inndataene er gruppert, blir resultatet regnet ut gruppenivå,
+#' Hvis inndataene er gruppert, blir resultatet regnet ut på gruppenivå,
 #' med én rad per gruppe.
 #'
 #' @note
