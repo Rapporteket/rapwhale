@@ -14,6 +14,25 @@ er_valideringsdatasett_gyldig = function(d_vld) {
     any(d_vld$vld_vartype == "")
   ) {
     gyldig = FALSE
+  } else {
+    d_vld_intern_x = d_vld %>%
+      select(starts_with("vld_verdi_intern_")) %>%
+      names()
+
+    d_vld_ekstern_x = d_vld_intern_x %>%
+      str_replace("vld_verdi_intern_", "vld_verdi_ekstern_")
+
+    d_vld_intern_class = d_vld[d_vld_intern_x] %>%
+      map(class) %>%
+      as.character()
+
+    d_vld_ekstern_class = d_vld[d_vld_ekstern_x] %>%
+      map(class) %>%
+      as.character()
+
+    if (any(d_vld_intern_class != d_vld_ekstern_class)) {
+      gyldig = FALSE
+    }
   }
 
   gyldig
