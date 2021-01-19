@@ -38,10 +38,12 @@ test_that("Valideringsdatasett med 0 rader vert rekna som gyldig (viss resten er
   expect_true(er_valideringsdatasett_gyldig(d_vld[c(), ]))
 })
 
-test_that("Inndata som ikkje er data.frame/tibble eller som ikkje har
-          tekstkolonnane «vld_varnamn» og «vld_vartype», vert rekna som ugyldig", {
+test_that("Inndata som ikkje er data.frame/tibble, vert rekna som ugyldig", {
   expect_false(er_valideringsdatasett_gyldig(5))
   expect_false(er_valideringsdatasett_gyldig(environment()))
+})
+
+test_that("Inndata som ikkje har tekstkolonnar «vld_varnamn» og «vld_vartype», vert rekna som ugyldig", {
   expect_false(er_valideringsdatasett_gyldig(select(d_vld, -vld_varnamn)))
   expect_false(er_valideringsdatasett_gyldig(select(d_vld, -vld_vartype)))
   expect_false(er_valideringsdatasett_gyldig(mutate(d_vld, vld_varnamn = 1:nrow(d_vld))))
