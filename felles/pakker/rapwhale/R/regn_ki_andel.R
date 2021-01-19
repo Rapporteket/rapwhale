@@ -81,7 +81,7 @@ NULL
 aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
   # Teste inndata
   if (!(is.data.frame(d_ki_ind) && all(hasName(d_ki_ind, c("ki_krit_teller", "ki_krit_nevner"))))) {
-    stop("Inndata må være tibble/data.frame med kolonnene 'ki_krit_teller' og 'ki_krit_nevner'")
+    stop("Inndata må være tibble/data.frame med kolonnene «ki_krit_teller» og «ki_krit_nevner»")
   }
   if (!(is.logical(d_ki_ind$ki_krit_teller) && is.logical(d_ki_ind$ki_krit_nevner))) {
     stop("Kriterievariablene må være boolsk")
