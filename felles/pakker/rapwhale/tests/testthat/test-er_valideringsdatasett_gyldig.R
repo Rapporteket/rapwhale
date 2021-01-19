@@ -45,3 +45,18 @@ test_that("Inndata som ikkje er data.frame/tibble eller som manglar vld_varnamn
   expect_false(er_valideringsdatasett_gyldig(select(d_vld, -vld_varnamn)))
   expect_false(er_valideringsdatasett_gyldig(select(d_vld, -vld_vartype)))
 })
+
+test_that("Datasett med NA-verdiar eller tomme tekststrengar i vld_varnamn eller
+          vld_vartype vert rekna som ugyldig", {
+  d_vld_ugyldig = d_vld
+  d_vld_ugyldig$vld_varnamn[3] = NA
+  expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
+  d_vld_ugyldig$vld_varnamn[3] = ""
+  expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
+
+  d_vld_ugyldig = d_vld
+  d_vld_ugyldig$vld_vartype[3] = NA
+  expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
+  d_vld_ugyldig$vld_vartype[3] = ""
+  expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
+})
