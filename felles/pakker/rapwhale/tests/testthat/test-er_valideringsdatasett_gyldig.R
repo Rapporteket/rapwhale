@@ -77,3 +77,9 @@ test_that("Datasett med NA-verdiar i primærnøkkel vert rekna som gyldig (viss
   d_vld$dato_inn[3] = NA
   expect_true(er_valideringsdatasett_gyldig(d_vld))
 })
+
+test_that("Kolonnar med namn som vld_tull skal ikkje vera lov (vld_ er reservert prefiks)", {
+  d_vld_ugyldig = d_vld
+  names(d_vld_ugyldig)[5] = "vld_sjukehus"
+  expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
+})
