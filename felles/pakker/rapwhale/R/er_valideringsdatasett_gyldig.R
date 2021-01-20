@@ -23,6 +23,22 @@ er_valideringsdatasett_gyldig = function(d_vld) {
     return(FALSE)
   }
 
+  # Viss vld_verdi_intern_x finst, finst også vld_verdi_ekstern_x, og vice versa
+
+  d_vld_int_ekst_x = d_vld %>%
+    select(starts_with("vld_verdi_intern_"), starts_with("vld_verdi_ekstern_")) %>%
+    names()
+
+  x = d_vld_int_ekst_x %>%
+    str_replace("vld_verdi_intern_", "") %>%
+    str_replace("vld_verdi_ekstern_", "") %>%
+    unique()
+
+  if (!all(map_chr(x, ~ glue::glue("vld_verdi_intern_{.x}")) %in% names(d_vld)) ||
+    !all(map_chr(x, ~ glue::glue("vld_verdi_ekstern_{.x}")) %in% names(d_vld))) {
+    return(FALSE)
+  }
+
   # vld_verdi_intern_x og vld_verdi_ekstern_x skal vera same type/klasse
 
   d_vld_intern_x = d_vld %>%
