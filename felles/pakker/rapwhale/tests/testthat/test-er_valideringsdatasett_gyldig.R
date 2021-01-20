@@ -71,3 +71,9 @@ test_that("vld_verdi_intern_x og vld_verdi_ekstern_x med ulik klasse vert rekna
   d_vld_ugyldig$vld_verdi_intern_tal = as.character(d_vld_ugyldig$vld_verdi_intern_tal)
   expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
 })
+
+test_that("Datasett med NA-verdiar i primærnøkkel vert rekna som gyldig (viss
+          resten er gyldig", {
+  d_vld$dato_inn[3] = NA
+  expect_true(er_valideringsdatasett_gyldig(d_vld))
+})
