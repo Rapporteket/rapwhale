@@ -1,6 +1,5 @@
 # Eksempel på gyldig valideringsdatasett
 d_vld = tibble(
-  stringsAsFactors = FALSE,
   pasid = c(5, 5, 5, 7, 7, 13, 13, 14),
   dato_inn = as.Date(c(
     "2020-06-07",
@@ -39,7 +38,7 @@ test_that("Valideringsdatasett med 0 rader vert rekna som gyldig (viss resten er
 })
 
 test_that("Inndata som ikkje er data.frame/tibble, vert rekna som ugyldig", {
-  expect_false(er_valideringsdatasett_gyldig(5))
+  expect_false(er_valideringsdatasett_gyldig(4))
   expect_false(er_valideringsdatasett_gyldig(environment()))
 })
 
@@ -83,3 +82,10 @@ test_that("Kolonnar med namn som vld_tull skal ikkje vera lov (vld_ er reservert
   names(d_vld_ugyldig)[5] = "vld_sjukehus"
   expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
 })
+
+# Viss vld_verdi_intern_x finst, finst også vld_verdi_ekstern_x, og vice versa
+# Kvar kombinasjon av verdiar til vld_varnamn eller variablar som ikkje startar med vld_ skal vera unike
+# For kvar unike verdi x av vld_vartype så skal det finnast ein variabel vld_verdi_intern_x og vld_verdi_ekstern_x
+# Skal vera lov å ha vld_verdi_ekstern_x utan at det nødvendigvis finst ein vld_vartype med verdi x
+# Viss vld_vartype = x, så må vld_verdi_intern_y og vld_verdi_ekstern_y vera tomme dersom x != y
+# vld_vartype må starta med ein bokstav, og berre innehalda bokstavar og/eller siffer
