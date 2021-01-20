@@ -33,6 +33,14 @@ er_valideringsdatasett_gyldig = function(d_vld) {
     if (any(d_vld_intern_class != d_vld_ekstern_class)) {
       gyldig = FALSE
     }
+
+    d_vld_namn = d_vld %>%
+      select(starts_with("vld_")) %>%
+      names()
+
+    if (!all(d_vld_namn %in% c(d_vld_intern_x, d_vld_ekstern_x, "vld_varnamn", "vld_vartype"))) {
+      gyldig = FALSE
+    }
   }
 
   gyldig
