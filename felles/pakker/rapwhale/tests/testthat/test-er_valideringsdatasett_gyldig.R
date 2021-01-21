@@ -92,9 +92,12 @@ test_that("Viss vld_verdi_intern_x finst, finst også vld_verdi_ekstern_x, og vi
   ))
 })
 
+test_that("For kvar unike verdi x av vld_vartype så skal det finnast ein
+          variabel vld_verdi_intern_x og vld_verdi_ekstern_x", {
+  expect_false(er_valideringsdatasett_gyldig(select(d_vld, -vld_verdi_intern_dato, -vld_verdi_ekstern_dato)))
+})
 
 # Kvar kombinasjon av verdiar til vld_varnamn eller variablar som ikkje startar med vld_ skal vera unike
-# For kvar unike verdi x av vld_vartype så skal det finnast ein variabel vld_verdi_intern_x og vld_verdi_ekstern_x
 # Skal vera lov å ha vld_verdi_ekstern_x utan at det nødvendigvis finst ein vld_vartype med verdi x
 # Viss vld_vartype = x, så må vld_verdi_intern_y og vld_verdi_ekstern_y vera tomme dersom x != y
 # vld_vartype må starta med ein bokstav, og berre innehalda bokstavar og/eller siffer
