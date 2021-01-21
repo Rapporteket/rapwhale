@@ -97,7 +97,21 @@ test_that("For kvar unike verdi x av vld_vartype så skal det finnast ein
   expect_false(er_valideringsdatasett_gyldig(select(d_vld, -vld_verdi_intern_dato, -vld_verdi_ekstern_dato)))
 })
 
+test_that("vld_vartype må starta med ein bokstav, og berre innehalda bokstavar og/eller siffer", {
+  expect_false(er_valideringsdatasett_gyldig(
+    tibble(
+      pasid = 101, vld_varnamn = "vekt", vld_vartype = "32int",
+      vld_verdi_intern_32int = 76, vld_verdi_ekstern_32int = as.numeric(NA)
+    )
+  ))
+  expect_false(er_valideringsdatasett_gyldig(
+    tibble(
+      pasid = 101, vld_varnamn = "vekt", vld_vartype = "t_",
+      vld_verdi_intern_t_ = 76, vld_verdi_ekstern_t_ = as.numeric(NA)
+    )
+  ))
+})
+
 # Kvar kombinasjon av verdiar til vld_varnamn eller variablar som ikkje startar med vld_ skal vera unike
 # Skal vera lov å ha vld_verdi_ekstern_x utan at det nødvendigvis finst ein vld_vartype med verdi x
 # Viss vld_vartype = x, så må vld_verdi_intern_y og vld_verdi_ekstern_y vera tomme dersom x != y
-# vld_vartype må starta med ein bokstav, og berre innehalda bokstavar og/eller siffer
