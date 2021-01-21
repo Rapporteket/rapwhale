@@ -23,6 +23,13 @@ er_valideringsdatasett_gyldig = function(d_vld) {
     return(FALSE)
   }
 
+  # vld_vartype må starta med ein bokstav, og berre innehalda bokstavar og/eller siffer
+
+  if (!all(grepl("^[a-zæøå][a-zæøå0-9]", d_vld$vld_vartype, ignore.case = TRUE))) {
+    return(FALSE)
+  }
+
+
   # Viss vld_verdi_intern_x finst, finst også vld_verdi_ekstern_x, og vice versa
 
   d_vld_int_ekst_x = d_vld %>%
