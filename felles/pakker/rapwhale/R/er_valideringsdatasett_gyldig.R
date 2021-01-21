@@ -74,5 +74,16 @@ er_valideringsdatasett_gyldig = function(d_vld) {
     return(FALSE)
   }
 
+  # For kvar unike verdi x av vld_vartype så skal det finnast ein
+  # variabel vld_verdi_intern_x og vld_verdi_ekstern_x
+
+  vld_vartype_x = d_vld$vld_vartype %>%
+    unique()
+
+  if (!all(map_chr(vld_vartype_x, ~ glue::glue("vld_verdi_intern_{.x}")) %in% names(d_vld)) ||
+    !all(map_chr(vld_vartype_x, ~ glue::glue("vld_verdi_ekstern_{.x}")) %in% names(d_vld))) {
+    return(FALSE)
+  }
+
   gyldig
 }
