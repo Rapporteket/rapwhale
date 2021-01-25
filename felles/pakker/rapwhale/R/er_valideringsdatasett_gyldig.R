@@ -99,5 +99,23 @@ er_valideringsdatasett_gyldig = function(d_vld) {
     return(FALSE)
   }
 
+  # Viss vld_vartype = x, så må vld_verdi_intern_y og
+  # vld_verdi_ekstern_y vera tomme viss x != y
+
+  ikkje_vld_vartype_x = x %>%
+    map(~ .x == d_vld$vld_vartype) %>%
+    map(~ which(!.x))
+
+  x_er_NA = x %>%
+    map(~ is.na(c(
+      d_vld[[glue::glue("vld_verdi_intern_{.x}")]][ikkje_vld_vartype_x[[match(.x, x)]]],
+      d_vld[[glue::glue("vld_verdi_ekstern_{.x}")]][ikkje_vld_vartype_x[[match(.x, x)]]]
+    )))
+
+  if (!all(x_er_NA %>%
+    map_lgl(all))) {
+    return(FALSE)
+  }
+
   gyldig
 }
