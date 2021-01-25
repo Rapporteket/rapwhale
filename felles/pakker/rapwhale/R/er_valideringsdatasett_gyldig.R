@@ -92,5 +92,12 @@ er_valideringsdatasett_gyldig = function(d_vld) {
     return(FALSE)
   }
 
+  # Kvar kombinasjon av verdiar til vld_varnamn eller variablar som ikkje
+  # startar med vld_ skal vera unike
+
+  if (any(duplicated(select(d_vld, -d_vld_namn, vld_varnamn)))) {
+    return(FALSE)
+  }
+
   gyldig
 }
