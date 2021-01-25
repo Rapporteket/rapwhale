@@ -112,6 +112,20 @@ test_that("vld_vartype må starta med ein bokstav, og berre innehalda bokstavar 
   ))
 })
 
-# Kvar kombinasjon av verdiar til vld_varnamn eller variablar som ikkje startar med vld_ skal vera unike
+test_that("Kvar kombinasjon av verdiar til vld_varnamn eller variablar som ikkje
+          startar med vld_ skal vera unike", {
+  d_vld_ugyldig = tibble(
+    pasid = c(101, 101),
+    dato_inn = as.Date(c("2020-06-07", "2020-06-07")),
+    kjonn = c("M", "M"),
+    sjukehus = c("Bergen", "Bergen"),
+    vld_varnamn = c("vekt", "vekt"),
+    vld_vartype = c("tal", "tal"),
+    vld_verdi_intern_tal = c(78, 75),
+    vld_verdi_ekstern_tal = c(78, NA)
+  )
+  expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
+})
+
 # Skal vera lov å ha vld_verdi_ekstern_x utan at det nødvendigvis finst ein vld_vartype med verdi x
 # Viss vld_vartype = x, så må vld_verdi_intern_y og vld_verdi_ekstern_y vera tomme dersom x != y
