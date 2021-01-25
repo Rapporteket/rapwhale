@@ -127,5 +127,16 @@ test_that("Kvar kombinasjon av verdiar til vld_varnamn eller variablar som ikkje
   expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
 })
 
+test_that("Viss vld_vartype = x, så må vld_verdi_intern_y og
+          vld_verdi_ekstern_y vera tomme viss x != y", {
+  expect_false(er_valideringsdatasett_gyldig(
+    tibble(
+      pasid = 101, vld_varnamn = "vekt", vld_vartype = "tal",
+      vld_verdi_intern_tal = 76, vld_verdi_ekstern_tal = 76,
+      vld_verdi_intern_dato = as.Date("2020-06-07"),
+      vld_verdi_ekstern_dato = as.Date(NA)
+    )
+  ))
+})
+
 # Skal vera lov å ha vld_verdi_ekstern_x utan at det nødvendigvis finst ein vld_vartype med verdi x
-# Viss vld_vartype = x, så må vld_verdi_intern_y og vld_verdi_ekstern_y vera tomme dersom x != y
