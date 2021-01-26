@@ -31,6 +31,7 @@ d_vld = tibble(
 
 test_that("Returnerer TRUE på gyldige valideringsdatasett", {
   expect_true(er_valideringsdatasett_gyldig(d_vld))
+  expect_true(er_valideringsdatasett_gyldig(as.data.frame(d_vld)))
 })
 
 test_that("Valideringsdatasett med 0 rader vert rekna som gyldig (viss resten er gyldig)", {
