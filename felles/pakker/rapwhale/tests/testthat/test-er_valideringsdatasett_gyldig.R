@@ -133,19 +133,27 @@ test_that("For kvar unike verdi x av vld_vartype så skal det finnast ein
   expect_false(er_valideringsdatasett_gyldig(select(d_vld, -vld_verdi_intern_dato, -vld_verdi_ekstern_dato)))
 })
 
-test_that("vld_vartype må starta med ein bokstav, og berre innehalda bokstavar og/eller siffer", {
-  expect_false(er_valideringsdatasett_gyldig(
+test_that("Sjekkar at vld_vartype må starta med ein bokstav, og berre innehalda bokstavar og/eller siffer", {
+  lag_datasett = function(vartype) {
     tibble(
-      pasid = 101, vld_varnamn = "vekt", vld_vartype = "32int",
-      vld_verdi_intern_32int = 76, vld_verdi_ekstern_32int = as.numeric(NA)
+      pasid = 101, vld_varnamn = "vekt", vld_vartype = vartype,
+      "vld_verdi_intern_{vartype}" = 0,
+      "vld_verdi_ekstern_{vartype}" = 0
     )
-  ))
-  expect_false(er_valideringsdatasett_gyldig(
-    tibble(
-      pasid = 101, vld_varnamn = "vekt", vld_vartype = "t_",
-      vld_verdi_intern_t_ = 76, vld_verdi_ekstern_t_ = as.numeric(NA)
-    )
-  ))
+  }
+  # Nokre ugyldige
+  expect_false(er_valideringsdatasett_gyldig(lag_datasett("32int")))
+  expect_false(er_valideringsdatasett_gyldig(lag_datasett("tal_32")))
+  expect_false(er_valideringsdatasett_gyldig(lag_datasett("tal og tull")))
+  expect_false(er_valideringsdatasett_gyldig(lag_datasett("t_")))
+  expect_false(er_valideringsdatasett_gyldig(lag_datasett(""))) # Er òg testa annan plass
+
+  # Nokre gyldige
+  expect_true(er_valideringsdatasett_gyldig(lag_datasett("int32")))
+  expect_true(er_valideringsdatasett_gyldig(lag_datasett("ABC")))
+  expect_true(er_valideringsdatasett_gyldig(lag_datasett("idé")))
+  expect_true(er_valideringsdatasett_gyldig(lag_datasett("a")))
+  expect_true(er_valideringsdatasett_gyldig(lag_datasett("Ô")))
 })
 
 test_that("Kvar kombinasjon av verdiar til vld_varnamn eller variablar som ikkje
