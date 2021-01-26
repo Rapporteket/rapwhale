@@ -1,7 +1,39 @@
+#' Valider valideringsdatasett
+#'
+#' @description Tek inn eit valideringsdatasett og returnerer TRUE eller FALSE
+#'              alt etter om det er på rett format eller ikkje.
+#'
+#' @param d_vld valideringsdatasett som skal sjekkast.
+#'
+#' @details
+#' Funksjonen sjekkar om `d_vld` er på rett format, og returnerer så TRUE
+#' eller FALSE.
+#'
+#' For å vera eit gyldig valideringsdatasett må `d_vld` vera ein data.frame
+#' eller tibble og ha tekstkolonnar `vld_varnamn` og `vld_vartype`.
+#' `vld_varnamn` og `vld_vartype` kan ikkje ha `NA`-verdiar eller tomme
+#' tekststrengar. `vld_vartype` må starta med ein bokstav, og berre innehalda
+#' bokstavar og/eller siffer. Kombinasjonen av verdiar til `vld_varnamn` og
+#' variablar som ikkje startar med `vld_` skal vera unik for kvar rad. For
+#' kvar unike verdi `x` av `vld_vartype` så skal det finnast ein variabel
+#' `vld_verdi_intern_x` og `vld_verdi_ekstern_x`. Kolonnar med namn som
+#' `vld_tull` er ikkje lov (`vld_` er reservert prefiks).
+#'
+#' @return TRUE/FALSE, alt etter om inndata er på rett format eller ikkje.
+#' @export
+#'
+#' @examples
+#' d_vld = tibble(
+#'   pasid = 101, vld_varnamn = "vekt", vld_vartype = "tal",
+#'   vld_verdi_intern_tal = 76,
+#'   vld_verdi_ekstern_tal = as.numeric(NA)
+#' )
+#'
+#' er_valideringsdatasett_gyldig(d_vld)
 er_valideringsdatasett_gyldig = function(d_vld) {
   gyldig = TRUE
 
-  # Inndata må vera data.frame/tibble og må ha tekstkolonner vld_varnamn og vld_vartype
+  # Inndata må vera data.frame/tibble og må ha tekstkolonnar vld_varnamn og vld_vartype
 
   if (!(is.data.frame(d_vld) &&
     all(has_name(d_vld, c("vld_varnamn", "vld_vartype")))
@@ -67,7 +99,7 @@ er_valideringsdatasett_gyldig = function(d_vld) {
     return(FALSE)
   }
 
-  # Kolonner med namn som vld_tull skal ikkje vera lov
+  # Kolonnar med namn som vld_tull skal ikkje vera lov
 
   d_vld_namn = d_vld %>%
     select(starts_with("vld_")) %>%
