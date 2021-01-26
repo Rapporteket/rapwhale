@@ -163,6 +163,23 @@ test_that("Kvar kombinasjon av verdiar til vld_varnamn eller variablar som ikkje
   expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
 })
 
+test_that("Valideringa brukar ikkje implisitt referanse til eksterne variablar", {
+  # Denne testen er her pga. ein feil oppdaga i funksjonen
+  # der select() brukte ein implisitt ekstern variabel.
+  # Er med for å unngå framtidige regresjonar.
+
+  # Datasett med med ugyldig primærnøkkel (dupliserte rader)
+  d_dup = tibble(
+    pasid = c(101, 101),
+    vld_varnamn = c("vekt", "vekt"),
+    vld_vartype = c("tal", "tal"),
+    d_vld_namn = "foo",
+    vld_verdi_intern_tal = c(78, 78),
+    vld_verdi_ekstern_tal = c(80, 85)
+  )
+  expect_false(er_valideringsdatasett_gyldig(d_dup))
+})
+
 test_that("Viss vld_vartype = x, så må vld_verdi_intern_y og
           vld_verdi_ekstern_y vera tomme viss x != y", {
   expect_false(er_valideringsdatasett_gyldig(
