@@ -114,8 +114,8 @@ test_that("Datasett med NA-verdiar i primærnøkkel vert rekna som gyldig (viss
 })
 
 test_that("Kolonnar med namn som vld_tull skal ikkje vera lov (vld_ er reservert prefiks)", {
-  d_vld_ugyldig = d_vld
-  names(d_vld_ugyldig)[4] = "vld_sjukehus"
+  d_vld_ugyldig = d_vld %>%
+    rename(vld_sjukehus = "sjukehus")
   expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
 })
 
