@@ -87,6 +87,19 @@ test_that("vld_verdi_intern_x og vld_verdi_ekstern_x med ulik klasse vert rekna
   d_vld_ugyldig = d_vld
   d_vld_ugyldig$vld_verdi_intern_tal = as.character(d_vld_ugyldig$vld_verdi_intern_tal)
   expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
+
+  # Viss ein kolonne har *fleire* klassar, må motsvarande
+  # òg ha same klassehierarki
+  d_vld_ugyldig = d_vld
+  class(d_vld_ugyldig$vld_verdi_intern_tal) = c("foo", "numeric")
+  expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
+})
+
+test_that("vld_verdi_intern_x og vld_verdi_ekstern_x som har likt klassehierarki (men med meir enn eitt nivå) vert rekna som like", {
+  d_vld_fleire_klassar = d_vld
+  class(d_vld_fleire_klassar$vld_verdi_intern_tal) = c("foo", "numeric")
+  class(d_vld_fleire_klassar$vld_verdi_ekstern_tal) = c("foo", "numeric")
+  expect_true(er_valideringsdatasett_gyldig(d_vld_fleire_klassar))
 })
 
 test_that("Datasett med NA-verdiar i primærnøkkel vert rekna som gyldig (viss
