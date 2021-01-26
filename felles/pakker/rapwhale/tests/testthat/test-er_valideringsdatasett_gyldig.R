@@ -50,6 +50,23 @@ test_that("Inndata som ikkje har tekstkolonnar «vld_varnamn» og «vld_vartype�
   expect_false(er_valideringsdatasett_gyldig(mutate(d_vld, vld_vartype = 1:nrow(d_vld))))
 })
 
+test_that("Gyldige inndata vert rekna som gyldige sjølv om «vld_varnamn» og «vld_vartype»
+          òg har attributt eller andre klassar i tillegg til «character»", {
+  # Realistisk eksempel på data me kan få frå SPSS (med haven::read_spss())
+  d_vld_med_label = d_vld
+  class(d_vld_med_label$vld_varnamn) = c("haven_labelled", "vctrs_vctr", "character")
+  attr(d_vld_med_label$vld_varnamn, "label") = "Variabelnamn"
+  class(d_vld_med_label$vld_vartype) = c("haven_labelled", "vctrs_vctr", "character")
+  attr(d_vld_med_label$vld_vartype, "label") = "Variabeltype"
+  attr(d_vld_med_label$vld_vartype, "labels") = c(
+    "Heiltal og desimtal" = "tal",
+    "Datoar" = "dato",
+    "Boolske verdiar" = "logisk"
+  )
+
+  expect_true(er_valideringsdatasett_gyldig(d_vld_med_label))
+})
+
 test_that("Datasett med NA-verdiar eller tomme tekststrengar i vld_varnamn eller
           vld_vartype vert rekna som ugyldig", {
   d_vld_ugyldig = d_vld
