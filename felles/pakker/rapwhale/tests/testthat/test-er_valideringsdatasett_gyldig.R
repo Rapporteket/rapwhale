@@ -166,4 +166,14 @@ test_that("Viss vld_vartype = x, så må vld_verdi_intern_y og
   ))
 })
 
-# Skal vera lov å ha vld_verdi_ekstern_x utan at det nødvendigvis finst ein vld_vartype med verdi x
+test_that("Skal vera lov å ha vld_verdi_intern_x og vld_verdi_ekstern_x utan at
+          det nødvendigvis finst ein vld_vartype med verdi x", {
+  expect_true(er_valideringsdatasett_gyldig(
+    tibble(
+      pasid = 101, vld_varnamn = "vekt", vld_vartype = "tal",
+      vld_verdi_intern_tal = 76, vld_verdi_ekstern_tal = 76,
+      vld_verdi_intern_dato = as.Date(NA),
+      vld_verdi_ekstern_dato = as.Date(NA)
+    )
+  ))
+})
