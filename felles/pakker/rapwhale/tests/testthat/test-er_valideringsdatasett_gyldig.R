@@ -34,8 +34,10 @@ test_that("Returnerer TRUE på gyldige valideringsdatasett", {
   expect_true(er_valideringsdatasett_gyldig(as.data.frame(d_vld_gyldig)))
 })
 
-test_that("Valideringsdatasett med 0 rader vert rekna som gyldig (viss resten er gyldig)", {
-  expect_true(er_valideringsdatasett_gyldig(d_vld_gyldig[c(), ]))
+test_that("Valideringsdatasett med 0 rader vert rekna som gyldige (viss resten er gyldig)", {
+  d_null_rader = d_vld_gyldig[c(), ]
+  expect_true(er_valideringsdatasett_gyldig(d_null_rader))
+  expect_true(er_valideringsdatasett_gyldig(as.data.frame(d_null_rader)))
 })
 
 test_that("Inndata som ikkje er data.frame/tibble, vert rekna som ugyldig", {
