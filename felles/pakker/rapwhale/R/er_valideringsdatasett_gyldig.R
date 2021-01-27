@@ -57,7 +57,7 @@ er_valideringsdatasett_gyldig = function(d_vld) {
 
   # vld_vartype må starta med ein bokstav, og berre innehalda bokstavar og/eller siffer
 
-  if (!all(grepl("^[a-zæøå][a-zæøå0-9]", d_vld$vld_vartype, ignore.case = TRUE))) {
+  if (!all(grepl("^[[:alpha:]][[:alnum:]]*$", d_vld$vld_vartype))) {
     return(FALSE)
   }
 
