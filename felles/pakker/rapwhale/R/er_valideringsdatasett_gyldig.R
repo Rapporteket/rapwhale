@@ -34,7 +34,6 @@ er_valideringsdatasett_gyldig = function(d_vld) {
   gyldig = TRUE
 
   # Inndata må vera data.frame/tibble og må ha tekstkolonnar vld_varnamn og vld_vartype
-
   if (!(is.data.frame(d_vld) &&
     all(has_name(d_vld, c("vld_varnamn", "vld_vartype")))
   )) {
@@ -46,7 +45,6 @@ er_valideringsdatasett_gyldig = function(d_vld) {
   }
 
   # vld_varnamn og vld_vartype kan ikkje ha NA-verdiar eller tomme tekstrengar
-
   if (anyNA(d_vld$vld_varnamn) ||
     anyNA(d_vld$vld_vartype) ||
     any(d_vld$vld_varnamn == "") ||
@@ -56,7 +54,6 @@ er_valideringsdatasett_gyldig = function(d_vld) {
   }
 
   # vld_vartype må starta med ein bokstav, og berre innehalda bokstavar og/eller siffer
-
   if (!all(grepl("^[[:alpha:]][[:alnum:]]*$", d_vld$vld_vartype))) {
     return(FALSE)
   }
@@ -77,6 +74,7 @@ er_valideringsdatasett_gyldig = function(d_vld) {
     !all(map_chr(x, ~ glue::glue("vld_verdi_ekstern_{.x}")) %in% names(d_vld))) {
     return(FALSE)
   }
+
 
   # vld_verdi_intern_x og vld_verdi_ekstern_x skal vera same type/klasse
 
@@ -99,6 +97,7 @@ er_valideringsdatasett_gyldig = function(d_vld) {
     return(FALSE)
   }
 
+
   # Kolonnar med namn som vld_tull skal ikkje vera lov
 
   d_vld_namn = d_vld %>%
@@ -115,10 +114,8 @@ er_valideringsdatasett_gyldig = function(d_vld) {
 
   # For kvar unike verdi x av vld_vartype så skal det finnast ein
   # variabel vld_verdi_intern_x og vld_verdi_ekstern_x
-
   vld_vartype_x = d_vld$vld_vartype %>%
     unique()
-
   if (!all(map_chr(vld_vartype_x, ~ glue::glue("vld_verdi_intern_{.x}")) %in% names(d_vld)) ||
     !all(map_chr(vld_vartype_x, ~ glue::glue("vld_verdi_ekstern_{.x}")) %in% names(d_vld))) {
     return(FALSE)
@@ -126,10 +123,10 @@ er_valideringsdatasett_gyldig = function(d_vld) {
 
   # Kvar kombinasjon av verdiar til vld_varnamn eller variablar som ikkje
   # startar med vld_ skal vera unike
-
   if (any(duplicated(select(d_vld, -starts_with("vld_"), vld_varnamn)))) {
     return(FALSE)
   }
+
 
   # Viss vld_vartype = x, så må vld_verdi_intern_y og
   # vld_verdi_ekstern_y vera tomme viss x != y
