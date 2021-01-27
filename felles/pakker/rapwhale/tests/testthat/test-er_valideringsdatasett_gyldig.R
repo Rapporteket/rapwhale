@@ -1,5 +1,5 @@
 # Eksempel på gyldig valideringsdatasett
-d_vld = tibble(
+d_vld_gyldig = tibble(
   pasid = c(5, 5, 5, 7, 7, 13, 13, 14),
   dato_inn = as.Date(c(
     "2020-06-07",
@@ -30,12 +30,12 @@ d_vld = tibble(
 )
 
 test_that("Returnerer TRUE på gyldige valideringsdatasett", {
-  expect_true(er_valideringsdatasett_gyldig(d_vld))
-  expect_true(er_valideringsdatasett_gyldig(as.data.frame(d_vld)))
+  expect_true(er_valideringsdatasett_gyldig(d_vld_gyldig))
+  expect_true(er_valideringsdatasett_gyldig(as.data.frame(d_vld_gyldig)))
 })
 
 test_that("Valideringsdatasett med 0 rader vert rekna som gyldig (viss resten er gyldig)", {
-  expect_true(er_valideringsdatasett_gyldig(d_vld[c(), ]))
+  expect_true(er_valideringsdatasett_gyldig(d_vld_gyldig[c(), ]))
 })
 
 test_that("Inndata som ikkje er data.frame/tibble, vert rekna som ugyldig", {
@@ -44,16 +44,16 @@ test_that("Inndata som ikkje er data.frame/tibble, vert rekna som ugyldig", {
 })
 
 test_that("Inndata som ikkje har tekstkolonnar «vld_varnamn» og «vld_vartype», vert rekna som ugyldig", {
-  expect_false(er_valideringsdatasett_gyldig(select(d_vld, -vld_varnamn)))
-  expect_false(er_valideringsdatasett_gyldig(select(d_vld, -vld_vartype)))
-  expect_false(er_valideringsdatasett_gyldig(mutate(d_vld, vld_varnamn = 1:nrow(d_vld))))
-  expect_false(er_valideringsdatasett_gyldig(mutate(d_vld, vld_vartype = 1:nrow(d_vld))))
+  expect_false(er_valideringsdatasett_gyldig(select(d_vld_gyldig, -vld_varnamn)))
+  expect_false(er_valideringsdatasett_gyldig(select(d_vld_gyldig, -vld_vartype)))
+  expect_false(er_valideringsdatasett_gyldig(mutate(d_vld_gyldig, vld_varnamn = 1:nrow(d_vld_gyldig))))
+  expect_false(er_valideringsdatasett_gyldig(mutate(d_vld_gyldig, vld_vartype = 1:nrow(d_vld_gyldig))))
 })
 
 test_that("Gyldige inndata vert rekna som gyldige sjølv om «vld_varnamn» og «vld_vartype»
           òg har attributt eller andre klassar i tillegg til «character»", {
   # Realistisk eksempel på data me kan få frå SPSS (med haven::read_spss())
-  d_vld_med_label = d_vld
+  d_vld_med_label = d_vld_gyldig
   class(d_vld_med_label$vld_varnamn) = c("haven_labelled", "vctrs_vctr", "character")
   attr(d_vld_med_label$vld_varnamn, "label") = "Variabelnamn"
   class(d_vld_med_label$vld_vartype) = c("haven_labelled", "vctrs_vctr", "character")
@@ -69,13 +69,13 @@ test_that("Gyldige inndata vert rekna som gyldige sjølv om «vld_varnamn» og �
 
 test_that("Datasett med NA-verdiar eller tomme tekststrengar i vld_varnamn eller
           vld_vartype vert rekna som ugyldig", {
-  d_vld_ugyldig = d_vld
+  d_vld_ugyldig = d_vld_gyldig
   d_vld_ugyldig$vld_varnamn[3] = NA
   expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
   d_vld_ugyldig$vld_varnamn[3] = ""
   expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
 
-  d_vld_ugyldig = d_vld
+  d_vld_ugyldig = d_vld_gyldig
   d_vld_ugyldig$vld_vartype[3] = NA
   expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
   d_vld_ugyldig$vld_vartype[3] = ""
@@ -84,19 +84,19 @@ test_that("Datasett med NA-verdiar eller tomme tekststrengar i vld_varnamn eller
 
 test_that("vld_verdi_intern_x og vld_verdi_ekstern_x med ulik klasse vert rekna
           som ugyldig", {
-  d_vld_ugyldig = d_vld
+  d_vld_ugyldig = d_vld_gyldig
   d_vld_ugyldig$vld_verdi_intern_tal = as.character(d_vld_ugyldig$vld_verdi_intern_tal)
   expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
 
   # Viss ein kolonne har *fleire* klassar, må motsvarande
   # òg ha same klassehierarki
-  d_vld_ugyldig = d_vld
+  d_vld_ugyldig = d_vld_gyldig
   class(d_vld_ugyldig$vld_verdi_intern_tal) = c("foo", "numeric")
   expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
 })
 
 test_that("vld_verdi_intern_x og vld_verdi_ekstern_x som har likt klassehierarki (men med meir enn eitt nivå) vert rekna som like", {
-  d_vld_fleire_klassar = d_vld
+  d_vld_fleire_klassar = d_vld_gyldig
   class(d_vld_fleire_klassar$vld_verdi_intern_tal) = c("foo", "numeric")
   class(d_vld_fleire_klassar$vld_verdi_ekstern_tal) = c("foo", "numeric")
   expect_true(er_valideringsdatasett_gyldig(d_vld_fleire_klassar))
@@ -105,16 +105,16 @@ test_that("vld_verdi_intern_x og vld_verdi_ekstern_x som har likt klassehierarki
 test_that("Datasett med NA-verdiar i primærnøkkel vert rekna som gyldig (viss
           resten er gyldig", {
   # Delar av primærnøkkelen er NA
-  d_vld$dato_inn[3] = NA
-  expect_true(er_valideringsdatasett_gyldig(d_vld))
+  d_vld_gyldig$dato_inn[3] = NA
+  expect_true(er_valideringsdatasett_gyldig(d_vld_gyldig))
 
   # Heile primærnøkkelen er NA
-  d_vld[3, c("pasid", "dato_inn", "kjonn", "sjukehus")] = NA
-  expect_true(er_valideringsdatasett_gyldig(d_vld))
+  d_vld_gyldig[3, c("pasid", "dato_inn", "kjonn", "sjukehus")] = NA
+  expect_true(er_valideringsdatasett_gyldig(d_vld_gyldig))
 })
 
 test_that("Kolonnar med namn som vld_tull skal ikkje vera lov (vld_ er reservert prefiks)", {
-  d_vld_ugyldig = d_vld %>%
+  d_vld_ugyldig = d_vld_gyldig %>%
     rename(vld_sjukehus = "sjukehus")
   expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
 })
@@ -130,7 +130,7 @@ test_that("Viss vld_verdi_intern_x finst, finst også vld_verdi_ekstern_x, og vi
 
 test_that("For kvar unike verdi x av vld_vartype så skal det finnast ein
           variabel vld_verdi_intern_x og vld_verdi_ekstern_x", {
-  expect_false(er_valideringsdatasett_gyldig(select(d_vld, -vld_verdi_intern_dato, -vld_verdi_ekstern_dato)))
+  expect_false(er_valideringsdatasett_gyldig(select(d_vld_gyldig, -vld_verdi_intern_dato, -vld_verdi_ekstern_dato)))
 })
 
 test_that("Sjekkar at vld_vartype må starta med ein bokstav, og berre innehalda bokstavar og/eller siffer", {
