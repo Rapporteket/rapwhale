@@ -216,6 +216,9 @@ test_that("Sjekkar at viss «vld_vartype» er lik x, så må for alle y != x
 
 test_that("Skal vera lov å ha «vld_verdi_intern_x» og «vld_verdi_ekstern_x» utan at
           det nødvendigvis finst ein «vld_vartype» med verdi x", {
+  # Dette er aktuelt der ein ser på eit utval (utvalde rader)
+  # av eit gyldig valideringsdatasett. Slike utval skal alltid
+  # vera gyldige dersom heile datasettet er det.
   expect_true(er_valideringsdatasett_gyldig(
     tibble(
       pasid = 101, vld_varnamn = "vekt", vld_vartype = "tal",
