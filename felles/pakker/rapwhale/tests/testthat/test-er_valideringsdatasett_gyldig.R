@@ -135,6 +135,8 @@ test_that("Datasett der «vld_verdi_intern_x» finst, men ikkje «vld_verdi_ekst
 test_that("Datasett der det ikkje finst kolonnar «vld_verdi_intern_x» og
           «vld_verdi_ekstern_x» for kvar unike verdi x av «vld_vartype»,
           skal reknast som ugyldige", {
+  expect_false(er_valideringsdatasett_gyldig(select(d_vld_gyldig, -vld_verdi_intern_dato)))
+  expect_false(er_valideringsdatasett_gyldig(select(d_vld_gyldig, -vld_verdi_ekstern_dato)))
   expect_false(er_valideringsdatasett_gyldig(select(d_vld_gyldig, -vld_verdi_intern_dato, -vld_verdi_ekstern_dato)))
 })
 
