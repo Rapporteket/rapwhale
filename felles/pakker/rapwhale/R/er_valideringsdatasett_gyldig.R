@@ -58,9 +58,20 @@ er_valideringsdatasett_gyldig = function(d_vld) {
     return(FALSE)
   }
 
+  # Kolonnar med namn som vld_tull skal ikkje vera lov
+  d_vld_namn = d_vld %>%
+    select(starts_with("vld_")) %>%
+    names()
+
+  d_vld_int_ekst_namn = d_vld %>%
+    select(starts_with("vld_verdi_intern_"), starts_with("vld_verdi_ekstern_")) %>%
+    names()
+
+  if (!all(d_vld_namn %in% c(d_vld_int_ekst_namn, "vld_varnamn", "vld_vartype"))) {
+    return(FALSE)
+  }
 
   # Viss vld_verdi_intern_x finst, finst også vld_verdi_ekstern_x, og vice versa
-
   d_vld_int_ekst_x = d_vld %>%
     select(starts_with("vld_verdi_intern_"), starts_with("vld_verdi_ekstern_")) %>%
     names()
@@ -75,9 +86,7 @@ er_valideringsdatasett_gyldig = function(d_vld) {
     return(FALSE)
   }
 
-
   # vld_verdi_intern_x og vld_verdi_ekstern_x skal vera same type/klasse
-
   d_vld_intern_x = d_vld %>%
     select(starts_with("vld_verdi_intern_")) %>%
     names()
@@ -97,21 +106,6 @@ er_valideringsdatasett_gyldig = function(d_vld) {
     return(FALSE)
   }
 
-
-  # Kolonnar med namn som vld_tull skal ikkje vera lov
-
-  d_vld_namn = d_vld %>%
-    select(starts_with("vld_")) %>%
-    names()
-
-  d_vld_int_ekst_namn = d_vld %>%
-    select(starts_with("vld_verdi_intern_"), starts_with("vld_verdi_ekstern_")) %>%
-    names()
-
-  if (!all(d_vld_namn %in% c(d_vld_int_ekst_namn, "vld_varnamn", "vld_vartype"))) {
-    return(FALSE)
-  }
-
   # For kvar unike verdi x av vld_vartype så skal det finnast ein
   # variabel vld_verdi_intern_x og vld_verdi_ekstern_x
   vld_vartype_x = d_vld$vld_vartype %>%
@@ -121,16 +115,8 @@ er_valideringsdatasett_gyldig = function(d_vld) {
     return(FALSE)
   }
 
-  # Kvar kombinasjon av verdiar til vld_varnamn eller variablar som ikkje
-  # startar med vld_ skal vera unike
-  if (any(duplicated(select(d_vld, -starts_with("vld_"), vld_varnamn)))) {
-    return(FALSE)
-  }
-
-
   # Viss vld_vartype = x, så må vld_verdi_intern_y og
   # vld_verdi_ekstern_y vera tomme viss x != y
-
   ikkje_vld_vartype_x = x %>%
     map(~ .x == d_vld$vld_vartype) %>%
     map(~ which(!.x))
@@ -143,6 +129,12 @@ er_valideringsdatasett_gyldig = function(d_vld) {
 
   if (!all(x_er_NA %>%
     map_lgl(all))) {
+    return(FALSE)
+  }
+
+  # Kvar kombinasjon av verdiar til vld_varnamn eller variablar som ikkje
+  # startar med vld_ skal vera unike
+  if (any(duplicated(select(d_vld, -starts_with("vld_"), vld_varnamn)))) {
     return(FALSE)
   }
 

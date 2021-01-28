@@ -85,61 +85,6 @@ test_that("Datasett med NA-verdiar eller tomme tekststrengar i «vld_varnamn» e
   expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
 })
 
-test_that("Datasett der «vld_verdi_intern_x» og «vld_verdi_ekstern_x» har ulike klassar, vert rekna
-          som ugyldige", {
-  d_vld_ugyldig = d_vld_gyldig
-  d_vld_ugyldig$vld_verdi_intern_tal = as.character(d_vld_ugyldig$vld_verdi_intern_tal)
-  expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
-
-  # Viss ein kolonne har *fleire* klassar, må motsvarande
-  # òg ha same klassehierarki
-  d_vld_ugyldig = d_vld_gyldig
-  class(d_vld_ugyldig$vld_verdi_intern_tal) = c("foo", "numeric")
-  expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
-})
-
-test_that("Datasett der «vld_verdi_intern_x» og «vld_verdi_ekstern_x» har likt klassehierarki (men med meir enn eitt nivå) vert rekna som gyldige", {
-  d_vld_fleire_klassar = d_vld_gyldig
-  class(d_vld_fleire_klassar$vld_verdi_intern_tal) = c("foo", "numeric")
-  class(d_vld_fleire_klassar$vld_verdi_ekstern_tal) = c("foo", "numeric")
-  expect_true(er_valideringsdatasett_gyldig(d_vld_fleire_klassar))
-})
-
-test_that("Datasett med NA-verdiar i primærnøkkel vert rekna som gyldige (viss
-          resten er gyldig", {
-  # Delar av primærnøkkelen er NA
-  d_vld_gyldig$dato_inn[3] = NA
-  expect_true(er_valideringsdatasett_gyldig(d_vld_gyldig))
-
-  # Heile primærnøkkelen er NA
-  d_vld_gyldig[3, c("pasid", "dato_inn", "kjonn", "sjukehus")] = NA
-  expect_true(er_valideringsdatasett_gyldig(d_vld_gyldig))
-})
-
-test_that("Datasett med kolonnar med namn som «vld_tull» vert rekna som ugyldige («vld_» er reservert prefiks)", {
-  d_vld_ugyldig = d_vld_gyldig %>%
-    rename(vld_sjukehus = "sjukehus")
-  expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
-})
-
-test_that("Datasett der «vld_verdi_intern_x» finst, men ikkje «vld_verdi_ekstern_x»
-          (eller omvendt), vert rekna som ugyldige", {
-  expect_false(er_valideringsdatasett_gyldig(
-    tibble(
-      pasid = numeric(), vld_varnamn = character(),
-      vld_vartype = character(), vld_verdi_intern_tal = numeric()
-    )
-  ))
-})
-
-test_that("Datasett der det ikkje finst kolonnar «vld_verdi_intern_x» og
-          «vld_verdi_ekstern_x» for kvar unike verdi x av «vld_vartype»,
-          skal reknast som ugyldige", {
-  expect_false(er_valideringsdatasett_gyldig(select(d_vld_gyldig, -vld_verdi_intern_dato)))
-  expect_false(er_valideringsdatasett_gyldig(select(d_vld_gyldig, -vld_verdi_ekstern_dato)))
-  expect_false(er_valideringsdatasett_gyldig(select(d_vld_gyldig, -vld_verdi_intern_dato, -vld_verdi_ekstern_dato)))
-})
-
 test_that("Sjekkar at «vld_vartype» må starta med ein bokstav, og berre innehalda bokstavar og/eller siffer", {
   lag_datasett = function(vartype) {
     tibble(
@@ -163,36 +108,48 @@ test_that("Sjekkar at «vld_vartype» må starta med ein bokstav, og berre inneh
   expect_true(er_valideringsdatasett_gyldig(lag_datasett("Ô")))
 })
 
-test_that("Sjekkar at kvar kombinasjon av verdiane til «vld_varnamn» og til variablar som ikkje
-          startar med «vld_» skal vera unike (dvs. at primærnøkkelen identifiserer rader unikt)", {
-  d_vld_ugyldig = tibble(
-    pasid = c(101, 101),
-    dato_inn = as.Date(c("2020-06-07", "2020-06-07")),
-    kjonn = c("M", "M"),
-    sjukehus = c("Bergen", "Bergen"),
-    vld_varnamn = c("vekt", "vekt"),
-    vld_vartype = c("tal", "tal"),
-    vld_verdi_intern_tal = c(78, 75),
-    vld_verdi_ekstern_tal = c(78, NA)
-  )
+test_that("Datasett med kolonnar med namn som «vld_tull» vert rekna som ugyldige («vld_» er reservert prefiks)", {
+  d_vld_ugyldig = d_vld_gyldig %>%
+    rename(vld_sjukehus = "sjukehus")
   expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
 })
 
-test_that("Valideringa brukar ikkje implisitt referanse til eksterne variablar", {
-  # Denne testen er her pga. ein feil oppdaga i funksjonen
-  # der select() brukte ein implisitt ekstern variabel.
-  # Er med for å unngå framtidige regresjonar.
+test_that("Datasett der «vld_verdi_intern_x» finst, men ikkje «vld_verdi_ekstern_x»
+          (eller omvendt), vert rekna som ugyldige", {
+  expect_false(er_valideringsdatasett_gyldig(
+    tibble(
+      pasid = numeric(), vld_varnamn = character(),
+      vld_vartype = character(), vld_verdi_intern_tal = numeric()
+    )
+  ))
+})
 
-  # Datasett med med ugyldig primærnøkkel (dupliserte rader)
-  d_dup = tibble(
-    pasid = c(101, 101),
-    vld_varnamn = c("vekt", "vekt"),
-    vld_vartype = c("tal", "tal"),
-    d_vld_namn = "foo",
-    vld_verdi_intern_tal = c(78, 78),
-    vld_verdi_ekstern_tal = c(80, 85)
-  )
-  expect_false(er_valideringsdatasett_gyldig(d_dup))
+test_that("Datasett der «vld_verdi_intern_x» og «vld_verdi_ekstern_x» har ulike klassar, vert rekna
+          som ugyldige", {
+  d_vld_ugyldig = d_vld_gyldig
+  d_vld_ugyldig$vld_verdi_intern_tal = as.character(d_vld_ugyldig$vld_verdi_intern_tal)
+  expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
+
+  # Viss ein kolonne har *fleire* klassar, må motsvarande
+  # òg ha same klassehierarki
+  d_vld_ugyldig = d_vld_gyldig
+  class(d_vld_ugyldig$vld_verdi_intern_tal) = c("foo", "numeric")
+  expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
+})
+
+test_that("Datasett der «vld_verdi_intern_x» og «vld_verdi_ekstern_x» har likt klassehierarki (men med meir enn eitt nivå) vert rekna som gyldige", {
+  d_vld_fleire_klassar = d_vld_gyldig
+  class(d_vld_fleire_klassar$vld_verdi_intern_tal) = c("foo", "numeric")
+  class(d_vld_fleire_klassar$vld_verdi_ekstern_tal) = c("foo", "numeric")
+  expect_true(er_valideringsdatasett_gyldig(d_vld_fleire_klassar))
+})
+
+test_that("Datasett der det ikkje finst kolonnar «vld_verdi_intern_x» og
+          «vld_verdi_ekstern_x» for kvar unike verdi x av «vld_vartype»,
+          skal reknast som ugyldige", {
+  expect_false(er_valideringsdatasett_gyldig(select(d_vld_gyldig, -vld_verdi_intern_dato)))
+  expect_false(er_valideringsdatasett_gyldig(select(d_vld_gyldig, -vld_verdi_ekstern_dato)))
+  expect_false(er_valideringsdatasett_gyldig(select(d_vld_gyldig, -vld_verdi_intern_dato, -vld_verdi_ekstern_dato)))
 })
 
 test_that("Sjekkar at viss «vld_vartype» er lik x, så må for alle y != x
@@ -229,4 +186,47 @@ test_that("Skal vera lov å ha «vld_verdi_intern_x» og «vld_verdi_ekstern_x»
       vld_verdi_ekstern_dato = as.Date(NA)
     )
   ))
+})
+
+test_that("Sjekkar at kvar kombinasjon av verdiane til «vld_varnamn» og til variablar som ikkje
+          startar med «vld_» skal vera unike (dvs. at primærnøkkelen identifiserer rader unikt)", {
+  d_vld_ugyldig = tibble(
+    pasid = c(101, 101),
+    dato_inn = as.Date(c("2020-06-07", "2020-06-07")),
+    kjonn = c("M", "M"),
+    sjukehus = c("Bergen", "Bergen"),
+    vld_varnamn = c("vekt", "vekt"),
+    vld_vartype = c("tal", "tal"),
+    vld_verdi_intern_tal = c(78, 75),
+    vld_verdi_ekstern_tal = c(78, NA)
+  )
+  expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
+})
+
+test_that("Datasett med NA-verdiar i primærnøkkel vert rekna som gyldige (viss
+          resten er gyldig)", {
+  # Delar av primærnøkkelen er NA
+  d_vld_gyldig$dato_inn[3] = NA
+  expect_true(er_valideringsdatasett_gyldig(d_vld_gyldig))
+
+  # Heile primærnøkkelen er NA
+  d_vld_gyldig[3, c("pasid", "dato_inn", "kjonn", "sjukehus")] = NA
+  expect_true(er_valideringsdatasett_gyldig(d_vld_gyldig))
+})
+
+test_that("Valideringa brukar ikkje implisitt referanse til eksterne variablar", {
+  # Denne testen er her pga. ein feil oppdaga i funksjonen
+  # der select() brukte ein implisitt ekstern variabel.
+  # Er med for å unngå framtidige regresjonar.
+
+  # Datasett med med ugyldig primærnøkkel (dupliserte rader)
+  d_dup = tibble(
+    pasid = c(101, 101),
+    vld_varnamn = c("vekt", "vekt"),
+    vld_vartype = c("tal", "tal"),
+    d_vld_namn = "foo",
+    vld_verdi_intern_tal = c(78, 78),
+    vld_verdi_ekstern_tal = c(80, 85)
+  )
+  expect_false(er_valideringsdatasett_gyldig(d_dup))
 })
