@@ -37,6 +37,7 @@ er_valideringsdatasett_gyldig = function(d_vld) {
   # for seinare bruk
   kolnamn_alle = names(d_vld)
   kolnamn_vld = stringr::str_subset(kolnamn_alle, "^vld_")
+  kolnamn_verdikol = stringr::str_subset(kolnamn_vld, "^vld_verdi_")
 
   # Inndata må vera data.frame/tibble og må ha tekstkolonnar vld_varnamn og vld_vartype
   if (!(is.data.frame(d_vld) &&
@@ -79,17 +80,15 @@ er_valideringsdatasett_gyldig = function(d_vld) {
   }
 
   # Viss vld_verdi_intern_x finst, finst også vld_verdi_ekstern_x, og vice versa
-  d_vld_int_ekst_x = d_vld %>%
-    select(starts_with("vld_verdi_intern_"), starts_with("vld_verdi_ekstern_")) %>%
-    names()
-
-  x = d_vld_int_ekst_x %>%
-    str_replace("vld_verdi_intern_", "") %>%
-    str_replace("vld_verdi_ekstern_", "") %>%
+  vartypar_i_verdikol = kolnamn_verdikol %>%
+    stringr::str_replace("^vld_verdi_(intern|ekstern)_", "") %>%
     unique()
-
-  if (!all(map_chr(x, ~ glue::glue("vld_verdi_intern_{.x}")) %in% names(d_vld)) ||
-    !all(map_chr(x, ~ glue::glue("vld_verdi_ekstern_{.x}")) %in% names(d_vld))) {
+  kolnamn_som_skal_finnast = c(
+    paste0("vld_verdi_intern_", vartypar_i_verdikol),
+    paste0("vld_verdi_ekstern_", vartypar_i_verdikol)
+  )
+  verdikol_finst = kolnamn_som_skal_finnast %in% kolnamn_verdikol
+  if (!all(verdikol_finst)) {
     return(FALSE)
   }
 
@@ -124,6 +123,7 @@ er_valideringsdatasett_gyldig = function(d_vld) {
 
   # Viss vld_vartype = x, så må vld_verdi_intern_y og
   # vld_verdi_ekstern_y vera tomme viss x != y
+  x = vartypar_i_verdikol
   ikkje_vld_vartype_x = x %>%
     map(~ .x == d_vld$vld_vartype) %>%
     map(~ which(!.x))
