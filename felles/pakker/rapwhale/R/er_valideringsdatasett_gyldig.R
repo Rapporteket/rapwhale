@@ -39,8 +39,8 @@ er_valideringsdatasett_gyldig = function(d_vld) {
   )) {
     return(FALSE)
   }
-  if (typeof(d_vld$vld_varnamn) != "character" ||
-    typeof(d_vld$vld_vartype) != "character") {
+  if (!(typeof(d_vld$vld_varnamn) == "character" &&
+    typeof(d_vld$vld_vartype) == "character")) {
     return(FALSE)
   }
 
