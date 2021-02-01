@@ -31,8 +31,6 @@
 #'
 #' er_valideringsdatasett_gyldig(d_vld)
 er_valideringsdatasett_gyldig = function(d_vld) {
-  gyldig = TRUE
-
   # Oversikt over alle kolonnenamn og kolonnenamn for «vld_»-kolonnane,
   # for seinare bruk
   kolnamn_alle = names(d_vld)
@@ -138,5 +136,7 @@ er_valideringsdatasett_gyldig = function(d_vld) {
     return(FALSE)
   }
 
-  gyldig
+  # Viss ingen tidlegare testar har slått ut (dvs. returnert FALSE),
+  # er datasettet gyldig
+  TRUE
 }
