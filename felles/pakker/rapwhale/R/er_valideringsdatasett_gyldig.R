@@ -83,10 +83,13 @@ er_valideringsdatasett_gyldig = function(d_vld) {
   vartypar_i_verdikol = kolnamn_verdikol %>%
     stringr::str_replace("^vld_verdi_(intern|ekstern)_", "") %>%
     unique()
-  kolnamn_som_skal_finnast = c(
-    paste0("vld_verdi_intern_", vartypar_i_verdikol),
-    paste0("vld_verdi_ekstern_", vartypar_i_verdikol)
-  )
+  lag_kolnamn_verdikol = function(vartypar) {
+    c(
+      paste0("vld_verdi_intern_", vartypar),
+      paste0("vld_verdi_ekstern_", vartypar)
+    )
+  }
+  kolnamn_som_skal_finnast = lag_kolnamn_verdikol(vartypar_i_verdikol)
   verdikol_finst = kolnamn_som_skal_finnast %in% kolnamn_verdikol
   if (!all(verdikol_finst)) {
     return(FALSE)
@@ -105,11 +108,16 @@ er_valideringsdatasett_gyldig = function(d_vld) {
 
   # For kvar unike verdi x av vld_vartype så skal det finnast ein
   # variabel vld_verdi_intern_x og vld_verdi_ekstern_x
-  vld_vartype_x = d_vld$vld_vartype %>%
-    unique()
-  if (!all(map_chr(vld_vartype_x, ~ glue::glue("vld_verdi_intern_{.x}")) %in% names(d_vld)) ||
-    !all(map_chr(vld_vartype_x, ~ glue::glue("vld_verdi_ekstern_{.x}")) %in% names(d_vld))) {
-    return(FALSE)
+  # (Obs: Dessverre litt kodeduplisering for tidlegare test på kolonnenamn,
+  #       men kan ikkje enkelt bruka generell funksjon, sidan
+  #       me skal returnera FALSE ved feil, men ikkje returnera elles.)
+  vartypar_som_skal_finnast = unique(d_vld$vld_vartype)
+  if (length(vartypar_som_skal_finnast) > 0) {
+    kolnamn_som_skal_finnast = lag_kolnamn_verdikol(vartypar_som_skal_finnast)
+    verdikol_finst = kolnamn_som_skal_finnast %in% kolnamn_verdikol
+    if (!all(verdikol_finst)) {
+      return(FALSE)
+    }
   }
 
   # Viss vld_vartype = x, så må vld_verdi_intern_y og
