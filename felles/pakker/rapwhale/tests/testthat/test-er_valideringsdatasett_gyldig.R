@@ -32,6 +32,17 @@ d_vld_gyldig = tibble(
 test_that("Returnerer TRUE på gyldige valideringsdatasett", {
   expect_true(er_valideringsdatasett_gyldig(d_vld_gyldig))
   expect_true(er_valideringsdatasett_gyldig(as.data.frame(d_vld_gyldig)))
+  expect_true(er_valideringsdatasett_gyldig(d_vld_gyldig[]))
+
+  # Bør sjekka at testane ikkje er avhengig av kolonnerekkjefølgja
+  expect_true(er_valideringsdatasett_gyldig(
+    d_vld_gyldig[c(
+      "vld_verdi_ekstern_dato", "vld_verdi_ekstern_logisk",
+      "kjonn", "vld_verdi_intern_dato", "vld_verdi_intern_logisk",
+      "vld_verdi_ekstern_tal", "vld_verdi_intern_tal",
+      "vld_vartype", "vld_varnamn", "sjukehus", "dato_inn", "pasid"
+    )]
+  ))
 })
 
 test_that("Valideringsdatasett med 0 rader vert rekna som gyldige (viss resten er gyldig)", {
