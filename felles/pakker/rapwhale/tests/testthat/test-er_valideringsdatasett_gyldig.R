@@ -49,6 +49,11 @@ test_that("Valideringsdatasett med 0 rader vert rekna som gyldige (viss resten e
   d_null_rader = d_vld_gyldig[c(), ]
   expect_true(er_valideringsdatasett_gyldig(d_null_rader))
   expect_true(er_valideringsdatasett_gyldig(as.data.frame(d_null_rader)))
+
+  # Skal faktisk vera lov å ikkje ha nokon verdikolonnar
+  # (dersom me har null rader)
+  d_null_rader_null_verdikol = d_vld_gyldig[c(), c("pasid", "dato_inn", "kjonn", "sjukehus", "vld_varnamn", "vld_vartype")]
+  expect_true(er_valideringsdatasett_gyldig(d_null_rader_null_verdikol))
 })
 
 test_that("Inndata som ikkje er data.frame/tibble, vert rekna som ugyldig", {
