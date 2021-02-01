@@ -38,6 +38,7 @@ er_valideringsdatasett_gyldig = function(d_vld) {
   kolnamn_alle = names(d_vld)
   kolnamn_vld = stringr::str_subset(kolnamn_alle, "^vld_")
   kolnamn_verdikol = stringr::str_subset(kolnamn_vld, "^vld_verdi_")
+  kolnamn_indekskol = setdiff(kolnamn_alle, c(kolnamn_verdikol, "vld_vartype"))
 
   # Inndata må vera data.frame/tibble og må ha tekstkolonnar vld_varnamn og vld_vartype
   if (!(is.data.frame(d_vld) &&
@@ -131,9 +132,9 @@ er_valideringsdatasett_gyldig = function(d_vld) {
     }
   }
 
-  # Kvar kombinasjon av verdiar til vld_varnamn eller variablar som ikkje
-  # startar med vld_ skal vera unike
-  if (any(duplicated(select(d_vld, -starts_with("vld_"), vld_varnamn)))) {
+  # Kvar kombinasjon av verdiar til indekskolonnane (dvs. til vld_varnamn
+  # eller variablar som ikkje startar med «vld_») skal vera unike
+  if (any(duplicated(d_vld[kolnamn_indekskol]))) {
     return(FALSE)
   }
 
