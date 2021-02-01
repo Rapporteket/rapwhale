@@ -33,6 +33,11 @@
 er_valideringsdatasett_gyldig = function(d_vld) {
   gyldig = TRUE
 
+  # Oversikt over alle kolonnenamn og kolonnenamn for «vld_»-kolonnane,
+  # for seinare bruk
+  kolnamn_alle = names(d_vld)
+  kolnamn_vld = stringr::str_subset(kolnamn_alle, "^vld")
+
   # Inndata må vera data.frame/tibble og må ha tekstkolonnar vld_varnamn og vld_vartype
   if (!(is.data.frame(d_vld) &&
     all(has_name(d_vld, c("vld_varnamn", "vld_vartype")))
@@ -62,22 +67,16 @@ er_valideringsdatasett_gyldig = function(d_vld) {
     return(FALSE)
   }
 
-
   # Datasett med kolonnar med namn som «vld_tull» skal reknast som
   # ugyldige («vld_» er reservert prefiks)
-
-  d_vld_namn = d_vld %>%
-    select(starts_with("vld_")) %>%
-    names()
-
-  d_vld_int_ekst_namn = d_vld %>%
-    select(starts_with("vld_verdi_intern_"), starts_with("vld_verdi_ekstern_")) %>%
-    names()
-
-  if (!all(d_vld_namn %in% c(d_vld_int_ekst_namn, "vld_varnamn", "vld_vartype"))) {
+  regexp_gyldige_kolnamn = paste0(
+    "^vld_varnamn|vld_vartype|",
+    "vld_verdi_(intern|ekstern)_[[:alpha:]][[:alnum:]]*$"
+  )
+  gyldige_kolnamn = stringr::str_detect(kolnamn_vld, regexp_gyldige_kolnamn)
+  if (!all(gyldige_kolnamn)) {
     return(FALSE)
   }
-
 
   # Viss vld_verdi_intern_x finst, finst også vld_verdi_ekstern_x, og vice versa
   d_vld_int_ekst_x = d_vld %>%
