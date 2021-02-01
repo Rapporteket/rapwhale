@@ -62,7 +62,10 @@ er_valideringsdatasett_gyldig = function(d_vld) {
     return(FALSE)
   }
 
-  # Kolonnar med namn som vld_tull skal ikkje vera lov
+
+  # Datasett med kolonnar med namn som «vld_tull» skal reknast som
+  # ugyldige («vld_» er reservert prefiks)
+
   d_vld_namn = d_vld %>%
     select(starts_with("vld_")) %>%
     names()
@@ -74,6 +77,7 @@ er_valideringsdatasett_gyldig = function(d_vld) {
   if (!all(d_vld_namn %in% c(d_vld_int_ekst_namn, "vld_varnamn", "vld_vartype"))) {
     return(FALSE)
   }
+
 
   # Viss vld_verdi_intern_x finst, finst også vld_verdi_ekstern_x, og vice versa
   d_vld_int_ekst_x = d_vld %>%
