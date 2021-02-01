@@ -93,23 +93,14 @@ er_valideringsdatasett_gyldig = function(d_vld) {
   }
 
   # vld_verdi_intern_x og vld_verdi_ekstern_x skal vera same type/klasse
-  d_vld_intern_x = d_vld %>%
-    select(starts_with("vld_verdi_intern_")) %>%
-    names()
-
-  d_vld_ekstern_x = d_vld_intern_x %>%
-    str_replace("vld_verdi_intern_", "vld_verdi_ekstern_")
-
-  d_vld_intern_class = d_vld[d_vld_intern_x] %>%
-    map(class) %>%
-    as.character()
-
-  d_vld_ekstern_class = d_vld[d_vld_ekstern_x] %>%
-    map(class) %>%
-    as.character()
-
-  if (any(d_vld_intern_class != d_vld_ekstern_class)) {
-    return(FALSE)
+  for (vartype in vartypar_i_verdikol) {
+    kolnamn_intern = paste0("vld_verdi_intern_", vartype)
+    kolnamn_ekstern = paste0("vld_verdi_ekstern_", vartype)
+    klasse_intern = class(d_vld[[kolnamn_intern]])
+    klasse_ekstern = class(d_vld[[kolnamn_ekstern]])
+    if (!identical(klasse_intern, klasse_ekstern)) {
+      return(FALSE)
+    }
   }
 
   # For kvar unike verdi x av vld_vartype så skal det finnast ein
