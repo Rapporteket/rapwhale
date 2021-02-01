@@ -83,10 +83,14 @@ er_valideringsdatasett_gyldig = function(d_vld) {
     stringr::str_replace("^vld_verdi_(intern|ekstern)_", "") %>%
     unique()
   lag_kolnamn_verdikol = function(vartypar) {
-    c(
-      paste0("vld_verdi_intern_", vartypar),
-      paste0("vld_verdi_ekstern_", vartypar)
-    )
+    if (length(vartypar) > 0) {
+      c(
+        paste0("vld_verdi_intern_", vartypar),
+        paste0("vld_verdi_ekstern_", vartypar)
+      )
+    } else {
+      character()
+    }
   }
   kolnamn_som_skal_finnast = lag_kolnamn_verdikol(vartypar_i_verdikol)
   verdikol_finst = kolnamn_som_skal_finnast %in% kolnamn_verdikol
@@ -111,12 +115,10 @@ er_valideringsdatasett_gyldig = function(d_vld) {
   #       men kan ikkje enkelt bruka generell funksjon, sidan
   #       me skal returnera FALSE ved feil, men ikkje returnera elles.)
   vartypar_som_skal_finnast = unique(d_vld$vld_vartype)
-  if (length(vartypar_som_skal_finnast) > 0) {
-    kolnamn_som_skal_finnast = lag_kolnamn_verdikol(vartypar_som_skal_finnast)
-    verdikol_finst = kolnamn_som_skal_finnast %in% kolnamn_verdikol
-    if (!all(verdikol_finst)) {
-      return(FALSE)
-    }
+  kolnamn_som_skal_finnast = lag_kolnamn_verdikol(vartypar_som_skal_finnast)
+  verdikol_finst = kolnamn_som_skal_finnast %in% kolnamn_verdikol
+  if (!all(verdikol_finst)) {
+    return(FALSE)
   }
 
   # Viss vld_vartype = x, så må vld_verdi_intern_y og
