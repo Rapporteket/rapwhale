@@ -54,7 +54,11 @@ er_valideringsdatasett_gyldig = function(d_vld) {
   }
 
   # vld_vartype må starta med ein bokstav, og berre innehalda bokstavar og/eller siffer
-  if (!all(grepl("^[[:alpha:]][[:alnum:]]*$", d_vld$vld_vartype))) {
+  vartypar_er_gyldige = stringr::str_detect(
+    d_vld$vld_vartype,
+    "^[[:alpha:]][[:alnum:]]*$"
+  )
+  if (!all(vartypar_er_gyldige)) {
     return(FALSE)
   }
 
