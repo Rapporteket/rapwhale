@@ -114,6 +114,12 @@ test_that("Datasett med kolonnar med namn som «vld_tull» vert rekna som ugyldi
   expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
 })
 
+test_that("Er lov med datasett som har «vanlege» kolonnar som begynner med «vld» (utan påfølgjande understrek)", {
+  d_vld_gyldig2 = d_vld_gyldig %>%
+    rename(vldfoo = "sjukehus")
+  expect_true(er_valideringsdatasett_gyldig(d_vld_gyldig2))
+})
+
 test_that("Datasett der «vld_verdi_intern_x» finst, men ikkje «vld_verdi_ekstern_x»
           (eller omvendt), vert rekna som ugyldige", {
   expect_false(er_valideringsdatasett_gyldig(

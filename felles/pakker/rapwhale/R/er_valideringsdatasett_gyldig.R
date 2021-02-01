@@ -36,7 +36,7 @@ er_valideringsdatasett_gyldig = function(d_vld) {
   # Oversikt over alle kolonnenamn og kolonnenamn for «vld_»-kolonnane,
   # for seinare bruk
   kolnamn_alle = names(d_vld)
-  kolnamn_vld = stringr::str_subset(kolnamn_alle, "^vld")
+  kolnamn_vld = stringr::str_subset(kolnamn_alle, "^vld_")
 
   # Inndata må vera data.frame/tibble og må ha tekstkolonnar vld_varnamn og vld_vartype
   if (!(is.data.frame(d_vld) &&
