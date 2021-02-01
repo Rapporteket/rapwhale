@@ -122,20 +122,13 @@ er_valideringsdatasett_gyldig = function(d_vld) {
 
   # Viss vld_vartype = x, så må vld_verdi_intern_y og
   # vld_verdi_ekstern_y vera tomme viss x != y
-  x = vartypar_i_verdikol
-  ikkje_vld_vartype_x = x %>%
-    map(~ .x == d_vld$vld_vartype) %>%
-    map(~ which(!.x))
-
-  x_er_NA = x %>%
-    map(~ is.na(c(
-      d_vld[[glue::glue("vld_verdi_intern_{.x}")]][ikkje_vld_vartype_x[[match(.x, x)]]],
-      d_vld[[glue::glue("vld_verdi_ekstern_{.x}")]][ikkje_vld_vartype_x[[match(.x, x)]]]
-    )))
-
-  if (!all(x_er_NA %>%
-    map_lgl(all))) {
-    return(FALSE)
+  for (kolnamn in kolnamn_verdikol) {
+    vartype_akt_kol = str_replace(kolnamn, "^vld_verdi_(intern|ekstern)_", "")
+    radnr_ikkje_akt_vartype = which(d_vld$vld_vartype != vartype_akt_kol)
+    verdiar = d_vld[[kolnamn]][radnr_ikkje_akt_vartype]
+    if (!all(is.na(verdiar))) {
+      return(FALSE)
+    }
   }
 
   # Kvar kombinasjon av verdiar til vld_varnamn eller variablar som ikkje
