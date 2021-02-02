@@ -26,3 +26,23 @@ test_that("Utdata skal seia (elementvis) om verdi1 er lik verdi2", {
     c(TRUE, TRUE, TRUE, FALSE)
   )
 })
+
+test_that("Skal handtera NA-verdiar", {
+  expect_identical(
+    samanlikn_identisk(
+      varnamn = "dato_ut",
+      verdi1 = NA,
+      verdi2 = NA
+    ),
+    TRUE
+  )
+
+  expect_identical(
+    samanlikn_identisk(
+      varnamn = "vekt",
+      verdi1 = c(75, 66),
+      verdi2 = c(NA, 66)
+    ),
+    c(FALSE, TRUE)
+  )
+})
