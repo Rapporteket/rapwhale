@@ -62,6 +62,22 @@ test_that("Skal stoppa med feilmelding dersom utdata frå samanliknaren har feil
     analyser_valideringsdatasett(d_vld_gyldig, samanliknar_feil_lengd),
     "Utdata frå samanliknaren har feil lengd"
   )
+
+  samanliknar_feil_lengd_kort = function(varnamn, verdi1, verdi2) {
+    return(head(samanlikn_identisk(varnamn, verdi1, verdi2), -1))
+  }
+  expect_error(
+    analyser_valideringsdatasett(d_vld_gyldig, samanliknar_feil_lengd_kort),
+    "Utdata frå samanliknaren har feil lengd"
+  )
+
+  samanliknar_feil_lengd_null = function(varnamn, verdi1, verdi2) {
+    return(logical())
+  }
+  expect_error(
+    analyser_valideringsdatasett(d_vld_gyldig, samanliknar_feil_lengd_null),
+    "Utdata frå samanliknaren har feil lengd"
+  )
 })
 
 test_that("Skal stoppa med feilmelding dersom utdata frå samanliknaren ikkje er logisk vektor", {
