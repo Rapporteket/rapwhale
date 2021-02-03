@@ -46,3 +46,10 @@ test_that("Gjev ut valideringsdatasettet med info i ekstrakolonne om verdiane
     )
   )
 })
+
+test_that("Skal stoppa med feilmelding dersom samanliknaren gjev ut NA-verdiar", {
+  samanliknar_lag_NA = function(varnamn, verdi1, verdi2) {
+    return(rep(NA, length(verdi1)))
+  }
+  expect_error(analyser_valideringsdatasett(d_vld_gyldig, samanliknar_lag_NA))
+})
