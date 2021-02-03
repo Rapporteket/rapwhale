@@ -21,7 +21,7 @@ analyser_valideringsdatasett = function(d_vld, samanliknar = samanlikn_identisk)
     intern = glue::glue("vld_verdi_intern_{vartype}")
     ekstern = glue::glue("vld_verdi_ekstern_{vartype}")
 
-    er_like = samanlikn_identisk(
+    er_like = samanliknar(
       d_vld_vartype[["vld_varnamn"]],
       d_vld_vartype[[intern]], d_vld_vartype[[ekstern]]
     )
