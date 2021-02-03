@@ -26,6 +26,10 @@ analyser_valideringsdatasett = function(d_vld, samanliknar = samanlikn_identisk)
       d_vld_vartype[[intern]], d_vld_vartype[[ekstern]]
     )
 
+    if (anyNA(er_like)) {
+      stop("NA-verdiar frå samanliknaren")
+    }
+
     d_vld_vartype = tibble(d_vld_vartype, vld_verdiar_er_like = er_like)
 
     d_vld_verdiar_er_like = add_row(d_vld_verdiar_er_like, d_vld_vartype)
