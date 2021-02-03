@@ -26,8 +26,14 @@ analyser_valideringsdatasett = function(d_vld, samanliknar = samanlikn_identisk)
       d_vld_vartype[[intern]], d_vld_vartype[[ekstern]]
     )
 
+    # Feilmelding viss samanliknar gjev NA-verdiar
     if (anyNA(er_like)) {
       stop("NA-verdiar frå samanliknaren")
+    }
+
+    # Feilmelding viss utdata frå samanliknar har feil lengd
+    if (length(er_like) != length(d_vld_vartype[[intern]])) {
+      stop("Utdata frå samanliknaren har feil lengd")
     }
 
     d_vld_vartype = tibble(d_vld_vartype, vld_verdiar_er_like = er_like)
