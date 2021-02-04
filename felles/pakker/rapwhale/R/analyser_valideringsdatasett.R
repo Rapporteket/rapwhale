@@ -41,9 +41,15 @@ analyser_valideringsdatasett = function(d_vld, samanliknar = samanlikn_identisk)
     d_vld_verdiar_er_like = add_row(d_vld_verdiar_er_like, d_vld_vartype)
   }
 
+  # Skal ta vare på opphavleg rekkefølgje
   d_vld_verdiar_er_like = d_vld_verdiar_er_like %>%
     arrange(rekkefolgje) %>%
     select(-rekkefolgje)
+
+  # Skal ta vare på opphavleg gruppering
+  gruppering = groups(d_vld)
+  d_vld_verdiar_er_like = d_vld_verdiar_er_like %>%
+    group_by(.dots = gruppering)
 
   return(d_vld_verdiar_er_like)
 }
