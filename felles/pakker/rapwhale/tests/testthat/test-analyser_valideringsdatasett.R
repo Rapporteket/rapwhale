@@ -86,3 +86,21 @@ test_that("Skal stoppa med feilmelding dersom utdata frå samanliknaren ikkje er
   }
   expect_error(analyser_valideringsdatasett(d_vld_gyldig, samanliknar_feil_type))
 })
+
+test_that("Skal fungera med grupperte inndata, og utdata skal bevara grupperinga", {
+  d_vld_gruppert = d_vld_gyldig %>%
+    group_by(kjonn, sjukehus)
+  d_vld_gruppert_resultat = tibble(d_vld_gruppert,
+    vld_verdiar_er_like = c(
+      TRUE, FALSE, FALSE, TRUE,
+      FALSE, TRUE, TRUE, FALSE
+    )
+  ) %>%
+    group_by(kjonn, sjukehus)
+
+  expect_identical(analyser_valideringsdatasett(d_vld_gruppert), d_vld_gruppert_resultat)
+  expect_identical(
+    groups(analyser_valideringsdatasett(d_vld_gruppert)),
+    groups(d_vld_gruppert)
+  )
+})
