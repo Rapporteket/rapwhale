@@ -168,7 +168,6 @@ lag_fig_soyle = function(d, x, y, flip = FALSE, facet = FALSE, facet_gruppe = NU
                          farge = farger_kvalreg()$farger_hoved[3], ymax = NA, y_mellomrom = NULL) {
   plott = ggplot(d, aes({{ x }}, {{ y }})) +
     geom_bar(stat = "identity", width = 2 / 3, fill = farge) +
-    tema_kvalreg() +
     xlab(NULL) +
     ylab(NULL)
 
