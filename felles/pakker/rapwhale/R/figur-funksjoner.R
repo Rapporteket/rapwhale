@@ -137,38 +137,64 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
 }
 
 
-#' Lag Søylediagram
+#' Lag søylediagram
 #'
-#' Funksjon for å lage søylediagram.
+#' @description Funksjon for å laga søylediagram.
 #'
-#' @param d Datasett som inkluderer de variablene man ønsker å bruke i søylediagrammet.
-#' @param x Variabel for x-aksen - Vanligvis er dette en kategorisk variabel.
-#' @param y Variabel for y-aksen - En kontinuerlig variabel. Kan være en prosent.
-#' @param farge Fargen på søylene. Default er SKDE-blå. Kan endres i andre sammenhenger.
-#' @param facet Boolsk variabel som bestemmer om man skal lage panel på en variabel. TRUE eller FALSE.
-#' @param facet_gruppe Hvilken variabel som skal brukes for å dele på panel. Brukes kun hvis facet = TRUE.
-#' @param prosent Om Y-aksen er en prosent (TRUE) eller ikke (FALSE). Er prosent som standard, siden disse er mest vanlig.
+#' @param d Datasett som inkluderer dei variablane som skal brukast søylediagrammet.
+#' @param x Variabel for x-aksen - Vanlegvis er dette ein kategorisk variabel.
+#' @param y Variabel for y-aksen - Ein kontinuerleg variabel. Kan vere en prosent.
+#' @param flip Logisk variabel som seier om diagrammet skal flippast.
+#' @param facet Logisk variabel som seier om ein skal laga panel på ein variabel.
+#' @param facet_gruppe Variabel som skal brukast for å laga panel. Brukast kun viss `facet` = TRUE.
+#' @param facet_col Numerisk variabel som seier kor mange kolonnar med panel som skal lagast. Brukast kun viss `facet` = TRUE.
+#' @param prosent Logisk variabel som seier om y-aksen er en prosent eller ikkje. Standard verdi FALSE.
+#' @param farge Fargen på søylene. Standard er SKDE-blå. Kan endrast i andre sammenhengar.
+#' @param ymax Maksverdi på y-aksen.
+#' @param y_mellomrom Avstand mellom linjene på y-aksen.
+#'
+#' @details
+#'
+#' @return Eit søylediagram som ggplot-objekt.
+#'
 #' @export
-lag_fig_soyle = function(d, x, y, farge = ColPrim[3], facet = FALSE, facet_gruppe = NULL, prosent = TRUE, ...) {
-  x_var = syms(x)[[1]]
-  y_var = syms(y)[[1]]
-
-  plott = ggplot(d, aes(x = !!x_var, y = !!y_var)) +
-    geom_barh(stat = "identity", fill = farge, width = 2 / 3) +
+#' @examples
+#' d = tibble(gruppe = c("a", "b", "c"), verdi = c(2.6, 2.1, 3.2))
+#' lag_fig_soyle(d, gruppe, verdi)
+#' lag_fig_soyle(d, gruppe, verdi, flip = TRUE)
+#' d = tibble(gruppe = c("a", "b", "c"), verdi = c(0.6, 0.5, 0.9))
+#' lag_fig_soyle(d, gruppe, verdi, flip = TRUE, prosent = TRUE)
+lag_fig_soyle = function(d, x, y, flip = FALSE, facet = FALSE, facet_gruppe = NULL, facet_col = NULL, prosent = FALSE,
+                         farge = farger_kvalreg()$farger_hoved[3], ymax = NA, y_mellomrom = NULL) {
+  plott = ggplot(d, aes({{ x }}, {{ y }})) +
+    geom_bar(stat = "identity", width = 2 / 3, fill = farge) +
+    tema_kvalreg() +
     xlab(NULL) +
-    ylab(NULL) +
-    fjern_y() +
-    scale_x_continuous(expand = expand_soyle()) +
-    fjern_y_ticks()
-  if (facet) {
-    facet_gruppe = syms(facet_gruppe)[[1]]
-    plott = plott + facet_wrap(vars(!!facet_gruppe))
-    plott
-  }
+    ylab(NULL)
+
   if (prosent) {
-    plott = plott +
-      scale_x_continuous(labels = akse_prosent, limits = c(NA, 1), breaks = scales::breaks_width(0.1), expand = expand_soyle())
-    plott
+    plott = plott + scale_y_continuous(
+      expand = expand_soyle(), labels = akse_prosent_format(0),
+      limits = c(NA, 1), breaks = scales::breaks_width(0.1)
+    )
+  } else if (is.null(y_mellomrom)) {
+    plott = plott + scale_y_continuous(expand = expand_soyle(), limits = c(0, ymax))
+  } else {
+    plott = plott + scale_y_continuous(expand = expand_soyle(), limits = c(0, ymax), breaks = scales::breaks_width(y_mellomrom))
+  }
+
+  if (facet) {
+    facet_gruppe = enquo(facet_gruppe)
+
+    plott = plott + facet_wrap(facet_gruppe, ncol = facet_col)
+  }
+
+  if (flip) {
+    plott = plott + coord_flip() +
+      fjern_y() + fjern_y_ticks()
+  } else {
+    plott = plott + fjern_x() +
+      fjern_x_ticks()
   }
   plott
 }
