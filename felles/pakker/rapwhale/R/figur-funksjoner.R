@@ -144,14 +144,7 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
 #' @param d Datasett som inkluderer dei variablane som skal brukast søylediagrammet.
 #' @param x Variabel for x-aksen - Vanlegvis er dette ein kategorisk variabel.
 #' @param y Variabel for y-aksen - Ein kontinuerleg variabel. Kan vere en prosent.
-#' @param flip Logisk variabel som seier om diagrammet skal flippast.
-#' @param facet Logisk variabel som seier om ein skal laga panel på ein variabel.
-#' @param facet_gruppe Variabel som skal brukast for å laga panel. Brukast kun viss `facet` = TRUE.
-#' @param facet_col Numerisk variabel som seier kor mange kolonnar med panel som skal lagast. Brukast kun viss `facet` = TRUE.
-#' @param prosent Logisk variabel som seier om y-aksen er en prosent eller ikkje. Standard verdi FALSE.
 #' @param farge Fargen på søylene. Standard er SKDE-blå. Kan endrast i andre sammenhengar.
-#' @param ymax Maksverdi på y-aksen.
-#' @param y_mellomrom Avstand mellom linjene på y-aksen.
 #'
 #' @details
 #'
@@ -161,41 +154,9 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
 #' @examples
 #' d = tibble(gruppe = c("a", "b", "c"), verdi = c(2.6, 2.1, 3.2))
 #' lag_fig_soyle(d, gruppe, verdi)
-#' lag_fig_soyle(d, gruppe, verdi, flip = TRUE)
-#' d = tibble(gruppe = c("a", "b", "c"), verdi = c(0.6, 0.5, 0.9))
-#' lag_fig_soyle(d, gruppe, verdi, flip = TRUE, prosent = TRUE)
-lag_fig_soyle = function(d, x, y, flip = FALSE, facet = FALSE, facet_gruppe = NULL, facet_col = NULL, prosent = FALSE,
-                         farge = farger_kvalreg()$farger_hoved[3], ymax = NA, y_mellomrom = NULL, ...) {
+lag_fig_soyle = function(d, x, y, farge = farger_kvalreg()$farger_hoved[3], ...) {
   plott = ggplot(d, aes({{ x }}, {{ y }})) +
-    geom_bar(stat = "identity", width = 2 / 3, fill = farge, ...) +
-    xlab(NULL) +
-    ylab(NULL)
-
-  if (prosent) {
-    plott = plott + scale_y_continuous(
-      expand = expand_soyle(), labels = akse_prosent_format(0),
-      limits = c(NA, 1), breaks = scales::breaks_width(0.1)
-    )
-  } else if (is.null(y_mellomrom)) {
-    plott = plott + scale_y_continuous(expand = expand_soyle(), limits = c(0, ymax))
-  } else {
-    plott = plott + scale_y_continuous(expand = expand_soyle(), limits = c(0, ymax), breaks = scales::breaks_width(y_mellomrom))
-  }
-
-  if (facet) {
-    facet_gruppe = enquo(facet_gruppe)
-
-    plott = plott + facet_wrap(facet_gruppe, ncol = facet_col)
-  }
-
-  if (flip) {
-    plott = plott + coord_flip() +
-      fjern_y() + fjern_y_ticks()
-  } else {
-    plott = plott + fjern_x() +
-      fjern_x_ticks()
-  }
-  plott
+    geom_bar(stat = "identity", width = 2 / 3, fill = farge, ...)
 }
 
 #' Lag histogram
