@@ -165,9 +165,9 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
 #' d = tibble(gruppe = c("a", "b", "c"), verdi = c(0.6, 0.5, 0.9))
 #' lag_fig_soyle(d, gruppe, verdi, flip = TRUE, prosent = TRUE)
 lag_fig_soyle = function(d, x, y, flip = FALSE, facet = FALSE, facet_gruppe = NULL, facet_col = NULL, prosent = FALSE,
-                         farge = farger_kvalreg()$farger_hoved[3], ymax = NA, y_mellomrom = NULL) {
+                         farge = farger_kvalreg()$farger_hoved[3], ymax = NA, y_mellomrom = NULL, ...) {
   plott = ggplot(d, aes({{ x }}, {{ y }})) +
-    geom_bar(stat = "identity", width = 2 / 3, fill = farge) +
+    geom_bar(stat = "identity", width = 2 / 3, fill = farge, ...) +
     xlab(NULL) +
     ylab(NULL)
 
