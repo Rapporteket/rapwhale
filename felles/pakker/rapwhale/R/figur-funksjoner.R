@@ -155,7 +155,7 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
 #' d = tibble(gruppe = c("a", "b", "c"), verdi = c(2.6, 2.1, 3.2))
 #' lag_fig_soyle(d, gruppe, verdi)
 lag_fig_soyle = function(d, x, y, farge = farger_kvalreg()$farger_hoved[3], ...) {
-  plott = ggplot(d, aes({{ x }}, {{ y }})) +
+  ggplot(d, aes({{ x }}, {{ y }})) +
     geom_bar(stat = "identity", width = 2 / 3, fill = farge, ...)
 }
 
