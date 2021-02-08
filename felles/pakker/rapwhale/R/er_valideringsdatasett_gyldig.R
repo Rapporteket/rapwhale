@@ -1,25 +1,44 @@
 #' Valider valideringsdatasett
 #'
-#' @description Tek inn eit valideringsdatasett og returnerer TRUE eller FALSE
-#'              alt etter om det er på rett format eller ikkje.
+#' @description Tek inn eit valideringsdatasett og returnerer `TRUE` eller
+#'              `FALSE` dersom det er høvesvis gyldig eller ugyldig.
 #'
-#' @param d_vld valideringsdatasett som skal sjekkast.
+#' @param d_vld Valideringsdatasett (dataramme/tibble).
 #'
 #' @details
-#' Funksjonen sjekkar om `d_vld` er på rett format, og returnerer så TRUE
-#' eller FALSE.
+#' Eit gyldig valideringsdatasett består av éin eller fleire
+#' indeksvariablar, variablane `vld_varnamn` og `vld_vartype` og
+#' to eller fleire verdivariablar.
 #'
-#' For å vera eit gyldig valideringsdatasett må `d_vld` vera ein data.frame
-#' eller tibble og ha tekstkolonnar `vld_varnamn` og `vld_vartype`.
-#' `vld_varnamn` og `vld_vartype` kan ikkje ha `NA`-verdiar eller tomme
-#' tekststrengar. `vld_vartype` må starta med ein bokstav, og berre innehalda
-#' bokstavar og/eller siffer. Kombinasjonen av verdiar til `vld_varnamn` og
-#' variablar som ikkje startar med `vld_` skal vera unik for kvar rad. For
-#' kvar unike verdi `x` av `vld_vartype` så skal det finnast ein variabel
-#' `vld_verdi_intern_x` og `vld_verdi_ekstern_x`. Kolonnar med namn som
-#' `vld_tull` er ikkje lov (`vld_` er reservert prefiks).
+#' Eksempel på indeksvariablar er pasient- og/eller forløps-ID pluss ekstra
+#' metadata som kjønn, sjukehus og operasjonstype. Saman med `vld_varnamn`
+#' skal indeksvariablane unikt identifisera ei rad (observasjonen som skal
+#' validerast).
 #'
-#' @return TRUE/FALSE, alt etter om inndata er på rett format eller ikkje.
+#' Variabelen `vld_varnamn` inneheld namnet på variabelen som rada
+#' inneheld valideringsdata for, mens `vld_vartype` seier kva
+#' type variabel det er, for eksempel tal, tekst eller dato.
+#' Ein kan fritt velja kva verdiar ein brukar for `vld_vartype`
+#' (for eksempel `"tal"`, `"tall"`, `"heiltal"` eller `"int32"`),
+#' men verdien må starta med ein bokstav og berre innehalda
+#' bokstavar og/eller siffer.
+#'
+#' For kvar unike `vld_vartype` skal det finnast verdivariablar –
+#' variablar med prefiksa `vld_verdi_intern_` og `vld_verdi_ekstern_`.
+#' Viss for eksempel ein `vld_vartype` er `"tal"`, skal det finnast
+#' verdivariablar `vld_verdi_intern_tal` og `vld_verdi_ekstern_tal`.
+#' Den første seier kva verdi variabelen i `vld_varnamn` har i den
+#' *interne* kjelda, som typisk er eit kvalitetsregister, og den
+#' andre seier kva verdi han har i den *eksterne* kjelda, som typisk
+#' er ein pasientjournal eller eit anna fagsystem. Dei to variablane
+#' skal naturlegvis ha tilsvarande variabeltype som `vld_vartype`,
+#' for `"tal"` for eksempel' `double` eller `integer`.
+#'
+#' Det skal ikkje finnast andre kolonnar som startar med `vld_` enn
+#' dei som er nemnde ovanfor (`vld_` er eit reservert prefiks).
+#'
+#' @return `TRUE` dersom datasettet er gyldig og `FALSE` dersom det
+#'         ikkje er det.
 #' @export
 #'
 #' @examples
