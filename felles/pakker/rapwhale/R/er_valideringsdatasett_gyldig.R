@@ -42,13 +42,31 @@
 #' @export
 #'
 #' @examples
-#' d_vld = tibble(
-#'   pasid = 101, vld_varnamn = "vekt", vld_vartype = "tal",
-#'   vld_verdi_intern_tal = 76,
-#'   vld_verdi_ekstern_tal = as.numeric(NA)
+#' # Eksempel på gyldig valideringsdatasett med to ulike variabeltypar,
+#' # "tal" («double») og "logisk" («logical»). Merk at variabelen «vekt»
+#' # har to verdiar for same pasient, men det er OK, sidan det var på to
+#' # ulike operasjonsdatoar.
+#' d_vld_gyldig = tibble::tibble(
+#'   pasient_id = c(5, 5, 5, 7),
+#'   dato_operasjon = as.Date(c("2020-06-07", "2020-12-13", "2020-12-13", "2021-02-05")),
+#'   kjonn = c("mann", "mann", "mann", "kvinne"),
+#'   sjukehus = c("Bergen", "Bergen", "Førde", "Stavanger"),
+#'   vld_varnamn = c("vekt", "vekt", "diabetes", "diabetes"),
+#'   vld_vartype = c("tal", "tal", "logisk", "logisk"),
+#'   vld_verdi_intern_tal = c(78, 88, NA, NA),
+#'   vld_verdi_ekstern_tal = c(78, 90, NA, NA),
+#'   vld_verdi_intern_logisk = c(NA, NA, TRUE, FALSE),
+#'   vld_verdi_ekstern_logisk = c(NA, NA, TRUE, NA)
 #' )
 #'
-#' er_valideringsdatasett_gyldig(d_vld)
+#' er_valideringsdatasett_gyldig(d_vld_gyldig) # TRUE
+#'
+#' # Eksempel på ugyldig valideringsdatasett, der indeksvariablane
+#' # pluss «vld_varnamn» ikkje unikt identifiserer ei rad.
+#' d_vld_ugyldig = d_vld_gyldig
+#' d_vld_ugyldig$dato_operasjon[2] = d_vld_ugyldig$dato_operasjon[1]
+#'
+#' er_valideringsdatasett_gyldig(d_vld_ugyldig) # FALSE
 er_valideringsdatasett_gyldig = function(d_vld) {
   # Oversikt over alle kolonnenamn og kolonnenamn for «vld_»-kolonnane,
   # for seinare bruk
