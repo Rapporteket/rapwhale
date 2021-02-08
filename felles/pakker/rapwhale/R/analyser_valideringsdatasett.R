@@ -69,8 +69,8 @@ analyser_valideringsdatasett = function(d_vld, samanliknar = samanlikn_identisk)
     ekstern = glue::glue("vld_verdi_ekstern_{vartype}")
 
     er_like = samanliknar(
-      d_vld_vartype[["vld_varnamn"]],
-      d_vld_vartype[[intern]], d_vld_vartype[[ekstern]]
+      d_vld_vartype[[intern]], d_vld_vartype[[ekstern]],
+      d_vld_vartype$vld_varnamn
     )
 
     # Feilmelding viss samanliknar gjev NA-verdiar

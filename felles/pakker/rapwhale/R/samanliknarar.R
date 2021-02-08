@@ -3,9 +3,9 @@
 #' @description Samanliknar verdiane i `verdi1` og `verdi2` elementvis, og
 #'              returnerer svara i ein logisk vektor.
 #'
-#' @param varnamn Vektor med namn på variablar som skal samanliknast. (Ingen funksjon i denne samanliknaren)
 #' @param verdi1 Vektor med verdiar som skal samanliknast mot `verdi2`.
 #' @param verdi2 Vektor med verdiar som skal samanliknast mot `verdi1`.
+#' @param varnamn Vektor med namn på variablar som skal samanliknast. (Ingen funksjon i denne samanliknaren)
 #'
 #' @details
 #' Funksjonen samanliknar verdiane i `verdi1` og `verdi2` elementvis, og
@@ -32,7 +32,7 @@
 #'   verdi1 = c(74, 72, 50, NA),
 #'   verdi2 = c(74, NA, 53, NA)
 #' )
-samanlikn_identisk = function(varnamn, verdi1, verdi2) {
+samanlikn_identisk = function(verdi1, verdi2, varnamn = NULL) {
   # Utdata skal seia (elementvis) om verdi1 er lik verdi2 og skal handtera NA-verdiar
   like = (verdi1 == verdi2) | (is.na(verdi1) & is.na(verdi2))
   like[is.na(like)] = FALSE
