@@ -36,22 +36,18 @@ test_that("Utdata skal seia (elementvis) om verdi1 er lik verdi2", {
   )
 })
 
-test_that("Skal handtera NA-verdiar", {
-  expect_identical(
-    samanlikn_identisk(
-      varnamn = "dato_ut",
-      verdi1 = NA,
-      verdi2 = NA
-    ),
-    TRUE
-  )
+test_that("samanlikn_identisk() fungerer òg for vektorar med 1 eller 0 element", {
+  # Eitt element
+  expect_identical(samanlikn_identisk(
+    varnamn = "vekt",
+    verdi1 = c(74),
+    verdi2 = c(74)
+  ), TRUE)
 
-  expect_identical(
-    samanlikn_identisk(
-      varnamn = "vekt",
-      verdi1 = c(75, 66),
-      verdi2 = c(NA, 66)
-    ),
-    c(FALSE, TRUE)
-  )
+  # Null element
+  expect_identical(samanlikn_identisk(
+    varnamn = character(),
+    verdi1 = numeric(),
+    verdi2 = numeric()
+  ), logical())
 })
