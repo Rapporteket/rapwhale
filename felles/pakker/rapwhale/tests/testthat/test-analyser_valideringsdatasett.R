@@ -41,7 +41,7 @@ test_that("Gjev ut valideringsdatasettet med info i ekstrakolonne om verdiane
           i kvar rad er «like»", {
   expect_identical(
     analyser_valideringsdatasett(d_vld_gyldig),
-    tibble(d_vld_gyldig,
+    bind_cols(d_vld_gyldig,
       vld_verdiar_er_like = c(TRUE, FALSE, FALSE, TRUE, FALSE, TRUE, TRUE, FALSE)
     )
   )
@@ -90,13 +90,12 @@ test_that("Skal stoppa med feilmelding dersom utdata frå samanliknaren ikkje er
 test_that("Skal fungera med grupperte inndata, og utdata skal bevara grupperinga", {
   d_vld_gruppert = d_vld_gyldig %>%
     group_by(kjonn, sjukehus)
-  d_vld_gruppert_resultat = tibble(d_vld_gruppert,
+  d_vld_gruppert_resultat = bind_cols(d_vld_gruppert,
     vld_verdiar_er_like = c(
       TRUE, FALSE, FALSE, TRUE,
       FALSE, TRUE, TRUE, FALSE
     )
-  ) %>%
-    group_by(kjonn, sjukehus)
+  )
 
   expect_identical(analyser_valideringsdatasett(d_vld_gruppert), d_vld_gruppert_resultat)
   expect_identical(
