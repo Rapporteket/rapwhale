@@ -55,7 +55,7 @@ analyser_valideringsdatasett = function(d_vld, samanliknar = samanlikn_identisk)
   # Gjev ut valideringsdatasettet med info i ekstrakolonne om verdiane
   # i kvar rad er «like»
 
-  d_vld_med_rekkefolgje = tibble(d_vld, rekkefolgje = c(1:nrow(d_vld)))
+  d_vld_med_rekkefolgje = tibble(d_vld, rekkefolgje = seq_len(nrow(d_vld)))
 
   vartypar_som_finst = unique(d_vld$vld_vartype)
 
