@@ -45,8 +45,7 @@ samanlikn_identisk = function(verdi1, verdi2, varnamn = NULL) {
     stop("Argumenta må vera vektorar av same lengd")
   }
 
-  # Utdata skal seia (elementvis) om verdi1 er lik verdi2 og skal handtera NA-verdiar
   like = (verdi1 == verdi2) | (is.na(verdi1) & is.na(verdi2))
   like[is.na(like)] = FALSE
-  return(like)
+  like
 }
