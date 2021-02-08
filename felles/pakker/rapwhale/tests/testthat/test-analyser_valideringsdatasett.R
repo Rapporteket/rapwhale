@@ -47,6 +47,14 @@ test_that("Gjev ut valideringsdatasettet med info i ekstrakolonne om verdiane
   )
 })
 
+test_that("Gjev ut valideringsdatasettet med rett ekstrakolonne også om inndata har 0 rader", {
+  d_vld_tom = d_vld_gyldig[c(), ]
+  expect_identical(
+    analyser_valideringsdatasett(d_vld_tom),
+    bind_cols(d_vld_tom, vld_verdiar_er_like = logical())
+  )
+})
+
 test_that("Skal stoppa med feilmelding dersom samanliknaren gjev ut NA-verdiar", {
   samanliknar_lag_NA = function(varnamn, verdi1, verdi2) {
     return(rep(NA, length(verdi1)))
