@@ -33,6 +33,18 @@
 #'   verdi2 = c(74, NA, 53, NA)
 #' )
 samanlikn_identisk = function(verdi1, verdi2, varnamn = NULL) {
+  if (!(typeof(verdi1) == typeof(verdi2))) {
+    stop("«verdi1» og «verdi2» må vera av same type")
+  }
+  if (!((is.character(varnamn) || is.null(varnamn)))) {
+    stop("«varnamn» må vera tekstvektor eller NULL")
+  }
+  if (!((length(verdi1) == length(verdi2) &&
+    (is.null(varnamn) || length(verdi1) == length(varnamn))
+  ))) {
+    stop("Argumenta må vera vektorar av same lengd")
+  }
+
   # Utdata skal seia (elementvis) om verdi1 er lik verdi2 og skal handtera NA-verdiar
   like = (verdi1 == verdi2) | (is.na(verdi1) & is.na(verdi2))
   like[is.na(like)] = FALSE
