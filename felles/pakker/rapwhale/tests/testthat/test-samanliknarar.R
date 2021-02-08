@@ -46,6 +46,11 @@ test_that("samanlikn_identisk() gjev feilmelding viss verdiane ikkje er av same 
   expect_error(samanlikn_identisk(verdi1 = "74", verdi2 = 74, varnamn = 123))
 })
 
+test_that("samanlikn_identisk() gjev feilmelding dersom «varnamn» ikkje er tekst eller NULL", {
+  expect_error(samanlikn_identisk(verdi1 = 74, verdi2 = 74, varnamn = 123))
+  expect_error(samanlikn_identisk(verdi1 = 74, verdi2 = 74, varnamn = function(x) x))
+})
+
 test_that("samanlikn_identisk() fungerer òg dersom «varnamn» er NULL", {
   expect_error(samanlikn_identisk(verdi1 = 74, verdi2 = 74, varnamn = NULL), NA)
 })
