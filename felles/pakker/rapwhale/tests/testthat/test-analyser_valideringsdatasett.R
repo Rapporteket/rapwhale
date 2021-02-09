@@ -56,30 +56,30 @@ test_that("Gjev ut valideringsdatasettet med rett ekstrakolonne også om inndata
 })
 
 test_that("Skal stoppa med feilmelding dersom samanliknaren gjev ut NA-verdiar", {
-  samanliknar_lag_NA = function(varnamn, verdi1, verdi2) {
+  samanliknar_lag_NA = function(verdi1, verdi2, varnamn) {
     return(rep(NA, length(verdi1)))
   }
   expect_error(analyser_valideringsdatasett(d_vld_gyldig, samanliknar_lag_NA))
 })
 
 test_that("Skal stoppa med feilmelding dersom utdata frå samanliknaren har feil lengd", {
-  samanliknar_feil_lengd = function(varnamn, verdi1, verdi2) {
-    return(c(samanlikn_identisk(varnamn, verdi1, verdi2), TRUE))
+  samanliknar_feil_lengd = function(verdi1, verdi2, varnamn) {
+    return(c(samanlikn_identisk(verdi1, verdi2, varnamn), TRUE))
   }
   expect_error(
     analyser_valideringsdatasett(d_vld_gyldig, samanliknar_feil_lengd),
     "Utdata frå samanliknaren har feil lengd"
   )
 
-  samanliknar_feil_lengd_kort = function(varnamn, verdi1, verdi2) {
-    return(head(samanlikn_identisk(varnamn, verdi1, verdi2), -1))
+  samanliknar_feil_lengd_kort = function(verdi1, verdi2, varnamn) {
+    return(head(samanlikn_identisk(verdi1, verdi2, varnamn), -1))
   }
   expect_error(
     analyser_valideringsdatasett(d_vld_gyldig, samanliknar_feil_lengd_kort),
     "Utdata frå samanliknaren har feil lengd"
   )
 
-  samanliknar_feil_lengd_null = function(varnamn, verdi1, verdi2) {
+  samanliknar_feil_lengd_null = function(verdi1, verdi2, varnamn) {
     return(logical())
   }
   expect_error(
@@ -89,8 +89,8 @@ test_that("Skal stoppa med feilmelding dersom utdata frå samanliknaren har feil
 })
 
 test_that("Skal stoppa med feilmelding dersom utdata frå samanliknaren ikkje er logisk vektor", {
-  samanliknar_feil_type = function(varnamn, verdi1, verdi2) {
-    return(as.character(samanlikn_identisk(varnamn, verdi1, verdi2)))
+  samanliknar_feil_type = function(verdi1, verdi2, varnamn) {
+    return(as.character(samanlikn_identisk(verdi1, verdi2, varnamn)))
   }
   expect_error(analyser_valideringsdatasett(d_vld_gyldig, samanliknar_feil_type))
 })
