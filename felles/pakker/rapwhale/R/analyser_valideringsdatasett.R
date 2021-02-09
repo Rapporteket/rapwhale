@@ -46,7 +46,6 @@
 #' )
 #' analyser_valideringsdatasett(d_vld)
 analyser_valideringsdatasett = function(d_vld, samanliknar = samanlikn_identisk) {
-  # Skal stoppa med feilmelding dersom inndata ikkje er gyldig
   if (!er_valideringsdatasett_gyldig(d_vld)) {
     stop("Datasettet er ikkje på rett format")
   }
@@ -55,48 +54,40 @@ analyser_valideringsdatasett = function(d_vld, samanliknar = samanlikn_identisk)
   # Gjev ut valideringsdatasettet med info i ekstrakolonne om verdiane
   # i kvar rad er «like»
 
-  d_vld_med_rekkefolgje = tibble(d_vld, rekkefolgje = seq_len(nrow(d_vld)))
+  vartypar = unique(d_vld$vld_vartype)
 
-  vartypar_som_finst = unique(d_vld$vld_vartype)
+  if (length(vartypar) == 0) {
+    d_vld$vld_verdiar_er_like = logical()
+  }
 
-  d_vld_verdiar_er_like = d_vld_med_rekkefolgje[c(), ]
-  d_vld_verdiar_er_like = tibble(d_vld_verdiar_er_like, vld_verdiar_er_like = logical())
+  for (vartype in vartypar) {
+    radnr_med_vartype = which(d_vld$vld_vartype == vartype)
 
-  for (vartype in vartypar_som_finst) {
-    d_vld_vartype = filter(d_vld_med_rekkefolgje, vld_vartype == vartype)
-
-    intern = glue::glue("vld_verdi_intern_{vartype}")
-    ekstern = glue::glue("vld_verdi_ekstern_{vartype}")
+    verdi_intern = glue::glue("vld_verdi_intern_{vartype}")
+    verdi_ekstern = glue::glue("vld_verdi_ekstern_{vartype}")
 
     er_like = samanliknar(
-      d_vld_vartype[[intern]], d_vld_vartype[[ekstern]],
-      d_vld_vartype$vld_varnamn
+      d_vld[[verdi_intern]][radnr_med_vartype],
+      d_vld[[verdi_ekstern]][radnr_med_vartype],
+      d_vld$vld_varnamn[radnr_med_vartype]
     )
 
-    # Feilmelding viss samanliknar gjev NA-verdiar
+    # Feilmelding viss samanliknar gjev ugyldige verdiar
+
     if (anyNA(er_like)) {
       stop("NA-verdiar frå samanliknaren")
     }
 
-    # Feilmelding viss utdata frå samanliknar har feil lengd
-    if (length(er_like) != length(d_vld_vartype[[intern]])) {
+    if (class(er_like) != "logical") {
+      stop("Ikkje logisk vektor frå samanliknaren")
+    }
+
+    antal_rader_vartype = nrow(d_vld[radnr_med_vartype, ])
+    if (length(er_like) != antal_rader_vartype) {
       stop("Utdata frå samanliknaren har feil lengd")
     }
 
-    d_vld_vartype = tibble(d_vld_vartype, vld_verdiar_er_like = er_like)
-
-    d_vld_verdiar_er_like = add_row(d_vld_verdiar_er_like, d_vld_vartype)
+    d_vld[radnr_med_vartype, "vld_verdiar_er_like"] = er_like
   }
-
-  # Skal ta vare på opphavleg rekkefølgje
-  d_vld_verdiar_er_like = d_vld_verdiar_er_like %>%
-    arrange(rekkefolgje) %>%
-    select(-rekkefolgje)
-
-  # Skal ta vare på opphavleg gruppering
-  gruppering = groups(d_vld)
-  d_vld_verdiar_er_like = d_vld_verdiar_er_like %>%
-    group_by(.dots = gruppering)
-
-  return(d_vld_verdiar_er_like)
+  d_vld
 }
