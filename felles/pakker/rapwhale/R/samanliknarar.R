@@ -41,7 +41,7 @@ samanlikn_identisk = function(verdi1, verdi2, varnamn = NULL) {
   if (!(typeof(verdi1) == typeof(verdi2))) {
     stop("«verdi1» og «verdi2» må vera av same type")
   }
-  if (!((is.character(varnamn) || is.null(varnamn)))) {
+  if (!(is.character(varnamn) || is.null(varnamn))) {
     stop("«varnamn» må vera tekstvektor eller NULL")
   }
   if (!((length(verdi1) == length(verdi2) &&
