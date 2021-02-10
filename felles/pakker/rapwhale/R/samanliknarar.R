@@ -1,36 +1,41 @@
-#' Samanlikn identisk
+#' Undersøk om verdiar i vektorar er identiske
 #'
-#' @description Samanliknar verdiane i `verdi1` og `verdi2` elementvis, og
-#'              returnerer svara i ein logisk vektor.
+#' @description Samanliknar elementvis om verdiane i to vektorar er identiske
+#'              (inkludert tilfellet der begge er `NA`). Er meint å brukast
+#'              saman med [analyser_valideringsdatasett()]
 #'
-#' @param verdi1 Vektor med verdiar som skal samanliknast mot `verdi2`.
-#' @param verdi2 Vektor med verdiar som skal samanliknast mot `verdi1`.
-#' @param varnamn Vektor med namn på variablar som skal samanliknast. (Ingen funksjon i denne samanliknaren)
+#' @param verdi1 Vektor med verdiar av valfri type.
+#' @param verdi2 Vektor med verdiar av same type som `verdi1`.
+#' @param varnamn Vektor med namn på variablane som skal samanliknast.
+#'   Må ha same lengd som `verdi1` og `verdi2` eller vera `NULL`.
 #'
 #' @details
-#' Funksjonen samanliknar verdiane i `verdi1` og `verdi2` elementvis, og
-#' returnerer TRUE eller FALSE for kvart par alt etter om dei er identiske
-#' eller ikkje. Funksjonen handterar også NA-verdiar.
+#' Funksjonen samanliknar verdiane i `verdi1` og `verdi2` elementvis og
+#' returnerer ein logisk vektor som seier om dei er identiske.
+#' Fungerer i praksis som `==`, men med den forskjellen at to `NA`-verdiar
+#' òg vert rekna som identiske.
 #'
-#' `verdi1` og `verdi2` må ha same lengd, og utdata vil også få den same lengda.
+#' Argumentet `varnamn` har ingen verknad, men er med for at funksjonen
+#' skal vera på same format som andre samanliknarar, for kompatibilitet
+#' med [analyser_valideringsdatasett()].
 #'
-#' `varnamn` har ingen funksjon i denne samanliknaren, men er med for at
-#' funksjonen skal vera på same format som andre samanliknarar.
-#'
-#' @return Logisk vektor som elementvis seier om `verdi1` er identisk `verdi2`.
+#' @return Logisk vektor som elementvis seier om `verdi1` er identisk
+#'   med `verdi2` (`TRUE`) eller ikkje (`FALSE`). Vil aldri innehalda
+#'   `NA`-verdiar.
 #' @export
 #'
 #' @examples
+#' # Samanlikn NA-handteringa med den i «==»
+#' x1 = c(5, 7, NA, NA)
+#' x2 = c(5, 8, NA, 5)
+#' samanlikn_identisk(x1, x2)
+#' x1 == x2
+#' #
+#' # Handterer verdiar av valfri type/klasse
 #' samanlikn_identisk(
-#'   varnamn = "dato_ut",
-#'   verdi1 = as.Date("2020-06-07"),
-#'   verdi2 = as.Date("2020-06-07")
-#' )
-#'
-#' samanlikn_identisk(
-#'   varnamn = rep("vekt", 4),
-#'   verdi1 = c(74, 72, 50, NA),
-#'   verdi2 = c(74, NA, 53, NA)
+#'   verdi1 = as.Date(c("1999-05-17", "1999-12-24")),
+#'   verdi2 = as.Date(c("1999-05-17", "2000-12-24")),
+#'   varnamn = c("dato_ut", "dato_ut")
 #' )
 samanlikn_identisk = function(verdi1, verdi2, varnamn = NULL) {
   if (!(typeof(verdi1) == typeof(verdi2))) {
