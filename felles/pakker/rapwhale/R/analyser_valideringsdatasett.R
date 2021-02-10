@@ -37,7 +37,8 @@
 #' slingringsmonn når han samanliknar to vektverdiar målt i gram enn to
 #' temperaturmålingar målt i Celsius.
 #' 
-#' @return Opphavleg datasett med ein ekstra kolonne `vld_verdiar_er_like`,
+#' @return Opphavleg datasett, men med ein ekstra kolonne
+#'         `vld_verdiar_er_like` lagd til,
 #'         som er `TRUE` for kvar rad der verdiane som skal samanliknast, er 
 #'         «like» i følgje `samanliknar`, og `FALSE` der dei ikkje er det.
 #' @export
