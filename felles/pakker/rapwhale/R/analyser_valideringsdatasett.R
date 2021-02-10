@@ -1,4 +1,4 @@
-#' Analyser valideringsdatasett
+#' Analyser valideringsdatasett ved å samanlikna verdiar
 #' 
 #' @description Tek inn eit valideringsdatasett og ein samanliknarfunksjon, 
 #'              og returnerer datasettet med ein ekstra kolonne som seier
