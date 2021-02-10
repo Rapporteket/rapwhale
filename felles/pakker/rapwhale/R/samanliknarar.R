@@ -30,7 +30,7 @@
 #' x2 = c(5, 8, NA, 5)
 #' samanlikn_identisk(x1, x2)
 #' x1 == x2
-#' #
+#'
 #' # Handterer verdiar av valfri type/klasse
 #' samanlikn_identisk(
 #'   verdi1 = as.Date(c("1999-05-17", "1999-12-24")),
