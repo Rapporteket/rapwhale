@@ -28,7 +28,7 @@
 #' skal føregå. I praksis inneheld han namnet på variablane som verdiane i
 #' valideringsdatasettet var henta frå.
 #' 
-#' Argumentet `varnamn` kan eventuelt vera `NULL` dersom om samanliknarfunksjonen
+#' Argumentet `varnamn` kan vera `NULL` dersom om samanliknarfunksjonen
 #' støttar dette. Det er elles nødvendig å bruka ein samanliknarfunksjon
 #' som forstår verdiane til `varnamn`.
 #' 
