@@ -1,37 +1,45 @@
 #' Analyser valideringsdatasett
 #' 
 #' @description Tek inn eit valideringsdatasett og ein samanliknarfunksjon, 
-#'              og returnerer datasettet med ein ekstra kolonne med `TRUE` 
-#'              eller `FALSE` for kvar rad der verdiane som samanliknast er 
-#'              høvesvis «like» eller ikkje.
+#'              og returnerer datasettet med ein ekstra kolonne som seier
+#'              om verdiane som skal samanliknast, er «like» eller ikkje.
 #'
 #' @param d_vld Valideringsdatasett (dataramme/tibble).
-#' @param samanliknar Samanliknarfunksjon, standard `samanlikn_identisk()`.
+#' @param samanliknar Samanliknarfunksjon. Standard [samanlikn_identisk()].
 #' 
 #' @details 
 #' Funksjonen tek inn eit valideringsdatasett `d_vld` og ein samanliknarfunksjon 
-#' `samanliknar`, og returnerer datasettet med ein ekstra kolonne `vld_verdiar_er_like`. 
+#' `samanliknar`, og returnerer datasettet med ein ekstra kolonne
+#' `vld_verdiar_er_like` som for kvar rad seier om verdiane som skal
+#' samanliknast, er «like»/ekvivalente (som definert av samanliknarfunksjonen). 
 #' 
-#' `d_vld` må vera på rett format, dvs. `er_valideringsdatasett_gyldig(d_vld)`
-#'  må vera `TRUE`. Sjå `?er_valideringsdatasett_gyldig` for meir info.
+#' Sjå [er_valideringsdatasett_gyldig()] for definisjonen på eit
+#' (gyldig) valideringsdatasett. Det vert automatisk testa at `d_vld`
+#' er gyldig.
 #' 
-#' `samanliknar` skal vera ein funksjon som tek inn tre like lange vektorar, 
-#' der dei to fyrste er verdiane som skal samanliknast elementvis, og den siste 
-#' inneheld namna på variablane. Den skal returnera ein logisk vektor med same
-#' lengd som vektorane den tek inn, som er `TRUE` eller `FALSE` alt etter om 
-#' elementa er høvesvis «like» eller ei. Kva som vert rekna som «like» varierer 
-#' mellom ulike samanliknarfunksjonar.
+#' For kvar rad i `d_vld` der `vld_vartype` er for eksempel `"x"`,
+#' brukar funksjonen `samanliknar`-funksjonen til å samanlikna verdiane
+#' i `vld_verdi_intern_x` og `vld_verdi_ekstern_x` (i `d_vld`).
 #' 
-#' `analyser_valideringsdatasett()` brukar `samanliknar` til å samanlikna 
-#' `vld_verdi_intern_x` og `vld_verdi_ekstern_x` for kvar rad der `vld_vartype = x`.
+#' Argumentet `samanliknar` skal vera ein funksjon `f(verdi1, verdi2, varnamn)`
+#' som tek inn tre like lange vektorar (eller siste argument kan vera `NULL`).
+#' Dei to fyrste argumenta inneheld verdiane som skal samanliknast elementvis,
+#' og den siste er ein tekstvektor som elementvis seier korleis samanlikninga
+#' skal føregå. I praksis inneheld han namnet på variablane som verdiane i
+#' valideringsdatasettet var henta frå.
 #' 
-#' Til slutt returnerast det opphavlege datasettet `d_vld` med ein ekstra 
-#' kolonne `vld_verdiar_er_like` som er `TRUE` for kvar rad der verdiane som 
-#' vart samanlikna er «like», og `FALSE` der dei ikkje er «like».
-#'
-#' @return Returnerer opphavleg datasett med ein ekstra kolonne `vld_verdiar_er_like`
-#'         som er `TRUE` for kvar rad der verdiane som skal samanliknast er 
-#'         «like» i følgje `samanliknar`, og `FALSE` der dei ikkje er «like».
+#' Argumentet `varnamn` kan eventuelt vera `NULL` dersom om samanliknarfunksjonen
+#' støttar dette. Det er elles nødvendig å bruka ein samanliknarfunksjon
+#' som forstår verdiane til `varnamn`.
+#' 
+#' Eit eksempel kan vera at ein har `varnamn`-element som `"vekt_gram"` og
+#' `"temperatur"`, der samanliknarfunksjonen veit at at han skal ha større
+#' slingringsmonn når han samanliknar to vektverdiar målt i gram enn to
+#' temperaturmålingar målt i Celsius.
+#' 
+#' @return Opphavleg datasett med ein ekstra kolonne `vld_verdiar_er_like`,
+#'         som er `TRUE` for kvar rad der verdiane som skal samanliknast, er 
+#'         «like» i følgje `samanliknar`, og `FALSE` der dei ikkje er det.
 #' @export
 #'
 #' @examples
