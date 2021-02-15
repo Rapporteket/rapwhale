@@ -73,8 +73,8 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   d_skjema_id = readr::read_delim(
     adresse_skjema_id,
     delim = ";",
-    locale = locale(encoding = "windows-1252"),
-    col_types = cols(
+    locale = readr::locale(encoding = "windows-1252"),
+    col_types = readr::cols(
       skjema_id_datadump = col_character(),
       skjema_id_kodebok = col_character(),
       skjema_id_kodebok_ny = col_character()
