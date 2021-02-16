@@ -1,0 +1,49 @@
+---
+title: "Ekstern validering"
+author: "Per Erik Haugedal"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Ekstern validering}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r pakkelasting, include = FALSE}
+suppressPackageStartupMessages({
+  library(rapwhale)
+})
+```
+
+# Innleiing
+
+# Eksempel - lag valideringsdatasett
+
+Me har eit enkelt register som registrerer vekt, høgd, om pasienten har opplevd
+biverknad, og i så fall kva type biverknad. Nokre av variablane i registeret kan 
+sjå slik ut:
+
+```{r lageksempel, echo = FALSE}
+d_reg = tibble::tribble(
+  ~pasid, ~dato_inn, ~kjonn, ~sjukehus, ~dato_ut, ~vekt, ~hogd, ~biverk, ~biverk_hovud, ~biverk_mage, ~biverk_fot,
+  5, as.Date("2020-06-07"), "M", "Bergen", as.Date("2020-06-15"), 78, 183, TRUE, FALSE, TRUE, TRUE,
+  5, as.Date("2020-12-13"), "M", "Førde", as.Date("2020-12-13"), 50, 179, TRUE, FALSE, TRUE, TRUE,
+  7, as.Date("2020-08-09"), "K", "Bergen", as.Date("2020-08-13"), 711, 196, TRUE, TRUE, TRUE, TRUE,
+  13, as.Date("2021-01-05"), "M", "Førde", NA, NA, 163, FALSE, NA, NA, NA,
+  14, as.Date("2021-01-05"), "M", "Førde", as.Date("2021-01-09"), 101, 182, TRUE, TRUE, FALSE, FALSE
+)
+```
+
+Data i registeret skal samanliknast med data frå ein gullstandard, typisk 
+pasientjournal. Det skal lagast eit valideringsdatasett som er enkelt å fylla 
+inn i, og lett å køyra statistikk/analyse på når det er ferdig fylt ut.
