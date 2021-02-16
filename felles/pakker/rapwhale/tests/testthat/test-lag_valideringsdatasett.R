@@ -14,6 +14,24 @@ test_that("Feilmelding viss indsvars ikkje finst i datasettet", {
   expect_error(lag_valideringsdatasett(d_reg, indvars_ugyldig))
 })
 
+test_that("Gjev ut datasett med rett kolonnar viss inndata har 0 rader", {
+  d_reg_tom = d_reg[c(), ]
+  d_vld = lag_valideringsdatasett(d_reg_tom, indvars)
+  d_vld_tom = tibble(
+    pasid = numeric(),
+    dato_inn = as.Date(NULL),
+    vld_varnamn = character(),
+    vld_vartype = character(),
+    vld_verdi_intern_Date = as.Date(NULL),
+    vld_verdi_ekstern_Date = as.Date(NULL),
+    vld_verdi_intern_numeric = numeric(),
+    vld_verdi_ekstern_numeric = numeric(),
+    vld_verdi_intern_logical = logical(),
+    vld_verdi_ekstern_logical = logical()
+  )
+  expect_identical(d_vld, d_vld_tom)
+})
+
 test_that("Rekkjefølgja på pasientforløpa er teke vare på", {
   d_vld = lag_valideringsdatasett(d_reg, indvars)
   expect_identical(
