@@ -1,7 +1,9 @@
 lag_valideringsdatasett = function(d_reg, indvars, vartypar = NULL) {
+  vars = names(d_reg)
+  stopifnot(all(indvars %in% vars))
+
   # Lag oversikt over datavariablar
-  datavars = d_reg %>%
-    names() %>%
+  datavars = vars %>%
     setdiff(indvars)
 
   # Lag oversikt over variabeltypar
