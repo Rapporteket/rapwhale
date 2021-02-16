@@ -8,7 +8,8 @@ lag_valideringsdatasett = function(d_reg, indvars, vartypar = NULL) {
 
   # Lag oversikt over variabeltypar
   rvartypar = map(d_reg[datavars], ~ class(.x)) %>%
-    map_chr(first)
+    map_chr(first) %>%
+    unname()
   # Dersom eigne namn på variabeltypane ikkje er gitt brukar me R-klassen
   if (is.null(vartypar)) {
     vartypar = rvartypar
@@ -25,11 +26,12 @@ lag_valideringsdatasett = function(d_reg, indvars, vartypar = NULL) {
   # Lag valideringsdatasett
 
   d_vld = d_reg
-  d_vld$vld_varnamn = rep(list(datavars), nrow(d_vld))
+  d_vld$vld_varnamn = rep(list(datavars), nrow(d_reg))
   d_vld = d_vld %>%
     unnest(vld_varnamn) %>%
     left_join(d_kopling, by = "vld_varnamn")
-  d_vld$rekkjefolgje = seq_len(nrow(d_vld))
+  antal_rader = nrow(d_vld)
+  d_vld$rekkjefolgje = seq_len(antal_rader)
 
   # Legg til aktuelle resultatkolonnar, med rett variabelklasse
   prefiksverdiar = c("vld_verdi_intern_", "vld_verdi_ekstern_")
@@ -54,10 +56,12 @@ lag_valideringsdatasett = function(d_reg, indvars, vartypar = NULL) {
   }
 
   # For kvar variabel, flytt verdiane til rett kolonne
-  d_vld = d_vld %>%
-    group_by(vld_varnamn) %>%
-    do(flytt_resultat(.)) %>% # Ev. bruka purr-funksjonar til dette?
-    ungroup()
+  if (antal_rader > 0) {
+    d_vld = d_vld %>%
+      group_by(vld_varnamn) %>%
+      do(flytt_resultat(.)) %>% # Ev. bruka purr-funksjonar til dette?
+      ungroup()
+  }
 
   # Fjern gamle datavariabelkolonnar og hjelpekolonne
   d_vld = d_vld %>%
