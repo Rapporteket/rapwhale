@@ -27,6 +27,7 @@ lag_valideringsdatasett = function(d_reg, indvars, vartypar = NULL) {
   d_vld = d_vld %>%
     unnest(vld_varnamn) %>%
     left_join(d_kopling, by = "vld_varnamn")
+  d_vld$rekkjefolgje = seq_len(nrow(d_vld))
 
   # Legg til aktuelle resultatkolonnar, med rett variabelklasse
   prefiksverdiar = c("vld_verdi_intern_", "vld_verdi_ekstern_")
@@ -58,6 +59,7 @@ lag_valideringsdatasett = function(d_reg, indvars, vartypar = NULL) {
 
   # Fjern gamle datavariabelkolonnar og hjelpekolonne
   d_vld = d_vld %>%
-    select(-datavars, -"res_kol")
+    arrange(rekkjefolgje) %>%
+    select(-datavars, -c("res_kol", "rekkjefolgje"))
   d_vld
 }
