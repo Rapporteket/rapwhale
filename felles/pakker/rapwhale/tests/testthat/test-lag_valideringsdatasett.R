@@ -9,6 +9,8 @@ d_reg = tibble::tribble(
 
 indvars = c("pasid", "dato_inn")
 
+d_vld = lag_valideringsdatasett(d_reg, indvars)
+
 test_that("Feilmelding viss inndata ikkje er data.frame/tibble", {
   expect_error(lag_valideringsdatasett(c(pasid = 4, vekt = 78), "pasid"))
   expect_error(lag_valideringsdatasett(as.list(d_reg), indvars))
@@ -20,7 +22,6 @@ test_that("Feilmelding viss indsvars ikkje finst i datasettet", {
 })
 
 test_that("Gjev ut datasett med rette kolonnar", {
-  d_vld = lag_valideringsdatasett(d_reg, indvars)
   kolonnar_som_finst = names(d_vld)
   kolonnar_som_skal_finnast = c(
     "pasid", "dato_inn", "vld_varnamn", "vld_vartype",
@@ -45,8 +46,8 @@ test_that("Gjev ut datasett med rette kolonnar", {
 
 test_that("Gjev ut datasett med rette kolonnar viss inndata har 0 rader", {
   d_reg_tom = d_reg[c(), ]
-  d_vld = lag_valideringsdatasett(d_reg_tom, indvars)
-  d_vld_tom = tibble(
+  d_vld_tom = lag_valideringsdatasett(d_reg_tom, indvars)
+  d_tom_kolonnar = tibble(
     pasid = numeric(),
     dato_inn = as.Date(NULL),
     vld_varnamn = character(),
@@ -58,11 +59,10 @@ test_that("Gjev ut datasett med rette kolonnar viss inndata har 0 rader", {
     vld_verdi_intern_logical = logical(),
     vld_verdi_ekstern_logical = logical()
   )
-  expect_identical(d_vld, d_vld_tom)
+  expect_identical(d_vld_tom, d_tom_kolonnar)
 })
 
 test_that("Rekkjefølgja på pasientforløpa er teke vare på", {
-  d_vld = lag_valideringsdatasett(d_reg, indvars)
   expect_identical(
     distinct(d_reg, pasid, dato_inn),
     distinct(d_vld, pasid, dato_inn)
@@ -72,7 +72,6 @@ test_that("Rekkjefølgja på pasientforløpa er teke vare på", {
 test_that("Rekkjefølgja på datavariablane er teke vare på", {
   datavars = names(d_reg) %>%
     setdiff(indvars)
-  d_vld = lag_valideringsdatasett(d_reg, indvars)
   varnamn = unique(d_vld$vld_varnamn)
   expect_identical(datavars, varnamn)
 })
