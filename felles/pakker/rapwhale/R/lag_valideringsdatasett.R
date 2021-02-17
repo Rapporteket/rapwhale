@@ -1,6 +1,12 @@
 lag_valideringsdatasett = function(d_reg, indvars, vartypar = NULL) {
   vars = names(d_reg)
-  stopifnot(all(indvars %in% vars))
+  if (!all(indvars %in% vars)) {
+    stop("Alle indeksvariablane finst ikkje i datasettet")
+  }
+
+  if (anyDuplicated(indvars)) {
+    stop("Duplikatverdiar i indeksvariablane")
+  }
 
   # Lag oversikt over datavariablar
   datavars = vars %>%
