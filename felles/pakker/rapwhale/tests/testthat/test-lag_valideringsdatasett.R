@@ -26,6 +26,11 @@ test_that("Feilmelding viss indeksvariabelvektoren har duplikatverdiar", {
   expect_error(lag_valideringsdatasett(d_reg, indvars_duplikat))
 })
 
+test_that("Feilmelding viss ikkje indeksvariablane identifiserer alle radene unikt", {
+  indvars_ikkje_unik = "pasid"
+  expect_error(lag_valideringsdatasett(d_reg, indvars_ikkje_unik))
+})
+
 test_that("Gjev ut gyldig valideringsdatasett", {
   expect_true(er_valideringsdatasett_gyldig(d_vld))
 })
