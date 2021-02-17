@@ -21,6 +21,10 @@ test_that("Feilmelding viss indsvars ikkje finst i datasettet", {
   expect_error(lag_valideringsdatasett(d_reg, indvars_ugyldig))
 })
 
+test_that("Gjev ut gyldig valideringsdatasett", {
+  expect_true(er_valideringsdatasett_gyldig(d_vld))
+})
+
 test_that("Gjev ut datasett med rette kolonnar", {
   kolonnar_som_finst = names(d_vld)
   kolonnar_som_skal_finnast = c(
