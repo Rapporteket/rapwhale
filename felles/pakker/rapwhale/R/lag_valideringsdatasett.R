@@ -8,6 +8,11 @@ lag_valideringsdatasett = function(d_reg, indvars, vartypar = NULL) {
     stop("Duplikatverdiar i indeksvariablane")
   }
 
+  prim_nokkel = select(d_reg, all_of(indvars))
+  if (any(duplicated(prim_nokkel))) {
+    stop("Indeksvariablane identifiserer ikkje alle radene unikt")
+  }
+
   # Lag oversikt over datavariablar
   datavars = vars %>%
     setdiff(indvars)
