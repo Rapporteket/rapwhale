@@ -19,7 +19,31 @@ test_that("Feilmelding viss indsvars ikkje finst i datasettet", {
   expect_error(lag_valideringsdatasett(d_reg, indvars_ugyldig))
 })
 
-test_that("Gjev ut datasett med rett kolonnar viss inndata har 0 rader", {
+test_that("Gjev ut datasett med rette kolonnar", {
+  d_vld = lag_valideringsdatasett(d_reg, indvars)
+  kolonnar_som_finst = names(d_vld)
+  kolonnar_som_skal_finnast = c(
+    "pasid", "dato_inn", "vld_varnamn", "vld_vartype",
+    "vld_verdi_intern_Date", "vld_verdi_ekstern_Date",
+    "vld_verdi_intern_numeric", "vld_verdi_ekstern_numeric",
+    "vld_verdi_intern_logical", "vld_verdi_ekstern_logical"
+  )
+  expect_identical(kolonnar_som_finst, kolonnar_som_skal_finnast)
+
+  # Også med spesifiserte vartypar
+  vartypar = c("dato", "tal", "tal", "logisk", "logisk", "logisk", "logisk")
+  d_vld_spes_vartypar = lag_valideringsdatasett(d_reg, indvars, vartypar)
+  kolonnar_som_finst = names(d_vld_spes_vartypar)
+  kolonnar_som_skal_finnast = c(
+    "pasid", "dato_inn", "vld_varnamn", "vld_vartype",
+    "vld_verdi_intern_dato", "vld_verdi_ekstern_dato",
+    "vld_verdi_intern_tal", "vld_verdi_ekstern_tal",
+    "vld_verdi_intern_logisk", "vld_verdi_ekstern_logisk"
+  )
+  expect_identical(kolonnar_som_finst, kolonnar_som_skal_finnast)
+})
+
+test_that("Gjev ut datasett med rette kolonnar viss inndata har 0 rader", {
   d_reg_tom = d_reg[c(), ]
   d_vld = lag_valideringsdatasett(d_reg_tom, indvars)
   d_vld_tom = tibble(
