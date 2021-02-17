@@ -21,6 +21,11 @@ test_that("Feilmelding viss indsvars ikkje finst i datasettet", {
   expect_error(lag_valideringsdatasett(d_reg, indvars_ugyldig))
 })
 
+test_that("Feilmelding viss indeksvariabelvektoren har duplikatverdiar", {
+  indvars_duplikat = c("pasid", "dato_inn", "pasid")
+  expect_error(lag_valideringsdatasett(d_reg, indvars_duplikat))
+})
+
 test_that("Gjev ut gyldig valideringsdatasett", {
   expect_true(er_valideringsdatasett_gyldig(d_vld))
 })
