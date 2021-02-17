@@ -66,6 +66,6 @@ lag_valideringsdatasett = function(d_reg, indvars, vartypar = NULL) {
   # Fjern gamle datavariabelkolonnar og hjelpekolonne
   d_vld = d_vld %>%
     arrange(rekkjefolgje) %>%
-    select(-datavars, -c("res_kol", "rekkjefolgje"))
+    select(-all_of(datavars), -c("res_kol", "rekkjefolgje"))
   d_vld
 }
