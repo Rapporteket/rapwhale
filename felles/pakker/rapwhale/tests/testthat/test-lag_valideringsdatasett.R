@@ -76,6 +76,12 @@ test_that("Gjev ut datasett med rette kolonnar viss inndata har 0 rader", {
   expect_identical(d_vld_tom, d_tom_kolonnar)
 })
 
+test_that("Gjev ut datasett med rett mengd rader", {
+  mengd_rader_finst = nrow(d_vld)
+  mengd_rader_skal_finnast = nrow(d_reg) * (ncol(d_reg) - length(indvars))
+  expect_identical(mengd_rader_finst, mengd_rader_skal_finnast)
+})
+
 test_that("Rekkjefølgja på pasientforløpa er teke vare på", {
   expect_identical(
     distinct(d_reg, pasid, dato_inn),
