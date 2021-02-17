@@ -9,6 +9,11 @@ d_reg = tibble::tribble(
 
 indvars = c("pasid", "dato_inn")
 
+test_that("Feilmelding viss inndata ikkje er data.frame/tibble", {
+  expect_error(lag_valideringsdatasett(c(pasid = 4, vekt = 78), "pasid"))
+  expect_error(lag_valideringsdatasett(as.list(d_reg), indvars))
+})
+
 test_that("Feilmelding viss indsvars ikkje finst i datasettet", {
   indvars_ugyldig = c("pasid", "forlopsid")
   expect_error(lag_valideringsdatasett(d_reg, indvars_ugyldig))
