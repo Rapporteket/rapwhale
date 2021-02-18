@@ -93,10 +93,9 @@ test_that("Gjev ut datasett med rett mengd rader", {
 })
 
 test_that("Rekkjefølgja på pasientforløpa er teke vare på", {
-  expect_identical(
-    distinct(d_reg, pasid, dato_inn),
-    distinct(d_vld, pasid, dato_inn)
-  )
+  rekkjefolgje_reg = distinct(d_reg, pasid, dato_inn)
+  rekkjefolgje_vld = distinct(d_vld, pasid, dato_inn)
+  expect_identical(rekkjefolgje_reg, rekkjefolgje_vld)
 })
 
 test_that("Rekkjefølgja på datavariablane er teke vare på", {
