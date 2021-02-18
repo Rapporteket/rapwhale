@@ -106,5 +106,14 @@ test_that("Rekkjefølgja på datavariablane er teke vare på", {
   expect_identical(datavars, varnamn)
 })
 
+test_that("Alle kolonnar vld_verdi_ekstern_x skal vera tomme", {
+  eksterne_verdiar = c(
+    d_vld$vld_verdi_ekstern_Date,
+    d_vld$vld_verdi_ekstern_numeric,
+    d_vld$vld_verdi_ekstern_logical
+  )
+  expect_true(all(is.na(eksterne_verdiar)))
+})
+
 
 # Sjå på aktuelle testar/sjekkar i gamal funksjon i ekstern_validering.R
