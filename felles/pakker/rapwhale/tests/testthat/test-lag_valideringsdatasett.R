@@ -8,6 +8,7 @@ d_reg = tibble::tribble(
 )
 
 indvars = c("pasid", "dato_inn")
+vartypar = c("dato", "tal", "tal", "logisk", "logisk", "logisk", "logisk")
 
 d_vld = lag_valideringsdatasett(d_reg, indvars)
 
@@ -31,6 +32,16 @@ test_that("Feilmelding viss ikkje indeksvariablane identifiserer alle radene uni
   expect_error(lag_valideringsdatasett(d_reg, indvars_ikkje_unik))
 })
 
+test_that("Feilmelding viss vartypar har feil lengd (når den ikkje er NULL)", {
+  # Vartypar for kort
+  vartypar_kort = head(vartypar, -1)
+  expect_error(lag_valideringsdatasett(d_reg, indvars, vartypar_kort))
+
+  # Vartypar for lang
+  vartypar_lang = c(vartypar, "dato")
+  expect_error(lag_valideringsdatasett(d_reg, indvars, vartypar_lang))
+})
+
 test_that("Gjev ut gyldig valideringsdatasett", {
   expect_true(er_valideringsdatasett_gyldig(d_vld))
 })
@@ -46,7 +57,6 @@ test_that("Gjev ut datasett med rette kolonnar", {
   expect_identical(kolonnar_som_finst, kolonnar_som_skal_finnast)
 
   # Også med spesifiserte vartypar
-  vartypar = c("dato", "tal", "tal", "logisk", "logisk", "logisk", "logisk")
   d_vld_spes_vartypar = lag_valideringsdatasett(d_reg, indvars, vartypar)
   kolonnar_som_finst = names(d_vld_spes_vartypar)
   kolonnar_som_skal_finnast = c(
