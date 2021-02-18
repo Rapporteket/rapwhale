@@ -1,9 +1,9 @@
 #' Lag valideringsdatasett
 #'
 #' @description
-#' Funksjon for å gjera om data frå eit registerdatasett til eit
-#' valideringsdatasett klart til og fyllast ut med og sjekkast opp mot data frå
-#' ein gullstandard (typisk pasientjournal).
+#' Lagar eit valideringsdatasett med data frå eit registerdatasett klart til å
+#' fyllast ut med og sjekkast opp mot data frå ein gullstandard (typisk
+#' pasientjournal).
 #'
 #' @param d_reg Datasett (dataramme/tibble).
 #' @param indvars Vektor med indeksvariablar.
@@ -32,15 +32,36 @@
 #' datasettet. Denne verdien vil vera lagra i kolonnen `vld_verdi_intern_x`, der
 #' `x` er typen til den aktuelle variabelen. Valideringsdatasettet  vil vera
 #' på formatet som er definert i [er_valideringsdatasett_gyldig()], med tomme
-#' kolonnar `vld_verdi_ekstern_x`, klare til og fyllast ut og sidan sjekkast mot
+#' kolonnar `vld_verdi_ekstern_x`, klare til å fyllast ut og sidan sjekkast mot
 #' verdiane i `vld_verdi_intern_x`.
 #'
-#' @return Valideringsdatasett som er klart til og fyllast ut med og sjekkast
+#' @return Valideringsdatasett som er klart til å fyllast ut med og sjekkast
 #'         opp mot data frå ein gullstandard (typisk pasientjournal).
 #'
 #' @export
 #'
 #' @examples
+#' # Eksempel på datasett frå eit register:
+#' d_reg = tibble::tribble(
+#'   ~pasid, ~dato_inn, ~dato_ut, ~vekt, ~hogd, ~biverk, ~biverk_hovud, ~biverk_mage, ~biverk_fot,
+#'   5, as.Date("2020-06-07"), as.Date("2020-06-15"), 78, 183, TRUE, FALSE, TRUE, TRUE,
+#'   5, as.Date("2020-12-13"), as.Date("2020-12-13"), 50, 179, TRUE, FALSE, TRUE, TRUE,
+#'   7, as.Date("2020-08-09"), as.Date("2020-08-13"), 711, 196, TRUE, TRUE, TRUE, TRUE,
+#'   13, as.Date("2021-01-05"), NA, NA, 163, FALSE, NA, NA, NA,
+#'   14, as.Date("2021-01-05"), as.Date("2021-01-09"), 101, 182, TRUE, TRUE, FALSE, FALSE
+#' )
+#'
+#' # Indeksvariablar:
+#' indvars = c("pasid", "dato_inn")
+#'
+#' d_vld = lag_valideringsdatasett(d_reg, indvars)
+#' d_vld
+#'
+#' # Eksempel på spesifisering av variabeltypar:
+#' vartypar = c("dato", "tal", "tal", "logisk", "logisk", "logisk", "logisk")
+#'
+#' d_vld = lag_valideringsdatasett(d_reg, indvars, vartypar)
+#' d_vld
 lag_valideringsdatasett = function(d_reg, indvars, vartypar = NULL) {
   vars = names(d_reg)
   if (!all(indvars %in% vars)) {
