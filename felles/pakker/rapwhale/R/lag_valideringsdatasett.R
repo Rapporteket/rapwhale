@@ -1,3 +1,46 @@
+#' Lag valideringsdatasett
+#'
+#' @description
+#' Funksjon for å gjera om data frå eit registerdatasett til eit
+#' valideringsdatasett klart til og fyllast ut med og sjekkast opp mot data frå
+#' ein gullstandard (typisk pasientjournal).
+#'
+#' @param d_reg Datasett (dataramme/tibble).
+#' @param indvars Vektor med indeksvariablar.
+#' @param vartypar Vektor med spesifiserte vartypar. Standard `NULL`.
+#'
+#' @details
+#' Funksjonen tek inn eit datasett `d_reg`, ein vektor `indvars` og eventuelt
+#' ein vektor `vartypar` og returnerer eit valideringsdatasett.
+#'
+#' Datasettet `d_reg` skal vera anten data.frame eller tibble.
+#'
+#' Vektoren `indvars` inneheld namna på alle indeksvariablane. Desse må alle
+#' finnast som kolonnar i `d_reg`, og kombinasjonen av dei må unikt identifisera
+#' kvar rad. Kolonnane i `d_reg` som ikkje er indeksvariablar er datavariablar
+#' som skal validerast.
+#'
+#' Vektoren `vartypar` inneheld spesifiserte namn på kva type verdiar kvar
+#' datavariabel har. Det kan vera for eksempel norske namn som "tal", "dato" og
+#' så vidare. Dette vert brukt til å laga namn på kolonnane med verdiar som skal
+#' sjekkast og fyllast ut. Standardverdi `NULL` vert brukt dersom ein berre vil
+#' bruka klassane variablane har i R.
+#'
+#' Valideringsdatasettet som vert gjeve ut vil ha éi rad for kvar datavariabel
+#' for kvar rad i det opphavlege datasettet. Kvar rad i valideringsdatasettet
+#' vil då innehalda verdien frå éin datavariabel i éi rad frå det opphavlege
+#' datasettet. Denne verdien vil vera lagra i kolonnen `vld_verdi_intern_x`, der
+#' `x` er typen til den aktuelle variabelen. Valideringsdatasettet  vil vera
+#' på formatet som er definert i [er_valideringsdatasett_gyldig()], med tomme
+#' kolonnar `vld_verdi_ekstern_x`, klare til og fyllast ut og sidan sjekkast mot
+#' verdiane i `vld_verdi_intern_x`.
+#'
+#' @return Valideringsdatasett som er klart til og fyllast ut med og sjekkast
+#'         opp mot data frå ein gullstandard (typisk pasientjournal).
+#'
+#' @export
+#'
+#' @examples
 lag_valideringsdatasett = function(d_reg, indvars, vartypar = NULL) {
   vars = names(d_reg)
   if (!all(indvars %in% vars)) {
