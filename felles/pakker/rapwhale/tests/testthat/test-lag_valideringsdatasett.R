@@ -114,5 +114,21 @@ test_that("Alle kolonnar vld_verdi_ekstern_x skal vera tomme", {
   expect_true(all(is.na(eksterne_verdiar)))
 })
 
+test_that("Alle kolonnar vld_verdi_intern_x skal ha rette verdiar", {
+  d_reg_liten = tibble(
+    pasid = 5, dato_inn = as.Date("2020-06-07"),
+    vekt = 78, biverk = TRUE
+  )
+  d_vld_liten = lag_valideringsdatasett(d_reg_liten, indvars)
+  verdiar_vld = d_vld_liten %>%
+    select(starts_with("vld_verdi_intern_"))
+  verdiar_reg = tibble::tribble(
+    ~vld_verdi_intern_numeric, ~vld_verdi_intern_logical,
+    78, NA,
+    NA, TRUE
+  )
+  expect_identical(verdiar_reg, verdiar_vld)
+})
+
 
 # Sjå på aktuelle testar/sjekkar i gamal funksjon i ekstern_validering.R
