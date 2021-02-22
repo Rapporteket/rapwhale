@@ -40,8 +40,8 @@ test_that("samanlikn_identisk() fungerer òg for vektorar med 1 eller 0 element"
   # Eitt element
   expect_identical(samanlikn_identisk(
     varnamn = "vekt",
-    verdi1 = c(74),
-    verdi2 = c(74)
+    verdi1 = 74,
+    verdi2 = 74
   ), TRUE)
 
   # Null element
