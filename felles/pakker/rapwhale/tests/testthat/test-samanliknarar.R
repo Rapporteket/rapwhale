@@ -10,6 +10,15 @@ test_that("Utdata skal seia (elementvis) om verdi1 er lik verdi2", {
 
   expect_identical(
     samanlikn_identisk(
+      varnamn = NULL,
+      verdi1 = c(74, 74, 74, NA, NA),
+      verdi2 = c(74, 80, NA, 74, NA)
+    ),
+    c(TRUE, FALSE, FALSE, FALSE, TRUE)
+  )
+
+  expect_identical(
+    samanlikn_identisk(
       varnamn = rep("dato", 5),
       verdi1 = c(74, 74, 74, NA, NA) + Sys.Date(),
       verdi2 = c(74, 80, NA, 74, NA) + Sys.Date()
