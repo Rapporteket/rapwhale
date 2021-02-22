@@ -68,8 +68,8 @@ test_that("samanlikn_identisk() gjev feilmelding viss «varnamn» ikkje er tekst
 })
 
 test_that("samanlikn_identisk() gjev feilmelding viss verdiane ikkje er av same type", {
-  expect_error(samanlikn_identisk(verdi1 = 74, verdi2 = "74", varnamn = 123))
-  expect_error(samanlikn_identisk(verdi1 = "74", verdi2 = 74, varnamn = 123))
+  expect_error(samanlikn_identisk(verdi1 = 74, verdi2 = "74", varnamn = "foo"))
+  expect_error(samanlikn_identisk(verdi1 = "74", verdi2 = 74, varnamn = "foo"))
 })
 
 test_that("samanlikn_identisk() gjev feilmelding dersom «varnamn» ikkje er tekst eller NULL", {
