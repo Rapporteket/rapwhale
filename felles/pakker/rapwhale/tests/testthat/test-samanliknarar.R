@@ -60,6 +60,7 @@ test_that("samanlikn_identisk() fungerer òg for vektorar med 1 eller 0 element"
 test_that("samanlikn_identisk() gjev feilmelding viss argumenta har ulik lengd", {
   expect_error(samanlikn_identisk(verdi1 = 74, verdi2 = 74, varnamn = c("foo", "bar")))
   expect_error(samanlikn_identisk(verdi1 = 74, verdi2 = c(74, 75), varnamn = "foo"))
+  expect_error(samanlikn_identisk(verdi1 = c(74, 75), verdi2 = c(74, 75), varnamn = "foo"))
 })
 
 test_that("samanlikn_identisk() gjev feilmelding viss «varnamn» ikkje er tekst", {
