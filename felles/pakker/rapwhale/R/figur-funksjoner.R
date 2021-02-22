@@ -148,7 +148,7 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
 
   # legger på ekstra tema under visse forhold
   if (figtype == "p") { # hvis det er p-chart ønsker vi norske prosenter fra funksjon i dette r-skriptet
-    plot = plot + scale_y_continuous(labels = akse_prosent)
+    plot = plot + scale_y_continuous(labels = akse_prosent_format(0))
   }
   if (lubridate::is.Date(d[[qic_x]])) { # hvis det er en tidsvisning trenger vi en dot for punktene i linjediagrammet
     plot = plot + ggplot2::geom_point()
