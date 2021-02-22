@@ -1,11 +1,13 @@
 #' Analyser valideringsdatasett ved å samanlikna verdiar
 #'
-#' @description Tek inn eit valideringsdatasett og ein samanliknarfunksjon,
-#'              og returnerer datasettet med ein ekstra kolonne som seier
-#'              om verdiane som skal samanliknast, er «like» eller ikkje.
+#' @description Brukar ein samanlikningsfunksjon for å undersøka om
+#'              interne og eksterne verdiar i eit valideringsdatasett
+#'              er «like» eller ikkje.
 #'
-#' @param d_vld Valideringsdatasett (dataramme/tibble).
-#' @param samanliknar Samanliknarfunksjon. Standard [samanlikn_identisk()].
+#' @param d_vld Valideringsdatasett (dataramme/tibble). Sjå
+#'   [er_valideringsdatasett_gyldig()] for definisjonen på eit (gyldig)
+#'   valideringsdatasett. Det vert automatisk testa at datasettet er gyldig.
+#' @param samanliknar Samanliknarfunksjon. Standard er [samanlikn_identisk()].
 #'
 #' @details
 #' Funksjonen tek inn eit valideringsdatasett `d_vld` og ein samanliknarfunksjon
@@ -13,13 +15,9 @@
 #' `vld_verdiar_er_like` som for kvar rad seier om verdiane som skal
 #' samanliknast, er «like»/ekvivalente (som definert av samanliknarfunksjonen).
 #'
-#' Sjå [er_valideringsdatasett_gyldig()] for definisjonen på eit
-#' (gyldig) valideringsdatasett. Det vert automatisk testa at `d_vld`
-#' er gyldig.
-#'
 #' For kvar rad i `d_vld` der `vld_vartype` er for eksempel `"x"`,
 #' brukar funksjonen `samanliknar`-funksjonen til å samanlikna verdiane
-#' i `vld_verdi_intern_x` og `vld_verdi_ekstern_x` (i `d_vld`).
+#' i kolonnane `vld_verdi_intern_x` og `vld_verdi_ekstern_x` (i `d_vld`).
 #'
 #' Argumentet `samanliknar` skal vera ein funksjon `f(verdi1, verdi2, varnamn)`
 #' som tek inn tre like lange vektorar (eller siste argument kan vera `NULL`).
@@ -28,10 +26,9 @@
 #' skal føregå. I praksis inneheld han namnet på variablane som verdiane i
 #' valideringsdatasettet var henta frå.
 #'
-#' Argumentet `varnamn` kan vera `NULL` dersom om samanliknarfunksjonen
+#' Argumentet `varnamn` i samanliknarfunksjonen kan vera `NULL` dersom han
 #' støttar dette. Det er elles nødvendig å bruka ein samanliknarfunksjon
 #' som forstår verdiane til `varnamn`.
-#'
 #' Eit eksempel kan vera at ein har `varnamn`-element som `"vekt_gram"` og
 #' `"temperatur"`, der samanliknarfunksjonen veit at at han skal ha større
 #' slingringsmonn når han samanliknar to vektverdiar målt i gram enn to
@@ -40,7 +37,8 @@
 #' @return Opphavleg datasett, men med ein ekstra kolonne
 #'         `vld_verdiar_er_like` lagd til,
 #'         som er `TRUE` for kvar rad der verdiane som skal samanliknast, er
-#'         «like» i følgje `samanliknar`, og `FALSE` der dei ikkje er det.
+#'         «like» i følgje `samanliknar`, og `FALSE` for kvar rad der dei
+#'         ikkje er det.
 #' @export
 #'
 #' @examples
