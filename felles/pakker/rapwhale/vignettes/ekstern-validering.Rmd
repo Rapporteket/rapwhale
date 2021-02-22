@@ -1,6 +1,6 @@
 ---
 title: "Ekstern validering"
-author: "Per Erik Haugedal"
+author: "Per Erik Haugedal og Karl Ove Hufthammer"
 output:
   rmarkdown::html_vignette:
     toc: true
@@ -25,10 +25,122 @@ suppressPackageStartupMessages({
 })
 ```
 
-# Innleiing
+## Innleiing
 
-# Eksempel - lag valideringsdatasett
+I `rapwhale` finst ein infrastruktur – eit sett R-funksjonar og tilhøyrande
+metodikk – for *ekstern validering* av registerdata. Målet med denne
+har vore å gjera det enklare, raskare og sikrare å gjennomføra ekstern
+validering av høg kvalitet.
 
+Ekstern validering er ... (Kva snakkar me eigentleg om? (korrektheit)
+Kva *er* ekstern validering. Korleis vert det gjennomført (kort).)
+
+Først skal me sjå på valideringsdatasettformatet me har komme fram til,
+så korleis me brukar eit ferdig valideringsdatasett,
+og så korleis me lagar eit.
+
+
+## Format til valideringsdatasett
+
+I eit valideringsdatsett må me for kvar måling registrera
+verdien i registeret (*intern verdi*) og tilhøyrande verdi
+i den eksterne kjelde (*ekstern verdi*). I tillegg treng
+me informasjon om kva pasient eller forløp verdien gjeld
+samt kva for variabel det er snakk om.
+
+### Superenkelt eksempel
+
+I utgangspunktet verkar eit format som dette fornuftig:
+
+pasid varnamn verdi_intern verdi_ekstern
+       hogd
+       vekt
+
+Her kan me registrera høgda og vekta til kvar pasient,
+både internt i registeret og i den eksterne kjelda.
+
+
+### Utvida eksempel
+
+Korfor det må bli litt meir komplisert.
+
+Problem? Løysing:
+
+Fleire variablar i primærnøkkel.
+Forskjellige variabeltypar.
+--> vartype, og ulike vld-kolonnar
+
+Endeleg løysing.
+
+
+## Bruk av valideringsdatasett
+
+Når me har eit ferdig valideringsdatsett, er det svært lett å
+rekna ut statistikk for det. Denne kan me så bruka i tabellar og
+figurar i valideringsrapportar.
+
+
+### Total korrektheit
+
+Det lettaste er å rekna ut total korrektheit for registeret.
+Då får me svar på sannsynet for at ein tilfeldig valt verdi
+i registeret er ført korrekt:
+
+Statistikken, inkludert konfidensintervalla, er naturlegvis
+berre gyldig dersom radene i valideringsdatasettet er eit
+*tilfeldig utval* av alle verdiane registrert i registeret,
+altså viss alle målingar har like stort sannsyn for å vera
+med i valideringsanalysen. Meir om tilfeldige utval i avsnitt xxx.
+
+
+### Korrektheit per variabel
+
+Nokre variablar er gjerne oftare registrerte korrekt enn andre.
+Då kan me sjå på korrektheit per variabel:
+
+
+Her er statistikken gyldig dersom det for kvar variabel er slik
+at radene i valideringsdatasettet svarar til eit tilfeldig utval
+av verdiane til tilhøyrande variabel i registeret. Men ein treng
+ikkje ha like mange verdiar for kvar variabel, og ein kan for eksempel
+validera fleire verdiar for viktige variablar enn for uviktige.
+Men merk at då er ikkje lenger statistikken for total korrektheit
+forventingsrett, og konfidensintervalla der kan ikkje brukast.
+(Ev. flytta dette avsnittet seinare, og berre så vidt hinta om det her.)
+
+Kan òg enkelt visa det som ein figur:
+
+(Enkel figur utan mykje finpussing.)
+
+Her kan (og bør) ein sjølvsagt finpussa figuren for å gjera
+han meir brukarvennleg, men det er ikkje fokus for denne vignetten.
+
+
+### Per månad, for å sjå utviklinga over tid
+
+Når me driv forbetring for å auka korrektheita i eit register,
+kan me sjå på korrektheit over tid:
+
+
+### Per sjukehus
+
+Viss nokre sjukehus er flinkare til å registrera korrekte data,
+kan me finna ut av det:
+
+Kan sjølvsagt kombinerast med andre gruppering,
+som per variabel eller over tid.
+
+For analyse for samanlikning av sjukehus, eller av enkeltsjukehus
+over tid, tilrår me SPC-metodikk (som me ikkje skriv om her i vignetten).
+
+
+
+## Generering av valideringsdatasett
+
+Når ein har registerdata, er det med denne pakken veldig lett å
+laga eit valideringsdatasett.
+
+### Eksempel på register
 Me har eit enkelt register som registrerer vekt, høgd, om pasienten har opplevd
 biverknad, og i så fall kva type biverknad. Nokre av variablane i registeret kan 
 sjå slik ut:
@@ -45,9 +157,40 @@ d_reg = tibble::tribble(
 print(d_reg)
 ```
 
-Data i registeret skal samanliknast med data frå ein gullstandard, typisk 
-pasientjournal. Det skal lagast eit valideringsdatasett som er enkelt å fylla 
-inn i, og lett å køyra statistikk/analyse på når det er ferdig fylt ut.
+
+### Komplett valideringsdatasett
+
+lag_valideringsdatasett()
+
+
+### Korleis lagra til SPSS-format?
+
+Nokre få linjer kode for å få éi fil per sjukehus.
+
+
+### Utval av variablar
+
+Berre bruk `select()` før funksjonskall. Easy peasy.
+
+
+### Ymse typar tilfeldige utval
+
+statistisk kommentar? eller berre la det stå i førre kapittel?
+
+20 % av forløpa per variabel
+
+Stadig meir vanskelege/avanserte eksempel
+
+joining med andre datasett
+
+stikkord:
+
+- tilfeldig rekkjefølgje (*alle* rader)
+- sample_n()
+- sample_frac()
+- per variabel?
+- per pasient?
+- sjå kommentarar lenger ned i vignetten for ulike eksempel (lag éi overskrift per eksempel)
 
 
 <!-- Behovskartlegging
@@ -61,11 +204,11 @@ Vi trenger altså en fil for hvert av de 6 angitte sykehusene, med f.eks. 100 pa
 Viktig at RA-pasienter med diagnose 2014 eller seinere prioriteres (minst 50 pasienter der det finnes).
 -> potensielt statistisk problematisk? viss sannsynet for å trekkast ut er avhengig av nokre variabelverdiar, for eksempel diagnose. uproblematisk ved *stratifisert* analyse eller ved rett justering.
 -> d1 = filter(diag == "ra")
-    d2 = filter(diag != "ra") # antar ingen NA-ar
+    d2 = filter(diag != "ra") ## antar ingen NA-ar
     d1_utval = sample_n(d1, n = 50)
     d2_utval = sample_frac(d2, frac = .2)
     d_utval = bind_rows(d1_utval, d2_utval)
-    # (i staden for d_utval = sample_frac(d, frac = .2)
+    ## (i staden for d_utval = sample_frac(d, frac = .2)
 
 Når det gjelder diagnose og diagnosedato skal vi ikke undersøke om disse er korrekt registrert, for her er det mye skjønn og det er OK. Vi trenger dette til å se på en del av de senere punktene. Derfor ønsker vi at diagnose og diagnosedato som er registrert i NorArtritt skal ligge i filen som vi skal fylle inn slik at vi kan sammenholde.
 For de andre variablene trenger vi ikke å ha NorArtritt dataene i filen."
@@ -75,7 +218,7 @@ For de andre variablene trenger vi ikke å ha NorArtritt dataene i filen."
 -> d_utval %>%
   left_join(d_regdata) %>%
   group_by(pasid) %>%
-  filter(!(variabel1 != x, varnamn %in% c(variabel2, variabel3 osv.))) # noko sånt ... :9
+  filter(!(variabel1 != x, varnamn %in% c(variabel2, variabel3 osv.))) ## noko sånt ... :9
 
 2) At man hadde logikker med, at hvis pasienten har verdien er mann = ja så får ikke denne pasienten variabelen for graviditet med i sitt variabelsett. SOReg ville ha noe lignende - at man ikke fikk variabelen for 6 vekers vekt når pasienten fikk operasjonen sin i går.
 -> d_vld_med_md %>%
@@ -84,7 +227,7 @@ For de andre variablene trenger vi ikke å ha NorArtritt dataene i filen."
 Tilfeldig utval av n pasientar.
 -> 
   akt_pasientar = select(d_regdata, pasid, dato_inn) %>%
-    # ev. distinct() %>% # viss det er pasientar og ikkje forløp me vil ha
+    ## ev. distinct() %>% ## viss det er pasientar og ikkje forløp me vil ha
     sample_n(n) %>%
   semi_join(d_utval, akt_pasientar)
 
@@ -96,16 +239,15 @@ Tilfeldig utval av k variablar, og så tilfeldig utval av m pasientar per variab
 Variablane skal visast i ei fornuftig rekkjefølgje (sortert etter pasient,
 eller etter ei spesiell variabelrekkjefølgje)
 ->
-  # Pasientar
+  ## Pasientar
   arrange(d_utval, pasid, dato_inn)
 
-  # Variabel
+  ## Variabel
   var_rekkjefolgje = c("hogd", "vekt", "dato_ut")
-  arrange(d_utval, !!match(varnamn, var_rekkjefolgje)) # ??? Noko sånt, jaffal
-  # Men det lettaste er å ha variablane i god rekkjefolgje i utgangspunktet
+  arrange(d_utval, !!match(varnamn, var_rekkjefolgje)) ## ??? Noko sånt, jaffal
+  ## Men det lettaste er å ha variablane i god rekkjefolgje i utgangspunktet
 
 Ev. annan funksjonalitet i opphavleg funksjon?
 ->
   ?
 -->
-
