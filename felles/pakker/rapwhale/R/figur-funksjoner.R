@@ -100,6 +100,26 @@ lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab
 # periode hvilket tidsrom (f.eks "month" eller "2 months", gjelder kun tidsvising)
 # kan velge å legge til tittelen for plottet i tittel, x-aksenavn i x_navn og y-akse-navn i y-akse.
 # krever pakkene tidyverse og qicharts2
+
+#' Lag shewhart-diagram
+#'
+#' @param d
+#' @param y
+#' @param x
+#' @param nevner
+#' @param figtype
+#' @param tittel
+#' @param gruppe
+#' @param periode
+#' @param x_navn
+#' @param y_navn
+#' @param tidsvisning
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
 lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
                             gruppe = NULL, periode = NULL, x_navn = NULL, y_navn = NULL,
                             tidsvisning = TRUE, ...) {
@@ -117,8 +137,8 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
   }
 
   # lager grunnplottet med alt som alle shewhart-diagram trenger + eventuelle tilleggsvalg, og ggplot2 tema
-  plot = eval_bare(rlang::expr(qic(
-    data = d, y = !!qic_y, n = maybe_missing(!!qic_n), x = !!qic_x, chart = figtype,
+  plot = rlang::eval_bare(rlang::expr(qic(
+    data = d, y = !!qic_y, n = rlang::maybe_missing(!!qic_n), x = !!qic_x, chart = figtype,
     title = tittel, xlab = x_navn, ylab = y_navn, show.labels = FALSE, x.period = periode, facets = ~ (!!qic_facet),
     flip = skal_flippes
   ))) +
