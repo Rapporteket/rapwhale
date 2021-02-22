@@ -250,4 +250,9 @@ eller etter ei spesiell variabelrekkjefølgje)
 Ev. annan funksjonalitet i opphavleg funksjon?
 ->
   ?
+  
+  Laging av eigne samanlikningfunksjonar (eiga avansert-kapittel).
+  Og så må det stå om korleis standard samanlikningsfunksjon fungerer
+  (spesielt om korleis handterer NA-verdiar).
+  
 -->
