@@ -190,6 +190,7 @@ Når ein har registerdata, er det med denne pakken veldig lett å
 laga eit valideringsdatasett.
 
 ### Eksempel på register
+
 Me har eit enkelt register som registrerer vekt, høgd, om pasienten har opplevd
 biverknad, og i så fall kva type biverknad. Nokre av variablane i registeret kan 
 sjå slik ut:
@@ -211,7 +212,27 @@ d_reg %>%
 
 ### Komplett valideringsdatasett
 
-lag_valideringsdatasett()
+Når ein køyrer `lag_valideringsdatasett()` får ein ut eit komplett 
+valideringsdatasett. Det vil seie at alle variablar for alle pasientar/forløp 
+er med. Talet på rader i valideringsdatasettet vert då lik talet på rader i
+det opphavlege datasettet gongar talet på datavariablar. For eksempelet over, 
+med 5 rader og 7 *datavariablar*, får ein eit valideringsdatasett med 35 rader. 
+Her er dei fyrste 7 radene i dette valideringsdatasettet, som svarar til den fyrste 
+rada i det opphavlege datasettet:
+
+```{r eksempel valideringsdatasett, echo = FALSE}
+indvars = c("pasid", "dato_inn")
+vartypar = c("dato", "tal", "tal", "logisk", "logisk", "logisk", "logisk")
+d_vld = d_reg %>%
+  select(-kjonn, -sjukehus) %>%
+  lag_valideringsdatasett(indvars, vartypar)
+d_vld %>%
+  head(7) %>%
+  kbl(align = c("lrllrrrrrr")) %>%
+  kable_classic(font_size = 11) %>%
+  row_spec(0, font_size = 10) # slik at tabellen ikkje skal verta for brei
+```
+
 
 
 ### Korleis lagra til SPSS-format?
