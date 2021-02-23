@@ -32,8 +32,9 @@ metodikk – for *ekstern validering* av registerdata. Målet med denne
 har vore å gjera det enklare, raskare og sikrare å gjennomføra ekstern
 validering av høg kvalitet.
 
-Ekstern validering er ... (Kva snakkar me eigentleg om? (korrektheit)
-Kva *er* ekstern validering. Korleis vert det gjennomført (kort).)
+Ekstern validering går ut på å finna korrektheita til eit register, altså å 
+sjekka om dataa i registeret er korrekte. I praksis vert dette gjort ved å 
+samanlikna registerdata med ein gullstandard, typisk pasientjournal.
 
 Først skal me sjå på valideringsdatasettformatet me har komme fram til,
 så korleis me brukar eit ferdig valideringsdatasett,
@@ -52,9 +53,14 @@ samt kva for variabel det er snakk om.
 
 I utgangspunktet verkar eit format som dette fornuftig:
 
-pasid varnamn verdi_intern verdi_ekstern
-       hogd
-       vekt
+```{r superenkelt eksempel, echo = FALSE}
+d_superenkelt = tibble::tribble(
+  ~pasid, ~varnamn, ~verdi_intern, ~verdi_ekstern,
+  5, "vekt", 78, 78,
+  7, "hogd", 196, 194
+)
+d_superenkelt
+```
 
 Her kan me registrera høgda og vekta til kvar pasient,
 både internt i registeret og i den eksterne kjelda.
@@ -62,15 +68,52 @@ både internt i registeret og i den eksterne kjelda.
 
 ### Utvida eksempel
 
-Korfor det må bli litt meir komplisert.
+Dersom ein ser vidare på meir realistiske datasett med fleire variablar og 
+registreringar vil ein oppdaga utfordringar som formatet i dette enkle 
+eksempelet ikkje løyser. Det endelege formatet må difor verta litt meir 
+komplisert.
 
-Problem? Løysing:
+Eit problem med dette formatet er dersom same pasient har fleire 
+registreringar på same variabel. Kanskje pasienten med pasientid 5 har 
+registrert vekt til dømes før og etter operasjon. Datasettet vil då ha to 
+rader med `pasid = 5` og `varnamn = "vekt"`, så når ein skal fylla inn dei to 
+verdiane frå journal veit ein ikkje kva for ein som skal kor. 
 
-Fleire variablar i primærnøkkel.
-Forskjellige variabeltypar.
---> vartype, og ulike vld-kolonnar
+For å løysa dette problemet treng ein fleire *indeksvariablar* i tillegg til 
+`pasid` og `varnamn`, slik at kombinasjonen av desse unikt identifiserer kvar 
+rad. Kombinasjonen av indeksvariablane skal altså vera primærnøkkel. Slike 
+indeksvariablar kan til dømes vera forløpsid, innleggjingsdato og så vidare.
 
-Endeleg løysing.
+Eit anna problem oppstår dersom me har variablar av ulik type. I det enkle 
+eksempelet med vekt og høgd går det bra, sidan begge desse er tal. Problemet 
+oppstår når me til dømes har ein variabel for kva dato pasienten vart utskriven 
+i tillegg. Då vil kolonnane `verdi_intern` og `verdi_ekstern` innehalda både 
+tal og datoar.
+
+Dette vert løyst ved å innføra fleire verdikolonnar, éin for kvar type variabel
+i det opphavlege datasettet, samt ein kolonne `vartype` som seier kva type den 
+aktuelle verdien er.
+
+Til slutt gjev me alle kolonnane som ikkje er variablar frå det opphavlege 
+datasettet prefikset *vld_*, kort for validering. Dette er eit reservert 
+prefiks, og er med for å unngå problem med at namn på variablar er like som
+namna på kolonnane i valideringsdatasettet. **Ingen** av variablane i det 
+opphavlege datasettet kan altså ha namn som startar med *vld_*.
+
+Eit eksempel på det endelege formatet vert då som dette:
+
+```{r eksempel format, echo = FALSE}
+d_format = tibble::tribble(
+  ~pasid, ~dato_inn, ~vld_varnamn, ~vld_vartype, ~vld_verdi_intern_dato, ~vld_verdi_ekstern_dato, ~vld_verdi_intern_tal, ~vld_verdi_ekstern_tal,
+  5, as.Date("2020-06-07"), "dato_ut", "dato", as.Date("2020-06-15"), as.Date("2020-06-15"), NA, NA,
+  5, as.Date("2020-06-07"), "vekt", "tal", NA, NA, 78, 78,
+  5, as.Date("2020-12-13"), "dato_ut", "dato", as.Date("2020-12-13"), as.Date("2020-12-14"), NA, NA,
+  5, as.Date("2020-12-13"), "vekt", "tal", NA, NA, 50, 50,
+  7, as.Date("2020-08-09"), "dato_ut", "dato", as.Date("2020-08-13"), as.Date("2020-08-13"), NA, NA,
+  7, as.Date("2020-08-09"), "hogd", "tal", NA, NA, 196, 194
+)
+d_format
+```
 
 
 ## Bruk av valideringsdatasett
