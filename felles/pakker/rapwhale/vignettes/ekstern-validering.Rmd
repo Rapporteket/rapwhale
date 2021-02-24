@@ -63,7 +63,7 @@ d_superenkelt = tibble::tribble(
 )
 d_superenkelt %>%
   kbl(align = c("llrr")) %>%
-  kable_classic(full_width = F, position = "left")
+  kable_classic("hover", full_width = F, position = "left")
 ```
 
 Her kan me registrera høgda og vekta til kvar pasient,
@@ -118,7 +118,7 @@ d_format = tibble::tribble(
 )
 d_format %>%
   kbl(align = c("lrllrrrr")) %>%
-  kable_classic(font_size = 11)
+  kable_classic("hover", font_size = 11)
 ```
 
 
@@ -208,7 +208,7 @@ d_reg = tibble::tribble(
 )
 d_reg %>%
   kbl(align = c("lrllrrrrrrr")) %>%
-  kable_classic(font_size = 11)
+  kable_classic("hover", font_size = 11)
 ```
 
 I dette eksempelet er indeksvariablane `pasid` og `dato_inn`, medan `kjonn` og 
@@ -236,8 +236,8 @@ d_vld = d_reg %>%
 d_vld %>%
   head(7) %>%
   kbl(align = c("lrllrrrrrr")) %>%
-  kable_classic(font_size = 11) %>%
-  row_spec(0, font_size = 10) # slik at tabellen ikkje skal verta for brei
+  kable_classic("hover", font_size = 11) %>%
+  row_spec(0, font_size = 9) # slik at tabellen ikkje skal verta for brei
 ```
 
 Det er likevel ofte at ein ikkje ynskjer eit komplett valideringsdatasett, 
