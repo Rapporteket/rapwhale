@@ -275,10 +275,96 @@ stikkord:
 - per pasient?
 - sjå kommentarar lenger ned i vignetten for ulike eksempel (lag éi overskrift per eksempel)
 
+#### Tilfeldig utval av n rader
+
+For å trekkja ut n tilfeldige rader køyrer ein følgjande kode med
+valideringsdatasettet `d_vld`:
+
+`sample_n(d_vld, n)`
+
+#### Tilfeldig utval av andel av rader
+
+For å trekkja ut x andel tilfeldige rader køyrer ein følgjande kode med
+valideringsdatasettet`d_vld`:
+
+`sample_frac(d_vld, x)`
+
+#### Alle rader i tilfeldig rekkjefølgje
+
+Det kan vera ynskjeleg å bruka eit komplett valideringsdatasett i 
+korrektheitsstudien, slik at ein jobbar seg gjennom så mykje ein klarar på 
+ei gitt tid, men då i tilfeldig rekkjefølgje, slik at ein får eit tilfeldig 
+utval. For å få til dette køyrer ein følgjande kode med valideringsdatasettet 
+`d_vld`:
+
+`sample_frac(d_vld)`
+
+#### Alle rader med pasientar i tilfeldig rekkjefølgje
+
+Dersom det er lite føremålstenleg å ha rader for same pasient på ulike stadar
+i valideringsdatasettet kan ein trekkja alle pasientane i tilfeldig rekkjefølgje
+og så ta med alle variablane for kvar pasient etter kvarandre. Dette kan gjerast 
+ved å køyra følgjande kode med valideringsdatasettet `d_vld`:
+
+```
+rekkjefolgje = sample(unique(d_vld$pasid))
+arrange(d_vld, match(pasid, rekkjefolgje), dato_inn)
+```
+
+#### Tilfeldig utval av n forløp eller pasientar
+
+For å trekkja ut n tilfeldige forløp køyrer ein følgjande kode med registerdata
+`d_reg` og valideringsdatasettet`d_vld`:
+
+```
+uttrekk_forlop = select(d_reg, pasid, dato_inn) %>% # pasid og dato_inn er indeksvariablane 
+                                                    # bruk berre pasid dersom det skal velgast ut 
+                                                    # pasientar og ikkje forløp
+    sample_n(n)
+
+semi_join(d_vld, uttrekk_forlop)
+```
+
+#### Tilfeldig utval av k variablar, og så tilfeldig utval av m forløp per variabel
+
+```
+uttrekk_variablar = sample(unique(d_vld$vld_varnamn), k)
+d_uttrekk = d_vld[c(),]
+for(variabel in uttrekk_variablar){
+  d_variabel = filter(d_vld, vld_varnamn == variabel)
+  uttrekk_forlop = select(d_variabel, pasid, dato_inn) %>%
+    sample_n(m)
+  uttrekk_variabel = semi_join(d_variabel, uttrekk_forlop)
+  d_uttrekk = add_row(d_uttrekk, uttrekk_variabel)
+}
+d_uttrekk
+```
+
+### Fornuftig rekkjefølgje
+
+Etter at ein har gjort eit tilfeldig utval kan det vera føremålstenleg å ha 
+radene i ei fornuftig rekkjefølgje. 
+
+#### Sorter rader etter forløp
+
+`arrange(d_uttrekk, pasid, dato_inn)`
+
+#### Sorter rader etter variablar
+
+```
+var_rekkjefolgje = c("hogd", "vekt", "dato_ut")
+arrange(d_uttrekk, match(vld_varnamn, var_rekkjefolgje))
+```
+
+#### Sorter rader etter forløp og variablar
+
+```
+arrange(d_uttrekk, pasid, dato_inn, match(vld_varnamn, var_rekkjefolgje))
+```
 
 <!-- Behovskartlegging
 
-I funksjonen bør det legges til mulighet for å hente ut et visst antall pasienter i utvalget (nå tas uansett alle sammen med per SPSS-fil, som er uoverkommelig for mange registre).
+*I funksjonen bør det legges til mulighet for å hente ut et visst antall pasienter i utvalget (nå tas uansett alle sammen med per SPSS-fil, som er uoverkommelig for mange registre).
 -> sample_frac() elns.
 
 Vi trenger altså en fil for hvert av de 6 angitte sykehusene, med f.eks. 100 pasienter med de 4 diagnosegruppene.
@@ -307,19 +393,19 @@ For de andre variablene trenger vi ikke å ha NorArtritt dataene i filen."
 -> d_vld_med_md %>%
   filter(!(kjonn="mann" && varnamn == "gravid))
 
-Tilfeldig utval av n pasientar.
+*Tilfeldig utval av n pasientar.
 -> 
   akt_pasientar = select(d_regdata, pasid, dato_inn) %>%
     ## ev. distinct() %>% ## viss det er pasientar og ikkje forløp me vil ha
     sample_n(n) %>%
   semi_join(d_utval, akt_pasientar)
 
-Tilfeldig utval av k variablar, og så tilfeldig utval av m pasientar per variabel.
+*Tilfeldig utval av k variablar, og så tilfeldig utval av m pasientar per variabel.
 ->
   akt_variablar = sample(d_utval$varnamn, k)
   filter(d_utval, varnamn %in% akt_variablar)
 
-Variablane skal visast i ei fornuftig rekkjefølgje (sortert etter pasient,
+*Variablane skal visast i ei fornuftig rekkjefølgje (sortert etter pasient,
 eller etter ei spesiell variabelrekkjefølgje)
 ->
   ## Pasientar
