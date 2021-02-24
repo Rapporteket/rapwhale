@@ -187,7 +187,9 @@ over tid, tilrår me SPC-metodikk (som me ikkje skriv om her i vignetten).
 ## Generering av valideringsdatasett
 
 Når ein har registerdata, er det med denne pakken veldig lett å
-laga eit valideringsdatasett.
+laga eit valideringsdatasett. Ein gjev inn eit datasett med indeksvariablar
+og datavariablar, og ein vektor med namna på indeksvariablane til funksjonen 
+`lag_valideringsdatasett()` og får ut eit valideringsdatasett.
 
 ### Eksempel på register
 
@@ -209,6 +211,11 @@ d_reg %>%
   kable_classic(font_size = 11)
 ```
 
+I dette eksempelet er indeksvariablane `pasid` og `dato_inn`, medan `kjonn` og 
+`sjukehus` er tilleggsvariablar som ein fjernar før bruk av 
+`lag_valideringsdatasett()`. Dette gjer ein enkelt på følgjande måte: 
+`select(registerdata, -kjonn, -sjukehus)`. Når det er gjort er ein klar
+til å laga valideringsdatasettet.
 
 ### Komplett valideringsdatasett
 
@@ -233,6 +240,10 @@ d_vld %>%
   row_spec(0, font_size = 10) # slik at tabellen ikkje skal verta for brei
 ```
 
+Det er likevel ofte at ein ikkje ynskjer eit komplett valideringsdatasett, 
+med alle variablar for alle pasientar/forløp. Kanskje ein ynskjer å avgrensa
+til eit visst antal rader, berre nokre visse sjukehus eller liknande. Under
+er eksempel på fleire scenario og korleis ein kan gå fram skildra.
 
 
 ### Korleis lagra til SPSS-format?
