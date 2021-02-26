@@ -51,19 +51,19 @@ i den eksterne kjelde (*ekstern verdi*). I tillegg treng
 me informasjon om kva pasient eller forløp verdien gjeld
 samt kva for variabel det er snakk om.
 
-### Superenkelt eksempel
+### Banalt eksempel
 
 I utgangspunktet verkar eit format som dette fornuftig:
 
 ```{r superenkelt eksempel, echo = FALSE}
-d_superenkelt = tibble::tribble(
+d_banalt = tibble::tribble(
   ~pasid, ~varnamn, ~verdi_intern, ~verdi_ekstern,
   5, "vekt", 78, 78,
   7, "hogd", 196, 194
 )
-d_superenkelt %>%
+d_banalt %>%
   kbl(align = c("llrr")) %>%
-  kable_classic("hover", full_width = F, position = "left")
+  kable_classic("hover", full_width = FALSE, position = "left")
 ```
 
 Her kan me registrera høgda og vekta til kvar pasient,
@@ -214,18 +214,20 @@ d_reg %>%
 I dette eksempelet er indeksvariablane `pasid` og `dato_inn`, medan `kjonn` og 
 `sjukehus` er tilleggsvariablar som ein fjernar før bruk av 
 `lag_valideringsdatasett()`. Dette gjer ein enkelt på følgjande måte: 
-`select(registerdata, -kjonn, -sjukehus)`. Når det er gjort er ein klar
+`select(d_reg, -kjonn, -sjukehus)`. Når det er gjort er ein klar
 til å laga valideringsdatasettet.
 
 ### Komplett valideringsdatasett
 
 Når ein køyrer `lag_valideringsdatasett()` får ein ut eit komplett 
-valideringsdatasett. Det vil seie at alle variablar for alle pasientar/forløp 
-er med. Talet på rader i valideringsdatasettet vert då lik talet på rader i
-det opphavlege datasettet gongar talet på datavariablar. For eksempelet over, 
-med 5 rader og 7 *datavariablar*, får ein eit valideringsdatasett med 35 rader. 
-Her er dei fyrste 7 radene i dette valideringsdatasettet, som svarar til den fyrste 
-rada i det opphavlege datasettet:
+valideringsdatasett, dersom ein ikkje har gjort ei filtrering av 
+registerdatasettet på førehand. Eit komplett valideringsdatasett vil seie at 
+alle variablar for alle pasientar/forløp er med. Talet på rader i 
+valideringsdatasettet vert då lik talet på rader i det opphavlege datasettet 
+gongar talet på datavariablar. For eksempelet over, med 5 rader og 7 
+*datavariablar*, får ein eit valideringsdatasett med 35 rader. Her er dei 
+fyrste 7 radene i dette valideringsdatasettet, som svarar til den fyrste rada 
+i det opphavlege datasettet:
 
 ```{r eksempel valideringsdatasett, echo = FALSE}
 indvars = c("pasid", "dato_inn")
@@ -253,8 +255,52 @@ Nokre få linjer kode for å få éi fil per sjukehus.
 
 ### Utval av variablar
 
-Berre bruk `select()` før funksjonskall. Easy peasy.
+Dersom ein berre skal sjå på eit utval av variablane, kan ein gjera dette ved
+å fjerna variablane som ikkje skal vera med, før ein kallar 
+`lag_valideringsdatasett()`. Dette kan ein gjera på same måte som ein fjernar 
+tilleggsvariablar:
 
+```
+select(d_reg, -dato_ut)
+```
+
+Eventuelt kan ein gjera det motsett, og velja dei variablane som *skal* vera 
+med, dersom det er enklare. Då må ein hugsa på å også ta med indeksvariablane:
+
+```
+select(d_reg, pasid, dato_inn, vekt, hogd)
+```
+
+#### Bruk av logikk til å fjerna unødvendige rader
+
+Det finst eksempel på at visse variablar berre gjev meining å sjekka dersom 
+ein annan variabel har ein viss verdi. Det kan til dømes vera at ein har 
+variabelen gravid, som berre gjev meining å sjekka dersom kjønn er kvinne. 
+Slike rader kan ein fjerna frå valideringsdatasettet på denne måten:
+
+```
+d_vld_med_metadata %>% # her har me kopla på metadata for å få kolonnen kjonn
+  filter(!(kjonn="mann" && varnamn == "gravid"))
+```
+
+Eit anna eksempel kan vera variablar som 1-års-vekt, som ikkje skal sjekkast 
+for pasientar som vart operert for mindre enn 1 år sidan:
+
+```
+d_vld %>%
+  filter(!(varnamn == "vekt_1aar" && op_dato > Sys.Date()-365))
+```
+
+### Utval av visse variabelverdiar
+
+Ein kan avgrense uttrekket til visse verdiar for éin eller fleire variablar,
+til dømes dersom ein berre skal kontrollera data på eitt eller fleire 
+særskilde sjukehus. Dette kan gjerast ved å bruka filtrera på ynskja verdiar
+før ein kallar `lag_valideringsdatasett()`:
+
+```
+filter(d_reg, sjukehus == "Bergen")
+```
 
 ### Ymse typar tilfeldige utval
 
@@ -289,7 +335,7 @@ valideringsdatasettet`d_vld`:
 
 `sample_frac(d_vld, x)`
 
-#### Alle rader i tilfeldig rekkjefølgje
+#### Komplett valideringsdatasett i tilfeldig rekkjefølgje
 
 Det kan vera ynskjeleg å bruka eit komplett valideringsdatasett i 
 korrektheitsstudien, slik at ein jobbar seg gjennom så mykje ein klarar på 
@@ -299,7 +345,7 @@ utval. For å få til dette køyrer ein følgjande kode med valideringsdatasette
 
 `sample_frac(d_vld)`
 
-#### Alle rader med pasientar i tilfeldig rekkjefølgje
+#### Komplett valideringsdatasett med pasientar i tilfeldig rekkjefølgje
 
 Dersom det er lite føremålstenleg å ha rader for same pasient på ulike stadar
 i valideringsdatasettet kan ein trekkja alle pasientane i tilfeldig rekkjefølgje
@@ -318,7 +364,7 @@ For å trekkja ut n tilfeldige forløp køyrer ein følgjande kode med registerd
 
 ```
 uttrekk_forlop = select(d_reg, pasid, dato_inn) %>% # pasid og dato_inn er indeksvariablane 
-                                                    # bruk berre pasid dersom det skal velgast ut 
+                                                    # bruk berre pasid dersom det skal veljast ut 
                                                     # pasientar og ikkje forløp
     sample_n(n)
 
@@ -340,6 +386,43 @@ for(variabel in uttrekk_variablar){
 d_uttrekk
 ```
 
+#### Prioritering av visse variabelverdiar
+
+I nokre tilfelle ynskjer ein å prioritera pasientar/forløp med visse 
+variabelverdiar, som til dømes ein viss diagnose. I eksempelregisteret vårt
+kan det tenkjast at ein vil prioritera pasientar med verdien `TRUE` på 
+`biverk_hovud`. Dersom dette registeret hadde hatt fleire forløp registrert, 
+kan ein sjå føre seg at ein til dømes ville trekkja ut 80 tilfeldige forløp
+med verdien `TRUE` på `biverk_hovud`, og 20 % blant resten. Dette kan gjerast 
+fylgjande måte:
+
+```
+d1 = filter(d_vld, biverk_hovud == TRUE)
+d2 = setdiff(d_vld, d1)
+d1_uttrekk = sample_n(d1, size = 1)
+d2_uttrekk = sample_frac(d2, size = .2)
+bind_rows(d1_uttrekk, d2_uttrekk)
+```
+
+#### Samanhengande variablar
+
+Visse variablar kan vera samanhengande ved at dei liknar eller er avhengig av 
+kvarandre, som til dømes biverknadvariablane i eksempelregisteret vårt. Det 
+kan vera føremålstenleg å inkludera alle slike samanhengande variablar for 
+kvart forløp det éin eller fleire av dei er trekt ut:
+
+```
+d_vld_biverk = d_vld %>%
+  filter(vld_varnamn %in% c("biverk", "biverk_hovud", "biverk_mage", "biverk_fot")) %>% 
+  distinct(pasid, dato_inn)
+
+d_vld_komplett_biverk = d_vld_komplett %>% 
+  filter(vld_varnamn %in% c("biverk", "biverk_hovud", "biverk_mage", "biverk_fot")) %>% 
+  inner_join(d_vld_biverk)
+  
+full_join(d_vld, d_vld_komplett_biverk)
+```
+
 ### Fornuftig rekkjefølgje
 
 Etter at ein har gjort eit tilfeldig utval kan det vera føremålstenleg å ha 
@@ -347,7 +430,9 @@ radene i ei fornuftig rekkjefølgje.
 
 #### Sorter rader etter forløp
 
-`arrange(d_uttrekk, pasid, dato_inn)`
+```
+arrange(d_uttrekk, pasid, dato_inn)
+```
 
 #### Sorter rader etter variablar
 
@@ -362,6 +447,17 @@ arrange(d_uttrekk, match(vld_varnamn, var_rekkjefolgje))
 arrange(d_uttrekk, pasid, dato_inn, match(vld_varnamn, var_rekkjefolgje))
 ```
 
+### Ekstra kolonnar med informasjon
+
+Det kan vera nyttig å leggja til ekstra kolonnar i valideringsdatasettet, til 
+dømes metadata som fødselsdato, alder og kjønn som kan gjera det enklare å
+finna pasienten i pasientjournalen. Dette kan gjerast ved å kopla på igjen 
+kolonnar frå registerdatasettet på valideringsdatasettet:
+
+```
+left_join(d_vld, select(d_reg, pasid, dato_inn, kjonn, sjukehus), by = c("pasid", "dato_inn"))
+```
+
 <!-- Behovskartlegging
 
 *I funksjonen bør det legges til mulighet for å hente ut et visst antall pasienter i utvalget (nå tas uansett alle sammen med per SPSS-fil, som er uoverkommelig for mange registre).
@@ -370,7 +466,7 @@ arrange(d_uttrekk, pasid, dato_inn, match(vld_varnamn, var_rekkjefolgje))
 Vi trenger altså en fil for hvert av de 6 angitte sykehusene, med f.eks. 100 pasienter med de 4 diagnosegruppene.
 -> funksjon for lagring()???
 
-Viktig at RA-pasienter med diagnose 2014 eller seinere prioriteres (minst 50 pasienter der det finnes).
+*Viktig at RA-pasienter med diagnose 2014 eller seinere prioriteres (minst 50 pasienter der det finnes).
 -> potensielt statistisk problematisk? viss sannsynet for å trekkast ut er avhengig av nokre variabelverdiar, for eksempel diagnose. uproblematisk ved *stratifisert* analyse eller ved rett justering.
 -> d1 = filter(diag == "ra")
     d2 = filter(diag != "ra") ## antar ingen NA-ar
@@ -379,17 +475,17 @@ Viktig at RA-pasienter med diagnose 2014 eller seinere prioriteres (minst 50 pas
     d_utval = bind_rows(d1_utval, d2_utval)
     ## (i staden for d_utval = sample_frac(d, frac = .2)
 
-Når det gjelder diagnose og diagnosedato skal vi ikke undersøke om disse er korrekt registrert, for her er det mye skjønn og det er OK. Vi trenger dette til å se på en del av de senere punktene. Derfor ønsker vi at diagnose og diagnosedato som er registrert i NorArtritt skal ligge i filen som vi skal fylle inn slik at vi kan sammenholde.
+*Når det gjelder diagnose og diagnosedato skal vi ikke undersøke om disse er korrekt registrert, for her er det mye skjønn og det er OK. Vi trenger dette til å se på en del av de senere punktene. Derfor ønsker vi at diagnose og diagnosedato som er registrert i NorArtritt skal ligge i filen som vi skal fylle inn slik at vi kan sammenholde.
 For de andre variablene trenger vi ikke å ha NorArtritt dataene i filen."
 -> left_join(d_utval, select(d_regdata, utvalde_kolonnar, ...))
 
-1) Hvis de henter tilfeldige variabler per pasient, ala SOReg-løsningen, kunne det vært slik at hvis en variabel som ble plukket ut var fra et sett med lignende variabler, så ble alle variablene i settet hentet for pasienten (eksemepelet var en rekke avkrysningsbokser for symptomer - hvis en variabel for et symptom, la oss si hodepine, blir trukket ut av variabel-rouletten, så ville de at variabelen for kvalme, kløe og fotsopp også ble med på den pasienten)
+*1) Hvis de henter tilfeldige variabler per pasient, ala SOReg-løsningen, kunne det vært slik at hvis en variabel som ble plukket ut var fra et sett med lignende variabler, så ble alle variablene i settet hentet for pasienten (eksemepelet var en rekke avkrysningsbokser for symptomer - hvis en variabel for et symptom, la oss si hodepine, blir trukket ut av variabel-rouletten, så ville de at variabelen for kvalme, kløe og fotsopp også ble med på den pasienten)
 -> d_utval %>%
   left_join(d_regdata) %>%
   group_by(pasid) %>%
   filter(!(variabel1 != x, varnamn %in% c(variabel2, variabel3 osv.))) ## noko sånt ... :9
 
-2) At man hadde logikker med, at hvis pasienten har verdien er mann = ja så får ikke denne pasienten variabelen for graviditet med i sitt variabelsett. SOReg ville ha noe lignende - at man ikke fikk variabelen for 6 vekers vekt når pasienten fikk operasjonen sin i går.
+*2) At man hadde logikker med, at hvis pasienten har verdien er mann = ja så får ikke denne pasienten variabelen for graviditet med i sitt variabelsett. SOReg ville ha noe lignende - at man ikke fikk variabelen for 6 vekers vekt når pasienten fikk operasjonen sin i går.
 -> d_vld_med_md %>%
   filter(!(kjonn="mann" && varnamn == "gravid))
 
@@ -422,7 +518,7 @@ Ev. annan funksjonalitet i opphavleg funksjon?
   
   Frå https://www.kvalitetsregistre.no/sites/default/files/2021-02/Erfaringer%20med%20valideringsstudie%20for%20SOReg-N.pdf finn me følgjande eksempel:
   
-  «Registeret ble enige med
+*«Registeret ble enige med
 statistikerne om å trekke et overkommelig antall, tilfeldige variabler
 per operasjon (operasjon = omtrent det samme som pasient, men
 noen få pasienter hadde hatt reoperasjoner). Planen var i
@@ -432,12 +528,12 @@ enn å åpne ny journal for å finne verdiene til en ny pasient. På bakgrunn av
 dette økte en antall tilfeldige valgte variabler til 10 variabler per pasient.»
 Bør ha eksempel på korleis ein gjer dette.
 
-Eksempel på at ein legg til ekstra metadata (eks. fødselsdato, alder og kjønn)
+*Eksempel på at ein legg til ekstra metadata (eks. fødselsdato, alder og kjønn)
 for å lettare finna pasienten i pasientjournalen.
 
-Eksempel på variabelrekkjefølgje:
+*Eksempel på variabelrekkjefølgje:
 
-«Rekkefølgene på radene var basert på en «naturlig» rekkefølge (for
+*«Rekkefølgene på radene var basert på en «naturlig» rekkefølge (for
 eksempel kom baseline-variabler før oppfølgingsvariabler), slik at det
 skulle være enklere og raskere å finne frem til informasjonen i
 pasientjournalen.»
@@ -461,9 +557,9 @@ og lesa ei survey-boka. Og SSBs notat som ulike samplingsmåtar?
   
 Frå NORIC og AblaNor:
 Me ønsker 
--	at det skal vera mogleg å bestemma kva variabler som skal kontrollerast (til dømes dersom me veit at det er mykje feil i nokre felt vil me heller kontrollera dei felta enn tilfeldig utvalde variablar)
--	å kunne avgrensa kor mange variabler som skal trekkjast ut + antal pasientar (Dersom prosjektet vert for stort er det vanskelig å finna ressursane til å gjennomføra det)
--	at det er mogleg å avgrensa til utvalde sjukehus. (Til dømes dersom me veit at det er mykje feil i Stavanger kan me ha mål om å forbetra kvaliteten på innregistreringa der)
+*-	at det skal vera mogleg å bestemma kva variabler som skal kontrollerast (til dømes dersom me veit at det er mykje feil i nokre felt vil me heller kontrollera dei felta enn tilfeldig utvalde variablar)
+*-	å kunne avgrensa kor mange variabler som skal trekkjast ut + antal pasientar (Dersom prosjektet vert for stort er det vanskelig å finna ressursane til å gjennomføra det)
+*-	at det er mogleg å avgrensa til utvalde sjukehus. (Til dømes dersom me veit at det er mykje feil i Stavanger kan me ha mål om å forbetra kvaliteten på innregistreringa der)
 -	ein mal på korleis ein skal registrera samanlikningane ein gjer (Excel ark ein kan fylla inn i? Eller anna løysing? )
 -	ein mal/døme på ferdig rapport. Til dømes flytskjema, oppteljingar per pasient/variabel med andel like/ulike registreringar, figurar 
 -	gjerne ein halvautomatisert rapport. Me bruker rmd-format og tykkjer det fungerer fint. Kanskje ei rmd-fil me kan fylla parametre inn i kunne vore ein ide? Til dømes at me får første og siste registrering, dato for rapport, figurar, tabellar, overskrifter osv., så fyller me sjølve inn tekst og kompletterer ved behov. 
