@@ -122,7 +122,7 @@ kan det vera at han ikkje fungerer heilt som han skal.
 Du må vera budd på små endringar (for eksempel i argumentnamn),
 men i hovudsak er funksjonalitet og grensesnitt til funksjonen fastsett.
 Det gjenstår berre ein del finpussing og kvalitetssikring.
-Òg her rettar me sjølvsagt feil me vert gjorde merksame på.
+Også her rettar me sjølvsagt feil me vert gjorde merksame på.
 
 
 ### Experimental
