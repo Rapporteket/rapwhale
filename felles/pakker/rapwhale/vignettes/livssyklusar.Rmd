@@ -41,7 +41,7 @@ Desse svarar til nivåa i
 [`lifecycle`-pakken](https://cran.r-project.org/package=lifecycle)-pakken,
 men me har eigne definisjonar tilpassa vår bruk og vår målgruppe.
 
-TLDR-versjonen av dette dokumentet er funksjonar på nivå
+TLDR-versjonen av dette dokumentet er at funksjonar på nivå
 ![stable](../man/figures/lifecycle-stable.svg){style="vertical-align:middle"}
 tilrår me at du brukar,
 dei på nivå
@@ -50,15 +50,14 @@ dei på nivå
 og små feil,
 mens dei på nivå
 ![experimental](../man/figures/lifecycle-experimental.svg){style="vertical-align:middle"}
-bør du unngå (men du kan gje tilbakemeldingar på dei).
-
-Her følgjer ei nærare skildring av utviklingsnivåa.
+bør du unngå, men du kan gje tilbakemeldingar på dei.
+Her følgjer ei nærare skildring.
 
 
 ### Stable
 
 Ein funksjon merkt med ![stable](../man/figures/lifecycle-stable.svg){style="vertical-align:middle"},
-tilrår me for bruk.
+tilrår me for bruk. Følgjande skal vera oppfylt:
 
 - Ønskt funksjonalitet er fastsett, og alle utviklarane har godkjent han
 - Funksjonsnamn og argumentstruktur er heilt fastsett
@@ -68,13 +67,13 @@ tilrår me for bruk.
 - Dekningsgraden for testane er 100 % (`covr`-pakken)
 - Dokumentasjonen på hjelpesida er komplett og har også brukseksempel
 - Minst to personar utanom den opphavlege utviklaren
-  har kvalitetssikra funksjonen
+  har kvalitetssikra heile funksjonen
 
-Ein ![stable](../man/figures/lifecycle-stable.svg){style="vertical-align:middle"}-
-funksjon kan du altså bruka
+Ein slik funksjon
+kan du altså bruka
 utan å måtte uroa deg.
-Men det *kan* sjølvsagt finnast feil også for slike funksjonar.
-Desse lovar me å retta opp viss me får tilsendt
+Det *kan* sjølvsagt finnast feil her,
+men desse lovar me å retta opp viss me får tilsendt
 [eit reprex](https://www.tidyverse.org/help/).
 
 Det kan komma utvida funksjonalitet i framtida (med nye funksjonsargument),
@@ -94,9 +93,10 @@ Men mange er merkte med
 
 Desse er på god veg til å verta stabile,
 men det manglar framleis litt.
+Følgjande skal vera oppfylt:
 
 - Ønskt *hovud*funksjonalitet er fastsett,
-  men er ikkje nødvendigvis enno godkjent og alle utviklarane
+  men er ikkje nødvendigvis enno godkjent av alle utviklarane
 - Funksjonsnamn og argumentstruktur er tentativt fastsett,
   men det kan komma (mindre) endringar,
   for eksempel endringar i argumentnamn eller -rekkjefølgje
@@ -128,8 +128,8 @@ Det gjenstår berre ein del finpussing og kvalitetssikring.
 
 Ein funksjon merkt med
 ![experimental](../man/figures/lifecycle-experimental.svg){style="vertical-align:middle"}
-eksperimentell.
-Desse tilrår me ikkje for vanleg bruk.
+tilrår me ikkje for vanleg bruk.
+Følgjande skal vera oppfylt:
 
 - Funksjonaliteten er ikkje fastsett –
   det implementerte er berre eit forslag
@@ -177,12 +177,13 @@ vert funksjonen rekna som
 
 ## Offentlege og interne funksjonar
 
-*Både* offentlege (eksporterte) og interne funksjonar i `rapwhale`
+Både offentlege (eksporterte) *og* interne funksjonar i `rapwhale`
 skal ha utviklingsnivå definert.
 At ein intern funksjon er
 ![stable](../man/figures/lifecycle-stable.svg){style="vertical-align:middle"},
 gjev nyttig informasjon,
-det det medfører at ein trygt kan bruka han i andre (offentlege eller interne).
+då det medfører at ein trygt kan bruka han i andre
+(offentlege eller interne) funksjonar.
 Men viss han er
 ![experimental](../man/figures/lifecycle-experimental.svg){style="vertical-align:middle"},
 må ein vera forsiktig,
@@ -192,7 +193,7 @@ kan aldri vera
 eller
 ![maturing](../man/figures/lifecycle-maturing.svg){style="vertical-align:middle"}.
 
-For eksterne brukarar (ikkje tilsette på fagsenteret) gjeld regelen
+For eksterne brukarar (altså ikkje tilsette på fagsenteret) gjeld regelen
 at ein *aldri* skal bruka interne `rapwhale`-funksjonar
 (altså ved å kalla dei tre med kolon, `rapwhale:::funksjonsnamn()`).
 Viss ein likevel vel å bruka dei
