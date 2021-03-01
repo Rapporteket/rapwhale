@@ -66,8 +66,41 @@ og me vil varsla om det,
 med informasjon om korleis du kan tilpassa koden din til endringane.
 
 
-
 ### Maturing
+
+Førebels er dei færraste funksjonar stabile.
+Men mange er merkte med
+![maturing](../man/figures/lifecycle-maturing.svg){style="vertical-align:middle"}.
+
+Desse er på god veg til å verta stabile,
+men det manglar framleis litt.
+
+- Funksjonsnamn og argumentstruktur er tentativt fastsett,
+  men det kan komma (mindre) endringar,
+  for eksempel endringar i argumentnamn eller -rekkjefølgje
+- Det meste av funksjonen er implementert,
+  men det kan vera delar av tiltenkt funksjonalitet som framleis manglar
+- Det finst automatiske testar (`testthat`-pakken)
+  for iallfall dei viktigaste delane av funksjonen
+- Dekningsgraden for testane er altså ikkje nødvendigvis 100 % (`covr`-pakken)
+- Hjelpesida har dokumentasjon,
+  men denne kan vera ufullstendig og ikkje språkleg finpussa,
+  og det kan mangla (gode) brukseksempel
+- Funksjonen er ikkje ferdig kvalitetssikra,
+  men skal ha gjennomgått noko kvalitetssikring
+
+Dette er ein funksjon du godt kan bruka,
+og han skal ha jamn god kvalitet,
+men me gjev ingen garantiar.
+Spesielt i sjeldne grensetilfelle
+(for eksempel viss du gjev han innadata med 0 rader eller med `NA`-verdiar)
+kan det vera at han ikkje fungerer heilt som han skal.
+
+Du må vera budd på små endringar (for eksempel i argumentnamn),
+men i hovudsak er funksjonalitet og grensesnitt til funksjonen fastsett.
+Det gjenstår berre ein del finpussing og kvalitetssikring.
+Òg her rettar me sjølvsagt feil me vert gjorde merksame på.
+
 
 ### Experimental
 
