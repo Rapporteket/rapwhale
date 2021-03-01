@@ -36,7 +36,35 @@ Desse svarar til nivåa i
 [`lifecycle`-pakken](https://cran.r-project.org/package=lifecycle)-pakken,
 men me har eigne definisjonar tilpassa vår bruk og vår målgruppe.
 
-### Stable
+### Stable (`r lifecycle::badge("stable")`)
+
+Ein funksjon merkt med `r lifecycle::badge("stable")`,
+tilrår me for bruk.
+
+- Funksjonsnamn og argumentstruktur er heilt fastsett
+- Implementeringa er komplett
+- Det finst automatiske testar (`testthat`-pakken) for all funksjonalitet,
+  som sikrar at funksjonen fungerer som han skal
+- Dekningsgraden for testane er 100 % (`covr`-pakken)
+- Dokumentasjonen på hjelpesida er komplett og har også brukseksempel
+- Minst to personar utanom den opphavlege utviklaren
+  har kvalitetssikra funksjonen
+
+Ein `r lifecycle::badge("stable")` funksjon kan du altså bruka
+utan å måtte uroa deg.
+Men det *kan* sjølvsagt finnast feil også for slike funksjonar.
+Desse lovar me å retta opp viss me får tilsendt
+[eit reprex](https://www.tidyverse.org/help/).
+
+Det kan komma utvida funksjonalitet i framtida (med nye funksjonsargument),
+men desse skal normalt ikkje påverka eksisterande funksjonalitet.
+
+Ein sjeldan gang *kan* det likevel komma (alle slags) andre endringar,
+men då er det i så fall svært gode grunnar til dette,
+og me vil varsla om det,
+med informasjon om korleis du kan tilpassa koden din til endringane.
+
+
 
 ### Maturing
 

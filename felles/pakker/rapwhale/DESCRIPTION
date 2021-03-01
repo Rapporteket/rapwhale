@@ -34,7 +34,8 @@ Imports:
     scales (>= 1.1.1),
     qicharts2,
     testthat,
-    Rdpack
+    Rdpack,
+    lifecycle
 RdMacros: Rdpack
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
