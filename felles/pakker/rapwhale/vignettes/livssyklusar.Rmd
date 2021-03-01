@@ -129,6 +129,18 @@ Merk at du *kan* bruka desse funksjonane
 men du må då vera budd på framtidige endringar.
 
 
-### Andre
+### Andre nivå
+
+Det finst òg andre utviklingsnivå i `lifecycle`-pakken (nokre utdaterte):
+
+- ![archived](../man/figures/lifecycle-archived.svg){style="vertical-align:middle"}
+- ![defunct](../man/figures/lifecycle-defunct.svg){style="vertical-align:middle"}
+- ![deprecated](../man/figures/lifecycle-deprecated.svg){style="vertical-align:middle"}
+- ![questioning](../man/figures/lifecycle-questioning.svg){style="vertical-align:middle"}
+- ![superseded](../man/figures/lifecycle-superseded.svg){style="vertical-align:middle"}
+
+Desse brukar me førebels ikkje,
+men me kan komma til å gjera det i framtida.
+
 
 ### Manglande nivå
