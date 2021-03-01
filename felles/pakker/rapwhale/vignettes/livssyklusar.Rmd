@@ -144,3 +144,8 @@ men me kan komma til å gjera det i framtida.
 
 
 ### Manglande nivå
+
+Alle funksjonar i `rapwhale` *skal* ha utviklingsnivå definert.
+Men viss det ved ein inkurie manglar,
+vert funksjonen rekna som
+![experimental](../man/figures/lifecycle-experimental.svg){style="vertical-align:middle"}.
