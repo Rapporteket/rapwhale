@@ -104,6 +104,31 @@ Det gjenstår berre ein del finpussing og kvalitetssikring.
 
 ### Experimental
 
+Ein funksjon merkt med
+![experimental](../man/figures/lifecycle-experimental.svg){style="vertical-align:middle"}
+eksperimentell.
+Desse tilrår me ikkje for vanleg bruk.
+
+- Funksjonsnamn og argumentstruktur er ikkje fastsett
+- Noko funksjonalitet er implementert
+- Det finst ikkje nødvendigivs automatiske testar (`testthat`-pakken)
+- Hjelpesida finst, men kan vera svært mangelfull
+- Funksjonen er ikkje ferdig kvalitetssikra,
+  og er kanskje ikkje kvalitetssikra i det heile teke
+
+Dette er funksjonar som ikkje er heilt gjennomtenkte
+og ferdigdiskuterte i fagsentergruppa.
+Det kan vera dei i framtida vert endra mykje,
+delt opp i fleire separate funksjonar,
+slegne saman med andre
+eller fjerna heilt.
+Men me tek svært gjerne imot tilbakemeldingar på dei.
+
+Merk at du *kan* bruka desse funksjonane
+(så lenge dei er eksporterte),
+men du må då vera budd på framtidige endringar.
+
+
 ### Andre
 
 ### Manglande nivå
