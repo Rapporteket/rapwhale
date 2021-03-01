@@ -67,7 +67,8 @@ tilrår me for bruk. Følgjande skal vera oppfylt:
 - Dekningsgraden for testane er 100 % (`covr`-pakken)
 - Dokumentasjonen på hjelpesida er komplett og har også brukseksempel
 - Minst to personar utanom den opphavlege utviklaren
-  har kvalitetssikra heile funksjonen
+  har kvalitetssikra heile funksjonen (inkludert testar,
+  hjelpeside, eksempel og eventuell vignett)
 
 Ein slik funksjon
 kan du altså bruka
