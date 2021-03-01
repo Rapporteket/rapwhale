@@ -36,9 +36,9 @@ Desse svarar til nivåa i
 [`lifecycle`-pakken](https://cran.r-project.org/package=lifecycle)-pakken,
 men me har eigne definisjonar tilpassa vår bruk og vår målgruppe.
 
-### Stable (`r lifecycle::badge("stable")`)
+### Stable
 
-Ein funksjon merkt med `r lifecycle::badge("stable")`,
+Ein funksjon merkt med ![stable](../man/figures/lifecycle-stable.svg){style="vertical-align:middle"},
 tilrår me for bruk.
 
 - Funksjonsnamn og argumentstruktur er heilt fastsett
@@ -50,7 +50,8 @@ tilrår me for bruk.
 - Minst to personar utanom den opphavlege utviklaren
   har kvalitetssikra funksjonen
 
-Ein `r lifecycle::badge("stable")` funksjon kan du altså bruka
+Ein ![stable](../man/figures/lifecycle-stable.svg){style="vertical-align:middle"}-
+funksjon kan du altså bruka
 utan å måtte uroa deg.
 Men det *kan* sjølvsagt finnast feil også for slike funksjonar.
 Desse lovar me å retta opp viss me får tilsendt
