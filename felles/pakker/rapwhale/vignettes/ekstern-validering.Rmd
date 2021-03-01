@@ -399,7 +399,7 @@ fylgjande måte:
 ```
 d1 = filter(d_vld, biverk_hovud == TRUE)
 d2 = setdiff(d_vld, d1)
-d1_uttrekk = sample_n(d1, size = 1)
+d1_uttrekk = sample_n(d1, size = 80)
 d2_uttrekk = sample_frac(d2, size = .2)
 bind_rows(d1_uttrekk, d2_uttrekk)
 ```
