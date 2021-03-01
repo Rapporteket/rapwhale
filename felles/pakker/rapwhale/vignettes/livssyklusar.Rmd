@@ -1,0 +1,47 @@
+---
+title: "Utviklingsnivå for funksjonar i rapwhale-pakken"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Utviklingsnivå for funksjonar i rapwhale-pakken}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduksjon
+
+Kvar funksjon i `rapwhale` har eit «skilt» på hjelpesida
+som seier kva utviklingsnivå han er på,
+for eksempel om han er ein stabil funksjon som er anbefalt for bruk
+eller ein eksperimentell funksjon som ein helst bør halda seg unna.
+Her er ei kort skildring av utviklingsnivå.
+For meir om tankegangen bak utviklingsnivå,
+sjå vignettane til
+[`lifecycle`-pakken](https://cran.r-project.org/package=lifecycle).
+
+## Utviklingsnivåa
+
+Førebels brukar me tre utviklingsnivå.
+Desse svarar til nivåa i
+[`lifecycle`-pakken](https://cran.r-project.org/package=lifecycle)-pakken,
+men me har eigne definisjonar tilpassa vår bruk og vår målgruppe.
+
+### Stable
+
+### Maturing
+
+### Experimental
+
+### Andre
+
+### Manglande nivå
