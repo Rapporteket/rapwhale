@@ -24,17 +24,36 @@ Kvar funksjon i `rapwhale` har eit «skilt» på hjelpesida
 som seier kva utviklingsnivå han er på,
 for eksempel om han er ein stabil funksjon som er anbefalt for bruk
 eller ein eksperimentell funksjon som ein helst bør halda seg unna.
-Her er ei kort skildring av utviklingsnivå.
+Her er ei kort skildring av utviklingsnivåa me brukar.
 For meir om tankegangen bak utviklingsnivå,
 sjå vignettane til
 [`lifecycle`-pakken](https://cran.r-project.org/package=lifecycle).
 
 ## Utviklingsnivåa
 
-Førebels brukar me tre utviklingsnivå.
+Førebels brukar me tre utviklingsnivå:
+
+- ![stable](../man/figures/lifecycle-stable.svg){style="vertical-align:middle"}
+- ![maturing](../man/figures/lifecycle-maturing.svg){style="vertical-align:middle"}
+- ![experimental](../man/figures/lifecycle-experimental.svg){style="vertical-align:middle"}
+
 Desse svarar til nivåa i
 [`lifecycle`-pakken](https://cran.r-project.org/package=lifecycle)-pakken,
 men me har eigne definisjonar tilpassa vår bruk og vår målgruppe.
+
+TLDR-versjonen av dette dokumentet er funksjonar på nivå
+![stable](../man/figures/lifecycle-stable.svg){style="vertical-align:middle"}
+tilrår me at du brukar,
+dei på nivå
+![maturing](../man/figures/lifecycle-maturing.svg){style="vertical-align:middle"}
+*kan* du bruka, men på eige ansvar, og du må vera budd på *mindre* endringar
+og små feil,
+mens dei på nivå
+![experimental](../man/figures/lifecycle-experimental.svg){style="vertical-align:middle"}
+bør du unngå (men du kan gje tilbakemeldingar på dei).
+
+Her følgjer ei nærare skildring av utviklingsnivåa.
+
 
 ### Stable
 
