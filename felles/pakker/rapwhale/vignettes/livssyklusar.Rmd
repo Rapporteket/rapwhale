@@ -149,3 +149,30 @@ Alle funksjonar i `rapwhale` *skal* ha utviklingsnivå definert.
 Men viss det ved ein inkurie manglar,
 vert funksjonen rekna som
 ![experimental](../man/figures/lifecycle-experimental.svg){style="vertical-align:middle"}.
+
+
+## Offentlege og interne funksjonar
+
+*Både* offentlege (eksporterte) og interne funksjonar i `rapwhale`
+skal ha utviklingsnivå definert.
+At ein intern funksjon er
+![stable](../man/figures/lifecycle-stable.svg){style="vertical-align:middle"},
+gjev nyttig informasjon,
+det det medfører at ein trygt kan bruka han i andre (offentlege eller interne).
+Men viss han er
+![experimental](../man/figures/lifecycle-experimental.svg){style="vertical-align:middle"},
+må ein vera forsiktig,
+og funksjonen ein brukar han i,
+kan aldri vera
+![stable](../man/figures/lifecycle-stable.svg){style="vertical-align:middle"}
+eller
+![maturing](../man/figures/lifecycle-maturing.svg){style="vertical-align:middle"}.
+
+For eksterne brukarar (ikkje tilsette på fagsenteret) gjeld regelen
+at ein *aldri* skal bruka interne `rapwhale`-funksjonar
+(altså ved å kalla dei tre med kolon, `rapwhale:::funksjonsnamn()`).
+Viss ein likevel vel å bruka dei
+(det er eit fritt land …),
+bør ein handtera dei som om dei var
+![experimental](../man/figures/lifecycle-experimental.svg){style="vertical-align:middle"},
+uavhengig av faktisk utviklingsnivå.
