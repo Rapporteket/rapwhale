@@ -150,7 +150,7 @@ Men me tek svært gjerne imot tilbakemeldingar på dei.
 
 Merk at du *kan* bruka desse funksjonane
 (så lenge dei er eksporterte),
-men du må då vera budd på framtidige endringar.
+men du må då vera budd på store framtidige endringar.
 
 
 ### Andre nivå
