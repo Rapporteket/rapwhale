@@ -96,7 +96,7 @@ men det manglar framleis litt.
 Følgjande skal vera oppfylt:
 
 - Ønskt *hovud*funksjonalitet er fastsett,
-  men er ikkje nødvendigvis enno godkjent av alle utviklarane
+  men er ikkje nødvendigvis enno godkjend av alle utviklarane
 - Funksjonsnamn og argumentstruktur er tentativt fastsett,
   men det kan komma (mindre) endringar,
   for eksempel endringar i argumentnamn eller -rekkjefølgje
