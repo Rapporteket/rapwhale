@@ -91,7 +91,6 @@ med informasjon om korleis du kan tilpassa koden din til endringane.
 Førebels er dei færraste funksjonar stabile.
 Men mange er merkte med
 ![maturing](../man/figures/lifecycle-maturing.svg){style="vertical-align:middle"}.
-
 Desse er på god veg til å verta stabile,
 men det manglar framleis litt.
 Følgjande skal vera oppfylt:
