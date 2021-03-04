@@ -28,12 +28,23 @@ suppressPackageStartupMessages({
 ```
 
 ```{r kable-format, include = FALSE}
-lag_kable = function(d, ...) {
+lag_kable = function(d, full_width = FALSE, ...) {
   d %>%
     kbl() %>%
-    kable_classic("hover", ...)
+    kable_classic("hover", full_width = full_width, ...)
 }
 ```
+
+```{css, echo=FALSE}
+/* Hack for å få tabellar til å flyt ut i margen om nødvendig
+   (fixme: bør erstattast med eit felles, eksternt og
+           gjennomtenkt stilsett for alle vignettane) */
+table { float: left; }
+p, h1, h2, h3, h4, h5, h6, div {
+  clear: both;
+}
+```
+
 
 ## Innleiing
 
@@ -72,7 +83,7 @@ d_banalt = tibble::tribble(
   7, "vekt", 53, 53,
   7, "hogd", 196, 186
 )
-lag_kable(d_banalt, full_width = FALSE, position = "left")
+lag_kable(d_banalt)
 ```
 
 Her kan me registrera høgda og vekta til kvar pasient
