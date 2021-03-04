@@ -1,8 +1,10 @@
 #' Analyser valideringsdatasett ved å samanlikna verdiar
 #'
-#' @description Brukar ein samanlikningsfunksjon for å undersøka om
-#'              interne og eksterne verdiar i eit valideringsdatasett
-#'              er «like» eller ikkje.
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
+#' Brukar ein samanlikningsfunksjon for å undersøka om interne og eksterne
+#' verdiar i eit valideringsdatasett er «like» eller ikkje.
 #'
 #' @param d_vld Valideringsdatasett (dataramme/tibble). Sjå
 #'   [er_valideringsdatasett_gyldig()] for definisjonen på eit (gyldig)

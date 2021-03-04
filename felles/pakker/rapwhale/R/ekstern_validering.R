@@ -17,6 +17,8 @@ NULL
 #' Lag valideringsdatasett
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Funksjon for å henta ut (tilfeldige) data frå eit registerdatasett
 #' for seinare bruk til ekstern validering av registeret.
 #' Kort sagt plukkar funksjonen ut tilfeldige
@@ -363,6 +365,8 @@ lag_valideringsdata = function(df, sjukehus_var, indeks_var, ekstra_var = NULL,
 #' Eksporter valideringsdatasett til SPSS-format
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Eksportering av valideringsdatasett (genert med
 #' \link{lag_valideringsdata}) til SPSS-format.
 #' Kvar eining (eksempelvis sjukehus) i valideringsdatasettet

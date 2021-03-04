@@ -1,6 +1,8 @@
 #' Lag valideringsdatasett
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Lagar eit valideringsdatasett med data frå eit registerdatasett klart til å
 #' fyllast ut med og sjekkast opp mot data frå ein gullstandard (typisk
 #' pasientjournal).

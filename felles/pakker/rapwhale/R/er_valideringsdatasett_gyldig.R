@@ -1,7 +1,10 @@
 #' Valider valideringsdatasett
 #'
-#' @description Tek inn eit valideringsdatasett og returnerer `TRUE` eller
-#'              `FALSE` dersom det er høvesvis gyldig eller ugyldig.
+#' @description
+#' `r lifecycle::badge("maturing")`
+#'
+#' Tek inn eit valideringsdatasett og returnerer `TRUE` eller `FALSE` dersom
+#' det er høvesvis gyldig eller ugyldig.
 #'
 #' @param d_vld Valideringsdatasett (dataramme/tibble).
 #'
