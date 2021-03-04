@@ -31,7 +31,7 @@ suppressPackageStartupMessages({
 lag_kable = function(d, full_width = FALSE, ...) {
   d %>%
     kbl() %>%
-    kable_classic("hover", full_width = full_width, ...)
+    kable_styling("hover", full_width = full_width, ...)
 }
 ```
 
