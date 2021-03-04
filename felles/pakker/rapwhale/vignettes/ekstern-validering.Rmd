@@ -86,34 +86,33 @@ som me har løyst med eit utvida og endeleg format.
 ### Utvida og endeleg format
 
 Det er tre potensielle problem –
-at ein pasient kan ha fleire målingar av same variabel,
-at me kan ha målingar av ulike typar variabel (eksempelvis både tal og datoar)
-og at indeksvariablar kan ha same namn som verdivariablane.
+at ein pasient kan ha *fleire målingar* av same variabel,
+at me kan ha målingar av *ulike datatypar* (eksempelvis både tal og datoar)
+og at indeksvariablar kan ha *same namn* som verdivariablane.
 
-Ein pasient kan ha fleire registreringar på same variabel
+Ein pasient kan ha *fleire målingar* av same variabel
 dersom han vore til fleire undersøkingar.
 Det løyser me enkelt ved å tillata fleire *indeksvariablar*,
 for eksempel både pasient-ID og undersøkingsdato.
-Dette er variablar som saman med `varnamn` unikt identifiserer kvar måling.
-(Det svarar altså til *primærnøklar* i databasesamanheng.)
+Dette er variablar som saman med `vld_varnamn` unikt identifiserer kvar måling.
+(Det svarar altså til *primærnøklar* i databasar.)
 
-Eit register har vanlegvis målingar av ulike datatypar,
+Eit register har vanlegvis målingar av *ulike datatypar*,
 for eksempel både tal (som ovanfor) og datoar eller logiske variablar
 (`TRUE`/`FALSE`).
 Men i dei fleste datasystem kan ein kolonne berre innehalda data av éin type.
 Dette løyser me ved å innføra fleire verdikolonnar,
-éin for kvar type variabel.
-Me treng då òg ein kolonne `vartype` som seier kva type variabel
+éin for kvar datatype.
+Me treng då òg ein kolonne (`vld_vartype`) som seier kva type variabel
 som kvar verdi gjeld.
 
-I sjeldne tilfelle indeksvariablar ha same som verdivariablane.
-Det prøver me å løysa ved å gje sistnemnde det uvanlege prefikset
-*vld_* («validering»).
-Dette er å rekna som eit reservert prefiks,
-så ingen av indeksvariablane kan bruka det.
+I sjeldne tilfelle har indeksvariablar *same namn* som verdivariablane.
+Det prøver me å løysa ved at alle variablar utanom indeksvariablane
+får prefikset *vld_* («validering»).
+Dette vert då å rekna som eit reservert prefiks.
 
 I det endelege formatet er det framleis slik at kvar rad
-indentifiserer ei *måling* (med to verdiar, intern og ekstern):
+indentifiserer ei *måling* (med to verdiar, éin intern og éin ekstern):
 
 ```{r eksempel format, echo = FALSE}
 d_format = tibble::tribble(
