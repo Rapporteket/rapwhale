@@ -27,6 +27,14 @@ suppressPackageStartupMessages({
 })
 ```
 
+```{r kable-format, include = FALSE}
+lag_kable = function(d, ...) {
+  d %>%
+    kbl() %>%
+    kable_classic("hover", ...)
+}
+```
+
 ## Innleiing
 
 I `rapwhale` finst ein infrastruktur – eit sett R-funksjonar og tilhøyrande
@@ -61,9 +69,7 @@ d_banalt = tibble::tribble(
   5, "vekt", 78, 78,
   7, "hogd", 196, 194
 )
-d_banalt %>%
-  kbl(align = c("llrr")) %>%
-  kable_classic("hover", full_width = FALSE, position = "left")
+lag_kable(d_banalt, full_width = FALSE, position = "left")
 ```
 
 Her kan me registrera høgda og vekta til kvar pasient,
@@ -116,9 +122,7 @@ d_format = tibble::tribble(
   7, as.Date("2020-08-09"), "dato_ut", "dato", as.Date("2020-08-13"), as.Date("2020-08-13"), NA, NA,
   7, as.Date("2020-08-09"), "hogd", "tal", NA, NA, 196, 194
 )
-d_format %>%
-  kbl(align = c("lrllrrrr")) %>%
-  kable_classic("hover", font_size = 11)
+lag_kable(d_format)
 ```
 
 
@@ -206,9 +210,7 @@ d_reg = tibble::tribble(
   13, as.Date("2021-01-05"), "M", "Førde", NA, NA, 163, FALSE, NA, NA, NA,
   14, as.Date("2021-01-05"), "M", "Førde", as.Date("2021-01-09"), 101, 182, TRUE, TRUE, FALSE, FALSE
 )
-d_reg %>%
-  kbl(align = c("lrllrrrrrrr")) %>%
-  kable_classic("hover", font_size = 11)
+lag_kable(d_reg)
 ```
 
 I dette eksempelet er indeksvariablane `pasid` og `dato_inn`, medan `kjonn` og 
@@ -237,9 +239,7 @@ d_vld = d_reg %>%
   lag_valideringsdatasett(indvars, vartypar)
 d_vld %>%
   head(7) %>%
-  kbl(align = c("lrllrrrrrr")) %>%
-  kable_classic("hover", font_size = 11) %>%
-  row_spec(0, font_size = 9) # slik at tabellen ikkje skal verta for brei
+  lag_kable()
 ```
 
 Det er likevel ofte at ein ikkje ynskjer eit komplett valideringsdatasett, 
