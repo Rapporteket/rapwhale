@@ -6,6 +6,7 @@ NULL
 #' Skår spørreskjema basert på skåringstabell
 #'
 #' @description
+#' `r lifecycle::badge("maturing")`
 #' Regner ut sumskår(er) i et datasett basert på en skåringstabell.
 #' Sjekker også at alle verdiene i datasettet er i samsvar med
 #' skåringstabellen.
@@ -118,6 +119,7 @@ skaar_datasett = function(d, skaaringstabell, variabelnavn = NULL,
 #' Sjekk om skåringstabell er gyldig
 #'
 #' @description
+#' `r lifecycle::badge("maturing")`
 #' Gir feilmelding hvis skåringstabellen ikke er gyldig.
 #'
 #' @param skaaringstabell Dataramme/tibble (skåringstabell).
@@ -198,6 +200,7 @@ sjekk_skaaringstabell = function(skaaringstabell) {
 #' Sjekk at oppgitte variabler finnes i datasettet
 #'
 #' @description
+#' `r lifecycle::badge("maturing")`
 #' Skal ta inn et datasett og en vektor med variabelnavn. Funksjonen gir
 #' feilmelding hvis datasettet ikke inneholder alle variabelnavnene i
 #' datasettet.
@@ -225,6 +228,7 @@ sjekk_variabelnavn = function(d, variabelnavn) {
 #' Sjekk at verdier i et datasett er gyldige
 #'
 #' @description
+#' `r lifecycle::badge("maturing")`
 #' Gir feilmelding dersom verdiene i datasettet ikke er i samsvar
 #' med en verditabell som sier hvile verdier som er gyldige for
 #' hvilke variabler.
@@ -279,6 +283,7 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 #' Finn ugyldige verdier i et datasett
 #'
 #' @description
+#' `r lifecycle::badge("maturing")`
 #' Gir ut en tibble med oversikt over alle ugyldige verdier i datasettet
 #' som blir tatt inn.
 #'
@@ -313,6 +318,7 @@ finn_ugyldige_verdier = function(d, verditabell) {
 #' Presenter ugyldige verdier i et datasett på en god måte
 #'
 #' @description
+#' `r lifecycle::badge("maturing")`
 #' Gir ut en oversiktlig fremstilling av tibble-en som returneres av
 #' [finn_ugyldige_verdier()].
 #'
@@ -349,6 +355,7 @@ oppsummer_ugyldige_verdier = function(d_ugyldige) {
 #' Skår garantert gyldig spørreskjema ved hjelp av verditabell
 #'
 #' @description
+#' `r lifecycle::badge("maturing")`
 #' Skårer et datasett som må være i samsvar med oppgitt verditabell og
 #' gir ut en dataramme/tibble som bare inneholder sumskårene.
 #'
@@ -441,6 +448,7 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
 #' Legg til NA-rader i skåringstabell
 #'
 #' @description
+#' `r lifecycle::badge("maturing")`
 #' Legg til rader med både `verdi` og `koeffisient` lik `NA`, for
 #' lettare skåring av datasett som har manglande verdiar.
 #'
@@ -478,6 +486,7 @@ legg_til_na_i_skaaringstabell = function(skaaringstabell) {
 #' Legg til / erstatt variabler i ett datasett med variabler i et annet
 #'
 #' @description
+#' `r lifecycle::badge("maturing")`
 #' Legger variabler fra ett datasett til et annet datasett (med
 #' overskriving av variabler som finnes i begge).
 #'
