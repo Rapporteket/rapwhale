@@ -33,6 +33,9 @@ NULL
 
 #' Konverter tall til LaTeX-format
 #'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Funksjon som tar inn ein vektor med tal x og konverterer han til riktig format i LaTeX, og (om nødvendig) legg inn fine mellomrom som tusenskiljeteikn og endrar desimalpunktum til desimalkomma.
 #'
 #' \code{NA}-verdiar vert gjorde om til tankestrekar. \cr\cr
@@ -95,6 +98,9 @@ num = function(x, desimalar, tabell = FALSE) {
 
 #' Vis desimaltall som prosent
 #'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' @param x Tallet som skal skrives som prosent.
 #' @param accuracy Antall desimaler som skal benyttes.
 #' @param decimal.mark desimaltegn.
@@ -116,6 +122,9 @@ akse_prosent = function(x, accuracy = 1, decimal.mark = ",", ...) {
 #        (krev gjerne endringar i filene som brukar dei).
 
 #' Formater akse med prosentformat
+#'
+#' @description
+#' `r lifecycle::badge("experimental")`
 #'
 #' Funksjonen brukes i ggplot-kall og konverterer akselabels til å vise
 #' prosent med riktig format. Standard er mellomrom før prosenttegnet
@@ -142,6 +151,9 @@ akse_prosent_format = function(antall_desimaler = 1, decimal.mark = ",", ...) {
 
 
 #' Formater akser med tallformat
+#'
+#' @description
+#' `r lifecycle::badge("experimental")`
 #'
 #' Funksjonen brukes i ggplot-kall og konverterer akselabels til å vise tall
 #' med tusenskille (standard er " ") og ønsket antall desimaler (standard er 2).
@@ -171,6 +183,9 @@ akse_tall_format = function(antall_desimaler = 2, decimal.mark = ",", big.mark =
 # Liknande funksjon for formatering av prosentverdiar som LaTeX-tekst.
 
 #' Vis prosent-verdi som LaTeX-tekst
+#'
+#' @description
+#' `r lifecycle::badge("experimental")`
 #'
 #' Tar inn et tall og konverterer det til LaTeX-kommando for å skrive prosent-tegn i tekst.
 #' @param x Tallet som skal skrives som prosentverdi.

@@ -1,6 +1,8 @@
 #' Tema for bruk i figurer
 #'
 #' @description 
+#' `r lifecycle::badge("experimental")`
+#' 
 #' Inneholder temainnstillinger som skal brukes i figurer 
 #' i årsrapporter.
 #' 
@@ -39,9 +41,12 @@ tema$plot.margin=margin(3, 3, 3, 3)
 
 tema
 }
+
 #' Temainstillinger for figurer 
 #' 
 #' @description 
+#' `r lifecycle::badge("maturing")`
+#' 
 #' Disse funksjonene brukes for å gjøre mindre endringer for panellinjer og 
 #' strekmarkeringer på aksene i figurer. 
 #' De krever ingen argumenter og legges til direkte i et ggplot-kall. 
@@ -106,6 +111,8 @@ fjern_y_ticks = theme(axis.ticks.y = element_blank())
 #' Juster søylediagram
 #' 
 #' @description 
+#' `r lifecycle::badge("experimental")`
+#' 
 #' Disse funksjonene brukes for å justere plassering av søyler i søylediagram. 
 #' Søylene starter helt inntil aksen og får litt luft i enden av søylen. 
 #'  

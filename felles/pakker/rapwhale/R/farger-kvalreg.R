@@ -3,6 +3,8 @@ NULL
 #' Farger for bruk i figurer
 #'
 #' @description 
+#' `r lifecycle::badge("maturing")`
+#' 
 #' Inneholder offisielle fargekoder som skal brukes i figurer 
 #' i årsrapporter.
 #' 
@@ -21,6 +23,9 @@ farger_kvalreg = function() {
 }
 
 #' Lag mørkare/lysare fargar
+#' 
+#' @description 
+#' `r lifecycle::badge("experimental")`
 #'
 #' Gjer ein vektor med fargar mørkare.
 #' Brukar CIELAB-fargerommet til utrekningar

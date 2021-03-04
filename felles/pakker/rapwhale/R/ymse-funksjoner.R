@@ -18,7 +18,12 @@ NULL
 
 #' Normaliser variabelnamn
 #'
-#' Funksjon for å konvertere variabelnavn til standardformat. \cr
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
+#' Funksjon for å konvertere variabelnavn til standardformat.
+#'
+#' @details
 #' Standardformatering er "snake_case", hvor "_" blir brukt som skilletegn, og kun små bokstaver benyttes.
 #'
 #' @param x Tekststreng med variabelnavn som skal konverteres.
@@ -44,6 +49,9 @@ normaliser_varnamn = function(x) {
 
 #' Tabell inkludert NA-verdier
 #'
+#' #' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Variant av table()-funksjonen som tar med NA-verdiar om dei finst.
 #' @param ... Tilsvarende argumenter som brukes i table()-funksjonen.
 #' @export
@@ -53,6 +61,9 @@ tab = function(...) {
 
 
 #' Konfidensintervall for binomisk fordeling
+#'
+#' @description
+#' `r lifecycle::badge("experimental")`
 #'
 #' Brukar Wilson-intervallet, som anbefalt i «Binomial confidence intervals
 #' and contingency tests: mathematical fundamentals and the evaluation of
@@ -75,7 +86,9 @@ regn_ki_bin = function(x, n) {
 
 ### Konfidenstinervall basert på gjennomsnittet til en  kontinuerlig variabel
 # med mulighet for bootstrap lagt inn i funksjonen
-
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' @export
 regn_ki_univar = function(x, bootstrap = FALSE, antall, ...) {
   # Hvis det er for få eller for lite varierende
@@ -120,6 +133,9 @@ regn_ki_univar = function(x, bootstrap = FALSE, antall, ...) {
 
 
 #' Lag LaTeX-tabell
+#'
+#' @description
+#' `r lifecycle::badge("experimental")`
 #'
 #' For å lage pene LaTeX-tabeller i et standardisert format for alle årsrapporter,
 #' med mulighet for å gjøre den stor nok til hele siden (wide = TRUE).

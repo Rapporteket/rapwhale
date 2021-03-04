@@ -2,6 +2,9 @@
 NULL
 
 #' Anonymiseringsfunksjonfunksjon
+#' 
+#' @description 
+#' `r lifecycle::badge("maturing")`
 #'
 #' Funksjonen lag_ano_funk() tar inn to argument og gjev ut ein
 #' anonymiseringsfunksjon (anonymiser_x_utvalg) som fungerer
@@ -48,6 +51,9 @@ lag_ano_funk = function(x, startnr = 1001) {
 }
 
 #' Anonymiseringsfunksjon
+#' 
+#' @description 
+#' `r lifecycle::badge("maturing")`
 #' 
 #' Hjelpefunksjon for lag_ano_funk() som kan brukes hvis det bare er ett datasett som skal anonymiseres. 
 #' Funksjonen gjør at du slipper å kalle anonymiseringsfunksjonen på det samme datasettet to ganger. 

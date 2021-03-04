@@ -11,6 +11,9 @@ NULL
 
 #' Flytt-opp funksjon.
 #'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Funksjon som flytter opp labels inni grafer hvis de kolliderer
 #' @param y y-koordinat til (midten av) tekstane
 #' @param tekst teksten i tekstane (berre brukt til å telja kor mange linjer det er).
@@ -35,6 +38,9 @@ flytt_opp = function(y, tekst, hoyde = .015) {
 }
 
 #' Lag linjegraf med 95 prosent konfidensintervall
+#'
+#' @description
+#' `r lifecycle::badge("experimental")`
 #'
 #' description
 #' @param refline y-koordinaten til vassrett referanselinje
@@ -103,6 +109,9 @@ lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab
 
 #' Lag shewhart-diagram
 #'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' @param d
 #' @param y
 #' @param x
@@ -159,6 +168,9 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
 
 #' Lag søylediagram
 #'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' @description Funksjon for å laga søylediagram.
 #'
 #' @param d Datasett som inkluderer dei variablane som skal brukast søylediagrammet.
@@ -182,6 +194,8 @@ lag_fig_soyle = function(d, x, y, farge = farger_kvalreg()$farger_hoved[3], ...)
 #' Lag histogram
 #'
 #' @description
+#' `r lifecycle::badge("maturing")`
+#'
 #' Lager et ggplot2-basert histogram for valgt variabel,
 #' med fornuftige standardverdier.
 #'

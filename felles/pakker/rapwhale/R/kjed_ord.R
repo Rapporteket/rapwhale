@@ -1,5 +1,8 @@
 #' Kjede saman element
 #'
+#' @description
+#' `r lifecycle::badge("maturing")`
+#'
 #' Tek inn ein vektor, kjedar saman elementa og returnerar
 #' dei som ein tekststreng.
 #'
