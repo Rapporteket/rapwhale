@@ -8,11 +8,10 @@
 #' @importFrom dplyr filter
 NULL
 
-# Definisjon av funksjon
-
-
 #' Hent variabeltekst for kategoriske variabler
 #'
+#' @description
+#' `r lifecycle::badge("stable")`
 #' Funksjon for å hente variabeltekstar på kategoriske variablar basert på kodebok. Genererer nye variabler med oppgitt suffiks
 #' og returnerer datasettet med de nye variablene inkludert. For en variabel som er kodet med en vilkårlig verdi vil denne funksjonen
 #' hente direkte fra kodebok hvilken gruppe de forskjellige verdiene representerer.

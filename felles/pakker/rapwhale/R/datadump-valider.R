@@ -26,6 +26,17 @@ NULL
 # datadumpen har samme rekkefølge på variabelnavn som i kodeboka.
 # Dette fordi OpenQREG har dokumentert at det ikke nødvendigvis er i samme rekkefølge.
 
+#' lag regelsett
+#'
+#' @description
+#' `r lifecycle::badge("stable")`
+#' Funksjon som automatisk lager et regelsett basert på informasjon fra
+#' en kodebok. Brukes for å validere en datadump.
+#'
+#' @param kodebok kodeboken datadumpen skal sjekkes mot.
+#' @param oblig Argument for om obligatoriske felt skal sjekkes.
+#' @param rekkefolge Argument for å sjekke om datadump har samme rekkefølge på
+#' variabelnavn som det som er oppgitt i kodeboken.
 lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
 
   # for å lage regler må kodeboka ha følgende kolonner:
@@ -292,6 +303,8 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
 
 #' Validering av datadump
 #'
+#' @description
+#' `r lifecycle::badge("experimental")`
 #' Funksjon som automatisk lager et regelsett basert på en kodebok, og sjekker at
 #' datadumpen er gyldig gitt dette regelsettet. \cr \cr
 #' Returnerer TRUE viss og berre viss datadumpen er gyldig. \cr

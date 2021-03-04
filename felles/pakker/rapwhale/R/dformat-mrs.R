@@ -23,6 +23,8 @@ NULL
 
 #' Konverter MRS-kodebok til standardformat
 #'
+#' @description
+#' `r lifecycle::badge("experimental")`
 #' Gjer om MRS-kodebok til kodebok på standardformat.
 #'
 #' Returnerer kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstaver.
@@ -212,6 +214,8 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
 
 #' Les datadump fra MRS-register
 #'
+#' @description
+#' `r lifecycle::badge("experimental")`
 #' Les inn MRS-data frå gitt skjema ved hjelp av kodebok. \cr
 #' Kodeboka vert brukt til å gje alle variablane rett format
 #' (tal, tekst, dato, boolske/logiske verdiar osv.) og til å

@@ -34,6 +34,8 @@ NULL
 
 #' Konverter Checkware kodebok til standardformat
 #'
+#' @description
+#' `r lifecycle::badge("maturing")`
 #' Les inn OQR-kodebok på dokumentert format og gjer om til vårt standardformat (kanonisk form).
 #'
 #' Returnerer kodeboken på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar.
@@ -138,6 +140,8 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
 
 #' Konverter Checkware-data til format fra kodebok
 #'
+#' @description
+#' `r lifecycle::badge("maturing")`
 #' Funksjon for å tilrettelegge checkware-data basert på kodebok,
 #' hvor funksjonen automatisk henter inn kodebok som blir brukt (hvis ønskelig). \cr
 #' Kodeboka vert brukt til å gje alle variablane rett format

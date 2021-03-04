@@ -1,6 +1,8 @@
 
 #' Les inn csv-fil med OQR formatspesifikasjon
 #'
+#' @description
+#' `r lifecycle::badge("experimental")`
 #' \code{les_csv_oqr()} er en spesifikk versjon av \code{les_csv_base()} som er tilpasset OpenQReg registerstruktur.
 #' Funksjonen tar inn argumentene adresse og spesifikasjon. Adresse angir filplassering, mens spesifikasjon angir opprinnelige og nye variabelnavn, samt variabeltype.
 #' Se rapwhale::spesifikasjon for eksempeloppsett for ulike innstillinger.

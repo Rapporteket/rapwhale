@@ -38,7 +38,7 @@ Førebels brukar me tre utviklingsnivå:
 - ![experimental](../man/figures/lifecycle-experimental.svg){style="vertical-align:middle"}
 
 Desse svarar til nivåa i
-[`lifecycle`-pakken](https://cran.r-project.org/package=lifecycle)-pakken,
+[`lifecycle`-pakken](https://cran.r-project.org/package=lifecycle),
 men me har eigne definisjonar tilpassa vår bruk og vår målgruppe.
 
 TLDR-versjonen av dette dokumentet er at funksjonar på nivå

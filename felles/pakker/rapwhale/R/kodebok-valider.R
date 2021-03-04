@@ -19,6 +19,8 @@ NULL
 
 #' Valider kodebok
 #'
+#' @description
+#' `r lifecycle::badge("experimental")`
 #' Gjer kodeboka om til kanonisk form, dvs. funksjonen fyller inn implisitte
 #' verdiar for variablane i kodeboka.
 #'
@@ -168,6 +170,8 @@ kb_til_kanonisk_form = function(kb) {
 
 #' Tester om kodebok er gyldig
 #'
+#' @description
+#' `r lifecycle::badge("experimental")`
 #' Funksjonen går gjennom en rekke tester for å se om en kodebok er gyldig. Tar inn en kodebok på glissen form.
 #'
 #' @param kb_glissen Kodebok på glissen form, det vil si en kodebok som er
