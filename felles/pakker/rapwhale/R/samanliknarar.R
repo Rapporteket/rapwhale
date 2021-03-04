@@ -1,8 +1,11 @@
 #' Undersøk om verdiar i vektorar er identiske
 #'
-#' @description Samanliknar elementvis om verdiane i to vektorar er identiske
-#'              (inkludert tilfellet der begge er `NA`). Er meint å brukast
-#'              saman med [analyser_valideringsdatasett()]
+#' @description
+#' `r lifecycle::badge("maturing")`
+#'
+#' Samanliknar elementvis om verdiane i to vektorar er identiske
+#' (inkludert tilfellet der begge er `NA`). Er meint å brukast
+#' saman med [analyser_valideringsdatasett()]
 #'
 #' @param verdi1 Vektor med verdiar av valfri type.
 #' @param verdi2 Vektor med verdiar av same type som `verdi1`.
