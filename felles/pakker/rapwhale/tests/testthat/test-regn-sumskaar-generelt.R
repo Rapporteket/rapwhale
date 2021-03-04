@@ -179,6 +179,11 @@ test_that("sjekk_skaaringstabell() gir ingen feilmelding hvis
 })
 
 test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen
+          ikke er en dataramme", {
+  expect_error(sjekk_skaaringstabell(5))
+})
+
+test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen
           ikke har riktige kolonnenavn", {
   feilmelding_kolonnenavn = "Skåringstabellen må inneholde kolonnene 'delskala', 'variabel', 'verdi' og 'koeffisient'"
 
