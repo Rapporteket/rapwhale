@@ -130,8 +130,8 @@ d_format = tibble::tribble(
   ~pasid, ~dato_inn, ~vld_varnamn, ~vld_vartype, ~vld_verdi_intern_dato, ~vld_verdi_ekstern_dato, ~vld_verdi_intern_tal, ~vld_verdi_ekstern_tal,
   5, as.Date("2020-06-07"), "vekt", "tal", NA, NA, 78, 78,
   5, as.Date("2020-06-07"), "dato_ut", "dato", as.Date("2020-06-15"), as.Date("2020-06-15"), NA, NA,
-  5, as.Date("2020-12-13"), "dato_ut", "dato", as.Date("2020-12-13"), as.Date("2020-12-14"), NA, NA,
   5, as.Date("2020-12-13"), "vekt", "tal", NA, NA, 50, 50,
+  5, as.Date("2020-12-13"), "dato_ut", "dato", as.Date("2020-12-13"), as.Date("2020-12-14"), NA, NA,
   7, as.Date("2020-08-07"), "vekt", "tal", NA, NA, 53, 53,
   7, as.Date("2020-08-09"), "hogd", "tal", NA, NA, 196, 194,
   7, as.Date("2020-08-09"), "dato_ut", "dato", as.Date("2020-08-13"), as.Date("2020-08-13"), NA, NA
