@@ -128,6 +128,15 @@ d_format = tibble::tribble(
 lag_kable(d_format)
 ```
 
+Her utgjer `pasid` (pasient-ID) og `dato_inn` (innskrivingsdato)
+indeksvariablane som *saman* unikt identifiserer ei måling (rad).
+Pasient 5 har hatt to opphald og pasient 7 eitt.
+Me vil samanlikna kva verdiar dei tre variablane
+`vekt` (vekta til pasienten),
+`hogd` (høgda til pasienten)
+og `dato_ut` (utskrivingsdatoen for pasienten)
+har i registeret med tilhøyrande verdiar i den eksterne kjelda.
+
 
 ## Bruk av valideringsdatasett
 
