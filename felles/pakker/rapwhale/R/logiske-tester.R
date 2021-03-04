@@ -3,6 +3,7 @@
 #' Sjekk om 'a' sann impliserer 'b' sann
 #'
 #' @description
+#' `r lifecycle::badge("maturing")`
 #' Sann hvis og bare hvis 'a' sann impliserer 'b' sann
 #' (håndterer NA-verdier fint, og gir alltid ut TRUE eller FALSE,
 #' aldri NA)
@@ -29,6 +30,7 @@ impl = function(a, b) {
 #' Sjekk om 'a' sann er ekvivalent med 'b' sann
 #'
 #' @description
+#' `r lifecycle::badge("maturing")`
 #' Sann hvis og bare hvis 'a' sann er ekvivalent med 'b' sann
 #' (håndterer NA-verdier fint, og gir alltid ut TRUE eller FALSE,
 #' aldri NA)
