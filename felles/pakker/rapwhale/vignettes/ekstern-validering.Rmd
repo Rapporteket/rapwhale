@@ -221,26 +221,34 @@ og datavariablar, og ein vektor med namna på indeksvariablane til funksjonen
 ### Eksempel på register
 
 Me har eit enkelt register som registrerer vekt, høgd, om pasienten har opplevd
-biverknad, og i så fall kva type biverknad. Nokre av variablane i registeret kan 
-sjå slik ut:
+biverknad, kva type biverknad og om pasienten er gravid. Nokre av variablane i 
+registeret kan sjå slik ut:
 
 ```{r lageksempel, echo = FALSE}
-d_reg = tibble::tribble(
-  ~pasid, ~dato_inn, ~kjonn, ~sjukehus, ~dato_ut, ~vekt, ~hogd, ~biverk, ~biverk_hovud, ~biverk_mage, ~biverk_fot,
-  5, as.Date("2020-06-07"), "M", "Bergen", as.Date("2020-06-15"), 78, 183, TRUE, FALSE, TRUE, TRUE,
-  5, as.Date("2020-12-13"), "M", "Førde", as.Date("2020-12-13"), 50, 179, TRUE, FALSE, TRUE, TRUE,
-  7, as.Date("2020-08-09"), "K", "Bergen", as.Date("2020-08-13"), 711, 196, TRUE, TRUE, TRUE, TRUE,
-  13, as.Date("2021-01-05"), "M", "Førde", NA, NA, 163, FALSE, NA, NA, NA,
-  14, as.Date("2021-01-05"), "M", "Førde", as.Date("2021-01-09"), 101, 182, TRUE, TRUE, FALSE, FALSE
+d_reg_full = tibble::tribble(
+  ~pasid, ~dato_inn, ~kjonn, ~sjukehus, ~dato_ut, ~vekt, ~hogd, ~biverk, ~biverk_hovud, ~biverk_mage, ~biverk_fot, ~gravid,
+  5, as.Date("2020-06-07"), "M", "Bergen", as.Date("2020-06-15"), 78, 183, TRUE, FALSE, TRUE, TRUE, NA,
+  5, as.Date("2020-12-13"), "M", "Førde", as.Date("2020-12-13"), 50, 179, TRUE, FALSE, TRUE, TRUE, NA,
+  7, as.Date("2020-08-09"), "K", "Bergen", as.Date("2020-08-13"), 711, 196, TRUE, TRUE, TRUE, TRUE, TRUE,
+  13, as.Date("2021-01-05"), "M", "Førde", NA, NA, 163, FALSE, NA, NA, NA, NA,
+  14, as.Date("2021-01-05"), "M", "Førde", as.Date("2021-01-09"), 101, 182, TRUE, TRUE, FALSE, FALSE, NA
 )
-lag_kable(d_reg)
+lag_kable(d_reg_full)
 ```
 
 I dette eksempelet er indeksvariablane `pasid` og `dato_inn`, medan `kjonn` og 
 `sjukehus` er tilleggsvariablar som ein fjernar før bruk av 
 `lag_valideringsdatasett()`. Dette gjer ein enkelt på følgjande måte: 
-`select(d_reg, -kjonn, -sjukehus)`. Når det er gjort er ein klar
-til å laga valideringsdatasettet.
+
+```{r fjern tilleggsvariablar}
+d_reg = select(d_reg_full, -kjonn, -sjukehus)
+```
+
+```{r, echo = FALSE}
+lag_kable(d_reg)
+```
+
+Når det er gjort er ein klar til å laga valideringsdatasettet.
 
 ### Komplett valideringsdatasett
 
@@ -249,19 +257,17 @@ valideringsdatasett, dersom ein ikkje har gjort ei filtrering av
 registerdatasettet på førehand. Eit komplett valideringsdatasett vil seie at 
 alle variablar for alle pasientar/forløp er med. Talet på rader i 
 valideringsdatasettet vert då lik talet på rader i det opphavlege datasettet 
-gongar talet på datavariablar. For eksempelet over, med 5 rader og 7 
-*datavariablar*, får ein eit valideringsdatasett med 35 rader. Her er dei 
-fyrste 7 radene i dette valideringsdatasettet, som svarar til den fyrste rada 
-i det opphavlege datasettet:
+gongar talet på datavariablar. For eksempelet over, med 5 rader og 8 
+*datavariablar*, får ein eit valideringsdatasett med 40 rader:
+
+```{r lag eksempel valideringsdatasett}
+indvars = c("pasid", "dato_inn")
+d_vld = d_reg %>%
+  lag_valideringsdatasett(indvars)
+```
 
 ```{r eksempel valideringsdatasett, echo = FALSE}
-indvars = c("pasid", "dato_inn")
-vartypar = c("dato", "tal", "tal", "logisk", "logisk", "logisk", "logisk")
-d_vld = d_reg %>%
-  select(-kjonn, -sjukehus) %>%
-  lag_valideringsdatasett(indvars, vartypar)
 d_vld %>%
-  head(7) %>%
   lag_kable()
 ```
 
@@ -283,15 +289,27 @@ Dersom ein berre skal sjå på eit utval av variablane, kan ein gjera dette ved
 `lag_valideringsdatasett()`. Dette kan ein gjera på same måte som ein fjernar 
 tilleggsvariablar:
 
+```{r fjern variabel}
+d_vld_fjern = d_reg %>%
+  select(-dato_ut) %>%
+  lag_valideringsdatasett(indvars)
 ```
-select(d_reg, -dato_ut)
+
+```{r, echo = FALSE}
+lag_kable(d_vld_fjern)
 ```
 
 Eventuelt kan ein gjera det motsett, og velja dei variablane som *skal* vera 
 med, dersom det er enklare. Då må ein hugsa på å også ta med indeksvariablane:
 
+```{r vel ut variablar}
+d_vld_fjern2 = d_reg %>%
+  select(pasid, dato_inn, vekt, hogd) %>%
+  lag_valideringsdatasett(indvars)
 ```
-select(d_reg, pasid, dato_inn, vekt, hogd)
+
+```{r, echo = FALSE}
+lag_kable(d_vld_fjern2)
 ```
 
 #### Bruk av logikk til å fjerna unødvendige rader
@@ -301,28 +319,40 @@ ein annan variabel har ein viss verdi. Det kan til dømes vera at ein har
 variabelen gravid, som berre gjev meining å sjekka dersom kjønn er kvinne. 
 Slike rader kan ein fjerna frå valideringsdatasettet på denne måten:
 
-```
-d_vld_med_metadata %>% # her har me kopla på metadata for å få kolonnen kjonn
-  filter(!(kjonn="mann" && varnamn == "gravid"))
+```{r fjern rader med logikk}
+# Lagar ein tabell med indeksvariablar og kjønn
+d_kjonn = d_reg_full %>%
+  select(pasid, dato_inn, kjonn)
+
+# Koplar tabellen med kjønn på valideringsdatasettet
+d_vld_med_kjonn = d_vld %>%
+  left_join(d_kjonn, by = c("pasid", "dato_inn"))
+
+# Filtrerer vekk unødvendige rader
+d_vld_logikk = d_vld_med_kjonn %>%
+  filter(!(kjonn == "M" & vld_varnamn == "gravid"))
 ```
 
-Eit anna eksempel kan vera variablar som 1-års-vekt, som ikkje skal sjekkast 
-for pasientar som vart operert for mindre enn 1 år sidan:
-
-```
-d_vld %>%
-  filter(!(varnamn == "vekt_1aar" && op_dato > Sys.Date()-365))
+```{r, echo = FALSE}
+lag_kable(d_vld_logikk)
 ```
 
 ### Utval av visse variabelverdiar
 
 Ein kan avgrense uttrekket til visse verdiar for éin eller fleire variablar,
 til dømes dersom ein berre skal kontrollera data på eitt eller fleire 
-særskilde sjukehus. Dette kan gjerast ved å bruka filtrera på ynskja verdiar
-før ein kallar `lag_valideringsdatasett()`:
+særskilde sjukehus. Dette kan gjerast ved å starta med å filtrera på ynskja 
+verdiar:
 
+```{r filtrer sjukehus}
+d_vld_bergen = d_reg_full %>%
+  filter(sjukehus == "Bergen") %>%
+  select(-kjonn, -sjukehus) %>%
+  lag_valideringsdatasett(indvars)
 ```
-filter(d_reg, sjukehus == "Bergen")
+
+```{r, echo = FALSE}
+lag_kable(d_vld_bergen)
 ```
 
 ### Ymse typar tilfeldige utval
@@ -349,14 +379,28 @@ stikkord:
 For å trekkja ut n tilfeldige rader køyrer ein følgjande kode med
 valideringsdatasettet `d_vld`:
 
-`sample_n(d_vld, n)`
+```{r n rader}
+n = 4
+d_vld_n = sample_n(d_vld, n)
+```
+
+```{r, echo = FALSE}
+lag_kable(d_vld_n)
+```
 
 #### Tilfeldig utval av andel av rader
 
 For å trekkja ut x andel tilfeldige rader køyrer ein følgjande kode med
 valideringsdatasettet`d_vld`:
 
-`sample_frac(d_vld, x)`
+```{r andel rader}
+x = 0.15
+d_vld_frac = sample_frac(d_vld, x)
+```
+
+```{r, echo = FALSE}
+lag_kable(d_vld_frac)
+```
 
 #### Komplett valideringsdatasett i tilfeldig rekkjefølgje
 
@@ -366,7 +410,13 @@ ei gitt tid, men då i tilfeldig rekkjefølgje, slik at ein får eit tilfeldig
 utval. For å få til dette køyrer ein følgjande kode med valideringsdatasettet 
 `d_vld`:
 
-`sample_frac(d_vld)`
+```{r tilfeldig rekkjefølgje}
+d_vld_tilfeldig = sample_frac(d_vld)
+```
+
+```{r, echo = FALSE}
+lag_kable(d_vld_tilfeldig)
+```
 
 #### Komplett valideringsdatasett med pasientar i tilfeldig rekkjefølgje
 
@@ -375,9 +425,13 @@ i valideringsdatasettet kan ein trekkja alle pasientane i tilfeldig rekkjefølgj
 og så ta med alle variablane for kvar pasient etter kvarandre. Dette kan gjerast 
 ved å køyra følgjande kode med valideringsdatasettet `d_vld`:
 
-```
+```{r pasientar tilfeldig rekkjefølgje}
 rekkjefolgje = sample(unique(d_vld$pasid))
-arrange(d_vld, match(pasid, rekkjefolgje), dato_inn)
+d_vld_tilfeldig_pas = arrange(d_vld, match(pasid, rekkjefolgje), dato_inn)
+```
+
+```{r, echo = FALSE}
+lag_kable(d_vld_tilfeldig_pas)
 ```
 
 #### Tilfeldig utval av n forløp eller pasientar
@@ -385,28 +439,38 @@ arrange(d_vld, match(pasid, rekkjefolgje), dato_inn)
 For å trekkja ut n tilfeldige forløp køyrer ein følgjande kode med registerdata
 `d_reg` og valideringsdatasettet`d_vld`:
 
-```
-uttrekk_forlop = select(d_reg, pasid, dato_inn) %>% # pasid og dato_inn er indeksvariablane 
-                                                    # bruk berre pasid dersom det skal veljast ut 
-                                                    # pasientar og ikkje forløp
-    sample_n(n)
+```{r n forløp}
+n = 1
+uttrekk_forlop = select(d_reg, pasid, dato_inn) %>% # pasid og dato_inn er indeksvariablane
+  # bruk berre pasid dersom det skal veljast ut
+  # pasientar og ikkje forløp
+  sample_n(n)
 
-semi_join(d_vld, uttrekk_forlop)
+d_vld_n_forlop = semi_join(d_vld, uttrekk_forlop)
+```
+
+```{r, echo = FALSE}
+lag_kable(d_vld_n_forlop)
 ```
 
 #### Tilfeldig utval av k variablar, og så tilfeldig utval av m forløp per variabel
 
-```
+```{r k variablar m forløp}
+k = 2
+m = 2
 uttrekk_variablar = sample(unique(d_vld$vld_varnamn), k)
-d_uttrekk = d_vld[c(),]
-for(variabel in uttrekk_variablar){
+d_vld_var_forlop = d_vld[c(), ]
+for (variabel in uttrekk_variablar) {
   d_variabel = filter(d_vld, vld_varnamn == variabel)
   uttrekk_forlop = select(d_variabel, pasid, dato_inn) %>%
     sample_n(m)
   uttrekk_variabel = semi_join(d_variabel, uttrekk_forlop)
-  d_uttrekk = add_row(d_uttrekk, uttrekk_variabel)
+  d_vld_var_forlop = add_row(d_vld_var_forlop, uttrekk_variabel)
 }
-d_uttrekk
+```
+
+```{r, echo = FALSE}
+lag_kable(d_vld_var_forlop)
 ```
 
 #### Prioritering av visse variabelverdiar
@@ -414,17 +478,21 @@ d_uttrekk
 I nokre tilfelle ynskjer ein å prioritera pasientar/forløp med visse 
 variabelverdiar, som til dømes ein viss diagnose. I eksempelregisteret vårt
 kan det tenkjast at ein vil prioritera pasientar med verdien `TRUE` på 
-`biverk_hovud`. Dersom dette registeret hadde hatt fleire forløp registrert, 
-kan ein sjå føre seg at ein til dømes ville trekkja ut 80 tilfeldige forløp
-med verdien `TRUE` på `biverk_hovud`, og 20 % blant resten. Dette kan gjerast 
-fylgjande måte:
+`biverk_hovud`. I vårt enkle eksempel kan ein til dømes trekkja ut 2 tilfeldige 
+forløp med verdien `TRUE` på `biverk_hovud`, og 20 % blant resten. Dette kan 
+gjerast fylgjande måte:
 
-```
-d1 = filter(d_vld, biverk_hovud == TRUE)
-d2 = setdiff(d_vld, d1)
-d1_uttrekk = sample_n(d1, size = 80)
+```{r prioritering variabelverdi}
+d1 = filter(d_reg, biverk_hovud == TRUE)
+d2 = setdiff(d_reg, d1)
+d1_uttrekk = sample_n(d1, size = 2)
 d2_uttrekk = sample_frac(d2, size = .2)
-bind_rows(d1_uttrekk, d2_uttrekk)
+d_vld_prioritert = bind_rows(d1_uttrekk, d2_uttrekk) %>%
+  lag_valideringsdatasett(indvars)
+```
+
+```{r, echo = FALSE}
+lag_kable(d_vld_prioritert)
 ```
 
 #### Samanhengande variablar
@@ -432,42 +500,64 @@ bind_rows(d1_uttrekk, d2_uttrekk)
 Visse variablar kan vera samanhengande ved at dei liknar eller er avhengig av 
 kvarandre, som til dømes biverknadvariablane i eksempelregisteret vårt. Det 
 kan vera føremålstenleg å inkludera alle slike samanhengande variablar for 
-kvart forløp det éin eller fleire av dei er trekt ut:
+kvart forløp det éin eller fleire av dei er trekt ut, her har me teke 
+utgangspunkt i `d_vld_n`:
 
-```
-d_vld_biverk = d_vld %>%
-  filter(vld_varnamn %in% c("biverk", "biverk_hovud", "biverk_mage", "biverk_fot")) %>% 
+```{r samanhengande variablar}
+pasientar_biverk = d_vld_n %>%
+  filter(vld_varnamn %in% c("biverk", "biverk_hovud", "biverk_mage", "biverk_fot")) %>%
   distinct(pasid, dato_inn)
 
-d_vld_komplett_biverk = d_vld_komplett %>% 
-  filter(vld_varnamn %in% c("biverk", "biverk_hovud", "biverk_mage", "biverk_fot")) %>% 
-  inner_join(d_vld_biverk)
-  
-full_join(d_vld, d_vld_komplett_biverk)
+d_pasientar_biverk = d_vld %>%
+  filter(vld_varnamn %in% c("biverk", "biverk_hovud", "biverk_mage", "biverk_fot")) %>%
+  right_join(pasientar_biverk, by = c("pasid", "dato_inn"))
+
+d_vld_n_med_biverk = full_join(d_vld_n, d_pasientar_biverk, by = names(d_vld_n))
+```
+
+```{r, echo = FALSE}
+lag_kable(d_vld_n_med_biverk)
 ```
 
 ### Fornuftig rekkjefølgje
 
 Etter at ein har gjort eit tilfeldig utval kan det vera føremålstenleg å ha 
-radene i ei fornuftig rekkjefølgje. 
+radene i ei fornuftig rekkjefølgje. Under er det vist nokre eksempel på 
+sortering med utgangspunkt i `d_vld_n_med_biverk`.
 
 #### Sorter rader etter forløp
 
+```{r sorter forløp}
+d_vld_sort_forlop = arrange(d_vld_n_med_biverk, pasid, dato_inn)
 ```
-arrange(d_uttrekk, pasid, dato_inn)
+
+```{r, echo = FALSE}
+lag_kable(d_vld_sort_forlop)
 ```
 
 #### Sorter rader etter variablar
 
+```{r sorter variablar}
+var_rekkjefolgje = c(
+  "dato_ut", "vekt", "hogd", "biverk",
+  "biverk_hovud", "biverk_mage", "biverk_fot", "gravid"
+)
+d_vld_sort_var = arrange(d_vld_n_med_biverk, match(vld_varnamn, var_rekkjefolgje))
 ```
-var_rekkjefolgje = c("hogd", "vekt", "dato_ut")
-arrange(d_uttrekk, match(vld_varnamn, var_rekkjefolgje))
+
+```{r, echo = FALSE}
+lag_kable(d_vld_sort_var)
 ```
 
 #### Sorter rader etter forløp og variablar
 
+```{r sorter forløp og variablar}
+d_vld_sort_forlop_var = d_vld_n_med_biverk %>%
+  arrange(pasid, dato_inn, match(vld_varnamn, var_rekkjefolgje))
 ```
-arrange(d_uttrekk, pasid, dato_inn, match(vld_varnamn, var_rekkjefolgje))
+
+```{r, echo = FALSE}
+lag_kable(d_vld_sort_forlop_var)
 ```
 
 ### Ekstra kolonnar med informasjon
@@ -477,8 +567,14 @@ dømes metadata som fødselsdato, alder og kjønn som kan gjera det enklare å
 finna pasienten i pasientjournalen. Dette kan gjerast ved å kopla på igjen 
 kolonnar frå registerdatasettet på valideringsdatasettet:
 
+```{r legg til metadata}
+d_reg_metadata = select(d_reg_full, pasid, dato_inn, kjonn, sjukehus)
+d_vld_metadata = d_reg_metadata %>%
+  inner_join(d_vld, by = c("pasid", "dato_inn"))
 ```
-left_join(d_vld, select(d_reg, pasid, dato_inn, kjonn, sjukehus), by = c("pasid", "dato_inn"))
+
+```{r, echo = FALSE}
+lag_kable(d_vld_metadata)
 ```
 
 <!-- Behovskartlegging
