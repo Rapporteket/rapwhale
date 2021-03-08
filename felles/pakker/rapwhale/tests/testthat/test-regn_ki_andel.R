@@ -117,7 +117,10 @@ test_that("Funksjonen gir en advarsel når det finnes NA-verdier i grupperingsva
 
   feilmelding_ekstra_levels = "Det finnes grupper uten observasjoner i grupperingsvariabel"
 
-  expect_warning(aggreger_ki_prop(d_gruppert_ekstra_levels), feilmelding_ekstra_levels)
+  expect_warning(
+    aggreger_ki_prop(d_gruppert_ekstra_levels),
+    feilmelding_ekstra_levels
+  )
 })
 
 # # Hvordan skal funksjonen håndtere tilfeller hvor ingen er i en av gruppene?
