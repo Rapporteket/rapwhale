@@ -42,7 +42,11 @@ test_that("Gjev ut valideringsdatasettet med info i ekstrakolonne om verdiane
   expect_identical(
     analyser_valideringsdatasett(d_vld_gyldig),
     bind_cols(d_vld_gyldig,
-      vld_verdiar_er_like = c(TRUE, FALSE, FALSE, TRUE, FALSE, TRUE, TRUE, FALSE)
+      ki_krit_teller = c(
+        TRUE, FALSE, FALSE, TRUE,
+        FALSE, TRUE, TRUE, FALSE
+      ),
+      ki_krit_nevner = TRUE
     )
   )
 })
@@ -51,7 +55,7 @@ test_that("Gjev ut valideringsdatasettet med rett ekstrakolonne også om inndata
   d_vld_tom = d_vld_gyldig[c(), ]
   expect_identical(
     analyser_valideringsdatasett(d_vld_tom),
-    bind_cols(d_vld_tom, vld_verdiar_er_like = logical())
+    bind_cols(d_vld_tom, ki_krit_teller = logical(), ki_krit_nevner = logical())
   )
 })
 
@@ -99,10 +103,11 @@ test_that("Skal fungera med grupperte inndata, og utdata skal bevara grupperinga
   d_vld_gruppert = d_vld_gyldig %>%
     group_by(kjonn, sjukehus)
   d_vld_gruppert_resultat = bind_cols(d_vld_gruppert,
-    vld_verdiar_er_like = c(
+    ki_krit_teller = c(
       TRUE, FALSE, FALSE, TRUE,
       FALSE, TRUE, TRUE, FALSE
-    )
+    ),
+    ki_krit_nevner = TRUE
   )
 
   expect_identical(analyser_valideringsdatasett(d_vld_gruppert), d_vld_gruppert_resultat)
