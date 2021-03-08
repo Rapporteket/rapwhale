@@ -35,18 +35,26 @@ test_that("Feilmelding hvis kriterievariablene inneholder annet enn TRUE, FALSE 
   d_teller_med_feil_1 = tibble::tibble(ki_krit_teller = c(FALSE, TRUE, TRUE), ki_krit_nevner = c(TRUE, TRUE, FALSE))
   d_teller_feil_og_na = tibble::tibble(ki_krit_teller = c(FALSE, TRUE, NA), ki_krit_nevner = c(TRUE, TRUE, TRUE))
 
-  d_teller_ok_men_na = tibble::tibble(ki_krit_teller = c(FALSE, TRUE, NA), ki_krit_nevner = c(TRUE, TRUE, FALSE))
-  d_teller_ok_men_na_res = tibble::tibble(est = 0.5, ki_teller = 1L, ki_nevner = 2L, konfint_nedre = 0.094531205734230739, konfint_ovre = 0.90546879426576921)
-
-  d_nevner_med_feil = tibble::tibble(ki_krit_teller = c(FALSE, TRUE, TRUE), ki_krit_nevner = c(TRUE, TRUE, NA))
-
   feilmelding_teller = "«ki_krit_teller» må være TRUE eller FALSE hvis «ki_krit_nevner» er TRUE, og FALSE eller NA hvis «ki_krit_nevner» er FALSE"
   expect_error(aggreger_ki_prop(d_teller_med_feil_1), feilmelding_teller)
   expect_error(aggreger_ki_prop(d_teller_feil_og_na), feilmelding_teller)
-  expect_identical(aggreger_ki_prop(d_teller_ok_men_na), d_teller_ok_men_na_res)
+
+
+  d_nevner_med_feil = tibble::tibble(ki_krit_teller = c(FALSE, TRUE, TRUE), ki_krit_nevner = c(TRUE, TRUE, NA))
 
   feilmelding_nevner = "«ki_krit_nevner» må være TRUE eller FALSE"
   expect_error(aggreger_ki_prop(d_nevner_med_feil), feilmelding_nevner)
+})
+
+test_that("aggreger_ki_prop() fungerer (utan feilmelding) viss «ki_krit_nevner» er FALSE (og elles er gyldig)", {
+  d_teller_ok_men_na = tibble::tibble(ki_krit_teller = c(FALSE, TRUE, NA), ki_krit_nevner = c(TRUE, TRUE, FALSE))
+  d_teller_ok_men_false = tibble::tibble(ki_krit_teller = c(FALSE, TRUE, FALSE), ki_krit_nevner = c(TRUE, TRUE, FALSE))
+  d_teller_ok_men_na_res = tibble::tibble(est = 0.5, ki_teller = 1L, ki_nevner = 2L, konfint_nedre = 0.094531205734230739, konfint_ovre = 0.90546879426576921)
+
+  expect_error(aggreger_ki_prop(d_teller_ok_men_na), NA)
+  expect_error(aggreger_ki_prop(d_teller_ok_men_false), NA)
+  expect_identical(aggreger_ki_prop(d_teller_ok_men_na), d_teller_ok_men_na_res)
+  expect_identical(aggreger_ki_prop(d_teller_ok_men_false), d_teller_ok_men_na_res)
 })
 
 # Funksjonen må tillate tilfeller hvor sum teller_krit er 0.
