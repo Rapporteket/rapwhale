@@ -214,3 +214,14 @@ test_that("Funksjonen støtter angivelse av konfidensinvå", {
   expect_identical(aggreger_ki_prop(d_test, alfa = .05), d_svar_05)
   expect_identical(aggreger_ki_prop(d_test, alfa = .10), d_svar_10)
 })
+
+test_that("Funksjonen gjev alltid ut ugrupperte data", {
+  d_test = tibble::tibble(
+    sjukehus = factor(c("A", "B", "B")),
+    post = factor(c("1", "1", "2")),
+    ki_krit_teller = c(TRUE, FALSE, TRUE),
+    ki_krit_nevner = c(TRUE, TRUE, TRUE)
+  )
+  expect_length(group_vars(aggreger_ki_prop(group_by(d_test, sjukehus))), 0)
+  expect_length(group_vars(aggreger_ki_prop(group_by(d_test, sjukehus, post))), 0)
+})
