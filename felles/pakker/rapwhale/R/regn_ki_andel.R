@@ -41,7 +41,7 @@ NULL
 #' konfidensintervallene som en får ut.
 #'
 #' @return
-#' Tibble eller `data.frame` (avhengig av inndataene) med følgende
+#' Ugruppert tibble eller `data.frame` (avhengig av inndataene) med følgende
 #' kolonner:
 #' \item{est}{Kvalitetsindikatoren, dvs. estimert andel (`ki_teller`/`ki_nevner`).}
 #' \item{ki_teller}{Telleren i indikatoren (antall sanne `ki_krit_teller`
