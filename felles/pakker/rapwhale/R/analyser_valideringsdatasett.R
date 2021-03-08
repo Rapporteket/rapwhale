@@ -13,9 +13,11 @@
 #'
 #' @details
 #' Funksjonen tek inn eit valideringsdatasett `d_vld` og ein samanliknarfunksjon
-#' `samanliknar`, og returnerer datasettet med ein ekstra kolonne
-#' `vld_verdiar_er_like` som for kvar rad seier om verdiane som skal
-#' samanliknast, er «like»/ekvivalente (som definert av samanliknarfunksjonen).
+#' `samanliknar`, og returnerer datasettet med to ekstra kolonnar -
+#' `ki_krit_teller` som for kvar rad seier om verdiane som skal
+#' samanliknast, er «like»/ekvivalente (som definert av samanliknarfunksjonen),
+#' og `ki_krit_nevner` som er `TRUE` for alle rader (denne er med for at utdata
+#' skal vera på formatet `aggreger_ki_prop()` nyttar).
 #'
 #' For kvar rad i `d_vld` der `vld_vartype` er for eksempel `"x"`,
 #' brukar funksjonen `samanliknar`-funksjonen til å samanlikna verdiane
@@ -36,11 +38,11 @@
 #' slingringsmonn når han samanliknar to vektverdiar målt i gram enn to
 #' temperaturmålingar målt i Celsius.
 #'
-#' @return Opphavleg datasett, men med ein ekstra kolonne
-#'         `vld_verdiar_er_like` lagd til,
-#'         som er `TRUE` for kvar rad der verdiane som skal samanliknast, er
-#'         «like» i følgje `samanliknar`, og `FALSE` for kvar rad der dei
-#'         ikkje er det.
+#' @return Opphavleg datasett, men med to ekstra kolonnar lagd til -
+#'         `ki_krit_teller` som er `TRUE` for kvar rad der verdiane som
+#'         skal samanliknast, er «like» i følgje `samanliknar`, og `FALSE` for
+#'         kvar rad der dei ikkje er det, og `ki_krit_nevner` som er `TRUE` for
+#'         alle rader.
 #' @export
 #'
 #' @examples
