@@ -98,7 +98,7 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
   )) {
     stop("«ki_krit_teller» må være TRUE eller FALSE hvis «ki_krit_nevner» er TRUE, og FALSE eller NA hvis «ki_krit_nevner» er FALSE")
   }
-  if (any(lengths(attr(d_ki_ind, "groups")$.rows) == 0)) {
+  if (any(group_size(d_ki_ind) == 0)) {
     warning("Det finnes grupper uten observasjoner i grupperingsvariabel")
   }
 
