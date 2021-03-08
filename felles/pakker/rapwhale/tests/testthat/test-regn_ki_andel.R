@@ -225,3 +225,18 @@ test_that("Funksjonen gjev alltid ut ugrupperte data", {
   expect_length(group_vars(aggreger_ki_prop(group_by(d_test, sjukehus))), 0)
   expect_length(group_vars(aggreger_ki_prop(group_by(d_test, sjukehus, post))), 0)
 })
+
+test_that("Funksjonen gjev ut tibble når inndata er tibble, og data.frame når inndata er data.frame", {
+  d_test_tibble = tibble::tibble(
+    ki_krit_teller = FALSE,
+    ki_krit_nevner = FALSE
+  )
+  d_test_df = as.data.frame(d_test_tibble)
+  d_res_tibble = tibble::tibble(
+    est = NA_real_, ki_teller = 0L, ki_nevner = 0L,
+    konfint_nedre = NA_real_, konfint_ovre = NA_real_
+  )
+  d_res_df = as.data.frame(d_res_tibble)
+  expect_identical(aggreger_ki_prop(d_test_tibble), d_res_tibble)
+  expect_identical(aggreger_ki_prop(d_test_df), d_res_df)
+})
