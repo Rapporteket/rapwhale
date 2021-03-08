@@ -88,13 +88,13 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
   if (!(is.logical(d_ki_ind$ki_krit_teller) && is.logical(d_ki_ind$ki_krit_nevner))) {
     stop("Kriterievariablene må være boolsk")
   }
-  if (!all(d_ki_ind$ki_krit_nevner %in% c(T, F))) {
+  if (!all(d_ki_ind$ki_krit_nevner %in% c(TRUE, FALSE))) {
     stop("«ki_krit_nevner» må være TRUE eller FALSE")
   }
   if (!all(
-    (d_ki_ind$ki_krit_teller %in% c(F, T, NA)) &
-      ((d_ki_ind$ki_krit_teller %in% c(F, T) & d_ki_ind$ki_krit_nevner == T) |
-        (d_ki_ind$ki_krit_teller %in% c(F, NA) & d_ki_ind$ki_krit_nevner == F))
+    (d_ki_ind$ki_krit_teller %in% c(TRUE, FALSE, NA)) &
+      ((d_ki_ind$ki_krit_teller %in% c(TRUE, FALSE) & d_ki_ind$ki_krit_nevner) |
+        (d_ki_ind$ki_krit_teller %in% c(FALSE, NA) & !d_ki_ind$ki_krit_nevner))
   )) {
     stop("«ki_krit_teller» må være TRUE eller FALSE hvis «ki_krit_nevner» er TRUE, og FALSE eller NA hvis «ki_krit_nevner» er FALSE")
   }
