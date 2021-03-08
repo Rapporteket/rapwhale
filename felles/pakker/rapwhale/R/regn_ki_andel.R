@@ -89,14 +89,14 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
     stop("Kriterievariablene må være boolsk")
   }
   if (!all(d_ki_ind$ki_krit_nevner %in% c(T, F))) {
-    stop("'ki_krit_nevner' må være TRUE eller FALSE")
+    stop("«ki_krit_nevner» må være TRUE eller FALSE")
   }
   if (!all(
     (d_ki_ind$ki_krit_teller %in% c(F, T, NA)) &
       ((d_ki_ind$ki_krit_teller %in% c(F, T) & d_ki_ind$ki_krit_nevner == T) |
         (d_ki_ind$ki_krit_teller %in% c(F, NA) & d_ki_ind$ki_krit_nevner == F))
   )) {
-    stop("'ki_krit_teller' må være TRUE eller FALSE hvis 'ki_krit_nevner' er TRUE, og FALSE eller NA hvis 'ki_krit_nevner' er FALSE")
+    stop("«ki_krit_teller» må være TRUE eller FALSE hvis «ki_krit_nevner» er TRUE, og FALSE eller NA hvis «ki_krit_nevner» er FALSE")
   }
   if (any(lengths(attr(d_ki_ind, "groups")$.rows) == 0)) {
     warning("Det finnes grupper uten observasjoner i grupperingsvariabel")

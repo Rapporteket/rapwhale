@@ -40,12 +40,12 @@ test_that("Feilmelding hvis kriterievariablene inneholder annet enn TRUE, FALSE 
 
   d_nevner_med_feil = tibble::tibble(ki_krit_teller = c(FALSE, TRUE, TRUE), ki_krit_nevner = c(TRUE, TRUE, NA))
 
-  feilmelding_teller = "'ki_krit_teller' må være TRUE eller FALSE hvis 'ki_krit_nevner' er TRUE, og FALSE eller NA hvis 'ki_krit_nevner' er FALSE"
+  feilmelding_teller = "«ki_krit_teller» må være TRUE eller FALSE hvis «ki_krit_nevner» er TRUE, og FALSE eller NA hvis «ki_krit_nevner» er FALSE"
   expect_error(aggreger_ki_prop(d_teller_med_feil_1), feilmelding_teller)
   expect_error(aggreger_ki_prop(d_teller_feil_og_na), feilmelding_teller)
   expect_identical(aggreger_ki_prop(d_teller_ok_men_na), d_teller_ok_men_na_res)
 
-  feilmelding_nevner = "'ki_krit_nevner' må være TRUE eller FALSE"
+  feilmelding_nevner = "«ki_krit_nevner» må være TRUE eller FALSE"
   expect_error(aggreger_ki_prop(d_nevner_med_feil), feilmelding_nevner)
 })
 
@@ -77,7 +77,7 @@ test_that("Funksjonen tillater tilfeller hvor ingen observasjoner oppfyller krit
 
 # 1) Hvordan skal funksjonen håndtere missing i grupperingsvariabel?
 
-test_that("Funksjonen returnerer 'NA' for de grupperte verdiene som ikke har noen øvrig gruppetilhørighet", {
+test_that("Funksjonen returnerer «NA» for de grupperte verdiene som ikke har noen øvrig gruppetilhørighet", {
   d_gruppert_med_na = suppressWarnings({
     tibble::tibble(
       sykehus = factor(rep(c("B", "A", NA), each = 3)),
