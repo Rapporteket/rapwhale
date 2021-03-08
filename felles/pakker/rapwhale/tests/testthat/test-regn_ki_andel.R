@@ -135,9 +135,10 @@ test_that("Funksjonen gir en advarsel når det finnes ubrukte nivå i gruppering
   )
 })
 
-# # Hvordan skal funksjonen håndtere tilfeller hvor ingen er i en av gruppene?
-# # Vil her at vi får ut en oppføring for *HVER* gruppe, inkludert de som ikke har noen observasjoner
-# # Grupper som ikke har noen verdier kan eventuelt filtreres ut i etterkant hvis de ikke skal være med i figurer, etc.
+# Hvordan skal funksjonen håndtere tilfeller med grupper der alle
+# ki_nevner-verdiene er FALSE?
+# Vil her at vi får ut en oppføring for *HVER* gruppe, inkludert de som ikke har noen observasjoner
+# Grupper som ikke har noen verdier kan eventuelt filtreres ut i etterkant hvis de ikke skal være med i figurer, etc.
 test_that("Funksjonen returnerer verdier for alle grupper i inndata, selv de gruppene som ikke inneholder observasjoner", {
   d_grupper_uten_innhold = tibble::tibble(
     sykehus = factor(rep(c("B", "A", "C"), each = 3)),
