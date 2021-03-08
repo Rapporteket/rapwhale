@@ -71,7 +71,7 @@ analyser_valideringsdatasett = function(d_vld, samanliknar = samanlikn_identisk)
   vartypar = unique(d_vld$vld_vartype)
 
   if (length(vartypar) == 0) {
-    d_vld$vld_verdiar_er_like = logical()
+    d_vld$ki_krit_teller = logical()
   }
 
   for (vartype in vartypar) {
@@ -101,7 +101,8 @@ analyser_valideringsdatasett = function(d_vld, samanliknar = samanlikn_identisk)
       stop("Utdata frå samanliknaren har feil lengd")
     }
 
-    d_vld[radnr_med_vartype, "vld_verdiar_er_like"] = er_like
+    d_vld[radnr_med_vartype, "ki_krit_teller"] = er_like
   }
+  d_vld$ki_krit_nevner = TRUE
   d_vld
 }
