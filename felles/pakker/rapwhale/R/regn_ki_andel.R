@@ -66,10 +66,13 @@ NULL
 #' # Utregnet kvalitetsindikator for hele datasettet
 #' aggreger_ki_prop(d)
 #'
-#' # Gruppert på sykehusnivå og med 90 %-konfidensintervall
+#' # Eventuelt med 90 %-konfidensintervall
+#' aggreger_ki_prop(d, alfa = 0.1)
+#'
+#' # Gruppert på sykehusnivå
 #' d %>%
 #'   group_by(sykehus) %>%
-#'   aggreger_ki_prop(alfa = 0.1)
+#'   aggreger_ki_prop()
 #'
 #' # Merk at sykehusene ovenfor blir vist i alfabetisk rekkefølge,
 #' # siden grupperingsvariabelen «sykehus» var en tekstvariabel.
@@ -79,7 +82,7 @@ NULL
 #' ))
 #' d %>%
 #'   group_by(sykehus) %>%
-#'   aggreger_ki_prop(alfa = 0.1)
+#'   aggreger_ki_prop()
 aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
   # Teste inndata
   if (!(is.data.frame(d_ki_ind) && all(hasName(d_ki_ind, c("ki_krit_teller", "ki_krit_nevner"))))) {
