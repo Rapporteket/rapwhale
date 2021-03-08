@@ -52,7 +52,7 @@ NULL
 #' I tillegg vil det være kolonner for alle grupperingsvariablene.
 #' @export
 #' @examples
-#' # Pakke for bruk av rør-teiknet
+#' # Pakke for bruk av tibble-objekt og rør-operatoren
 #' library(dplyr)
 #'
 #' # Eksempeldata
