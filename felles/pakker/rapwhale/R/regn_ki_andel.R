@@ -109,11 +109,11 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
   # Beregne utdata
   d_sammendrag = d_ki_ind %>%
     summarise(
-      ki_teller = as.integer(sum(ki_krit_teller, na.rm = TRUE)),
-      ki_nevner = as.integer(sum(ki_krit_nevner)),
+      ki_teller = as.integer(sum(ki_krit_teller, na.rm = TRUE)), # QA fixme: Unødvendig as.integer()-kall
+      ki_nevner = as.integer(sum(ki_krit_nevner)), # QA fixme: Unødvendig as.integer()-kall
       est = ki_teller / ki_nevner
     ) %>%
-    select(!!!groups(d_ki_ind), est, ki_teller, ki_nevner)
+    select(!!!groups(d_ki_ind), est, ki_teller, ki_nevner) # QA fixme: Bruk group_cols()
 
   # Legg til konfidensintervall
   konfint = binom::binom.wilson(d_sammendrag$ki_teller, d_sammendrag$ki_nevner, conf.level = 1 - alfa)
@@ -123,7 +123,7 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
   # Sørg for at manglende estimat alltid blir returnert som NA
   # (og ikke for eksempel NaN, som vi får ved 0/0)
   d_sammendrag = d_sammendrag %>%
-    mutate_at(vars(est, konfint_nedre, konfint_ovre),
+    mutate_at(vars(est, konfint_nedre, konfint_ovre), # QA fixme: Oppdater til å bruka mutate()
       tidyr::replace_na,
       replace = NA
     )
