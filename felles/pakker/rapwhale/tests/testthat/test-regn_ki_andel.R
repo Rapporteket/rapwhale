@@ -22,7 +22,7 @@ test_that("Feilmelding hvis data av feil type", {
   d_feil_teller_num = tibble::tibble(ki_krit_teller = c(FALSE, TRUE, 2), ki_krit_nevner = c(TRUE, TRUE, TRUE))
   d_feil_nevner_num = tibble::tibble(ki_krit_teller = c(FALSE, TRUE, TRUE), ki_krit_nevner = c(TRUE, TRUE, 2))
 
-  feilmelding = "Kriterievariablene må være boolsk"
+  feilmelding = "Kriterievariablene må være logiske variabler"
   expect_error(aggreger_ki_prop(d_feil_teller_tekst), feilmelding)
   expect_error(aggreger_ki_prop(d_feil_nevner_tekst), feilmelding)
   expect_error(aggreger_ki_prop(d_feil_teller_fak), feilmelding)
