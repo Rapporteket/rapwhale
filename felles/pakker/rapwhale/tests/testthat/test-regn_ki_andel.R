@@ -1,7 +1,5 @@
 # Aggregering - Beregn andel ----------------------------------------------
 
-context("aggreger_ki_andel")
-
 test_that("Feilmelding hvis ikke tibble/data.frame med nødvendige kolonner", {
   d_uten_nevner = tibble::tibble(foo = 1:3, ki_krit_teller = rep(TRUE, 3))
   d_uten_teller = tibble::tibble(foo = 1:3, ki_krit_nevner = rep(TRUE, 3))
