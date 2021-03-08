@@ -6,6 +6,7 @@ NULL
 #'
 #' @description
 #' `r lifecycle::badge("maturing")`
+#'
 #' Regner ut kvalitetsindikator for andeler (teller delt på nevner)
 #' basert på et standard datasett for binomiske data / andelsdata.
 #' Gir også ut konfidensintervall for andelene.
