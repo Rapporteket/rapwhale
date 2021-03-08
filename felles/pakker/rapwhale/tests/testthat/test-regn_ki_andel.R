@@ -107,7 +107,7 @@ test_that("Funksjonen returnerer «NA» for de grupperte verdiene som ikke har n
 
 # 2) Hvordan håndtere at grupperingsvariabel er en faktor som har nivå som ikke eksisterer i datasettet?
 # Eks.:
-test_that("Funksjonen gir en advarsel når det finnes NA-verdier i grupperingsvariabel", {
+test_that("Funksjonen gir en advarsel når det finnes ubrukte nivå i grupperingsvariabel (men likevel en rad for hvert *mulige* nivå)", {
   d_gruppert_ekstra_levels = tibble::tibble(
     sykehus = factor(rep(c("B", "A"), each = 3), levels = LETTERS[1:4]),
     ki_krit_teller = c(rep(FALSE, 6)),
@@ -115,11 +115,23 @@ test_that("Funksjonen gir en advarsel når det finnes NA-verdier i grupperingsva
   ) %>%
     dplyr::group_by(sykehus, .drop = FALSE)
 
-  feilmelding_ekstra_levels = "Det finnes grupper uten observasjoner i grupperingsvariabel"
+  d_svar_gruppert_ekstra_levels = tibble::tibble(
+    sykehus = factor(LETTERS[1:4], levels = LETTERS[1:4]),
+    est = c(NA, 0, NA, NA),
+    ki_teller = rep(0L, 4),
+    ki_nevner = c(0L, 3L, 0L, 0L),
+    konfint_nedre = c(NA, 0, NA, NA),
+    konfint_ovre = c(NA, 0.561497031755045, NA, NA)
+  )
 
+  feilmelding_ekstra_levels = "Det finnes grupper uten observasjoner i grupperingsvariabel"
   expect_warning(
     aggreger_ki_prop(d_gruppert_ekstra_levels),
     feilmelding_ekstra_levels
+  )
+  expect_equal(
+    suppressWarnings(aggreger_ki_prop(d_gruppert_ekstra_levels)),
+    d_svar_gruppert_ekstra_levels
   )
 })
 
