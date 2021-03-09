@@ -31,7 +31,7 @@ utviklingsnivaa = function(mappe = "H:/kvalreg/felles/pakker/rapwhale/man") {
     stringr::str_replace("\\.Rd", "()")
 
   # Les inn linjene i hjelpefilene
-  parse_Rd_mapper = as_mapper(~ tools::parse_Rd(., permissive = TRUE))
+  parse_Rd_mapper = purrr::as_mapper(~ tools::parse_Rd(., permissive = TRUE))
   funksjonar_parsed = paste0(mappe, "/", funksjonar) %>%
     purrr::map(parse_Rd_mapper)
 
