@@ -1,4 +1,26 @@
-
+#' @importFrom stringr str_detect str_c str_sub str_split_fixed
+NULL
+#' Test om fødselsnummer er gyldig
+#'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#' Tester om fødselsnummer (inkludert D-nummer og H-nummer) er gyldige.
+#'
+#' @details
+#' Basert på skildringene fra:
+#' * https://no.wikipedia.org/wiki/F%C3%B8dselsnummer
+#' * https://lovas.info/2013/12/01/identitetsnummer-i-norge/
+#'
+#' @param x En tekstvektor med fødselsnummer som skal sjekkes.
+#'
+#' @return
+#' Returnerer en navngitt logisk variabel som indikerer om fødselsnummer
+#' er gyldige eller ikke.
+#' @export
+#'
+#' @examples
+#' d_fnr = c("01234567899", "15354897865", "15151515151", "11037627154")
+#' fnr_er_gyldig(d_fnr)
 fnr_er_gyldig = function(x) {
   # Sjekk først at det er snakk om tekststreng,
   # ikkje tal (som ville mista førstesifferet om dette er 0)
@@ -121,7 +143,30 @@ fnr_er_gyldig = function(x) {
   ok
 }
 
-
+#' Foreslå lignende fødselsnummer
+#'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#' Hvis det finnes ugyldige fødselsnummer kan denne funksjonen brukes for å
+#' foreslå lignende fødselsnummer som *er* gyldige. Dette gjøres ved å bytte
+#' ut ett vilkårlig siffer, eller bytter om på to nabosiffer.
+#'
+#' @details
+#' OBS! *Ikke* bruk resultatene av funksjonen direkte. Sjekk de oppgitte
+#' fødselsnummer i DIPS eller andre kilder for å kontrollere at de viser til
+#' rett person.
+#'
+#' @param x tekststreng med ugyldige fødselsnummer som det skal
+#' foreslås lignende fødselsnummer for.
+#'
+#' @return
+#' Returnerer en tekstvektor med et gyldig fødselsnummer hvis det finnes et
+#' nærliggende fødselsnummer som er gyldig. Hvis det ikke finnes et gyldig
+#' fødselsnummer returneres en tom tekststreng.
+#'
+#' @examples
+#' ugyldig_fodselsnummer = "11284968756"
+#' fnr_foresla(ugyldig_fodselsnummer)
 fnr_foresla = function(x) {
   stopifnot(length(x) == 1 && is.character(x) && nchar(x) == 11)
 
