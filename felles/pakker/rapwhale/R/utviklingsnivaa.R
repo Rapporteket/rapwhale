@@ -27,12 +27,13 @@ utviklingsnivaa = function(mappe = "H:/kvalreg/felles/pakker/rapwhale/man") {
   funksjonar = list.files(mappe, pattern = "\\.Rd$")
 
   # Lag vektor med funksjonsnamn
-  funksjonar_namn = list.files(mappe, pattern = "\\.Rd$") %>%
+  funksjonar_namn = funksjonar %>%
     stringr::str_replace("\\.Rd", "()")
 
   # Les inn linjene i hjelpefilene
+  parse_Rd_mapper = as_mapper(~ tools::parse_Rd(., permissive = TRUE))
   funksjonar_parsed = paste0(mappe, "/", funksjonar) %>%
-    purrr::map(tools::parse_Rd)
+    purrr::map(parse_Rd_mapper)
 
   # Lag vektor med utviklingsnivåa til funksjonane
   nivaa = funksjonar_parsed %>%
