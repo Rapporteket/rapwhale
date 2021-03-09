@@ -24,7 +24,7 @@
 #' utviklingsnivaa("H:/kvalreg/felles/pakker/rapwhale/man")
 utviklingsnivaa = function(mappe = "H:/kvalreg/felles/pakker/rapwhale/man") {
   # Lag vektor med adresser til hjelpefilene
-  funksjonar = list.files(mappe, pattern = "\\.Rd$", full.names = TRUE)
+  funksjonar = list.files(mappe, pattern = "\\.Rd$")
 
   # Lag vektor med funksjonsnamn
   funksjonar_namn = list.files(mappe, pattern = "\\.Rd$") %>%
@@ -32,15 +32,15 @@ utviklingsnivaa = function(mappe = "H:/kvalreg/felles/pakker/rapwhale/man") {
 
   # Les inn linjene i hjelpefilene
   funksjonar_parsed = paste0(mappe, "/", funksjonar) %>%
-    map(parse_Rd)
+    purrr::map(tools::parse_Rd)
 
   # Lag vektor med utviklingsnivåa til funksjonane
   nivaa = funksjonar_parsed %>%
     as.character() %>%
-    map_chr(~ .x %>%
+    purrr::map_chr(~ .x %>%
       stringr::str_extract("lifecycle-[[:alpha:]]+\\.svg") %>%
       stringr::str_remove_all("lifecycle-|\\.svg"))
 
-  tibble(funksjon = funksjonar_namn, utviklingsnivaa = nivaa) %>%
-    arrange(utviklingsnivaa)
+  tibble::tibble(funksjon = funksjonar_namn, utviklingsnivaa = nivaa) %>%
+    dplyr::arrange(utviklingsnivaa)
 }
