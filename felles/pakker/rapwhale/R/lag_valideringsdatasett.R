@@ -9,11 +9,10 @@
 #'
 #' @param d_reg Datasett (dataramme/tibble).
 #' @param indvars Vektor med indeksvariablar.
-#' @param vartypar Vektor med spesifiserte vartypar. Standard `NULL`.
 #'
 #' @details
-#' Funksjonen tek inn eit datasett `d_reg`, ein vektor `indvars` og eventuelt
-#' ein vektor `vartypar` og returnerer eit valideringsdatasett.
+#' Funksjonen tek inn eit datasett `d_reg` og ein vektor `indvars` og
+#' returnerer eit valideringsdatasett.
 #'
 #' Datasettet `d_reg` skal vera anten data.frame eller tibble.
 #'
@@ -21,12 +20,6 @@
 #' finnast som kolonnar i `d_reg`, og kombinasjonen av dei må unikt identifisera
 #' kvar rad. Kolonnane i `d_reg` som ikkje er indeksvariablar er datavariablar
 #' som skal validerast.
-#'
-#' Vektoren `vartypar` inneheld spesifiserte namn på kva type verdiar kvar
-#' datavariabel har. Det kan vera for eksempel norske namn som "tal", "dato" og
-#' så vidare. Dette vert brukt til å laga namn på kolonnane med verdiar som skal
-#' sjekkast og fyllast ut. Standardverdi `NULL` vert brukt dersom ein berre vil
-#' bruka klassane variablane har i R.
 #'
 #' Valideringsdatasettet som vert gjeve ut vil ha éi rad for kvar datavariabel
 #' for kvar rad i det opphavlege datasettet. Kvar rad i valideringsdatasettet
@@ -58,13 +51,7 @@
 #'
 #' d_vld = lag_valideringsdatasett(d_reg, indvars)
 #' d_vld
-#'
-#' # Eksempel på spesifisering av variabeltypar:
-#' vartypar = c("dato", "tal", "tal", "logisk", "logisk", "logisk", "logisk")
-#'
-#' d_vld = lag_valideringsdatasett(d_reg, indvars, vartypar)
-#' d_vld
-lag_valideringsdatasett = function(d_reg, indvars, vartypar = NULL) {
+lag_valideringsdatasett = function(d_reg, indvars) {
   vars = names(d_reg)
   if (!all(indvars %in% vars)) {
     stop("Alle indeksvariablane finst ikkje i datasettet")
@@ -84,14 +71,9 @@ lag_valideringsdatasett = function(d_reg, indvars, vartypar = NULL) {
     setdiff(indvars)
 
   # Lag oversikt over variabeltypar
-  rvartypar = map(d_reg[datavars], ~ class(.x)) %>%
+  vartypar = map(d_reg[datavars], ~ class(.x)) %>%
     map_chr(first) %>%
     unname()
-  # Dersom eigne namn på variabeltypane ikkje er gitt brukar me R-klassen
-  if (is.null(vartypar)) {
-    vartypar = rvartypar
-  }
-  unike_rvartypar = unique(rvartypar)
   unike_vartypar = unique(vartypar)
 
   # Lag koplingstabell med datavariablar, vartypar og info om kvar resultatet
@@ -113,12 +95,11 @@ lag_valideringsdatasett = function(d_reg, indvars, vartypar = NULL) {
   # Legg til aktuelle resultatkolonnar, med rett variabelklasse
   prefiksverdiar = c("vld_verdi_intern_", "vld_verdi_ekstern_")
   for (i in seq_len(length(unike_vartypar))) {
-    rvartype = unike_rvartypar[i]
     vartype = unike_vartypar[i]
     for (prefiks in prefiksverdiar) {
       vld_varnamn = paste0(prefiks, vartype)
-      d_vld[[vld_varnamn]] = as.numeric(NA)
-      class(d_vld[[vld_varnamn]]) = rvartype
+      d_vld[[vld_varnamn]] = NA_real_
+      class(d_vld[[vld_varnamn]]) = vartype
     }
   }
 
