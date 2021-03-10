@@ -6,6 +6,7 @@ NULL
 #'
 #' @description 
 #' `r lifecycle::badge("maturing")`
+#' 
 #' Regner ut kvalitetsindikator for gjennomsnitt (sum av x delt på n)
 #' hvor x er en numerisk indikatorvariabel og n er antall observasjoner. 
 #' Gir også ut konfidensintervall for gjenomsnittet dersom det er mulig. 
