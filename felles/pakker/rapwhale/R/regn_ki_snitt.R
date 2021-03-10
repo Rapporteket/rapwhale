@@ -48,7 +48,7 @@ NULL
 #' I tillegg vil det være kolonner for alle grupperingsvariablene.
 #' @export
 #' @examples
-#' # Pakke for bruk av rør-tegnet
+#' # Pakke for bruk av tibble-objekt og rør-operatoren
 #' library(dplyr)
 #'
 #' # Eksempeldata
@@ -59,24 +59,26 @@ NULL
 #'   ki_aktuell = c(TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, TRUE, TRUE)
 #' )
 #'
-#' # Viser resultat for alle rader i inndata
+#' # Utregnet kvalitetsindikator for hele datasettet
 #' aggreger_ki_snitt(d)
 #'
-#' # Gruppert til sykehusnivå og konfidensintervallet
-#' # er justert til 90 % ved å endre på alfa.
+#' # Eventuelt med 90 %-konfidensintervall
+#' aggreger_ki_snitt(d, alfa = 0.1)
+#'
+#' # Gruppert på sykehusnivå
 #' d %>%
 #'   group_by(sykehus) %>%
-#'   aggreger_ki_snitt(alfa = 0.1)
+#'   aggreger_ki_snitt()
 #'
 #' # Merk at sykehusene ovenfor blir vist i alfabetisk rekkefølge,
 #' # siden grupperingsvariabelen «sykehus» var en tekstvariabel.
-#' # Hvis du vil ha en annen rekkefølge, gjør de om til faktor først.
+#' # Hvis du vil ha en annen rekkefølge, gjør den om til faktor først.
 #' d = mutate(d, sykehus = factor(sykehus,
 #'   levels = c("Haukeland", "Førde", "Voss")
 #' ))
 #' d %>%
 #'   group_by(sykehus) %>%
-#'   aggreger_ki_snitt(alfa = 0.1)
+#'   aggreger_ki_snitt()
 aggreger_ki_snitt = function(d_ki_ind, alfa = 0.05) {
 
   # Teste inndata
