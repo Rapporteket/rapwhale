@@ -7,9 +7,9 @@ NULL
 #' @description 
 #' `r lifecycle::badge("maturing")`
 #' 
-#' Regner ut kvalitetsindikator for gjennomsnitt (sum av x delt på n)
-#' hvor x er en numerisk indikatorvariabel og n er antall observasjoner. 
-#' Gir også ut konfidensintervall for gjenomsnittet dersom det er mulig. 
+#' Regner ut kvalitetsindikator med gjennomsnitt av kontinuerlige data,
+#' basert på et standard datasett for dette. 
+#' Gir også ut konfidensintervall for gjenomsnittet. 
 #' 
 #' @param d_ki_ind Datasett som gitt ut av en standard KI-funksjon
 #'   for numeriske data. Se detaljer nedenfor.
