@@ -76,7 +76,7 @@ NULL
 #' ))
 #' d %>%
 #'   group_by(sykehus) %>%
-#'   aggreger_ki_prop(alfa = 0.1)
+#'   aggreger_ki_snitt(alfa = 0.1)
 aggreger_ki_snitt = function(d_ki_ind, alfa = 0.05) {
 
   # Teste inndata
