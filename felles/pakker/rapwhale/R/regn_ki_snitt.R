@@ -12,14 +12,14 @@ NULL
 #' Gir også ut konfidensintervall for gjenomsnittet. 
 #' 
 #' @param d_ki_ind Datasett som gitt ut av en standard KI-funksjon
-#'   for numeriske data. Se detaljer nedenfor.
+#'   for numeriske/kontinuerlige data. Se detaljer nedenfor.
 #' @param alfa Én minus nivået til konfidensintervallet.
 #'   Standardverdi er 0.05, som tilsvarer et 95 %-konfidensintervall.
 #'
 #' @details 
 #' Inndatasettet må inneholde minst de to variablene
 #' `ki_x` og `ki_aktuell`, der `ki_x` er den numeriske variabelen 
-#' det skal beregnes gjennomsnitt for og `ki_aktuell` er en 
+#' det skal beregnes gjennomsnitt for og `ki_aktuell` en 
 #' logisk variabel som indikerer om observasjonen skal inkluderes i 
 #' beregningen eller ikke.  
 #' Se vignetten for kvalitetsindikatorar
@@ -30,13 +30,14 @@ NULL
 #' Funksjonen gir ut aggregert datasett med estimert gjennomsnitt, 
 #' konfidensintervall for estimatet, og antall observasjoner hvor `ki_aktuell` 
 #' er sann. 
-#' Dersom ingen `ki_aktuell` er sann eller hvis det kun er en observasjon 
-#' i en gruppe, vil konfidensgrenser være `NA`.
+#' Dersom ingen `ki_aktuell` er sann eller konfidensintervallet
+#' ikke kan regnes ut (for eksempel fordi det bare finnes én observasjon
+#' i en gitt gruppe), vil konfidensgrensene være `NA`.
 #' Hvis inndataene er gruppert, blir resultatet regnet ut på gruppenivå,
 #' med én rad per gruppe.
 #' 
 #' @return 
-#' Tibble eller `data.frame` (avhengig av inndataene) med følgende
+#' Ugruppert tibble eller `data.frame` (avhengig av inndataene) med følgende
 #' kolonner:
 #' \item{est}{Kvalitetsindikatoren, dvs. estimert gjennomsnitt 
 #' (sum(`ki_x`)/sum(`ki_aktuell`)).}
