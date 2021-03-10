@@ -77,7 +77,7 @@ NULL
 #'
 #' # Merk at sykehusene ovenfor blir vist i alfabetisk rekkefølge,
 #' # siden grupperingsvariabelen «sykehus» var en tekstvariabel.
-#' # Hvis du vil ha en annen rekkefølge, gjør de om til faktor først.
+#' # Hvis du vil ha en annen rekkefølge, gjør den om til faktor først.
 #' d = mutate(d, sykehus = factor(sykehus,
 #'   levels = c("Haukeland", "Førde", "Voss")
 #' ))
