@@ -36,6 +36,16 @@ NULL
 #' Hvis inndataene er gruppert, blir resultatet regnet ut på gruppenivå,
 #' med én rad per gruppe.
 #'
+#' @note
+#' Konfidensintervallene blir regnet ut under forutsetning
+#' at dataene er normalfordelt.
+#' (De bruker den vanlege formelen basert på *t*-fordelingen.)
+#' Man bør altså være forsiktig med å stole mye på dem
+#' dersom de kommer fra andre fordelinger,
+#' spesielt usymmetriske fordelinger,
+#' med mindre antall observasjoner er så stort
+#' at sentralgrenseteoremet slår inn.
+#'
 #' @return
 #' Ugruppert tibble eller `data.frame` (avhengig av inndataene) med følgende
 #' kolonner:
