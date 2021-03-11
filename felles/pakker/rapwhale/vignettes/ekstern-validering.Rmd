@@ -617,12 +617,129 @@ d_vld_metadata = d_reg_metadata %>%
 lag_kable(d_vld_metadata)
 ```
 
+## Analysering av valideringsdatasett
+
+Når valideringsdatasettet er fylt ut med eksterne verdiar frå ein gullstandard 
+kan det analyserast. Fyrst samanliknar ein interne og eksterne verdiar rad for 
+rad, og sidan kan ein aggregera dataa og få ut estimat på korrektheita til 
+dømes per variabel eller per sjukehus.
+
+### Samanlikning av verdiar
+
+For å gjera sjølve samanlikninga av dei interne og eksterne verdiane brukar ein
+funksjonen `analyser_valideringsdatasett()`. Denne funksjonen tek inn eit 
+datasett på formatet `lag_valideringsdatasett()` gjev ut, og eventuelt ein 
+«samanliknarfunksjon». Funksjonen returnerer et datasett på et format som er 
+tenkt brukt vidare i funksjon for aggregering. 
+
+Som standard er samanliknarfunksjonen slik at den samanliknar verdiane eksakt, 
+og gjev ut `TRUE` viss verdiane er identiske, og `FALSE` elles. Tanken med 
+argumentet `samanliknar` i `analyser_valideringsdatasett()` er at ein skal 
+kunna laga eigne samanliknarfunksjonar. Desse kan samanlikna interne og eksterne 
+verdiar på ulike måtar, gjerne basert på kva variabel som samanliknast. Til 
+dømes kan ein ynskja eit visst slingringsmonn i samanlikninga for éin variabel,
+og eksakt samanlikning for ein annan.
+
+Funksjonen `analyser_valideringsdatasett()` legg til to kolonnar i det 
+opphavlege datasettet, `ki_krit_teller`, som er `TRUE` viss intern og ekstern 
+verdi for den aktuelle rada er «like» i følgje samanliknarfuksjonen, og 
+`ki_krit_nevner`, som er `TRUE` for alle radene. `ki_krit_nevner` er med 
+for at utdata skal vera på formatet `aggreger_ki_prop()` tek inn, og seier om 
+den aktuelle rada skal inkluderast i resultatet.
+
+```{r samanlikning}
+d_samanlikna = d_vld %>%
+  analyser_valideringsdatasett()
+```
+
+```{r, echo = FALSE}
+lag_kable(d_samanlikna) %>%
+  column_spec(11, background = "yellow") %>%
+  column_spec(12, background = "yellow")
+```
+
+### Aggregering av valideringsdatasett
+
+For å få eit estimat på total korrektheit, eller per variabel/sjukehus 
+aggregerer ein datasettet ein frå `analyser_valideringsdatasett()` ved hjelp av 
+funksjonen `aggreger_ki_prop()`. 
+
+Denne funksjonen tek inn eit datasett, og eventuelt ein alpha-verdi for 
+konffidensintervall, og gjev ut eit aggregert datasett. Standard alpha-verdi 
+er 0,05 som svarar til 95 %-konfidensintervall. Dersom inndataa er gruppert 
+vert resultatet rekna ut på gruppenivå.
+
+Under er nokre eksempel på korleis ein brukar funksjonen. 
+
+#### Total korrektheit
+
+For å estimera total korrektheit køyrer ein `aggreger_ki_prop()` direkte på 
+datasettet frå `analyser_valideringsdatasett()`:
+
+```{r aggregering total}
+d_agg_total = d_samanlikna %>%
+  aggreger_ki_prop()
+```
+
+```{r, echo = FALSE}
+lag_kable(d_agg_total)
+```
+
+Sjølve estimatet finn ein i kolonnen `est`. Kolonnane `ki_teller` og `ki_nevner`
+seier høvesvis kor mange rader som hadde «like» verdiar og kor mange rader som
+vart samanlikna. `konfint_nedre` og `konfint_ovre` gjev nedre og øvre grense 
+for konfidensintervallet.
+
+#### Per variabel/sjukehus
+
+For å estimera korrektheit per variabel eller sjukehus må ein gruppera dataa 
+før ein aggregerer. Ein får då ut same info som ovanfor, men med éi rad per 
+gruppe, og ein ekstra kolonne som seier kva gruppe det gjeld. 
+
+```{r aggregering variabel}
+# Per variabel
+d_agg_var = d_samanlikna %>%
+  group_by(vld_varnamn) %>%
+  aggreger_ki_prop()
+```
+
+```{r, echo = FALSE}
+lag_kable(d_agg_var)
+```
+
+```{r aggregering sjukehus}
+# Per sjukehus
+d_agg_sjukehus = d_vld_metadata %>%
+  analyser_valideringsdatasett() %>%
+  group_by(sjukehus) %>%
+  aggreger_ki_prop()
+```
+
+```{r, echo = FALSE}
+lag_kable(d_agg_sjukehus)
+```
+
+#### Endra storleik på konfidensintervall
+
+Med `aggreger_ki_prop()` kan ein velja ein annan storleik på 
+konfidensintervall enn 95 % ved å gje inn ein verdi i argumentet `alfa`. For 
+å få 90 %-konfidensintervall brukar ein `alfa = 0.1`:
+
+```{r aggregering konfidensintervall}
+d_agg_konf = d_samanlikna %>%
+  aggreger_ki_prop(alfa = 0.1)
+```
+
+```{r, echo = FALSE}
+lag_kable(d_agg_konf)
+```
+
 <!-- Behovskartlegging
 
 *I funksjonen bør det legges til mulighet for å hente ut et visst antall pasienter i utvalget (nå tas uansett alle sammen med per SPSS-fil, som er uoverkommelig for mange registre).
 -> sample_frac() elns.
 
-Vi trenger altså en fil for hvert av de 6 angitte sykehusene, med f.eks. 100 pasienter med de 4 diagnosegruppene.
+*Vi trenger altså en fil for hvert av de 6 angitte sykehusene, med f.eks. 100 pasienter med de 4 diagnosegruppene.
 -> funksjon for lagring()???
 
 *Viktig at RA-pasienter med diagnose 2014 eller seinere prioriteres (minst 50 pasienter der det finnes).
@@ -699,7 +816,7 @@ pasientjournalen.»
 
 Eksempel på:
 
-«Videre viste det seg at mange av variablene var uaktuelle for enkelte pasienter.
+*«Videre viste det seg at mange av variablene var uaktuelle for enkelte pasienter.
 Det var ikke aktuelt å se på 1-års-vekt til pasienter som nylig hadde hatt sin
 operasjon og 1-års-oppfølging ikke var aktuelt enda. På bakgrunn av dette
 kunne statistikere legge til i datasettet at variabler som gjaldt målinger på 6-
@@ -725,7 +842,7 @@ Me ønsker
 
 Sjå tekst og lenkjer på https://www.kvalitetsregistre.no/korrekthet
 Verdt å merka seg:
-«For kontinuerlige variabler (eksempelvis høyde eller vekt) bør man også
+*«For kontinuerlige variabler (eksempelvis høyde eller vekt) bør man også
 analysere hvor stort avviket er fra den sanne verdien. En variabel hvor
 avviket fra gullstandarden er stort er mer problematisk enn hvor
 avviket er lite.»
