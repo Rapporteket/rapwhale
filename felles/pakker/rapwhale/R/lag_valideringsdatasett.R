@@ -117,7 +117,8 @@ lag_valideringsdatasett = function(d_reg, indvars) {
   if (antal_rader > 0) {
     d_vld = d_vld %>%
       group_by(vld_varnamn) %>%
-      do(flytt_resultat(.)) %>% # Ev. bruka purr-funksjonar til dette?
+      split(group_indices(.)) %>%
+      purrr::map_df(flytt_resultat) %>%
       ungroup()
   }
 
