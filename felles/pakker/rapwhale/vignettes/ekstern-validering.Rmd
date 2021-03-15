@@ -296,8 +296,10 @@ ggplot(
 Her kan (og bør) me sjølvsagt finpussa figuren for å gjera
 han meir brukarvennleg, men det er ikkje tema for denne vignetten.
 
-Me tilrår elles òg *sterkt* å bruka SPC-metodikk i staden for
-konfidensintervall for samanlikning av korrektheit,
+Me tilrår elles òg *sterkt* å bruka SPC-metodikk,
+*ikkje* konfidensintervall,
+for samanlikning av korrektheit,
+for eksempel mellom ulike sjukehus eller over tid,
 men det er heller ikkje tema her.
 
 
@@ -317,8 +319,6 @@ kan me finna ut av det:
 Kan sjølvsagt kombinerast med andre gruppering,
 som per variabel eller over tid.
 
-For analyse for samanlikning av sjukehus, eller av enkeltsjukehus
-over tid, tilrår me SPC-metodikk (som me ikkje skriv om her i vignetten).
 
 
 
