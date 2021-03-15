@@ -206,7 +206,7 @@ både totalt og stratifisert på éin eller fleire variablar.
 
 #### Total korrektheit
 
-Total korrektheit reknar me ut direkte:
+Total korrektheit reknar me ut direkte med `aggreger_ki_prop()`:
 
 ```{r aggregering total}
 d_samanlikna %>%
@@ -220,14 +220,15 @@ d_agg_total = aggreger_ki_prop(d_samanlikna)
 ```
 
 Her ser me at `r d_agg_total$ki_teller` av `r d_agg_total$ki_nevner`
-(`r round(100*d_agg_total$est)` %)
+(dvs. `r round(100*d_agg_total$est)` %)
 av verdiane var like i registeret og gullstandarden.
 Me får òg ut tilhøyrande 95 %-konfidensintervall.
 
 
-#### Korrektheit per variabel/sjukehus
+#### Korrektheit per variabel
 
-Nokre variablar er gjerne oftare korrekt registrerte enn andre:
+Nokre variablar er gjerne oftare korrekt registrerte enn andre.
+Me kan lett få ut stratifisert statistikk ved å bruka `group_by()`:
 
 ```{r aggregering per-variabel}
 d_samanlikna %>%
