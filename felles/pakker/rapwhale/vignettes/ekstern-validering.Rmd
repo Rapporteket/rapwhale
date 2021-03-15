@@ -4,6 +4,7 @@ author: "Per Erik Haugedal og Karl Ove Hufthammer"
 output:
   rmarkdown::html_vignette:
     toc: true
+    toc_depth: 4
 vignette: >
   %\VignetteIndexEntry{Ekstern validering}
   %\VignetteEncoding{UTF-8}
