@@ -155,8 +155,59 @@ Når me har eit ferdig valideringsdatsett, er det svært lett å
 rekna ut statistikk for det. Denne kan me så bruka i tabellar og
 figurar i valideringsrapportar.
 
+Når valideringsdatasettet er fylt ut med eksterne verdiar frå ein gullstandard 
+kan det analyserast. Fyrst samanliknar ein interne og eksterne verdiar rad for 
+rad, og sidan kan ein aggregera dataa og få ut estimat på korrektheita til 
+dømes per variabel eller per sjukehus.
 
-### Total korrektheit
+### Samanlikning av verdiar
+
+For å gjera sjølve samanlikninga av dei interne og eksterne verdiane brukar ein
+funksjonen `analyser_valideringsdatasett()`. Denne funksjonen tek inn eit 
+datasett på formatet `lag_valideringsdatasett()` gjev ut, og eventuelt ein 
+«samanliknarfunksjon». Funksjonen returnerer et datasett på et format som er 
+tenkt brukt vidare i funksjon for aggregering. 
+
+Som standard er samanliknarfunksjonen slik at den samanliknar verdiane eksakt, 
+og gjev ut `TRUE` viss verdiane er identiske, og `FALSE` elles. Tanken med 
+argumentet `samanliknar` i `analyser_valideringsdatasett()` er at ein skal 
+kunna laga eigne samanliknarfunksjonar. Desse kan samanlikna interne og eksterne 
+verdiar på ulike måtar, gjerne basert på kva variabel som samanliknast. Til 
+dømes kan ein ynskja eit visst slingringsmonn i samanlikninga for éin variabel,
+og eksakt samanlikning for ein annan.
+
+Funksjonen `analyser_valideringsdatasett()` legg til to kolonnar i det 
+opphavlege datasettet, `ki_krit_teller`, som er `TRUE` viss intern og ekstern 
+verdi for den aktuelle rada er «like» i følgje samanliknarfuksjonen, og 
+`ki_krit_nevner`, som er `TRUE` for alle radene. `ki_krit_nevner` er med 
+for at utdata skal vera på formatet `aggreger_ki_prop()` tek inn, og seier om 
+den aktuelle rada skal inkluderast i resultatet.
+
+```{r samanlikning}
+d_samanlikna = d_vld %>%
+  analyser_valideringsdatasett()
+```
+
+```{r, echo = FALSE}
+lag_kable(d_samanlikna) %>%
+  column_spec(11, background = "yellow") %>%
+  column_spec(12, background = "yellow")
+```
+
+### Aggregering av valideringsdatasett
+
+For å få eit estimat på total korrektheit, eller per variabel/sjukehus 
+aggregerer ein datasettet ein frå `analyser_valideringsdatasett()` ved hjelp av 
+funksjonen `aggreger_ki_prop()`. 
+
+Denne funksjonen tek inn eit datasett, og eventuelt ein alpha-verdi for 
+konffidensintervall, og gjev ut eit aggregert datasett. Standard alpha-verdi 
+er 0,05 som svarar til 95 %-konfidensintervall. Dersom inndataa er gruppert 
+vert resultatet rekna ut på gruppenivå.
+
+Under er nokre eksempel på korleis ein brukar funksjonen. 
+
+#### Total korrektheit
 
 Det lettaste er å rekna ut total korrektheit for registeret.
 Då får me svar på sannsynet for at ein tilfeldig valt verdi
@@ -168,12 +219,27 @@ berre gyldig dersom radene i valideringsdatasettet er eit
 altså viss alle målingar har like stort sannsyn for å vera
 med i valideringsanalysen. Meir om tilfeldige utval i avsnitt xxx.
 
+For å estimera total korrektheit køyrer ein `aggreger_ki_prop()` direkte på 
+datasettet frå `analyser_valideringsdatasett()`:
 
-### Korrektheit per variabel
+```{r aggregering total}
+d_agg_total = d_samanlikna %>%
+  aggreger_ki_prop()
+```
+
+```{r, echo = FALSE}
+lag_kable(d_agg_total)
+```
+
+Sjølve estimatet finn ein i kolonnen `est`. Kolonnane `ki_teller` og `ki_nevner`
+seier høvesvis kor mange rader som hadde «like» verdiar og kor mange rader som
+vart samanlikna. `konfint_nedre` og `konfint_ovre` gjev nedre og øvre grense 
+for konfidensintervallet.
+
+#### Per variabel/sjukehus
 
 Nokre variablar er gjerne oftare registrerte korrekt enn andre.
 Då kan me sjå på korrektheit per variabel:
-
 
 Her er statistikken gyldig dersom det for kvar variabel er slik
 at radene i valideringsdatasettet svarar til eit tilfeldig utval
@@ -190,6 +256,48 @@ Kan òg enkelt visa det som ein figur:
 
 Her kan (og bør) ein sjølvsagt finpussa figuren for å gjera
 han meir brukarvennleg, men det er ikkje fokus for denne vignetten.
+
+For å estimera korrektheit per variabel eller sjukehus må ein gruppera dataa 
+før ein aggregerer. Ein får då ut same info som ovanfor, men med éi rad per 
+gruppe, og ein ekstra kolonne som seier kva gruppe det gjeld. 
+
+```{r aggregering variabel}
+# Per variabel
+d_agg_var = d_samanlikna %>%
+  group_by(vld_varnamn) %>%
+  aggreger_ki_prop()
+```
+
+```{r, echo = FALSE}
+lag_kable(d_agg_var)
+```
+
+```{r aggregering sjukehus}
+# Per sjukehus
+d_agg_sjukehus = d_vld_metadata %>%
+  analyser_valideringsdatasett() %>%
+  group_by(sjukehus) %>%
+  aggreger_ki_prop()
+```
+
+```{r, echo = FALSE}
+lag_kable(d_agg_sjukehus)
+```
+
+#### Endra storleik på konfidensintervall
+
+Med `aggreger_ki_prop()` kan ein velja ein annan storleik på 
+konfidensintervall enn 95 % ved å gje inn ein verdi i argumentet `alfa`. For 
+å få 90 %-konfidensintervall brukar ein `alfa = 0.1`:
+
+```{r aggregering konfidensintervall}
+d_agg_konf = d_samanlikna %>%
+  aggreger_ki_prop(alfa = 0.1)
+```
+
+```{r, echo = FALSE}
+lag_kable(d_agg_konf)
+```
 
 
 ### Per månad, for å sjå utviklinga over tid
@@ -617,122 +725,7 @@ d_vld_metadata = d_reg_metadata %>%
 lag_kable(d_vld_metadata)
 ```
 
-## Analysering av valideringsdatasett
 
-Når valideringsdatasettet er fylt ut med eksterne verdiar frå ein gullstandard 
-kan det analyserast. Fyrst samanliknar ein interne og eksterne verdiar rad for 
-rad, og sidan kan ein aggregera dataa og få ut estimat på korrektheita til 
-dømes per variabel eller per sjukehus.
-
-### Samanlikning av verdiar
-
-For å gjera sjølve samanlikninga av dei interne og eksterne verdiane brukar ein
-funksjonen `analyser_valideringsdatasett()`. Denne funksjonen tek inn eit 
-datasett på formatet `lag_valideringsdatasett()` gjev ut, og eventuelt ein 
-«samanliknarfunksjon». Funksjonen returnerer et datasett på et format som er 
-tenkt brukt vidare i funksjon for aggregering. 
-
-Som standard er samanliknarfunksjonen slik at den samanliknar verdiane eksakt, 
-og gjev ut `TRUE` viss verdiane er identiske, og `FALSE` elles. Tanken med 
-argumentet `samanliknar` i `analyser_valideringsdatasett()` er at ein skal 
-kunna laga eigne samanliknarfunksjonar. Desse kan samanlikna interne og eksterne 
-verdiar på ulike måtar, gjerne basert på kva variabel som samanliknast. Til 
-dømes kan ein ynskja eit visst slingringsmonn i samanlikninga for éin variabel,
-og eksakt samanlikning for ein annan.
-
-Funksjonen `analyser_valideringsdatasett()` legg til to kolonnar i det 
-opphavlege datasettet, `ki_krit_teller`, som er `TRUE` viss intern og ekstern 
-verdi for den aktuelle rada er «like» i følgje samanliknarfuksjonen, og 
-`ki_krit_nevner`, som er `TRUE` for alle radene. `ki_krit_nevner` er med 
-for at utdata skal vera på formatet `aggreger_ki_prop()` tek inn, og seier om 
-den aktuelle rada skal inkluderast i resultatet.
-
-```{r samanlikning}
-d_samanlikna = d_vld %>%
-  analyser_valideringsdatasett()
-```
-
-```{r, echo = FALSE}
-lag_kable(d_samanlikna) %>%
-  column_spec(11, background = "yellow") %>%
-  column_spec(12, background = "yellow")
-```
-
-### Aggregering av valideringsdatasett
-
-For å få eit estimat på total korrektheit, eller per variabel/sjukehus 
-aggregerer ein datasettet ein frå `analyser_valideringsdatasett()` ved hjelp av 
-funksjonen `aggreger_ki_prop()`. 
-
-Denne funksjonen tek inn eit datasett, og eventuelt ein alpha-verdi for 
-konffidensintervall, og gjev ut eit aggregert datasett. Standard alpha-verdi 
-er 0,05 som svarar til 95 %-konfidensintervall. Dersom inndataa er gruppert 
-vert resultatet rekna ut på gruppenivå.
-
-Under er nokre eksempel på korleis ein brukar funksjonen. 
-
-#### Total korrektheit
-
-For å estimera total korrektheit køyrer ein `aggreger_ki_prop()` direkte på 
-datasettet frå `analyser_valideringsdatasett()`:
-
-```{r aggregering total}
-d_agg_total = d_samanlikna %>%
-  aggreger_ki_prop()
-```
-
-```{r, echo = FALSE}
-lag_kable(d_agg_total)
-```
-
-Sjølve estimatet finn ein i kolonnen `est`. Kolonnane `ki_teller` og `ki_nevner`
-seier høvesvis kor mange rader som hadde «like» verdiar og kor mange rader som
-vart samanlikna. `konfint_nedre` og `konfint_ovre` gjev nedre og øvre grense 
-for konfidensintervallet.
-
-#### Per variabel/sjukehus
-
-For å estimera korrektheit per variabel eller sjukehus må ein gruppera dataa 
-før ein aggregerer. Ein får då ut same info som ovanfor, men med éi rad per 
-gruppe, og ein ekstra kolonne som seier kva gruppe det gjeld. 
-
-```{r aggregering variabel}
-# Per variabel
-d_agg_var = d_samanlikna %>%
-  group_by(vld_varnamn) %>%
-  aggreger_ki_prop()
-```
-
-```{r, echo = FALSE}
-lag_kable(d_agg_var)
-```
-
-```{r aggregering sjukehus}
-# Per sjukehus
-d_agg_sjukehus = d_vld_metadata %>%
-  analyser_valideringsdatasett() %>%
-  group_by(sjukehus) %>%
-  aggreger_ki_prop()
-```
-
-```{r, echo = FALSE}
-lag_kable(d_agg_sjukehus)
-```
-
-#### Endra storleik på konfidensintervall
-
-Med `aggreger_ki_prop()` kan ein velja ein annan storleik på 
-konfidensintervall enn 95 % ved å gje inn ein verdi i argumentet `alfa`. For 
-å få 90 %-konfidensintervall brukar ein `alfa = 0.1`:
-
-```{r aggregering konfidensintervall}
-d_agg_konf = d_samanlikna %>%
-  aggreger_ki_prop(alfa = 0.1)
-```
-
-```{r, echo = FALSE}
-lag_kable(d_agg_konf)
-```
 
 <!-- Behovskartlegging
 
