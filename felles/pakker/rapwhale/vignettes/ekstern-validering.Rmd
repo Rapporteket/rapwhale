@@ -304,24 +304,6 @@ men det er heller ikkje tema her.
 
 
 
-
-### Per månad, for å sjå utviklinga over tid
-
-Når me driv forbetring for å auka korrektheita i eit register,
-kan me sjå på korrektheit over tid:
-
-
-### Per sjukehus
-
-Viss nokre sjukehus er flinkare til å registrera korrekte data,
-kan me finna ut av det:
-
-Kan sjølvsagt kombinerast med andre gruppering,
-som per variabel eller over tid.
-
-
-
-
 ## Generering av valideringsdatasett
 
 Når ein har registerdata, er det med denne pakken veldig lett å
