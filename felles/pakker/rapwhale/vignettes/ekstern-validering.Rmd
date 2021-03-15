@@ -301,20 +301,6 @@ konfidensintervall for samanlikning av korrektheit,
 men det er heller ikkje tema her.
 
 
-#### Endra storleik på konfidensintervall
-
-Med `aggreger_ki_prop()` kan ein velja ein annan storleik på 
-konfidensintervall enn 95 % ved å gje inn ein verdi i argumentet `alfa`. For 
-å få 90 %-konfidensintervall brukar ein `alfa = 0.1`:
-
-```{r aggregering konfidensintervall}
-d_agg_konf = d_samanlikna %>%
-  aggreger_ki_prop(alfa = 0.1)
-```
-
-```{r, echo = FALSE}
-lag_kable(d_agg_konf)
-```
 
 
 ### Per månad, for å sjå utviklinga over tid
