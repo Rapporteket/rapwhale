@@ -224,12 +224,6 @@ Her ser me at `r d_agg_total$ki_teller` av `r d_agg_total$ki_nevner`
 av verdiane var like i registeret og gullstandarden.
 Me får òg ut tilhøyrande 95 %-konfidensintervall.
 
-Statistikken, inkludert konfidensintervalla, er naturlegvis
-berre gyldig dersom radene i valideringsdatasettet er eit
-*tilfeldig utval* av alle verdiane registrert i registeret,
-altså viss alle målingar har like stort sannsyn for å vera
-med i valideringsanalysen. Meir om tilfeldige utval i avsnitt **fixme**.
-
 
 #### Korrektheit per variabel/sjukehus
 
@@ -244,15 +238,6 @@ d_samanlikna %>%
 Tilsvarande kan me rekna ut korrektheit per sjukehus,
 per variabel per sjukehus,
 eller over tid (ved å ha år og månad som grupperingsvariablar).
-
-Her er statistikken gyldig dersom det for kvar variabel er slik
-at radene i valideringsdatasettet svarar til eit tilfeldig utval
-av verdiane til tilhøyrande variabel i registeret. Men ein treng
-ikkje ha like mange verdiar for kvar variabel, og ein kan for eksempel
-validera fleire verdiar for viktige variablar enn for uviktige.
-Men merk at då er ikkje lenger statistikken for total korrektheit
-forventingsrett, og konfidensintervalla der kan ikkje brukast.
-(Ev. flytta dette avsnittet seinare, og berre så vidt hinta om det her.)
 
 
 #### Bruk av statistikken
@@ -709,6 +694,39 @@ d_vld_metadata = d_reg_metadata %>%
 ```{r, echo = FALSE}
 lag_kable(d_vld_metadata)
 ```
+
+
+
+## Statistiske avspekt ved bruk av valideringsdata
+
+**Fixme:**
+Her må det stå om viktige statistiske ting ein må vera klar over
+når ein tolkar resultata frå valideringsdatasett.
+Det gjeld både sjølve estimata og tilhøyrande konfidensintervall.
+Bør òg vera vera eksempel på korleis ein får *riktige* estimat
+på det ein er på jakt etter, ved for eksempel å ta vekta snitt
+av estimata av ting samla inn gjennom stratifisert datainnsamling.
+(Teksten som står her er berre kladd og spreidde tankar.
+Må få skikkeleg introduksjon og god struktur.)
+
+Total korrektheit:
+(Fixme: Legg til referanse til dette i tihøyrande avsnitt.)
+Statistikken, inkludert konfidensintervalla, er naturlegvis
+berre gyldig dersom radene i valideringsdatasettet er eit
+*tilfeldig utval* av alle verdiane registrert i registeret,
+altså viss alle målingar har like stort sannsyn for å vera
+med i valideringsanalysen.
+
+Per variabel/sjukehus:
+(Fixme: Legg til referanse til dette i tihøyrande avsnitt.)
+Her er statistikken gyldig dersom det for kvar variabel er slik
+at radene i valideringsdatasettet svarar til eit tilfeldig utval
+av verdiane til tilhøyrande variabel i registeret. Men ein treng
+ikkje ha like mange verdiar for kvar variabel, og ein kan for eksempel
+validera fleire verdiar for viktige variablar enn for uviktige.
+Men merk at då er ikkje lenger statistikken for total korrektheit
+forventingsrett, og konfidensintervalla der kan ikkje brukast.
+(Ev. flytta dette avsnittet seinare, og berre så vidt hinta om det her.)
 
 
 
