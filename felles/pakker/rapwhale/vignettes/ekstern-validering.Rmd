@@ -424,19 +424,29 @@ d_vld_utval_samla
 ```
 
 
-### 
+### Valideringsdatasett med datavariablar i fast rekkjefølgje
 
 Det er gjerne praktisk at datavariablane kjem i same
-rekkjefølgje for alle pasientane.
+rekkjefølgje for alle pasientane,
 Det kan for eksempel vera rekkjefølgja opplysningane står
 i i pasientjournalen.
-Det ordnar me lett. 
+Det ordnar me lett.
 
-Viss me vil sikra at rekkjefølgja på datavariablane
-vert den same for kvar pasient,
+I dette eksempelet brukar me variabelrekkjefølgja
+frå det opphavlege datasettet:
+
+```{r}
+var_rekkjefolgje = names(d_reg_full)
+d_vld_utval %>%
+  arrange(match(vld_varnamn, !!var_rekkjefolgje))
+```
+
+(Og så kan me bruka oppskrifta frå førre avsnitt for å få
+dataa frå same pasient samla.)
 
 
 
+### Alle datavariablar for eit tilfeldig utval pasientar
 
 Dersom det er lite føremålstenleg å ha rader for same pasient på ulike stadar
 i valideringsdatasettet kan ein trekkja alle pasientane i tilfeldig rekkjefølgje
