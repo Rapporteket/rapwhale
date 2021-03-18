@@ -68,6 +68,18 @@ test_that("Forventet utdata når inndata er gruppert og ugruppert", {
   expect_equal(aggreger_ki_snitt(d_ugruppert), d_ugruppert_ut)
 })
 
+
+test_that("Funksjonen gir alltid ut ugrupperte data", {
+  d_test = tibble::tibble(
+    sjukehus = factor(c("A", "B", "B")),
+    post = factor(c("1", "1", "2")),
+    ki_x = c(1, 5, 8),
+    ki_aktuell = c(TRUE, TRUE, TRUE)
+  )
+  expect_length(group_vars(aggreger_ki_snitt(group_by(d_test, sjukehus))), 0)
+  expect_length(group_vars(aggreger_ki_snitt(group_by(d_test, sjukehus, post))), 0)
+})
+
 test_that("Tilfeller hvor det kun er ett individ i en gruppe", {
   d_gruppe_alene = tibble::tibble(
     sykehus = factor(rep(c("A", "B"), each = 3)),
