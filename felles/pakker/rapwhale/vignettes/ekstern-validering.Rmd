@@ -307,44 +307,45 @@ Nokre av variablane i registeret kan sjå slik ut:
 
 ```{r lageksempel, echo = FALSE}
 d_reg_full = tibble::tribble(
-  ~pasid, ~dato_inn, ~kjonn, ~sjukehus, ~dato_ut, ~vekt, ~hogd, ~biverk, ~biverk_hovud, ~biverk_mage, ~biverk_fot, ~gravid,
-  5, as.Date("2020-06-07"), "M", "Bergen", as.Date("2020-06-15"), 78, 183, TRUE, FALSE, TRUE, TRUE, NA,
-  5, as.Date("2020-12-13"), "M", "Førde", as.Date("2020-12-13"), 50, 179, TRUE, FALSE, TRUE, TRUE, NA,
-  7, as.Date("2020-08-09"), "K", "Bergen", as.Date("2020-08-13"), 711, 196, TRUE, TRUE, TRUE, TRUE, TRUE,
-  13, as.Date("2021-01-05"), "M", "Førde", NA, NA, 163, FALSE, NA, NA, NA, NA,
-  14, as.Date("2021-01-05"), "M", "Førde", as.Date("2021-01-09"), 101, 182, TRUE, TRUE, FALSE, FALSE, NA
+  ~pasid, ~dato_inn, ~sjukehus, ~dato_ut, ~vekt, ~hogd, ~biverk, ~biverk_hovud, ~biverk_mage, ~biverk_fot, ~gravid,
+  5, as.Date("2020-06-07"), "Bergen", as.Date("2020-06-15"), 78, 183, TRUE, FALSE, TRUE, TRUE, NA,
+  5, as.Date("2020-12-13"), "Førde", as.Date("2020-12-13"), 50, 179, TRUE, FALSE, TRUE, TRUE, NA,
+  7, as.Date("2020-08-09"), "Bergen", as.Date("2020-08-13"), 711, 196, TRUE, TRUE, TRUE, TRUE, TRUE,
+  13, as.Date("2021-01-05"), "Førde", NA, NA, 163, FALSE, NA, NA, NA, NA,
+  14, as.Date("2021-01-05"), "Førde", as.Date("2021-01-09"), 101, 182, TRUE, TRUE, FALSE, FALSE, NA
+)
+d_pas = tibble::tribble(
+  ~pasid, ~kjonn,
+  5, "mann",
+  7, "kvinne",
+  13, "mann",
+  14, "mann"
 )
 lag_kable(d_reg_full)
 ```
 
-I dette eksempelet er indeksvariablane `pasid` og `dato_inn`, medan `kjonn` og 
-`sjukehus` er tilleggsvariablar som ein fjernar før bruk av 
-`lag_valideringsdatasett()`. Dette gjer ein enkelt på følgjande måte: 
+I dette eksempelet er indeksvariablane `pasid` og `dato_inn`.
+Sjukehus er alltid registrert rett,
+så det er ein variabel me ikkje er interessert i å validera.
+Me fjernar han derfor før me genererer valideringsdatasettet.
 
 ```{r fjern tilleggsvariablar}
-d_reg = select(d_reg_full, -kjonn, -sjukehus)
+d_reg = select(d_reg_full, -sjukehus)
 ```
 
-```{r, echo = FALSE}
-lag_kable(d_reg)
-```
-
-Når det er gjort er ein klar til å laga valideringsdatasettet.
 
 ### Komplett valideringsdatasett
 
-Når ein køyrer `lag_valideringsdatasett()` får ein ut eit komplett 
-valideringsdatasett, dersom ein ikkje har gjort ei filtrering av 
-registerdatasettet på førehand. Eit komplett valideringsdatasett vil seie at 
-alle variablar for alle pasientar/forløp er med. Talet på rader i 
-valideringsdatasettet vert då lik talet på rader i det opphavlege datasettet 
-gongar talet på datavariablar. For eksempelet over, med 5 rader og 8 
-*datavariablar*, får ein eit valideringsdatasett med 40 rader:
+Når me køyrer `lag_valideringsdatasett()`,
+får me ut eit komplett valideringsdatasett,
+der alle pasientar/forløp og alle datavariablar er med.
+Talet på rader vert då lik talet på rader i det opphavlege datasettet 
+gongar talet på datavariablar.
+Her har me 5 pasientforløp og 8 *datavariablar*,
+og me får såleis eit valideringsdatasett med 40 rader:
 
 ```{r lag eksempel valideringsdatasett}
-indvars = c("pasid", "dato_inn")
-d_vld = d_reg %>%
-  lag_valideringsdatasett(indvars)
+d_vld = lag_valideringsdatasett(d_reg, indvars = c("pasid", "dato_inn"))
 ```
 
 ```{r eksempel valideringsdatasett, echo = FALSE}
@@ -441,13 +442,9 @@ variabelen gravid, som berre gjev meining å sjekka dersom kjønn er kvinne.
 Slike rader kan ein fjerna frå valideringsdatasettet på denne måten:
 
 ```{r fjern rader med logikk}
-# Lagar ein tabell med indeksvariablar og kjønn
-d_kjonn = d_reg_full %>%
-  select(pasid, dato_inn, kjonn)
-
 # Koplar tabellen med kjønn på valideringsdatasettet
 d_vld_med_kjonn = d_vld %>%
-  left_join(d_kjonn, by = c("pasid", "dato_inn"))
+  left_join(d_pas, by = c("pasid", "dato_inn"))
 
 # Filtrerer vekk unødvendige rader
 d_vld_logikk = d_vld_med_kjonn %>%
