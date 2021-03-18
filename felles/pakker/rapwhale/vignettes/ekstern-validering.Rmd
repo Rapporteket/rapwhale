@@ -359,50 +359,6 @@ til eit visst antal rader, berre nokre visse sjukehus eller liknande. Under
 er eksempel på fleire scenario og korleis ein kan gå fram skildra.
 
 
-### Korleis lagra til SPSS-format?
-
-For å lagra valideringsdatasettet som SPSS-format kan ein bruka `write_sav()` 
-frå `haven`-pakken:
-
-```{r eval=FALSE}
-# Definerer og eventuelt lagar mappe for lagring
-mappe = "H:\\Valideringsdata"
-dir.create(mappe, showWarnings = FALSE, recursive = TRUE)
-
-# Lagar filnamn og -adresse
-filadresse = paste0(mappe, "\\valideringsdatasett.sav")
-
-# Lagrar fila på SPSS-format
-haven::write_sav(d_vld, filadresse)
-```
-
-#### Éi fil per sjukehus
-
-Ofte vil det vera føremålstenleg å ha ei eiga fil for kvart sjukehus. Då må ein 
-fyrst kopla på igjen kolonnen som seier kva sjukehus rada gjeld for. Korleis 
-ein kan gjera dette er forklart i avsnitt xxx. Her tek me utgangspunkt i 
-`d_vld_metadata`, definert i same avsnitt, for eit eksempel på å lagra éi fil
-per sjukehus:
-
-```{r eval=FALSE}
-# Splittar valideringsdatasettet per sjukehus
-d_vld_gruppert = group_by(d_vld_metadata, sjukehus)
-sjukehus_namn = group_keys(d_vld_gruppert)[[1]]
-d_vld_splitta = d_vld_gruppert %>%
-  group_split()
-
-# Lagar filadresse per sjukehus
-filadresser = paste0(mappe, "\\", sjukehus_namn, ".sav")
-
-# Lagrar filer på SPSS-format
-purrr::pwalk(
-  list(
-    data = d_vld_splitta,
-    path = filadresser
-  ),
-  haven::write_sav
-)
-```
 
 ### Utval av variablar
 
@@ -693,6 +649,54 @@ d_vld_metadata = d_reg_metadata %>%
 
 ```{r, echo = FALSE}
 lag_kable(d_vld_metadata)
+```
+
+
+## Lagring og lesing av valideringsdatasett
+
+### Korleis lagra til SPSS-format?
+
+For å lagra valideringsdatasettet som SPSS-format kan ein bruka `write_sav()` 
+frå `haven`-pakken:
+
+```{r eval=FALSE}
+# Definerer og eventuelt lagar mappe for lagring
+mappe = "H:\\Valideringsdata"
+dir.create(mappe, showWarnings = FALSE, recursive = TRUE)
+
+# Lagar filnamn og -adresse
+filadresse = paste0(mappe, "\\valideringsdatasett.sav")
+
+# Lagrar fila på SPSS-format
+haven::write_sav(d_vld, filadresse)
+```
+
+#### Éi fil per sjukehus
+
+Ofte vil det vera føremålstenleg å ha ei eiga fil for kvart sjukehus. Då må ein 
+fyrst kopla på igjen kolonnen som seier kva sjukehus rada gjeld for. Korleis 
+ein kan gjera dette er forklart i avsnitt xxx. Her tek me utgangspunkt i 
+`d_vld_metadata`, definert i same avsnitt, for eit eksempel på å lagra éi fil
+per sjukehus:
+
+```{r eval=FALSE}
+# Splittar valideringsdatasettet per sjukehus
+d_vld_gruppert = group_by(d_vld_metadata, sjukehus)
+sjukehus_namn = group_keys(d_vld_gruppert)[[1]]
+d_vld_splitta = d_vld_gruppert %>%
+  group_split()
+
+# Lagar filadresse per sjukehus
+filadresser = paste0(mappe, "\\", sjukehus_namn, ".sav")
+
+# Lagrar filer på SPSS-format
+purrr::pwalk(
+  list(
+    data = d_vld_splitta,
+    path = filadresser
+  ),
+  haven::write_sav
+)
 ```
 
 
