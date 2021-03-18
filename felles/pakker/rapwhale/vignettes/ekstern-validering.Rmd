@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 ```{r pakkelasting, include = FALSE}
 suppressPackageStartupMessages({
   library(rapwhale)
-  library(dplyr)
+  library(tidyverse)
   library(kableExtra)
 })
 ```
