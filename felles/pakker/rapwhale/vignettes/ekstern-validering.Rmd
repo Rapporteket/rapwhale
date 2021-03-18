@@ -396,7 +396,47 @@ slice_sample(d_vld_enkel, n = Inf)
 ```
 
 
-#### Komplett valideringsdatasett med pasientar i tilfeldig rekkjefølgje
+### Valideringsdatasett med forløp i tilfeldig rekkjefølgje
+
+Når me jamfører registerdata med for eksempel pasientjournalar,
+er praktisk å sjå på alle datavariablane samla for kvar pasient,
+slik at me ikkje heile tida må veksla mellom journalar.
+Me har for eksempel fått denne stikkprøven med valideringsdata:
+
+```{r}
+d_vld_utval = d_vld_enkel[c(18, 32, 1, 40, 2, 17), ]
+d_vld_utval
+```
+
+Her er ein enkel måte å samla dataa på,
+men som samtidig sikrar
+tilfeldig rekkjefølgje på pasientane (som er viktig for validiteten)
+
+```{r}
+set.seed(1)
+d_vld_utval_samla = d_vld_utval %>%
+  group_by(pasid, dato_inn) %>% # Ev. bruk nest_by()
+  nest() %>%
+  ungroup() %>% # Nødvendig for slice_sample()
+  slice_sample(n = Inf) %>%
+  unnest(data)
+d_vld_utval_samla
+```
+
+
+### 
+
+Det er gjerne praktisk at datavariablane kjem i same
+rekkjefølgje for alle pasientane.
+Det kan for eksempel vera rekkjefølgja opplysningane står
+i i pasientjournalen.
+Det ordnar me lett. 
+
+Viss me vil sikra at rekkjefølgja på datavariablane
+vert den same for kvar pasient,
+
+
+
 
 Dersom det er lite føremålstenleg å ha rader for same pasient på ulike stadar
 i valideringsdatasettet kan ein trekkja alle pasientane i tilfeldig rekkjefølgje
