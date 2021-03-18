@@ -125,10 +125,10 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
   # Sørg for at manglende estimat alltid blir returnert som NA
   # (og ikke for eksempel NaN, som vi får ved 0/0)
   d_sammendrag = d_sammendrag %>%
-    mutate_at(vars(est, konfint_nedre, konfint_ovre), # QA fixme: Oppdater til å bruka mutate()
+    mutate(across(c(est, konfint_nedre, konfint_ovre),
       tidyr::replace_na,
       replace = NA
-    )
+    ))
 
   d_sammendrag
 }
