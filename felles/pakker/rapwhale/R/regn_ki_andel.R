@@ -111,9 +111,11 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
     summarise(
       ki_teller = sum(ki_krit_teller, na.rm = TRUE),
       ki_nevner = sum(ki_krit_nevner),
-      est = ki_teller / ki_nevner
+      est = ki_teller / ki_nevner,
+      .groups = "keep"
     ) %>%
-    select(!!!groups(d_ki_ind), est, ki_teller, ki_nevner) # QA fixme: Bruk group_cols()
+    select(group_cols(d_ki_ind), est, ki_teller, ki_nevner) %>%
+    ungroup()
 
   # Legg til konfidensintervall
   konfint = binom::binom.wilson(d_sammendrag$ki_teller, d_sammendrag$ki_nevner, conf.level = 1 - alfa)
