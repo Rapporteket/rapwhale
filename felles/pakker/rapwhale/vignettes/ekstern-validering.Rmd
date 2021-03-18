@@ -293,16 +293,17 @@ men det er heller ikkje tema her.
 
 ## Generering av valideringsdatasett
 
-Når ein har registerdata, er det med denne pakken veldig lett å
-laga eit valideringsdatasett. Ein gjev inn eit datasett med indeksvariablar
-og datavariablar, og ein vektor med namna på indeksvariablane til funksjonen 
-`lag_valideringsdatasett()` og får ut eit valideringsdatasett.
+Denne pakken har funksjonar for enkelt å laga klar valideringsdatasett.
+Først treng me registerdata, lagra som eitt eller fleire datasett.
+Så kan me bruka `lag_valideringsdatasett()` til å laga valideringsdatasett,
+og til slutt kan me tilpassa dette datasettet slik at me
+berre treng validera dei variablane og verdiane me er intersserte i.
 
 ### Eksempel på register
 
 Me har eit enkelt register som registrerer vekt, høgd, om pasienten har opplevd
-biverknad, kva type biverknad og om pasienten er gravid. Nokre av variablane i 
-registeret kan sjå slik ut:
+biverknadar, kva type biverknadar og om pasienten er gravid.
+Nokre av variablane i registeret kan sjå slik ut:
 
 ```{r lageksempel, echo = FALSE}
 d_reg_full = tibble::tribble(
