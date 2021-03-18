@@ -353,70 +353,48 @@ d_vld %>%
   lag_kable()
 ```
 
+For å ikkje få for breie tabellar
+viser me berre nokre av kolonnane i dei vidare eksempela:
 
-
-### Ymse typar tilfeldige utval
-
-statistisk kommentar? eller berre la det stå i førre kapittel?
-
-20 % av forløpa per variabel
-
-Stadig meir vanskelege/avanserte eksempel
-
-joining med andre datasett
-
-stikkord:
-
-- tilfeldig rekkjefølgje (*alle* rader)
-- sample_n()
-- sample_frac()
-- per variabel?
-- per pasient?
-- sjå kommentarar lenger ned i vignetten for ulike eksempel (lag éi overskrift per eksempel)
-
-#### Tilfeldig utval av n rader
-
-For å trekkja ut n tilfeldige rader køyrer ein følgjande kode med
-valideringsdatasettet `d_vld`:
-
-```{r n rader}
-n = 4
-d_vld_n = sample_n(d_vld, n)
+```{r}
+d_vld_enkel = select(d_vld, pasid:vld_vartype)
 ```
 
-```{r, echo = FALSE}
-lag_kable(d_vld_n)
+
+
+### Tilfeldig rekkjefølgje og utval
+
+Om me vil, kan me no validera *heile* datasettet
+(ved å samanlikna det med gullstandraden).
+Men i praksis vil me ta ein stikkprøve.
+
+Kanskje har me berre tid til å validera ti målingar:
+
+```{r}
+set.seed(12345) # For reproduserbare «tilfeldige» trekkingar
+slice_sample(d_vld_enkel, n = 10)
 ```
 
-#### Tilfeldig utval av andel av rader
+Eller ti prosent av datasettet:
 
-For å trekkja ut x andel tilfeldige rader køyrer ein følgjande kode med
-valideringsdatasettet`d_vld`:
-
-```{r andel rader}
-x = 0.15
-d_vld_frac = sample_frac(d_vld, x)
+```{r}
+slice_sample(d_vld_enkel, prop = .1)
 ```
 
-```{r, echo = FALSE}
-lag_kable(d_vld_frac)
+I nokre tilfelle kan me ikkje garantera tid til å
+validera eit visst tal eller ein viss prosentdel av målingane.
+Ei pragmatisk løysing er då gjera klar *heile* valideringsdatasettet,
+men i tilfeldig rekkjefølgje.
+Når me skal gjennomføra valideringa, startar me på toppen
+og arbeider oss nedover.
+Når me slepp opp for tid,
+slettar me rett og slett dei resterande radene.
+Me har likevel eit tilfeldig utval rader:
+
+```{r}
+slice_sample(d_vld_enkel, n = Inf)
 ```
 
-#### Komplett valideringsdatasett i tilfeldig rekkjefølgje
-
-Det kan vera ynskjeleg å bruka eit komplett valideringsdatasett i 
-korrektheitsstudien, slik at ein jobbar seg gjennom så mykje ein klarar på 
-ei gitt tid, men då i tilfeldig rekkjefølgje, slik at ein får eit tilfeldig 
-utval. For å få til dette køyrer ein følgjande kode med valideringsdatasettet 
-`d_vld`:
-
-```{r tilfeldig rekkjefølgje}
-d_vld_tilfeldig = sample_frac(d_vld)
-```
-
-```{r, echo = FALSE}
-lag_kable(d_vld_tilfeldig)
-```
 
 #### Komplett valideringsdatasett med pasientar i tilfeldig rekkjefølgje
 
