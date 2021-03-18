@@ -400,7 +400,7 @@ Slike rader kan ein fjerna frå valideringsdatasettet på denne måten:
 ```{r fjern rader med logikk}
 # Koplar tabellen med kjønn på valideringsdatasettet
 d_vld_med_kjonn = d_vld %>%
-  left_join(d_pas, by = c("pasid", "dato_inn"))
+  left_join(d_pas, by = c("pasid"))
 
 # Filtrerer vekk unødvendige rader
 d_vld_logikk = d_vld_med_kjonn %>%
