@@ -353,81 +353,7 @@ d_vld %>%
   lag_kable()
 ```
 
-Det er likevel ofte at ein ikkje ynskjer eit komplett valideringsdatasett, 
-med alle variablar for alle pasientar/forløp. Kanskje ein ynskjer å avgrensa
-til eit visst antal rader, berre nokre visse sjukehus eller liknande. Under
-er eksempel på fleire scenario og korleis ein kan gå fram skildra.
 
-
-
-### Utval av variablar
-
-Dersom ein berre skal sjå på eit utval av variablane, kan ein gjera dette ved
-å fjerna variablane som ikkje skal vera med, før ein kallar 
-`lag_valideringsdatasett()`. Dette kan ein gjera på same måte som ein fjernar 
-tilleggsvariablar:
-
-```{r fjern variabel}
-d_vld_fjern = d_reg %>%
-  select(-dato_ut) %>%
-  lag_valideringsdatasett(indvars)
-```
-
-```{r, echo = FALSE}
-lag_kable(d_vld_fjern)
-```
-
-Eventuelt kan ein gjera det motsett, og velja dei variablane som *skal* vera 
-med, dersom det er enklare. Då må ein hugsa på å også ta med indeksvariablane:
-
-```{r vel ut variablar}
-d_vld_fjern2 = d_reg %>%
-  select(pasid, dato_inn, vekt, hogd) %>%
-  lag_valideringsdatasett(indvars)
-```
-
-```{r, echo = FALSE}
-lag_kable(d_vld_fjern2)
-```
-
-#### Bruk av logikk til å fjerna unødvendige rader
-
-Det finst eksempel på at visse variablar berre gjev meining å sjekka dersom 
-ein annan variabel har ein viss verdi. Det kan til dømes vera at ein har 
-variabelen gravid, som berre gjev meining å sjekka dersom kjønn er kvinne. 
-Slike rader kan ein fjerna frå valideringsdatasettet på denne måten:
-
-```{r fjern rader med logikk}
-# Koplar tabellen med kjønn på valideringsdatasettet
-d_vld_med_kjonn = d_vld %>%
-  left_join(d_pas, by = c("pasid"))
-
-# Filtrerer vekk unødvendige rader
-d_vld_logikk = d_vld_med_kjonn %>%
-  filter(!(kjonn == "M" & vld_varnamn == "gravid"))
-```
-
-```{r, echo = FALSE}
-lag_kable(d_vld_logikk)
-```
-
-### Utval av visse variabelverdiar
-
-Ein kan avgrense uttrekket til visse verdiar for éin eller fleire variablar,
-til dømes dersom ein berre skal kontrollera data på eitt eller fleire 
-særskilde sjukehus. Dette kan gjerast ved å starta med å filtrera på ynskja 
-verdiar:
-
-```{r filtrer sjukehus}
-d_vld_bergen = d_reg_full %>%
-  filter(sjukehus == "Bergen") %>%
-  select(-kjonn, -sjukehus) %>%
-  lag_valideringsdatasett(indvars)
-```
-
-```{r, echo = FALSE}
-lag_kable(d_vld_bergen)
-```
 
 ### Ymse typar tilfeldige utval
 
@@ -546,6 +472,80 @@ for (variabel in uttrekk_variablar) {
 ```{r, echo = FALSE}
 lag_kable(d_vld_var_forlop)
 ```
+
+
+
+
+### Utval av variablar
+
+Dersom ein berre skal sjå på eit utval av variablane, kan ein gjera dette ved
+å fjerna variablane som ikkje skal vera med, før ein kallar 
+`lag_valideringsdatasett()`. Dette kan ein gjera på same måte som ein fjernar 
+tilleggsvariablar:
+
+```{r fjern variabel}
+d_vld_fjern = d_reg %>%
+  select(-dato_ut) %>%
+  lag_valideringsdatasett(indvars)
+```
+
+```{r, echo = FALSE}
+lag_kable(d_vld_fjern)
+```
+
+Eventuelt kan ein gjera det motsett, og velja dei variablane som *skal* vera 
+med, dersom det er enklare. Då må ein hugsa på å også ta med indeksvariablane:
+
+```{r vel ut variablar}
+d_vld_fjern2 = d_reg %>%
+  select(pasid, dato_inn, vekt, hogd) %>%
+  lag_valideringsdatasett(indvars)
+```
+
+```{r, echo = FALSE}
+lag_kable(d_vld_fjern2)
+```
+
+#### Bruk av logikk til å fjerna unødvendige rader
+
+Det finst eksempel på at visse variablar berre gjev meining å sjekka dersom 
+ein annan variabel har ein viss verdi. Det kan til dømes vera at ein har 
+variabelen gravid, som berre gjev meining å sjekka dersom kjønn er kvinne. 
+Slike rader kan ein fjerna frå valideringsdatasettet på denne måten:
+
+```{r fjern rader med logikk}
+# Koplar tabellen med kjønn på valideringsdatasettet
+d_vld_med_kjonn = d_vld %>%
+  left_join(d_pas, by = c("pasid"))
+
+# Filtrerer vekk unødvendige rader
+d_vld_logikk = d_vld_med_kjonn %>%
+  filter(!(kjonn == "M" & vld_varnamn == "gravid"))
+```
+
+```{r, echo = FALSE}
+lag_kable(d_vld_logikk)
+```
+
+### Utval av visse variabelverdiar
+
+Ein kan avgrense uttrekket til visse verdiar for éin eller fleire variablar,
+til dømes dersom ein berre skal kontrollera data på eitt eller fleire 
+særskilde sjukehus. Dette kan gjerast ved å starta med å filtrera på ynskja 
+verdiar:
+
+```{r filtrer sjukehus}
+d_vld_bergen = d_reg_full %>%
+  filter(sjukehus == "Bergen") %>%
+  select(-kjonn, -sjukehus) %>%
+  lag_valideringsdatasett(indvars)
+```
+
+```{r, echo = FALSE}
+lag_kable(d_vld_bergen)
+```
+
+
 
 #### Prioritering av visse variabelverdiar
 
