@@ -109,8 +109,8 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
   # Beregne utdata
   d_sammendrag = d_ki_ind %>%
     summarise(
-      ki_teller = as.integer(sum(ki_krit_teller, na.rm = TRUE)), # QA fixme: Unødvendig as.integer()-kall
-      ki_nevner = as.integer(sum(ki_krit_nevner)), # QA fixme: Unødvendig as.integer()-kall
+      ki_teller = sum(ki_krit_teller, na.rm = TRUE),
+      ki_nevner = sum(ki_krit_nevner),
       est = ki_teller / ki_nevner
     ) %>%
     select(!!!groups(d_ki_ind), est, ki_teller, ki_nevner) # QA fixme: Bruk group_cols()
