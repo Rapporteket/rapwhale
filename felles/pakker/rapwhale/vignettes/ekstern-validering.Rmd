@@ -502,6 +502,7 @@ Dersom ein berre skal sjå på eit utval av variablane, kan ein gjera dette ved
 tilleggsvariablar:
 
 ```{r fjern variabel}
+indvars = c("pasid", "dato_inn")
 d_vld_fjern = d_reg %>%
   select(-dato_ut) %>%
   lag_valideringsdatasett(indvars)
@@ -555,7 +556,7 @@ verdiar:
 ```{r filtrer sjukehus}
 d_vld_bergen = d_reg_full %>%
   filter(sjukehus == "Bergen") %>%
-  select(-kjonn, -sjukehus) %>%
+  select(-sjukehus) %>%
   lag_valideringsdatasett(indvars)
 ```
 
@@ -596,7 +597,7 @@ kvart forløp det éin eller fleire av dei er trekt ut, her har me teke
 utgangspunkt i `d_vld_n`:
 
 ```{r samanhengande variablar}
-pasientar_biverk = d_vld_n %>%
+pasientar_biverk = d_vld %>%
   filter(vld_varnamn %in% c("biverk", "biverk_hovud", "biverk_mage", "biverk_fot")) %>%
   distinct(pasid, dato_inn)
 
@@ -604,7 +605,7 @@ d_pasientar_biverk = d_vld %>%
   filter(vld_varnamn %in% c("biverk", "biverk_hovud", "biverk_mage", "biverk_fot")) %>%
   right_join(pasientar_biverk, by = c("pasid", "dato_inn"))
 
-d_vld_n_med_biverk = full_join(d_vld_n, d_pasientar_biverk, by = names(d_vld_n))
+d_vld_n_med_biverk = full_join(d_vld, d_pasientar_biverk, by = names(d_vld))
 ```
 
 ```{r, echo = FALSE}
@@ -660,7 +661,7 @@ finna pasienten i pasientjournalen. Dette kan gjerast ved å kopla på igjen
 kolonnar frå registerdatasettet på valideringsdatasettet:
 
 ```{r legg til metadata}
-d_reg_metadata = select(d_reg_full, pasid, dato_inn, kjonn, sjukehus)
+d_reg_metadata = select(d_reg_full, pasid, dato_inn, sjukehus)
 d_vld_metadata = d_reg_metadata %>%
   inner_join(d_vld, by = c("pasid", "dato_inn"))
 ```
