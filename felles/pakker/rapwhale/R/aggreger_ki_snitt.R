@@ -105,7 +105,6 @@ aggreger_ki_snitt = function(d_ki_ind, alfa = 0.05) {
     stop("'ki_x' må være en numerisk verdi hvis 'ki_aktuell' er TRUE")
   }
 
-  # Husk å legge inn tester for dette tilfellet.
   konfint = function(x) {
     konfint_robust = possibly(
       ~ t.test(.x)$conf.int,
