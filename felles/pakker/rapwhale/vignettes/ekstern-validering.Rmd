@@ -354,7 +354,7 @@ d_vld %>%
 ```
 
 For å ikkje få for breie tabellar
-viser me berre nokre av kolonnane i dei vidare eksempela:
+viser me berre nokre av kolonnane i dei vidare eksempla:
 
 ```{r}
 d_vld_enkel = select(d_vld, pasid:vld_vartype)
@@ -413,7 +413,7 @@ men som samtidig sikrar
 tilfeldig rekkjefølgje på pasientane (som er viktig for validiteten)
 
 ```{r}
-set.seed(1)
+set.seed(1) # For reproduserbare «tilfeldige» trekkingar
 d_vld_utval_samla = d_vld_utval %>%
   group_by(pasid, dato_inn) %>% # Ev. bruk nest_by()
   nest() %>%
@@ -423,8 +423,12 @@ d_vld_utval_samla = d_vld_utval %>%
 d_vld_utval_samla
 ```
 
+Viss me heller berre vil ha eit *utval* av forløpa,
+endrar me berre `n`-verdien i `slice_sample()`.
 
-### Valideringsdatasett med datavariablar i fast rekkjefølgje
+
+
+### Variablar i fast rekkjefølgje
 
 Det er gjerne praktisk at datavariablane kjem i same
 rekkjefølgje for alle pasientane,
@@ -446,61 +450,25 @@ dataa frå same pasient samla.)
 
 
 
-### Alle datavariablar for eit tilfeldig utval pasientar
+### Tilfeldig utval av fast tal pasientar og variablar
 
-Dersom det er lite føremålstenleg å ha rader for same pasient på ulike stadar
-i valideringsdatasettet kan ein trekkja alle pasientane i tilfeldig rekkjefølgje
-og så ta med alle variablane for kvar pasient etter kvarandre. Dette kan gjerast 
-ved å køyra følgjande kode med valideringsdatasettet `d_vld`:
+Alt ovanfor kan sjølvsagt kombinerast.
+Viss me vil trekkja 5 forløp og 2 variablar per forløp,
+kan me gjera det slik:
 
-```{r pasientar tilfeldig rekkjefølgje}
-rekkjefolgje = sample(unique(d_vld$pasid))
-d_vld_tilfeldig_pas = arrange(d_vld, match(pasid, rekkjefolgje), dato_inn)
+```{r}
+set.seed(1) # For reproduserbare «tilfeldige» trekkingar
+n_forlop = 5 # Talet på forløp
+n_var = 2 # Talet på variablar per forløp
+d_vld_utval = d_vld_enkel %>%
+  group_by(pasid, dato_inn) %>%
+  slice_sample(n = n_var) %>%
+  nest() %>%
+  ungroup() %>% # Nødvendig for slice_sample()
+  slice_sample(n = n_forlop) %>%
+  unnest(data)
+print(d_vld_utval, n = Inf) # 10 rader
 ```
-
-```{r, echo = FALSE}
-lag_kable(d_vld_tilfeldig_pas)
-```
-
-#### Tilfeldig utval av n forløp eller pasientar
-
-For å trekkja ut n tilfeldige forløp køyrer ein følgjande kode med registerdata
-`d_reg` og valideringsdatasettet`d_vld`:
-
-```{r n forløp}
-n = 1
-uttrekk_forlop = select(d_reg, pasid, dato_inn) %>% # pasid og dato_inn er indeksvariablane
-  # bruk berre pasid dersom det skal veljast ut
-  # pasientar og ikkje forløp
-  sample_n(n)
-
-d_vld_n_forlop = semi_join(d_vld, uttrekk_forlop)
-```
-
-```{r, echo = FALSE}
-lag_kable(d_vld_n_forlop)
-```
-
-#### Tilfeldig utval av k variablar, og så tilfeldig utval av m forløp per variabel
-
-```{r k variablar m forløp}
-k = 2
-m = 2
-uttrekk_variablar = sample(unique(d_vld$vld_varnamn), k)
-d_vld_var_forlop = d_vld[c(), ]
-for (variabel in uttrekk_variablar) {
-  d_variabel = filter(d_vld, vld_varnamn == variabel)
-  uttrekk_forlop = select(d_variabel, pasid, dato_inn) %>%
-    sample_n(m)
-  uttrekk_variabel = semi_join(d_variabel, uttrekk_forlop)
-  d_vld_var_forlop = add_row(d_vld_var_forlop, uttrekk_variabel)
-}
-```
-
-```{r, echo = FALSE}
-lag_kable(d_vld_var_forlop)
-```
-
 
 
 
