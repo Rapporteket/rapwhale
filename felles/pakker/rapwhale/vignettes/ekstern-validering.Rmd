@@ -472,74 +472,64 @@ print(d_vld_utval, n = Inf) # 10 rader
 
 
 
-### Utval av variablar
+### Utval av variablar i ferdige valideringsdatasett
 
-Dersom ein berre skal sjå på eit utval av variablane, kan ein gjera dette ved
-å fjerna variablane som ikkje skal vera med, før ein kallar 
-`lag_valideringsdatasett()`. Dette kan ein gjera på same måte som ein fjernar 
-tilleggsvariablar:
+Dersom ein berre skal sjå på eit utval av variablane,
+kan me anten gjer dette *før* me lagar valideringsdatasettet
+(slik me gjorde med `sjukehus`-variabelen)
+eller ved filtrering etterpå.
+Viss me for eksempel ikkje vil ha med biverknadsvariablane i
+eit allereie laga valideringsdatasett,
+kan me fjerna dei slik:
 
 ```{r fjern variabel}
-indvars = c("pasid", "dato_inn")
-d_vld_fjern = d_reg %>%
-  select(-dato_ut) %>%
-  lag_valideringsdatasett(indvars)
+d_vld %>%
+  filter(!str_detect(vld_varnamn, "^biverk"))
 ```
 
-```{r, echo = FALSE}
-lag_kable(d_vld_fjern)
-```
 
-Eventuelt kan ein gjera det motsett, og velja dei variablane som *skal* vera 
-med, dersom det er enklare. Då må ein hugsa på å også ta med indeksvariablane:
-
-```{r vel ut variablar}
-d_vld_fjern2 = d_reg %>%
-  select(pasid, dato_inn, vekt, hogd) %>%
-  lag_valideringsdatasett(indvars)
-```
-
-```{r, echo = FALSE}
-lag_kable(d_vld_fjern2)
-```
 
 #### Bruk av logikk til å fjerna unødvendige rader
 
-Det finst eksempel på at visse variablar berre gjev meining å sjekka dersom 
-ein annan variabel har ein viss verdi. Det kan til dømes vera at ein har 
-variabelen gravid, som berre gjev meining å sjekka dersom kjønn er kvinne. 
-Slike rader kan ein fjerna frå valideringsdatasettet på denne måten:
+Nokre variablar gjev berre meining å sjekka
+dersom andre variablar har visse verdiar.
+Variabelen `gravid` treng ein for eksempel berre sjekka
+dersom pasienten er kvinne.
+
+Merk at informasjon om kjønn ikkje finst i valideringsdatasettet,
+så me hentar det frå eit anna datasett.
+(Ein slik operasjon kan vera nyttig i mange samanhengar,
+for eksempel for å hekta fødselsnummer på valideringsdatasett,
+slik at det vert lettare å finna pasienten i pasientjournalen.)
 
 ```{r fjern rader med logikk}
 # Koplar tabellen med kjønn på valideringsdatasettet
 d_vld_med_kjonn = d_vld %>%
   left_join(d_pas, by = c("pasid"))
 
-# Filtrerer vekk unødvendige rader
-d_vld_logikk = d_vld_med_kjonn %>%
-  filter(!(kjonn == "M" & vld_varnamn == "gravid"))
+# Filtrerer vekk rader som gjeld graviditet for «ikkje-kvinner» (inkl. NA-kjønn)
+d_vld_med_kjonn %>%
+  filter(!(vld_varnamn == "gravid" & kjonn != "kvinne"))
 ```
 
-```{r, echo = FALSE}
-lag_kable(d_vld_logikk)
+Logikken kan sjølvsagt skrivast på mange (ekvivalente) måtar, for eksempel:
+
+```{r}
+d_vld_med_kjonn %>%
+  filter(vld_varnamn != "gravid" | kjonn == "kvinne")
 ```
 
-### Utval av visse variabelverdiar
+Men ein kan lett gå seg bort i alle `!`-teikna og parentesane som trengst
+for å uttrykka seg.
+Me tilrår derfor å bruka `impl()`-funksjonen i `rapwhale`,
+som er ein enkel måte å uttrykka sanningsverdiane i utsegn på forma
+«A impliserer B» (altså «viss A, så B»).
+I vårt eksempel er logikken «viss me ser på gravidvariabelen,
+så må det vera for ei kvinne»:
 
-Ein kan avgrense uttrekket til visse verdiar for éin eller fleire variablar,
-til dømes dersom ein berre skal kontrollera data på eitt eller fleire 
-særskilde sjukehus. Dette kan gjerast ved å starta med å filtrera på ynskja 
-verdiar:
-
-```{r filtrer sjukehus}
-d_vld_bergen = d_reg_full %>%
-  filter(sjukehus == "Bergen") %>%
-  select(-sjukehus) %>%
-  lag_valideringsdatasett(indvars)
-```
-
-```{r, echo = FALSE}
-lag_kable(d_vld_bergen)
+```{r}
+d_vld_med_kjonn %>%
+  filter(impl(vld_varnamn == "gravid", kjonn == "kvinne"))
 ```
 
 
