@@ -580,63 +580,6 @@ d_vld_n_med_biverk = full_join(d_vld, d_pasientar_biverk, by = names(d_vld))
 lag_kable(d_vld_n_med_biverk)
 ```
 
-### Fornuftig rekkjefølgje
-
-Etter at ein har gjort eit tilfeldig utval kan det vera føremålstenleg å ha 
-radene i ei fornuftig rekkjefølgje. Under er det vist nokre eksempel på 
-sortering med utgangspunkt i `d_vld_n_med_biverk`.
-
-#### Sorter rader etter forløp
-
-```{r sorter forløp}
-d_vld_sort_forlop = arrange(d_vld_n_med_biverk, pasid, dato_inn)
-```
-
-```{r, echo = FALSE}
-lag_kable(d_vld_sort_forlop)
-```
-
-#### Sorter rader etter variablar
-
-```{r sorter variablar}
-var_rekkjefolgje = c(
-  "dato_ut", "vekt", "hogd", "biverk",
-  "biverk_hovud", "biverk_mage", "biverk_fot", "gravid"
-)
-d_vld_sort_var = arrange(d_vld_n_med_biverk, match(vld_varnamn, var_rekkjefolgje))
-```
-
-```{r, echo = FALSE}
-lag_kable(d_vld_sort_var)
-```
-
-#### Sorter rader etter forløp og variablar
-
-```{r sorter forløp og variablar}
-d_vld_sort_forlop_var = d_vld_n_med_biverk %>%
-  arrange(pasid, dato_inn, match(vld_varnamn, var_rekkjefolgje))
-```
-
-```{r, echo = FALSE}
-lag_kable(d_vld_sort_forlop_var)
-```
-
-### Ekstra kolonnar med informasjon
-
-Det kan vera nyttig å leggja til ekstra kolonnar i valideringsdatasettet, til 
-dømes metadata som fødselsdato, alder og kjønn som kan gjera det enklare å
-finna pasienten i pasientjournalen. Dette kan gjerast ved å kopla på igjen 
-kolonnar frå registerdatasettet på valideringsdatasettet:
-
-```{r legg til metadata}
-d_reg_metadata = select(d_reg_full, pasid, dato_inn, sjukehus)
-d_vld_metadata = d_reg_metadata %>%
-  inner_join(d_vld, by = c("pasid", "dato_inn"))
-```
-
-```{r, echo = FALSE}
-lag_kable(d_vld_metadata)
-```
 
 
 ## Lagring og lesing av valideringsdatasett
