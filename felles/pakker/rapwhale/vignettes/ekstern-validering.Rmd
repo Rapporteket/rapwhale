@@ -534,28 +534,6 @@ d_vld_med_kjonn %>%
 
 
 
-#### Prioritering av visse variabelverdiar
-
-I nokre tilfelle ynskjer ein å prioritera pasientar/forløp med visse 
-variabelverdiar, som til dømes ein viss diagnose. I eksempelregisteret vårt
-kan det tenkjast at ein vil prioritera pasientar med verdien `TRUE` på 
-`biverk_hovud`. I vårt enkle eksempel kan ein til dømes trekkja ut 2 tilfeldige 
-forløp med verdien `TRUE` på `biverk_hovud`, og 20 % blant resten. Dette kan 
-gjerast fylgjande måte:
-
-```{r prioritering variabelverdi}
-d1 = filter(d_reg, biverk_hovud == TRUE)
-d2 = setdiff(d_reg, d1)
-d1_uttrekk = sample_n(d1, size = 2)
-d2_uttrekk = sample_frac(d2, size = .2)
-d_vld_prioritert = bind_rows(d1_uttrekk, d2_uttrekk) %>%
-  lag_valideringsdatasett(indvars)
-```
-
-```{r, echo = FALSE}
-lag_kable(d_vld_prioritert)
-```
-
 #### Samanhengande variablar
 
 Visse variablar kan vera samanhengande ved at dei liknar eller er avhengig av 
@@ -578,6 +556,30 @@ d_vld_n_med_biverk = full_join(d_vld, d_pasientar_biverk, by = names(d_vld))
 
 ```{r, echo = FALSE}
 lag_kable(d_vld_n_med_biverk)
+```
+
+
+
+#### Prioritering av visse variabelverdiar
+
+I nokre tilfelle ynskjer ein å prioritera pasientar/forløp med visse 
+variabelverdiar, som til dømes ein viss diagnose. I eksempelregisteret vårt
+kan det tenkjast at ein vil prioritera pasientar med verdien `TRUE` på 
+`biverk_hovud`. I vårt enkle eksempel kan ein til dømes trekkja ut 2 tilfeldige 
+forløp med verdien `TRUE` på `biverk_hovud`, og 20 % blant resten. Dette kan 
+gjerast fylgjande måte:
+
+```{r prioritering variabelverdi}
+d1 = filter(d_reg, biverk_hovud == TRUE)
+d2 = setdiff(d_reg, d1)
+d1_uttrekk = sample_n(d1, size = 2)
+d2_uttrekk = sample_frac(d2, size = .2)
+d_vld_prioritert = bind_rows(d1_uttrekk, d2_uttrekk) %>%
+  lag_valideringsdatasett(indvars)
+```
+
+```{r, echo = FALSE}
+lag_kable(d_vld_prioritert)
 ```
 
 
