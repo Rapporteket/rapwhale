@@ -618,7 +618,7 @@ d2 = setdiff(d_reg, d1)
 d1_uttrekk = sample_n(d1, size = 2)
 d2_uttrekk = sample_frac(d2, size = .2)
 d_vld_prioritert = bind_rows(d1_uttrekk, d2_uttrekk) %>%
-  lag_valideringsdatasett(indvars)
+  lag_valideringsdatasett(indvars = c("pasid", "dato_inn"))
 ```
 
 ```{r, echo = FALSE}
