@@ -159,6 +159,13 @@ Så kan me rekna ut statistikk som seier kor korrekte dataa er,
 og til slutt kan me bruka statistikken i tabellar og
 figurar i valideringsrapportar.
 
+Valideringsdatasetta har me i R implementert som vanlege
+datarammer/tibble-objekt:
+
+```{r}
+d_vld
+```
+
 
 ### Samanlikning av interne og eksterne verdiar
 
