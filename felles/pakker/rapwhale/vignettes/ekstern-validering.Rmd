@@ -547,7 +547,7 @@ I nokre tilfelle kan samanhengen mellom variablane vera meir kompleks.
 For eksempel fyller ein ut biverknads-«undervariablane»
 `biverk_hovud`, `biverk_mage` og `biverk_fot`
 viss og berre viss hovudvariabelen `biverk` er `TRUE`.
-Det har kanskje ikkje noko for seg å sjekka
+Det har ikkje noko for seg å sjekka
 `biverk_hovud` viss `biverk` er `FALSE`
 (gitt at innregistreringssystemet garanterer at ein
 ikkje kan registrera inkonsistente verdiar,
