@@ -630,65 +630,101 @@ print(d_vld_utval_endeleg, n = Inf)
 
 ## Lagring og lesing av valideringsdatasett
 
-### Dataformat og dataprogram for utfylling av valideringsdatasett
+### Eigna filformat og dataprogram for utfylling
 
-Formatet på valideringsdatasetta er utforma for
-å kunna brukast i ulike dataprogram/filformat.
-Ein står fritt til sjølv å velja kva format ein vil bruka
+Formatet på valideringsdatasetta er utforma slik
+at datasetta lett kan brukast i ulike dataprogram/filformat.
+Ein står fritt til sjølv å velja kva filformat ein vil bruka
 når ein skal fylla ut valideringsdatasetta
 med verdiane frå den eksterne kjelda.
-Men me tilrår sterkt å bruka anten eit databaseverktøy
+
+Me tilrår likevel sterkt å bruka anten eit databaseverktøy
 eller eit statistikkprogram *som sikrar dataintegriteten*.
-Programma bør sikra at ein for eksempel ikkje (ved ein feil)
-kan skriva inn tekst eller tal i ein kolonne som berre tek datoar.
+Programmet bør sikra at ein for eksempel ikkje ved ein feil
+skriv inn tekst eller tal i ein kolonne som berre tek datoar.
 
 Både SPSS og Stata er statistikkprogram som er godt eigna.
 Me **frårår på det sterkaste** å bruka Microsoft Excel.
+Me viser her eit par eksempel på korleis ein kan lagra
+valideringsdatasettet vårt til SPSS-format.
 
 
-### Korleis lagra til SPSS-format?
+### Fullstendig valideringsdatasett til SPSS-format
 
-For å lagra valideringsdatasettet som SPSS-format kan ein bruka `write_sav()` 
+For å lagra valideringsdatasettet som SPSS-format kan me bruka `write_sav()` 
 frå `haven`-pakken:
 
 ```{r eval=FALSE}
-# Definerer og eventuelt lagar mappe for lagring
-mappe = "H:\\Valideringsdata"
-dir.create(mappe, showWarnings = FALSE, recursive = TRUE)
+# Definerer mappe og filnamn for lagring
+mappe_vld = "h:\\valideringsdata\\"
+filnamn = "valideringsdatasett.sav"
+filadresse = paste0(mappe_vld, filnamn)
 
-# Lagar filnamn og -adresse
-filadresse = paste0(mappe, "\\valideringsdatasett.sav")
+# Opprett mappa (om ho ikkje finst frå før)
+dir.create(mappe_vld, showWarnings = FALSE, recursive = TRUE)
 
-# Lagrar fila på SPSS-format
-haven::write_sav(d_vld, filadresse)
+# Lagra valideringsdatasett på SPSS-format
+library(haven)
+write_sav(d_vld, filadresse)
 ```
 
-#### Éi fil per sjukehus
+For lesing av ferdigredigerte valideringsfiler
+brukar me tilsvarande `read_spss()`.
 
-Ofte vil det vera føremålstenleg å ha ei eiga fil for kvart sjukehus. Då må ein 
-fyrst kopla på igjen kolonnen som seier kva sjukehus rada gjeld for. Korleis 
-ein kan gjera dette er forklart i avsnitt xxx. Her tek me utgangspunkt i 
-`d_vld_metadata`, definert i same avsnitt, for eit eksempel på å lagra éi fil
-per sjukehus:
+
+### Eitt valideringsdatasett per sjukehus til SPSS-format
+
+Når me reiser rundt og validerer,
+gjer me det jo for eitt og eitt sjukehus,
+så ofte vil det vera føremålstenleg å ha éi fil per sjukehus.
+Me har gjerne sjukehusinfo for kvart forløp lagra i eit separat datasett:
+
+```{r, include=FALSE}
+d_forlopsinfo = distinct(d_reg_full, pasid, dato_inn, sjukehus)
+```
+
+```{r}
+d_forlopsinfo
+```
+
+Me må først kopla sjukehusnamna på valideringsdatasettet.
+Me genererer så filnamn basert på desse namna.
+For å få meir maskinvennlege filnamn brukar me i dette eksempelet
+`to_any_case()`-funksjonen i `snakecase`-pakken.
+(Slik me brukar han,
+vil han for eksempel gjera om `"Helse Førde"` til `"helse_forde"`.)
+Til slutt er det berre å dela opp valideringsdatasettet i eitt datasett
+per sjukehus og lagra desse datasetta i separate filer:
 
 ```{r eval=FALSE}
-# Splittar valideringsdatasettet per sjukehus
-d_vld_gruppert = group_by(d_vld_metadata, sjukehus)
-sjukehus_namn = group_keys(d_vld_gruppert)[[1]]
-d_vld_splitta = d_vld_gruppert %>%
-  group_split()
+# Hekt på sjukehusnamn
+d_vld_med_sjukehus = d_vld %>%
+  left_join(d_forlopsinfo, by = c("pasid", "dato_inn"))
 
-# Lagar filadresse per sjukehus
-filadresser = paste0(mappe, "\\", sjukehus_namn, ".sav")
+# Generer maskinvennlege filadresser
+library(snakecase)
+d_vld_med_sjukehus = d_vld_med_sjukehus %>%
+  mutate(
+    filnamn = paste0(to_any_case(sjukehus, transliterations = "Latin-ASCII"), ".sav"),
+    filadresse = paste0(mappe_vld, filnamn)
+  )
 
-# Lagrar filer på SPSS-format
-purrr::pwalk(
-  list(
-    data = d_vld_splitta,
-    path = filadresser
-  ),
-  haven::write_sav
-)
+# Del opp datasettet i eitt per sjukehus/filamn,
+# og lagra dei som separate filer
+d_vld_med_sjukehus %>%
+  split(.$filadresse) %>%
+  iwalk(write_sav)
+```
+
+Me kan bruka tilsvarande metodikk viss me vil ha éi fil
+per årstal, per månad eller per sjukehus per månad.
+Når me så har fylt ut valideringsdatasetta i SPSS,
+kan me enkelt lasta dei alle inn *til eitt stort datasett* slik:
+
+```{r eval = FALSE}
+filadresser = list.files(mappe_vld, pattern = "\\.sav$", full.names = TRUE)
+d_vld_utfylt = filadresser %>%
+  map_dfr(read_sav)
 ```
 
 
