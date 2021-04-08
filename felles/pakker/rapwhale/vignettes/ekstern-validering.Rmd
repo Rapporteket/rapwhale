@@ -771,110 +771,13 @@ forventingsrett, og konfidensintervalla der kan ikkje brukast.
 
 <!-- Behovskartlegging
 
-*I funksjonen bør det legges til mulighet for å hente ut et visst antall pasienter i utvalget (nå tas uansett alle sammen med per SPSS-fil, som er uoverkommelig for mange registre).
--> sample_frac() elns.
-
-*Vi trenger altså en fil for hvert av de 6 angitte sykehusene, med f.eks. 100 pasienter med de 4 diagnosegruppene.
--> funksjon for lagring()???
-
-*Viktig at RA-pasienter med diagnose 2014 eller seinere prioriteres (minst 50 pasienter der det finnes).
--> potensielt statistisk problematisk? viss sannsynet for å trekkast ut er avhengig av nokre variabelverdiar, for eksempel diagnose. uproblematisk ved *stratifisert* analyse eller ved rett justering.
--> d1 = filter(diag == "ra")
-    d2 = filter(diag != "ra") ## antar ingen NA-ar
-    d1_utval = sample_n(d1, n = 50)
-    d2_utval = sample_frac(d2, frac = .2)
-    d_utval = bind_rows(d1_utval, d2_utval)
-    ## (i staden for d_utval = sample_frac(d, frac = .2)
-
-*Når det gjelder diagnose og diagnosedato skal vi ikke undersøke om disse er korrekt registrert, for her er det mye skjønn og det er OK. Vi trenger dette til å se på en del av de senere punktene. Derfor ønsker vi at diagnose og diagnosedato som er registrert i NorArtritt skal ligge i filen som vi skal fylle inn slik at vi kan sammenholde.
-For de andre variablene trenger vi ikke å ha NorArtritt dataene i filen."
--> left_join(d_utval, select(d_regdata, utvalde_kolonnar, ...))
-
-*1) Hvis de henter tilfeldige variabler per pasient, ala SOReg-løsningen, kunne det vært slik at hvis en variabel som ble plukket ut var fra et sett med lignende variabler, så ble alle variablene i settet hentet for pasienten (eksemepelet var en rekke avkrysningsbokser for symptomer - hvis en variabel for et symptom, la oss si hodepine, blir trukket ut av variabel-rouletten, så ville de at variabelen for kvalme, kløe og fotsopp også ble med på den pasienten)
--> d_utval %>%
-  left_join(d_regdata) %>%
-  group_by(pasid) %>%
-  filter(!(variabel1 != x, varnamn %in% c(variabel2, variabel3 osv.))) ## noko sånt ... :9
-
-*2) At man hadde logikker med, at hvis pasienten har verdien er mann = ja så får ikke denne pasienten variabelen for graviditet med i sitt variabelsett. SOReg ville ha noe lignende - at man ikke fikk variabelen for 6 vekers vekt når pasienten fikk operasjonen sin i går.
--> d_vld_med_md %>%
-  filter(!(kjonn="mann" && varnamn == "gravid))
-
-*Tilfeldig utval av n pasientar.
--> 
-  akt_pasientar = select(d_regdata, pasid, dato_inn) %>%
-    ## ev. distinct() %>% ## viss det er pasientar og ikkje forløp me vil ha
-    sample_n(n) %>%
-  semi_join(d_utval, akt_pasientar)
-
-*Tilfeldig utval av k variablar, og så tilfeldig utval av m pasientar per variabel.
-->
-  akt_variablar = sample(d_utval$varnamn, k)
-  filter(d_utval, varnamn %in% akt_variablar)
-
-*Variablane skal visast i ei fornuftig rekkjefølgje (sortert etter pasient,
-eller etter ei spesiell variabelrekkjefølgje)
-->
-  ## Pasientar
-  arrange(d_utval, pasid, dato_inn)
-
-  ## Variabel
-  var_rekkjefolgje = c("hogd", "vekt", "dato_ut")
-  arrange(d_utval, !!match(varnamn, var_rekkjefolgje)) ## ??? Noko sånt, jaffal
-  ## Men det lettaste er å ha variablane i god rekkjefolgje i utgangspunktet
-
-Ev. annan funksjonalitet i opphavleg funksjon?
-->
-  ?
-  
-  Frå https://www.kvalitetsregistre.no/sites/default/files/2021-02/Erfaringer%20med%20valideringsstudie%20for%20SOReg-N.pdf finn me følgjande eksempel:
-  
-*«Registeret ble enige med
-statistikerne om å trekke et overkommelig antall, tilfeldige variabler
-per operasjon (operasjon = omtrent det samme som pasient, men
-noen få pasienter hadde hatt reoperasjoner). Planen var i
-utgangspunktet 7 tilfeldige variabler per operasjon.
-[...] En erfaring var at å finne mange variabler for en pasient var lettere
-enn å åpne ny journal for å finne verdiene til en ny pasient. På bakgrunn av
-dette økte en antall tilfeldige valgte variabler til 10 variabler per pasient.»
-Bør ha eksempel på korleis ein gjer dette.
-
-*Eksempel på at ein legg til ekstra metadata (eks. fødselsdato, alder og kjønn)
-for å lettare finna pasienten i pasientjournalen.
-
-*Eksempel på variabelrekkjefølgje:
-
-*«Rekkefølgene på radene var basert på en «naturlig» rekkefølge (for
-eksempel kom baseline-variabler før oppfølgingsvariabler), slik at det
-skulle være enklere og raskere å finne frem til informasjonen i
-pasientjournalen.»
-
-Eksempel på:
-
-*«Videre viste det seg at mange av variablene var uaktuelle for enkelte pasienter.
-Det var ikke aktuelt å se på 1-års-vekt til pasienter som nylig hadde hatt sin
-operasjon og 1-års-oppfølging ikke var aktuelt enda. På bakgrunn av dette
-kunne statistikere legge til i datasettet at variabler som gjaldt målinger på 6-
-ukers og 1-års oppfølging bare dukket opp for pasienter som var aktuelle for
-disse oppfølgingene.»
-
 Eige kapittel om statistikk, med råd om å bruka survey-pakken
 og lesa ei survey-boka. Og SSBs notat som ulike samplingsmåtar?
-
   
   Laging av eigne samanlikningfunksjonar (eiga avansert-kapittel).
   Og så må det stå om korleis standard samanlikningsfunksjon fungerer
   (spesielt om korleis handterer NA-verdiar).
   
-Frå NORIC og AblaNor:
-Me ønsker 
-*-	at det skal vera mogleg å bestemma kva variabler som skal kontrollerast (til dømes dersom me veit at det er mykje feil i nokre felt vil me heller kontrollera dei felta enn tilfeldig utvalde variablar)
-*-	å kunne avgrensa kor mange variabler som skal trekkjast ut + antal pasientar (Dersom prosjektet vert for stort er det vanskelig å finna ressursane til å gjennomføra det)
-*-	at det er mogleg å avgrensa til utvalde sjukehus. (Til dømes dersom me veit at det er mykje feil i Stavanger kan me ha mål om å forbetra kvaliteten på innregistreringa der)
--	ein mal på korleis ein skal registrera samanlikningane ein gjer (Excel ark ein kan fylla inn i? Eller anna løysing? )
--	ein mal/døme på ferdig rapport. Til dømes flytskjema, oppteljingar per pasient/variabel med andel like/ulike registreringar, figurar 
--	gjerne ein halvautomatisert rapport. Me bruker rmd-format og tykkjer det fungerer fint. Kanskje ei rmd-fil me kan fylla parametre inn i kunne vore ein ide? Til dømes at me får første og siste registrering, dato for rapport, figurar, tabellar, overskrifter osv., så fyller me sjølve inn tekst og kompletterer ved behov. 
-
 Sjå tekst og lenkjer på https://www.kvalitetsregistre.no/korrekthet
 Verdt å merka seg:
 *«For kontinuerlige variabler (eksempelvis høyde eller vekt) bør man også
