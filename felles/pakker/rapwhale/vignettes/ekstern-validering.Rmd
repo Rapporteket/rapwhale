@@ -586,7 +586,7 @@ vil me òg validera dei andre biverknadsvariablane, altså dei for
 hovud- og fotbiverknadar samt den generelle biverknadsvariabelen.
 
 Det er fleire måtar å få dette til på.
-Her er eit eksempel der me
+Her er eit eksempel der me,
 i staden for å bruka `slice_sample()` til å filtrera vekk rader *direkte*,
 først lagar ein «inklusjonsvariabel» som seier om den aktuelle rada
 skal takast med (inkluderast) i valideringsdatasettet.
