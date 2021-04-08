@@ -149,7 +149,7 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
   plot = rlang::eval_bare(rlang::expr(qic(
     data = d, y = !!qic_y, n = rlang::maybe_missing(!!qic_n), x = !!qic_x, chart = figtype,
     title = tittel, xlab = x_navn, ylab = y_navn, show.labels = FALSE, x.period = periode, facets = ~ (!!qic_facet),
-    flip = skal_flippes
+    flip = skal_flippes, ...
   ))) +
     fjern_x() +
     fjern_y() +
