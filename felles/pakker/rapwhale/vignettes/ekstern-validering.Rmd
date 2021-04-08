@@ -630,6 +630,22 @@ print(d_vld_utval_endeleg, n = Inf)
 
 ## Lagring og lesing av valideringsdatasett
 
+### Dataformat og dataprogram for utfylling av valideringsdatasett
+
+Formatet på valideringsdatasetta er utforma for
+å kunna brukast i ulike dataprogram/filformat.
+Ein står fritt til sjølv å velja kva format ein vil bruka
+når ein skal fylla ut valideringsdatasetta
+med verdiane frå den eksterne kjelda.
+Men me tilrår sterkt å bruka anten eit databaseverktøy
+eller eit statistikkprogram *som sikrar dataintegriteten*.
+Programma bør sikra at ein for eksempel ikkje (ved ein feil)
+kan skriva inn tekst eller tal i ein kolonne som berre tek datoar.
+
+Både SPSS og Stata er statistikkprogram som er godt eigna.
+Me **frårår på det sterkaste** å bruka Microsoft Excel.
+
+
 ### Korleis lagra til SPSS-format?
 
 For å lagra valideringsdatasettet som SPSS-format kan ein bruka `write_sav()` 
