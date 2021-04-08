@@ -534,7 +534,7 @@ d_vld_med_kjonn %>%
 
 
 
-#### Samanhengande variablar
+#### Logikk basert på fleire variablar
 
 I nokre tilfelle kan samanhengen mellom variablane vera meir kompleks.
 For eksempel fyller ein ut biverknads-«undervariablane»
@@ -570,35 +570,59 @@ nrow(d_vld_utval_endeleg)
 ```
 
 
-Men korleis kan me sikra at me ikkje prøver å validera unødvendige verdiar?
-Her er tre løysingar:
+#### Logikk basert på faste variabelsett
 
-- Ignorer heile problemstillinga.
-- Trekk tilfeldige rader/målingar som før,
-  men sjå vekk frå undervariablane dersom
-  hovudvariabelen ikkje er `TRUE`.
-- Behandla variablane som eit «sett».
+Nokre gongar heng eit sett variablar så sterkt saman
+at me vil sjå på / validera alle dersom me ser på minst éin av dei.
+Viss me for eksempel for eit forløp skal validera variabelen for magebiverknadar,
+vil me òg validera dei andre biverknadsvariablane, altså dei for
+hovud- og fotbiverknadar samt den generelle biverknadsvariabelen.
 
-Visse variablar kan vera samanhengande ved at dei liknar eller er avhengig av 
-kvarandre, som til dømes biverknadvariablane i eksempelregisteret vårt. Det 
-kan vera føremålstenleg å inkludera alle slike samanhengande variablar for 
-kvart forløp det éin eller fleire av dei er trekt ut, her har me teke 
-utgangspunkt i `d_vld_n`:
+Det er fleire måtar å få dette til på.
+Her er eit eksempel der me
+i staden for å bruka `slice_sample()` til å filtrera vekk rader *direkte*,
+først lagar ein «inklusjonsvariabel» som seier om den aktuelle rada
+skal takast med (inkluderast) i valideringsdatasettet.
+Dette mogleggjer meir avansert vidarebehandling,
+der verdien til inklusjonsvariabelen kan avhenga av fleire rader:
 
 ```{r samanhengande variablar}
-pasientar_biverk = d_vld %>%
-  filter(vld_varnamn %in% c("biverk", "biverk_hovud", "biverk_mage", "biverk_fot")) %>%
-  distinct(pasid, dato_inn)
+# Viss minst éin av desse variablane inngår i valideringsdatasettet
+# for eit forløp, så skal alle gjera det
+varnamn_biverk = c("biverk", "biverk_hovud", "biverk_mage", "biverk_fot")
 
-d_pasientar_biverk = d_vld %>%
-  filter(vld_varnamn %in% c("biverk", "biverk_hovud", "biverk_mage", "biverk_fot")) %>%
-  right_join(pasientar_biverk, by = c("pasid", "dato_inn"))
+# Skal bruka indeksvariablane fleire gongar, så lagrar dei
+# for enkelheits skuld som ein eigen variabel
+indeksvar = quos(pasid, dato_inn)
 
-d_vld_n_med_biverk = full_join(d_vld, d_pasientar_biverk, by = names(d_vld))
-```
+set.seed(57)
+d_vld_utval_utkast = d_vld_enkel %>%
+  group_by(!!!indeksvar) %>%
+  mutate(inkluder = row_number() %in% sample(row_number(), 2)) # To verdiar per forløp
+filter(d_vld_utval_utkast, inkluder)
 
-```{r, echo = FALSE}
-lag_kable(d_vld_n_med_biverk)
+# Generell hjelpefunksjon for å oppdatera inklusjonsstatus,
+# der denne vert sett til TRUE for alle variablane med namn
+# i «varnamn_gruppe» dersom minst éin av dei har
+# inklusjonsstatus TRUE. Er meint å køyrast på grupperte datasett.
+oppdater_inklusjonsstatus = function(inkluder, vld_varnamn, varnamn_gruppe) {
+  er_variabel_i_gruppa = vld_varnamn %in% varnamn_gruppe
+  if (any(inkluder[er_variabel_i_gruppa])) {
+    inkluder[er_variabel_i_gruppa] = TRUE
+  }
+  inkluder
+}
+
+# Ta med alle biverknadsrader dersom minst éi er teken med (per forløp)
+d_vld_utval_utkast = d_vld_utval_utkast %>%
+  group_by(!!!indeksvar) %>%
+  mutate(inkluder = oppdater_inklusjonsstatus(inkluder, vld_varnamn, !!varnamn_biverk))
+
+# Fjern alle ikkje-inkluderte rader
+d_vld_utval_endeleg = d_vld_utval_utkast %>%
+  filter(inkluder) %>%
+  select(-inkluder)
+print(d_vld_utval_endeleg, n = Inf)
 ```
 
 
