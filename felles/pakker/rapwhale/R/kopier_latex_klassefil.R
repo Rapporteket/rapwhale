@@ -16,6 +16,7 @@
 #' Dersom `texmappe = NULL` vert klassefila kopiert til TeX Live-mappa
 #' `C:/Users/brukarnamn/texmf/tex/latex/kvalreg/`.
 #' Elles vert ho kopiert til den oppgjevne mappa `texmappe`.
+#' Dersom mappa ikkje finst finst frå før vert ho oppretta.
 #'
 #' @export
 #'
