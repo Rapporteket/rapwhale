@@ -153,6 +153,30 @@ test_that("Funksjonen returnerer verdier for alle grupper i inndata, selv de gru
   expect_identical(aggreger_ki_prop(d_grupper_uten_innhold), svar_uten_innhold)
 })
 
+test_that("Funksjonen returnerer en tom ugruppert tibble med riktige kolonner hvis inndata er gruppert med null rader", {
+  d_gruppert_tom = tibble::tibble(
+    sykehus = c("A", "B", "C"),
+    ki_krit_teller = c(TRUE, TRUE, TRUE),
+    ki_krit_nevner = c(TRUE, TRUE, TRUE)
+  ) %>%
+    group_by(sykehus) %>%
+    filter(is.na(sykehus))
+
+  svar_tom = tibble::tibble(
+    sykehus = factor(),
+    est = numeric(),
+    ki_teller = integer(),
+    ki_nevner = integer(),
+    konfint_nedre = numeric(),
+    konfint_ovre = numeric()
+  )
+
+  expect_identical(
+    aggreger_ki_prop(d_gruppert_tom),
+    svar_tom
+  )
+})
+
 
 test_that("Funksjonen gir forventet resultat", {
   d_25 = tibble::tibble(
