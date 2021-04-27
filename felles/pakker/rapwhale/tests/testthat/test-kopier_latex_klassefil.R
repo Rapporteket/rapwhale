@@ -1,5 +1,12 @@
+tempmappe = tempdir()
+kopier_latex_klassefil(tempmappe)
+klassefil_adresse = paste0(tempmappe, "/kvalreg-rapport.cls")
+
 test_that("LaTeX-klassefila vert kopiert til rett mappe", {
-  tempmappe = tempdir()
-  kopier_latex_klassefil(tempmappe)
-  expect_true(file.exists(paste0(tempmappe, "/kvalreg-rapport.cls")))
+  expect_true(file.exists(klassefil_adresse))
+})
+
+test_that("Den kopierte fila har storleik større enn 0", {
+  klassefil_info = file.info(klassefil_adresse)
+  expect_true(klassefil_info$size > 0)
 })
