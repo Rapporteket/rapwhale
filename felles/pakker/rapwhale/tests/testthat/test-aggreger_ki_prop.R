@@ -155,12 +155,11 @@ test_that("Funksjonen returnerer verdier for alle grupper i inndata, selv de gru
 
 test_that("Funksjonen returnerer en tom ugruppert tibble med riktige kolonner hvis inndata er gruppert med null rader", {
   d_gruppert_tom = tibble::tibble(
-    sykehus = c("A", "B", "C"),
-    ki_krit_teller = c(TRUE, TRUE, TRUE),
-    ki_krit_nevner = c(TRUE, TRUE, TRUE)
+    sykehus = factor(),
+    ki_krit_teller = logical(),
+    ki_krit_nevner = logical()
   ) %>%
-    group_by(sykehus) %>%
-    filter(is.na(sykehus))
+    group_by(sykehus)
 
   svar_tom = tibble::tibble(
     sykehus = factor(),

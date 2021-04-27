@@ -118,7 +118,24 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
     ungroup()
 
   # Legg til konfidensintervall
-  konfint = binom::binom.wilson(d_sammendrag$ki_teller, d_sammendrag$ki_nevner, conf.level = 1 - alfa)
+  konfint_robust = function(x) {
+    konf = possibly(~ binom::binom.wilson(d_sammendrag$ki_teller,
+      d_sammendrag$ki_nevner,
+      conf.level = 1 - alfa
+    ),
+    otherwise = data.frame(
+      method = NA_character_,
+      x = NA_integer_,
+      n = NA_integer_,
+      mean = NA_real_,
+      lower = NA_real_,
+      upper = NA_real_
+    )
+    )
+    konf(x)
+  }
+
+  konfint = konfint_robust()
   d_sammendrag$konfint_nedre = konfint$lower
   d_sammendrag$konfint_ovre = konfint$upper
 
