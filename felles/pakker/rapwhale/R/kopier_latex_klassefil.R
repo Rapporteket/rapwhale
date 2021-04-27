@@ -32,10 +32,12 @@ kopier_latex_klassefil = function(texmappe = NULL) {
 
   dir.create(texmappe, showWarnings = FALSE, recursive = TRUE)
 
-  rapwhale_mappe = find.package("rapwhale")
+  klassefil_adresse = system.file("extdata", "kvalreg-rapport.cls",
+    package = "rapwhale"
+  )
 
   invisible(file.copy(
-    from = paste0(rapwhale_mappe, "/extdata/kvalreg-rapport.cls"),
-    to = texmappe, overwrite = TRUE, copy.date = TRUE
+    from = klassefil_adresse, to = texmappe,
+    overwrite = TRUE, copy.date = TRUE
   ))
 }
