@@ -25,5 +25,17 @@
 #' texmappe = tempdir()
 #' kopier_latex_klassefil(texmappe)
 kopier_latex_klassefil = function(texmappe = NULL) {
+  if (is.null(texmappe)) {
+    texmappe_rot = system2("kpsewhich", "-var-value=TEXMFHOME", stdout = TRUE)
+    texmappe = paste0(texmappe_rot, "/tex/latex/kvalreg/")
+  }
 
+  dir.create(texmappe, showWarnings = FALSE, recursive = TRUE)
+
+  rapwhale_mappe = find.package("rapwhale")
+
+  invisible(file.copy(
+    from = paste0(rapwhale_mappe, "/extdata/kvalreg-rapport.cls"),
+    to = texmappe, overwrite = TRUE, copy.date = TRUE
+  ))
 }
