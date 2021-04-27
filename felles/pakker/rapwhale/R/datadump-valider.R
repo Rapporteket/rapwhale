@@ -29,7 +29,8 @@ NULL
 #' lag regelsett
 #'
 #' @description
-#' `r lifecycle::badge("stable")`
+#' `r lifecycle::badge("maturing")`
+#'
 #' Funksjon som automatisk lager et regelsett basert på informasjon fra
 #' en kodebok. Brukes for å validere en datadump.
 #'
