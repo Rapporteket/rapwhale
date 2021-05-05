@@ -37,8 +37,10 @@ kopier_latex_klassefil = function(texmappe = NULL) {
     package = "rapwhale"
   )
 
-  invisible(file.copy(
+  file.copy(
     from = klassefil_adresse, to = texmappe,
     overwrite = TRUE, copy.date = TRUE
-  ))
+  )
+
+  invisible(texmappe)
 }
