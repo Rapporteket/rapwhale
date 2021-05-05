@@ -17,7 +17,7 @@
 #' `C:/Users/brukarnamn/texmf/tex/latex/kvalreg/`.
 #' Elles vert ho kopiert til den oppgjevne mappa `texmappe`.
 #' Dersom mappa ikkje finst finst frå før vert ho oppretta.
-#' Adressa til denne mappa vert returnert frå funksjonen usynleg.
+#' Adressa til denne mappa vert returnert frå funksjonen, usynleg.
 #'
 #' Dersom fila `kvalreg-rapport.cls` allereie finst i mappa det skal kopierast
 #' til, vert den skriven over.
