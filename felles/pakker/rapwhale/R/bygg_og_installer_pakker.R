@@ -29,6 +29,7 @@ bygg_og_installer_pakker = function(pakkemappe = "H:\\kvalreg\\felles\\pakker\\"
       quiet = stille
     )
     adresse_pakkefil = devtools::build(adresse_pakke, quiet = stille)
+    pkgload::unload(pakke, quiet = stille)
     devtools::install_local(adresse_pakkefil, dependencies = TRUE, quiet = stille)
   }
 }
