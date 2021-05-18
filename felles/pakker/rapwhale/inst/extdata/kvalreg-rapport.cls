@@ -48,17 +48,44 @@
    \ProcessOptions\relax
 \LoadClass{memoir}
 
-% Brukar LuaLaTeX, så for språkstøtte må me lasta
-% polyglossia-pakken, ikkje babel
-\RequirePackage{polyglossia}
+% Språkstøtte:
+% Fram til 2021 brukte me polyglossia-pakken for
+% språkstøtte, då den var utvikla for LuaLaTeX
+% (som me brukar), og babel-pakken støtta ikkje dette.
+% Men med TeX Live 2021 oppstod ein litt merkeleg feil
+% som gjorde at årsrapportane våre ikkje kunna
+% kompilerast når me brukte polyglossia *og* samtidig
+% brukte standardskrifta vår, Cambria. Feilen hadde
+% faktisk med luaotfload å gjera, ikkje polyglossia,
+% men bruk av polyglossia utløyste feilen. Sjå
+% https://tex.stackexchange.com/questions/594485/strange-error-when-compiling-document-with-cambria-font-using-lualatex-in-tex-li
+% for meir informasjon.
+%
+% Men for å få kompilerbare årsrapportar må me altså
+% *mellombels* unngå polyglossia-pakken. Me er derfor
+% tilbake til babel-pakken, som i mellomtida har fått
+% støtte for LuaLaTeX.
+%
+% Merk at polyglossia sine kommandoar for mellombels
+% skifte av språk i tekst (eks. \textenglish-kommandoen)
+% ikkje er tilgjengelege i babel, så me lagar ei
+% «fattigmannsløysing» (eigendefinerte kommandoar)
+% som brukar babel, for kompatibilitet med eksisterande
+% dokument.
+% 
+% fixme: Når TeX Live 2020 er tilgjengeleg,
+%        gå tilbake til polyglossia-løysinga,
+%        ved å revertera *heile* endringa som
+%        la inn denne kommentaren (ved hjelp
+%        av eigna/magisk SVN-/Git-kommando).
 \ifkvalreg@nynorsk
-  \setdefaultlanguage{nynorsk}
+  \RequirePackage[british,main=nynorsk]{babel}
 \else\ifkvalreg@bokmal
-  \setdefaultlanguage{norsk}
+  \RequirePackage[british,main=norsk]{babel}
 \else\ifkvalreg@british
-  \setdefaultlanguage{british}
+  \RequirePackage[main=british]{babel}
 \fi\fi\fi
-\setotherlanguages{english}
+\newcommand{\textenglish}[1]{\foreignlanguage{british}{#1}}
 \AtBeginDocument{%
   \lefthyphenmin=3
   \righthyphenmin=3
