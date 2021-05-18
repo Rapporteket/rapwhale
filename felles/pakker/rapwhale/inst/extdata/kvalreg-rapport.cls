@@ -451,6 +451,7 @@
 % Start forsida
 \begin{titlingpage}
 \begingroup
+\sffamily\lettskrift
 \null % For å unngå at tekst på neste side kjem med her.
 
 % Logo oppe til høgre
@@ -461,35 +462,36 @@
 \fi
 
 % Farga boks nede på forsida
-\begin{textblock}{14}[0,0](1,10)%
+% fixme: I (TeX Live) 2021 er det ikkje lenger farga boks,
+%        grunna problem med farga tekst og
+%        luacolor (sjå òg kommentar for draftwatermark).
+%        Problemet kjem kanskje frå https://github.com/ho-tex/luacolor/issues/4
+%        Har derfor ei nødløysing med berre ein vassrett strek.
+%        Når problemet med luacolor er fiksa (TeX Live 2022?),
+%        reverter denne endringa, og gå tilbake gammal forside
+%        (eller helst lag ei forside som faktisk er fin!).
+\begin{textblock}{12.6}[0,0](1.7,11)%
 \noindent\begin{tikzpicture}
-\node[fill=AltCol,outer sep=0pt,inner sep=0pt] (bcbox)%
-{
-\begin{minipage}{\textwidth}{%
-\hfill\vspace*{0.33\paperheight}%
-}
-\end{minipage}
-};
+\draw[draw=PrimCol, line width=.25cm, line cap=rect] (0,0) -- (\linewidth-\pgflinewidth,0);%
 \end{tikzpicture}
 \end{textblock}
 
 % Tittel og undertittel i farga boks
-\begin{textblock}{13}[0,0](1.7,10.5)
-\sffamily
-\lettskrift\fontsize{50}{53}\selectfont
-\raggedright\textcolor{white}{\@tittel\\\@undertittel}
+\begin{textblock}{14}[0,0](1.7,11.4)
+\fontsize{38}{41}\selectfont
+\raggedright\@tittel\\\@undertittel
 \end{textblock}
 
 % Namn på register oppe til høgre
 \begin{textblock}{11}[1,1](14,7.5) % Tittel
-\fontsize{40}{43}\selectfont
+\fontsize{45}{48}\selectfont
 \raggedleft
 \@registernamn
 \end{textblock}
 
 % Dagens dato rett etter registernamnet
-\begin{textblock}{10}[1,0](14,7.8) % Dato
-\raggedleft\Large\itshape%
+\begin{textblock}{10}[1,0](14,7.9) % Dato
+\raggedleft\LARGE\itshape%
 \today
 \end{textblock}
 \endgroup
