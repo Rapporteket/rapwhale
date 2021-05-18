@@ -173,7 +173,8 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
     "Skjult variabel", "tekst",
     "Tallvariabel", "numerisk",
     "Tidsvariabel", "kl",
-    "TIMESTAMP", "dato_kl"
+    "TIMESTAMP", "dato_kl",
+    "Dynamisk Listevariabel", "tekst"
   )
 
   # Stopp viss det dukkar opp variabeltypar me ikkje kjenner til
@@ -450,7 +451,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
   # Les inn datasettet
   kol_typar = str_c(spek_innlesing$csv_bokstav, collapse = "")
   oqr_lokale = readr::locale(
-    decimal_mark = ".", grouping_mark = "",
+    decimal_mark = ",", grouping_mark = "",
     date_format = "%Y-%m-%d", time_format = "%H:%M:%S",
     tz = "Europe/Oslo"
   ) # Vert brukt både her og seinare
