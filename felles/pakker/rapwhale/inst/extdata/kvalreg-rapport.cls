@@ -73,7 +73,7 @@
 % som brukar babel, for kompatibilitet med eksisterande
 % dokument.
 % 
-% fixme: Når TeX Live 2020 er tilgjengeleg,
+% fixme: Når TeX Live 2022 er tilgjengeleg,
 %        gå tilbake til polyglossia-løysinga,
 %        ved å revertera *heile* endringa som
 %        la inn denne kommentaren (ved hjelp
