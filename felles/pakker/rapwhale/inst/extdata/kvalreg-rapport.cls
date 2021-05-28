@@ -666,18 +666,6 @@
   \ClassWarning{kvalreg-rapport}{Bruk av forbudt underline-kommando}
 }
 
-% Rett feilmelding frå tikz (fixme: finn ut korfor ein får denne)
-% http://tex.stackexchange.com/questions/165929/semiverbatim-with-tikz-in-beamer
-\global\let\tikz@ensure@dollar@catcode=\relax
-
-% Feil i TeX Live 2018 (LaTeX eller memoir-klassen) gjer at punktum
-% i figurnummer forsvinn (for eksempel vert «figur 3.5» til «figur 35»).
-% Sjå forklaring på https://tex.stackexchange.com/q/427451
-% Dette rettar feilen. fixme: Fjern dette når me har fått TeX Live 2019.
-\makeatletter
-\renewcommand{\counterwithin}{\@ifstar{\@csinstar}{\@csin}}
-\makeatother
-
 % Lagra tekst (typisk for samandragskapittelet) i eiga fil for
 % bruk ein annan plass i dokumentet (gjerne *før* definisjonen).
 % Er nyttig når samandragskapittelet brukar utrekningar som
