@@ -742,6 +742,15 @@ Korleis me vel ut tilfeldige målingar (*samplingsmetoden*),
 påverkar *kva* storleikar me kan estimera og
 *korleis* me kan estimera dei.
 
+Me har tidlegare vist eksempel på enkelt tilfeldig utval og
+ulike former stratifiserte utval.
+Me skal no sjå nærare på korleis me kan,
+og ikkje kan,
+estimera dei ulike storleikane for dei ulike samplingsmetodane.
+
+
+### Enkelt tilfeldig utval
+
 La oss først tenkja oss at me plukkar ut *heilt tilfeldige* målingar
 frå *heile* registeret med `slice_sample()`
 (anten eit visst tal målingar eller ein viss prosentdel).
@@ -791,6 +800,9 @@ lag_kable(d_sjukehus2)
 Her kan me i *teorien* svara på alle spørsmåla ovanfor,
 men det er klart at me likevel har altfor få målingar
 frå sjukehus A til å seia noko om korrektheita.
+
+
+### Stratifisert tilfeldig utval
 
 Viss me er interesserte i tala per sjukehus,
 kan me heller bruka ein samplingsmetode
@@ -863,6 +875,10 @@ rekna ut standardfeilen for ein vekta sum av uavhengige variablar,
 og så bruka normaltilnærminga.
 Men i praksis er det betre å bruka funksjonar i ein ferdig R-pakke,
 for eksempel [`survey`-pakken](https://cran.r-project.org/package=survey).
+
+
+
+### Råd ved komplisert sampling
 
 Ved meir kompliserte samplingsmetodar må ein halda tunga
 rett i munnen dersom ein vil rekna ut (forventings)rette estimat på
