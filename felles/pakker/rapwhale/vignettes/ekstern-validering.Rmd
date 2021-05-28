@@ -808,17 +808,17 @@ Viss me er interesserte i tala per sjukehus,
 kan me heller bruka ein samplingsmetode
 der me plukkar ut like mange målingar per sjukehus:
 
-```{r}
+```{r, echo = FALSE}
 d_sjukehus3 = d_sjukehus2 %>%
   mutate(Trekte = 33)
-d_sjukehus3
+lag_kable(d_sjukehus3)
 ```
 
 Dette kan me bruka direkte for å estimera kor stor del
 av målingane som er korrekte per sjukehus,
 for å samanlikna sjukehusa (gjerne med SPC-metodikk):
 
-```{r}
+```{r, echo = FALSE}
 d_sjukehus4 = d_sjukehus3 %>%
   mutate(
     Trekte = 33,
@@ -827,6 +827,7 @@ d_sjukehus4 = d_sjukehus3 %>%
   )
 n_korrekte = sum(d_sjukehus4$Korrekte)
 n_trekte = sum(d_sjukehus4$Trekte)
+lag_kable(d_sjukehus4)
 ```
 
 Me kan òg bruka dei same dataa for direkte å svara
@@ -841,8 +842,7 @@ Det vil gje både feil estimat og feil konfidensintervall.
 Her vil det gje estimatat
 (`r paste0(d_sjukehus4$Korrekte, collapse = " + ")`) / 
 (`r paste0(d_sjukehus4$Trekte, collapse = " + ")`) = 
-`paste0(n_korrekte, " / ", n_trekte, " = ",
-        format(round(n_korrekte/n_trekte, 2), nsmall=2))`.
+`r paste0(n_korrekte, " / ", n_trekte, " = ", format(round(n_korrekte/n_trekte, 2), nsmall=2))`.
 Men dette svaret er openbert feil.
 Dei dårlege resultata frå sjukehus A har fått altfor stor vekt.
 
@@ -854,11 +854,13 @@ eller dersom alle sjukehusa er like store
 *Rett* analysemetode er å rekna ut eit vekta snitt av dei tre estimata,
 vekta etter talet på *målingar* som er gjorde per sjukehus:
 
-```{r}
+```{r, echo = FALSE}
 d_sjukehus5 = d_sjukehus4 %>%
   select(-Pasientar) %>%
   mutate(`Del målingar` = Målingar / sum(Målingar))
 n_bra_estimat = sum(d_sjukehus5$`Del korrekte` * d_sjukehus5$`Del målingar`)
+d_sjukehus5$`Del målingar` = round(d_sjukehus5$`Del målingar`, 3)
+lag_kable(d_sjukehus5)
 ```
 
 Rett (og forventingsrett) estimat på kor stor del av
