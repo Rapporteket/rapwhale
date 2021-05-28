@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{kvalreg-rapport}[2020/06/19 Rapportar for kvalitetsregister]
+\ProvidesClass{kvalreg-rapport}[2021/05/28 Rapportar for kvalitetsregister]
 
 % Krev bruk av LuaLaTeX
 \RequirePackage{ifluatex}
