@@ -738,35 +738,151 @@ d_vld_utfylt = filadresser %>%
 
 ## Statistiske avspekt ved bruk av valideringsdata
 
-**Fixme:**
-Her må det stå om viktige statistiske ting ein må vera klar over
-når ein tolkar resultata frå valideringsdatasett.
-Det gjeld både sjølve estimata og tilhøyrande konfidensintervall.
-Bør òg vera vera eksempel på korleis ein får *riktige* estimat
-på det ein er på jakt etter, ved for eksempel å ta vekta snitt
-av estimata av ting samla inn gjennom stratifisert datainnsamling.
-(Teksten som står her er berre kladd og spreidde tankar.
-Må få skikkeleg introduksjon og god struktur.)
+Korleis me vel ut tilfeldige målingar (*samplingsmetoden*),
+påverkar *kva* storleikar me kan estimera og
+*korleis* me kan estimera dei.
 
-Total korrektheit:
-(Fixme: Legg til referanse til dette i tihøyrande avsnitt.)
-Statistikken, inkludert konfidensintervalla, er naturlegvis
-berre gyldig dersom radene i valideringsdatasettet er eit
-*tilfeldig utval* av alle verdiane registrert i registeret,
-altså viss alle målingar har like stort sannsyn for å vera
-med i valideringsanalysen.
+La oss først tenkja oss at me plukkar ut *heilt tilfeldige* målingar
+frå *heile* registeret med `slice_sample()`
+(anten eit visst tal målingar eller ein viss prosentdel).
+Då kan me estimera blant anna desse storleikane direkte,
+ved bruk av `aggreger_ki_prop()`,
+eventuelt med `group_by()` først:
 
-Per variabel/sjukehus:
-(Fixme: Legg til referanse til dette i tihøyrande avsnitt.)
-Her er statistikken gyldig dersom det for kvar variabel er slik
-at radene i valideringsdatasettet svarar til eit tilfeldig utval
-av verdiane til tilhøyrande variabel i registeret. Men ein treng
-ikkje ha like mange verdiar for kvar variabel, og ein kan for eksempel
-validera fleire verdiar for viktige variablar enn for uviktige.
-Men merk at då er ikkje lenger statistikken for total korrektheit
-forventingsrett, og konfidensintervalla der kan ikkje brukast.
-(Ev. flytta dette avsnittet seinare, og berre så vidt hinta om det her.)
+* Prosentdelen målingar som er rette i heile registeret.
+* Prosentdelen av éin type måling (eks. biverknadar) som er rett
+  i heile registeret.
+* Prosentdelen målingar per sjukehus som er rette.
+* Prosentdelen av éin type måling som er rett per sjukehus.
 
+Estimata vert forventingsrette og konfindensintervalla gyldige.
+
+Denne samplingsmetoden er den mest enkle og fleksible,
+då han kan gje svar på *alle* moglege problemstillingar,
+men han har òg nokre ulemper.
+
+La oss no tenkja oss at me har eit register med tre sjukehus
+av svært ulik storleik, og dermed ulikt pasienttal i registeret:
+
+```{r, echo = FALSE}
+d_sjukehus = tibble(
+  Eining = paste0("Sjukehus ", LETTERS[1:3]),
+  Pasientar = c(70, 400, 6700)
+)
+n_tot = sum(d_sjukehus$Pasientar)
+n_plukk = 100
+n_var = 10
+lag_kable(d_sjukehus)
+```
+
+Kvar pasient er registrert me `r `n_var` variablar.
+Me plukkar `r n_plukk`` tilfeldige målingar.
+Då vert forventa tal på trekte målingar per sjukehus om lag:
+
+```{r, echo = FALSE}
+d_sjukehus2 = d_sjukehus %>%
+  mutate(
+    Målingar = Pasientar * n_var,
+    Trekte = round(Målingar * n_plukk / sum(Målingar))
+  )
+lag_kable(d_sjukehus2)
+```
+
+Her kan me i *teorien* svara på alle spørsmåla ovanfor,
+men det er klart at me likevel har altfor få målingar
+frå sjukehus A til å seia noko om korrektheita.
+
+Viss me er interesserte i tala per sjukehus,
+kan me heller bruka ein samplingsmetode
+der me plukkar ut like mange målingar per sjukehus:
+
+```{r}
+d_sjukehus3 = d_sjukehus2 %>%
+  mutate(Trekte = 33)
+d_sjukehus3
+```
+
+Dette kan me bruka direkte for å estimera kor stor del
+av målingane som er korrekte per sjukehus,
+for å samanlikna sjukehusa (gjerne med SPC-metodikk):
+
+```{r}
+d_sjukehus4 = d_sjukehus3 %>%
+  mutate(
+    Trekte = 33,
+    Korrekte = c(13, 25, 31),
+    `Del korrekte` = round(Korrekte / Trekte, 2)
+  )
+n_korrekte = sum(d_sjukehus4$Korrekte)
+n_trekte = sum(d_sjukehus4$Trekte)
+```
+
+Me kan òg bruka dei same dataa for direkte å svara
+på korrektheit per variabel per sjukehus
+(men bør sjølvsagt ha fleire trekte målingar
+for å få presise estimat).
+
+Men viss me vil ha svar på kor stor del av målingane
+i *heile* registeret som er rette,
+kan me ikkje lenger bruka `aggreger_ki_prop()` direkte.
+Det vil gje både feil estimat og feil konfidensintervall.
+Her vil det gje estimatat
+(`r paste0(d_sjukehus4$Korrekte, collapse = " + ")`) / 
+(`r paste0(d_sjukehus4$Trekte, collapse = " + ")`) = 
+`paste0(n_korrekte, " / ", n_trekte, " = ",
+        format(round(n_korrekte/n_trekte, 2), nsmall=2))`.
+Men dette svaret er openbert feil.
+Dei dårlege resultata frå sjukehus A har fått altfor stor vekt.
+
+Metoden ovanfor vil berre vera gyldig dersom det ikkje finst
+forskjellar i korrektheit mellom sjukehusa
+eller dersom alle sjukehusa er like store
+(har like mange målingar i registeret).
+
+*Rett* analysemetode er å rekna ut eit vekta snitt av dei tre estimata,
+vekta etter talet på *målingar* som er gjorde per sjukehus:
+
+```{r}
+d_sjukehus5 = d_sjukehus4 %>%
+  select(-Pasientar) %>%
+  mutate(`Del målingar` = Målingar / sum(Målingar))
+n_bra_estimat = sum(d_sjukehus5$`Del korrekte` * d_sjukehus5$`Del målingar`)
+```
+
+Rett (og forventingsrett) estimat på kor stor del av
+målingane i *heile registeret* som er rette,
+vert då cirka `r round(n_bra_estimat, 2)`.
+Dette estimatet er nærare på estimatetet til sjukehus C,
+sidan dette har dei fleste pasientane/målingane i registeret.
+
+Utrekning av tilhøyrande konfidensintervall vert meir komplisert.
+Viss estimata ikkje er veldig små
+og ikkje er baserte på så veldig få observasjonar,
+kan me rekna ut standardfeil for kvart av dei tre estimata,
+rekna ut standardfeilen for ein vekta sum av uavhengige variablar,
+og så bruka normaltilnærminga.
+Men i praksis er det betre å bruka funksjonar i ein ferdig R-pakke,
+for eksempel [`survey`-pakken](https://cran.r-project.org/package=survey).
+
+Ved meir kompliserte samplingsmetodar må ein halda tunga
+rett i munnen dersom ein vil rekna ut (forventings)rette estimat på
+korrektheit, og tilhøyrande konfidensintervall.
+Me tilrår å bruka `survey`-pakken og ta kontakt med ein statistikar.
+Merk at `survey`-pakken seg sjølv er ganske kompliert.
+Han har ei eiga bok,
+[Complex Surveys: A Guide to Analysis Using R](http://r-survey.r-forge.r-project.org/svybook/),
+som kan vera verd å lea.
+
+Ein statistikar bør òg vera involvert når ein vel samplingsmetode i utgangspunktet,
+for å sikra at ein seinare kan få (både rette og presise)
+svar/estimat på dei spørsmåla ein ønskjer.
+
+Viss det ikkje er veldig stor forskjell i storleiken på sjukehusa,
+eller viss ein ikkje treng stratifiserte estimat,
+tilrår me å bruka enkelt tilfeldig utval
+(dvs.~eit tilfeldig utval der alle relevante målingar i registeret
+har likt sannsyn for å verta trekte).
+Då gjer ein livet enklare for seg sjølv.
 
 
 <!-- Behovskartlegging
