@@ -785,7 +785,7 @@ n_var = 10
 lag_kable(d_sjukehus)
 ```
 
-Kvar pasient er registrert me `r n_var` variablar.
+Kvar pasient er registrert med `r n_var` variablar.
 Me plukkar `r n_plukk` tilfeldige målingar.
 Då vert forventa tal på trekte målingar per sjukehus om lag:
 
