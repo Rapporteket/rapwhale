@@ -1,17 +1,28 @@
 # Generelle funksjoner for å teste logikker
 
-#' Sjekk om 'a' sann impliserer 'b' sann
+#' Sjekk om sann `a` impliserer sann `b`
 #'
 #' @description
 #' `r lifecycle::badge("maturing")`
-#' Sann hvis og bare hvis 'a' sann impliserer 'b' sann
-#' (håndterer NA-verdier fint, og gir alltid ut TRUE eller FALSE,
-#' aldri NA)
 #'
-#' @param a Variabel som hvis sann impliserer at variabel 'b' er sann.
-#' @param b Variabel som er sann hvis 'a' er sann.
+#' Tar inn to logiske vektorer `a` og `b`, og gir ut en logisk vektor som
+#' elementvis sier om `a = TRUE` impliserer `b = TRUE`.
 #'
-#' @return TRUE eller FALSE
+#' @param a Logisk vektor.
+#' @param b Logisk vektor som elementvis skal sjekkes mot `a`.
+#'
+#' @details
+#' Funksjonen tar inn to logiske vektorer `a` og `b`, sjekker elementvis om
+#' `a = TRUE` impliserer `b = TRUE`.
+#'
+#' Den gir ut en logisk vektor som er `TRUE` for hvert elementpar fra
+#' `a` og `b` der `a = FALSE`, `a = NA`, eller både
+#' `a` og `b = TRUE`, og `FALSE` ellers. Den gir altså ut `FALSE` for
+#' elementpar som motstrider at `a = TRUE` impliserer `b = TRUE`.
+#'
+#' Funksjonen tilsvarer altså `!a | b`, men håndterer `NA` som `FALSE`.
+#'
+#' @return Logisk vektor som elementvis sier om `a = TRUE` impliserer `b = TRUE`.
 #' @examples
 #' d_gyldig_eks = tibble::tribble(
 #'   ~pas_id, ~bosted_by, ~bosted_bydel,
