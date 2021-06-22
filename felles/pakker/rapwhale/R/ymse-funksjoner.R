@@ -84,11 +84,13 @@ regn_ki_bin = function(x, n) {
 
 
 
-### Konfidenstinervall basert på gjennomsnittet til en  kontinuerlig variabel
-# med mulighet for bootstrap lagt inn i funksjonen
+#' Konfidenstinervall basert på gjennomsnittet til en  kontinuerlig variabel
+
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
+#' Konfidenstinervall basert på gjennomsnittet til en  kontinuerlig variabel
+#' med mulighet for bootstrap lagt inn i funksjonen
 #' @export
 regn_ki_univar = function(x, bootstrap = FALSE, antall, ...) {
   # Hvis det er for få eller for lite varierende
