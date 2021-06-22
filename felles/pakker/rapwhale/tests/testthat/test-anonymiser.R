@@ -126,6 +126,13 @@ test_that("Gjev rett svar når det er 1 unikt element", {
   expect_identical(anonymiser(c("p2", "p2", "p2")), rep(1001L, 3))
 })
 
+# Test som feila når funksjonen var implementert som
+# as.numeric(factor(pas_id, levels = sample(unique(pas_id)))) - 1 + startnr
+# (men fungerer viss pass_id er tekst vektor)
+test_that("Gjev rett svar når det er 1 unikt element og dette er tal", {
+  expect_identical(anonymiser(c(4321, 4321, 4321)), rep(1001L, 3))
+})
+
 test_that("Gjev rett svar når det er 0 element", {
   expect_identical(anonymiser(character()), integer())
 })
