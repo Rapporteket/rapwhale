@@ -100,27 +100,6 @@ num = function(x, desimalar, tabell = FALSE) {
   x_form
 }
 
-# FIXME -Fjerne akse_prosent funksjon når alle rapporter er oppdatert til å bruke
-# akse_prosent_format.
-
-#' Vis desimaltall som prosent
-#'
-#' @description
-#' `r lifecycle::badge("experimental")`
-#'
-#' @param x Tallet som skal skrives som prosent.
-#' @param accuracy Antall desimaler som skal benyttes.
-#' @param decimal.mark desimaltegn.
-#' @param ... Ytterligere argumenter.
-#'
-#' @export
-akse_prosent = function(x, accuracy = 1, decimal.mark = ",", ...) {
-  scales::percent(x,
-    suffix = " %",
-    accuracy = accuracy, decimal.mark = decimal.mark, ...
-  )
-}
-
 
 ### Prosent med norsk stavemåte i aksenotasjoner
 
