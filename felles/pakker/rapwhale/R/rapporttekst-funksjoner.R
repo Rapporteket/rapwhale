@@ -54,6 +54,13 @@ NULL
 #' @param desimalar Hvor mange desimaler skal inkluderes etter komma? (Rund av og vis så mange desimaler).
 #' @param tabell \code{TRUE} eller \code{FALSE} for å indikere om tallet skal brukes i en tabell, og dermed skal ha tabelltekst.
 #' @export
+#' @examples
+#' # Til bruk i setningar i latex
+#' paste0("Store tal som ", num(123456789), " får mellomrom som tusenskiljeteikn.")
+#' paste0("Pi avrunda til fire desimalar er ", num(pi, desimalar = 4), ".")
+#'
+#' # Til bruk i tabell i latex
+#' num(pi, desimalar = 2, tabell = TRUE)
 num = function(x, desimalar, tabell = FALSE) {
   # Argument til \num-kommandoen
   arg = NULL
