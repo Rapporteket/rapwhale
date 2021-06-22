@@ -4,7 +4,7 @@ NULL
 #' Lag funksjon for anonymisering av datavektorar
 #'
 #' @description
-#' `r lifecycle::badge("maturing")`
+#' `r lifecycle::badge("stable")`
 #'
 #' Lagar ein funksjon som kan brukast til å anonymisera verdiane i ein vektor
 #' ved å byta dei ut med tilfeldige tal.
@@ -88,7 +88,7 @@ lag_anonymiseringsfunksjon = function(x, startnr = 1001) {
 #' Anonymiser datavektor
 #'
 #' @description
-#' `r lifecycle::badge("maturing")`
+#' `r lifecycle::badge("stable")`
 #'
 #' Anonymiserer verdiane i ein vektor ved å byta dei ut med tilfeldige tal.
 #'
