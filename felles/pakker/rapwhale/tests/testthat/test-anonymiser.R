@@ -21,16 +21,16 @@ pas_ids_oppf = c(1, 3, 2, 5, 4, 9, 7, 8, 11)
 pas_ids = c(pas_ids_hofteop, pas_ids_kneop)
 
 
-# Testar at lag_ano_funk() fungerar som den skal ------------------------------------------
+# Testar at lag_anonymiseringsfunksjon() fungerar som den skal ------------------------------------------
 
 test_that("Skal gje advarsel ved NA-verdiar", {
-  expect_warning(lag_ano_funk(pas_ids_hofteop_na), "ID-vektoren inneheld NA-verdiar")
+  expect_warning(lag_anonymiseringsfunksjon(pas_ids_hofteop_na), "ID-vektoren inneheld NA-verdiar")
 })
 
-# Testar at funksjonen som kjem ut av lag_ano_funk() fungerar som den skal ----------------
+# Testar at funksjonen som kjem ut av lag_anonymiseringsfunksjon() fungerar som den skal ----------------
 
 test_that("Skal gje feilmelding ved ukjende ID-ar (utenom NA-ID-ar)", {
-  anonymiser_mittreg = lag_ano_funk(pas_ids)
+  anonymiser_mittreg = lag_anonymiseringsfunksjon(pas_ids)
   expect_error(anonymiser_mittreg(pas_ids_oppf), "ID-vektoren inneheld nye (ukjende) ID-ar", fixed = TRUE)
 
   # Utfunksjonen skal *ikkje* gje feilmeldinga "ID-vektoren inneheld nye (ukjende) ID-ar"
@@ -41,7 +41,7 @@ test_that("Skal gje feilmelding ved ukjende ID-ar (utenom NA-ID-ar)", {
 })
 
 test_that("ID-ar som finst i fleire skjema får like anonymiserte ID-ar på tvers av skjemaa", {
-  anonymiser_mittreg = lag_ano_funk(pas_ids)
+  anonymiser_mittreg = lag_anonymiseringsfunksjon(pas_ids)
   test_idsamsvar = function(d1, d2) {
     expect_identical(
       match(d1, d2),

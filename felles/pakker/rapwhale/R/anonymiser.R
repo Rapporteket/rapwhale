@@ -60,13 +60,13 @@ NULL
 #'   komplikasjonar = c(TRUE, FALSE)
 #' )
 #'
-#' anonymiser_pasids = lag_ano_funk(d_operajson$pasient_id)
+#' anonymiser_pasids = lag_anonymiseringsfunksjon(d_operajson$pasient_id)
 #'
 #' d_operasjon_ano = dplyr::mutate(d_operasjon, pasient_id = anonymiser_pasids(pasient_id))
 #' d_oppfolging_ano = dplyr::mutate(d_oppfolging, pasient_id = anonymiser_pasids(pasient_id))
 #' d_operasjon_ano
 #' d_oppfolging_ano
-lag_ano_funk = function(x, startnr = 1001) {
+lag_anonymiseringsfunksjon = function(x, startnr = 1001) {
   if (any(is.na(x))) {
     warning("ID-vektoren inneheld NA-verdiar")
   }
@@ -92,7 +92,7 @@ lag_ano_funk = function(x, startnr = 1001) {
 #'
 #' Anonymiserer verdiane i ein vektor ved å byta dei ut med tilfeldige tal.
 #'
-#' @inheritParams lag_ano_funk
+#' @inheritParams lag_anonymiseringsfunksjon
 #'
 #' @details
 #' Alle verdiane i  `x` vert bytte ut med tilfeldige tal frå følgja
@@ -108,7 +108,7 @@ lag_ano_funk = function(x, startnr = 1001) {
 #'
 #' @seealso
 #' Viss du vil anonymisera verdiar som inngår i fleire datasett,
-#' bruk heller [lag_ano_funk()].
+#' bruk heller [lag_anonymiseringsfunksjon()].
 #'
 #' @return
 #' Heiltalsvektor med anonymiserte verdiar.
@@ -129,5 +129,5 @@ lag_ano_funk = function(x, startnr = 1001) {
 #'   sjukehus_ano = anonymiser(sjukehus, startnr = 11)
 #' )
 anonymiser = function(x, startnr = 1001) {
-  lag_ano_funk(x, startnr = startnr)(x)
+  lag_anonymiseringsfunksjon(x, startnr = startnr)(x)
 }
