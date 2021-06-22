@@ -29,12 +29,14 @@ test_that("Skal gje advarsel ved NA-verdiar", {
 
 # Testar at funksjonen som kjem ut av lag_ano_funk() fungerar som den skal ----------------
 
-test_that("Skal gje advarsel ved ukjende ID-ar (utenom NA-ID-ar)", {
+test_that("Skal gje feilmelding ved ukjende ID-ar (utenom NA-ID-ar)", {
   anonymiser_mittreg = lag_ano_funk(pas_ids)
-  expect_warning(anonymiser_mittreg(pas_ids_oppf), "ID-vektoren inneheld nye (ukjende) ID-ar", fixed = TRUE)
+  expect_error(anonymiser_mittreg(pas_ids_oppf), "ID-vektoren inneheld nye (ukjende) ID-ar", fixed = TRUE)
 
-  # Utfunksjonen skal *ikkje* gje advarselen "ID-vektoren inneheld nye (ukjende) ID-ar"
-  # dersom alle dei nye (ukjende) verdiane berre er NA-verdiar
+  # Utfunksjonen skal *ikkje* gje feilmeldinga "ID-vektoren inneheld nye (ukjende) ID-ar"
+  # dersom alle dei nye (ukjende) verdiane berre er NA-verdiar,
+  # berre åtvaring om det finst NA-verdiar
+  expect_error(suppressWarnings(anonymiser_mittreg(c(pas_ids, NA)), NA))
   expect_warning(anonymiser_mittreg(c(pas_ids, NA)), "ID-vektoren inneheld NA-verdiar", all = TRUE)
 })
 

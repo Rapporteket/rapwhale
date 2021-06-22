@@ -42,6 +42,8 @@ NULL
 #' Funksjon som tar inn ein vektor med verdiar
 #' (som alle må inngå i `x`)
 #' og gjev ut ein heiltalsvektor med tilsvarande anonymiserte verdiar.
+#' Han gjev ut feilmelding viss ein prøver
+#' å bruka han på «ukjende» verdiar.
 #'
 #' @export
 #'
@@ -76,7 +78,7 @@ lag_ano_funk = function(x, startnr = 1001) {
       warning("ID-vektoren inneheld NA-verdiar")
     }
     if (!is_empty(na.omit(setdiff(x_utvalg, x)))) {
-      warning("ID-vektoren inneheld nye (ukjende) ID-ar")
+      stop("ID-vektoren inneheld nye (ukjende) ID-ar")
     }
     til[match(x_utvalg, fra)]
   }
