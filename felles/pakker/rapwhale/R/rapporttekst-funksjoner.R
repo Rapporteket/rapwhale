@@ -192,6 +192,16 @@ akse_tall_format = function(antall_desimaler = 2, decimal.mark = ",", big.mark =
 #' @param desimalar Antall desimaler som skal vises.
 #' @param tabell TRUE eller FALSE for å indikere om tallet skal brukes i en tabell, og dermed skal ha tabelltekst.
 #' @export
+#' @examples
+#' menn = 5
+#' kvinner = 7
+#' andel_menn = menn / (menn + kvinner)
+#'
+#' # Til bruk i setning i latex
+#' paste0("Andel menn er ", prosent(andel_menn), ".")
+#'
+#' # Til bruk i tabell i latex
+#' prosent(andel_menn, desimalar = 1, tabell = TRUE)
 prosent = function(x, desimalar = 0, tabell = FALSE) {
   prosent_tekst = x %>%
     purrr::map_chr(~ num(100 * .x, desimalar, tabell = tabell) %>%
