@@ -60,7 +60,7 @@ NULL
 #'   komplikasjonar = c(TRUE, FALSE)
 #' )
 #'
-#' anonymiser_pasids = lag_anonymiseringsfunksjon(d_operajson$pasient_id)
+#' anonymiser_pasids = lag_anonymiseringsfunksjon(d_operasjon$pasient_id)
 #'
 #' d_operasjon_ano = dplyr::mutate(d_operasjon, pasient_id = anonymiser_pasids(pasient_id))
 #' d_oppfolging_ano = dplyr::mutate(d_oppfolging, pasient_id = anonymiser_pasids(pasient_id))
