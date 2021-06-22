@@ -289,8 +289,8 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 #' @description
 #' `r lifecycle::badge("maturing")`
 #'
-#' Gir ut en tibble med oversikt over alle ugyldige verdier i datasettet
-#' som blir tatt inn.
+#' Gir ut en tibble med oversikt over alle ugyldige verdier i datasettet,
+#' basert på en oversikt over mulige gyldige verdier.
 #'
 #' @param d Dataramme/tibble som kun inneholder kolonner med identiske
 #'     navn som i `verditabell$variabel`. Alle kolonnene må inneholde
