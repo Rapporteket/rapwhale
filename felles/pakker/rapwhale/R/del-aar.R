@@ -1,5 +1,8 @@
 #' Periode til tidslinje
 #'
+#' @description
+#' `r lifecycle::badge("maturing")`
+#'
 #' Tar inn en vektor med årstall, en vektor med periode-tilhørighet og et
 #' heltall som sier hvor mange deler året skal deles inn i.
 #'
@@ -47,6 +50,9 @@ periode_til_tidslinje = function(aar, delnummer, antall_deler) {
 }
 
 #' Tid til tidslinje
+#'
+#' #' @description
+#' `r lifecycle::badge("maturing")`
 #'
 #' Tar inn en vektor med datoer og et heltall som angir hvor mange deler året skal
 #' deles inn i. Håndterer også klokkeslett, helt ned til sekunder
