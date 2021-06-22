@@ -46,10 +46,33 @@ periode_til_tidslinje = function(aar, delnummer, antall_deler) {
   (aar + delnummer / antall_deler - (1 / antall_deler) / 2)
 }
 
-# Funksjonen tid_til_tidslinje() tar inn en vektor med datoer og et heltall som sier hvor mange deler året skal deles opp i. Tilsvarende som funksjonen
-# periode_til_tidslinje returnerer den en vektor med desimaltall som representerer koordinatene for de ulike inndata.
-# tid_til_tidslinje inkluderer også klokkeslett, helt ned til sekunder i utregning av koordinat.
-
+#' Tid til tidslinje
+#'
+#' Tar inn en vektor med datoer og et heltall som angir hvor mange deler året skal
+#' deles inn i. Håndterer også klokkeslett, helt ned til sekunder
+#' i utregning av koordinat.
+#'
+#' @param dato Vektor med datoer som det skal regnes koordinat for.
+#' @param antall_deler Antall deler året skal deles inn i.
+#'
+#' @return
+#' Returnerer en vektor med desimaltall som representerer koordinatene for de
+#' ulike datapunktene i inndata.
+#' @export
+#'
+#' @examples
+#' # Eksempel med dato
+#' dato = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
+#' antall_deler = 4
+#' tid_til_tidslinje(dato = dato, antall_deler = antall_deler)
+#'
+#' # Eksempel med klokkeslett
+#' dato_med_klokkeslett = as.POSIXct(c(
+#'   "2019-01-01 12:00", "2019-04-01 12:00",
+#'   "2019-08-01 12:00", "2019-12-01 12:00"
+#' ))
+#' antall_deler = 5
+#' tid_til_tidslinje(dato = dato_med_klokkeslett, antall_deler = antall_deler)
 tid_til_tidslinje = function(dato, antall_deler) {
 
   # Sjekke inndata
@@ -63,24 +86,24 @@ tid_til_tidslinje = function(dato, antall_deler) {
     stop("antall_deler må være et heltall")
   }
 
-  if (!(is.timepoint(dato))) { # Både Date og POSIXt-format er timepoint.
+  if (!(lubridate::is.timepoint(dato))) { # Både Date og POSIXt-format er timepoint.
     stop("Dato-vektor er ikke i Date- eller POSIXt-format")
   }
 
   # er dato i Date format settes klokkeslett til 12:00 (konverterer dato til POSIXlt)
-  if (is.Date(dato)) {
-    hour(dato) = 12
-    tz(dato) = "UTC"
+  if (lubridate::is.Date(dato)) {
+    lubridate::hour(dato) = 12
+    lubridate::tz(dato) = "UTC"
 
     # Se om tidssone er registrert, sett til UTC hvis ikke.
   } else {
     if (is.null(attr(dato, "tzone"))) {
-      tz(dato) = "UTC"
+      lubridate::tz(dato) = "UTC"
     }
 
     # Hvis format er POSIXlt, men time, minutt og sekund er 0 settes tidspunkt til 1200.
     if (all(unlist(dato[1])[1:3] == 0)) {
-      hour(dato) = 12
+      lubridate::hour(dato) = 12
     }
   }
 
@@ -91,7 +114,7 @@ tid_til_tidslinje = function(dato, antall_deler) {
   # Finne midtpunkt for alle årstall som er representert i dato.
   endepunkt = (1:antall_deler) * (1 / antall_deler)
 
-  unike_ar = sort(unique(year(dato)))
+  unike_ar = sort(unique(lubridate::year(dato)))
   aar = c(min(unike_ar), endepunkt + rep(unike_ar, each = length(endepunkt)))
 
   aar_midtpunkt = numeric(length = length(unike_ar) * antall_deler)
@@ -100,7 +123,11 @@ tid_til_tidslinje = function(dato, antall_deler) {
   }
 
   # Finner hvilket intervall hver observasjon tilhører.
-  nye_pkt = findInterval(x = decimal_date(dato), vec = aar, rightmost.closed = FALSE, left.open = FALSE) # (2019,2020]
+  nye_pkt = findInterval(
+    x = lubridate::decimal_date(dato),
+    vec = aar, rightmost.closed = FALSE,
+    left.open = FALSE
+  ) # (2019,2020]
 
   # Returnerer koordinater
   (aar_midtpunkt[nye_pkt])
