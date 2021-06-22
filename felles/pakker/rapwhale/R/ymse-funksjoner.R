@@ -147,6 +147,15 @@ regn_ki_univar = function(x, bootstrap = FALSE, antall, ...) {
 #' @param wide valgmulighet for om tabellen skal være breiere enn standard tekstbredde. Må være TRUE eller FALSE, default er FALSE
 #' @param ... Ytterligere argumenter som kan gis til Hmisc::latex funksjon
 #' @export
+#' @examples
+#' cars_top_mpg = mtcars %>%
+#'   arrange(desc(mpg)) %>%
+#'   head()
+#' cars_top_mpg_tab = lag_tab_latex(cars_top_mpg,
+#'   label = "mpg_table",
+#'   caption = "Cars with best mileage"
+#' )
+#' cat(cars_top_mpg_tab)
 lag_tab_latex = function(dataframe, label, caption, wide = FALSE, ...) {
 
   # Viss dataramma ikkje har nokon radar, bryt latex()-funksjonen
