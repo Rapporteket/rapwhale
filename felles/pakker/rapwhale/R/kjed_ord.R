@@ -1,7 +1,7 @@
 #' Kjed saman elementa i ein vektor til ein tekststreng
 #'
 #' @description
-#' `r lifecycle::badge("maturing")`
+#' `r lifecycle::badge("stable")`
 #'
 #' Tek inn ein vektor og kjedar saman (listar opp) elementa.
 #' Returnerer resultatet som ein tekststreng.
