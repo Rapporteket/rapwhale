@@ -201,9 +201,10 @@ sjekk_skaaringstabell = function(skaaringstabell) {
 #'
 #' @description
 #' `r lifecycle::badge("maturing")`
-#' Skal ta inn et datasett og en vektor med variabelnavn. Funksjonen gir
+#'
+#' Tar inn et datasett og en vektor med variabelnavn. Gir
 #' feilmelding hvis datasettet ikke inneholder alle variabelnavnene i
-#' datasettet.
+#' vektoren.
 #'
 #' @param d Dataramme/tibble.
 #' @param variabelnavn Vektor med variabelnavn (som skal sjekkes om
