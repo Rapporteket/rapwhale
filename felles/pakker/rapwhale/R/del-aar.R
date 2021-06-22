@@ -1,9 +1,24 @@
-
-library(lubridate)
-
-# Funksjonen periode_til_tidslinje() tar inn en vektor med årstall, en vektor med periode-tilhørighet og et heltall som sier hvor mange deler året skal deles opp i.
-# Utdata er en vektor med desimaltall som representerer koordinatene for de ulike periodene i inndata fordelt på en akse.
-
+#' Periode til tidslinje
+#'
+#' Tar inn en vektor med årstall, en vektor med periode-tilhørighet og et
+#' heltall som sier hvor mange deler året skal deles inn i.
+#'
+#' @param aar Vektor med årstall (på heltallsformat)
+#' @param delnummer Heltallsvektor som angir hvilken periode datapunktet tilhører
+#' @param antall_deler Heltall som angir hvor mange like deler året skal deles
+#' inn i.
+#'
+#' @return
+#' Gir ut en vektor med desimaltall som representerer kordinatene for de ulike
+#' punktene i inndata fordelt på en akse.
+#'
+#' @export
+#'
+#' @examples
+#' aarstall = c(2014, 2015, 2016, 2017)
+#' delnummer = c(1, 2, 2, 4)
+#' antall_deler = 4
+#' periode_til_tidslinje(aarstall, delnummer, antall_deler)
 periode_til_tidslinje = function(aar, delnummer, antall_deler) {
 
   # Sjekk at inndata er i riktig format
