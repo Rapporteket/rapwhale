@@ -38,18 +38,30 @@ impl = function(a, b) {
   (is.na(a) | !a) | tidyr::replace_na(b, FALSE) # eg. (!a | b), men håndterer NA
 }
 
-#' Sjekk om 'a' sann er ekvivalent med 'b' sann
+#' Sjekk om sann `a` er ekvivalent med sann `b`
 #'
 #' @description
 #' `r lifecycle::badge("maturing")`
-#' Sann hvis og bare hvis 'a' sann er ekvivalent med 'b' sann
-#' (håndterer NA-verdier fint, og gir alltid ut TRUE eller FALSE,
-#' aldri NA)
 #'
-#' @param a Variabel som hvis sann ekvivalerer at variabel 'b' er sann.
-#' @param b Variabel som hvis sann ekvivalerer at variabel 'a' er sann.
+#' Tar inn to logiske vektorer `a` og `b`, og gir ut en logisk vektor som
+#' elementvis sier om `a = TRUE` er ekvivalent med `b = TRUE`.
 #'
-#' @return TRUE eller FALSE
+#' @param a Logisk vektor som elementvis skal sjekkes mot `b`.
+#' @param b Logisk vektor som elementvis skal sjekkes mot `a`.
+#'
+#' @details
+#' Funksjonen tar inn to logiske vektorer `a` og `b`, sjekker elementvis om
+#' `a = TRUE` er ekvivalent med `b = TRUE`.
+#'
+#' Den gir ut en logisk vektor som er `TRUE` for hvert elementpar fra
+#' `a` og `b` der både `a` og `b = TRUE`, eller både `a` og `b = FALSE`
+#' eller `NA`, og `FALSE` ellers. Den gir altså ut `FALSE` for
+#' elementpar som motstrider at `a = TRUE` er ekvivalent med `b = TRUE`.
+#'
+#' Funksjonen tilsvarer altså `a == b`, men håndterer `NA` som `FALSE`.
+#'
+#' @return Logisk vektor som elementvis sier om `a = TRUE` er ekvivalent
+#'         med `b = TRUE`.
 #' @examples
 #' d_gyldig_eks = tibble::tribble(
 #'   ~pas_id, ~operert, ~komplikasjoner,
