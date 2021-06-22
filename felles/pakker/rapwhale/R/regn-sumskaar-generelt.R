@@ -202,7 +202,7 @@ sjekk_skaaringstabell = function(skaaringstabell) {
 #' Sjekk at oppgitte variabler finnes i datasettet
 #'
 #' @description
-#' `r lifecycle::badge("maturing")`
+#' `r lifecycle::badge("stable")`
 #'
 #' Tar inn et datasett og en vektor med variabelnavn. Gir
 #' feilmelding hvis datasettet ikke inneholder alle variabelnavnene i
