@@ -24,6 +24,12 @@ test_that("impl() gir feilmelding hvis a eller b ikke er logiske vektorer", {
   expect_error(impl(as.character(a), as.character(b)), feilmelding)
 })
 
+test_that("impl() fungerer som forventet for inndata med lengde 0", {
+  expect_identical(impl(logical(), logical()), logical())
+  expect_identical(impl(logical(), TRUE), logical())
+  expect_identical(impl(TRUE, logical()), logical())
+})
+
 test_that("impl() gir kun ut TRUE ved gyldig datasett", {
   expect_identical(
     all(impl(
@@ -81,6 +87,12 @@ test_that("ekviv() gir feilmelding hvis a eller b ikke er logiske vektorer", {
   expect_error(ekviv(TRUE, 1), feilmelding)
   expect_error(ekviv(as.numeric(a), as.numeric(b)), feilmelding)
   expect_error(ekviv(as.character(a), as.character(b)), feilmelding)
+})
+
+test_that("ekviv() fungerer som forventet for inndata med lengde 0", {
+  expect_identical(ekviv(logical(), logical()), logical())
+  expect_identical(ekviv(logical(), TRUE), logical())
+  expect_identical(ekviv(TRUE, logical()), logical())
 })
 
 test_that("ekviv() gir kun ut TRUE ved gyldig datasett", {
