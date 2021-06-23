@@ -175,3 +175,7 @@ test_that("ekviv() gir advarsel hvis lengdene av a og b er ulike, og den ene ikk
   expect_warning(ekviv(c(TRUE, FALSE), rep(TRUE, 3)))
   expect_warning(ekviv(rep(TRUE, 3), c(TRUE, FALSE)))
 })
+
+test_that("ekviv(a, b) gir samme resultat som ekviv(b, a)", {
+  expect_identical(ekviv(a, b), ekviv(b, a))
+})
