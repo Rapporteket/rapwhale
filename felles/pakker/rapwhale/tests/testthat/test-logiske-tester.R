@@ -79,6 +79,23 @@ test_that("impl() gir ut rett verdi for alle kombinasjoner av TRUE, FALSE og NA"
   expect_identical(impl(a, b), forventet)
 })
 
+test_that("impl() fungerer som forventet for ulike lenger av a og b", {
+  forventet_true = rep(c(TRUE, FALSE, FALSE), 3)
+  forventet_false = !forventet_true
+  expect_identical(impl(TRUE, b), forventet_true)
+  expect_identical(impl(b, FALSE), forventet_false)
+
+  forventet_ulik_lengde_a = c(TRUE, TRUE, TRUE, FALSE, TRUE, TRUE, FALSE, TRUE, TRUE)
+  forventet_ulik_lengde_b = c(TRUE, FALSE, FALSE, rep(TRUE, 6))
+  expect_identical(impl(c(TRUE, FALSE, NA), a), forventet_ulik_lengde_a)
+  expect_identical(impl(a, c(TRUE, FALSE, NA)), forventet_ulik_lengde_b)
+})
+
+test_that("impl() gir advarsel hvis lengdene av a og b er ulike, og den ene ikke er et multiplum av den andre", {
+  expect_warning(impl(c(TRUE, FALSE), rep(TRUE, 3)))
+  expect_warning(impl(rep(TRUE, 3), c(TRUE, FALSE)))
+})
+
 context("ekviv")
 
 test_that("ekviv() gir feilmelding hvis a eller b ikke er logiske vektorer", {
@@ -142,4 +159,19 @@ test_that("ekviv() gir aldri ut NA", {
 test_that("ekviv() gir ut rett verdi for alle kombinasjoner av TRUE, FALSE og NA", {
   forventet = c(TRUE, FALSE, FALSE, FALSE, TRUE, TRUE, FALSE, TRUE, TRUE)
   expect_identical(ekviv(a, b), forventet)
+})
+
+test_that("ekviv() fungerer som forventet for ulike lenger av a og b", {
+  forventet_true = rep(c(TRUE, FALSE, FALSE), 3)
+  expect_identical(ekviv(TRUE, b), forventet_true)
+  expect_identical(ekviv(b, TRUE), forventet_true)
+
+  forventet_ulik_lengde = c(TRUE, FALSE, FALSE, FALSE, TRUE, TRUE, FALSE, TRUE, TRUE)
+  expect_identical(ekviv(c(TRUE, FALSE, NA), a), forventet_ulik_lengde)
+  expect_identical(ekviv(a, c(TRUE, FALSE, NA)), forventet_ulik_lengde)
+})
+
+test_that("ekviv() gir advarsel hvis lengdene av a og b er ulike, og den ene ikke er et multiplum av den andre", {
+  expect_warning(ekviv(c(TRUE, FALSE), rep(TRUE, 3)))
+  expect_warning(ekviv(rep(TRUE, 3), c(TRUE, FALSE)))
 })
