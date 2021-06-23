@@ -164,7 +164,7 @@ er_valideringsdatasett_gyldig = function(d_vld) {
   # Viss vld_vartype = x, så må vld_verdi_intern_y og
   # vld_verdi_ekstern_y vera tomme viss x != y
   for (kolnamn in kolnamn_verdikol) {
-    vartype_akt_kol = str_replace(kolnamn, "^vld_verdi_(intern|ekstern)_", "")
+    vartype_akt_kol = stringr::str_replace(kolnamn, "^vld_verdi_(intern|ekstern)_", "")
     radnr_ikkje_akt_vartype = which(d_vld$vld_vartype != vartype_akt_kol)
     verdiar = d_vld[[kolnamn]][radnr_ikkje_akt_vartype]
     if (!all(is.na(verdiar))) {
