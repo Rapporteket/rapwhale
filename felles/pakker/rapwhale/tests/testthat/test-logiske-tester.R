@@ -16,6 +16,14 @@ b = rep(c(TRUE, FALSE, NA), 3)
 
 context("impl")
 
+test_that("impl() gir feilmelding hvis a eller b ikke er logiske vektorer", {
+  feilmelding = "a og b må være logiske vektorer"
+  expect_error(impl(1, TRUE), feilmelding)
+  expect_error(impl(TRUE, 1), feilmelding)
+  expect_error(impl(as.numeric(a), as.numeric(b)), feilmelding)
+  expect_error(impl(as.character(a), as.character(b)), feilmelding)
+})
+
 test_that("impl() gir kun ut TRUE ved gyldig datasett", {
   expect_identical(
     all(impl(
@@ -66,6 +74,14 @@ test_that("impl() gir ut rett verdi for alle kombinasjoner av TRUE, FALSE og NA"
 })
 
 context("ekviv")
+
+test_that("ekviv() gir feilmelding hvis a eller b ikke er logiske vektorer", {
+  feilmelding = "a og b må være logiske vektorer"
+  expect_error(ekviv(1, TRUE), feilmelding)
+  expect_error(ekviv(TRUE, 1), feilmelding)
+  expect_error(ekviv(as.numeric(a), as.numeric(b)), feilmelding)
+  expect_error(ekviv(as.character(a), as.character(b)), feilmelding)
+})
 
 test_that("ekviv() gir kun ut TRUE ved gyldig datasett", {
   expect_identical(
