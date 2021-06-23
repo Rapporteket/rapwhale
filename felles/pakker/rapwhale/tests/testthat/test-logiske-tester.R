@@ -10,6 +10,10 @@ d_gyldig_eks = tibble::tribble(
   5, "Oslo", "Haugenstua", "Ja", "Ja"
 )
 
+# a og b som sammen har alle kombinasjoner av to av verdiene TRUE, FALSE og NA
+a = rep(c(TRUE, FALSE, NA), each = 3)
+b = rep(c(TRUE, FALSE, NA), 3)
+
 context("impl")
 
 test_that("impl() gir kun ut TRUE ved gyldig datasett", {
@@ -56,6 +60,11 @@ test_that("impl() gir aldri ut NA", {
   )
 })
 
+test_that("impl() gir ut rett verdi for alle kombinasjoner av TRUE, FALSE og NA", {
+  forventet = c(TRUE, FALSE, FALSE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE)
+  expect_identical(impl(a, b), forventet)
+})
+
 context("ekviv")
 
 test_that("ekviv() gir kun ut TRUE ved gyldig datasett", {
@@ -100,4 +109,9 @@ test_that("ekviv() gir aldri ut NA", {
     )),
     TRUE
   )
+})
+
+test_that("ekviv() gir ut rett verdi for alle kombinasjoner av TRUE, FALSE og NA", {
+  forventet = c(TRUE, FALSE, FALSE, FALSE, TRUE, TRUE, FALSE, TRUE, TRUE)
+  expect_identical(ekviv(a, b), forventet)
 })
