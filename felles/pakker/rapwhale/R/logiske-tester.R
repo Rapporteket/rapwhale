@@ -22,6 +22,10 @@
 #'
 #' Funksjonen tilsvarer altså `!a | b`, men håndterer `NA` som `FALSE`.
 #'
+#' Hvis `a` og `b` har ulik lengde blir den korteste brukt på ny nødvendig
+#' antall ganger, likt som for logiske operatorer. Se [base::Logic] for
+#' detaljer.
+#'
 #' @return Logisk vektor som elementvis sier om `a = TRUE` impliserer `b = TRUE`.
 #' @examples
 #' d_gyldig_eks = tibble::tribble(
@@ -63,6 +67,10 @@ impl = function(a, b) {
 #' elementpar som motstrider at `a = TRUE` er ekvivalent med `b = TRUE`.
 #'
 #' Funksjonen tilsvarer altså `a == b`, men håndterer `NA` som `FALSE`.
+#'
+#' Hvis `a` og `b` har ulik lengde blir den korteste brukt på ny nødvendig
+#' antall ganger, likt som for logiske operatorer. Se [base::Logic] for
+#' detaljer.
 #'
 #' @return Logisk vektor som elementvis sier om `a = TRUE` er ekvivalent
 #'         med `b = TRUE`.
