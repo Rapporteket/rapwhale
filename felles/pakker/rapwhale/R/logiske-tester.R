@@ -35,6 +35,10 @@
 #' impl(d_gyldig_eks$bosted_bydel == "Åsane", d_gyldig_eks$bosted_by == "Bergen")
 #' @export
 impl = function(a, b) {
+  if (class(a) != "logical" | class(b) != "logical") {
+    stop("a og b må være logiske vektorer")
+  }
+
   (is.na(a) | !a) | tidyr::replace_na(b, FALSE) # eg. (!a | b), men håndterer NA
 }
 
@@ -74,5 +78,9 @@ impl = function(a, b) {
 #' ekviv(d_gyldig_eks$operert == "Ja", !is.na(d_gyldig_eks$komplikasjoner))
 #' @export
 ekviv = function(a, b) {
+  if (class(a) != "logical" | class(b) != "logical") {
+    stop("a og b må være logiske vektorer")
+  }
+
   impl(a, b) & impl(b, a)
 }
