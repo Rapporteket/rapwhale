@@ -96,6 +96,10 @@ test_that("impl() gir advarsel hvis lengdene av a og b er ulike, og den ene ikke
   expect_warning(impl(rep(TRUE, 3), c(TRUE, FALSE)))
 })
 
+test_that("Infiks-versjonen %impl% er identisk impl()", {
+  expect_identical(`%impl%`, impl)
+})
+
 context("ekviv")
 
 test_that("ekviv() gir feilmelding hvis a eller b ikke er logiske vektorer", {
@@ -178,4 +182,8 @@ test_that("ekviv() gir advarsel hvis lengdene av a og b er ulike, og den ene ikk
 
 test_that("ekviv(a, b) gir samme resultat som ekviv(b, a)", {
   expect_identical(ekviv(a, b), ekviv(b, a))
+})
+
+test_that("Infiks-versjonen %ekviv% er identisk ekviv()", {
+  expect_identical(`%ekviv%`, ekviv)
 })
