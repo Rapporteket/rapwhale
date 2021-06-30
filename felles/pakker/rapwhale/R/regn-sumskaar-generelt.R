@@ -311,6 +311,7 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 #'     `feilverdi`. Sortert etter radnummer og så rekkefølge i `d`.
 #'     Hvis `d` ikke inneholder noen ugyldige verdier, vil tibble-en ha
 #'     null rader.
+#  FIXME Legg til eksempel på bruk av funksjonen
 #' @seealso [sjekk_variabelverdier()], [oppsummer_ugyldige_verdier()]
 finn_ugyldige_verdier = function(d, verditabell) {
   d %>%

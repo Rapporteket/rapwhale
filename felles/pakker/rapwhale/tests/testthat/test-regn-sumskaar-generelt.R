@@ -503,6 +503,11 @@ test_that("finn_ugyldige_verdier() gir ut en dataramme
   )
 })
 
+# FIXME Test på at NA-verdiar i variablar skal kunna ha det vert rekna som gyldige
+# Eller eventuelt berre endra/leggja til ein NA verdi i variabelen psyk1 i d_gyldig_eks1
+
+# FIXME Test på at inndata med 0 rader fungerer som forventa
+
 # Eksempeldata med 1 feil
 d_ugyldig_1_feil = d_gyldig_eks1
 d_ugyldig_1_feil$fys1[1] = 13
@@ -574,6 +579,8 @@ ugyldighetstabell_na_feil = tibble(
   variabel = "fys1",
   feilverdi = as.numeric(NA)
 )
+
+# FIXME Del testane opp i eigne test_that()-kall slik at dei vert meir spesifikke
 
 test_that("finn_ugyldige_verdier() gir ut korrekt feiloversikt hvis det
           finnes ugyldige verdier i datasettet", {
