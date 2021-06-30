@@ -28,7 +28,7 @@
 #'
 #' @return Logisk vektor som elementvis sier om `a = TRUE` impliserer `b = TRUE`.
 #' @examples
-#' d_gyldig_eks = tibble::tribble(
+#' d = tibble::tribble(
 #'   ~pas_id, ~bosted_by, ~bosted_bydel,
 #'   1, "Bergen", "Åsane",
 #'   2, "Bergen", "Landås",
@@ -36,7 +36,15 @@
 #'   4, "Bergen", "Fana",
 #'   5, "Oslo", "Haugenstua"
 #' )
-#' impl(d_gyldig_eks$bosted_bydel == "Åsane", d_gyldig_eks$bosted_by == "Bergen")
+#'
+#' bosted_aasane = d$bosted_bydel == "Åsane"
+#' bosted_bergen = d$bosted_by == "Bergen"
+#'
+#' # Sjekk om bosted Åsane impliserer bosted Bergen
+#' impl(bosted_aasane, bosted_bergen)
+#'
+#' # Eller som infiks-operator
+#' bosted_aasane %impl% bosted_bergen
 #' @export
 impl = function(a, b) {
   if (class(a) != "logical" | class(b) != "logical") {
@@ -45,6 +53,10 @@ impl = function(a, b) {
 
   (is.na(a) | !a) | tidyr::replace_na(b, FALSE) # eg. (!a | b), men håndterer NA
 }
+
+#' @describeIn impl [impl()] som infiks-operator
+#' @export
+`%impl%` = impl
 
 #' Sjekk om sann `a` er ekvivalent med sann `b`
 #'
@@ -75,7 +87,7 @@ impl = function(a, b) {
 #' @return Logisk vektor som elementvis sier om `a = TRUE` er ekvivalent
 #'         med `b = TRUE`.
 #' @examples
-#' d_gyldig_eks = tibble::tribble(
+#' d = tibble::tribble(
 #'   ~pas_id, ~operert, ~komplikasjoner,
 #'   1, "Ja", "Nei",
 #'   2, "Ja", "Nei",
@@ -83,7 +95,16 @@ impl = function(a, b) {
 #'   4, "Nei", NA,
 #'   5, "Ja", "Ja"
 #' )
-#' ekviv(d_gyldig_eks$operert == "Ja", !is.na(d_gyldig_eks$komplikasjoner))
+#'
+#' er_operert = d$operert == "Ja"
+#' komplikasjoner_registrert = !is.na(d$komplikasjoner)
+#'
+#' # Sjekk om alle som er operert har ein verdi
+#' # registrert i variabelen komplikasjoner
+#' ekviv(er_operert, komplikasjoner_registrert)
+#'
+#' # Eller som infiks-operator
+#' er_operert %ekviv% komplikasjoner_registrert
 #' @export
 ekviv = function(a, b) {
   if (class(a) != "logical" | class(b) != "logical") {
@@ -92,3 +113,7 @@ ekviv = function(a, b) {
 
   impl(a, b) & impl(b, a)
 }
+
+#' @describeIn ekviv [ekviv()] som infiks-operator
+#' @export
+`%ekviv%` = ekviv
