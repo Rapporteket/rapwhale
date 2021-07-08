@@ -194,3 +194,59 @@ lag_tab_latex = function(dataframe, label, caption, wide = FALSE, ...) {
   # Returner tabellen (eller feilmelding)
   tabell
 }
+
+#' Lag statistisk samandragsfunksjon med trunkerte grenser for konfidensintervall
+#'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
+#' Lagar ein statistisk samandragsfunksjon tilsvarande
+#' [ggplot2::mean_cl_normal()] der grensene for konfidensintervallet
+#' vert trunkerte.
+#'
+#' @param ymin Nedre grense for konfidensintervall. Standard verdi `NA`.
+#' @param ymax Øvre grense for konfidensintervall. Standard verdi `NA`.
+#'
+#' @details
+#' Tek inn ei nedre grense `ymin` og ei øvre grense `ymax` og gjev ut ein
+#' funksjon tilsvarande [ggplot2::mean_cl_normal()] der grensene for
+#' konfidensintervallet er trunkerte til desse verdiane.
+#'
+#' Dersom `ymin` og/eller `ymax` er `NA`, vert ikkje tilhøyrande grenser
+#' trunkerte.
+#'
+#' Denne funksjonen kan nyttast til å laga trunkerte konfidensintervall
+#' viss inndata har kjende nedre og/eller øvre verdigrenser.
+#'
+#' Funksjonen er også laga for å brukast i [ggplot2::stat_summary()].
+#'
+#' @return
+#' Ein funksjon tilsvarande [ggplot2::mean_cl_normal()], men der grensene for
+#' konfidensintervallet vert trunkerte
+#' @export
+#'
+#' @examples
+#' # Vektorar med eksempel på svar frå undersøkjing
+#'
+#' # På ein skala frå 1-5, kor godt nøgd er du med x?
+#' x = c(5, 5, 4, 5)
+#' # På ein skala frå 1-5, kor godt nøgd er du med y?
+#' y = c(1, 2, 1, 1)
+#'
+#' ggplot2::mean_cl_normal(x)
+#' mean_cl_normal_truncated(ymin = 1, ymax = 5)(x)
+#'
+#' d = tibble(spm = rep(c("x", "y"), each = 4), verdi = c(x, y))
+#' p = ggplot(d, aes(spm, verdi)) +
+#'   geom_point(position = position_dodge2(width = 0.05))
+#'
+#' p + stat_summary(fun.data = mean_cl_normal, size = 1, color = "red")
+#' p + stat_summary(fun.data = mean_cl_normal_truncated(ymin = 1, ymax = 5), size = 1, color = "red")
+mean_cl_normal_truncated = function(ymin = NA, ymax = NA) {
+  function(x, ...) {
+    res = ggplot2::mean_cl_normal(x, ...)
+    res$ymin = pmax(ymin, res$ymin, na.rm = TRUE)
+    res$ymax = pmin(ymax, res$ymax, na.rm = TRUE)
+    res
+  }
+}
