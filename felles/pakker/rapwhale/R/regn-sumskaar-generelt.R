@@ -320,8 +320,20 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 #'     Radene er sortert etter radnummer og så kolonnerekkefølge i `d`.
 #'     Hvis `d` ikke inneholder noen ugyldige verdier, vil tibble-en ha
 #'     null rader.
-#  FIXME Legg til eksempel på bruk av funksjonen
+#'
 #' @seealso [sjekk_variabelverdier()], [oppsummer_ugyldige_verdier()]
+#'
+#' @examples
+#' # To ugyldige verdiar
+#' d = data.frame(kjonn = c(2, 1, 1, 3), livskvalitet = c(0, 10, NA, 5))
+#' verditabell = data.frame(
+#'   variabel = c(rep("kjonn", 2), rep("livskvalitet", 3)),
+#'   verdi = c(1, 2, 0, 5, 10)
+#' )
+#' rapwhale:::finn_ugyldige_verdier(d, verditabell)
+#'
+#' # Berre gyldige verdiar
+#' rapwhale:::finn_ugyldige_verdier(d[1:2, ], verditabell)
 finn_ugyldige_verdier = function(d, verditabell) {
   d %>%
     rowid_to_column("radnr") %>%
