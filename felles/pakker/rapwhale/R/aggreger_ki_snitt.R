@@ -105,6 +105,10 @@ aggreger_ki_snitt = function(d_ki_ind, alfa = 0.05) {
     stop("'ki_x' må være en numerisk verdi hvis 'ki_aktuell' er TRUE")
   }
 
+  if (!is.numeric(alfa) | alfa <= 0 | alfa >= 1) {
+    stop("«alfa» må være et tall mellom 0 og 1")
+  }
+
   konfint = function(x) {
     konfint_robust = possibly(
       ~ t.test(.x, conf.level = 1 - alfa)$conf.int,
