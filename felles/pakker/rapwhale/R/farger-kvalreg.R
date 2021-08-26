@@ -1,19 +1,23 @@
 #' @importFrom colorspace coords
 NULL
-#' Farger for bruk i figurer
+#' Lagre offisielle fargekoder i miljøet
 #'
 #' @description 
 #' `r lifecycle::badge("maturing")`
 #' 
-#' Inneholder offisielle fargekoder som skal brukes i figurer 
-#' i årsrapporter.
+#' Funksjonen gir ut en statisk liste med fargekoder for de offisielle fargene 
+#' som skal brukes i figurer i årsrapporter. 
 #' 
 #' @return En liste med `farger_hoved`, `farger_noyt` og `farger_kontr`.
 #' @export
+#' @example 
+#' #les inn fargekoder
+#' farger = farger_kvalreg()
+#' 
+#' farger
 farger_kvalreg = function() {
   
-  # Dei offisielle fargene (som eg ikkje er så glad i)
-  # du mener, som INGEN liker.
+  # Dei offisielle fargene
   colPrim=c("#000059", "#084594", "#2171b5", 
             "#4292c6", "#6baed6", "#c6dbef") # Primærfarge (mørk til lys)
   colNoyt=c("#4D4D4D", "#737373", "#A6A6A6", "#DADADA") # Nøytralfarge
