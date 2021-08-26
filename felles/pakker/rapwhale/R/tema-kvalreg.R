@@ -111,7 +111,7 @@ fjern_y_ticks = theme(axis.ticks.y = element_blank())
 #' Juster søylediagram
 #' 
 #' @description 
-#' `r lifecycle::badge("experimental")`
+#' `r lifecycle::badge("maturing")`
 #' 
 #' Disse funksjonene brukes for å justere plassering av søyler i søylediagram. 
 #' Søylene starter helt inntil aksen og får litt luft i enden av søylen. 
