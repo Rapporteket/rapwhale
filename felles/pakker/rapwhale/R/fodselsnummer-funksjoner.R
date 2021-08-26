@@ -203,7 +203,7 @@ fnr_er_gyldig_v2 = function(nummer, gyldige_typar = c("FNR", "H", "D", "FH")) {
 #' Tek inn ein tekstvektor og gjev for kvart element ut `TRUE` viss det er
 #' 11 teikn langt og berre inneheld siffer, og `FALSE` elles.
 #'
-#' @param nummmer Tekstvektor.
+#' @param nummer Tekstvektor.
 #'
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er syntaktisk korrekt eller ikkje.
