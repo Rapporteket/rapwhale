@@ -295,8 +295,9 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 #' @param d Dataramme/tibble som kun inneholder kolonner med identiske
 #'     navn som i `verditabell$variabel`. Alle kolonnene må inneholde
 #'     numeriske verdier.
-#' @param verditabell Dataramme/tibble med to kolonner (`variabel` og
-#'     `verdi`) som sier hvilke verdier som er gyldige for hvilke
+#' @param verditabell Dataramme/tibble med to kolonner,
+#'     `variabel` og `verdi`,
+#'     som sier hvilke verdier som er gyldige for hvilke
 #'     variabler. Kolonnen `variabel` må være av typen tekst og
 #'     `verdi` må være numerisk.
 #'
@@ -307,8 +308,10 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 #'
 #' @keywords internal
 #'
-#' @return Tibble som inneholder tre kolonner, `radnr`, `variabel` og
-#'     `feilverdi`. Sortert etter radnummer og så rekkefølge i `d`.
+#' @return Tibble med én rad for hver ugyldige verdi i `d`.
+#'     Inneholder tre kolonner, `radnr`, `variabel` og `feilverdi`,
+#'     som tilsvarer radnummer, kolonnenavn og celleverdi i `d`.
+#'     Radene er sortert etter radnummer og så kolonnerekkefølge i `d`.
 #'     Hvis `d` ikke inneholder noen ugyldige verdier, vil tibble-en ha
 #'     null rader.
 #  FIXME Legg til eksempel på bruk av funksjonen
