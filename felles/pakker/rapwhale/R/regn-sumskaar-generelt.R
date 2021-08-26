@@ -306,6 +306,12 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 #' brukes separat. Resultatene kan oppsummeres til en
 #' tekststreng med [oppsummer_ugyldige_verdier()].
 #'
+#' @note
+#' Verdien `NA` blir *ikke* håndtert på noen spesiell måte.
+#' Hvis denne skal regnes som gyldig,
+#' må den altså eksplisitt listes opp i `verditabell`
+#' (for hver `variabel`).
+#'
 #' @keywords internal
 #'
 #' @return Tibble med én rad for hver ugyldige verdi i `d`.
