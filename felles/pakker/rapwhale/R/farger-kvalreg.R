@@ -10,7 +10,7 @@ NULL
 #' 
 #' @return En liste med `farger_hoved`, `farger_noyt` og `farger_kontr`.
 #' @export
-#' @example 
+#' @examples 
 #' #les inn fargekoder
 #' farger = farger_kvalreg()
 #' 
