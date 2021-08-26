@@ -28,7 +28,7 @@ farger_kvalreg = function() {
 #' Lag mørkare/lysare fargar
 #' 
 #' @description 
-#' `r lifecycle::badge("experimental")`
+#' `r lifecycle::badge("maturing")`
 #'
 #' Gjer ein vektor med fargar mørkare.
 #' Brukar CIELAB-fargerommet til utrekningar
