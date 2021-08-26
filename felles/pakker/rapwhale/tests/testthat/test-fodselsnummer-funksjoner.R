@@ -60,7 +60,7 @@ test_that("er_gyldig_f_nummer() gjev forventa resultat", {
   )
   expect_identical(
     er_gyldig_f_nummer(fnr_ugyldige),
-    rep(TRUE, length(fnr_ugyldige))
+    rep(FALSE, length(fnr_ugyldige))
   )
 })
 
