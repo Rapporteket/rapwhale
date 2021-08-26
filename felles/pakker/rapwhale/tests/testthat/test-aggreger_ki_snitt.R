@@ -68,6 +68,18 @@ test_that("Forventet utdata når inndata er gruppert og ugruppert", {
   expect_equal(aggreger_ki_snitt(d_ugruppert), d_ugruppert_ut)
 })
 
+test_that("Forventet utdata når alfa endres fra standard", {
+  d_test = tibble::tibble(
+    sykehus = factor(c("B", "B", "B", "A", "A", "A", "A")),
+    ki_x = c(1, 2, 3, 4, 5, 6, 8), ki_aktuell = rep(TRUE, 7)
+  )
+  d_test_ut = tibble::tibble(
+    est = 4.14285714285714324, konfint_nedre = 2.37260820476272194,
+    konfint_ovre = 5.91310608095156365, n_aktuell = 7L
+  )
+
+  expect_equal(aggreger_ki_snitt(d_test, alfa = 0.1), d_test_ut)
+})
 
 test_that("Funksjonen gir alltid ut ugrupperte data", {
   d_test = tibble::tibble(

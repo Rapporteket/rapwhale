@@ -107,7 +107,7 @@ aggreger_ki_snitt = function(d_ki_ind, alfa = 0.05) {
 
   konfint = function(x) {
     konfint_robust = possibly(
-      ~ t.test(.x)$conf.int,
+      ~ t.test(.x, conf.level = 1 - alfa)$conf.int,
       otherwise = c(NA_real_, NA_real_)
     )
     konfint_robust(x)
