@@ -121,6 +121,7 @@ num = function(x, desimalar, tabell = FALSE) {
 #' @param antall_desimaler Antall desimaler skal vises.
 #' @param decimal.mark Instilling for desimaltall. Standard er ",".
 #' @param ... Ytterligere argumenter.
+#' @return En funksjon med spesifiserte innstillinger for prosentformat.
 #' @export
 #' @examples
 #' ggplot(iris, aes(x = Sepal.Length, y = Petal.Width)) +
@@ -148,6 +149,7 @@ akse_prosent_format = function(antall_desimaler = 1, decimal.mark = ",", ...) {
 #' @param decimal.mark Instilling for desimaltegn. Standard er ",".
 #' @param big.mark Instilling for tusenskille. Standard er " ".
 #' @param ... Ytterligere argumenter.
+#' @return En funksjon med spesifiserte innstillinger for tallformat.
 #' @export
 #' @examples
 #' a = tibble::tibble(
