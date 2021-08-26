@@ -146,7 +146,7 @@ fjern_y_ticks = theme(axis.ticks.y = element_blank())
 #' p + scale_y_continuous(expand = expand_soyle_str_fig())
 #' @export
 expand_soyle = function() {
-  expand_soyle = expansion(mult = c(0.0, .05), add = 0)
+  expand_soyle = ggplot2::expansion(mult = c(0.0, .05), add = 0)
 }
 
 # I noen tilfeller er det ikke tilstrekkelig plass for tekst-label i plot.
@@ -154,5 +154,5 @@ expand_soyle = function() {
 #' @rdname expand_soyle
 #' @export
 expand_soyle_str_fig = function() {
-  expand_soyle_str_fig = expansion(mult = c(0.0, .09), add = 0)
+  expand_soyle_str_fig = ggplot2::expansion(mult = c(0.0, .09), add = 0)
 }
