@@ -287,7 +287,7 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 #' Finn ugyldige verdier i et datasett
 #'
 #' @description
-#' `r lifecycle::badge("maturing")`
+#' `r lifecycle::badge("stable")`
 #'
 #' Gir ut en tibble med oversikt over alle ugyldige verdier i datasettet,
 #' basert på en oversikt over mulige gyldige verdier.
