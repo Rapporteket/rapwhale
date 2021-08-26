@@ -324,7 +324,7 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 #' @seealso [sjekk_variabelverdier()], [oppsummer_ugyldige_verdier()]
 #'
 #' @examples
-#' # To ugyldige verdiar
+#' # To ugyldige verdier
 #' d = data.frame(kjonn = c(2, 1, 1, 3), livskvalitet = c(0, 10, NA, 5))
 #' verditabell = data.frame(
 #'   variabel = c(rep("kjonn", 2), rep("livskvalitet", 3)),
@@ -332,7 +332,7 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 #' )
 #' rapwhale:::finn_ugyldige_verdier(d, verditabell)
 #'
-#' # Berre gyldige verdiar
+#' # Berre gyldige verdier
 #' rapwhale:::finn_ugyldige_verdier(d[1:2, ], verditabell)
 finn_ugyldige_verdier = function(d, verditabell) {
   d %>%
