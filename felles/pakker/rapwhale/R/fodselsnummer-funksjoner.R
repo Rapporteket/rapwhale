@@ -207,8 +207,8 @@ fnr_er_gyldig_v2 = function(nummer, gyldige_typar = c("FNR", "H", "D", "FH")) {
 #'
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er syntaktisk korrekt eller ikkje.
-er_syntaktisk_fnr = function(nummmer) {
-
+er_syntaktisk_fnr = function(nummer) {
+  str_detect(nummer, "^\\d{11}$")
 }
 
 #' Sjekk gyldig dato
