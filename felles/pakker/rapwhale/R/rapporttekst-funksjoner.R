@@ -110,7 +110,7 @@ num = function(x, desimalar, tabell = FALSE) {
 #' Formater akse med prosentformat
 #'
 #' @description
-#' `r lifecycle::badge("experimental")`
+#' `r lifecycle::badge("maturing")`
 #'
 #' Funksjonen brukes i ggplot-kall og konverterer akselabels til å vise
 #' prosent med riktig format. Standard er mellomrom før prosenttegnet
@@ -140,7 +140,7 @@ akse_prosent_format = function(antall_desimaler = 1, decimal.mark = ",", ...) {
 #' Formater akser med tallformat
 #'
 #' @description
-#' `r lifecycle::badge("experimental")`
+#' `r lifecycle::badge("maturing")`
 #'
 #' Funksjonen brukes i ggplot-kall og konverterer akselabels til å vise tall
 #' med tusenskille (standard er " ") og ønsket antall desimaler (standard er 2).
