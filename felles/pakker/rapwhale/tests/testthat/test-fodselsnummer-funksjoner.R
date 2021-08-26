@@ -1,4 +1,4 @@
-# ---------- Testar for er_syntaktisk_fnr() --------------------
+context("er_syntaktisk_fnr()")
 
 test_that("er_syntaktisk_fnr() gjev forventa resultat", {
   nummer = c(
