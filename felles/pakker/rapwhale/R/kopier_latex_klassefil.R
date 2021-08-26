@@ -1,4 +1,4 @@
-#' Kopier LaTeX-klassefil
+#' Kopier LaTeX-klassefil til TeX Live eller liknande
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
