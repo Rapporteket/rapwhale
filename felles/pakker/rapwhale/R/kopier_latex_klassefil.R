@@ -1,7 +1,7 @@
 #' Kopier LaTeX-klassefil til TeX Live eller liknande
 #'
 #' @description
-#' `r lifecycle::badge("experimental")`
+#' `r lifecycle::badge("maturing")`
 #'
 #' Kopierer LaTeX-klassefila for kvalreg-rapportar frå rapwhale til
 #' TeX Live-mappa eller anna gjeven mappe.
