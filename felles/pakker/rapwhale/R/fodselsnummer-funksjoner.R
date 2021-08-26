@@ -222,7 +222,11 @@ er_syntaktisk_fnr = function(nummer) {
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `dato` alt etter om det høvesvis er ein gyldig dato eller ikkje.
 er_gyldig_fnr_dato = function(dato) {
+  dato_tekst = str_c(str_sub(dato, 1, 4), "20", str_sub(dato, 5, 6)) # Legg til hundreårsinfo
 
+  # Sjekk om det kan vera ein gyldig dato
+  datoar = as.Date(dato_tekst, format = "%d%m%Y")
+  !is.na(datoar)
 }
 
 #' Sjekk gyldig F-nummer
