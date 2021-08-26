@@ -145,12 +145,33 @@ fnr_er_gyldig = function(x) {
 
 #' Sjekk gyldig fødselsnummmer og liknande
 #'
-#' @param nummer Tekstvektor med fødselsnummer.
-#' @param gyldige_typar Tekstvektor med typar fødselsnummer som skal reknast
+#' @description
+#' Tek inn ein vektor `nummer`med nummer som skal sjekkast,
+#' og ein vektor `gyldige_typar` med typar nummmer som skal godkjennast,
+#' og gjev for kvart nummer ut `TRUE` viss det er gyldig, og `FALSE`
+#' viss det er ugyldig.
+#'
+#' @param nummer Tekstvektor med nummer som skal sjekkast.
+#' @param gyldige_typar Tekstvektor med typar nummer som skal reknast
 #' som gyldige. Standard verdi er `c("FNR", "H", "D", "FH")`.
 #'
+#' @details
+#' Funksjonen sjekkar om nummera i vektoren `nummer` er gyldige nummer
+#' av typane i `gyldige_typar`, og gjev for kvart nummer ut `TRUE`
+#' viss det er gyldig, og `FALSE` viss det er ugyldig.
+#'
+#' Moglege typar til `gyldige_typar` er:
+#' Fødselsnummer ("FNR") - Vanleg ellevesifra fødselsnummer som inneheld
+#' fødselsdato og personnummer.
+#' D-nummer ("D") - Ellevesifra nummer, som fødselsnummer, men modifisert ved
+#' at det er lagt til 4 på det fyrste sifferet.
+#' H-nummer ("H") - Ellevesifra nummer, som fødselsnummer, men modifisert ved
+#' at det er lagt til 4 på det tredje sifferet.
+#' FH-nummer ("FH") - Ellevesifra nummer der fyrste siffer er 8 eller 9,
+#' dei neste åtte siffera er tilfeldige, og dei to siste er kontrollsiffer.
+#'
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
-#' i `nummer` alt etter om det høvesvis gyldige fødselsnummer av typane i
+#' i `nummer` alt etter om det høvesvis er gyldige nummer av typane i
 #' `gyldige_typar` eller ikkje.
 #' @export
 #'
@@ -164,11 +185,11 @@ fnr_er_gyldig_v2 = function(nummer, gyldige_typar = c("FNR", "H", "D", "FH")) {
   if ("FNR" %in% gyldige_typar) {
     gyldig[gyldig] = er_gyldig_f_nummer(nummer[gyldig])
   }
-  if ("H" %in% gyldige_typar) {
-    gyldig[gyldig] = er_gyldig_h_nummer(nummer[gyldig])
-  }
   if ("D" %in% gyldige_typar) {
     gyldig[gyldig] = er_gyldig_d_nummer(nummer[gyldig])
+  }
+  if ("H" %in% gyldige_typar) {
+    gyldig[gyldig] = er_gyldig_h_nummer(nummer[gyldig])
   }
   if ("FH" %in% gyldige_typar) {
     gyldig[gyldig] = er_gyldig_fh_nummer(nummer[gyldig])
@@ -177,6 +198,10 @@ fnr_er_gyldig_v2 = function(nummer, gyldige_typar = c("FNR", "H", "D", "FH")) {
 }
 
 #' Sjekk syntaktisk fødselsnummer
+#'
+#' @description
+#' Tek inn ein tekstvektor og gjev for kvart element ut `TRUE` viss det er
+#' 11 teikn langt og berre inneheld siffer, og `FALSE` elles.
 #'
 #' @param nummmer Tekstvektor.
 #'
@@ -188,7 +213,11 @@ er_syntaktisk_fnr = function(nummmer) {
 
 #' Sjekk gyldig dato
 #'
-#' @param dato Tekstvektor der kvart element har seks siffer.
+#' @description
+#' Tek inn ein tekstvektor med sekssifra element og gjev for kvart element ut
+#' `TRUE` viss det er ein gyldig dato på formatet "DDMMYY", og `FALSE` elles.
+#'
+#' @param dato Tekstvektor der kvart element har 6 siffer.
 #'
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `dato` alt etter om det høvesvis er ein gyldig dato eller ikkje.
@@ -198,7 +227,18 @@ er_gyldig_fnr_dato = function(dato) {
 
 #' Sjekk gyldig F-nummer
 #'
-#' @param nummer Tekstvektor med F-nummer.
+#' @description
+#' Tek inn ein tekstvektorder der kvart element har 11 siffer,
+#' og gjev for kvart element ut `TRUE` viss det er eit gyldig fødselsnummer,
+#' og `FALSE` elles.
+#'
+#' @param nummer Tekstvektor der kvart element har 11 siffer.
+#'
+#' @details
+#' I eit gyldig fødselsnummer er dei fyrste seks siffera ein fødselsdato på
+#' formatet "DDMMYY", og dei siste fem siffera eit personnummmer.
+#' Personnummeret inneheld tre individsiffer, og to kontrollsiffer rekna ut
+#' frå dei føregåande siffera.
 #'
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er eit gyldig F-nummer eller ikkje.
@@ -206,19 +246,20 @@ er_gyldig_f_nummer = function(nummer) {
 
 }
 
-#' Sjekk gyldig H-nummer
-#'
-#' @param nummer Tekstvektor med H-nummer.
-#'
-#' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
-#' i `nummer` alt etter om det høvesvis er eit gyldig H-nummer eller ikkje.
-er_gyldig_h_nummer = function(nummer) {
-
-}
-
 #' Sjekk gyldig D-nummer
 #'
-#' @param nummer Tekstvektor med D-nummer.
+#' @description
+#' Tek inn ein tekstvektorder der kvart element har 11 siffer,
+#' og gjev for kvart element ut `TRUE` viss det er eit gyldig D-nummer,
+#' og `FALSE` elles.
+#'
+#' @param nummer Tekstvektor der kvart element har 11 siffer.
+#'
+#' @details
+#' I eit gyldig D-nummer er dei fyrste seks siffera ein fødselsdato på
+#' formatet "DDMMYY", men der det er lagt til 4 til det fyrste sifferet.
+#' Dei siste fem siffera er eit personnummmer som inneheld tre individsiffer,
+#' og to kontrollsiffer rekna ut frå dei føregåande siffera.
 #'
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er eit gyldig D-nummer eller ikkje.
@@ -226,9 +267,41 @@ er_gyldig_d_nummer = function(nummer) {
 
 }
 
+#' Sjekk gyldig H-nummer
+#'
+#' @description
+#' Tek inn ein tekstvektorder der kvart element har 11 siffer,
+#' og gjev for kvart element ut `TRUE` viss det er eit gyldig H-nummer,
+#' og `FALSE` elles.
+#'
+#' @param nummer Tekstvektor der kvart element har 11 siffer.
+#'
+#' @details
+#' I eit gyldig H-nummer er dei fyrste seks siffera ein fødselsdato på
+#' formatet "DDMMYY", men der det er lagt til 4 til det tredje sifferet.
+#' Dei siste fem siffera er eit personnummmer som inneheld tre individsiffer,
+#' og to kontrollsiffer rekna ut frå dei føregåande siffera.
+#'
+#' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
+#' i `nummer` alt etter om det høvesvis er eit gyldig H-nummer eller ikkje.
+er_gyldig_h_nummer = function(nummer) {
+
+}
+
 #' Sjekk gyldig FH-nummer
 #'
-#' @param nummer Tekstvektor med FH-nummer.
+#' @description
+#' Tek inn ein tekstvektorder der kvart element har 11 siffer,
+#' og gjev for kvart element ut `TRUE` viss det er eit gyldig FH-nummer,
+#' og `FALSE` elles.
+#'
+#' @param nummer Tekstvektor der kvart element har 11 siffer.
+#'
+#' @details
+#' Eit gyldig FH-nummer er eit ellevesifra nummer
+#' der fyrste siffer er 8 eller 9,
+#' dei neste åtte siffera er tilfeldige,
+#' og dei to siste siffera er kontrollsiffer rekna ut frå dei føregåande siffera.
 #'
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er eit gyldig FH-nummer eller ikkje.
@@ -238,7 +311,21 @@ er_gyldig_fh_nummer = function(nummer) {
 
 #' Kontroller sjekksum for fødselsnummer og liknande
 #'
-#' @param nummer Tekstvektor med fødselsnummer.
+#' @description
+#' Tek inn ein tekstvektorder der kvart element har 11 siffer,
+#' og gjev for kvart element ut `TRUE` viss dei to siste siffera,
+#' kontrollsiffera, er korrekt i høve dei føregåande siffera,
+#' og `FALSE` elles.
+#'
+#' @param nummer Tekstvektor der kvart element har 11 siffer.
+#'
+#' @details
+#' Kvart av kontrollsiffera skal vera ein sjekksum rekna ut frå dei
+#' føregåande siffera. Viss dei ni fyrste siffera av eit fødselsnummer,
+#' eller anna liknande nummer, er d1 d2 m1 m2 å1 å2 i1 i2 i3,
+#' skal kontrollsiffera, k1 og k2, oppfylla fylgjande:
+#' `k1 = 11 - ((3 * d1 + 7 * d2 + 6 * m1 + 1 * m2 + 8 * å1 + 9 * å2 + 4 * i1 + 5 * i2 + 2 * i3) mod 11)`
+#' `k2 = 11 - ((5 * d1 + 4 * d2 + 3 * m1 + 2 * m2 + 7 * å1 + 6 * å2 + 5 * i1 + 4 * i2 + 3 * i3 + 2 * k1) mod 11)`.
 #'
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis gjev korrekt sjekksum eller ikkje.
