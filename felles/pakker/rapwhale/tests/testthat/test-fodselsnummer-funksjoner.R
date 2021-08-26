@@ -78,7 +78,7 @@ test_that("er_gyldig_f_nummer() fungerer òg med vektorar av lengd 0", {
 context("er_fnr_sjekksum_korrekt()")
 
 test_that("er_fnr_sjekksum_korrekt() gjev forventa resultat", {
-  nummer_gyldige = c("12345678911", "12345678922", "15076500565")
+  nummer_gyldige = c("12345678911", "15076500565")
   nummer_ugyldige = c("12345678922", "15076500511")
   expect_identical(
     er_fnr_sjekksum_korrekt(nummer_gyldige),
