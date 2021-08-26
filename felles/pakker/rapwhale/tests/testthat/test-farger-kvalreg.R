@@ -1,14 +1,11 @@
 context("farger_kvalreg")
 test_that("utdata er en liste som inneholder 3 tekstvektorer: farger_hoved,
           farger_noyt, farger_kontr", {
-  farger = as.data.frame(summary(farger_kvalreg())) %>%
-    filter(Var2 == "Mode", Freq == "character")
-  expect_identical(nrow(farger), 3L)
+  expect_length(purrr:::map_lgl(farger_kvalreg(), is.character), 3)
 
   navn_vektorer = c("farger_hoved", "farger_noyt", "farger_kontr")
-  expect_identical(as.character(farger$Var1), navn_vektorer)
+  expect_identical(purrr::imap_chr(farger_kvalreg(), ~.y) %>% unname(), navn_vektorer)
 })
-
 
 context("farge_morkare")
 test_that("farge_morkare gir ut forventede fargekoder ved ulike grader", {
