@@ -14,11 +14,14 @@ farger_kvalreg = function() {
   
   # Dei offisielle fargene (som eg ikkje er så glad i)
   # du mener, som INGEN liker.
-  colPrim=c("#000059", "#084594", "#2171b5", "#4292c6", "#6baed6", "#c6dbef") # Primærfarge (mørk til lys)
+  colPrim=c("#000059", "#084594", "#2171b5", 
+            "#4292c6", "#6baed6", "#c6dbef") # Primærfarge (mørk til lys)
   colNoyt=c("#4D4D4D", "#737373", "#A6A6A6", "#DADADA") # Nøytralfarge
   colKontr="#FF7260"                                    # Kontrastfarge
   
-  farger = list("farger_hoved" = colPrim, "farger_noyt" = colNoyt, "farger_kontr" = colKontr)
+  farger = list("farger_hoved" = colPrim, 
+                "farger_noyt" = colNoyt, 
+                "farger_kontr" = colKontr)
   farger
 }
 
@@ -32,15 +35,17 @@ farger_kvalreg = function() {
 #' (i staden for RGB-fargerommet), for
 #' betre resultat (meir tilpassa korleis
 #' synet vårt fungerer).
+#' 
 #' @param fargar ein vektor med fargar.
 #' @param grad seier kor mykje mørkare fargen skal gjerast (so bruk negative verdiar for å gjera han lysare).
+#' 
 #' @export
 #' @examples
 #' Lag vektor med fargar mørkare
-#' farge_morkare(c("#000059", "#084594", "#2171b5"))
+#' farge_morkare(fargar = c("#000059", "#084594", "#2171b5"))
 #' 
 #' Lag vektor med fargar lysare
-#' farge_morkare(c("#000059", "#084594", "#2171b5"), -3)
+#' farge_morkare(fargar = c("#000059", "#084594", "#2171b5"), grad = -3)
 farge_morkare = function(fargar, grad = 5) {
   farge_lab = as(colorspace::hex2RGB(fargar), "LAB")
   farge_lab@coords[, 1] = pmax(farge_lab@coords[, 1] - grad, 0)
