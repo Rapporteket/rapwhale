@@ -143,6 +143,91 @@ fnr_er_gyldig = function(x) {
   ok
 }
 
+#' Sjekk argumentet gyldige typar
+#'
+#' @param typar Tekstvektor med typar fødselsnummer.
+#'
+#' @return `TRUE` viss argumentet `typar` er OK, og `FALSE` viss ikkje.
+sjekk_argument_gyldige_typar = function(typar) {
+
+}
+
+#' Sjekk syntaktisk fødselsnummer
+#'
+#' @param nummmer Tekstvektor med fødselsnummer.
+#'
+#' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
+#' i `nummer` alt etter om det høvesvis er syntaktisk korrekt eller ikkje.
+er_syntaktisk_fnr = function(nummmer) {
+
+}
+
+#' Sjekk gyldig dato
+#'
+#' @param dato Tekstvektor med sekssifra datoar.
+#'
+#' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
+#' i `dato` alt etter om det høvesvis er ein gyldig dato eller ikkje.
+er_gyldig_fnr_dato = function(dato) {
+
+}
+
+#' Sjekk gyldig H-nummer
+#'
+#' @param nummer Tekstvektor med H-nummer.
+#'
+#' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
+#' i `nummer` alt etter om det høvesvis er eit gyldig H-nummer eller ikkje.
+er_gyldig_h_nummer = function(nummer) {
+
+}
+
+#' Sjekk gyldig D-nummer
+#'
+#' @param nummer Tekstvektor med D-nummer.
+#'
+#' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
+#' i `nummer` alt etter om det høvesvis er eit gyldig D-nummer eller ikkje.
+er_gyldig_d_nummer = function(nummer) {
+
+}
+
+#' Sjekk gyldig FH-nummer
+#'
+#' @param nummer Tekstvektor med FH-nummer.
+#'
+#' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
+#' i `nummer` alt etter om det høvesvis er eit gyldig FH-nummer eller ikkje.
+er_gyldig_fh_nummer = function(nummer) {
+
+}
+
+#' Kontroller sjekksum
+#'
+#' @param nummer Tekstvektor med fødselsnummer.
+#'
+#' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
+#' i `nummer` alt etter om det høvesvis gjev korrekt sjekksum eller ikkje.
+er_sjekksum_korrekt = function(nummer) {
+
+}
+
+#' Sjekk gyldig fødselsnummmer
+#'
+#' @param nummer Tekstvektor med fødselsnummer.
+#' @param gyldige_typar Tekstvektor med typar fødselsnummer som skal reknast
+#' som gyldige. Standard verdi er c("FNR", "H", "D", "FH").
+#'
+#' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
+#' i `nummer` alt etter om det høvesvis gyldige fødselsnummer av typane i
+#' `gyldige_typar` eller ikkje.
+#' @export
+#'
+#' @examples
+fnr_er_gyldig = function(nummer, gyldige_typar = c("FNR", "H", "D", "FH")) {
+
+}
+
 #' Foreslå lignende fødselsnummer
 #'
 #' @description
