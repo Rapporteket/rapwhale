@@ -29,10 +29,12 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' kopier_latex_klassefil()
 #'
 #' texmappe = tempdir()
 #' kopier_latex_klassefil(texmappe)
+#' }
 kopier_latex_klassefil = function(texmappe = NULL) {
   if (is.null(texmappe)) {
     texmappe_rot = system2("kpsewhich", "-var-value=TEXMFHOME", stdout = TRUE)
