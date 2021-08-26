@@ -501,7 +501,7 @@ test_that("finn_ugyldige_verdier() gir ut en dataramme
 })
 
 test_that("finn_ugyldige_verdier() håndterer inndata med 0 rader", {
-  d = data.frame(kjonn = c(), livskvalitet = c())
+  d = data.frame(kjonn = numeric(), livskvalitet = numeric())
   expect_identical(
     finn_ugyldige_verdier(
       d,
