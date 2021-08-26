@@ -46,6 +46,15 @@ test_that("Feilmelding hvis kriterievariablene inneholder annet enn TRUE, FALSE 
   expect_error(aggreger_ki_prop(d_nevner_med_feil), feilmelding_nevner)
 })
 
+test_that("Feilmelding hvis alfa ikke er et tall mellom 0 og 1", {
+  d_teller_ok = tibble::tibble(ki_krit_teller = c(FALSE, TRUE, FALSE), ki_krit_nevner = c(TRUE, TRUE, FALSE))
+  feilmelding_alfa = "«alfa» må være et tall mellom 0 og 1"
+  expect_error(aggreger_ki_prop(d_teller_ok, alfa = 1.2), feilmelding_alfa)
+  expect_error(aggreger_ki_prop(d_teller_ok, alfa = 0), feilmelding_alfa)
+  expect_error(aggreger_ki_prop(d_teller_ok, alfa = 1), feilmelding_alfa)
+  expect_error(aggreger_ki_prop(d_teller_ok, alfa = "0.05"), feilmelding_alfa)
+})
+
 test_that("aggreger_ki_prop() fungerer (utan feilmelding) viss «ki_krit_nevner» er FALSE (og elles er gyldig)", {
   d_teller_ok_men_na = tibble::tibble(ki_krit_teller = c(FALSE, TRUE, NA), ki_krit_nevner = c(TRUE, TRUE, FALSE))
   d_teller_ok_men_false = tibble::tibble(ki_krit_teller = c(FALSE, TRUE, FALSE), ki_krit_nevner = c(TRUE, TRUE, FALSE))
