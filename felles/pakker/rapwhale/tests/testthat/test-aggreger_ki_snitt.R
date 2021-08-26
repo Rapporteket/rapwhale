@@ -49,7 +49,7 @@ test_that("Feilmelding hvis 'alfa' ikke er et tall mellom 0 og 1", {
     ki_x = c(15, 12, 12),
     ki_aktuell = c(TRUE, TRUE, TRUE)
   )
-  feilmelding_alfa = "'alfa' må være et tall mellom 0 og 1"
+  feilmelding_alfa = "«alfa» må være et tall mellom 0 og 1"
   expect_error(aggreger_ki_snitt(d_test, alfa = 0), feilmelding_alfa)
   expect_error(aggreger_ki_snitt(d_test, alfa = 1), feilmelding_alfa)
   expect_error(aggreger_ki_snitt(d_test, alfa = 1.2), feilmelding_alfa)
