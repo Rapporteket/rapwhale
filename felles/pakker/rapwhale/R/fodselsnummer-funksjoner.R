@@ -229,6 +229,54 @@ er_gyldig_fnr_dato = function(dato) {
   !is.na(datoar)
 }
 
+#' Kontroller sjekksum for fødselsnummer og liknande
+#'
+#' @description
+#' Tek inn ein tekstvektorder der kvart element har 11 siffer,
+#' og gjev for kvart element ut `TRUE` viss dei to siste siffera,
+#' kontrollsiffera, er korrekt i høve dei føregåande siffera,
+#' og `FALSE` elles.
+#'
+#' @param nummer Tekstvektor der kvart element har 11 siffer.
+#'
+#' @details
+#' Kvart av kontrollsiffera skal vera ein sjekksum rekna ut frå dei
+#' føregåande siffera. Viss dei ni fyrste siffera av eit fødselsnummer,
+#' eller anna liknande nummer, er d1 d2 m1 m2 å1 å2 i1 i2 i3,
+#' skal kontrollsiffera, k1 og k2, oppfylla fylgjande:
+#' `k1 = 11 - ((3 * d1 + 7 * d2 + 6 * m1 + 1 * m2 + 8 * å1 + 9 * å2 + 4 * i1 + 5 * i2 + 2 * i3) mod 11)`
+#' `k2 = 11 - ((5 * d1 + 4 * d2 + 3 * m1 + 2 * m2 + 7 * å1 + 6 * å2 + 5 * i1 + 4 * i2 + 3 * i3 + 2 * k1) mod 11)`.
+#'
+#' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
+#' i `nummer` alt etter om det høvesvis gjev korrekt sjekksum eller ikkje.
+er_fnr_sjekksum_korrekt = function(nummer) {
+  # Del fødselsnummera opp i siffer
+  siffer = str_split_fixed(nummer, "", n = 11) %>%
+    t()
+
+  # Sidan as.numeric() mistar matrisedimensjonane,
+  # lat oss ta vare på dei manuelt
+  di = dim(siffer)
+  siffer = as.numeric(siffer)
+  dim(siffer) = di
+
+  # Koeffisientar for utrekning
+  koef1 = c(3, 7, 6, 1, 8, 9, 4, 5, 2)
+  koef2 = c(5, 4, 3, 2, 7, 6, 5, 4, 3, 2)
+
+  # Rekn ut kva kontrollsiffera *skulle* vera
+  # Første kontrollsiffer
+  k1 = 11 - (colSums(koef1 * siffer[1:9, , drop = FALSE]) %% 11)
+  k1 = ifelse(k1 == 11, 0, k1)
+
+  # Andre kontrollsiffer
+  k2 = 11 - (colSums(koef2 * rbind(siffer[1:9, , drop = FALSE], k1)) %% 11)
+  k2 = ifelse(k2 == 11, 0, k2)
+
+  # Er dei utrekna kontrollsiffera lik dei oppgjevne?
+  (k1 == siffer[10, ]) & (k2 == siffer[11, ])
+}
+
 #' Sjekk gyldig F-nummer
 #'
 #' @description
@@ -310,30 +358,6 @@ er_gyldig_h_nummer = function(nummer) {
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er eit gyldig FH-nummer eller ikkje.
 er_gyldig_fh_nummer = function(nummer) {
-
-}
-
-#' Kontroller sjekksum for fødselsnummer og liknande
-#'
-#' @description
-#' Tek inn ein tekstvektorder der kvart element har 11 siffer,
-#' og gjev for kvart element ut `TRUE` viss dei to siste siffera,
-#' kontrollsiffera, er korrekt i høve dei føregåande siffera,
-#' og `FALSE` elles.
-#'
-#' @param nummer Tekstvektor der kvart element har 11 siffer.
-#'
-#' @details
-#' Kvart av kontrollsiffera skal vera ein sjekksum rekna ut frå dei
-#' føregåande siffera. Viss dei ni fyrste siffera av eit fødselsnummer,
-#' eller anna liknande nummer, er d1 d2 m1 m2 å1 å2 i1 i2 i3,
-#' skal kontrollsiffera, k1 og k2, oppfylla fylgjande:
-#' `k1 = 11 - ((3 * d1 + 7 * d2 + 6 * m1 + 1 * m2 + 8 * å1 + 9 * å2 + 4 * i1 + 5 * i2 + 2 * i3) mod 11)`
-#' `k2 = 11 - ((5 * d1 + 4 * d2 + 3 * m1 + 2 * m2 + 7 * å1 + 6 * å2 + 5 * i1 + 4 * i2 + 3 * i3 + 2 * k1) mod 11)`.
-#'
-#' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
-#' i `nummer` alt etter om det høvesvis gjev korrekt sjekksum eller ikkje.
-er_fnr_sjekksum_korrekt = function(nummer) {
 
 }
 
