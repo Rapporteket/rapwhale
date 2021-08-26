@@ -4,25 +4,27 @@
 #' `r lifecycle::badge("experimental")`
 #'
 #' Kopierer LaTeX-klassefila for kvalreg-rapportar frå rapwhale til
-#' TeX Live-mappa eller anna gjeven mappe
+#' TeX Live-mappa eller anna gjeven mappe.
 #'
-#' @param texmappe Filadresse til mappa som LaTeX-klassefila skal kopierast
-#'                 til. Standard verdi = `NULL`.
+#' @param texmappe Adressa til mappa som LaTeX-klassefila skal kopierast
+#'                 til. Viss `NULL` (standard), vert fila kopiert til
+#'                 ei høveleg undermappe i TeX Live-mappa.
 #'
 #' @details
-#' Funksjonen kopierer LaTeX-klassefila for kvalreg-rapportar frå rapwhale til
-#' ynskja mappe.
-#'
-#' Dersom `texmappe = NULL` vert klassefila kopiert til TeX Live-mappa
+#' Dersom `texmappe` er `NULL`,
+#' vert klassefila kopiert til undermappa
+#' `/tex/latex/kvalreg/` i TeX Live-mappa
+#' definert av TeX-variabelen `TEXMFHOME`.
+#' Det vert typisk noko slikt:
 #' `C:/Users/brukarnamn/texmf/tex/latex/kvalreg/`.
+#' Dette gjer at ho automatisk vert funnen av LuaLaTeX.
 #' Elles vert ho kopiert til den oppgjevne mappa `texmappe`.
-#' Dersom mappa ikkje finst finst frå før vert ho oppretta.
-#' Adressa til denne mappa vert returnert frå funksjonen, usynleg.
 #'
+#' Dersom mappa ikkje finst finst frå før, vert ho oppretta.
 #' Dersom fila `kvalreg-rapport.cls` allereie finst i mappa det skal kopierast
-#' til, vert den skriven over.
+#' til, vert ho skriven over.
 #'
-#' @return Adressa til mappa som LaTeX-klassefila vert kopiert til, usynleg.
+#' @return Adressa til mappa som LaTeX-klassefila vart kopiert til, usynleg.
 #'
 #' @export
 #'
