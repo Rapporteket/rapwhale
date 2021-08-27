@@ -143,40 +143,50 @@ fnr_er_gyldig = function(x) {
   ok
 }
 
-#' Sjekk gyldig fødselsnummmer og liknande
+#' Sjekk om fødselsnummmer eller liknande er gyldige
 #'
 #' @description
-#' Tek inn ein vektor `nummer`med nummer som skal sjekkast,
-#' og ein vektor `gyldige_typar` med typar nummmer som skal godkjennast,
-#' og gjev for kvart nummer ut `TRUE` viss det er gyldig, og `FALSE`
-#' viss det er ugyldig.
+#' Tek inn vektor med `nummer` som skal sjekkast og `gyldige_typar`,
+#' som definerer kva type nummer desse potensielt kan vera
+#' (fødselsnummer, H-nummer, D-nummer og liknande).
+#' Gjev ut logisk vektor med `TRUE` for gyldige nummer og
+#' `FALSE` for ugyldige nummer.
 #'
 #' @param nummer Tekstvektor med nummer som skal sjekkast.
-#' @param gyldige_typar Tekstvektor med typar nummer som skal reknast
-#' som gyldige. Standard verdi er `c("FNR", "H", "D", "FH")`.
+#' @param gyldige_typar Tekstvektor med kva nummertypar verdiane
+#'  i `nummer` skal sjekkast mot. Må vera éin eller fleire av
+#'  `c("FNR", "H", "D", "FH")`.
+#'  Som standard vert nummera sjekka mot alle desse.
 #'
 #' @details
-#' Funksjonen sjekkar om nummera i vektoren `nummer` er gyldige nummer
-#' av typane i `gyldige_typar`, og gjev for kvart nummer ut `TRUE`
-#' viss det er gyldig, og `FALSE` viss det er ugyldig.
+#' Dei moglege verdiane i `gyldige_typar` tyder:
+#' - `"FNR"`: Fødselsnummer.
+#'   Vanleg ellevesifra fødselsnummer
+#'   som inneheld fødselsdato (seks siffer) etterfølgd av personnummer
+#'   (fem siffer, der dei to siste er sjekksiffer).
+#' - `"D"`: D-nummer.
+#'   Ellevesifra nummer,
+#'   som fødselsnummer,
+#'   men modifisert ved at det er lagt til 4 på det fyrste sifferet.
+#' - `"H"`: H-nummer (hjelpenummer).
+#'   Ellevesifra nummer,
+#'   som fødselsnummer,
+#'   men modifisert ved at det er lagt til 4 på det tredje sifferet.
+#' - `"FH"`: FH-nummer (felles hjelpenummer).
+#'   Ellevesifra nummer der fyrste siffer er 8 eller 9,
+#'   dei neste åtte siffera er tilfeldige,
+#'   og dei to siste er kontrollsiffer.
 #'
-#' Moglege typar til `gyldige_typar` er:
-#' Fødselsnummer ("FNR") - Vanleg ellevesifra fødselsnummer som inneheld
-#' fødselsdato og personnummer.
-#' D-nummer ("D") - Ellevesifra nummer, som fødselsnummer, men modifisert ved
-#' at det er lagt til 4 på det fyrste sifferet.
-#' H-nummer ("H") - Ellevesifra nummer, som fødselsnummer, men modifisert ved
-#' at det er lagt til 4 på det tredje sifferet.
-#' FH-nummer ("FH") - Ellevesifra nummer der fyrste siffer er 8 eller 9,
-#' dei neste åtte siffera er tilfeldige, og dei to siste er kontrollsiffer.
+#' Du kan lesa meir om dei ulike nummertypane på desse nettsidene:
+#'   - \href{https://no.wikipedia.org/wiki/F%C3%B8dselsnummer}{Wikipedia: Fødselsnummer}
+#'   - \href{https://lovas.info/2013/12/01/identitetsnummer-i-norge/}{Identitetsnummer i Norge}
 #'
-#' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
-#' i `nummer` alt etter om det høvesvis er gyldige nummer av typane i
-#' `gyldige_typar` eller ikkje.
+#' @return Logisk vektor med `TRUE` eller `FALSE` for kvart element
+#' i `nummer`, alt ettersom det høvesvis er eit gyldige nummer
+#' av typane i `gyldige_typar` eller ikkje.
 #' @export
-#'
-#' @examples
-fnr_er_gyldig_v2 = function(nummer, gyldige_typar = c("FNR", "H", "D", "FH")) {
+fnr_er_gyldig_v2 = function(nummer,
+                            gyldige_typar = c("FNR", "H", "D", "FH")) {
   stopifnot(all(gyldige_typar %in% c("FNR", "H", "D", "FH")))
   stopifnot(!is.character(nummer))
 
