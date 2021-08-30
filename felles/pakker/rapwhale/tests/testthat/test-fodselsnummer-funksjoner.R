@@ -1,3 +1,71 @@
+context("fnr_er_gyldig_v2()")
+
+nummer = c(
+  "15076500565", # Gyldig F-nummer
+  "70019950032", # Gyldig D-nummer
+  "01410199935", # Gyldig H-nummer
+  "88888888831", # Gyldig FH-nummer
+  "98019800546"
+) # Ugyldig nummer generelt
+
+test_that("fnr_er_gyldig_v2() gjev rette verdiar når «gyldige_typar» er sett til éin verdi", {
+  expect_identical(
+    fnr_er_gyldig_v2(nummer, gyldige_typar = "FNR"),
+    er_gyldig_f_nummer(nummer)
+  )
+  expect_identical(
+    fnr_er_gyldig_v2(nummer, gyldige_typar = "D"),
+    er_gyldig_d_nummer(nummer)
+  )
+  expect_identical(
+    fnr_er_gyldig_v2(nummer, gyldige_typar = "H"),
+    er_gyldig_h_nummer(nummer)
+  )
+  expect_identical(
+    fnr_er_gyldig_v2(nummer, gyldige_typar = "FH"),
+    er_gyldig_fh_nummer(nummer)
+  )
+})
+
+test_that("fnr_er_gyldig_v2() gjev rette verdiar for kombinasjonar av «gyldige_typar»", {
+  expect_identical(
+    fnr_er_gyldig_v2(nummer, gyldige_typar = c("FNR", "D")),
+    er_gyldig_f_nummer(nummer) | er_gyldig_d_nummer(nummer)
+  )
+  expect_identical(
+    fnr_er_gyldig_v2(nummer, gyldige_typar = c("D", "H")),
+    er_gyldig_d_nummer(nummer) | er_gyldig_h_nummer(nummer)
+  )
+  expect_identical(
+    fnr_er_gyldig_v2(nummer, gyldige_typar = c("H", "FH")),
+    er_gyldig_h_nummer(nummer) | er_gyldig_fh_nummer(nummer)
+  )
+  expect_identical(
+    fnr_er_gyldig_v2(nummer),
+    er_gyldig_f_nummer(nummer) | er_gyldig_d_nummer(nummer) |
+      er_gyldig_h_nummer(nummer) | er_gyldig_fh_nummer(nummer)
+  )
+})
+
+test_that("er_gyldig_f_nummer() fungerer òg med vektorar av lengd 0", {
+  expect_identical(er_gyldig_fnr_dato(character()), logical())
+})
+
+test_that("fnr_er_gyldig_v2() reknar alle inndata som ugyldige dersom «gyldige_typar» er tom", {
+  alle_ugyldige = rep(FALSE, length(nummer))
+  expect_identical(fnr_er_gyldig_v2(nummer, gyldige_typar = character()), alle_ugyldige)
+})
+
+test_that("fnr_er_gyldig_v2() gjev feilmelding viss inn-nummera ikkje er av typen tekst", {
+  expect_error(fnr_er_gyldig_v2(as.numeric(nummer)))
+})
+
+test_that("fnr_er_gyldig_v2() gjev feilmelding viss ein oppgjev ukjende «gyldige_typar»", {
+  expect_error(fnr_er_gyldig_v2(nummer, gyldige_typar = c("foo", "FNR")))
+})
+
+
+
 context("er_syntaktisk_fnr()")
 
 test_that("er_syntaktisk_fnr() gjev forventa resultat", {
