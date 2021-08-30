@@ -141,6 +141,39 @@ test_that("er_gyldig_h_nummer() fungerer òg med vektorar av lengd 0", {
 
 
 
+context("er_gyldig_fh_nummer()")
+
+test_that("er_gyldig_fh_nummer() gjev forventa resultat", {
+  fhnr_gyldige = c("88888888831", "99999999928", "80102030404")
+  fhnr_ugyldige = c(
+    "88888888832", "88888888841",
+    "77777777745",
+    "15076500565", # Gyldig F-nummer, men ugyldig som FH-nummer
+    "41010199946", # Gyldig D-nummer, men ugyldig som FH-nummer
+    "01410199935", # Gyldig H-nummer, men ugyldig som FH-nummer
+    "98019800546"
+  )
+  expect_identical(
+    er_gyldig_fh_nummer(fhnr_gyldige),
+    rep(TRUE, length(fhnr_gyldige))
+  )
+  expect_identical(
+    er_gyldig_fh_nummer(fhnr_ugyldige),
+    rep(FALSE, length(fhnr_ugyldige))
+  )
+})
+
+test_that("er_gyldig_fh_nummer() fungerer òg med vektorar av lengd 1", {
+  expect_identical(er_gyldig_fh_nummer("88888888831"), TRUE)
+  expect_identical(er_gyldig_fh_nummer("88888888832"), FALSE)
+})
+
+test_that("er_gyldig_fh_nummer() fungerer òg med vektorar av lengd 0", {
+  expect_identical(er_gyldig_fh_nummer(character()), logical())
+})
+
+
+
 context("er_fnr_sjekksum_korrekt()")
 
 test_that("er_fnr_sjekksum_korrekt() gjev forventa resultat", {
