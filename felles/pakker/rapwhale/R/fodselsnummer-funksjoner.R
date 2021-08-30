@@ -331,7 +331,7 @@ er_gyldig_f_nummer = function(nummer) {
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er eit gyldig D-nummer eller ikkje.
 er_gyldig_d_nummer = function(nummer) {
-
+  logical(length(nummer)) # Plasshaldar for ekte implementasjon
 }
 
 #' Sjekk gyldig H-nummer
@@ -352,7 +352,7 @@ er_gyldig_d_nummer = function(nummer) {
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er eit gyldig H-nummer eller ikkje.
 er_gyldig_h_nummer = function(nummer) {
-
+  logical(length(nummer)) # Plasshaldar for ekte implementasjon
 }
 
 #' Sjekk gyldig FH-nummer
@@ -373,7 +373,7 @@ er_gyldig_h_nummer = function(nummer) {
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er eit gyldig FH-nummer eller ikkje.
 er_gyldig_fh_nummer = function(nummer) {
-
+  logical(length(nummer)) # Plasshaldar for ekte implementasjon
 }
 
 #' Foreslå lignende fødselsnummer
