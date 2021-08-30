@@ -64,6 +64,20 @@ test_that("fnr_er_gyldig_v2() gjev feilmelding viss ein oppgjev ukjende «gyldig
   expect_error(fnr_er_gyldig_v2(nummer, gyldige_typar = c("foo", "FNR")))
 })
 
+test_that("fnr_er_gyldig_v2() gjev ikkje feilmeldingar (men rett svar) dersom inndataa er tekst men ikkje 11 siffer", {
+  nummer_med_feil_syntaks = c(
+    "123", "123456789ab", "15076500565abc",
+    "  15076500565  ", "abc"
+  )
+  fasit = rep(FALSE, length(nummer_med_feil_syntaks))
+  expect_error(fnr_er_gyldig_v2(nummer_med_feil_syntaks), NA)
+  expect_identical(fnr_er_gyldig_v2(nummer_med_feil_syntaks), fasit)
+  expect_identical(
+    fnr_er_gyldig_v2(c(nummer_med_feil_syntaks, "15076500565")),
+    c(fasit, TRUE)
+  )
+})
+
 
 
 context("er_syntaktisk_fnr()")
