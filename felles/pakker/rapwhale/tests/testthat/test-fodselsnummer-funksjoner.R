@@ -39,7 +39,7 @@ test_that("er_gyldig_f_nummer() fungerer òg med vektorar av lengd 0", {
 
 context("er_gyldig_f_nummer()")
 
-# Dei gyldige fødselsnummera er ikkje reelle,
+# Dei gyldige fødselsnummera o.l. er ikkje reelle,
 # men henta frå dokumentet «Testaktører»
 # versjon 3.7, datert 19.11.2013.
 
@@ -72,6 +72,42 @@ test_that("er_gyldig_f_nummer() fungerer òg med vektorar av lengd 1", {
 test_that("er_gyldig_f_nummer() fungerer òg med vektorar av lengd 0", {
   expect_identical(er_gyldig_f_nummer(character()), logical())
 })
+
+
+
+context("er_gyldig_d_nummer()")
+
+test_that("er_gyldig_d_nummer() gjev forventa resultat", {
+  dnr_gyldige = c(
+    "70019950032", # Henta frå testaktørar, resten er laga manuelt
+    "41010199946", "51010199917",
+    "61010199998", "71010199969"
+  )
+  dnr_ugyldige = c(
+    "70019950033",
+    "15076500565", # Gyldig F-nummer, men ugyldig som D-nummer
+    "81030399951",
+    "98019800547"
+  )
+  expect_identical(
+    er_gyldig_d_nummer(dnr_gyldige),
+    rep(TRUE, length(dnr_gyldige))
+  )
+  expect_identical(
+    er_gyldig_d_nummer(dnr_ugyldige),
+    rep(FALSE, length(dnr_ugyldige))
+  )
+})
+
+test_that("er_gyldig_d_nummer() fungerer òg med vektorar av lengd 1", {
+  expect_identical(er_gyldig_d_nummer("70019950032"), TRUE)
+  expect_identical(er_gyldig_d_nummer("70019950033"), FALSE)
+})
+
+test_that("er_gyldig_d_nummer() fungerer òg med vektorar av lengd 0", {
+  expect_identical(er_gyldig_d_nummer(character()), logical())
+})
+
 
 
 
