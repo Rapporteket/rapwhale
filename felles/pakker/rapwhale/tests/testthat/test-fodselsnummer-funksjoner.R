@@ -120,8 +120,9 @@ test_that("er_gyldig_f_nummer() gjev forventa resultat", {
   fnr_ugyldige = c(
     "15076500561", "21016400992",
     "13057900499", "13126900216",
+    "29022512321", # Gyldige sjekksiffer, men ugyldig dato
     "98019800547"
-  ) # Siste nummer har gyldige sjekksiffer
+  ) # Gyldige sjekksiffer, men har ikkje dato
   expect_identical(
     er_gyldig_f_nummer(fnr_gyldige),
     rep(TRUE, length(fnr_gyldige))
@@ -155,6 +156,7 @@ test_that("er_gyldig_d_nummer() gjev forventa resultat", {
     "70019950033",
     "15076500565", # Gyldig F-nummer, men ugyldig som D-nummer
     "81030399951",
+    "69022512315", # Gyldige sjekksiffer, men ugyldig dato
     "98019800547"
   )
   expect_identical(
@@ -186,6 +188,7 @@ test_that("er_gyldig_h_nummer() gjev forventa resultat", {
     "01410199936", "01410199945",
     "15076500565", # Gyldig F-nummer, men ugyldig som H-nummer
     "41010199946", # Gyldig D-nummer, men ugyldig som H-nummer
+    "29422512304", # Gyldige sjekksiffer, men ugyldig dato
     "98019800547"
   )
   expect_identical(
