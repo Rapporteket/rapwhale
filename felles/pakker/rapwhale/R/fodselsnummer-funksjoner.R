@@ -309,10 +309,14 @@ er_fnr_sjekksum_korrekt = function(nummer) {
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er eit gyldig F-nummer eller ikkje.
 er_gyldig_f_nummer = function(nummer) {
-  datoar = str_sub(nummer, 1, 6)
-  er_syntaktisk_fnr(nummer) &
-    er_gyldig_fnr_dato(datoar) &
-    er_fnr_sjekksum_korrekt(nummer)
+  gyldig = er_syntaktisk_fnr(nummer)
+
+  datoar = str_sub(nummer[gyldig], 1, 6)
+
+  gyldig[gyldig] = er_gyldig_fnr_dato(datoar) &
+    er_fnr_sjekksum_korrekt(nummer[gyldig])
+
+  gyldig
 }
 
 #' Sjekk gyldig D-nummer
@@ -333,13 +337,16 @@ er_gyldig_f_nummer = function(nummer) {
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er eit gyldig D-nummer eller ikkje.
 er_gyldig_d_nummer = function(nummer) {
-  # Reknar ut faktiske datoar for D-nummer
-  d_siffer = as.numeric(str_sub(nummer, 1, 1))
-  datoar = str_c(d_siffer - 4, str_sub(nummer, 2, 6))
+  gyldig = er_syntaktisk_fnr(nummer)
 
-  er_syntaktisk_fnr(nummer) &
-    er_gyldig_fnr_dato(datoar) &
-    er_fnr_sjekksum_korrekt(nummer)
+  # Reknar ut faktiske datoar for D-nummer
+  d_siffer = as.numeric(str_sub(nummer[gyldig], 1, 1))
+  datoar = str_c(d_siffer - 4, str_sub(nummer[gyldig], 2, 6))
+
+  gyldig[gyldig] = er_gyldig_fnr_dato(datoar) &
+    er_fnr_sjekksum_korrekt(nummer[gyldig])
+
+  gyldig
 }
 
 #' Sjekk gyldig H-nummer
