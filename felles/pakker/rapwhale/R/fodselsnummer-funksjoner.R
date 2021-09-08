@@ -246,7 +246,7 @@ er_gyldig_fnr_dato = function(dato) {
 #' Kontroller sjekksum for fødselsnummer og liknande
 #'
 #' @description
-#' Tek inn ein tekstvektorder der kvart element har 11 siffer,
+#' Tek inn ein tekstvektor der kvart element har 11 siffer,
 #' og gjev for kvart element ut `TRUE` viss dei to siste siffera,
 #' kontrollsiffera, er korrekt i høve dei føregåande siffera,
 #' og `FALSE` elles.
