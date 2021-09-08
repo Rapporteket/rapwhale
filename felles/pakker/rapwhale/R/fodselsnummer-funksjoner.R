@@ -188,7 +188,7 @@ fnr_er_gyldig = function(x) {
 fnr_er_gyldig_v2 = function(nummer,
                             gyldige_typar = c("FNR", "H", "D", "FH")) {
   stopifnot(all(gyldige_typar %in% c("FNR", "H", "D", "FH")))
-  stopifnot(!is.character(nummer))
+  stopifnot(is.character(nummer))
 
   gyldig = logical(length(nummer))
 
