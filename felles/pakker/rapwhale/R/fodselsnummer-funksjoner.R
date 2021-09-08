@@ -146,6 +146,8 @@ fnr_er_gyldig = function(x) {
 #' Sjekk om fødselsnummmer eller liknande er gyldige
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Tek inn vektor med `nummer` som skal sjekkast og `gyldige_typar`,
 #' som definerer kva type nummer desse potensielt kan vera
 #' (fødselsnummer, H-nummer, D-nummer og liknande).
@@ -210,6 +212,8 @@ fnr_er_gyldig_v2 = function(nummer,
 #' Sjekk syntaktisk fødselsnummer
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Tek inn ein tekstvektor og gjev for kvart element ut `TRUE` viss det er
 #' 11 teikn langt og berre inneheld siffer, og `FALSE` elles.
 #'
@@ -224,6 +228,8 @@ er_syntaktisk_fnr = function(nummer) {
 #' Sjekk gyldig dato
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Tek inn ein tekstvektor med sekssifra element og gjev for kvart element ut
 #' `TRUE` viss det er ein gyldig dato på formatet "DDMMYY", og `FALSE` elles.
 #'
@@ -246,6 +252,8 @@ er_gyldig_fnr_dato = function(dato) {
 #' Kontroller sjekksum for fødselsnummer og liknande
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Tek inn ein tekstvektor der kvart element har 11 siffer,
 #' og gjev for kvart element ut `TRUE` viss dei to siste siffera,
 #' kontrollsiffera, er korrekt i høve dei føregåande siffera,
@@ -294,6 +302,8 @@ er_fnr_sjekksum_korrekt = function(nummer) {
 #' Sjekk gyldig F-nummer
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Tek inn ein tekstvektor,
 #' og gjev for kvart element ut `TRUE` viss det er eit gyldig fødselsnummer,
 #' og `FALSE` elles.
@@ -322,6 +332,8 @@ er_gyldig_f_nummer = function(nummer) {
 #' Sjekk gyldig D-nummer
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Tek inn ein tekstvektor,
 #' og gjev for kvart element ut `TRUE` viss det er eit gyldig D-nummer,
 #' og `FALSE` elles.
@@ -352,6 +364,8 @@ er_gyldig_d_nummer = function(nummer) {
 #' Sjekk gyldig H-nummer
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Tek inn ein tekstvektor,
 #' og gjev for kvart element ut `TRUE` viss det er eit gyldig H-nummer,
 #' og `FALSE` elles.
@@ -386,6 +400,8 @@ er_gyldig_h_nummer = function(nummer) {
 #' Sjekk gyldig FH-nummer
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Tek inn ein tekstvektor,
 #' og gjev for kvart element ut `TRUE` viss det er eit gyldig FH-nummer,
 #' og `FALSE` elles.
