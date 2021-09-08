@@ -294,11 +294,11 @@ er_fnr_sjekksum_korrekt = function(nummer) {
 #' Sjekk gyldig F-nummer
 #'
 #' @description
-#' Tek inn ein tekstvektorder der kvart element har 11 siffer,
+#' Tek inn ein tekstvektor,
 #' og gjev for kvart element ut `TRUE` viss det er eit gyldig fødselsnummer,
 #' og `FALSE` elles.
 #'
-#' @param nummer Tekstvektor der kvart element har 11 siffer.
+#' @param nummer Tekstvektor med nummer som skal sjekkast.
 #'
 #' @details
 #' I eit gyldig fødselsnummer er dei fyrste seks siffera ein fødselsdato på
@@ -322,11 +322,11 @@ er_gyldig_f_nummer = function(nummer) {
 #' Sjekk gyldig D-nummer
 #'
 #' @description
-#' Tek inn ein tekstvektorder der kvart element har 11 siffer,
+#' Tek inn ein tekstvektor,
 #' og gjev for kvart element ut `TRUE` viss det er eit gyldig D-nummer,
 #' og `FALSE` elles.
 #'
-#' @param nummer Tekstvektor der kvart element har 11 siffer.
+#' @param nummer Tekstvektor med nummer som skal sjekkast.
 #'
 #' @details
 #' I eit gyldig D-nummer er dei fyrste seks siffera ein fødselsdato på
@@ -352,11 +352,11 @@ er_gyldig_d_nummer = function(nummer) {
 #' Sjekk gyldig H-nummer
 #'
 #' @description
-#' Tek inn ein tekstvektorder der kvart element har 11 siffer,
+#' Tek inn ein tekstvektor,
 #' og gjev for kvart element ut `TRUE` viss det er eit gyldig H-nummer,
 #' og `FALSE` elles.
 #'
-#' @param nummer Tekstvektor der kvart element har 11 siffer.
+#' @param nummer Tekstvektor med nummer som skal sjekkast.
 #'
 #' @details
 #' I eit gyldig H-nummer er dei fyrste seks siffera ein fødselsdato på
@@ -386,11 +386,11 @@ er_gyldig_h_nummer = function(nummer) {
 #' Sjekk gyldig FH-nummer
 #'
 #' @description
-#' Tek inn ein tekstvektorder der kvart element har 11 siffer,
+#' Tek inn ein tekstvektor,
 #' og gjev for kvart element ut `TRUE` viss det er eit gyldig FH-nummer,
 #' og `FALSE` elles.
 #'
-#' @param nummer Tekstvektor der kvart element har 11 siffer.
+#' @param nummer Tekstvektor med nummer som skal sjekkast.
 #'
 #' @details
 #' Eit gyldig FH-nummer er eit ellevesifra nummer
