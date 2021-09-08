@@ -333,7 +333,13 @@ er_gyldig_f_nummer = function(nummer) {
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er eit gyldig D-nummer eller ikkje.
 er_gyldig_d_nummer = function(nummer) {
-  logical(length(nummer)) # Plasshaldar for ekte implementasjon
+  # Reknar ut faktiske datoar for D-nummer
+  d_siffer = as.numeric(str_sub(nummer, 1, 1))
+  datoar = str_c(d_siffer - 4, str_sub(nummer, 2, 6))
+
+  er_syntaktisk_fnr(nummer) &
+    er_gyldig_fnr_dato(datoar) &
+    er_fnr_sjekksum_korrekt(nummer)
 }
 
 #' Sjekk gyldig H-nummer
