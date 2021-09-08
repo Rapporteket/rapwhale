@@ -401,7 +401,15 @@ er_gyldig_h_nummer = function(nummer) {
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er eit gyldig FH-nummer eller ikkje.
 er_gyldig_fh_nummer = function(nummer) {
-  logical(length(nummer)) # Plasshaldar for ekte implementasjon
+  gyldig = er_syntaktisk_fnr(nummer)
+
+  # Fyrste siffer, som skal vera 8 eller 9 i FH-nummer
+  fh_siffer = as.numeric(str_sub(nummer[gyldig], 1, 1))
+
+  gyldig[gyldig] = fh_siffer %in% 8:9 &
+    er_fnr_sjekksum_korrekt(nummer[gyldig])
+
+  gyldig
 }
 
 #' Foreslå lignende fødselsnummer
