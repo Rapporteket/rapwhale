@@ -310,7 +310,9 @@ er_fnr_sjekksum_korrekt = function(nummer) {
 #' i `nummer` alt etter om det høvesvis er eit gyldig F-nummer eller ikkje.
 er_gyldig_f_nummer = function(nummer) {
   datoar = str_sub(nummer, 1, 6)
-  er_gyldig_fnr_dato(datoar) & er_fnr_sjekksum_korrekt(nummer)
+  er_syntaktisk_fnr(nummer) &
+    er_gyldig_fnr_dato(datoar) &
+    er_fnr_sjekksum_korrekt(nummer)
 }
 
 #' Sjekk gyldig D-nummer
