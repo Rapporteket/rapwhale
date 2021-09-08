@@ -190,19 +190,19 @@ fnr_er_gyldig_v2 = function(nummer,
   stopifnot(all(gyldige_typar %in% c("FNR", "H", "D", "FH")))
   stopifnot(!is.character(nummer))
 
-  gyldig = er_syntaktisk_fnr(nummer)
+  gyldig = logical(length(nummer))
 
   if ("FNR" %in% gyldige_typar) {
-    gyldig[gyldig] = er_gyldig_f_nummer(nummer[gyldig])
+    gyldig[!gyldig] = er_gyldig_f_nummer(nummer[!gyldig])
   }
   if ("D" %in% gyldige_typar) {
-    gyldig[gyldig] = er_gyldig_d_nummer(nummer[gyldig])
+    gyldig[!gyldig] = er_gyldig_d_nummer(nummer[!gyldig])
   }
   if ("H" %in% gyldige_typar) {
-    gyldig[gyldig] = er_gyldig_h_nummer(nummer[gyldig])
+    gyldig[!gyldig] = er_gyldig_h_nummer(nummer[!gyldig])
   }
   if ("FH" %in% gyldige_typar) {
-    gyldig[gyldig] = er_gyldig_fh_nummer(nummer[gyldig])
+    gyldig[!gyldig] = er_gyldig_fh_nummer(nummer[!gyldig])
   }
   gyldig
 }
