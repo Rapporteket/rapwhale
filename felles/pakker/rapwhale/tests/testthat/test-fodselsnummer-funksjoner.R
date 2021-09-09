@@ -1,4 +1,4 @@
-context("fnr_er_gyldig_v2()")
+context("fnr_er_gyldig()")
 
 nummer = c(
   "15076500565", # Gyldig F-nummer
@@ -8,40 +8,40 @@ nummer = c(
   "98019800546"
 ) # Ugyldig nummer generelt
 
-test_that("fnr_er_gyldig_v2() gjev rette verdiar når «gyldige_typar» er sett til éin verdi", {
+test_that("fnr_er_gyldig() gjev rette verdiar når «gyldige_typar» er sett til éin verdi", {
   expect_identical(
-    fnr_er_gyldig_v2(nummer, gyldige_typar = "FNR"),
+    fnr_er_gyldig(nummer, gyldige_typar = "FNR"),
     er_gyldig_f_nummer(nummer)
   )
   expect_identical(
-    fnr_er_gyldig_v2(nummer, gyldige_typar = "D"),
+    fnr_er_gyldig(nummer, gyldige_typar = "D"),
     er_gyldig_d_nummer(nummer)
   )
   expect_identical(
-    fnr_er_gyldig_v2(nummer, gyldige_typar = "H"),
+    fnr_er_gyldig(nummer, gyldige_typar = "H"),
     er_gyldig_h_nummer(nummer)
   )
   expect_identical(
-    fnr_er_gyldig_v2(nummer, gyldige_typar = "FH"),
+    fnr_er_gyldig(nummer, gyldige_typar = "FH"),
     er_gyldig_fh_nummer(nummer)
   )
 })
 
-test_that("fnr_er_gyldig_v2() gjev rette verdiar for kombinasjonar av «gyldige_typar»", {
+test_that("fnr_er_gyldig() gjev rette verdiar for kombinasjonar av «gyldige_typar»", {
   expect_identical(
-    fnr_er_gyldig_v2(nummer, gyldige_typar = c("FNR", "D")),
+    fnr_er_gyldig(nummer, gyldige_typar = c("FNR", "D")),
     er_gyldig_f_nummer(nummer) | er_gyldig_d_nummer(nummer)
   )
   expect_identical(
-    fnr_er_gyldig_v2(nummer, gyldige_typar = c("D", "H")),
+    fnr_er_gyldig(nummer, gyldige_typar = c("D", "H")),
     er_gyldig_d_nummer(nummer) | er_gyldig_h_nummer(nummer)
   )
   expect_identical(
-    fnr_er_gyldig_v2(nummer, gyldige_typar = c("H", "FH")),
+    fnr_er_gyldig(nummer, gyldige_typar = c("H", "FH")),
     er_gyldig_h_nummer(nummer) | er_gyldig_fh_nummer(nummer)
   )
   expect_identical(
-    fnr_er_gyldig_v2(nummer),
+    fnr_er_gyldig(nummer),
     er_gyldig_f_nummer(nummer) | er_gyldig_d_nummer(nummer) |
       er_gyldig_h_nummer(nummer) | er_gyldig_fh_nummer(nummer)
   )
@@ -51,29 +51,29 @@ test_that("er_gyldig_f_nummer() fungerer òg med vektorar av lengd 0", {
   expect_identical(er_gyldig_fnr_dato(character()), logical())
 })
 
-test_that("fnr_er_gyldig_v2() reknar alle inndata som ugyldige dersom «gyldige_typar» er tom", {
+test_that("fnr_er_gyldig() reknar alle inndata som ugyldige dersom «gyldige_typar» er tom", {
   alle_ugyldige = rep(FALSE, length(nummer))
-  expect_identical(fnr_er_gyldig_v2(nummer, gyldige_typar = character()), alle_ugyldige)
+  expect_identical(fnr_er_gyldig(nummer, gyldige_typar = character()), alle_ugyldige)
 })
 
-test_that("fnr_er_gyldig_v2() gjev feilmelding viss inn-nummera ikkje er av typen tekst", {
-  expect_error(fnr_er_gyldig_v2(as.numeric(nummer)))
+test_that("fnr_er_gyldig() gjev feilmelding viss inn-nummera ikkje er av typen tekst", {
+  expect_error(fnr_er_gyldig(as.numeric(nummer)))
 })
 
-test_that("fnr_er_gyldig_v2() gjev feilmelding viss ein oppgjev ukjende «gyldige_typar»", {
-  expect_error(fnr_er_gyldig_v2(nummer, gyldige_typar = c("foo", "FNR")))
+test_that("fnr_er_gyldig() gjev feilmelding viss ein oppgjev ukjende «gyldige_typar»", {
+  expect_error(fnr_er_gyldig(nummer, gyldige_typar = c("foo", "FNR")))
 })
 
-test_that("fnr_er_gyldig_v2() gjev ikkje feilmeldingar (men rett svar) dersom inndataa er tekst men ikkje 11 siffer", {
+test_that("fnr_er_gyldig() gjev ikkje feilmeldingar (men rett svar) dersom inndataa er tekst men ikkje 11 siffer", {
   nummer_med_feil_syntaks = c(
     "123", "123456789ab", "15076500565abc",
     "  15076500565  ", "abc", NA_character_
   )
   fasit = rep(FALSE, length(nummer_med_feil_syntaks))
-  expect_error(fnr_er_gyldig_v2(nummer_med_feil_syntaks), NA)
-  expect_identical(fnr_er_gyldig_v2(nummer_med_feil_syntaks), fasit)
+  expect_error(fnr_er_gyldig(nummer_med_feil_syntaks), NA)
+  expect_identical(fnr_er_gyldig(nummer_med_feil_syntaks), fasit)
   expect_identical(
-    fnr_er_gyldig_v2(c(nummer_med_feil_syntaks, "15076500565")),
+    fnr_er_gyldig(c(nummer_med_feil_syntaks, "15076500565")),
     c(fasit, TRUE)
   )
 })
