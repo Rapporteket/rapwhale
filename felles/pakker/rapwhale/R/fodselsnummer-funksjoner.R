@@ -187,6 +187,19 @@ fnr_er_gyldig = function(x) {
 #' i `nummer`, alt ettersom det høvesvis er eit gyldige nummer
 #' av typane i `gyldige_typar` eller ikkje.
 #' @export
+#'
+#' @examples
+#' nummer = c(
+#'   "15076500565", # Gyldig F-nummer
+#'   "70019950032", # Gyldig D-nummer
+#'   "01410199935", # Gyldig H-nummer
+#'   "88888888831", # Gyldig FH-nummer
+#'   "98019800546"
+#' ) # Ugyldig nummer generelt
+#'
+#' fnr_er_gyldig_v2(nummer)
+#'
+#' fnr_er_gyldig_v2(nummer, gyldige_typar = c("FNR", "H"))
 fnr_er_gyldig_v2 = function(nummer,
                             gyldige_typar = c("FNR", "H", "D", "FH")) {
   stopifnot(all(gyldige_typar %in% c("FNR", "H", "D", "FH")))
@@ -221,6 +234,11 @@ fnr_er_gyldig_v2 = function(nummer,
 #'
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er syntaktisk korrekt eller ikkje.
+#'
+#' @examples
+#' nummer = c("12345612345", "123456789", "123456789ab", "abcdefghijk")
+#'
+#' rapwhale:::er_syntaktisk_fnr(nummer)
 er_syntaktisk_fnr = function(nummer) {
   str_detect(nummer, "^\\d{11}$")
 }
@@ -237,6 +255,16 @@ er_syntaktisk_fnr = function(nummer) {
 #'
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `dato` alt etter om det høvesvis er ein gyldig dato eller ikkje.
+#'
+#' @examples
+#' datoar = c(
+#'   "010101",
+#'   "290204", # Skotårsdag
+#'   "290225", # «Skotårsdag» som aldri er gyldig ...
+#'   "320101"
+#' )
+#'
+#' rapwhale:::er_gyldig_fnr_dato(datoar)
 er_gyldig_fnr_dato = function(dato) {
   dato_tekst = str_c(
     str_sub(dato, 1, 4),
@@ -271,6 +299,14 @@ er_gyldig_fnr_dato = function(dato) {
 #'
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis gjev korrekt sjekksum eller ikkje.
+#'
+#' @examples
+#' nummer = c(
+#'   "15076500565", # Gyldig F-nummer
+#'   "15076500575"
+#' ) # Feil i kontrollsiffer
+#'
+#' rapwhale:::er_fnr_sjekksum_korrekt(nummer)
 er_fnr_sjekksum_korrekt = function(nummer) {
   # Del fødselsnummera opp i siffer
   siffer = str_split_fixed(nummer, "", n = 11) %>%
@@ -318,6 +354,17 @@ er_fnr_sjekksum_korrekt = function(nummer) {
 #'
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er eit gyldig F-nummer eller ikkje.
+#'
+#' @examples
+#' nummer = c(
+#'   "15076500565", # Gyldig F-nummer
+#'   "70019950032", # Gyldig D-nummer
+#'   "01410199935", # Gyldig H-nummer
+#'   "88888888831", # Gyldig FH-nummer
+#'   "98019800546"
+#' ) # Ugyldig nummer generelt
+#'
+#' rapwhale:::er_gyldig_f_nummer(nummer)
 er_gyldig_f_nummer = function(nummer) {
   gyldig = er_syntaktisk_fnr(nummer)
 
@@ -348,6 +395,17 @@ er_gyldig_f_nummer = function(nummer) {
 #'
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er eit gyldig D-nummer eller ikkje.
+#'
+#' @examples
+#' nummer = c(
+#'   "15076500565", # Gyldig F-nummer
+#'   "70019950032", # Gyldig D-nummer
+#'   "01410199935", # Gyldig H-nummer
+#'   "88888888831", # Gyldig FH-nummer
+#'   "98019800546"
+#' ) # Ugyldig nummer generelt
+#'
+#' rapwhale:::er_gyldig_d_nummer(nummer)
 er_gyldig_d_nummer = function(nummer) {
   gyldig = er_syntaktisk_fnr(nummer)
 
@@ -380,6 +438,17 @@ er_gyldig_d_nummer = function(nummer) {
 #'
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er eit gyldig H-nummer eller ikkje.
+#'
+#' @examples
+#' nummer = c(
+#'   "15076500565", # Gyldig F-nummer
+#'   "70019950032", # Gyldig D-nummer
+#'   "01410199935", # Gyldig H-nummer
+#'   "88888888831", # Gyldig FH-nummer
+#'   "98019800546"
+#' ) # Ugyldig nummer generelt
+#'
+#' rapwhale:::er_gyldig_h_nummer(nummer)
 er_gyldig_h_nummer = function(nummer) {
   gyldig = er_syntaktisk_fnr(nummer)
 
@@ -416,6 +485,17 @@ er_gyldig_h_nummer = function(nummer) {
 #'
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er eit gyldig FH-nummer eller ikkje.
+#'
+#' @examples
+#' nummer = c(
+#'   "15076500565", # Gyldig F-nummer
+#'   "70019950032", # Gyldig D-nummer
+#'   "01410199935", # Gyldig H-nummer
+#'   "88888888831", # Gyldig FH-nummer
+#'   "98019800546"
+#' ) # Ugyldig nummer generelt
+#'
+#' rapwhale:::er_gyldig_fh_nummer(nummer)
 er_gyldig_fh_nummer = function(nummer) {
   gyldig = er_syntaktisk_fnr(nummer)
 
