@@ -294,8 +294,8 @@ er_gyldig_fnr_dato = function(dato) {
 #' føregåande siffera. Viss dei ni fyrste siffera av eit fødselsnummer,
 #' eller anna liknande nummer, er d1 d2 m1 m2 å1 å2 i1 i2 i3,
 #' skal kontrollsiffera, k1 og k2, oppfylla fylgjande:
-#' `k1 = 11 - ((3 * d1 + 7 * d2 + 6 * m1 + 1 * m2 + 8 * å1 + 9 * å2 + 4 * i1 + 5 * i2 + 2 * i3) mod 11)`
-#' `k2 = 11 - ((5 * d1 + 4 * d2 + 3 * m1 + 2 * m2 + 7 * å1 + 6 * å2 + 5 * i1 + 4 * i2 + 3 * i3 + 2 * k1) mod 11)`.
+#' - `k1 = 11 - ((3 * d1 + 7 * d2 + 6 * m1 + 1 * m2 + 8 * å1 + 9 * å2 + 4 * i1 + 5 * i2 + 2 * i3) mod 11)`
+#' - `k2 = 11 - ((5 * d1 + 4 * d2 + 3 * m1 + 2 * m2 + 7 * å1 + 6 * å2 + 5 * i1 + 4 * i2 + 3 * i3 + 2 * k1) mod 11)`.
 #'
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis gjev korrekt sjekksum eller ikkje.
