@@ -67,7 +67,7 @@ test_that("fnr_er_gyldig_v2() gjev feilmelding viss ein oppgjev ukjende «gyldig
 test_that("fnr_er_gyldig_v2() gjev ikkje feilmeldingar (men rett svar) dersom inndataa er tekst men ikkje 11 siffer", {
   nummer_med_feil_syntaks = c(
     "123", "123456789ab", "15076500565abc",
-    "  15076500565  ", "abc"
+    "  15076500565  ", "abc", NA_character_
   )
   fasit = rep(FALSE, length(nummer_med_feil_syntaks))
   expect_error(fnr_er_gyldig_v2(nummer_med_feil_syntaks), NA)
