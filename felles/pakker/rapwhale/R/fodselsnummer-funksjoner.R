@@ -409,8 +409,12 @@ er_gyldig_f_nummer = function(nummer) {
 er_gyldig_d_nummer = function(nummer) {
   gyldig = er_syntaktisk_fnr(nummer)
 
+  # Sjekkar at fyrste siffer er 4, 5, 6 eller 7
+  fyrste_siffer = as.numeric(str_sub(nummer[gyldig], 1, 1))
+  gyldig[gyldig] = fyrste_siffer %in% 4:7
+
   # Reknar ut faktiske datoar for D-nummer
-  d_siffer = as.numeric(str_sub(nummer[gyldig], 1, 1))
+  d_siffer = fyrste_siffer[fyrste_siffer %in% 4:7]
   datoar = str_c(d_siffer - 4, str_sub(nummer[gyldig], 2, 6))
 
   gyldig[gyldig] = er_gyldig_fnr_dato(datoar) &
