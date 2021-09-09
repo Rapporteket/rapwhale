@@ -240,7 +240,7 @@ fnr_er_gyldig_v2 = function(nummer,
 #'
 #' rapwhale:::er_syntaktisk_fnr(nummer)
 er_syntaktisk_fnr = function(nummer) {
-  str_detect(nummer, "^\\d{11}$")
+  !is.na(nummer) & str_detect(nummer, "^\\d{11}$")
 }
 
 #' Sjekk gyldig dato
