@@ -456,8 +456,12 @@ er_gyldig_d_nummer = function(nummer) {
 er_gyldig_h_nummer = function(nummer) {
   gyldig = er_syntaktisk_fnr(nummer)
 
+  # Sjekkar at tredje siffer er 4 eller 5
+  tredje_siffer = as.numeric(str_sub(nummer[gyldig], 3, 3))
+  gyldig[gyldig] = tredje_siffer %in% 4:5
+
   # Reknar ut faktiske datoar for H-nummer
-  h_siffer = as.numeric(str_sub(nummer[gyldig], 3, 3))
+  h_siffer = tredje_siffer[tredje_siffer %in% 4:5]
   datoar = str_c(
     str_sub(nummer[gyldig], 1, 2),
     h_siffer - 4,
