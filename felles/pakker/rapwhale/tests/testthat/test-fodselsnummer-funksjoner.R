@@ -82,6 +82,10 @@ test_that("fnr_er_gyldig_v2() gjev ikkje feilmeldingar (men rett svar) dersom in
 
 context("er_syntaktisk_fnr()")
 
+test_that("er_syntaktisk_fnr(NA_character_) returnerer FALSE", {
+  expect_false(er_syntaktisk_fnr(NA_character_))
+})
+
 test_that("er_syntaktisk_fnr() gjev forventa resultat", {
   nummer = c(
     "123456789", "123456789ab", "12345612345", "123456123456",
