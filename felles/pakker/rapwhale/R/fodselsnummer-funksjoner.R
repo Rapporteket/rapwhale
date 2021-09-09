@@ -271,8 +271,10 @@ er_gyldig_d_nummer = function(nummer) {
   gyldig[gyldig] = fyrste_siffer %in% 4:7
 
   # Reknar ut faktiske datoar for D-nummer
-  d_siffer = fyrste_siffer[fyrste_siffer %in% 4:7]
-  datoar = str_c(d_siffer - 4, str_sub(nummer[gyldig], 2, 6))
+  datoar = str_c(
+    as.numeric(str_sub(nummer[gyldig], 1, 1)) - 4,
+    str_sub(nummer[gyldig], 2, 6)
+  )
 
   gyldig[gyldig] = er_gyldig_fnr_dato(datoar) &
     er_fnr_sjekksum_korrekt(nummer[gyldig])
@@ -318,10 +320,9 @@ er_gyldig_h_nummer = function(nummer) {
   gyldig[gyldig] = tredje_siffer %in% 4:5
 
   # Reknar ut faktiske datoar for H-nummer
-  h_siffer = tredje_siffer[tredje_siffer %in% 4:5]
   datoar = str_c(
     str_sub(nummer[gyldig], 1, 2),
-    h_siffer - 4,
+    as.numeric(str_sub(nummer[gyldig], 3, 3)) - 4,
     str_sub(nummer[gyldig], 4, 6)
   )
 
