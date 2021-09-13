@@ -392,6 +392,15 @@ er_gyldig_fh_nummer = function(nummer) {
 #' @export
 #'
 #' @examples
+#' nummer = c(
+#'   "15076500565", # Gyldig F-nummer
+#'   "70019950032", # Gyldig D-nummer
+#'   "01410199935", # Gyldig H-nummer
+#'   "88888888831", # Gyldig FH-nummer
+#'   "98019800546"
+#' ) # Ugyldig nummer generelt
+#'
+#' finn_type_idnummer(nummer)
 finn_type_idnummer = function(nummer) {
   rep(NA, length(nummer)) # Plasshaldar for ekte implementasjon
 }
