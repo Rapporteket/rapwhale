@@ -374,6 +374,28 @@ er_gyldig_fh_nummer = function(nummer) {
   gyldig
 }
 
+#' Finn type ID-nummer
+#'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
+#' Tek inn vektor med `nummer` som skal sjekkast,
+#' og gjev ut ein tekstvektor som elementvis seier kva type ID-nummer det er,
+#' og `NA` for element som ikkje er ein av dei støtta typane ID-nummer
+#' (fødselsnummer, D-nummer, H-nummer og FH-nummer). Sjå [fnr_er_gyldig()]
+#' for meir info om dei ulike typane.
+#'
+#' @param nummer Tekstvektor med nummer som skal sjekkast.
+#'
+#' @return Tekstvektor som elemetvis seier kva type ID-nummer elementa
+#' i `nummer` er.
+#' @export
+#'
+#' @examples
+finn_type_idnummer = function(nummer) {
+  rep(NA, length(nummer)) # Plasshaldar for ekte implementasjon
+}
+
 #' Foreslå lignende fødselsnummer
 #'
 #' @description
