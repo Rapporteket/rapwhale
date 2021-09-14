@@ -277,3 +277,33 @@ test_that("er_fnr_sjekksum_korrekt() gjev forventa resultat", {
     rep(FALSE, length(nummer_ugyldige))
   )
 })
+
+
+
+context("finn_type_idnummer()")
+
+test_that("finn_type_idnummer() gjev rette verdiar for alle (støtta) typar ID-nummer", {
+  fasit = c("FNR", "D", "H", "FH", NA_character_)
+  expect_identical(finn_type_idnummer(nummer), fasit)
+})
+
+test_that("finn_type_idnummer() gjev forventa resultat òg for inndata av typen tekst, men med feil syntaks", {
+  nummer_med_feil_syntaks = c(
+    "123", "123456789ab", "15076500565abc",
+    "  15076500565  ", "abc", NA_character_
+  )
+  fasit = rep(NA_character_, length(nummer_med_feil_syntaks))
+  expect_identical(finn_type_idnummer(nummer_med_feil_syntaks), fasit)
+})
+
+test_that("finn_type_idnummer() fungerer òg med vektorar av lengd 1", {
+  expect_identical(finn_type_idnummer(nummer[1]), "FNR")
+})
+
+test_that("finn_type_idnummer() fungerer òg med vektorar av lengd 0", {
+  expect_identical(finn_type_idnummer(character()), character())
+})
+
+test_that("finn_type_idnummer() gjev feilmelding viss inn-nummera ikkje er av typen tekst", {
+  expect_error(fnr_er_gyldig(as.numeric(nummer)))
+})
