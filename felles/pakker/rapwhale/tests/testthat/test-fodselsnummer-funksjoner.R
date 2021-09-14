@@ -95,6 +95,15 @@ test_that("er_syntaktisk_fnr() gjev forventa resultat", {
   expect_identical(er_syntaktisk_fnr(nummer), forventa)
 })
 
+test_that("er_syntaktisk_fnr() fungerer òg med vektorar av lengd 1", {
+  expect_true(er_syntaktisk_fnr("15076500565"))
+  expect_false(er_syntaktisk_fnr("12345"))
+})
+
+test_that("er_syntaktisk_fnr() fungerer òg med vektorar av lengd 0", {
+  expect_identical(er_syntaktisk_fnr(character()), logical())
+})
+
 
 
 context("er_gyldig_fnr_dato()")
