@@ -111,12 +111,12 @@ test_that("er_gyldig_fnr_dato() gjev forventa resultat", {
   expect_identical(er_gyldig_fnr_dato(datoar), dato_gyldig)
 })
 
-test_that("er_gyldig_f_nummer() fungerer òg med vektorar av lengd 1", {
+test_that("er_gyldig_fnr_dato() fungerer òg med vektorar av lengd 1", {
   expect_identical(er_gyldig_fnr_dato("010101"), TRUE)
   expect_identical(er_gyldig_fnr_dato("320101"), FALSE)
 })
 
-test_that("er_gyldig_f_nummer() fungerer òg med vektorar av lengd 0", {
+test_that("er_gyldig_fnr_dato() fungerer òg med vektorar av lengd 0", {
   expect_identical(er_gyldig_fnr_dato(character()), logical())
 })
 
