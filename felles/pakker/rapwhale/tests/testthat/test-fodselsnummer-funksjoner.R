@@ -47,8 +47,8 @@ test_that("fnr_er_gyldig() gjev rette verdiar for kombinasjonar av «gyldige_typ
   )
 })
 
-test_that("er_gyldig_f_nummer() fungerer òg med vektorar av lengd 0", {
-  expect_identical(er_gyldig_fnr_dato(character()), logical())
+test_that("fnr_er_gyldig() fungerer òg med vektorar av lengd 0", {
+  expect_identical(fnr_er_gyldig(character()), logical())
 })
 
 test_that("fnr_er_gyldig() reknar alle inndata som ugyldige dersom «gyldige_typar» er tom", {
