@@ -402,7 +402,18 @@ er_gyldig_fh_nummer = function(nummer) {
 #'
 #' finn_type_idnummer(nummer)
 finn_type_idnummer = function(nummer) {
-  rep(NA, length(nummer)) # Plasshaldar for ekte implementasjon
+  typar = rep(NA_character_, length(nummer))
+  er_f_nummer = fnr_er_gyldig(nummer, gyldige_typar = "FNR")
+  er_d_nummer = fnr_er_gyldig(nummer, gyldige_typar = "D")
+  er_h_nummer = fnr_er_gyldig(nummer, gyldige_typar = "H")
+  er_fh_nummer = fnr_er_gyldig(nummer, gyldige_typar = "FH")
+
+  typar[er_f_nummer] = "FNR"
+  typar[er_d_nummer] = "D"
+  typar[er_h_nummer] = "H"
+  typar[er_fh_nummer] = "FH"
+
+  typar
 }
 
 #' Foreslå lignende fødselsnummer
