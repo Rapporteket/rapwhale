@@ -43,6 +43,10 @@ NULL
 #' @return Logisk vektor med `TRUE` eller `FALSE` for kvart element
 #' i `nummer`, alt ettersom det høvesvis er eit gyldige nummer
 #' av typane i `gyldige_typar` eller ikkje.
+#'
+#' @seealso
+#' Viss du vil ha ut type ID-nummer, kan du bruka [finn_type_idnummer()].
+#'
 #' @export
 #'
 #' @examples
