@@ -287,6 +287,15 @@ test_that("er_fnr_sjekksum_korrekt() gjev forventa resultat", {
   )
 })
 
+test_that("er_fnr_sjekksum_korrekt() fungerer òg med vektorar av lengd 1", {
+  expect_true(er_fnr_sjekksum_korrekt("15076500565"))
+  expect_false(er_fnr_sjekksum_korrekt("98019800546"))
+})
+
+test_that("er_fnr_sjekksum_korrekt() fungerer òg med vektorar av lengd 0", {
+  expect_identical(er_fnr_sjekksum_korrekt(character()), logical())
+})
+
 
 
 context("finn_type_idnummer()")
