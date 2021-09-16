@@ -79,9 +79,9 @@
 %        la inn denne kommentaren (ved hjelp
 %        av eigna/magisk SVN-/Git-kommando).
 \ifkvalreg@nynorsk
-  \RequirePackage[british,main=nynorsk]{babel}
+  \RequirePackage[british,main=nynorsk,shorthands=off]{babel}
 \else\ifkvalreg@bokmal
-  \RequirePackage[british,main=norsk]{babel}
+  \RequirePackage[british,main=norsk,shorthands=off]{babel}
 \else\ifkvalreg@british
   \RequirePackage[main=british]{babel}
 \fi\fi\fi
