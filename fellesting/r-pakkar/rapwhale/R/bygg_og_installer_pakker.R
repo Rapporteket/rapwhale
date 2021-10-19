@@ -1,3 +1,6 @@
+#' @importFrom magrittr %>%
+#' @importFrom stringr str_subset str_extract
+NULL
 #' Bygg og installer pakker
 #'
 #' @description
@@ -5,10 +8,15 @@
 #'
 #' Dokumenterer, bygger og installerer pakker (tar.gz-filer).
 #'
-#' @param pakkemappe Mappe for pakker.
+#' @param pakkemapper Tekstvektor med mappeadresser til pakker. Standard er NULL.
 #' @param installer Skal pakkene installeres? Standard er TRUE.
 #' @param stille Skal det kun gis ut oppsummerte advarsler og
 #'     feilmeldinger? Standard er TRUE.
+#'
+#' @details
+#' Funksjonen dokumenterer, bygger og installerer pakkene som finnes i
+#' `pakkemapper`. Hvis `pakkemapper = NULL` (standard) velges alle pakker som
+#' ligger i mapper som heter `r-pakke` eller `r-pakkar` under `H:/kvalreg/`.
 #'
 #' @return `NULL`
 #' @export
@@ -17,18 +25,26 @@
 #' \dontrun{
 #' bygg_og_installer_pakker()
 #' }
-bygg_og_installer_pakker = function(pakkemappe = "H:\\kvalreg\\felles\\pakker\\",
+bygg_og_installer_pakker = function(pakkemapper = NULL,
                                     installer = TRUE,
                                     stille = TRUE) {
-  pakker = list.dirs(pakkemappe, full.names = FALSE, recursive = FALSE)
-  for (pakke in pakker) {
-    adresse_pakke = paste0(pakkemappe, pakke)
+  if (is.null(pakkemapper)) {
+    pakkemapper = list.files("H:/kvalreg",
+      pattern = "r-pakk(e|ar)",
+      recursive = TRUE, full.names = TRUE,
+      include.dirs = TRUE
+    ) %>%
+      list.files(pattern = "^[[:alnum:]]*$", full.names = TRUE)
+  }
+
+  for (pakkemappe in pakkemapper) {
+    pakke = str_extract(pakkemappe, "[[:alnum:]]*$")
     cat("Dokumenter og bygg tar.gz-fil:", pakke, "\n")
-    devtools::document(adresse_pakke,
+    devtools::document(pakkemappe,
       roclets = c("rd", "collate", "namespace"),
       quiet = stille
     )
-    adresse_pakkefil = devtools::build(adresse_pakke, quiet = stille)
+    adresse_pakkefil = devtools::build(pakkemappe, quiet = stille)
     pkgload::unload(pakke, quiet = stille)
     devtools::install_local(adresse_pakkefil, dependencies = FALSE, quiet = stille)
   }
