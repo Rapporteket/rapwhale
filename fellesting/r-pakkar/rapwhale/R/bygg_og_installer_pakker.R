@@ -48,6 +48,11 @@ bygg_og_installer_pakker = function(pakkemapper = NULL,
     )
     adresse_pakkefil = devtools::build(pakkemappe, quiet = stille)
     pkgload::unload(pakke, quiet = stille)
-    devtools::install_local(adresse_pakkefil, dependencies = FALSE, quiet = stille)
+    if (installer) {
+      devtools::install_local(adresse_pakkefil,
+        dependencies = FALSE,
+        quiet = stille
+      )
+    }
   }
 }
