@@ -9,14 +9,16 @@ NULL
 #' Dokumenterer, bygger og installerer pakker (tar.gz-filer).
 #'
 #' @param pakkemapper Tekstvektor med mappeadresser til pakker. Standard er NULL.
-#' @param installer Skal pakkene installeres? Standard er TRUE.
-#' @param stille Skal det kun gis ut oppsummerte advarsler og
+#' @param installer Logisk variabel. Skal pakkene installeres? Standard er TRUE.
+#' @param stille Logisk variabel. Skal det kun gis ut oppsummerte advarsler og
 #'     feilmeldinger? Standard er TRUE.
 #'
 #' @details
-#' Funksjonen dokumenterer, bygger og installerer pakkene som finnes i
+#' Funksjonen dokumenterer, bygger og eventuelt installerer pakkene som finnes i
 #' `pakkemapper`. Hvis `pakkemapper = NULL` (standard) velges alle pakker som
 #' ligger i mapper som heter `r-pakke` eller `r-pakkar` under `H:/kvalreg/`.
+#' Hvis `installer = TRUE` blir pakkene installert. Hvis `stille = TRUE` blir
+#' det kun gitt ut oppsummerte advarsler og feilmeldinger.
 #'
 #' @return `NULL`
 #' @export
