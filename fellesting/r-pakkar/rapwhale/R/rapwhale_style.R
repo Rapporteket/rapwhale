@@ -81,9 +81,24 @@ rapwhale_style = function(scope = "tokens", strict = TRUE, indent_by = 2,
                           reindention = tidyverse_reindention(),
                           math_token_spacing = tidyverse_math_token_spacing()) {
   # Ta utgangspunkt i tidyverse-stilen
-  tidyverse_style(
+  temp_style = tidyverse_style(
     scope = scope, strict = strict, indent_by = indent_by,
     start_comments_with_one_space = start_comments_with_one_space,
     reindention = reindention, math_token_spacing = math_token_spacing
   )
+
+  # Bruk = i staden for <-
+  if ("tokens" %in% scope) {
+    temp_style$token$force_assignment_op = NULL
+    temp_style$token$force_equals_op = function(pd) {
+      to_replace = pd$token == "LEFT_ASSIGN"
+      pd$token[to_replace] = "EQ_ASSIGN"
+      pd$text[to_replace] = "="
+      pd
+    }
+    temp_style$transformers_drop$token$force_assignment_op = NULL
+    temp_style$transformers_drop$token$force_equals_op = "LEFT_ASSIGN"
+  }
+
+  temp_style
 }
