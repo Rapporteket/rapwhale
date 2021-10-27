@@ -90,6 +90,10 @@ rapwhale_style = function(scope = "tokens", strict = TRUE, indent_by = 2,
     reindention = reindention, math_token_spacing = math_token_spacing
   )
 
+  temp_style$style_guide_name = "rapwhale::rapwhale_style()"
+  temp_style$style_guide_version = packageVersion("rapwhale") %>%
+    as.character()
+
   # Bruk = i staden for <-
   if ("tokens" %in% scope) {
     temp_style$token$force_assignment_op = NULL
