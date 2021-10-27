@@ -57,6 +57,9 @@ NULL
 #' Sjå 'Examples' for detaljar.
 #'
 #' @return
+#' Stilguide, ei liste med funksjonar og annan info,
+#' til bruk ved formatering av kode med `styler`-pakken.
+#'
 #' @export
 #'
 #' @examples
