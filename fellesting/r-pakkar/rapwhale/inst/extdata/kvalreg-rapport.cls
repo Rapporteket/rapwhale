@@ -500,7 +500,7 @@
 \frontmatter
 \cleartorecto % Hopp til ny høgreside
 
-% Vis innhadsliste
+% Vis innhaldsliste
 {\hypersetup{hidelinks}
 \tableofcontents*
 }
