@@ -1,3 +1,76 @@
+#' @importFrom ggplot2 theme_set update_geom_defaults
+NULL
+#' Slå på kvalregtema for ggplot2 og qicharts2
+#'
+#' @description
+#' Set aktivt tema til `tema_kvalreg()`,
+#' og oppdaterer andre standardverdiar som fargar og punkt-/linjestorleik.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' aktiver_kvalregtema()
+aktiver_kvalregtema = function() {
+  theme_set(tema_kvalreg())
+
+  farger = farger_kvalreg()
+  skde_bla = farger$farger_hoved[3]
+  skde_morkebla = farger$farger_hoved[1]
+  skde_lysebla = farger$farger_hoved[6]
+  kontrastfarge = farger$farger_kontr
+
+  update_geom_defaults("point", list(size = 2, colour = skde_bla))
+  update_geom_defaults("line", list(size = 1, colour = skde_bla))
+  update_geom_defaults("linerange", list(size = 0.5, colour = skde_bla))
+  update_geom_defaults("hline", list(size = 0.5, colour = skde_morkebla))
+  update_geom_defaults("vline", list(size = 0.5, colour = skde_morkebla))
+  update_geom_defaults("bar", list(fill = skde_bla))
+  update_geom_defaults("col", list(fill = skde_bla))
+
+  skde_bla_to = c(
+    farger$farger_hoved[3],
+    farger$farger_hoved[5]
+  )
+  skde_bla_tre = c(
+    farger$farger_hoved[1],
+    farger$farger_hoved[3],
+    farger$farger_hoved[5]
+  )
+  skde_bla_fire = c(
+    farger$farger_hoved[1],
+    farger$farger_hoved[3],
+    farger$farger_hoved[5],
+    farger$farger_hoved[6]
+  )
+  skde_bla_fem = c(
+    farger$farger_hoved[1],
+    farger$farger_hoved[2],
+    farger$farger_hoved[3],
+    farger$farger_hoved[5],
+    farger$farger_hoved[6]
+  )
+  skde_bla_seks = farger$farger_hoved
+  skde_bla_liste = list(
+    skde_bla_to,
+    skde_bla_tre,
+    skde_bla_fire,
+    skde_bla_fem,
+    skde_bla_seks
+  )
+
+  options(
+    ggplot2.discrete.colour = skde_bla_liste,
+    ggplot2.discrete.fill = skde_bla_liste
+  )
+
+  options(
+    qic.signalcol = kontrastfarge,
+    qic.linecol = skde_bla,
+    qic.targetcol = skde_lysebla
+  )
+}
+
 #' Tema for bruk i figurer
 #'
 #' @description 
