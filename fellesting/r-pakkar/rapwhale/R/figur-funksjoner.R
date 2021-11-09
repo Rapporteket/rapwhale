@@ -173,12 +173,20 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' @description Funksjon for å laga søylediagram.
+#' Funksjon for å laga søylediagram
 #'
-#' @param d Datasett som inkluderer dei variablane som skal brukast søylediagrammet.
-#' @param x Variabel for x-aksen - Vanlegvis er dette ein kategorisk variabel.
-#' @param y Variabel for y-aksen - Ein kontinuerleg variabel. Kan vere en prosent.
-#' @param farge Fargen på søylene. Standard er SKDE-blå. Kan endrast i andre sammenhengar.
+#' @param d
+#' Datasett som inkluderer dei variablane som skal brukast søylediagrammet.
+#' @param x
+#' Variabel for x-aksen - Vanlegvis er dette ein kategorisk variabel.
+#' @param y
+#' Variabel for y-aksen - Ein kontinuerleg variabel.
+#' For prosent, bruk [lag_fig_soyle_prosent()].
+#' @param flip
+#' Logisk variabel som seier om plottet skal flippast. Standard verdi = `TRUE`.
+#' @param ...
+#' Ekstra argument som vert gjeve vidare til [lag_fig_soyle_grunnplott()]
+#' (og så vidare igjen til [ggplot2::geom_col()]).
 #'
 #' @details
 #'
@@ -188,9 +196,84 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
 #' @examples
 #' d = tibble(gruppe = c("a", "b", "c"), verdi = c(2.6, 2.1, 3.2))
 #' lag_fig_soyle(d, gruppe, verdi)
-lag_fig_soyle = function(d, x, y, farge = farger_kvalreg()$farger_hoved[3], ...) {
+#' lag_fig_soyle(d, gruppe, verdi, flip = FALSE)
+lag_fig_soyle = function(d, x, y, flip = TRUE, ...) {
+  lag_fig_soyle_grunnplott(d, {{ x }}, {{ y }}, flip = flip, ...) +
+    scale_y_continuous(
+      expand = expand_soyle(),
+      limits = c(0, NA)
+    )
+}
+
+#' Lag søylediagram med prosent
+#'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
+#' Funksjon for å laga søylediagram med prosent
+#'
+#' @param d
+#' Datasett som inkluderer dei variablane som skal brukast søylediagrammet.
+#' @param x
+#' Variabel for x-aksen - Vanlegvis er dette ein kategorisk variabel.
+#' @param y
+#' Variabel for y-aksen - Ein kontinuerleg variabel i prosent (andel).
+#' @param flip
+#' Logisk variabel som seier om plottet skal flippast. Standard verdi = `TRUE`.
+#' @param ...
+#' Ekstra argument som vert gjeve vidare til [lag_fig_soyle_grunnplott()]
+#' (og så vidare igjen til [ggplot2::geom_col()]).
+#'
+#' @details
+#'
+#' @return Eit søylediagram som ggplot-objekt.
+#'
+#' @export
+#' @examples
+#' d = tibble(gruppe = c("a", "b", "c"), verdi = c(0.6, 0.1, 0.2))
+#' lag_fig_soyle_prosent(d, gruppe, verdi)
+#' lag_fig_soyle_prosent(d, gruppe, verdi, flip = FALSE)
+lag_fig_soyle_prosent = function(d, x, y, flip = TRUE, ...) {
+  lag_fig_soyle_grunnplott(d, {{ x }}, {{ y }}, flip = flip, ...) +
+    scale_y_continuous(
+      expand = expand_soyle(),
+      labels = akse_prosent_format(0),
+      limits = c(0, 1)
+    )
+}
+
+#' Lag søylediagram-grunnplott
+#'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
+#' Hjelpefunksjon for å laga søylediagram i [lag_fig_soyle()] og
+#' [lag_fig_soyle_prosent()].
+#'
+#' @param d
+#' Datasett som inkluderer dei variablane som skal brukast søylediagrammet.
+#' @param x
+#' Variabel for x-aksen - Vanlegvis er dette ein kategorisk variabel.
+#' @param y
+#' Variabel for y-aksen - Ein kontinuerleg variabel. Kan vera prosent.
+#' @param flip
+#' Logisk variabel som seier om plottet skal flippast. Standard verdi = `TRUE`.
+#' @param ...
+#' Ekstra argument som vert gjeve vidare til [ggplot2::geom_col()].
+#'
+#' @details
+#'
+#' @return Eit søylediagram som ggplot-objekt.
+#'
+#' @examples
+lag_fig_soyle_grunnplott = function(d, x, y, flip = TRUE, ...) {
   ggplot(d, aes({{ x }}, {{ y }})) +
-    geom_bar(stat = "identity", width = 2 / 3, fill = farge, ...)
+    geom_col(width = 2 / 3, ...) +
+    if (flip) {
+      list(coord_flip(), fjern_y(), fjern_y_ticks())
+    } else {
+      list(fjern_x(), fjern_x_ticks())
+    }
 }
 
 #' Lag histogram
