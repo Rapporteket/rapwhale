@@ -4,7 +4,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom rlang enexpr syms eval_bare maybe_missing
 #' @importFrom qicharts2 qic
-#' @importFrom ggplot2 scale_x_continuous scale_y_continuous
+#' @import ggplot2
 NULL
 
 # Graffunksjoner ----------------------------------------------------------
@@ -282,54 +282,55 @@ lag_fig_soyle_grunnplott = function(d, x, y, flip = TRUE, ...) {
 #' Lag histogram
 #'
 #' @description
-#' `r lifecycle::badge("maturing")`
+#' `r lifecycle::badge("experimental")`
 #'
-#' Lager et ggplot2-basert histogram for valgt variabel,
-#' med fornuftige standardverdier.
+#' Funksjon for å laga histogram.
+#'
+#' @param d
+#' Datasett som inkluderer variabelen som skal brukast i histogrammet.
+#' @param x
+#' Variabelen som skal plottast.
+#' @param binwidth
+#' Søylebreidde (som i [ggplot2::geom_histogram()]). Standard er 1.
+#' @param boundary
+#' Justeringsgrense for venstre søylekant (som i [ggplot2::geom_histogram()]).
+#' Bør vanlegvis vera 0, som òg er standardverdi.
+#' @param breaks_width Avstand/mellomrom som skal brukast mellom kvart aksetal.
+#' Viss `NULL`, vert ein fornuftig standardverdi brukt.
+#' @param ...
+#' Ekstra argument som vert gjeve vidare til [ggplot2::geom_histogram()].
 #'
 #' @details
-#' Tilsvarer et vanlig histogram laget med [ggplot2::ggplot()]
-#' og [ggplot2::geom_histogram()],men med mer nyttige standardverdier
-#' og enkelte visuelle forbedringer:
+#' Lagar eit vanleg histogram,
+#' med [ggplot2::ggplot()] og [ggplot2::geom_histogram()],
+#' men med meir nyttige standardverdiar og enkelte visuelle forbetringar:
 #'
-#' - `boundary`-argumentet er som standard satt til 0, slik at
-#'   søyler med heltallig `binwidth` alltid vil starte på et heltall.
-#' - Søylene starter helt nede ved *x*-aksen (og har 5 % luft over seg).
-#' - En kan enkelt velge avstanden som skal være mellom aksetallene
-#'   (`aksetall_avstand`).
-#' - Søylefargen er som standard lik standard årsrapportfarge.
-#' - Vannrette akselinjer blir ikke vist.
-#'
-#' @param d Datasett som innholder variabelen som skal brukes i histogrammet.
-#' @param x Variabelnavn (rånavn, ikke tekststreng) som skal brukes på *x*-aksen.
-#' @param binwidth Søylebredde (som i [ggplot2::geom_histogram()]).
-#' @param boundary Justeringsgrense for venstre søylekant
-#'   (som i [ggplot2::geom_histogram()]). Bør vanligvis være 0.
-#' @param fill Søylefarge (som i [ggplot2::geom_histogram()]).
-#'   Hvis `NULL`, blir standard årsrapportfarge brukt.
-#' @param aksetall_avstand Avstand/mellomrom som skal brukes mellom
-#'   hvert aksetall. Hvis `NULL`, blir en fornuftig standardverdi brukt.
-#' @param ... Eventuelle andre argument som skal videresendes til
-#'   [ggplot2::geom_histogram()].
+#' - `boundary`-argumentet er som standard sett til 0,
+#' slik at søyler med heiltalig `binwidth` alltid vil starta på eit heiltal.
+#' - Søylene starter heilt nede ved *x*-aksen, og har 5 % luft over seg.
+#' - Ein kan enkelt velja avstanden som skal vera mellom aksetala
+#' med `breaks_width`.
+#' - Vassrette akselinjer vert ikkje vist.
 #'
 #' @return
-#' Et ggplot-objekt.
+#' Eit histogram som ggplot-objekt.
 #'
 #' @export
 #' @examples
-#' lag_fig_histogram(iris, Petal.Length, binwidth = .25, aksetall_avstand = .5)
-#' lag_fig_histogram(iris, Petal.Width, binwidth = .2, aksetall_avstand = .4, fill = "#737373")
-lag_fig_histogram = function(d, x, binwidth = 1, boundary = 0,
-                             fill = NULL, aksetall_avstand = NULL, ...) {
-  if (is.null(fill)) {
-    fill = farger_kvalreg()$farger_hoved[3]
-  }
-  p = ggplot2::ggplot(d, aes(x = {{ x }})) +
-    ggplot2::geom_histogram(binwidth = binwidth, boundary = boundary, fill = fill, ...) +
-    scale_y_continuous(expand = expansion(mult = c(0.0, .05), add = 0)) +
+#' lag_fig_histogram(iris, Petal.Length, binwidth = .25, breaks_width = .5)
+lag_fig_histogram = function(d, x,
+                             binwidth = 1,
+                             boundary = 0,
+                             breaks_width = NULL,
+                             ...) {
+  p = ggplot(d, aes({{ x }})) +
+    geom_histogram(binwidth = binwidth, boundary = boundary, ...) +
+    scale_y_continuous(expand = expand_soyle()) +
     fjern_x()
-  if (!is.null(aksetall_avstand)) {
-    p = p + scale_x_continuous(breaks = scales::breaks_width(aksetall_avstand))
+
+  if (!is.null(breaks_width)) {
+    p = p + scale_x_continuous(breaks = scales::breaks_width(breaks_width))
   }
+
   p
 }
