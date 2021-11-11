@@ -266,6 +266,9 @@ lag_fig_soyle_prosent = function(d, x, y, flip = TRUE, ...) {
 #' @return Eit søylediagram som ggplot-objekt.
 #'
 #' @examples
+#' d = tibble(gruppe = c("a", "b", "c"), verdi = c(2.6, 2.1, 3.2))
+#' rapwhale:::lag_fig_soyle_grunnplott(d, gruppe, verdi)
+#' rapwhale:::lag_fig_soyle_grunnplott(d, gruppe, verdi, flip = FALSE)
 lag_fig_soyle_grunnplott = function(d, x, y, flip = TRUE, ...) {
   ggplot(d, aes({{ x }}, {{ y }})) +
     geom_col(width = 2 / 3, ...) +
