@@ -182,12 +182,12 @@ lag_fig_soyle = function(d, x, y, flip = TRUE, ...) {
 #' d = tibble::tibble(gruppe = c("a", "b", "c"), verdi = c(0.6, 0.1, 0.2))
 #' lag_fig_soyle_prosent(d, gruppe, verdi)
 #' lag_fig_soyle_prosent(d, gruppe, verdi, flip = FALSE)
-lag_fig_soyle_prosent = function(d, x, y, flip = TRUE, ...) {
+lag_fig_soyle_prosent = function(d, x, y, flip = TRUE, ymax = 1, ...) {
   lag_fig_soyle_grunnplott(d, {{ x }}, {{ y }}, flip = flip, ...) +
     scale_y_continuous(
       expand = expand_soyle(),
       labels = akse_prosent_format(0),
-      limits = c(0, 1)
+      limits = c(0, ymax)
     )
 }
 
