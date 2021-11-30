@@ -1,3 +1,39 @@
+#' Wrap if-else, while and for statements in curly braces
+#'
+#' @description
+#' Wrap statements in curly braces if it is not already wrapped in a such.
+#'
+#' @param pd
+#' A parse table.
+#' @param indent_by
+#' The amount of spaces used to indent an expression in curly braces.
+#' Used for unindention.
+#'
+#' @details
+#' Lik [styler::wrap_if_else_while_for_fun_multi_line_in_curly],
+#' men der alle uttrykk får krøllparentesar (ikkje berre multi-line).
+wrap_if_else_while_for_fun_in_curly_rapwhale = function(pd, indent_by = 2) {
+  key_token = purrr::when(
+    pd,
+    styler:::is_cond_expr(.) ~ "')'",
+    styler:::is_while_expr(.) ~ "')'",
+    styler:::is_for_expr(.) ~ "forcond",
+    styler:::is_function_dec(.) ~ "')'"
+  )
+  if (length(key_token) > 0) {
+    pd = pd %>%
+      wrap_curly_rapwhale(indent_by,
+        space_after = ifelse(styler:::contains_else_expr(pd), 1, 0),
+        key_token = key_token
+      )
+  }
+  if (styler:::is_cond_expr(pd)) {
+    pd = pd %>%
+      styler:::wrap_else_multiline_curly(indent_by, space_after = 0)
+  }
+  pd
+}
+
 #' Wrap a statement in curly braces
 #'
 #' @description
