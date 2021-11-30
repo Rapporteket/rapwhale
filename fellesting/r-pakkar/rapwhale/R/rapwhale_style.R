@@ -107,5 +107,12 @@ rapwhale_style = function(scope = "tokens", strict = TRUE, indent_by = 2,
     temp_style$transformers_drop$token$force_equals_op = "LEFT_ASSIGN"
   }
 
+  # if, else osv. skal alltid ha krøllparentesar
+  temp_style$token = temp_style$token %>%
+    purrr::prepend(c(
+      wrap_if_else_while_for_fun_in_curly_rapwhale =
+        wrap_if_else_while_for_fun_in_curly_rapwhale
+    ))
+
   temp_style
 }
