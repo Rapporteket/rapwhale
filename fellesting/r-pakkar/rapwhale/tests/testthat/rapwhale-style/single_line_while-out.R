@@ -1,0 +1,3 @@
+while (FALSE) {
+  "Hello world!"
+}

@@ -47,3 +47,15 @@ test_that("<- vert ikkje endra viss 'tokens' ikkje er med i 'scope'", {
     NA
   )
 })
+
+test_that("Single-line if, else, while, for og function får krøllparentesar", {
+  expect_warning(
+    styler:::test_collection(
+      "rapwhale-style",
+      "^single_line_",
+      transformer = style_text_rapwhale,
+      dry = "on"
+    ),
+    NA
+  )
+})
