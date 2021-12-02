@@ -86,11 +86,6 @@ test_that("Fungerer uavhengig av hvilken datatype 'variabel' er", {
   )
 })
 
-test_that("Variabeltype for variabel er samme i både inn- og utdata", {
-
-})
-
-
 test_that("Fungerer med grupperte inndata og ugrupperte inndata", {
   data_inn_gruppert = data_inn %>%
     group_by(sykehus)
