@@ -114,5 +114,9 @@ rapwhale_style = function(scope = "tokens", strict = TRUE, indent_by = 2,
         wrap_if_else_while_for_fun_in_curly_rapwhale
     ))
 
+  # Alltid linjeskift etter røyr, også med berre eitt røyr
+  temp_style$line_break$add_line_break_after_pipe =
+    add_line_break_after_pipe_rapwhale
+
   temp_style
 }
