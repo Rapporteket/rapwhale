@@ -10,7 +10,7 @@ data_inn = tibble::tibble(
 )
 
 # Inndata -----------------------------------------------------------------
-test_that("Feilmelding hvis 'data' ikke inneholder 'variabel' nødvendige kolonner", {
+test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {
   data_uten_var = data_inn %>%
     select(-var_1)
   feilmelding = "'var_1' mangler i inndata."
@@ -20,21 +20,17 @@ test_that("Feilmelding hvis 'data' ikke inneholder 'variabel' nødvendige kolonn
   )
 })
 test_that("Feilmelding hvis na_vektor er tom", {
-  feilmelding = "na_vektor inneholder ingen verdier"
-  expect_error(erstatt_ukjent(data_inn, variabel = "var_1", na_vektor = "Ukjent"))
+  expect_error(erstatt_ukjent(data_inn, variabel = "var_1"))
 })
-test_that("Feilmelding hvis na_vektor og variabel har ulik datatype", {
-  data_ut = data_inn %>%
-    select(-var_1) %>%
-    add_column(var_1 = c(1, NA, NA, NA, 2, NA))
 
+test_that("Feilmelding hvis na_vektor og variabel har ulik datatype", {
   feilmelding = "'var_1' og na_vektor må være av samme datatype"
   expect_error(
     erstatt_ukjent(data_inn, variabel = "var_1", na_vektor = "Ukjent"),
     feilmelding
   )
-  expect_identical()
 })
+
 test_that("Feilmelding hvis 'variabel' ikke er en streng", {
   expect_error(erstatt_ukjent(data_inn, variabel = var_1, na_vektor = -1))
 })
@@ -43,7 +39,7 @@ test_that("Feilmelding hvis 'variabel' ikke er en streng", {
 
 test_that("Fungerer uavhengig av hvilken datatype 'variabel' er", {
   data_med_andre_vartyper = data_inn %>%
-    add_column(
+    tibble::add_column(
       var_tekst = c("glad", "sliten", "sulten", "ikke svart", "ikke svart", NA),
       var_desimal = c(0.2, 0.1, -1.0, NA, 1.0, 99.0),
       var_heltall = c(1L, 3L, 6L, -1L, 99L, 9L)
@@ -51,15 +47,21 @@ test_that("Fungerer uavhengig av hvilken datatype 'variabel' er", {
 
   data_ut_var_tekst = data_med_andre_vartyper %>%
     select(-var_tekst) %>%
-    add_column(var_tekst = c("glad", "sliten", "sulten", NA_character_, NA_character_, NA_character_))
+    tibble::add_column(
+      var_tekst = c("glad", "sliten", "sulten", NA_character_, NA_character_, NA_character_),
+      .before = 5
+    )
 
   data_ut_var_desimal = data_med_andre_vartyper %>%
     select(-var_desimal) %>%
-    add_column(var_desimal = c(0.2, 0.1, NA_real_, NA_real_, 1.0, NA_real_))
+    tibble::add_column(
+      var_desimal = c(0.2, 0.1, NA_real_, NA_real_, 1.0, NA_real_),
+      .before = 6
+    )
 
   data_ut_var_heltall = data_med_andre_vartyper %>%
     select(-var_heltall) %>%
-    add_column(var_heltall = c(1L, 3L, 6L, NA_integer_, NA_integer_, 9L))
+    tibble::add_column(var_heltall = c(1L, 3L, 6L, NA_integer_, NA_integer_, 9L))
 
   expect_identical(
     erstatt_ukjent(data_med_andre_vartyper,
@@ -80,7 +82,7 @@ test_that("Fungerer uavhengig av hvilken datatype 'variabel' er", {
   expect_identical(
     erstatt_ukjent(data_med_andre_vartyper,
       variabel = "var_heltall",
-      na_vektor = c(-1L, 99L)
+      na_vektor = c(99L, -1L)
     ),
     data_ut_var_heltall
   )
@@ -101,7 +103,8 @@ test_that("Fungerer med grupperte inndata og ugrupperte inndata", {
       NA_integer_, 2L, NA_integer_
     ),
     var_2 = c(1L, 2L, 3L, NA_integer_, -1L, -1L)
-  )
+  ) %>%
+    group_by(sykehus)
 
   expect_identical(
     erstatt_ukjent(data_inn_gruppert,
@@ -114,10 +117,10 @@ test_that("Fungerer med grupperte inndata og ugrupperte inndata", {
 test_that("Konverterer flere verdier hvis det er oppgitt i na_vektor", {
   data_ut = data_inn %>%
     select(-var_1) %>%
-    add_column(var_1 = c(
+    tibble::add_column(var_1 = c(
       1L, NA_integer_, NA_integer_,
       NA_integer_, 2L, NA_integer_
-    ))
+    ), .before = 3)
 
   expect_identical(
     erstatt_ukjent(data_inn,
