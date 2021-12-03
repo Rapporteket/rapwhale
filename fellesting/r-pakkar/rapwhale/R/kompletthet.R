@@ -10,5 +10,11 @@
 # I tillegg tar den inn en na_vektor med alle verdiene som skal byttes til NA.
 
 erstatt_ukjent = function(data, variabel, na_vektor) {
+  if (!has_name(data, variabel)) {
+    stop(paste0("'", variabel, "' mangler i inndata."))
+  }
 
+  d = data %>%
+    mutate(across(all_of(variabel), ~ replace(., . %in% na_vektor, NA)))
+  d
 }
