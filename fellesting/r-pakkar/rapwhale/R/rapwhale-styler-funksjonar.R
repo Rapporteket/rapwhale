@@ -109,3 +109,22 @@ if_for_while_part_requires_braces_rapwhale = function(pd, key_token) {
   child = pd$child[[styler:::next_non_comment(pd, pos_first_key_token)]]
   !styler:::is_curly_expr(child)
 }
+
+#' Add line break after pipe
+#'
+#' @param pd
+#' A parse table.
+#'
+#' @details
+#' Lik [styler::add_line_break_after_pipe],
+#' men der det òg vert lagt til linjeskift etter korte røyr.
+add_line_break_after_pipe_rapwhale = function(pd) {
+  is_pipe = pd$token %in% c("SPECIAL-PIPE", "PIPE")
+  pd$lag_newlines[styler:::lag(is_pipe) & pd$lag_newlines > 1] = 1L
+
+  if (sum(is_pipe & pd$token_after != "COMMENT") > 0 &&
+    !(styler:::next_terminal(pd, vars = "token_before")$token_before %in% c("'('", "EQ_SUB", "','"))) {
+    pd$lag_newlines[styler:::lag(is_pipe) & pd$token != "COMMENT"] = 1L
+  }
+  pd
+}
