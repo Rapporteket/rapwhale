@@ -59,3 +59,15 @@ test_that("Single-line if, else, while, for og function får krøllparentesar", 
     NA
   )
 })
+
+test_that("Korte røyr får òg linjeskift", {
+  expect_warning(
+    styler:::test_collection(
+      "rapwhale-style",
+      "^short_pipes",
+      transformer = style_text_rapwhale,
+      dry = "on"
+    ),
+    NA
+  )
+})
