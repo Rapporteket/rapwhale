@@ -1,4 +1,5 @@
 #' @importFrom ggplot2 theme_set update_geom_defaults
+#' @importFrom scales colour_ramp gradient_n_pal
 NULL
 #' Slå på kvalregtema for ggplot2 og qicharts2
 #'
@@ -263,4 +264,84 @@ expand_soyle = function() {
 #' @export
 expand_soyle_str_fig = function() {
   expand_soyle_str_fig = ggplot2::expansion(mult = c(0.0, .09), add = 0)
+}
+
+#' Kvalreg-fargeskala
+#'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
+#' Sekvensielle fargeskalaar for diskrete og kontinuerlege data
+#' basert på dei blåe «SKDE-fargane».
+#'
+#' @return
+#' Ein diskret eller kontinuerleg fargeskala.
+#'
+#' @export
+#' @rdname scale_kvalreg
+#'
+#' @examples
+#' library(ggplot2)
+#'
+#' # Diskrete data
+#'
+#' ggplot(diamonds, aes(x = price, fill = cut)) +
+#'   geom_histogram(position = "dodge", binwidth = 1000) +
+#'   scale_fill_kvalreg()
+#'
+#' ggplot(mpg, aes(cty, hwy)) +
+#'   geom_point(aes(colour = drv)) +
+#'   scale_colour_kvalreg()
+#'
+#' # Kontinuerlege data
+#'
+#' ggplot(faithfuld) +
+#'   geom_tile(aes(waiting, eruptions, fill = density)) +
+#'   scale_fill_kvalreg_kont()
+#'
+#' gplot(mpg, aes(cty, hwy)) +
+#'   geom_point(aes(colour = displ)) +
+#'   scale_colour_kvalreg_kont()
+scale_fill_kvalreg = function() {
+  fargar = farger_kvalreg()$farger_hoved
+  fargerampe = colour_ramp(fargar)
+  palett = function(n) {
+    fargerampe(seq(0, 1, length.out = n))
+  }
+  discrete_scale("fill", scale_name = "skde", palette = palett)
+}
+
+#' @rdname scale_kvalreg
+#' @export
+scale_colour_kvalreg = function() {
+  fargar = farger_kvalreg()$farger_hoved
+  fargerampe = colour_ramp(fargar)
+  palett = function(n) {
+    fargerampe(seq(0, 1, length.out = n))
+  }
+  discrete_scale("colour", scale_name = "skde", palette = palett)
+}
+
+#' @rdname scale_kvalreg
+#' @export
+scale_fill_kvalreg_kont = function() {
+  fargar = farger_kvalreg()$farger_hoved
+  palett = gradient_n_pal(fargar)
+  continuous_scale("fill",
+    scale_name = "skde",
+    palette = palett,
+    guide = "colourbar"
+  )
+}
+
+#' @rdname scale_kvalreg
+#' @export
+scale_colour_kvalreg_kont = function() {
+  fargar = farger_kvalreg()$farger_hoved
+  palett = gradient_n_pal(fargar)
+  continuous_scale("colour",
+    scale_name = "skde",
+    palette = palett,
+    guide = "colourbar"
+  )
 }
