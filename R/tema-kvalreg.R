@@ -43,40 +43,11 @@ aktiver_kvalregtema = function() {
   update_geom_defaults("bar", list(fill = skde_bla))
   update_geom_defaults("col", list(fill = skde_bla))
 
-  skde_bla_to = c(
-    farger$farger_hoved[3],
-    farger$farger_hoved[5]
-  )
-  skde_bla_tre = c(
-    farger$farger_hoved[1],
-    farger$farger_hoved[3],
-    farger$farger_hoved[5]
-  )
-  skde_bla_fire = c(
-    farger$farger_hoved[1],
-    farger$farger_hoved[3],
-    farger$farger_hoved[5],
-    farger$farger_hoved[6]
-  )
-  skde_bla_fem = c(
-    farger$farger_hoved[1],
-    farger$farger_hoved[2],
-    farger$farger_hoved[3],
-    farger$farger_hoved[5],
-    farger$farger_hoved[6]
-  )
-  skde_bla_seks = farger$farger_hoved
-  skde_bla_liste = list(
-    skde_bla_to,
-    skde_bla_tre,
-    skde_bla_fire,
-    skde_bla_fem,
-    skde_bla_seks
-  )
-
   options(
-    ggplot2.discrete.colour = skde_bla_liste,
-    ggplot2.discrete.fill = skde_bla_liste
+    ggplot2.discrete.colour = scale_colour_kvalreg,
+    ggplot2.discrete.fill = scale_fill_kvalreg,
+    ggplot2.continuous.colour = scale_colour_kvalreg_kont,
+    ggplot2.continuous.fill = scale_fill_kvalreg_kont
   )
 
   options(
