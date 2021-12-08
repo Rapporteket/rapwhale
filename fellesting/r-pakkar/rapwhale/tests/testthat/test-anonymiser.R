@@ -112,6 +112,18 @@ test_that("Alle pasientene får same anonymiserte ID for kvar oppføring dei har
   }
 })
 
+test_that("Fungerer òg viss inndataelementa er lik dei som inngår i utdata", {
+  pas2_tekst = c("1002", "1001", "1001", "1003")
+  pas2_tal = as.integer(pas2_tekst)
+  ok_anonymisert = function(x) {
+    all((!x[1] %in% x[2:4]) & (x[2] == x[3]) & (x[3] != x[4]) &
+      (sort(unique(x)) == c(1001, 1002, 1003)))
+  }
+  # Kan gå bra tilfeldigvis, så sjekkar mange gongar
+  walk(1:10, ~ expect_true(ok_anonymisert(anonymiser(pas2_tekst))))
+  walk(1:10, ~ expect_true(ok_anonymisert(anonymiser(pas2_tal))))
+})
+
 
 # Grensetilfelle --------------------------------------------------------------------------
 
