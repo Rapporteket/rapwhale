@@ -3,6 +3,8 @@ NULL
 #' Equals-assignment linter
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Linter som sjekkar at `=` alltid vert brukt ved tilordning.
 assignment_eq_linter = function(source_file) {
   lapply(ids_with_token(source_file, "LEFT_ASSIGN"), function(id) {
