@@ -124,6 +124,40 @@ test_that("Fungerer òg viss inndataelementa er lik dei som inngår i utdata", {
   walk(1:10, ~ expect_true(ok_anonymisert(anonymiser(pas2_tal))))
 })
 
+# Test av faktorar der det finst nivå som ikkje er brukte i
+# inndatavektoren. Basert på løysingsforslag som var omtrent slikt:
+#   x_fak = as.factor(x)
+#   nye = sample.int(length(unique(x))) + startnr - 1
+#   levels(x_fak) = nye # Gjev feilmelding eller feil svar
+#   as.integer(as.character(x_fak))
+test_that("Anonymisering av faktorar med ubrukte nivå eller NA fungerer òg", {
+  pas_id_ekstra = factor(c("d", "a"),
+    levels = c("b", "a", "c", "d")
+  )
+  pas_id_na = factor(c("d", "a", NA))
+
+  # Skal ikkje gje åtvaringar/feilmeldingar
+  expect_warning(anonymiser(pas_id_ekstra), NA)
+  expect_error(anonymiser(pas_id_ekstra), NA)
+  expect_error(suppressWarnings(anonymiser(pas_id_na)), NA)
+
+  ok_anonymisert_ekstra = function(x) {
+    identical(x, c(1001L, 1002L)) ||
+      identical(x, c(1002L, 1001L))
+  }
+  ok_anonymisert_na = function(x) {
+    identical(x, c(1001L, 1002L, NA)) ||
+      identical(x, c(1002L, 1001L, NA))
+  }
+  # Kan gå bra tilfeldigvis, så sjekkar mange gongar
+  walk(1:10, ~ expect_true(ok_anonymisert_ekstra(
+    anonymiser(pas_id_ekstra)
+  )))
+  walk(1:10, ~ expect_true(ok_anonymisert_na(
+    suppressWarnings(anonymiser(pas_id_na))
+  )))
+})
+
 
 # Grensetilfelle --------------------------------------------------------------------------
 
