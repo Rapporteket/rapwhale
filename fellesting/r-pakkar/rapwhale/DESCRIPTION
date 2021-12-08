@@ -36,7 +36,8 @@ Imports:
     testthat,
     Rdpack,
     lifecycle,
-    devtools
+    devtools,
+    lintr
 RdMacros: Rdpack
 RoxygenNote: 7.1.2
 Roxygen: list(markdown = TRUE)
