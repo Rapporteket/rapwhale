@@ -37,7 +37,8 @@ Imports:
     Rdpack,
     lifecycle,
     devtools,
-    lintr
+    lintr,
+    styler
 RdMacros: Rdpack
 RoxygenNote: 7.1.2
 Roxygen: list(markdown = TRUE)
