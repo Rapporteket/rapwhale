@@ -98,7 +98,7 @@ rapwhale_style = function(scope = "tokens", strict = TRUE, indent_by = 2,
   if ("tokens" %in% scope) {
     temp_style$token$force_assignment_op = NULL
     temp_style$token$force_equals_op = function(pd) {
-      to_replace = pd$token == "LEFT_ASSIGN"
+      to_replace = pd$token == "LEFT_ASSIGN" & pd$text != "<<-"
       pd$token[to_replace] = "EQ_ASSIGN"
       pd$text[to_replace] = "="
       pd
