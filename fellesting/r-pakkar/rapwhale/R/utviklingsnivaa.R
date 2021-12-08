@@ -22,7 +22,7 @@
 #' utviklingsnivaa()
 #'
 #' utviklingsnivaa("H:/kvalreg/felles/pakker/rapwhale/man")
-utviklingsnivaa = function(mappe = "H:/kvalreg/felles/pakker/rapwhale/man") {
+utviklingsnivaa = function(mappe = "H:\\kvalreg\\fellesting\\r-pakkar\\rapwhale\\man") {
   # Lag vektor med filnamn
   funksjonar = list.files(mappe, pattern = "\\.Rd$")
 
