@@ -139,3 +139,23 @@ test_that("Gjør ingenting hvis inndata mangler verdier fra na_vektor", {
     data_inn
   )
 })
+
+
+context("Beregn_kompletthet")
+
+test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {})
+test_that("Gir riktig resultat for antall og andel missing", {})
+test_that("Gir forventet utdata med grupperte data", {})
+test_that("Gir feilmelding hvis inndata ikke er tibble/data.frame", {})
+test_that("Gir feilmelding hvis variabel ikke er tekststreng", {})
+
+
+context("Beregn_kompletthet_med_ukjent")
+
+test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {})
+test_that("Feilmelding hvis na_vektor er tom", {})
+test_that("Feilmelding hvis na_vektor og variabel har ulik datatype", {})
+test_that("Gir riktig resultat for antall og andel missing", {})
+test_that("Gir forventet utdata med grupperte data", {})
+test_that("Gir feilmelding hvis inndata ikke er tibble/data.frame", {})
+test_that("Gir feilmelding hvis variabel ikke er tekststreng", {})
