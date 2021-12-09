@@ -21,9 +21,11 @@ kompiler_rnw = function(adresse) {
   tex_adresse = str_replace(adresse, ".Rnw", ".tex")
   knit_res = try(
     suppressPackageStartupMessages(
-      knit(
-        adresse,
-        encoding = "utf-8", quiet = TRUE, envir = globalenv()
+      knit(adresse,
+        output = tex_adresse,
+        encoding = "utf-8",
+        quiet = TRUE,
+        envir = globalenv()
       )
     ),
     silent = TRUE
