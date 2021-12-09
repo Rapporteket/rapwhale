@@ -1,6 +1,19 @@
-# Kompileringsfunksjonar --------------------------------------------------
-
-# Kompiler ei .Rnw-fil til .tex-fil
+#' Kompiler .Rnw til .tex
+#'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
+#' Funksjonen kompilerer ei .Rnw-fil til .tex-fil
+#'
+#' @param adresse Tekststreng med adresse til .Rnw-fila som skal kompilerast.
+#'
+#' @details
+#' Dersom kompileringa ikkje vert fullført utan feil,
+#' slettar funksjonen .tex-fila som svarar til `adresse`.
+#'
+#' @return
+#'
+#' @export
 kompiler_rnw = function(adresse) {
   # Køyr først .Rnw-fila gjennom R for å få ut ei .tex-fil
   cat(paste0(basename(adresse), " (knitr): "))
@@ -22,7 +35,22 @@ kompiler_rnw = function(adresse) {
   }
 }
 
-# Kompiler ei .tex-fil til PDF-fil (med maks «maksiter» LuaLaTeX-køyringar)
+#' Kompiler .tex til .pdf
+#'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
+#' Funksjonen kompilerer ei .tex-fil til .pdf-fil,
+#' med maks `maksiter` LuaLaTeX-køyringar.
+#'
+#' @param adresse
+#' Tekststreng med adresse til .tex-fila som skal kompilerast.
+#' @param maksiter
+#' Heiltal for maks antal LuaLaTeX-køyringar. Standard = 5.
+#'
+#' @return
+#'
+#' @export
 kompiler_tex = function(adresse, maksiter = 5) {
   # Gjenta kompilering til alle kryssreferansar og
   # slikt er i orden, men maks «maksiter» gongar.
