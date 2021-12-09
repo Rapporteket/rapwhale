@@ -1,3 +1,8 @@
+#' @importFrom stringr str_replace str_c str_detect str_split str_subset str_replace_all
+#' @importFrom knitr knit
+#' @importFrom readr read_lines
+#' @importFrom purrr pluck
+NULL
 #' Kompiler .Rnw til .tex
 #'
 #' @description
