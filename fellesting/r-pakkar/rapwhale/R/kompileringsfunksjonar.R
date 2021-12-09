@@ -34,7 +34,10 @@ kompiler_rnw = function(adresse) {
     invisible(tex_adresse)
   } else {
     cat("FEIL!\n")
-    suppressWarnings(file.remove(str_replace(adresse, ".Rnw", ".tex"))) # Fjern .tex-fila, for å unngå forsøk på kompilering
+    # Fjern .tex-fila, for å unngå forsøk på kompilering
+    if (file.exists(tex_adresse)) {
+      file.remove(tex_adresse)
+    }
   }
 }
 
