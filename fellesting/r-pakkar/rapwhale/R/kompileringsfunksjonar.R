@@ -21,7 +21,6 @@ NULL
 #'
 #' @export
 kompiler_rnw = function(adresse) {
-  # Køyr først .Rnw-fila gjennom R for å få ut ei .tex-fil
   cat(paste0(basename(adresse), " (knitr): "))
   tex_adresse = str_replace(adresse, ".Rnw", ".tex")
   knit_res = try(
