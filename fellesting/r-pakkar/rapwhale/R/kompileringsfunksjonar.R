@@ -68,11 +68,12 @@ kompiler_tex = function(adresse, maksiter = 5, vis_feilmeldingar = TRUE) {
   repeat {
     iter = iter + 1
     filnamn = basename(adresse)
+    mappe = dirname(adresse)
     cat(paste0(filnamn, " (LuaLaTex): ", iter, ": ")) # Vis statusmelding
     old_opts = options(warn = 1) # Vis åtvaringar når dei skjer (for eksempel viss PDF-fila er låst for skriving)
     logg = suppressWarnings(system2(
       "lualatex",
-      args = paste("--interaction=nonstopmode --halt-on-error --file-line-error", filnamn),
+      args = paste0("--interaction=nonstopmode --halt-on-error --file-line-error --output-directory=", mappe, " ", adresse),
       stdout = TRUE
     ))
 
