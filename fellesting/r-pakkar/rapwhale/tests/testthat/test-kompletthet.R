@@ -1,13 +1,16 @@
 
 context("Erstatt_ukjent")
 
-# Baseobjekt for testdata
+# Baseobjekter for testdata
 data_inn = tibble::tibble(
   pas_id = c(1L, 2L, 3L, 4L, 5L, 6L),
   sykehus = c("HUS", "HUS", "SVG", "SVG", "SVG", "OUS"),
   var_1 = c(1L, NA_integer_, NA_integer_, -1L, 2L, 99L),
   var_2 = c(1L, 2L, 3L, NA_integer_, -1L, -1L)
 )
+
+data_inn_gruppert = data_inn %>%
+  group_by(sykehus)
 
 # Inndata -----------------------------------------------------------------
 test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {
@@ -89,9 +92,6 @@ test_that("Fungerer uavhengig av hvilken datatype 'variabel' er", {
 })
 
 test_that("Fungerer med grupperte inndata og ugrupperte inndata", {
-  data_inn_gruppert = data_inn %>%
-    group_by(sykehus)
-
   data_ut_gruppert = tibble::tibble(
     pas_id = c(1L:6L),
     sykehus = c(
@@ -143,11 +143,49 @@ test_that("Gjør ingenting hvis inndata mangler verdier fra na_vektor", {
 
 context("Beregn_kompletthet")
 
-test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {})
-test_that("Gir riktig resultat for antall og andel missing", {})
-test_that("Gir forventet utdata med grupperte data", {})
-test_that("Gir feilmelding hvis inndata ikke er tibble/data.frame", {})
-test_that("Gir feilmelding hvis variabel ikke er tekststreng", {})
+test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {
+  data_uten_var = data_inn %>%
+    select(-var_1)
+  feilmelding = "'var_1' mangler i inndata."
+  expect_error(
+    beregn_kompletthet(data = data_uten_var, variabel = "var_1"),
+    feilmelding
+  )
+})
+
+test_that("Gir riktig resultat for antall og andel missing for ugrupperte data", {
+  data_forventet_ut_ugruppert =
+    tibble::tibble(
+      variabelnavn = "var_1",
+      totalt_antall = 6L,
+      antall_na = 2L,
+      andel_na = 2 / 6
+    )
+
+  expect_identical(
+    beregn_kompletthet(data_inn, "var_1"),
+    data_forventet_ut_ugruppert
+  )
+})
+
+test_that("Gir forventet utdata med grupperte data", {
+  data_forventet_ut_gruppert = tibble::tibble(
+    sykehus = c("HUS", "SVG", "OUS"),
+    variabelnavn = c(rep("var_1", 3)),
+    totalt_antall = c(2L, 3L, 1L),
+    antall_na = c(1L, 1L, 0L),
+    andel_na = c(1 / 2, 1 / 3, 0 / 2)
+  ) %>%
+    group_by(sykehus)
+  expect_identical(
+    beregn_kompletthet(data = data_inn_gruppert, variabel = "var_1"),
+    data_forventet_ut_gruppert
+  )
+})
+
+test_that("Gir feilmelding hvis variabel ikke er tekststreng", {
+  expect_error(beregn_kompletthet(data_inn, variabel = var_1))
+})
 
 
 context("Beregn_kompletthet_med_ukjent")
