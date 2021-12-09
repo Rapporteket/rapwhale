@@ -47,11 +47,13 @@ kompiler_rnw = function(adresse) {
 #' Tekststreng med adresse til .tex-fila som skal kompilerast.
 #' @param maksiter
 #' Heiltal for maks antal LuaLaTeX-køyringar. Standard = 5.
+#' @param vis_feilmeldingar
+#' Logisk variabel som seier om feilmeldingar skal visast. Standard = TRUE.
 #'
 #' @return
 #'
 #' @export
-kompiler_tex = function(adresse, maksiter = 5) {
+kompiler_tex = function(adresse, maksiter = 5, vis_feilmeldingar = TRUE) {
   # Gjenta kompilering til alle kryssreferansar og
   # slikt er i orden, men maks «maksiter» gongar.
   iter = 0
