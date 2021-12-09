@@ -12,11 +12,13 @@
 #' slettar funksjonen .tex-fila som svarar til `adresse`.
 #'
 #' @return
+#' Adressa til .tex-fila, viss den vart kompilert utan feil, usynleg.
 #'
 #' @export
 kompiler_rnw = function(adresse) {
   # Køyr først .Rnw-fila gjennom R for å få ut ei .tex-fil
   cat(paste0(basename(adresse), " (knitr): "))
+  tex_adresse = str_replace(adresse, ".Rnw", ".tex")
   knit_res = try(
     suppressPackageStartupMessages(
       knit(
@@ -29,6 +31,7 @@ kompiler_rnw = function(adresse) {
   knit_ok = !inherits(knit_res, "try-error")
   if (knit_ok) {
     cat("OK\n")
+    invisible(tex_adresse)
   } else {
     cat("FEIL!\n")
     suppressWarnings(file.remove(str_replace(adresse, ".Rnw", ".tex"))) # Fjern .tex-fila, for å unngå forsøk på kompilering
