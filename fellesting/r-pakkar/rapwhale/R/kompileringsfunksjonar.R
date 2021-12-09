@@ -74,10 +74,15 @@ kompiler_tex = function(adresse, maksiter = 5, vis_feilmeldingar = TRUE) {
     filnamn = basename(adresse)
     mappe = dirname(adresse)
     cat(paste0(filnamn, " (LuaLaTex): ", iter, ": ")) # Vis statusmelding
-    old_opts = options(warn = 1) # Vis åtvaringar når dei skjer (for eksempel viss PDF-fila er låst for skriving)
+    # Vis åtvaringar når dei skjer
+    # (for eksempel viss PDF-fila er låst for skriving)
+    old_opts = options(warn = 1)
     processx::run(
       "lualatex",
-      args = c("--interaction=nonstopmode", "--halt-on-error", "--file-line-error", paste0("--output-directory=", mappe), adresse),
+      args = c(
+        "--interaction=nonstopmode", "--halt-on-error", "--file-line-error",
+        paste0("--output-directory=", mappe), adresse
+      ),
       stdout = NULL
     )
 
@@ -99,19 +104,22 @@ kompiler_tex = function(adresse, maksiter = 5, vis_feilmeldingar = TRUE) {
 
     # Skil loggen inn i separate «loggmeldingar», som me definerer
     # til å vera tekst etterfølgt av ei *tom* linje
-    loggmeldingar = str_c(logg, collapse = "\n") %>% # Gjer loggteksten om til éin stor streng
+    loggmeldingar = str_c(logg, collapse = "\n") %>%
       str_split("\n\n+") %>%
-      pluck(1) # Del opp i loggmeldingar
-    logg_akt = str_subset(loggmeldingar, "([Ww]arning|[Ee]rror):") # Hent ut aktuelle loggmeldingar
+      pluck(1)
+    # Hent ut aktuelle loggmeldingar
+    logg_akt = str_subset(loggmeldingar, "([Ww]arning|[Ee]rror):")
 
     # Vis eventuelle feilmeldingar/åtvaringar i loggen
     vis_loggfeil = function() {
       if (vis_feilmeldingar && (length(logg_akt) > 0)) {
-        cat("Åtvaringar/feil: ",
+        cat(
+          "Åtvaringar/feil: ",
+          # Innrykk på alle linjer
           str_c("  ", str_replace_all(logg_akt, "\n", "\n  ")),
           sep = "\n"
         )
-      } # Innrykk på alle linjer
+      }
     }
 
     if (feil) {
@@ -120,7 +128,7 @@ kompiler_tex = function(adresse, maksiter = 5, vis_feilmeldingar = TRUE) {
       break
     } else if (ferdig) {
       cat("OK\n")
-      vis_loggfeil() # Det kan vera åtvaringar sjølv om kompileringa fungerte ...
+      vis_loggfeil() # Det kan vera åtvaringar sjølv om kompileringa fungerte
       break
     } else if (iter >= maksiter) {
       cat("GJEV OPP (for mange rekompileringar)\n")
@@ -128,7 +136,9 @@ kompiler_tex = function(adresse, maksiter = 5, vis_feilmeldingar = TRUE) {
       break
     } else {
       cat("Treng rekompilering ...\n")
-      # vis_loggfeil() # Er typisk så mange åtvaringar viss me treng rekompilering at det er betre å ikkje visa dei
+      # vis_loggfeil()
+      # Er typisk så mange åtvaringar viss me treng rekompilering
+      # at det er betre å ikkje visa dei
     }
   }
 }
