@@ -75,11 +75,11 @@ kompiler_tex = function(adresse, maksiter = 5, vis_feilmeldingar = TRUE) {
     mappe = dirname(adresse)
     cat(paste0(filnamn, " (LuaLaTex): ", iter, ": ")) # Vis statusmelding
     old_opts = options(warn = 1) # Vis åtvaringar når dei skjer (for eksempel viss PDF-fila er låst for skriving)
-    logg = suppressWarnings(system2(
+    processx::run(
       "lualatex",
-      args = paste0("--interaction=nonstopmode --halt-on-error --file-line-error --output-directory=", mappe, " ", adresse),
-      stdout = TRUE
-    ))
+      args = c("--interaction=nonstopmode", "--halt-on-error", "--file-line-error", paste0("--output-directory=", mappe), adresse),
+      stdout = NULL
+    )
 
     # Loggen me får ut på kommandolinja har ikkje eit format me lett kan bruka.
     # Les derfor heller inn den *lagra* loggfila (som har fint format på grunn
