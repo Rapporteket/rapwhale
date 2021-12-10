@@ -180,7 +180,7 @@ test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {
 test_that("Gir riktig resultat for antall og andel missing for ugrupperte data", {
   data_forventet_ut_ugruppert =
     tibble::tibble(
-      variabelnavn = "var_1",
+      variabel = "var_1",
       totalt_antall = 6L,
       antall_na = 2L,
       andel_na = 2 / 6
@@ -195,12 +195,12 @@ test_that("Gir riktig resultat for antall og andel missing for ugrupperte data",
 test_that("Gir forventet utdata med grupperte data", {
   data_forventet_ut_gruppert = tibble::tibble(
     sykehus = c("SVG", "HUS", "OUS"),
-    variabelnavn = c(rep("var_1", 3)),
+    variabel = c(rep("var_1", 3)),
     totalt_antall = c(3L, 2L, 1L),
     antall_na = c(1L, 1L, 0L),
     andel_na = c(1 / 3, 1 / 2, 0 / 2)
-  ) %>%
-    group_by(sykehus)
+  )
+
   expect_identical(
     beregn_kompletthet(data = data_inn_gruppert, variabel = "var_1"),
     data_forventet_ut_gruppert
@@ -246,7 +246,7 @@ test_that("Feilmelding hvis na_vektor og variabel har ulik datatype", {
 test_that("Gir riktig resultat for antall og andel missing", {
   data_forventet_ut_med_ukjent_ugruppert = tibble::tibble(
     variabel = "var_1",
-    antall_totalt = 6L,
+    totalt_antall = 6L,
     antall_na = 2L,
     andel_na = 2 / 6,
     antall_na_med_ukjent = 4L,
@@ -267,7 +267,7 @@ test_that("Gir forventet utdata med grupperte data", {
   data_forventet_ut_med_ukjent_gruppert = tibble::tibble(
     sykehus = c("SVG", "HUS", "OUS"),
     variabel = c(rep("var_1", 3)),
-    antall_totalt = c(3L, 2L, 1L),
+    totalt_antall = c(3L, 2L, 1L),
     antall_na = c(1L, 1L, 0L),
     andel_na = c(1 / 3, 1 / 2, 0 / 2),
     antall_na_med_ukjent = c(2L, 1L, 1L),

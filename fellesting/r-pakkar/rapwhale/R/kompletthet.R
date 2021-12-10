@@ -74,12 +74,17 @@ erstatt_ukjent = function(data, variabel, na_vektor) {
 #' beregn_kompletthet(data = d, variabel = "var_1", na_vektor = c(-1, 99))
 beregn_kompletthet = function(data, variabel) {
   
+  if (!has_name(data, variabel)) {
+    stop(paste0("'", variabel, "' mangler i inndata"))
+  }
+  
   data_ut = data %>% 
-    summarise(variabelnavn = variabel, 
+    summarise(variabel = variabel, 
               totalt_antall = n(), 
               antall_na = sum(is.na(!!sym(variabel))), 
               andel_na = sum(is.na(!!sym(variabel)))/n(), 
-              .groups = "keep")
+              .groups = "drop") %>% 
+    arrange(desc(totalt_antall))
   
   data_ut
 }
@@ -119,15 +124,12 @@ beregn_kompletthet_med_ukjent = function(data, variabel, na_vektor) {
   data_uten_ukjent = erstatt_ukjent(data, variabel = variabel, na_vektor = na_vektor)
   d_na_ukjent = beregn_kompletthet(data_uten_ukjent, variabel = variabel)
   
-  d_na_ukjent = d_na_ukjent %>% 
-    select(-variabelnavn, -totalt_antall) %>% 
-    rename(antall_na_med_ukjent = antall_na, 
-           andel_na_med_ukjent = andel_na)
+   d_na_ukjent = d_na_ukjent %>% 
+     rename(antall_na_med_ukjent = antall_na, 
+            andel_na_med_ukjent = andel_na)
   
-  data_ut = d_na %>% bind_cols(d_na_ukjent)
+  data_ut = d_na %>% left_join(d_na_ukjent) %>% 
+    arrange(desc(totalt_antall))
   
   data_ut
 }
-
-
-
