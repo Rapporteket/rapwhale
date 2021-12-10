@@ -70,6 +70,12 @@ lag_anonymiseringsfunksjon = function(x, startnr = 1001) {
   if (any(is.na(x))) {
     warning("ID-vektoren inneheld NA-verdiar")
   }
+  if (!is.atomic(x)) {
+    stop("Inndata må vera ein atomisk vektor")
+  }
+  if (!is.numeric(startnr)) {
+    stop("Startnummeret må vera numerisk")
+  }
   fra = sort(unique(x))
   til = as.integer(sample.int(length(fra)) + startnr - 1)
 
