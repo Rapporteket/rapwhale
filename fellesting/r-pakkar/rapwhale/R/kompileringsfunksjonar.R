@@ -70,6 +70,7 @@ kompiler_rnw = function(adresse) {
 #' Logisk variabel som seier om feilmeldingar skal visast. Standard = TRUE.
 #'
 #' @return
+#' Adressa til .pdf-fila, usynleg.
 #'
 #' @export
 kompiler_tex = function(adresse, maksiter = 5, vis_feilmeldingar = TRUE) {
@@ -155,4 +156,6 @@ kompiler_tex = function(adresse, maksiter = 5, vis_feilmeldingar = TRUE) {
       # at det er betre å ikkje visa dei
     }
   }
+  pdf_adressse = str_replace(adresse, ".tex$", ".pdf")
+  invisible(pdf_adressse)
 }
