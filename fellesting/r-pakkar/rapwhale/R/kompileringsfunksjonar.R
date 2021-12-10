@@ -23,10 +23,13 @@ NULL
 kompiler_rnw = function(adresse) {
   cat(paste0(basename(adresse), " (knitr): "))
   tex_adresse = str_replace(adresse, ".Rnw", ".tex")
+
+  # Byt arbeidsmappe slik at all output kjem på rett plass
+  old_wd = setwd(dirname(adresse))
+
   knit_res = try(
     suppressPackageStartupMessages(
       knit(adresse,
-        output = tex_adresse,
         encoding = "utf-8",
         quiet = TRUE,
         envir = globalenv()
@@ -34,6 +37,10 @@ kompiler_rnw = function(adresse) {
     ),
     silent = TRUE
   )
+
+  # Byt tilbake til gamal arbeidsmappe
+  setwd(old_wd)
+
   knit_ok = !inherits(knit_res, "try-error")
   if (knit_ok) {
     cat("OK\n")
@@ -72,16 +79,20 @@ kompiler_tex = function(adresse, maksiter = 5, vis_feilmeldingar = TRUE) {
   repeat {
     iter = iter + 1
     filnamn = basename(adresse)
-    mappe = dirname(adresse)
     cat(paste0(filnamn, " (LuaLaTex): ", iter, ": ")) # Vis statusmelding
+
     # Vis åtvaringar når dei skjer
     # (for eksempel viss PDF-fila er låst for skriving)
     old_opts = options(warn = 1)
+
+    # Byt arbeidsmappe til rapportmappa
+    old_wd = setwd(dirname(adresse))
+
     processx::run(
       "lualatex",
       args = c(
         "--interaction=nonstopmode", "--halt-on-error", "--file-line-error",
-        paste0("--output-directory=", mappe), adresse
+        adresse
       ),
       stdout = NULL
     )
@@ -98,7 +109,10 @@ kompiler_tex = function(adresse, maksiter = 5, vis_feilmeldingar = TRUE) {
     # der loggen er éin long tekst utan linjeskift.
     logg1l = str_c(logg, collapse = "")
 
+    # Byt tilbake til gamle instillingar
     options(old_opts)
+    setwd(old_wd)
+
     feil = str_detect(logg1l, "no output PDF file produced")
     ferdig = !str_detect(logg1l, "run LaTeX again|Rerun to|Rerun LaTeX")
 
