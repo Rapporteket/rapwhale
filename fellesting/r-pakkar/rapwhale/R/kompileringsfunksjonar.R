@@ -30,7 +30,6 @@ kompiler_rnw = function(adresse) {
   knit_res = try(
     suppressPackageStartupMessages(
       knit(adresse,
-        encoding = "utf-8",
         quiet = TRUE,
         envir = globalenv()
       )
