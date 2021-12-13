@@ -28,11 +28,10 @@ kompiler_rnw = function(adresse) {
   old_wd = setwd(dirname(adresse))
 
   knit_res = try(
-    suppressPackageStartupMessages(
-      knit(adresse,
-        quiet = TRUE,
-        envir = globalenv()
-      )
+    callr::r(function(...) {
+        knitr::knit(..., quiet = TRUE, envir = globalenv())
+      },
+      args = list(input = adresse)
     ),
     silent = TRUE
   )
