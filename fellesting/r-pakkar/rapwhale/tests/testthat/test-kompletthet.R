@@ -28,14 +28,6 @@ test_that("Feilmelding hvis na_vektor er tom", {
   expect_error(erstatt_ukjent(data_inn, variabel = "var_1"))
 })
 
-test_that("Feilmelding hvis na_vektor og variabel har ulik datatype", {
-  feilmelding = "'var_1' og na_vektor må være av samme datatype"
-  expect_error(
-    erstatt_ukjent(data_inn, variabel = "var_1", na_vektor = "Ukjent"),
-    feilmelding
-  )
-})
-
 test_that("Feilmelding hvis 'variabel' ikke er en streng", {
   expect_error(erstatt_ukjent(data_inn, variabel = var_1, na_vektor = -1))
 })
@@ -234,15 +226,7 @@ test_that("Feilmelding hvis na_vektor er tom", {
     variabel = "var_1"
   ))
 })
-test_that("Feilmelding hvis na_vektor og variabel har ulik datatype", {
-  expect_error(
-    beregn_kompletthet_med_ukjent(data_inn,
-      variabel = "var_1",
-      na_vektor = "ukjent"
-    ),
-    "'na_vektor' og 'var_1' må være samme datatype"
-  )
-})
+
 test_that("Gir riktig resultat for antall og andel missing", {
   data_forventet_ut_med_ukjent_ugruppert = tibble::tibble(
     variabel = "var_1",

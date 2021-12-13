@@ -7,18 +7,19 @@ NULL
 #' (primært MRS-register) har variabler hvor manglende besvarelser får verdi -1,
 #' 99 eller andre mer eller mindre vilkårlige verdier for å indikere at spørsmålet
 #' ikke er besvart. I tillegg kan det også finnes ekte NA-verdier, slik at 
-#' beregning av kompletthet kompliseres. 
+#' beregning av kompletthet kompliseres. Funksjonen tar inn en na_vektor som 
+#' indikerer hvilke verdier som skal erstattes med NA, slik at beregning av NA
+#' kan inkludere disse "ukjente" besvarelsene.  
 #' 
 #' @param data tibble/data.frame som inneholder variabel hvor 
 #' ukjente verdier skal erstattes. 
 #' @param variabel tekststreng med navn på variabel hvor ukjente verdier skal 
 #' erstattes.  
-#' @param na_vektor vektor med verdier som skal erstattes med NA. Må være samme 
-#' datatype som 'variabel'. 
+#' @param na_vektor vektor med verdier som skal erstattes med NA. 
 #'
 #' @return
-#' Returnerer opprinnelig datasett hvor ukjente verdier er erstattet med NA for 
-#' oppgitt variabel. 
+#' Returnerer opprinnelig datasett hvor verdier i 'na_vektor' funnet i 
+#' 'variabel' er erstattet med NA. 
 #' 
 #' @export
 #'
@@ -99,8 +100,8 @@ beregn_kompletthet = function(data, variabel) {
 #' @param data Tibble/data.frame som inneholder variabel det skal beregnes 
 #' kompletthet for. 
 #' @param variabel Streng med navn på variabel det skal beregnes kompletthet for. 
-#' @param na_vektor Vektor av samme datatype som 'variabel', som angir hvilke 
-#' verdier som skal erstattes med NA. 
+#' @param na_vektor Vektor som angir hvilke verdier i 'variabel' som skal 
+#' erstattes med NA. 
 #'
 #' @return
 #' Returnerer et aggregert datasett med kolonnene: 
