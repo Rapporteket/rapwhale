@@ -42,6 +42,9 @@ utviklingsnivaa = function(mappe = "H:\\kvalreg\\fellesting\\r-pakkar\\rapwhale\
       stringr::str_extract("lifecycle-[[:alpha:]]+\\.svg") %>%
       stringr::str_remove_all("lifecycle-|\\.svg"))
 
+  eksterne_funksjonar = paste0(ls("package:rapwhale"), "()")
+
   tibble::tibble(funksjon = funksjonar_namn, utviklingsnivaa = nivaa) %>%
-    dplyr::arrange(utviklingsnivaa)
+    dplyr::arrange(utviklingsnivaa) %>%
+    dplyr::mutate(ekstern = funksjon %in% !!eksterne_funksjonar)
 }
