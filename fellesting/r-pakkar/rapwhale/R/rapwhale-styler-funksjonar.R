@@ -1,6 +1,8 @@
 #' Wrap if-else, while and for statements in curly braces
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Wrap statements in curly braces if it is not already wrapped in a such.
 #'
 #' @param pd
@@ -37,6 +39,8 @@ wrap_if_else_while_for_fun_in_curly_rapwhale = function(pd, indent_by = 2) {
 #' Wrap a statement in curly braces
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Wrap a statement in curly braces.
 #'
 #' @param pd
@@ -91,6 +95,8 @@ wrap_curly_rapwhale = function(pd,
 #' Check if if, for or while loop expression require braces
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' This is the case if they are not yet wrapped into curly braces.
 #'
 #' @param pd
@@ -111,6 +117,11 @@ if_for_while_part_requires_braces_rapwhale = function(pd, key_token) {
 }
 
 #' Add line break after pipe
+#'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
+#' Legg til linjeskift etter røyropperator.
 #'
 #' @param pd
 #' A parse table.

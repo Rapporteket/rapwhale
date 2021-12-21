@@ -3,6 +3,8 @@ NULL
 #' Slå på kvalregtema for ggplot2 og qicharts2
 #'
 #' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Set aktivt tema til `tema_kvalreg()`,
 #' og oppdaterer andre standardverdiar som fargar og punkt-/linjestorleik.
 #'
