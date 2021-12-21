@@ -116,7 +116,7 @@ if_for_while_part_requires_braces_rapwhale = function(pd, key_token) {
 #' A parse table.
 #'
 #' @details
-#' Lik [styler::add_line_break_after_pipe],
+#' Lik `styler:::add_line_break_after_pipe()`,
 #' men der det òg vert lagt til linjeskift etter korte røyr.
 add_line_break_after_pipe_rapwhale = function(pd) {
   is_pipe = pd$token %in% c("SPECIAL-PIPE", "PIPE")
