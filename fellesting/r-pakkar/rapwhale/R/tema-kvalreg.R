@@ -5,7 +5,7 @@ NULL
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' Set aktivt tema til `tema_kvalreg()`,
+#' Set aktivt tema til [tema_kvalreg()],
 #' og oppdaterer andre standardverdiar som fargar og punkt-/linjestorleik.
 #'
 #' @return
