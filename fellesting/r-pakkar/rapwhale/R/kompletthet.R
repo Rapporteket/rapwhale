@@ -2,7 +2,10 @@
 #' @importFrom dplyr mutate across all_of
 NULL
 #' Erstatt ukjent verdi
-#'
+#' 
+#' @description 
+#' `r lifecycle::badge("experimental")`
+#' 
 #' Erstatter utvalgte 'ukjente' verdier med NA. Noen datasett 
 #' (primært MRS-register) har variabler hvor manglende besvarelser får verdi -1,
 #' 99 eller andre mer eller mindre vilkårlige verdier for å indikere at spørsmålet
@@ -40,6 +43,9 @@ erstatt_ukjent = function(data, variabel, na_vektor) {
 
 
 #' beregn kompletthet
+#' 
+#' @description 
+#' `r lifecycle::badge("experimental")`
 #' 
 #' Regner ut antall og andel manglende observasjoner for en variabel. Tar inn 
 #' et datasett og en variabel det skal beregnes kompletthet for. 
@@ -92,6 +98,9 @@ beregn_kompletthet = function(data, variabel) {
 
 
 #' Beregn kompletthet med ukjent
+#' 
+#' @description 
+#' `r lifecycle::badge("experimental")`
 #' 
 #' Beregner antall og andel NA, både med og uten inkludering av ukjente verdier. 
 #' Ukjente verdier defineres i na_vektor. Tanken er at besvarelser som 
