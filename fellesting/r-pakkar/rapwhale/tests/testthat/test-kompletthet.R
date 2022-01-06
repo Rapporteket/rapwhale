@@ -1,4 +1,4 @@
-
+# Erstatt_ukjent ----------------------------------------------------------
 context("Erstatt_ukjent")
 
 # Baseobjekter for testdata
@@ -157,6 +157,7 @@ test_that("Gjør ingenting hvis inndata mangler verdier fra na_vektor", {
 })
 
 
+# Beregn_kompletthet ------------------------------------------------------
 context("Beregn_kompletthet")
 
 test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {
@@ -204,6 +205,7 @@ test_that("Gir feilmelding hvis variabel ikke er tekststreng", {
 })
 
 
+# Beregn_kompletthet_med_ukjent -------------------------------------------
 context("Beregn_kompletthet_med_ukjent")
 
 test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {
