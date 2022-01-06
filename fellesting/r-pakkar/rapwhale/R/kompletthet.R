@@ -143,3 +143,24 @@ beregn_kompletthet_med_ukjent = function(data, variabel, na_vektor) {
   
   data_ut
 }
+
+
+# beregn_kompletthet_datasett ---------------------------------------------
+
+# Tar inn et datasett det skal beregnes kompletthet for og returnerer en 
+# tibble med oversikt over kompletthet for samtlige variabler. Tar ikke 
+# hensyn til Ukjent/ikke besvart etc. 
+
+beregn_kompletthet_datasett = function() {}
+
+# beregn_kompletthet_datasett_med_ukjent ----------------------------------
+
+# Tar inn et datasett det skal beregnes kompletthet for i tillegg til 
+# en tibble/nested-liste med oversikt over hvilke verdier som teller som 
+# ukjent. 
+# Returnerer en tibble med oversikt over direkte kompletthet og indirekte 
+# kompletthet for hele datasettet. 
+# Det vil si Andel ikke NA, og andel ikke NA/ukjent. 
+
+beregn_kompletthet_datasett_med_ukjent = function() {}
+
