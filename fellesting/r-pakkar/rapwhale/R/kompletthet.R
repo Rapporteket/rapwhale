@@ -70,7 +70,7 @@ erstatt_ukjent = function(data, variabel, na_vektor) {
 #' d = tibble::tibble(pas_id = c(1, 2, 3, 4, 5, 6), 
 #'                    sykehus = c("HUS", "HUS", "SVG", "SVG", "SVG", "OUS"),
 #'                    var_1 = c(1, 2, -1, 99, NA, 5))
-#' beregn_kompletthet(data = d, variabel = "var_1", na_vektor = c(-1, 99))
+#' beregn_kompletthet(data = d, variabel = "var_1")
 #' 
 #' # Grupperte inndata: 
 #' #' d = tibble::tibble(pas_id = c(1, 2, 3, 4, 5, 6), 
@@ -78,7 +78,7 @@ erstatt_ukjent = function(data, variabel, na_vektor) {
 #'                    var_1 = c(1, 2, -1, 99, NA, 5)) %>%
 #'        group_by(sykehus)
 #'        
-#' beregn_kompletthet(data = d, variabel = "var_1", na_vektor = c(-1, 99))
+#' beregn_kompletthet(data = d, variabel = "var_1")
 beregn_kompletthet = function(data, variabel) {
   
   if (!has_name(data, variabel)) {
