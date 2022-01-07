@@ -281,44 +281,42 @@ test_that("Gir feilmelding hvis variabel ikke er tekststreng", {
 context("beregn_kompletthet_datasett")
 
 d_test = tibble::tibble(
-  pas_id = c(1, 2, 3, 4, 5, 6),
+  pas_id = c(1L, 2L, 3L, 4L, 5L, 6L),
   sykehus = c("HUS", "HUS", "SUS", "SUS", "SUS", "OUS"),
-  vekt = c(60, NA_integer_, 100, NA_integer_, 99, -1),
-  vekt_2 = c(55, NA_integer_, 99, -1, NA_integer_, 50),
+  vekt = c(60L, NA_integer_, 100L, NA_integer_, 99L, -1L),
+  vekt_2 = c(55L, NA_integer_, 99L, -1L, NA_integer_, 50L),
   hoyde = c(1.52, NA_real_, 1.89, 2.15, NA_real_, 99.9),
   symptom = c("svett", "klam", NA_character_, "trøtt", "vet ikke", "Ukjent"),
   test_logisk = c(TRUE, FALSE, NA, NA, FALSE, TRUE)
 )
 
-variabel_vektor = c("vekt", "hoyde", "symptom", "test_logisk")
-
 ukjent_datasett = tibble::tibble(
-  variabel = c(rep("vekt", 2), rep("vekt_2", 2), "høyde", rep("symptom", 2), "test_logisk"),
-  ukjent_verdi_integer = c(99, -1, 99, -1, NA_integer_, NA_integer_, NA_integer_, NA_integer_),
-  ukjent_verdi_real = c(NA_real_, NA_real_, NA_real_, NA_real_, 99.9, NA_real_, NA_real_, NA_real_),
-  ukjent_verdi_tekst = c(NA_character_, NA_character_, NA_character_, NA_character_, NA_character_, "vet ikke", "Ukjent", NA_character_)
+  variabel = c("pas_id", "sykehus", rep("vekt", 2), rep("vekt_2", 2), "hoyde", rep("symptom", 2), "test_logisk"),
+  ukjent_verdi_integer = c(NA_integer_, NA_integer_, 99, -1, 99, -1, NA_integer_, NA_integer_, NA_integer_, NA_integer_),
+  ukjent_verdi_real = c(NA_real_, NA_real_, NA_real_, NA_real_, NA_real_, NA_real_, 99.9, NA_real_, NA_real_, NA_real_),
+  ukjent_verdi_tekst = c(NA_character_, NA_character_, NA_character_, NA_character_, NA_character_, NA_character_, NA_character_, "vet ikke", "Ukjent", NA_character_)
 )
 
 
 d_test_ut_uten_ukjent = tibble::tibble(
-  variabel = c("vekt", "vekt_2", "hoyde", "symptom", "test_logisk"),
-  totalt_antall = c(rep(6L, 5L)),
-  antall_na = c(2L, 2L, 2L, 1L, 2L),
-  andel_na = c(2L / 6L, 2L / 6L, 2L / 6L, 1L / 6L, 2L / 6L)
+  variabel = c("pas_id", "sykehus", "vekt", "vekt_2", "hoyde", "symptom", "test_logisk"),
+  totalt_antall = c(rep(6L, 7L)),
+  antall_na = c(0L, 0L, 2L, 2L, 2L, 1L, 2L),
+  andel_na = c(0L / 6L, 0L / 6L, 2L / 6L, 2L / 6L, 2L / 6L, 1L / 6L, 2L / 6L)
 )
 
 d_test_ut_med_ukjent = tibble::tibble(
-  variabel = c("vekt", "vekt_2", "hoyde", "symptom", "test_logisk"),
-  totalt_antall = c(rep(6L, 5L)),
-  antall_na = c(2L, 2L, 2L, 1L, 2L),
-  andel_na = c(2L / 6L, 2L / 6L, 2L / 6L, 1L / 6L, 2L / 6L),
-  antall_na_med_ukjent = c(4L, 4L, 3L, 3L, 2L),
-  andel_na_med_ukjent = c(4L / 6L, 4L / 6L, 3L / 6L, 3L / 6L, 2L / 6L)
+  variabel = c("pas_id", "sykehus", "vekt", "vekt_2", "hoyde", "symptom", "test_logisk"),
+  totalt_antall = c(rep(6L, 7L)),
+  antall_na = c(0L, 0L, 2L, 2L, 2L, 1L, 2L),
+  andel_na = c(0L / 6L, 0L / 6L, 2L / 6L, 2L / 6L, 2L / 6L, 1L / 6L, 2L / 6L),
+  antall_na_med_ukjent = c(0L, 0L, 4L, 4L, 3L, 3L, 2L),
+  andel_na_med_ukjent = c(0L / 6L, 0L / 6L, 4L / 6L, 4L / 6L, 3L / 6L, 3L / 6L, 2L / 6L)
 )
 
 test_that("Returnerer forventet resultat", {
   expect_identical(
-    beregn_kompletthet_datasett(d = d_test, variabler = variabel_vektor),
+    beregn_kompletthet_datasett(data = d_test),
     d_test_ut_uten_ukjent
   )
 })
@@ -326,7 +324,7 @@ test_that("Returnerer forventet resultat", {
 # beregn_kompletthet_datasett_med_ukjent ----------------------------------
 test_that("Returnerer forventet resultat", {
   expect_identical(
-    beregn_kompletthet_datasett_med_ukjent(d = d_test, ukjente_verdier = ukjent_datasett),
+    beregn_kompletthet_datasett_med_ukjent(data = d_test, ukjent_datasett = ukjent_datasett),
     d_test_ut_med_ukjent
   )
 })
