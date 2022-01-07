@@ -176,5 +176,41 @@ beregn_kompletthet_datasett = function(data) {
 # kompletthet for hele datasettet. 
 # Det vil si Andel ikke NA, og andel ikke NA/ukjent. 
 
-beregn_kompletthet_datasett_med_ukjent = function() {}
-
+beregn_kompletthet_datasett_med_ukjent = function(data, ukjent_datasett) {
+  
+  d_na = beregn_kompletthet_datasett(data = data)
+  
+  # erstatter ukjente verdier
+  data_uten_ukjent = tibble::tibble_row()
+  
+  hjelpefunksjon_na_vektor = 
+    purrr::possibly(~ (.x %>% 
+                         filter(variabel == .y) %>% 
+                         select(where(~!all(is.na(.x))), -variabel) %>% 
+                         pull()), otherwise = NULL)
+  
+  for(i in 1:ncol(data)) {
+    variabel_i = names(data)[i]
+    na_vektor_i = hjelpefunksjon_na_vektor(ukjent_datasett, 
+                                           variabel_i)
+    
+    
+    d = erstatt_ukjent(data = data %>% select(!!variabel_i), 
+                       variabel = variabel_i, na_vektor = na_vektor_i)
+    
+    data_uten_ukjent = data_uten_ukjent %>% bind_cols(d)
+  }
+  
+  # regner ut kompletthet inkludert ukjente verdier
+  d_na_ukjent = beregn_kompletthet_datasett(data_uten_ukjent)
+  
+  d_na_ukjent = d_na_ukjent %>% 
+    rename(antall_na_med_ukjent = antall_na, 
+           andel_na_med_ukjent = andel_na)
+  
+  data_ut = d_na %>% left_join(d_na_ukjent) %>% 
+    arrange(desc(totalt_antall))
+  
+  data_ut
+  
+}
