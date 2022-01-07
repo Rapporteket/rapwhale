@@ -151,7 +151,21 @@ beregn_kompletthet_med_ukjent = function(data, variabel, na_vektor) {
 # tibble med oversikt over kompletthet for samtlige variabler. Tar ikke 
 # hensyn til Ukjent/ikke besvart etc. 
 
-beregn_kompletthet_datasett = function() {}
+beregn_kompletthet_datasett = function(data) {
+  
+  variabel = names(data)
+  d_na = tibble::tibble()
+    
+  for(i in 1:length(variabel)){
+  d = beregn_kompletthet(data[variabel[i]], variabel[i])
+  
+  
+  d_na = d_na %>% bind_rows(d)
+  
+  }
+  
+  d_na
+}
 
 # beregn_kompletthet_datasett_med_ukjent ----------------------------------
 
