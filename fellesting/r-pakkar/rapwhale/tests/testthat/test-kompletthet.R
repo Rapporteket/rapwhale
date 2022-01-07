@@ -276,3 +276,57 @@ test_that("Gir feilmelding hvis variabel ikke er tekststreng", {
     na_vektor = c(-1L, 99L)
   ))
 })
+
+# beregn_kompletthet_datasett ---------------------------------------------
+context("beregn_kompletthet_datasett")
+
+d_test = tibble::tibble(
+  pas_id = c(1, 2, 3, 4, 5, 6),
+  sykehus = c("HUS", "HUS", "SUS", "SUS", "SUS", "OUS"),
+  vekt = c(60, NA_integer_, 100, NA_integer_, 99, -1),
+  vekt_2 = c(55, NA_integer_, 99, -1, NA_integer_, 50),
+  hoyde = c(1.52, NA_real_, 1.89, 2.15, NA_real_, 99.9),
+  symptom = c("svett", "klam", NA_character_, "trøtt", "vet ikke", "Ukjent"),
+  test_logisk = c(TRUE, FALSE, NA, NA, FALSE, TRUE)
+)
+
+variabel_vektor = c("vekt", "hoyde", "symptom", "test_logisk")
+
+ukjent_datasett = tibble::tibble(
+  variabel = c(rep("vekt", 2), rep("vekt_2", 2), "høyde", rep("symptom", 2), "test_logisk"),
+  ukjent_verdi_integer = c(99, -1, 99, -1, NA_integer_, NA_integer_, NA_integer_, NA_integer_),
+  ukjent_verdi_real = c(NA_real_, NA_real_, NA_real_, NA_real_, 99.9, NA_real_, NA_real_, NA_real_),
+  ukjent_verdi_tekst = c(NA_character_, NA_character_, NA_character_, NA_character_, NA_character_, "vet ikke", "Ukjent", NA_character_)
+)
+
+
+d_test_ut_uten_ukjent = tibble::tibble(
+  variabel = c("vekt", "vekt_2", "hoyde", "symptom", "test_logisk"),
+  totalt_antall = c(rep(6L, 5L)),
+  antall_na = c(2L, 2L, 2L, 1L, 2L),
+  andel_na = c(2L / 6L, 2L / 6L, 2L / 6L, 1L / 6L, 2L / 6L)
+)
+
+d_test_ut_med_ukjent = tibble::tibble(
+  variabel = c("vekt", "vekt_2", "hoyde", "symptom", "test_logisk"),
+  totalt_antall = c(rep(6L, 5L)),
+  antall_na = c(2L, 2L, 2L, 1L, 2L),
+  andel_na = c(2L / 6L, 2L / 6L, 2L / 6L, 1L / 6L, 2L / 6L),
+  antall_na_med_ukjent = c(4L, 4L, 3L, 3L, 2L),
+  andel_na_med_ukjent = c(4L / 6L, 4L / 6L, 3L / 6L, 3L / 6L, 2L / 6L)
+)
+
+test_that("Returnerer forventet resultat", {
+  expect_identical(
+    beregn_kompletthet_datasett(d = d_test, variabler = variabel_vektor),
+    d_test_ut_uten_ukjent
+  )
+})
+
+# beregn_kompletthet_datasett_med_ukjent ----------------------------------
+test_that("Returnerer forventet resultat", {
+  expect_identical(
+    beregn_kompletthet_datasett_med_ukjent(d = d_test, ukjente_verdier = ukjent_datasett),
+    d_test_ut_med_ukjent
+  )
+})
