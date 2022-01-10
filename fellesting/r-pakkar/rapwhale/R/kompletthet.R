@@ -174,7 +174,11 @@ beregn_kompletthet_datasett = function(data) {
 # ukjent. 
 # Returnerer en tibble med oversikt over direkte kompletthet og indirekte 
 # kompletthet for hele datasettet. 
-# Det vil si Andel ikke NA, og andel ikke NA/ukjent. 
+
+# FIXME - Trekke ut funksjon for å erstatte ukjente i hele datasett
+# FIXME - Lage oppsett for å generere tibble med riktig format for ukjente 
+# verdier for bruk i funksjon. 
+# FIXME - Skrive dokumentasjon for nye funksjoner
 
 beregn_kompletthet_datasett_med_ukjent = function(data, ukjent_datasett) {
   
