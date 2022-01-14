@@ -110,6 +110,7 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
     "Avkrysning", "boolsk",
     "Dato/Tid", "dato_kl",
     "Dato/tid", "dato_kl",
+    "Dato", "dato",
     "Id (Guid)", "tekst",
     "Numerisk (heltall)", "numerisk", # Men sjå bruk «desimalar» lenger nede
     "Numerisk (flyttall)", "numerisk"
@@ -332,6 +333,7 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
     "tekst", "c",
     "boolsk", "c", # Sjå konvertering nedanfor
     "dato_kl", "c", # Mellombels, jf. https://github.com/tidyverse/readr/issues/642 (fixme til "T" når denne er fiksa)
+    "dato", "D",
     "numerisk", "d",
     "numerisk_heiltal", "i"
   )
