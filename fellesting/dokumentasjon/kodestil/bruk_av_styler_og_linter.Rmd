@@ -52,6 +52,14 @@ I boksen som kjem opp skriv ein inn `rapwhale::rapwhale_style()`
 og trykkjer ok.
 `styler`vil no bruka vår kodestil ved formatering av kode.
 
+For å få `rapwhale::rapwhale_style()` som standard kodestil,
+slik at ein ikkje treng endra for kvar økt,
+må ein setja dette i `.Rprofile`-fila.
+For å gjera dette kan ein køyra `usethis::edit_r_profile()`
+og leggja til linja
+`options(styler.addins_style_transformer = "rapwhale::rapwhale_style()")`
+i fila som vert opna.
+
 I same nedtekksmeny som ein finn «Set style» finst òg vala «Style selection»,
 «Style active file» og «Style active package».
 Desse er ganske sjølvforklarande,
