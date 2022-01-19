@@ -32,6 +32,8 @@ aktiver_kvalregtema = function() {
   options(
     ggplot2.discrete.colour = scale_colour_kvalreg,
     ggplot2.discrete.fill = scale_fill_kvalreg,
+    ggplot2.ordinal.colour = scale_colour_kvalreg_ordinal,
+    ggplot2.ordinal.fill = scale_fill_kvalreg_ordinal,
     ggplot2.continuous.colour = scale_colour_kvalreg_kont,
     ggplot2.continuous.fill = scale_fill_kvalreg_kont
   )
@@ -221,13 +223,15 @@ expand_soyle_str_fig = function() {
 #'
 #' # Diskrete data
 #'
-#' ggplot(diamonds, aes(x = price, fill = cut)) +
-#'   geom_histogram(position = "dodge", binwidth = 1000) +
-#'   scale_fill_kvalreg()
-#'
 #' ggplot(mpg, aes(cty, hwy)) +
 #'   geom_point(aes(colour = drv)) +
 #'   scale_colour_kvalreg()
+#'
+#' # Ordinale data
+#'
+#' ggplot(diamonds, aes(x = price, fill = cut)) +
+#'   geom_histogram(position = "dodge", binwidth = 1000) +
+#'   scale_fill_kvalreg_ordinal()
 #'
 #' # Kontinuerlege data
 #'
@@ -239,6 +243,20 @@ expand_soyle_str_fig = function() {
 #'   geom_point(aes(colour = displ)) +
 #'   scale_colour_kvalreg_kont()
 scale_fill_kvalreg = function() {
+  fargar = farger_kvalreg()$farger_tillegg
+  scale_fill_manual(values = fargar)
+}
+
+#' @rdname scale_kvalreg
+#' @export
+scale_colour_kvalreg = function() {
+  fargar = farger_kvalreg()$farger_tillegg
+  scale_colour_manual(values = fargar)
+}
+
+#' @rdname scale_kvalreg
+#' @export
+scale_fill_kvalreg_ordinal = function() {
   fargar = farger_kvalreg()$farger_hoved
   fargerampe = colour_ramp(fargar)
   palett = function(n) {
@@ -249,7 +267,7 @@ scale_fill_kvalreg = function() {
 
 #' @rdname scale_kvalreg
 #' @export
-scale_colour_kvalreg = function() {
+scale_colour_kvalreg_ordinal = function() {
   fargar = farger_kvalreg()$farger_hoved
   fargerampe = colour_ramp(fargar)
   palett = function(n) {
