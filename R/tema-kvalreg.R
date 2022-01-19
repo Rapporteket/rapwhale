@@ -270,7 +270,7 @@ expand_soyle_str_fig = function() {
 #'   geom_tile(aes(waiting, eruptions, fill = density)) +
 #'   scale_fill_kvalreg_kont()
 #'
-#' gplot(mpg, aes(cty, hwy)) +
+#' ggplot(mpg, aes(cty, hwy)) +
 #'   geom_point(aes(colour = displ)) +
 #'   scale_colour_kvalreg_kont()
 scale_fill_kvalreg = function() {
