@@ -1,9 +1,13 @@
-test_that("utdata er en liste som inneholder 3 tekstvektorer: farger_hoved,
-          farger_noyt, farger_kontr", {
-  expect_length(purrr::map_lgl(farger_kvalreg(), is.character), 3)
+test_that("utdata er en liste som inneholder 4 tekstvektorer: farger_hoved,
+          farger_noyt, farger_kontr og farger_tillegg", {
+  expect_length(purrr:::map_lgl(farger_kvalreg(), is.character), 4)
 
-  navn_vektorer = c("farger_hoved", "farger_noyt", "farger_kontr")
-  expect_named(farger_kvalreg(), navn_vektorer)
+  navn_vektorer = c(
+    "farger_hoved", "farger_noyt", "farger_kontr", "farger_tillegg"
+  )
+  navn_vektorer_funksjon = purrr::imap_chr(farger_kvalreg(), \(x, navn) navn) |>
+    unname()
+  expect_identical(navn_vektorer_funksjon, navn_vektorer)
 })
 
 test_that("farge_morkare gir ut forventede fargekoder ved ulike grader", {
