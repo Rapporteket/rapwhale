@@ -6,7 +6,9 @@
 #' Funksjonen gir ut en statisk liste med fargekoder for de offisielle fargene
 #' som skal brukes i figurer i årsrapporter.
 #'
-#' @return En liste med `farger_hoved`, `farger_noyt` og `farger_kontr`.
+#' @return
+#' En liste med `farger_hoved`, `farger_noyt`,
+#' `farger_kontr` og `farger_tillegg`.
 #' @export
 #' @examples
 #' # les inn fargekoder
@@ -18,16 +20,21 @@
 farger_kvalreg = function() {
   # Dei offisielle fargene
   col_prim = c(
-    "#000059", "#084594", "#2171b5",
-    "#4292c6", "#6baed6", "#c6dbef"
+    "#000059", "#084594", "#2171b5", "#4292c6", "#6baed6", "#c6dbef"
   ) # Primærfarge (mørk til lys)
   col_noyt = c("#4D4D4D", "#737373", "#A6A6A6", "#DADADA") # Nøytralfarge
   col_kontr = "#FF7260" # Kontrastfarge
+  col_tillegg = c(
+    "#003087", "#6CACE4", "#BFCED6", "#6FA287",
+    "#ADDFB3", "#00C19F", "#93C90E", "#FFC845",
+    "#FF671F", "#A76E5E", "#CB333B", "#87189D"
+  ) # Tilleggspalett
 
   farger = list(
-    farger_hoved = col_prim,
-    farger_noyt = col_noyt,
-    farger_kontr = col_kontr
+    "farger_hoved" = col_prim,
+    "farger_noyt" = col_noyt,
+    "farger_kontr" = col_kontr,
+    "farger_tillegg" = col_tillegg
   )
   farger
 }
