@@ -1,6 +1,11 @@
 # Dette skriptet inneholder en rekke funksjoner som er potensielt nyttige
 # (og noen, uunnværlige) i registersammenheng og i andre sammenheng.
 
+#' @importFrom rlang enexpr syms eval_bare maybe_missing exec
+#' @importFrom qicharts2 qic
+#' @import ggplot2
+NULL
+
 # Graffunksjoner ----------------------------------------------------------
 
 #' Flytt-opp funksjon.
@@ -177,12 +182,16 @@ lag_fig_shewhart = function(d, y, x, figtype, nevner = NULL, tittel = NULL,
 #' d = tibble(gruppe = c("a", "b", "c"), verdi = c(2.6, 2.1, 3.2))
 #' lag_fig_soyle(d, gruppe, verdi)
 #' lag_fig_soyle(d, gruppe, verdi, flip = FALSE)
-lag_fig_soyle = function(d, x, y, flip = TRUE, ...) {
+lag_fig_soyle = function(d, x, y, flip = TRUE, y_akse_argument = NULL, ...) {
+  if (!("expand" %in% names(y_akse_argument))) {
+    y_akse_argument[["expand"]] = expand_soyle()
+  }
+  if (!("limits" %in% names(y_akse_argument))) {
+    y_akse_argument[["limits"]] = c(0, NA)
+  }
+
   lag_fig_soyle_grunnplott(d, {{ x }}, {{ y }}, flip = flip, ...) +
-    scale_y_continuous(
-      expand = expand_soyle(),
-      limits = c(0, NA)
-    )
+    exec(scale_y_continuous, !!!y_akse_argument)
 }
 
 #' Lag søylediagram med prosent
@@ -213,13 +222,24 @@ lag_fig_soyle = function(d, x, y, flip = TRUE, ...) {
 #' d = tibble(gruppe = c("a", "b", "c"), verdi = c(0.6, 0.1, 0.2))
 #' lag_fig_soyle_prosent(d, gruppe, verdi)
 #' lag_fig_soyle_prosent(d, gruppe, verdi, flip = FALSE)
-lag_fig_soyle_prosent = function(d, x, y, flip = TRUE, ymax = 1, ...) {
+lag_fig_soyle_prosent = function(d,
+                                 x,
+                                 y,
+                                 flip = TRUE,
+                                 y_akse_argument = NULL,
+                                 ...) {
+  if (!("expand" %in% names(y_akse_argument))) {
+    y_akse_argument[["expand"]] = expand_soyle()
+  }
+  if (!("limits" %in% names(y_akse_argument))) {
+    y_akse_argument[["limits"]] = c(0, 1)
+  }
+  if (!("labels" %in% names(y_akse_argument))) {
+    y_akse_argument[["labels"]] = akse_prosent_format(0)
+  }
+
   lag_fig_soyle_grunnplott(d, {{ x }}, {{ y }}, flip = flip, ...) +
-    scale_y_continuous(
-      expand = expand_soyle(),
-      labels = akse_prosent_format(0),
-      limits = c(0, ymax)
-    )
+    exec(scale_y_continuous, !!!y_akse_argument)
 }
 
 #' Lag søylediagram-grunnplott
