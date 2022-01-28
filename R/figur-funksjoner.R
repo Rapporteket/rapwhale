@@ -133,6 +133,10 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
 #' For prosent, bruk [lag_fig_soyle_prosent()].
 #' @param flip
 #' Logisk variabel som seier om plottet skal flippast. Standard verdi = `TRUE`.
+#' @param y_akse_argument
+#' Liste med namngjevne argument som vert sende vidare til scale_y_continuous().
+#' Standard verdi er `NULL`, men funksjonen set verdiar for `expand` og
+#' `limits` viss dei ikkje er med i argumentet.
 #' @param ...
 #' Ekstra argument som vert gjeve vidare til [lag_fig_soyle_grunnplott()]
 #' (og så vidare igjen til [ggplot2::geom_col()]).
@@ -173,6 +177,10 @@ lag_fig_soyle = function(d, x, y, flip = TRUE, y_akse_argument = NULL, ...) {
 #' Variabel for y-aksen - Ein kontinuerleg variabel i prosent (andel).
 #' @param flip
 #' Logisk variabel som seier om plottet skal flippast. Standard verdi = `TRUE`.
+#' @param y_akse_argument
+#' Liste med namngjevne argument som vert sende vidare til scale_y_continuous().
+#' Standard verdi er `NULL`, men funksjonen set verdiar for `expand`, `limits`
+#' og `labels` viss dei ikkje er med i argumentet.
 #' @param ...
 #' Ekstra argument som vert gjeve vidare til [lag_fig_soyle_grunnplott()]
 #' (og så vidare igjen til [ggplot2::geom_col()]).
