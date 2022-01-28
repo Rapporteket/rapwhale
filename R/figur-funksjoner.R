@@ -150,6 +150,7 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
 #' d = tibble::tibble(gruppe = c("a", "b", "c"), verdi = c(2.6, 2.1, 3.2))
 #' lag_fig_soyle(d, gruppe, verdi)
 #' lag_fig_soyle(d, gruppe, verdi, flip = FALSE)
+#' lag_fig_soyle(d, gruppe, verdi, y_akse_argument = list(limits = c(0, 5)))
 lag_fig_soyle = function(d, x, y, flip = TRUE, y_akse_argument = NULL, ...) {
   if (!("expand" %in% names(y_akse_argument))) {
     y_akse_argument[["expand"]] = expand_soyle()
@@ -194,6 +195,9 @@ lag_fig_soyle = function(d, x, y, flip = TRUE, y_akse_argument = NULL, ...) {
 #' d = tibble::tibble(gruppe = c("a", "b", "c"), verdi = c(0.6, 0.1, 0.2))
 #' lag_fig_soyle_prosent(d, gruppe, verdi)
 #' lag_fig_soyle_prosent(d, gruppe, verdi, flip = FALSE)
+#' lag_fig_soyle_prosent(d, gruppe, verdi,
+#'   y_akse_argument = list(breaks = scales::breaks_width(0.2))
+#' )
 lag_fig_soyle_prosent = function(d,
                                  x,
                                  y,
