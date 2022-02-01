@@ -58,7 +58,7 @@ kjed_ord = function(ord, skiljeteikn = ", ", og = " og ") {
     tekst = paste0(ord, collapse = og)
   } else if (n > 2) {
     tekst = paste0(
-      paste0(ord[1:n - 1], collapse = skiljeteikn),
+      paste0(ord[1:(n - 1)], collapse = skiljeteikn),
       og, ord[n]
     )
   }
