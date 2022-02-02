@@ -37,14 +37,23 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
-    dato = dir(mappe_dd, pattern = "^[0-9]{4}-[0-1][0-9]-[0-9]{2}$", full.names = FALSE) %>%
+    dato = dir(mappe_dd,
+      pattern = "^[0-9]{4}-[0-1][0-9]-[0-9]{2}$",
+      full.names = FALSE
+    ) %>%
       sort() %>%
       last()
   }
+
   dato = as_date(dato) # I tilfelle det var ein tekstreng
 
   # Sammensatt adresse til kodeboka
   adresse_kb = paste0(mappe_dd, "\\", dato, "\\rapport.xlsx")
+
+  # Feilmelding om kodebok ikke ligger i mappe_dd.
+  if (!file.exists(adresse_kb)) {
+    stop("Kodebok 'rapport.xlsx' må ligge i mappe_dd")
+  }
 
   # Kodeboka er laget i excel. Excel har heller ikke så mange, presise variabeltyper
   # MRS gjør det gangske enkelt med at alle kolonnene er "text".
