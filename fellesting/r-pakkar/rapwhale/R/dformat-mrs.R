@@ -81,6 +81,13 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   # og en kolonne for skjema_id-ene i filnavnene til datadumpene, slik at vi vet hvilken som samsvarer med hvilken.
   # Denne er laget på forhånd, manuelt, men skal alltid legges i den nyeste mappen med datadumper v/ ny innhenting av data.
   adresse_skjema_id = paste0(mappe_dd, dato, "\\skjema_id_kobling.csv")
+
+  # Feilmelding om skjema_id_kobling ikke ligger i mappe_dd.
+  if (!file.exists(adresse_skjema_id)) {
+    stop("skjema_id_kobling 'skjema_id_kobling.csv' må ligge i mappe_dd")
+  }
+
+  # Leser inn skjema_id_kobling
   d_skjema_id = readr::read_delim(
     adresse_skjema_id,
     delim = ";",
