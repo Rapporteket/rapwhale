@@ -92,28 +92,18 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
     adresse_skjema_id,
     delim = ";",
     locale = readr::locale(encoding = "windows-1252"),
-    col_types = readr::cols(
-      skjema_id_datadump = col_character(),
-      skjema_id_kodebok = col_character()
-    )
+    col_types =
+      readr::cols(
+        skjema_id_datadump = col_character(),
+        skjema_id_kodebok = col_character()
+      )
   )
 
   # legger til "riktige" skjema_id
-  kb_mrs = kb_mrs %>%
+  kb_mrs_skjema_id = kb_mrs %>%
     left_join(d_skjema_id, by = c("skjema_id" = "skjema_id_kodebok")) %>%
     mutate(skjema_id = skjema_id_datadump) %>%
     select(-skjema_id_datadump)
-
-  # Indeks til rader som startar ein ny variabel
-  ind_nyvar = which(!is.na(kb_mrs$Feltnavn))
-  nvars = length(ind_nyvar) # Talet på variablar
-
-  # Kor mange kodar kvar variabel har
-  # (Merk at siste variabel ikkje vert
-  #  avløyst av ein ny variabel, og må
-  #  derfor handterast spesielt.)
-  var_nverd = diff(ind_nyvar) - 1
-  var_nverd[nvars] = nrow(kb_mrs) - ind_nyvar[nvars] # Sistevariabel
 
   # Oversikt over variabeltypar i MRS og tilhøyrande standardnamn som me brukar
   vartype_mrs_standard = tibble::tribble(
@@ -130,68 +120,53 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
     "Numerisk (heltall)", "numerisk", # Men sjå bruk «desimalar» lenger nede
     "Numerisk (flyttall)", "numerisk"
   )
-  nye_vartypar = na.omit(setdiff(kb_mrs$Felttype, vartype_mrs_standard$type_mrs))
+
+  nye_vartypar = na.omit(setdiff(
+    kb_mrs_skjema_id$Felttype,
+    vartype_mrs_standard$type_mrs
+  ))
   if (length(nye_vartypar) > 0) {
-    stop("Kodeboka har variabeltypar me ikkje har standardnamn på: ", str_c(nye_vartypar, collapse = ", "))
+    stop(
+      "Kodeboka har variabeltypar me ikkje har standardnamn på: ",
+      str_c(nye_vartypar, collapse = ", ")
+    )
   }
 
-  # Dette var sant fram til hausten 2017:
-  #
-  # -----
-  # Lag dataramme med i utgangspunktet éi rad for kvar variabel
-  # Variabelnamna brukt i datadumpen finn me:
-  #   – Ikkje i kolonnen Datadumpnavn (det hadde vore for enkelt og logisk)
-  #   – Ikkje i kolonnen Feltnavn (ditto)
-  #   – Ikkje direkte i kolonnen Variabelnavn (ditto)
-  # Men:
-  #   Etter det *siste* punktumet (om dette eksisterer) i kolonnen Variabelnavn
-  #   i den første rada i eit sett med rader som omhandlar ein variabel, og der
-  #   settet begynner med ein ikkje-tom verdi i kolonnen som heiter Feltnavn.
-  # -----
-  #
-  # Etter hausten 2017 ser de ut til at variabelnamna brukt i datadumpen
-  # faktisk *finn* me i variabelen «Datadumpnavn»! *mind blown*
-  #
-  # Å finna dei andre verdiane (for eksempel kodar og kodetekst) gjer ein på
-  # tilsvarande vanskelege måtar
-  kodebok_utg = tibble::tibble(
-    skjema_id = kb_mrs$skjema_id[ind_nyvar],
-    variabel_id = kb_mrs$Variabelnavn[ind_nyvar] %>% stringr::str_replace(".*\\.", ""),
-    variabeletikett = kb_mrs$Feltnavn[ind_nyvar], # Berre forklaring for *enkelte* variablar, men er det beste me har …
-    variabeltype = vartype_mrs_standard$type_standard[match(kb_mrs$Felttype[ind_nyvar], vartype_mrs_standard$type_mrs)],
-    obligatorisk = "nei",
-    # skjema_id = d$Skjema[ind_nyvar], # fixme! Ventar spent på at denne skal dukka opp (førespurnad er send)
-    verdi = NA_integer_, # Føreset førbels at MRS-kodane alltid er tal (gjer om til tekst om dette ikkje stemmer)
-    verditekst = NA_character_,
-    desimalar = ifelse(kb_mrs$Felttype[ind_nyvar] == "Numerisk (heltall)", 0L, NA_integer_),
-    kommentar = kb_mrs$Hjelpetekst[ind_nyvar]
-  )
-
-  # Kor mange gongar kvar variabel skal gjentakast i
-  # den nye kodeboka, dvs. kor mange rader han skal oppta
-  reps = pmax(var_nverd, 1)
-
-  # Utvid kodeboka slik at enum-variablane får fleire rader
-  kodebok = kodebok_utg[rep(1:nvars, times = reps), ]
-
-  # Hent ut kodane og tilhøyrande tekst til alle Enum/Enkeltvalg-variablane
-  enums = kb_mrs %>%
-    filter(is.na(Felttype)) %>%
-    pull(`Mulige verdier`) %>%
-    stringr::str_split_fixed(" = ", n = 2)
-
-  # Legg kodane inn i den nye kodeboka,
-  # med rett format (heiltal for kodar
-  # og tekst for kodetekst), og på rett plass
-  enum_ind = (kodebok$variabeltype == "kategorisk")
-  kodebok$verdi[enum_ind] = enums[, 1] %>%
-    as.numeric() # Kodar
-  kodebok$verditekst[enum_ind] = enums[, 2] # Tilhøyrande tekst
-
-  # Nokre verditekstar tyder at verdien ikkje er registrert,
-  # og me markerer det i kodeboka
-  kodebok = kodebok %>%
-    mutate(manglande = ifelse(verditekst %in% c("---", "Velg verdi", "Ikke valgt"), "ja", "nei"))
+  # Konvertere kodebok til standard format
+  kodebok = kb_mrs_skjema_id %>%
+    fill(Feltnavn, Variabelnavn, Felttype) %>%
+    mutate(
+      variabel_id = Variabelnavn,
+      variabeletikett = Feltnavn,
+      variabeltype = vartype_mrs_standard$type_standard[match(Felttype, vartype_mrs_standard$type_mrs)],
+      obligatorisk = "nei",
+      verdi = as.integer(str_split(`Mulige verdier`,
+        pattern = " = ",
+        simplify = TRUE
+      )[, 1]),
+      verditekst = str_split(`Mulige verdier`,
+        pattern = " = ",
+        simplify = TRUE
+      )[, 2],
+      desimalar = ifelse(Felttype == "Numerisk (heltall)",
+        0L,
+        NA_integer_
+      ),
+      kommentar = Hjelpetekst,
+      manglande = ifelse(verditekst %in% c("---", "Velg verdi", "Ikke valgt"),
+        "ja",
+        "nei"
+      )
+    ) %>%
+    relocate(
+      skjema_id, variabel_id, variabeletikett,
+      variabeltype, obligatorisk, verdi, verditekst,
+      desimalar, kommentar, manglande
+    ) %>%
+    select(
+      -Feltnavn, -Variabelnavn, -`Mulige verdier`,
+      -Felttype, -Gyldighet, -Hjelpetekst
+    )
 
   # gjør om kodeboka til kanonisk form
   kb_kanonisk = kb_til_kanonisk_form(kodebok)
