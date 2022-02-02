@@ -78,14 +78,13 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
     locale = readr::locale(encoding = "windows-1252"),
     col_types = readr::cols(
       skjema_id_datadump = col_character(),
-      skjema_id_kodebok = col_character(),
-      skjema_id_kodebok_ny = col_character()
+      skjema_id_kodebok = col_character()
     )
   )
 
   # legger til "riktige" skjema_id
   kb_mrs = kb_mrs %>%
-    left_join(d_skjema_id, by = c("skjema_id" = "skjema_id_kodebok_ny")) %>%
+    left_join(d_skjema_id, by = c("skjema_id" = "skjema_id_kodebok")) %>%
     mutate(skjema_id = skjema_id_datadump) %>%
     select(-skjema_id_datadump)
 
