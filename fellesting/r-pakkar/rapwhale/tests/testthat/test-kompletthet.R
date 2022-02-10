@@ -322,6 +322,7 @@ test_that("Returnerer forventet resultat", {
 })
 
 # beregn_kompletthet_datasett_med_ukjent ----------------------------------
+context("beregn_kompletthet_datasett_med_ukjent")
 test_that("Returnerer forventet resultat", {
   expect_identical(
     beregn_kompletthet_datasett_med_ukjent(data = d_test, ukjent_datasett = ukjent_datasett),
