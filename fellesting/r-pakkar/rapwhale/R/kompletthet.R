@@ -175,35 +175,43 @@ beregn_kompletthet_datasett = function(data) {
 # Returnerer en tibble med oversikt over direkte kompletthet og indirekte 
 # kompletthet for hele datasettet. 
 
-# FIXME - Trekke ut funksjon for å erstatte ukjente i hele datasett
 # FIXME - Lage oppsett for å generere tibble med riktig format for ukjente 
 # verdier for bruk i funksjon. 
 # FIXME - Skrive dokumentasjon for nye funksjoner
 
-beregn_kompletthet_datasett_med_ukjent = function(data, ukjent_datasett) {
+erstatt_ukjent_for_datasett = function(data, ukjent_datasett){
   
-  d_na = beregn_kompletthet_datasett(data = data)
-  
-  # erstatter ukjente verdier
   data_uten_ukjent = tibble::tibble_row()
   
   hjelpefunksjon_na_vektor = 
-    purrr::possibly(~ (.x %>% 
-                         filter(variabel == .y) %>% 
-                         select(where(~!all(is.na(.x))), -variabel) %>% 
+    purrr::possibly(~ (.x %>% filter(variabel == .y) %>% 
+                         select(where(~!all(is.na(.x))), 
+                                -variabel) %>% 
                          pull()), otherwise = NULL)
   
+  # 
   for(i in 1:ncol(data)) {
     variabel_i = names(data)[i]
     na_vektor_i = hjelpefunksjon_na_vektor(ukjent_datasett, 
                                            variabel_i)
     
+    d = rapwhale::erstatt_ukjent(data = data %>% select(!!variabel_i),
+                                 variabel = variabel_i, 
+                                 na_vektor = na_vektor_i)
     
-    d = erstatt_ukjent(data = data %>% select(!!variabel_i), 
-                       variabel = variabel_i, na_vektor = na_vektor_i)
-    
-    data_uten_ukjent = data_uten_ukjent %>% bind_cols(d)
+    data_uten_ukjent = data_uten_ukjent %>% 
+      bind_cols(d)
   }
+  data_uten_ukjent
+}
+
+
+beregn_kompletthet_datasett_med_ukjent = function(data, ukjent_datasett) {
+  
+  # Beregner kompletthet for datasett ekskludert ukjente
+  d_na = beregn_kompletthet_datasett(data = data)
+  
+  data_uten_ukjent = erstatt_ukjent_for_datasett(data = data, ukjent_datasett = ukjent_datasett)
   
   # regner ut kompletthet inkludert ukjente verdier
   d_na_ukjent = beregn_kompletthet_datasett(data_uten_ukjent)
