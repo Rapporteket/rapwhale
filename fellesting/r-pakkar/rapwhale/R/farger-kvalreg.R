@@ -2,36 +2,40 @@
 NULL
 #' Lagre offisielle fargekoder i miljøet
 #'
-#' @description 
+#' @description
 #' `r lifecycle::badge("maturing")`
-#' 
-#' Funksjonen gir ut en statisk liste med fargekoder for de offisielle fargene 
-#' som skal brukes i figurer i årsrapporter. 
-#' 
+#'
+#' Funksjonen gir ut en statisk liste med fargekoder for de offisielle fargene
+#' som skal brukes i figurer i årsrapporter.
+#'
 #' @return En liste med `farger_hoved`, `farger_noyt` og `farger_kontr`.
 #' @export
-#' @examples 
-#' #les inn fargekoder
+#' @examples
+#' # les inn fargekoder
 #' farger = farger_kvalreg()
-#' 
+#'
 #' farger
 farger_kvalreg = function() {
-  
+
   # Dei offisielle fargene
-  colPrim=c("#000059", "#084594", "#2171b5", 
-            "#4292c6", "#6baed6", "#c6dbef") # Primærfarge (mørk til lys)
-  colNoyt=c("#4D4D4D", "#737373", "#A6A6A6", "#DADADA") # Nøytralfarge
-  colKontr="#FF7260"                                    # Kontrastfarge
-  
-  farger = list("farger_hoved" = colPrim, 
-                "farger_noyt" = colNoyt, 
-                "farger_kontr" = colKontr)
+  colPrim = c(
+    "#000059", "#084594", "#2171b5",
+    "#4292c6", "#6baed6", "#c6dbef"
+  ) # Primærfarge (mørk til lys)
+  colNoyt = c("#4D4D4D", "#737373", "#A6A6A6", "#DADADA") # Nøytralfarge
+  colKontr = "#FF7260" # Kontrastfarge
+
+  farger = list(
+    "farger_hoved" = colPrim,
+    "farger_noyt" = colNoyt,
+    "farger_kontr" = colKontr
+  )
   farger
 }
 
 #' Lag mørkare/lysare fargar
-#' 
-#' @description 
+#'
+#' @description
 #' `r lifecycle::badge("maturing")`
 #'
 #' Gjer ein vektor med fargar mørkare.
@@ -39,16 +43,16 @@ farger_kvalreg = function() {
 #' (i staden for RGB-fargerommet), for
 #' betre resultat (meir tilpassa korleis
 #' synet vårt fungerer).
-#' 
+#'
 #' @param fargar ein vektor med fargar.
 #' @param grad seier kor mykje mørkare fargen skal gjerast (so bruk negative verdiar for å gjera han lysare).
-#' 
+#'
 #' @export
 #' @examples
-#' Lag vektor med fargar mørkare
+#' # Lag vektor med fargar mørkare
 #' farge_morkare(fargar = c("#000059", "#084594", "#2171b5"))
-#' 
-#' Lag vektor med fargar lysare
+#'
+#' # Lag vektor med fargar lysare
 #' farge_morkare(fargar = c("#000059", "#084594", "#2171b5"), grad = -3)
 farge_morkare = function(fargar, grad = 5) {
   farge_lab = as(colorspace::hex2RGB(fargar), "LAB")
