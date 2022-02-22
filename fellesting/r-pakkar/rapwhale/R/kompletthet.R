@@ -125,7 +125,7 @@ beregn_kompletthet = function(data, variabel) {
 #'
 #' @examples
 #' d = tibble::tibble(pas_id = c(1, 2, 3, 4, 5, 6),
-#'                    sykehus = c("A", "A", "B", "B", "B", "C") 
+#'                    sykehus = c("A", "A", "B", "B", "B", "C"), 
 #'                    var_1 = c(1, 2, -1, 99, NA, 5))
 #' beregn_kompletthet_med_ukjent(data = d, variabel = "var_1", na_vektor = c(-1, 99))
 beregn_kompletthet_med_ukjent = function(data, variabel, na_vektor) {
