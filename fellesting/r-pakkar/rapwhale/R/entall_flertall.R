@@ -1,4 +1,4 @@
-#' Formater tall med enhet
+#' Formater tall med automatisk entalls-/flertallsenhet
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
@@ -8,38 +8,50 @@
 #'
 #' @param x Numerisk vektor.
 #' @param entall Tekst som skal brukes som enhet for `x`-elementer lik 1.
-#' @param flertall Tekst som skal brukes som enhet for resterende
-#' `x`-elementer.
-#' @param nulltekst Tekst som skal brukes for å indikere `x`-elementer lik 0.
-#' Standardverdi er "0".
+#' @param flertall Tekst som skal brukes som enhet for `x`-elementer ulik 1.
+#' @param nulltekst Tekst som skal erstatte `x`-elementer lik 0.
 #'
 #' @details
-#' Funksjonen formaterer en numerisk vektor,
+#' Formaterer en tallvektor,
 #' `x`,
 #' med tilhørende enhet bøyd til
 #' enten entalls- eller flertallsform.
-#' Om et `x`-element er lik 1,
-#' blir `x`-elementet formatert slik at `entall`-argumentet etterfølger
-#' `x`-elementet.
-#' Om `x`-elementet er ulik 1,
-#' blir `flertall`-argumentet brukt i stedet for `entall`-argumentet.
+#' For eksempel kan tallet 1 bli formatert som «1 pasient»,
+#' mens tallet 34 blir formatert som «34 pasienter».
+#'
+#' Alle `x`-elementer lik 1 blir formatert med enheten `entall`,
+#' mens resterende elementer blir formatert med enheten `flertall`.
 #'
 #' Noen ganger vil vi at `x`-elementer lik 0 skal vises med ord
-#' (eksempelvis teksten "ingen").
-#' Bruk da `nulltekst`-argumentet.
+#' (eksempelvis teksten «ingen»).
+#' Bruk da `nulltekst`-argumentet
+#' (se eksempel nedenfor).
+#'
+#' @note
+#' Funksjonen håndterer også desimaltall,
+#' med samme regler,
+#' også for tall der desimaldelen slutter på 1.
+#' Det blir for eksempel «2,1 millioner»,
+#' ikke «2,1 million»,
+#' selv om begge skrivemåtene er tillatt på norsk.
 #'
 #' @return
 #' Tekstvektor av samme lengde som `x`.
-#' Hvert element i `x` blir formatert som "tallverdi" + " " + "enhet".
+#' Hver tallverdi i `x` blir formatert som tallverdien + mellomrom + enhet.
 #'
 #' @export
 #'
 #' @examples
-#' # Enkeltverdi inndata.
+#' # Formatering av enkeltverdier
 #' entall_flertall(1, "operasjon", "operasjoner")
+#' entall_flertall(34, "operasjon", "operasjoner")
 #'
-#' # Vektorverdi inndata, med ikke-standard nulltekst.
-#' entall_flertall(c(0, 1, 2), "nytt", "nye", "ingen")
+#' # Formatering av vektorverdier, og med ikke-standard nulltekst
+#' entall_flertall(c(0, 1, 2),
+#'   entall = "ny pasient",
+#'   flertall = "nye pasienter",
+#'   nulltekst = "ingen"
+#' )
 entall_flertall = function(x, entall, flertall, nulltekst = "0") {
   if (!is.character(entall) ||
     !is.character(flertall) ||
