@@ -1,30 +1,36 @@
-#' Velg riktig form av entall og flertall
+#' Formater tall med enhet
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' Velger riktig form, entall eller flertall, til å etterfølge et tall.
+#' Formaterer tall med tilhørende enhet automatisk bøyd til
+#' entalls-/flertallsform.
 #'
-#' @param x Vektor bestående av heltall.
-#' @param entall `character`-verdi som angir ordet i entallsform.
-#' @param flertall `character`-verdi som angir ordet i flertallsform.
-#' @param nulltekst `character`-verdi som angir nullteskt. Standardverdi
-#' er "0".
+#' @param x Numerisk vektor.
+#' @param entall Tekst som skal brukes som enhet for `x`-elementer lik 1.
+#' @param flertall Tekst som skal brukes som enhet for resterende
+#' `x`-elementer.
+#' @param nulltekst Tekst som skal brukes for å indikere `x`-elementer lik 0.
+#' Standardverdi er "0".
 #'
 #' @details
-#' Funksjonen velger enten entalls- eller flertallsformen av et ønskelig ord,
-#' hvor begge alternativer (entall og flertall) blir skrevet inn av brukeren.
-#' Ordet etterfølger tallet fra heltallsvektoren som blir lest inn.
+#' Funksjonen formaterer en numerisk vektor,
+#' `x`,
+#' med tilhørende enhet bøyd til
+#' enten entalls- eller flertallsform.
+#' Om et `x`-element er lik 1,
+#' blir `x`-elementet formatert slik at `entall`-argumentet etterfølger
+#' `x`-elementet.
+#' Om `x`-elementet er ulik 1,
+#' blir `flertall`-argumentet brukt i stedet for `entall`-argumentet.
 #'
-#' Noen ganger er ikke standardverdien "0" som er tilegnet
-#' `nulltekst`-argumentet et passende ord. Legg da inn det egnede ordet i
-#' dette argumentet.
+#' Noen ganger vil vi at `x`-elementer lik 0 skal vises med ord
+#' (eksempelvis teksten "ingen").
+#' Bruk da `nulltekst`-argumentet.
 #'
 #' @return
-#' Gir ut en `character`-vektor. Denne vektoren består av heltallsvektoren, x,
-#' som ble lest inn, hvor 0 er byttet ut med `"nulltekst"`, etterfulgt av
-#' `"entall"` om heltallet foran er 1, eller `"flertall"` om heltallet foran er
-#' ulik 1.
+#' Tekstvektor av samme lengde som `x`.
+#' Hvert element i `x` blir formatert som "tallverdi" + " " + "enhet".
 #'
 #' @export
 #'
