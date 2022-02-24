@@ -1,5 +1,5 @@
 test_that("Gir feilmelding ved ingen inndata", {
-  feilmelding_ingen_inndata = "Ingen inndata"
+  feilmelding_ingen_inndata = "Inndata «x» inneholder ingen verdier"
   expect_error(
     entall_flertall(NULL, "operasjon", "operasjoner"),
     feilmelding_ingen_inndata
@@ -59,7 +59,7 @@ test_that(
 )
 
 test_that("Gir feilmelding ved inndata av negativ verdi", {
-  feilmelding_negative_verdi = "Inndata inneholder minst en negativ verdi"
+  feilmelding_negative_verdi = "Inndata «x» inneholder minst én negativ verdi"
   expect_error(
     entall_flertall(-1, "operasjon", "operasjoner"),
     feilmelding_negative_verdi
@@ -71,7 +71,7 @@ test_that("Gir feilmelding ved inndata av negativ verdi", {
 })
 
 test_that("Gir feilmelding ved inndata av NA-verdi", {
-  feilmelding_NA_verdi = "Inndata inneholder minst en NA-verdi"
+  feilmelding_NA_verdi = "Inndata «x» inneholder minst én NA-verdi"
   expect_error(
     entall_flertall(NA_integer_, "operasjon", "operasjoner"),
     feilmelding_NA_verdi
@@ -83,7 +83,7 @@ test_that("Gir feilmelding ved inndata av NA-verdi", {
 })
 
 test_that("Gir feilmelding ved ugyldig type inndata", {
-  feilmelding_inndata = "Inndata må være tall (heltall/flyttall), men er:"
+  feilmelding_inndata = "Inndata «x» må være tall, men er:"
   expect_error(entall_flertall("en", "operasjon", "operasjoner"),
     paste(feilmelding_inndata, class("en")),
     fixed = TRUE
@@ -100,7 +100,10 @@ test_that("Gir feilmelding ved ugyldig type inndata", {
 
 test_that("Gir feilmelding ved ugyldig type argument-verdi for 'entall'-,
           'flertall'- og 'nulltekst'-argumentene", {
-  feilmelding_argument = "Argumentene 'entall', 'flertall' og 'nulltekst' må alle være av klasse character og av lengde 1"
+  feilmelding_argument = paste0(
+    "Argumentene «entall», «flertall» og ",
+    "«nulltekst» må alle være av klasse «character» og lengde 1"
+  )
   expect_error(
     entall_flertall(1, 1, "operasjoner"),
     feilmelding_argument

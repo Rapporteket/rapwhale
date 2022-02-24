@@ -60,21 +60,21 @@ entall_flertall = function(x, entall, flertall, nulltekst = "0") {
     length(flertall) != 1 ||
     length(nulltekst) != 1) {
     stop(
-      "Argumentene 'entall', 'flertall' og 'nulltekst' må alle være ",
-      "av klasse character og av lengde 1"
+      "Argumentene «entall», «flertall» og «nulltekst» må alle være ",
+      "av klasse «character» og lengde 1"
     )
   }
   if (length(x) == 0) {
-    stop("Ingen inndata")
+    stop("Inndata «x» inneholder ingen verdier")
   }
   if (!is.numeric(x)) {
-    stop(paste("Inndata må være tall (heltall/flyttall), men er:", class(x)))
+    stop(paste("Inndata «x» må være tall, men er:", class(x)))
   }
   if (NA %in% x) {
-    stop("Inndata inneholder minst en NA-verdi")
+    stop("Inndata «x» inneholder minst én NA-verdi")
   }
   if (!all(x >= 0)) {
-    stop("Inndata inneholder minst en negativ verdi")
+    stop("Inndata «x» inneholder minst én negativ verdi")
   }
 
   tall_tekst = ifelse(x == 0, nulltekst, x)
