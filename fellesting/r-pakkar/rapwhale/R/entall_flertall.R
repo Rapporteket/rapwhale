@@ -6,7 +6,7 @@
 #' Formaterer tall med tilhørende enhet automatisk bøyd til
 #' entalls-/flertallsform.
 #'
-#' @param x Numerisk vektor.
+#' @param x Numerisk vektor med minst ett element.
 #' @param entall Tekst som skal brukes som enhet for `x`-elementer lik 1.
 #' @param flertall Tekst som skal brukes som enhet for `x`-elementer ulik 1.
 #' @param nulltekst Tekst som skal erstatte `x`-elementer lik 0.
