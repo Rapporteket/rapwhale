@@ -20,7 +20,7 @@
 #'
 #' @return
 #' Vektor av samme lengde og innhold som `x`,
-#' med med 0-verdier byttet ut med `nullverdi`.
+#' med 0-verdier byttet ut med `nullverdi`.
 #' Verdiene blir om nødvendig gjort om til
 #' å ha same type som `nullverdi`
 #' (oftest tekst eller tall),
