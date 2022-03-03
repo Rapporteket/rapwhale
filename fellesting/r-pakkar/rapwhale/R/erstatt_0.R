@@ -32,3 +32,7 @@
 #' erstatt_0(c(0, 1, 2), "ingen")
 #' erstatt_0(c(0, 1, 2), -99)
 #' erstatt_0(c(0, 1, 2), NA)
+#'
+#' # Merk at utdata bare blir gjort om til tekst *om nødvendig*
+#' erstatt_0(c(2, 1), "ingen") # Tall
+#' erstatt_0(c(2, 0, 1), "ingen") # Tekst
