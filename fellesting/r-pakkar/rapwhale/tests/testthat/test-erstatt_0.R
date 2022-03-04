@@ -61,10 +61,9 @@ test_that("Gir feilmelding ved ugyldig type for «x»-argumentet", {
 })
 
 test_that("Gir feilmelding ved hvis «nullverdi» ikke har nøyaktig 1 element", {
+  feilmelding_nullverdi = "«nullverdi» må ha nøyaktig 1 element"
   expect_error(
-    entall_flertall(0, c("ingen", "null"))
-  )
-  expect_error(
-    entall_flertall(0, c("ingen", "null"))
+    erstatt_0(0, c("ingen", "null")),
+    feilmelding_nullverdi
   )
 })
