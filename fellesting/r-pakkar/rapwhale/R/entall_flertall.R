@@ -7,9 +7,13 @@
 #' entalls-/flertallsform.
 #'
 #' @param x Numerisk vektor med minst ett element.
-#' @param entall Tekst som skal brukes som enhet for `x`-elementer lik 1.
-#' @param flertall Tekst som skal brukes som enhet for `x`-elementer ulik 1.
-#' @param nulltekst Tekst som skal erstatte `x`-elementer lik 0.
+#' `x` kan ikke inneholde `NA`-verdier.
+#' @param entall Tekst som skal brukes som enhet for `x`-elementer lik 1
+#' eller -1.
+#' @param flertall Tekst som skal brukes som enhet for `x`-elementer ulik 1
+#' og -1.
+#' @param formatering Funksjon som beskriver ytterligere formatering.
+#' @param ... Ytterligere argumenter sendt til `formatering`.
 #'
 #' @details
 #' Formaterer en tallvektor,
@@ -19,13 +23,16 @@
 #' For eksempel kan tallet 1 bli formatert som «1 pasient»,
 #' mens tallet 34 blir formatert som «34 pasienter».
 #'
-#' Alle `x`-elementer lik 1 blir formatert med enheten `entall`,
+#' Alle `x`-elementer lik 1 eller -1 blir formatert med enheten `entall`,
 #' mens resterende elementer blir formatert med enheten `flertall`.
 #'
 #' Noen ganger vil vi at `x`-elementer lik 0 skal vises med ord
 #' (eksempelvis teksten «ingen»).
-#' Bruk da `nulltekst`-argumentet
+#' Bruk da `formatering`-argumentet sammen med funksjonen [erstatt_0()]
 #' (se eksempel nedenfor).
+#'
+#' `formatering`-argumenetet er fleksibelt,
+#' og kan for eksempel brukes til å innføre tusenskillet.
 #'
 #' @note
 #' Funksjonen håndterer også desimaltall,
@@ -46,22 +53,28 @@
 #' entall_flertall(1, "operasjon", "operasjoner")
 #' entall_flertall(34, "operasjon", "operasjoner")
 #'
-#' # Formatering av vektorverdier, og med ikke-standard nulltekst
+#' # Formatering av vektorverdier, og med ikke-standard nullverdi
 #' entall_flertall(c(0, 1, 2),
 #'   entall = "ny pasient",
 #'   flertall = "nye pasienter",
-#'   nulltekst = "ingen"
+#'   nullverdi = "ingen"
 #' )
-entall_flertall = function(x, entall, flertall, nulltekst = "0") {
+#'
+#' # Formatering til ett desimaltall
+#' entall_flertall(c(2.67, 1, 0, pi),
+#'   entall = "million",
+#'   flertall = "millioner",
+#'   formatering = num,
+#'   desimalar = 1
+#' )
+entall_flertall = function(x, entall, flertall, formatering = erstatt_0, ...) {
   if (!is.character(entall) ||
     !is.character(flertall) ||
-    !is.character(nulltekst) ||
     length(entall) != 1 ||
-    length(flertall) != 1 ||
-    length(nulltekst) != 1) {
+    length(flertall) != 1) {
     stop(
-      "Argumentene «entall», «flertall» og «nulltekst» må alle være ",
-      "av klasse «character» og lengde 1"
+      "Argumentene «entall» og «flertall» må begge være av ",
+      "klasse «character» og lengde 1"
     )
   }
   if (length(x) == 0) {
@@ -73,11 +86,8 @@ entall_flertall = function(x, entall, flertall, nulltekst = "0") {
   if (NA %in% x) {
     stop("Inndata «x» inneholder minst én NA-verdi")
   }
-  if (!all(x >= 0)) {
-    stop("Inndata «x» inneholder minst én negativ verdi")
-  }
 
-  tall_tekst = ifelse(x == 0, nulltekst, x)
-  enhet = ifelse(x == 1, entall, flertall)
-  paste(tall_tekst, enhet)
+  x_formatert = formatering(x, ...)
+  enhet = ifelse(x_formatert %in% c(1, -1), entall, flertall)
+  paste(x_formatert, enhet)
 }
