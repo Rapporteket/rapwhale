@@ -32,10 +32,10 @@ test_that("Gir ut riktig resultat for enkelt-verdi inndata", {
   )
 })
 
-test_that("Gir ut riktig resultat for vektor-verdi inndata", {
+test_that("Gir ut riktig resultat for inndata med mer enn 1 element", {
   expect_identical(
-    erstatt_0(c(0, 1), "ingen"),
-    c("ingen", "1")
+    erstatt_0(c(2, 0, 1, 0), "ingen"),
+    c("2", "ingen", "1", "ingen")
   )
 })
 
