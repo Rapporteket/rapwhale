@@ -1,11 +1,11 @@
-test_that("Gir ut riktig resultat for tom inndata", {
+test_that("Gir ut riktig resultat når inndata har lengde 0", {
   expect_identical(
     erstatt_0(numeric(), "ingen"),
     numeric(0)
   )
 })
 
-test_that("Gir ut riktig resultat for enkelt-verdi inndata", {
+test_that("Gir ut riktig resultat når inndata har lengde 1", {
   expect_identical(
     erstatt_0(0, "ingen"),
     "ingen"
@@ -16,7 +16,7 @@ test_that("Gir ut riktig resultat for enkelt-verdi inndata", {
   )
 })
 
-test_that("Gir ut riktig resultat for inndata med mer enn 1 element", {
+test_that("Gir ut riktig resultat når inndata har lengde > 1", {
   expect_identical(
     erstatt_0(c(2, 0, 1, 0), "ingen"),
     c("2", "ingen", "1", "ingen")
