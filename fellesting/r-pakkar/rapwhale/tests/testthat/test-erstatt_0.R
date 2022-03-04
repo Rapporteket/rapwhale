@@ -16,11 +16,11 @@ test_that("Gir ut riktig resultat for enkelt-verdi inndata", {
   )
   expect_identical(
     erstatt_0(1.23, "ingen"),
-    "1.23"
+    1.23
   )
   expect_identical(
     erstatt_0(NA_real_, "ingen"),
-    "NA"
+    NA
   )
   expect_identical(
     erstatt_0(0, -99),
