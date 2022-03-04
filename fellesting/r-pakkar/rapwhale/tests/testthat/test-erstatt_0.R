@@ -14,6 +14,16 @@ test_that("Gir ut riktig resultat for enkelt-verdi inndata", {
     erstatt_0(0L, "ingen"),
     "ingen"
   )
+})
+
+test_that("Gir ut riktig resultat for inndata med mer enn 1 element", {
+  expect_identical(
+    erstatt_0(c(2, 0, 1, 0), "ingen"),
+    c("2", "ingen", "1", "ingen")
+  )
+})
+
+test_that("Gjør ikke resultatet om til tekst med mindre det er nødvendig", {
   expect_identical(
     erstatt_0(1.23, "ingen"),
     1.23
@@ -30,15 +40,11 @@ test_that("Gir ut riktig resultat for enkelt-verdi inndata", {
     erstatt_0(0, NA),
     NA
   )
-})
-
-test_that("Gir ut riktig resultat for inndata med mer enn 1 element", {
   expect_identical(
-    erstatt_0(c(2, 0, 1, 0), "ingen"),
-    c("2", "ingen", "1", "ingen")
+    erstatt_0(c(2, 1, 3), "ingen"),
+    c(2, 1, 3)
   )
 })
-
 
 test_that("Gir feilmelding ved ugyldig type for «x»-argumentet", {
   feilmelding_inndata = "Inndata «x» må være tall, men er:"
