@@ -54,17 +54,11 @@ test_that("Gir feilmelding ved ugyldig type for «x»-argumentet", {
   )
 })
 
-test_that("Gir feilmelding ved ugyldig type for «nullverdi»-argumentet", {
-  feilmelding_argument = paste0(
-    "«nullverdi»-argumentet må være av klasse ",
-    "«numeric» eller «character» og ha lengde 1"
+test_that("Gir feilmelding ved hvis «nullverdi» ikke har nøyaktig 1 element", {
+  expect_error(
+    entall_flertall(0, c("ingen", "null"))
   )
   expect_error(
-    entall_flertall(0, factor(0)),
-    feilmelding_argument
-  )
-  expect_error(
-    entall_flertall(0, c("ingen", "null")),
-    feilmelding_argument
+    entall_flertall(0, c("ingen", "null"))
   )
 })
