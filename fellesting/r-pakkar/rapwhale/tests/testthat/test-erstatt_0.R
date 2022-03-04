@@ -20,7 +20,7 @@ test_that("Gir ut riktig resultat for enkelt-verdi inndata", {
   )
   expect_identical(
     erstatt_0(NA_real_, "ingen"),
-    NA
+    NA_real_
   )
   expect_identical(
     erstatt_0(0, -99),
