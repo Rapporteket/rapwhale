@@ -44,8 +44,8 @@ erstatt_0 = function(x, nullverdi) {
     stop("«nullverdi» må ha nøyaktig 1 element")
   }
 
-  all_data = x
-  idx = which(!is.na(x))
-  all_data[idx] = ifelse(x[idx] == 0, nullverdi, x[idx])
-  all_data
+  if (any(x == 0, na.rm = TRUE)) { # Unngå unødvendig typeomgjering
+    x = replace(x, x == 0, nullverdi)
+  }
+  x
 }
