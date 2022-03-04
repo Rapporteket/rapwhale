@@ -54,7 +54,7 @@ test_that("Gir feilmelding ved ugyldig type for «x»-argumentet", {
     fixed = TRUE
   )
   expect_error(
-    erstatt(factor(0), "ingen"),
+    erstatt_0(factor(0), "ingen"),
     paste(feilmelding_inndata, class(factor(0))),
     fixed = TRUE
   )
