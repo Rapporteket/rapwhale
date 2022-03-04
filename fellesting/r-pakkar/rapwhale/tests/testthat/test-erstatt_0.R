@@ -1,3 +1,10 @@
+test_that("Gir ut riktig resultat for tom inndata", {
+  expect_identical(
+    erstatt_0(numeric(), "ingen"),
+    numeric(0)
+  )
+})
+
 test_that("Gir ut riktig resultat for enkelt-verdi inndata", {
   expect_identical(
     erstatt_0(0, "ingen"),
