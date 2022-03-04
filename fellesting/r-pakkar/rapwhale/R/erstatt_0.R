@@ -36,3 +36,16 @@
 #' # Merk at utdata bare blir gjort om til tekst *om nødvendig*
 #' erstatt_0(c(2, 1), "ingen") # Tall
 #' erstatt_0(c(2, 0, 1), "ingen") # Tekst
+erstatt_0 = function(x, nullverdi) {
+  if (!is.numeric(x)) {
+    stop(paste("Inndata «x» må være tall, men er:", class(x)))
+  }
+  if (length(nullverdi) != 1) {
+    stop("«nullverdi» må ha nøyaktig 1 element")
+  }
+
+  all_data = x
+  idx = which(!is.na(x))
+  all_data[idx] = ifelse(x[idx] == 0, nullverdi, x[idx])
+  all_data
+}
