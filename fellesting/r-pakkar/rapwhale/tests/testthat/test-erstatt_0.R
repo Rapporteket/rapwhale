@@ -38,7 +38,7 @@ test_that("Gjør ikke resultatet om til tekst med mindre det er nødvendig", {
   )
   expect_identical(
     erstatt_0(0, NA),
-    NA
+    NA_real_
   )
   expect_identical(
     erstatt_0(c(2, 1, 3), "ingen"),
