@@ -50,24 +50,24 @@
 #'
 #' @examples
 #' # Formatering av enkeltverdier
-#' entall_flertall(1, "operasjon", "operasjoner")
-#' entall_flertall(34, "operasjon", "operasjoner")
+#' boy_enhet(1, "operasjon", "operasjoner")
+#' boy_enhet(34, "operasjon", "operasjoner")
 #'
 #' # Formatering av vektorverdier, og med ikke-standard nullverdi
-#' entall_flertall(c(0, 1, 2),
+#' boy_enhet(c(0, 1, 2),
 #'   entall = "ny pasient",
 #'   flertall = "nye pasienter",
 #'   nullverdi = "ingen"
 #' )
 #'
 #' # Formatering til ett desimaltall
-#' entall_flertall(c(2.67, 1, 0, pi),
+#' boy_enhet(c(2.67, 1, 0, pi),
 #'   entall = "million",
 #'   flertall = "millioner",
 #'   formatering = num,
 #'   desimalar = 1
 #' )
-entall_flertall = function(x, entall, flertall, formatering = erstatt_0, ...) {
+boy_enhet = function(x, entall, flertall, formatering = erstatt_0, ...) {
   if (!is.character(entall) ||
     !is.character(flertall) ||
     length(entall) != 1 ||
