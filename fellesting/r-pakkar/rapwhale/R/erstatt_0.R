@@ -6,7 +6,7 @@
 #' Erstatter alle tall som er lik 0 med en valgfri verdi.
 #'
 #' @param x Numerisk vektor.
-#' @param nullverdi Verdi (tall eller tekst)
+#' @param nullverdi Verdi (typisk tall eller tekst)
 #'   som skal erstatte `x`-elementer lik 0.
 #'
 #' @details
