@@ -24,14 +24,21 @@ test_that("Gir ut riktig resultat for enkelt-verdi inndata", {
     "123 operasjoner"
   )
   expect_identical(
-    entall_flertall(0, "nytt", "nye", "ingen"),
+    entall_flertall(0, "nytt", "nye", nullverdi = "ingen"),
     "ingen nye"
   )
   expect_identical(
-    entall_flertall(1L, "nytt", "nye", "ingen"),
+    entall_flertall(1L, "nytt", "nye", nullverdi = "ingen"),
     "1 nytt"
   )
 })
+
+test_that("Git ut riktig resultat for ikke-standard formateingsfunksjon", {
+  expect_identical(
+    entall_flertall(-1.23, "million", "millioner", round, digits = 1),
+    "-1.2 millioner"
+  )
+}) 
 
 test_that("Gir ut riktig resultat for vektor-verdi inndata", {
   expect_identical(
@@ -39,7 +46,7 @@ test_that("Gir ut riktig resultat for vektor-verdi inndata", {
     c("1 operasjon", "123 operasjoner", "0 operasjoner")
   )
   expect_identical(
-    entall_flertall(c(1, 123, 0), "nytt", "nye", "ingen"),
+    entall_flertall(c(1, 123, 0), "nytt", "nye", nullverdi = "ingen"),
     c("1 nytt", "123 nye", "ingen nye")
   )
 })
@@ -57,18 +64,6 @@ test_that(
     )
   )
 )
-
-test_that("Gir feilmelding ved inndata av negativ verdi", {
-  feilmelding_negative_verdi = "Inndata «x» inneholder minst én negativ verdi"
-  expect_error(
-    entall_flertall(-1, "operasjon", "operasjoner"),
-    feilmelding_negative_verdi
-  )
-  expect_error(
-    entall_flertall(c(1, -1), "operasjon", "operasjoner"),
-    feilmelding_negative_verdi
-  )
-})
 
 test_that("Gir feilmelding ved inndata av NA-verdi", {
   feilmelding_NA_verdi = "Inndata «x» inneholder minst én NA-verdi"
@@ -98,11 +93,11 @@ test_that("Gir feilmelding ved ugyldig type inndata", {
   )
 })
 
-test_that("Gir feilmelding ved ugyldig type argument-verdi for 'entall'-,
-          'flertall'- og 'nulltekst'-argumentene", {
+test_that("Gir feilmelding ved ugyldig type argument-verdi for 'entall'- og
+          'flertall'-argumentene", {
   feilmelding_argument = paste0(
-    "Argumentene «entall», «flertall» og ",
-    "«nulltekst» må alle være av klasse «character» og lengde 1"
+    "Argumentene «entall» og «flertall» må begge være av ",
+    "klasse «character» og lengde 1"
   )
   expect_error(
     entall_flertall(1, 1, "operasjoner"),
@@ -110,10 +105,6 @@ test_that("Gir feilmelding ved ugyldig type argument-verdi for 'entall'-,
   )
   expect_error(
     entall_flertall(123, "operasjon", 123),
-    feilmelding_argument
-  )
-  expect_error(
-    entall_flertall(0, "nytt", "nye", factor(0)),
     feilmelding_argument
   )
   expect_error(
