@@ -36,7 +36,7 @@
 #' # Merk at utdata bare blir gjort om til tekst *om nødvendig*
 #' erstatt_0(c(2, 1), "ingen") # Tall
 #' erstatt_0(c(2, 0, 1), "ingen") # Tekst
-erstatt_0 = function(x, nullverdi) {
+erstatt_0 = function(x, nullverdi = 0) {
   if (!is.numeric(x)) {
     stop(paste("Inndata «x» må være tall, men er:", class(x)))
   }
