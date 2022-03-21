@@ -45,7 +45,7 @@ erstatt_0 = function(x, nullverdi = 0) {
   }
 
   if (any(x == 0, na.rm = TRUE)) { # Unngå unødvendig typeomgjering
-    x = replace(x, x == 0, nullverdi)
+    x[x == 0] = nullverdi
   }
   x
 }
