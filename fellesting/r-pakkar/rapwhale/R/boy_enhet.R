@@ -94,6 +94,16 @@ boy_enhet = function(x, entall, flertall, formatering = erstatt_0, ...) {
   }
 
   x_formatert = formatering(x, ...)
+  n_x = length(x)
+  n_x_formatert = length(x_formatert)
+  if (n_x != n_x_formatert) {
+    stop(
+      paste0(
+        "Utdata fra formatering() må ha samme lengde som «x» ",
+        "(har hhv. lengde ", n_x_formatert, " og ", n_x, ")"
+      )
+    )
+  }
   enhet = ifelse(x %in% c(1, -1), entall, flertall)
   paste(x_formatert, enhet)
 }
