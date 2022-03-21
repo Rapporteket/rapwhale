@@ -34,7 +34,7 @@
 #' eller avrundet til heltal.
 #' Standard formateringsfunksjon [erstatt_0()]
 #' gjør i utgangspunktet *ingen* formatering,
-#' men tar argumentet `nulltekst`,
+#' men tar argumentet `nullverdi`,
 #' som kan brukes til å erstatte tallet 0
 #' med en selvvalgt verdi,
 #' for eksempel teksten «ingen»
