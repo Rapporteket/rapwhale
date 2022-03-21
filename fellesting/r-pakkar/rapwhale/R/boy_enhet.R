@@ -12,8 +12,11 @@
 #' eller -1.
 #' @param flertall Tekst som skal brukes som enhet for `x`-elementer ulik 1
 #' og -1.
-#' @param formatering Funksjon som beskriver ytterligere formatering.
-#' @param ... Ytterligere argumenter sendt til `formatering`.
+#' @param formatering Funksjon for formatering av verdiene i `x`.
+#'   Tar inn `x` og må gi ut en vektor av samme lengde,
+#'   enten en tekstvektor eller en vektor som kan
+#'   gjøres om til tekst via [as.character()]`.
+#' @param ... Ytterligere argumenter sendt til `formatering()`.
 #'
 #' @details
 #' Formaterer en tallvektor,
@@ -26,13 +29,16 @@
 #' Alle `x`-elementer lik 1 eller -1 blir formatert med enheten `entall`,
 #' mens resterende elementer blir formatert med enheten `flertall`.
 #'
-#' Noen ganger vil vi at `x`-elementer lik 0 skal vises med ord
-#' (eksempelvis teksten «ingen»).
-#' Bruk da `formatering`-argumentet sammen med funksjonen [erstatt_0()]
+#' Formateringsfunksjonen `formatering` kan for eksempel
+#' brukes til å formatere tallene i `x` med tusenskilletegn
+#' eller avrundet til heltal.
+#' Standard formateringsfunksjon [erstatt_0()]
+#' gjør i utgangspunktet *ingen* formatering,
+#' men tar argumentet `nulltekst`,
+#' som kan brukes til å erstatte tallet 0
+#' med en selvvalgt verdi,
+#' for eksempel teksten «ingen»
 #' (se eksempel nedenfor).
-#'
-#' `formatering`-argumenetet er fleksibelt,
-#' og kan for eksempel brukes til å innføre tusenskillet.
 #'
 #' @note
 #' Funksjonen håndterer også desimaltall,
@@ -60,7 +66,7 @@
 #'   nullverdi = "ingen"
 #' )
 #'
-#' # Formatering til ett desimaltall
+#' # Formatering til LaTeX-tekst og med ett desimaltall
 #' boy_enhet(c(2.67, 1, 0, pi),
 #'   entall = "million",
 #'   flertall = "millioner",
