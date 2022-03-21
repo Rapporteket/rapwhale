@@ -97,6 +97,19 @@ test_that("Gir feilmelding ved ugyldig type inndata", {
   )
 })
 
+test_that("Gir feilmelding hvis utdata fra formatering() ikke har rett lengde", {
+  expect_error(boy_enhet(
+    1:3, "operasjon", "operasjoner",
+    formatering = \(x) x[1]
+  ),
+  paste0(
+    "Utdata fra formatering() må ha samme lengde som «x» ",
+    "(har hhv. lengde 1 og 3)"
+  ),
+  fixed = TRUE
+  )
+})
+
 test_that("Gir feilmelding ved ugyldig type argument-verdi for 'entall'- og
           'flertall'-argumentene", {
   feilmelding_argument = paste0(
