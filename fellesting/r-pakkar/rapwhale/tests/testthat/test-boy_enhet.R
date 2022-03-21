@@ -33,12 +33,16 @@ test_that("Gir ut riktig resultat for enkelt-verdi inndata", {
   )
 })
 
-test_that("Git ut riktig resultat for ikke-standard formateingsfunksjon", {
+test_that("Gir ut riktig resultat for ikke-standard formateringsfunksjon", {
   expect_identical(
     boy_enhet(-1.23, "million", "millioner", round, digits = 1),
     "-1.2 millioner"
   )
-}) 
+  expect_identical(
+    boy_enhet(1, "pasient", "pasienter", \(x) ifelse(x == 1, "én", x)),
+    "én pasient"
+  )
+})
 
 test_that("Gir ut riktig resultat for vektor-verdi inndata", {
   expect_identical(
