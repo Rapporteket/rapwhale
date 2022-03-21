@@ -7,11 +7,11 @@
 #' entalls-/flertallsform.
 #'
 #' @param x Numerisk vektor med minst ett element.
-#' Kan ikke inneholde `NA`-verdier.
+#'   Kan ikke inneholde `NA`-verdier.
 #' @param entall Tekst som skal brukes som enhet for `x`-elementer lik 1
-#' eller -1.
+#'   eller -1.
 #' @param flertall Tekst som skal brukes som enhet for `x`-elementer ulik 1
-#' og -1.
+#'   og -1.
 #' @param formatering Funksjon for formatering av verdiene i `x`.
 #'   Tar inn `x` og må gi ut en vektor av samme lengde,
 #'   enten en tekstvektor eller en vektor som kan
