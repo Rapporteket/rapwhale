@@ -399,7 +399,7 @@ slettar me rett og slett dei resterande radene.
 Me har likevel eit tilfeldig utval rader:
 
 ```{r}
-slice_sample(d_vld_enkel, n = Inf)
+slice_sample(d_vld_enkel, prop = 1)
 ```
 
 
@@ -425,7 +425,7 @@ d_vld_utval_samla = d_vld_utval %>%
   group_by(pasid, dato_inn) %>% # Ev. bruk nest_by()
   nest() %>%
   ungroup() %>% # Nødvendig for slice_sample()
-  slice_sample(n = Inf) %>%
+  slice_sample(prop = 1) %>%
   unnest(data)
 d_vld_utval_samla
 ```
