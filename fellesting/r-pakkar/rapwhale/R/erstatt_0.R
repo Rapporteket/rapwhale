@@ -16,7 +16,7 @@
 #' å erstatte tallet 0 med teksten «ingen» i løpende tekst.
 #'
 #' Funksjonen er hovedsakelig laget for å brukes
-#' sammen med [entall_flertall()].
+#' sammen med [boy_enhet()].
 #'
 #' @return
 #' Vektor av samme lengde og innhold som `x`,
