@@ -105,8 +105,8 @@ test_that("Sjekkar at «vld_vartype» må starta med ein bokstav, og berre inneh
   lag_datasett = function(vartype) {
     tibble(
       pasid = 101, vld_varnamn = "vekt", vld_vartype = vartype,
-      "vld_verdi_intern_{vartype}" = 0,
-      "vld_verdi_ekstern_{vartype}" = 0
+      "vld_verdi_intern_{vartype}" := 0,
+      "vld_verdi_ekstern_{vartype}" := 0
     )
   }
   # Nokre ugyldige
