@@ -104,6 +104,6 @@ boy_enhet = function(x, entall, flertall, formatering = erstatt_0, ...) {
       )
     )
   }
-  enhet = ifelse(x %in% c(1, -1), entall, flertall)
+  enhet = dplyr::if_else(x %in% c(1, -1), entall, flertall)
   paste(x_formatert, enhet)
 }
