@@ -1,7 +1,7 @@
 #' Formater tall med automatisk entalls-/flertallsenhet
 #'
 #' @description
-#' `r lifecycle::badge("maturing")`
+#' `r lifecycle::badge("stable")`
 #'
 #' Formaterer tall med tilhørende enhet automatisk bøyd til
 #' entalls-/flertallsform.

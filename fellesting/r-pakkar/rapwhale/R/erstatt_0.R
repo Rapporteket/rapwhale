@@ -1,7 +1,7 @@
 #' Erstatt tall lik 0 med valgfri verdi
 #'
 #' @description
-#' `r lifecycle::badge("maturing")`
+#' `r lifecycle::badge("stable")`
 #'
 #' Erstatter alle tall som er lik 0 med en valgfri verdi.
 #'
