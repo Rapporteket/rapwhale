@@ -7,6 +7,7 @@
 style_text_rapwhale = purrr::partial(styler::style_text, style = rapwhale_style)
 
 test_that("<- vert gjort om til =", {
+  # <<- og := skal ikkje gjerast om
   expect_warning(
     styler:::test_collection(
       "rapwhale-style",
