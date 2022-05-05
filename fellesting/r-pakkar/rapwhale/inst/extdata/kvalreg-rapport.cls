@@ -151,9 +151,22 @@
 % Godta komma som desimalskiljeteikn i matte
 \RequirePackage{ncccomma}
 
+% Kommando for å slå av automatisk orddeling ved linjeskift
+% I teorien kunne me brukt hyphenat-pakken og \nohyphens-makroen,
+% men denne pakken omdefinerer dessverre òg tydinga av \_,
+% noko som gjer at at me kan få orddeling etter ein understrek
+% *sjølv om* han står inni \nohyphens{}, slik at for eksempel
+% \nohyphens{eit_langt_variabelnamn} kan bli delt som
+% eit_langt_-
+% variabelnamn
+% Me gjer derfor omtrent det same som hyphenat-pakken
+% (definerer eit språk som ikkje har nokon orddelingsmønster),
+% men utan å omdefinera \_.
+\newlanguage\sprakutanorddeling
+\newcommand{\nohyphens}[1]{{\language\sprakutanorddeling #1}}
+
 % Viser akronyom med kapitélar
 % (Brukar \texorpdfstring for å hindra problem med bruk av kommandoen i PDF-innhaldslista)
-\RequirePackage{hyphenat}
 \newcommand{\kort}[1]{\texorpdfstring{\nohyphens{\addfontfeatures{Letters=UppercaseSmallCaps}#1}}{#1}}
 
 % Vis programkode, pakkenamn o.l. med fastbreiddskrift, fin farge,
