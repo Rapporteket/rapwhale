@@ -5,7 +5,8 @@
 #'
 #' Sjekkar alle .Rd-filer i ei mappe, og lagar ein oversikt over utviklingsnivåa.
 #'
-#' @param mappe Adresse til mappe med hjelpefiler. Standard er "H:/kvalreg/felles/pakker/rapwhale/man".
+#' @param mappe Adresse til mappe med hjelpefiler. Standard er
+#' "H:\\kvalreg\\fellesting\\r-pakkar\\rapwhale\\man".
 #'
 #' @details
 #' Funksjonen tek inn adressa til ei mappe, og ser etter utviklingsnivå
@@ -21,7 +22,7 @@
 #' @examples
 #' utviklingsnivaa()
 #'
-#' utviklingsnivaa("H:/kvalreg/felles/pakker/rapwhale/man")
+#' utviklingsnivaa("H:\\kvalreg\\fellesting\\r-pakkar\\rapwhale\\man")
 utviklingsnivaa = function(mappe = "H:\\kvalreg\\fellesting\\r-pakkar\\rapwhale\\man") {
   # Lag vektor med filnamn
   funksjonar = list.files(mappe, pattern = "\\.Rd$")
