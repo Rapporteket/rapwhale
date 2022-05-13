@@ -5,8 +5,7 @@
 #'
 #' Sjekkar alle .Rd-filer i ei mappe, og lagar ein oversikt over utviklingsnivåa.
 #'
-#' @param mappe Adresse til mappe med hjelpefiler. Standard er
-#' "H:\\kvalreg\\fellesting\\r-pakkar\\rapwhale\\man".
+#' @param mappe Adresse til mappe med hjelpefiler. Standard er "H:\\kvalreg\\fellesting\\r-pakkar\\rapwhale\\man".
 #'
 #' @details
 #' Funksjonen tek inn adressa til ei mappe, og ser etter utviklingsnivå
@@ -44,10 +43,21 @@ utviklingsnivaa = function(mappe = "H:\\kvalreg\\fellesting\\r-pakkar\\rapwhale\
       stringr::str_remove_all("lifecycle-|\\.svg"))
 
   # Lag vektor som angir om funksjonane er interne eller ei
+<<<<<<< HEAD
   intern = funksjonar_parsed %>%
     as.character() %>%
     purrr::map_lgl(~ .x %>%
       stringr::str_detect("internal"))
+=======
+  er_intern = function(funksjon_rd) {
+    funksjon_rd = funksjon_rd[purrr::map_lgl(
+      funksjon_rd,
+      ~ attr(., "Rd_tag") == "\\keyword"
+    )]
+    any(purrr::map_chr(funksjon_rd, 1) == "internal")
+  }
+  intern = map_lgl(funksjonar_parsed, er_intern)
+>>>>>>> 800d98614 (Lagt til ny funksjon for å evaluere om en funksjon er intern)
 
   tibble::tibble(funksjon = funksjonar_namn, utviklingsnivaa = nivaa, intern = intern) %>%
     dplyr::arrange(utviklingsnivaa)
