@@ -42,9 +42,12 @@ utviklingsnivaa = function(mappe = "H:\\kvalreg\\fellesting\\r-pakkar\\rapwhale\
       stringr::str_extract("lifecycle-[[:alpha:]]+\\.svg") %>%
       stringr::str_remove_all("lifecycle-|\\.svg"))
 
-  eksterne_funksjonar = paste0(ls("package:rapwhale"), "()")
+  # Lag vektor som angir om funksjonane er interne eller ei
+  intern = funksjonar_parsed %>%
+    as.character() %>%
+    purrr::map_lgl(~ .x %>%
+      stringr::str_detect("internal"))
 
-  tibble::tibble(funksjon = funksjonar_namn, utviklingsnivaa = nivaa) %>%
-    dplyr::arrange(utviklingsnivaa) %>%
-    dplyr::mutate(ekstern = funksjon %in% !!eksterne_funksjonar)
+  tibble::tibble(funksjon = funksjonar_namn, utviklingsnivaa = nivaa, intern = intern) %>%
+    dplyr::arrange(utviklingsnivaa)
 }
