@@ -33,9 +33,9 @@ sjå vignettane til
 
 Førebels brukar me tre utviklingsnivå:
 
-- ![stable](../man/figures/lifecycle-stable.svg){style="vertical-align:middle"}
-- ![maturing](../man/figures/lifecycle-maturing.svg){style="vertical-align:middle"}
-- ![experimental](../man/figures/lifecycle-experimental.svg){style="vertical-align:middle"}
+- ![stable](../man/figures/lifecycle-stable.svg){style="vertical-align:middle"} – stable
+- ![maturing](../man/figures/lifecycle-maturing.svg){style="vertical-align:middle"} – maturing
+- ![experimental](../man/figures/lifecycle-experimental.svg){style="vertical-align:middle"} – experimental
 
 Desse svarar til nivåa i
 [`lifecycle`-pakken](https://cran.r-project.org/package=lifecycle),
@@ -157,11 +157,11 @@ men du må då vera budd på store framtidige endringar.
 
 Det finst òg andre utviklingsnivå i `lifecycle`-pakken (nokre utdaterte):
 
-- ![archived](../man/figures/lifecycle-archived.svg){style="vertical-align:middle"}
-- ![defunct](../man/figures/lifecycle-defunct.svg){style="vertical-align:middle"}
-- ![deprecated](../man/figures/lifecycle-deprecated.svg){style="vertical-align:middle"}
-- ![questioning](../man/figures/lifecycle-questioning.svg){style="vertical-align:middle"}
-- ![superseded](../man/figures/lifecycle-superseded.svg){style="vertical-align:middle"}
+- ![archived](../man/figures/lifecycle-archived.svg){style="vertical-align:middle"} – archived
+- ![defunct](../man/figures/lifecycle-defunct.svg){style="vertical-align:middle"} – defunct
+- ![deprecated](../man/figures/lifecycle-deprecated.svg){style="vertical-align:middle"} – deprecated
+- ![questioning](../man/figures/lifecycle-questioning.svg){style="vertical-align:middle"} – questioning
+- ![superseded](../man/figures/lifecycle-superseded.svg){style="vertical-align:middle"} – superseded
 
 Desse brukar me førebels ikkje,
 men me kan komma til å gjera det i framtida.
