@@ -9,94 +9,97 @@ NULL
 
 ### Funksjon for å legge inn tall i en rapport som bruker LaTeX
 
-# Tar inn eit tal x og viser det som \num{x}, som (om nødvendig)
-# legg inn fine mellomrom som tusenskiljeteikn og endrar
-# desimalpunktum til desimalkomma.
-
-# Innargument:
-#   desimalar: talet på desimalar etter komma (rund av og vis så mange desimalar)
-#      tabell: talet vert brukt i ein tabell og skal derfor ha tabelltekst
-#
-# Argumentet «tabell» burde vore unødvendig, men siunitx *insisterer*
-# på å endra skrifta til \textrm, sjølv om eg har slått på alle moglege
-# detect-argument (og prøvd mykje anna, og søkt på nettet etter løysingar
-# (bruk søkeorda «siunitx» og «fontspec»)). Alle andre løysingar eg har
-# funne gjer at anten vert ikkje rett skrift brukt i brødteksten eller så vert
-# ikkje rett tekst brukt i tabellforklaringa eller så vert ikkje rett tekst
-# brukt i sjølve tabellen. (Merk at me brukar ulik skrift i tabell-/
-# figurforklaringa, sjølv om dei begge er Calibri. Ein ser lettast forskjellen
-# ved å studera 1-tala.)
-#
-# Som ei nødløysing har me ordna det slik at me kan manuelt velja at
-# tabellskrifta skal brukast når me kallar num()-funksjonen.
-
-
-#' Konverter tall til LaTeX-format
+#' Konverter tal til LaTeX-format
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' Funksjon som tar inn ein vektor med tal x og konverterer han til riktig format i LaTeX, og (om nødvendig) legg inn fine mellomrom som tusenskiljeteikn og endrar desimalpunktum til desimalkomma.
-#'
-#' \code{NA}-verdiar vert gjorde om til tankestrekar. \cr\cr
-#' Argumentet «tabell» burde vore unødvendig, men siunitx \emph{insisterer}
-#' på å endra skrifta til \code{\\textrm}, sjølv om eg har slått på alle moglege
-#' detect-argument (og prøvd mykje anna, og søkt på nettet etter løysingar
-#' (bruk søkeorda «siunitx» og «fontspec»)). Alle andre løysingar eg har
-#' funne gjer at anten vert ikkje rett skrift brukt i brødteksten eller så vert
-#' ikkje rett tekst brukt i tabellforklaringa eller så vert ikkje rett tekst
-#' brukt i sjølve tabellen. (Merk at me brukar ulik skrift i tabell-/
-#' figurforklaringa, sjølv om dei begge er Calibri. Ein ser lettast forskjellen
-#' ved å studera 1-tala.). \cr\cr
-#' Som ei nødløysing har me ordna det slik at me kan manuelt velja at
-#' tabellskrifta skal brukast når me kallar num()-funksjonen.
-#' @param x Tallet en ønsker å skrive på LaTeX-format.
-#' @param desimalar Hvor mange desimaler skal inkluderes etter komma? (Rund av og vis så mange desimaler).
-#' @param tabell \code{TRUE} eller \code{FALSE} for å indikere om tallet skal brukes i en tabell, og dermed skal ha tabelltekst.
+#' Tar inn ein vektor med tal og gjev ut ein ein vektor
+#' med' LaTeX-kommandoar for finformatert vising av tala,
+#' for eksempel med tusenskiljeteikn
+#' og med avrunding til eit fast tal desimalar.
+#' 
+#' @param x Vektor med tala ein ønskjer å få ut på LaTeX-format.
+#' @param desimalar Kor mange desimalar skal visast etter kommaet?
+#' @param tabell `r lifecycle::badge("deprecated")` Utdatert og ikkje
+#'   lenger nødvendig argument.
+#'   Vert fjerna i neste versjon av pakken.
+#'   
+#' @details
+#' Tala vert viste med tusenskiljeteikn («12 345», ikkje «12345»),
+#' desimalteiknet vert
+#' (viss språket er norsk)
+#' komma («3,14»),
+#' ikkje punktum («3.14»),
+#' negative tal vert viste med ekte minusteikn («−42»),
+#' ikkje bindestrek («-42»)
+#' og `NA`-verdiar vert viste som ein kort tankestrek («–»).
+#' 
+#' Tala vert avrunda til `desimalar` desimalar
+#' med den vanlege avrundingsregelen i R.
+#' Viss `desimalar` er NULL,
+#' vert det vist så mange desimalar som
+#' [format()]-funksjonen viser som standard.
+#' (Men,
+#' i motsetning til den funksjonen,
+#' vil vert tala aldri viste i eksponentiell notasjon.)
+#' 
+#' Merk at funksjonen berre skal brukast på vanlege tal,
+#' ikkje årstal,
+#' fødselsnummer eller liknande.
+#' 
+#' Det vert brukt ein funksjon gjort tilgjengeleg av
+#' `kvalreg-rapport`-klassen
+#' for formatering av tala.
+#' Nøyaktig kva funksjon som vert brukt,
+#' kan endrast i framtida,
+#' men funksjonaliteten vil vera lik.
+#' 
+#' @note Viss `desimalar` er oppgjeve,
+#'   vert det alltid vist *nøyaktig* så mange desimalar,
+#'   sjølv om dei siste vert 0.
+#'   
 #' @export
 #' @examples
-#' # Til bruk i setningar i latex
+#' # Til bruk i setningar i LaTeX
 #' paste0("Store tal som ", num(123456789), " får mellomrom som tusenskiljeteikn.")
 #' paste0("Pi avrunda til fire desimalar er ", num(pi, desimalar = 4), ".")
-#'
-#' # Til bruk i tabell i latex
-#' num(pi, desimalar = 2, tabell = TRUE)
-num = function(x, desimalar, tabell = FALSE) {
-  # Argument til \num-kommandoen
-  arg = NULL
-  if (tabell) {
-    arg = "text-rm=\\tablefont"
+#' paste0("Nulldesimalar vert òg viste: ", num(12, desimalar = 2))
+num = function(x, desimalar = NULL, tabell = lifecycle::deprecated()) {
+  # Åtvar viss nokon brukar det utdaterte «tabell»-argumentet
+  if (lifecycle::is_present(tabell)) {
+    lifecycle::deprecate_warn(
+      when = "0.4.0", 
+      what = "num(tabell)",
+      details = "It will be completely dropped in the next version."
+    )
   }
 
-  # Spesialtilpass kommandoen etter talet på desimalar
-  if (!missing(desimalar)) {
-    # \num kan runda av for oss, men rundar av i R
-    # for å sikra avrundinga vert identisk som ved
-    # andre plassar der me ikkje brukar \num.
+  if (!is.null(desimalar)) {
+    # LaTeX-kommandoen kan runda av for oss,
+    # men me rundar av i R for å sikra at avrundinga
+    # vert identisk som ved andre plassar der
+    # me ikkje brukar LaTeX
     x = round(x, desimalar)
-
-    # Viss me vil ha desimalar, vis *alle* desimalane
-    # (eks. vert både 3.1 og 3.123 vist som 3,1),
-    # også for heiltal (eks. vert 3 vist som 3.0).
-    if (desimalar > 0) {
-      arg = arg %>%
-        append(c(
-          paste0("round-precision=", desimalar),
-          "round-integer-to-decimal=true"
-        ))
-    }
   }
-  # Legg til argumentliste
-  argtekst = paste0("[", paste0(arg, collapse = ", "), "]")
-
-  # Returner LaTeX-kode for talformatering. Me legg *heile* kommandoen
+  
+  nsmall = if (is.null(desimalar)) {
+    0L
+  } else {
+    desimalar
+  }
+  # Må køyra format() separat på kvart element for å unngå
+  # at alle elementa får like mange desimalar (viss «desimalar» er NULL)
+  x_form = purrr::map_chr(x, format, nsmall = nsmall, scientific = FALSE)
+  x_form = paste0("\\numprint{", x_form, "}")
+  x_form[is.na(x)] = "\textendash{}"
+  
+  # Me legg *heile* LaTeX-kommandoen
   # mellom {} for å hindra problem ved bruk for eksempel inni shortcap-delen
   # av \caption[shortcap]{longcap} (eventuelle ]-teikn vert elles tolka
   # til å avslutta shortcap-argumentet, jf. https://tex.stackexchange.com/a/78416)
-  x_form = paste0("{\\num", argtekst, "{", format(x, scientific = FALSE), "}}")
-  x_form[is.na(x)] = paste0("{", if (tabell) {
-    "\\tablefont"
-  }, "\\textendash{}}")
+  x_form = paste0("{", x_form, "}")
+  
   x_form
 }
 
