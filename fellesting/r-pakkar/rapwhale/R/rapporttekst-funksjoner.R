@@ -181,7 +181,9 @@ akse_tall_format = function(antall_desimaler = 2, decimal.mark = ",", big.mark =
 #' Tar inn et tall og konverterer det til LaTeX-kommando for å skrive prosent-tegn i tekst.
 #' @param x Tallet som skal skrives som prosentverdi.
 #' @param desimalar Antall desimaler som skal vises.
-#' @param tabell TRUE eller FALSE for å indikere om tallet skal brukes i en tabell, og dermed skal ha tabelltekst.
+#' @param tabell `r lifecycle::badge("deprecated")` Utdatert og ikke
+#'   lenger nødvendig argument. Blir fjernet i neste versjon av pakken.
+
 #' @export
 #' @examples
 #' menn = 5
@@ -190,12 +192,17 @@ akse_tall_format = function(antall_desimaler = 2, decimal.mark = ",", big.mark =
 #'
 #' # Til bruk i setning i latex
 #' paste0("Andel menn er ", prosent(andel_menn), ".")
-#'
-#' # Til bruk i tabell i latex
-#' prosent(andel_menn, desimalar = 1, tabell = TRUE)
-prosent = function(x, desimalar = 0, tabell = FALSE) {
+prosent = function(x, desimalar = 0, tabell = lifecycle::deprecated()) {
+  # Åtvar viss nokon brukar det utdaterte «tabell»-argumentet
+  if (lifecycle::is_present(tabell)) {
+    lifecycle::deprecate_warn(
+      when = "0.4.0", 
+      what = "prosent(tabell)",
+      details = "It will be completely dropped in the next version."
+    )
+  }
   prosent_tekst = x %>%
-    purrr::map_chr(~ num(100 * .x, desimalar, tabell = tabell) %>%
+    purrr::map_chr(~ num(100 * .x, desimalar) %>%
       stringr::str_c("\\prosent"))
   ifelse(is.na(x), "\\textendash{}", prosent_tekst)
 }
