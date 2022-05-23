@@ -364,8 +364,8 @@
 % I utkastmodus, vis tid for kompilering i toppmargen
 \ifdraft
   \RequirePackage{clock}
-  \makeevenhead{plain}{\hspace*{\margjuster}\today~-- \texttime}{\kort{UTKAST}}{}
-  \makeoddhead{plain}{}{\kort{UTKAST}}{\today~-- \texttime}
+  \makeevenhead{plain}{\hspace*{\margjuster}\today~-- \texttime}{}{}
+  \makeoddhead{plain}{}{}{\today~-- \texttime}
 \fi
 
 % I utkastmodus, vis strek viss ting kjem utanfor margen
@@ -600,15 +600,6 @@
 }
 
 % Legg ev. til UTKAST-vassmerke
-% fixme: I TeX Live 2021 er det ein feil som gjer
-%        at vassmerket får svart tekst. Sjå
-%        https://github.com/callegar/LaTeX-draftwatermark/issues/27
-%        Dette gjer at teksten under vert vanskeleg å lesa.
-%        Har derfor mellombels deaktivert vassmerket
-%        (med \iffalse) og heller lagt til UTKAST i toppteksten.
-%        Når dette er fiksa (TeX Live 2022?), reverter denne
-%        endringa (ved hjelp av eigna/magisk SVN-/Git-kommando).
-\iffalse
 \ifdraft
   \usepackage{draftwatermark}
   \ifkvalreg@british
@@ -617,7 +608,6 @@
     \SetWatermarkText{UTKAST}
   \fi
   \SetWatermarkLightness{.95}
-\fi
 \fi
 
 
