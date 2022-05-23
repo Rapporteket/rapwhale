@@ -447,15 +447,7 @@
   \end{textblock}
 \fi
 
-% Farga boks nede på forsida
-% fixme: I (TeX Live) 2021 er det ikkje lenger farga boks,
-%        grunna problem med farga tekst og
-%        luacolor (sjå òg kommentar for draftwatermark).
-%        Problemet kjem kanskje frå https://github.com/ho-tex/luacolor/issues/4
-%        Har derfor ei nødløysing med berre ein vassrett strek.
-%        Når problemet med luacolor er fiksa (TeX Live 2022?),
-%        reverter denne endringa, og gå tilbake gammal forside
-%        (eller helst lag ei forside som faktisk er fin!).
+% Farga strek nede på forsida
 \begin{textblock}{12.6}[0,0](1.7,11)%
 \noindent\begin{tikzpicture}
 \draw[draw=PrimCol, line width=.25cm, line cap=rect] (0,0) -- (\linewidth-\pgflinewidth,0);%
