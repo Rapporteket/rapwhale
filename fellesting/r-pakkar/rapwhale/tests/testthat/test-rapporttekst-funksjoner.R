@@ -1,3 +1,33 @@
+# Testing av num()
+
+test_that("num() gir ut tankestrek når «x»-argumentet inneholder NA", {
+  expect_identical(num(NA_real_), "{\\textendash{}}")
+})
+
+test_that("num() gir ut riktig verdi når kun «x»-argumentet er gitt", {
+  expect_identical(num(NULL), "{\\numprint{}}")
+  expect_identical(num(1234), "{\\numprint{1234}}")
+  expect_identical(
+    num(c(12.34, 3.1415)),
+    c("{\\numprint{12.34}}", "{\\numprint{3.1415}}")
+  )
+})
+
+test_that("num() gir ut riktig verdi med «desimalar»-argumentet", {
+  expect_identical(
+    num(12, desimalar = 0),
+    "{\\numprint{12}"
+  )
+  expect_identical(
+    num(12, desimalar = 2),
+    "{\\numprint{12.00}"
+  )
+  expect_identical(
+    num(c(12.34, 3.1415), desimalar = 3),
+    c("{\\numprint{12.340}", "{\\numprint{3.142}")
+  )
+})
+
 # Testing av akse_prosent_format()
 
 test_that("akse_prosent_format() gir ut verdier på riktig format ved
