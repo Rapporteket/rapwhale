@@ -50,10 +50,10 @@ utviklingsnivaa = function(mappe = "H:\\kvalreg\\fellesting\\r-pakkar\\rapwhale\
       stringr::str_detect("internal"))
 =======
   er_intern = function(funksjon_rd) {
-    funksjon_rd = funksjon_rd[purrr::map_lgl(
+    funksjon_rd = purrr::keep(
       funksjon_rd,
       ~ attr(., "Rd_tag") == "\\keyword"
-    )]
+    )
     any(purrr::map_chr(funksjon_rd, 1) == "internal")
   }
   intern = map_lgl(funksjonar_parsed, er_intern)
