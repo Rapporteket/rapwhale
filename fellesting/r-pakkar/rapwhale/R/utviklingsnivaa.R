@@ -34,13 +34,23 @@ utviklingsnivaa = function(mappe = "H:\\kvalreg\\fellesting\\r-pakkar\\rapwhale\
   parse_Rd_mapper = purrr::as_mapper(~ tools::parse_Rd(., permissive = TRUE))
   funksjonar_parsed = paste0(mappe, "/", funksjonar) %>%
     purrr::map(parse_Rd_mapper)
-
-  # Lag vektor med utviklingsnivåa til funksjonane
-  nivaa = funksjonar_parsed %>%
-    as.character() %>%
-    purrr::map_chr(~ .x %>%
-      stringr::str_extract("lifecycle-[[:alpha:]]+\\.svg") %>%
-      stringr::str_remove_all("lifecycle-|\\.svg"))
+  
+  # Hent utviklingsnivå for en funksjon
+  hent_nivaa = function(funksjon_rd) {
+    desc_rd = purrr::keep(
+      funksjon_rd,
+      ~ attr(., "Rd_tag") == "\\description"
+    )
+    nivaa = unlist(desc_rd) %>% 
+      stringr::str_subset("^lifecycle-[[:alpha:]]+\\.svg$") %>% 
+      stringr::str_remove_all("lifecycle-|\\.svg")
+    if (length(nivaa) == 0) {
+      NA_character_
+    } else {
+      nivaa[1]
+    }
+  }
+  nivaa = map_chr(funksjonar_parsed, hent_nivaa)
 
   # Lag vektor som angir om funksjonane er interne eller ei
 <<<<<<< HEAD
