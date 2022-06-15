@@ -34,15 +34,15 @@ utviklingsnivaa = function(mappe = "H:\\kvalreg\\fellesting\\r-pakkar\\rapwhale\
   parse_Rd_mapper = purrr::as_mapper(~ tools::parse_Rd(., permissive = TRUE))
   funksjonar_parsed = paste0(mappe, "/", funksjonar) %>%
     purrr::map(parse_Rd_mapper)
-  
+
   # Hent utviklingsnivå for en funksjon
   hent_nivaa = function(funksjon_rd) {
     desc_rd = purrr::keep(
       funksjon_rd,
       ~ attr(., "Rd_tag") == "\\description"
     )
-    nivaa = unlist(desc_rd) %>% 
-      stringr::str_subset("^lifecycle-[[:alpha:]]+\\.svg$") %>% 
+    nivaa = unlist(desc_rd) %>%
+      stringr::str_subset("^lifecycle-[[:alpha:]]+\\.svg$") %>%
       stringr::str_remove_all("lifecycle-|\\.svg")
     if (length(nivaa) == 0) {
       NA_character_
@@ -53,12 +53,6 @@ utviklingsnivaa = function(mappe = "H:\\kvalreg\\fellesting\\r-pakkar\\rapwhale\
   nivaa = map_chr(funksjonar_parsed, hent_nivaa)
 
   # Lag vektor som angir om funksjonane er interne eller ei
-<<<<<<< HEAD
-  intern = funksjonar_parsed %>%
-    as.character() %>%
-    purrr::map_lgl(~ .x %>%
-      stringr::str_detect("internal"))
-=======
   er_intern = function(funksjon_rd) {
     funksjon_rd = purrr::keep(
       funksjon_rd,
@@ -67,7 +61,6 @@ utviklingsnivaa = function(mappe = "H:\\kvalreg\\fellesting\\r-pakkar\\rapwhale\
     any(purrr::map_chr(funksjon_rd, 1) == "internal")
   }
   intern = map_lgl(funksjonar_parsed, er_intern)
->>>>>>> 800d98614 (Lagt til ny funksjon for å evaluere om en funksjon er intern)
 
   tibble::tibble(funksjon = funksjonar_namn, utviklingsnivaa = nivaa, intern = intern) %>%
     dplyr::arrange(utviklingsnivaa)
