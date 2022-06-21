@@ -1,4 +1,4 @@
-# Rapwhale versjon ???
+# Rapwhale versjon 0.4.0
 
 ## Nye funksjoner
 
