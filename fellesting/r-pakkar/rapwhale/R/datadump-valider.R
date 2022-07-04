@@ -306,6 +306,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' Funksjon som automatisk lager et regelsett basert på en kodebok, og sjekker at
 #' datadumpen er gyldig gitt dette regelsettet. \cr \cr
 #' Returnerer TRUE viss og berre viss datadumpen er gyldig. \cr

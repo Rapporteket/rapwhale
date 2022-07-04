@@ -424,6 +424,7 @@ finn_type_idnummer = function(nummer) {
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' Hvis det finnes ugyldige fødselsnummer kan denne funksjonen brukes for å
 #' foreslå lignende fødselsnummer som *er* gyldige. Dette gjøres ved å bytte
 #' ut ett vilkårlig siffer, eller bytter om på to nabosiffer.

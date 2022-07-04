@@ -5,6 +5,7 @@ NULL
 #'
 #' @description
 #' `r lifecycle::badge("stable")`
+#'
 #' Regner ut fysisk og psykisk sumskår (PCS og MCS)
 #' for RAND-12-/SF-12-spørreskjema basert valgfri skåringsalgoritme.
 #' Sjekker også at alle variabelnavnene og

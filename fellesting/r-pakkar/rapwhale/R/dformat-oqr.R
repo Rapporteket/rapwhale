@@ -32,6 +32,7 @@ NULL
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' Funksjonen leser inn OQR-kodebok på dokumentert format og gjer om til vårt standardformat (kanonisk form).
 #'
 #' Returnerer kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar.
@@ -323,6 +324,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' Les inn OQR-data frå gitt skjema ved hjelp av kodebok. \cr \cr
 #' Kodeboka vert brukt til å gje alle variablane rett format (tal, tekst, dato, boolske/logiske verdiar osv.)
 #' og til å sikra at datadumpen er i samsvar med kodeboka. \cr

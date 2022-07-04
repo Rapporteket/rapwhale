@@ -2,6 +2,7 @@
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' \code{les_varnavn()} henter ut første rad fra en datafil. Bruker filplassering som argument.
 #'
 #' @details
@@ -90,6 +91,7 @@ konverter_boolske = function(x, boolsk_usann, boolsk_sann, na_verdier = NA) {
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' \code{std_koltype_til_readr_koltype()} tar inn en vektor med variabeltyper oppgitt på vårt standardformat.
 #' Returnerer en sammenslått tekststreng med gyldige coltypes for bruk i \code{read_*()}-funksjoner fra readr-pakken.
 #' Se \code{read_delim()}
@@ -136,6 +138,7 @@ erstatt_med_na = function(x, na_verdi) {
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' \code{les_csv_base()} leser inn en csv-fil fra en filplassering.
 #' Spesifisering av format og datastruktur gjøres i argumentene formatspek og spesifikasjon.
 #' Se rapwhale::formatspek og rapwhale::spesifikasjon for eksempeloppsett for
@@ -201,6 +204,7 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' \code{lag formatspek()} er en hjelpefunksjon som skal sikre at alle argumenter
 #' i formatspek angis i riktig format og med riktig navn. Formatspek spesifiserer
 #' hvilket format inndata er på og brukes i diverse innlesningsfunksjoner i rapwhale.

@@ -8,6 +8,7 @@ NULL
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' Hovedfunksjon for å lese inn kodebok for OQR-register.
 #' Tar inn filplassering for kodebok og argumentet valider som angir om det skal
 #' gjøres validering av kodebok ved innlesning.
@@ -79,6 +80,7 @@ les_kb_oqr_v2 = function(adresse, valider = TRUE) {
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' les_kb_oqr_base leser inn en base-versjon av OQR-kodebok. Det gjøres ingen
 #' validering eller korreksjoner på kodeboken her. Den leses inn slik den er.
 #' Eneste argument er adresse, som angir filplassering for kodebok.
@@ -132,6 +134,7 @@ les_kb_oqr_base = function(adresse) {
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' Funksjonen tar inn en tekst-vektor og konverterer til ønsket format.
 #' Må oppgi et regex-uttrykk for å vise hvordan tekst-strengene som skal endres ser ut.
 #' Funksjonen ser deretter etter mønsteret i tekst-vektoren og konverterer de det gjelder
@@ -156,6 +159,7 @@ konverter_tekst = function(d, regex, parse_funksjon, ...) {
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' Ved bruk av les_kb_oqr_base får vi inn en kodebok på et format som må endres
 #' litt for å kunne brukes til å lese inn datadump.
 #' Denne funksjonen gjør følgende endringer:
@@ -219,6 +223,7 @@ kb_oqr_base_til_std = function(kb_oqr) {
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' Funksjon for å trekke ut unike variabler innenfor et skjema.
 #' Foreløpig er denne funksjonen laget spesifikt for les_kb_v2.R, men den kan kanskje
 #' utvides til å dekke mer generelle tilfeller.
@@ -238,6 +243,7 @@ reduser_duplikate_variabler = function(kb_mellom) {
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' Funksjonen tar statusvariabel fra OQR-register og konverterer den til en
 #' kategorisk variabel. I OQR-struktur har statusvariabel kun et nivå, men
 #' vi vil ha et nivå for hver listeverdi.
@@ -276,6 +282,7 @@ utvid_statusvariabel = function(kb_mellom) {
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' Tar inn kodebok på mellomformat og konverterer til standardformat.
 #' Endrer navn på variabeltyper til standard navn
 #' Velger standardkolonner som alle kodebøker skal ha på standardformat.
@@ -302,6 +309,7 @@ konverter_oqr_kb = function(kb_mellom) {
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' Endrer navn for variabeltyper fra OQR-navn til standardnavn.
 #' Sjekker også at det ikke er ukjente variabeltyper i kodebok.
 #'
@@ -343,6 +351,7 @@ oqr_til_std_variabeltyper = function(kb_mellom) {
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' Enkel sjekk for om obligatoriske variabler er aktiveringsspørsmål.
 #' Hvis en obligatorisk variabel ikke er et aktiveringsspørsmål settes
 #' obligatorisk til nei.
@@ -367,6 +376,7 @@ sjekk_obligatorisk = function(kb_mellom) {
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' Velger ut standardkolonner tilsvarende vårt standardformat. Kolonnene
 #' hentes ut i standard rekkefølge.
 #'
@@ -392,6 +402,7 @@ velg_standardkolonner = function(kb_mellom) {
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' Gir nye skjemanavn som samsvarer med tabellen variablene ligger i.
 #' Velger første *ledige* navn blant tilgjengelige skjema-id'er.
 #'
@@ -424,6 +435,7 @@ tildel_unike_skjemanavn_fra_skjema_id = function(kb_std) {
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' Funksjon for å legge til variabler i kodebok som finnes i datadump, men ikke
 #' er med i kodebok.
 #' Kolonnene skjema_id, skjemanavn, variabel_id, variabeletikett, variabeltype, unik, obligatorisk og desimaler er obligatorisk.
@@ -465,6 +477,7 @@ legg_til_variabler_kb = function(kb_std, ekstra_data) {
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' Funksjon for å validere kodebok for å sikre at den er i henhold til vårt standardformat.
 #' Tar inn kodebok og returnerer ingenting gitt at kodeboken oppfyller kravene til standardformat.
 #'
@@ -483,6 +496,7 @@ valider_kodebok = function(kodebok) {
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' Funksjon for å validere struktur av kodebok.
 #' Fullstendig mangelfull per nå, vil lages senere.
 #'
@@ -496,6 +510,7 @@ valider_kb_struktur = function(kodebok) {}
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' Et sett med tester for å validere kodebok på skjemanivå.
 #'
 #' @param kodebok kodebok på standard format.
@@ -553,6 +568,7 @@ valider_kb_skjema = function(kodebok) {
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' Et sett med tester for å validere kodebok på kolonnenivå.
 #'
 #' @param kodebok kodebok på standard format
@@ -611,6 +627,7 @@ valider_kb_kolonner = function(kodebok) {
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
+#'
 #' Et sett med tester for å valider kodebok på variabelnivå.
 #'
 #' @param kodebok kodebok på standardformat
