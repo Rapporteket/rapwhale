@@ -224,6 +224,21 @@ test_that("Funksjonen gir forventet resultat", {
   expect_identical(aggreger_ki_prop(d_75), svar_75)
 })
 
+test_that("Funksjonen gir konfindensintervall med øvre grense 1 og nedre nedre grense 0" {
+  for (i in 1:100) {
+    d_ovre_1 = tibble::tibble(
+      ki_krit_teller = rep(TRUE, i),
+      ki_krit_nevner = rep(TRUE, i)
+    )
+    d_nedre_0 = tibble::tibble(
+      ki_krit_teller = rep(FALSE, i),
+      ki_krit_nevner = rep(TRUE, i)
+    )
+    expect_false(aggreger_ki_prop(d_ovre_1)$konfint_ovre > 1)
+    expect_false(aggreger_ki_prop(d_nedre_0)$konfint_nedre < 0)
+  }
+})
+
 test_that("Funksjonen støtter angivelse av konfidensinvå", {
   d_test = tibble::tibble(
     ki_krit_teller = c(TRUE, FALSE, FALSE, FALSE),
