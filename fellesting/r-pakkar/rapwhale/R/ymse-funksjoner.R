@@ -69,13 +69,15 @@ tab = function(...) {
 #' and contingency tests: mathematical fundamentals and the evaluation of
 #' alternative methods», av Sean Wallis, University College London.
 #'
-#' Returnerer en tibble med nedre og øvre grense for et 95 \%
-#' wilson-konfidensintervall.
+#' Returnerer en tibble med nedre og øvre grense for et
+#' wilson-konfidensintervall på angitt nivå.
 #' @param x Antall suksesser i forsøket.
 #' @param n Antall uavhengige forsøk.
+#' @param alfa Én minus nivået til konfidensintervallet.
+#'   Standardverdi er 0.05, som tilsvarer et 95 %-konfidensintervall.
 #' @export
-regn_ki_bin = function(x, n, conf.level) {
-  ki = binom::binom.wilson(x, n, conf.level)
+regn_ki_bin = function(x, n, alfa = 0.05) {
+  ki = binom::binom.wilson(x, n, 1 - alfa)
   tibble(
     lower = pmax(0, ki$lower), # Fiks for at grensene av og til kan gå *bitte litt* utanfor [0,1]
     upper = pmin(1, ki$upper)
