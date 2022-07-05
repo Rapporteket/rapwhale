@@ -125,7 +125,7 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
   konfint_robust = function(x) {
     konf = possibly(~ regn_ki_bin(d_sammendrag$ki_teller,
       d_sammendrag$ki_nevner,
-      conf.level = 1 - alfa
+      alfa
     ),
     otherwise = data.frame(
       method = NA_character_,
