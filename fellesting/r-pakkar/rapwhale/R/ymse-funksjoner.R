@@ -74,11 +74,11 @@ tab = function(...) {
 #' @param x Antall suksesser i forsøket.
 #' @param n Antall uavhengige forsøk.
 #' @export
-regn_ki_bin = function(x, n) {
-  ki = binom::binom.wilson(x, n)
+regn_ki_bin = function(x, n, conf.level) {
+  ki = binom::binom.wilson(x, n, conf.level)
   tibble(
-    low = pmax(0, ki$lower), # Fiks for at grensene av og til kan gå *bitte litt* utanfor [0,1]
-    high = pmin(1, ki$upper)
+    lower = pmax(0, ki$lower), # Fiks for at grensene av og til kan gå *bitte litt* utanfor [0,1]
+    upper = pmin(1, ki$upper)
   )
 }
 
