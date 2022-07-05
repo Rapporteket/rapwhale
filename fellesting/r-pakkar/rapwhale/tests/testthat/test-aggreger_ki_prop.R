@@ -224,7 +224,7 @@ test_that("Funksjonen gir forventet resultat", {
   expect_identical(aggreger_ki_prop(d_75), svar_75)
 })
 
-test_that("Funksjonen gir konfindensintervall med øvre grense 1 og nedre nedre grense 0" {
+test_that("Funksjonen gir konfindensintervall med øvre grense 1 og nedre nedre grense 0", {
   for (i in 1:100) {
     d_ovre_1 = tibble::tibble(
       ki_krit_teller = rep(TRUE, i),
