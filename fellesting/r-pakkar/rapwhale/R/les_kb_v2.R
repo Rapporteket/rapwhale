@@ -305,7 +305,7 @@ konverter_oqr_kb = function(kb_mellom) {
 }
 
 
-#' konverter navn for variabeltyper fra OQR til standard
+#' Konverter navn for variabeltyper fra OQR til standard
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`

@@ -26,7 +26,7 @@ NULL
 # datadumpen har samme rekkefølge på variabelnavn som i kodeboka.
 # Dette fordi OpenQREG har dokumentert at det ikke nødvendigvis er i samme rekkefølge.
 
-#' lag regelsett
+#' Lag regelsett
 #'
 #' @description
 #' `r lifecycle::badge("maturing")`
