@@ -49,7 +49,7 @@ normaliser_varnamn = function(x) {
 
 #' Tabell inkludert NA-verdier
 #'
-#' #' @description
+#' @description
 #' `r lifecycle::badge("experimental")`
 #'
 #' Variant av table()-funksjonen som tar med NA-verdiar om dei finst.

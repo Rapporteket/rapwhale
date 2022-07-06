@@ -51,7 +51,7 @@ periode_til_tidslinje = function(aar, delnummer, antall_deler) {
 
 #' Tid til tidslinje
 #'
-#' #' @description
+#' @description
 #' `r lifecycle::badge("maturing")`
 #'
 #' Tar inn en vektor med datoer og et heltall som angir hvor mange deler året skal
