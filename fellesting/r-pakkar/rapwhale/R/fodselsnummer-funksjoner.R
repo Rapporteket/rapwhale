@@ -442,6 +442,8 @@ finn_type_idnummer = function(nummer) {
 #' nærliggende fødselsnummer som er gyldig. Hvis det ikke finnes et gyldig
 #' fødselsnummer returneres en tom tekststreng.
 #'
+#' @export
+#'
 #' @examples
 #' ugyldig_fodselsnummer = "11284968756"
 #' fnr_foresla(ugyldig_fodselsnummer)
