@@ -45,6 +45,7 @@
 #'   13, as.Date("2021-01-05"), NA, NA, 163, FALSE, NA, NA, NA,
 #'   14, as.Date("2021-01-05"), as.Date("2021-01-09"), 101, 182, TRUE, TRUE, FALSE, FALSE
 #' )
+#' d_reg
 #'
 #' # Indeksvariablar:
 #' indvars = c("pasid", "dato_inn")

@@ -12,7 +12,18 @@ NULL
 #' @export
 #'
 #' @examples
+#' # Pakke for å laga figurar
+#' library(ggplot2)
+#'
+#' # Sølediagram før aktivering av tema
+#' p = ggplot(mpg, aes(class)) +
+#'   geom_bar()
+#' p
+#'
 #' aktiver_kvalregtema()
+#'
+#' # Søylediagram etter aktivering av tema
+#' p
 aktiver_kvalregtema = function() {
   theme_set(tema_kvalreg())
 
@@ -145,6 +156,9 @@ tema_kvalreg = function() {
 #' Funksjonene returnerer et theme-objekt som kan brukes direkte i et ggplot-kall.
 #'
 #' @examples
+#' # Pakke for å laga figurar
+#' library(ggplot2)
+#'
 #' p = ggplot(iris, aes(x = Petal.Width, y = Petal.Length)) +
 #'   geom_point()
 #'
@@ -206,8 +220,9 @@ fjern_y_ticks = function() {
 #' scale_* funksjoner.
 #'
 #' @examples
+#' # Pakke for å laga figurar
+#' library(ggplot2)
 #'
-#' library(tidyverse)
 #' p = ggplot(mtcars, aes(x = cyl, y = mpg)) +
 #'   geom_col()
 #'
@@ -216,8 +231,7 @@ fjern_y_ticks = function() {
 #' p + scale_y_continuous(expand = expand_soyle())
 #'
 #' # Legge til mer rom i enden av søylene for tekst-labels
-#' p = mtcars %>%
-#'   ggplot(aes(x = cyl)) +
+#' p = ggplot(mtcars, aes(x = cyl)) +
 #'   geom_bar() +
 #'   geom_text(stat = "count", aes(x = cyl, label = ..count..), vjust = -1)
 #'

@@ -23,8 +23,11 @@ NULL
 #' @param suffiks Suffiks for variabelnavn som kobles på det opprinnelige variabelnavnet. Default er "_tekst".
 #' @export
 #' @examples
+#' # Pakke for bruk av tibble-objekt og rør-operatoren
+#' library(dplyr)
+#'
 #' # eksempel kodebok
-#' kb = tibble::tribble(
+#' kb = tribble(
 #'   ~variabel_id, ~verdi, ~verditekst,
 #'   "kjonn", 1, "mann",
 #'   "kjonn", 2, "kvinne",
@@ -38,7 +41,7 @@ NULL
 #' )
 #'
 #' # Eksempeldatasett
-#' d = tibble::tribble(
+#' d = tribble(
 #'   ~pasid, ~kjonn, ~alder, ~med, ~prem,
 #'   101, 2, 18, 3, 2,
 #'   102, 1, 37, 4, 2,

@@ -67,8 +67,11 @@ erstatt_ukjent = function(data, variabel, na_vektor) {
 #' @export
 #'
 #' @examples
+#' # Pakke for bruk av tibble-objekt og rør-operatoren
+#' library(dplyr)
+#'
 #' # Ugrupperte inndata:
-#' d = tibble::tibble(
+#' d = tibble(
 #'   pas_id = c(1, 2, 3, 4, 5, 6),
 #'   sykehus = c("HUS", "HUS", "SVG", "SVG", "SVG", "OUS"),
 #'   var_1 = c(1, 2, -1, 99, NA, 5)
@@ -76,7 +79,7 @@ erstatt_ukjent = function(data, variabel, na_vektor) {
 #' beregn_kompletthet(data = d, variabel = "var_1")
 #'
 #' # Grupperte inndata:
-#' d = tibble::tibble(
+#' d = tibble(
 #'   pas_id = c(1, 2, 3, 4, 5, 6),
 #'   sykehus = c("HUS", "HUS", "SVG", "SVG", "SVG", "OUS"),
 #'   var_1 = c(1, 2, -1, 99, NA, 5)

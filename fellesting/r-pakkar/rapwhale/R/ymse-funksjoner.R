@@ -152,6 +152,9 @@ regn_ki_univar = function(x, bootstrap = FALSE, antall, ...) {
 #' @param ... Ytterligere argumenter som kan gis til Hmisc::latex funksjon
 #' @export
 #' @examples
+#' # Pakke for bruk av tibble-objekt og rør-operatoren
+#' library(dplyr)
+#'
 #' cars_top_mpg = mtcars %>%
 #'   arrange(desc(mpg)) %>%
 #'   head()
@@ -228,6 +231,9 @@ lag_tab_latex = function(dataframe, label, caption, wide = FALSE, ...) {
 #' @export
 #'
 #' @examples
+#' # Pakke for å laga figurar
+#' library(ggplot2)
+#'
 #' # Vektorar med eksempel på svar frå undersøkjing
 #'
 #' # På ein skala frå 1-5, kor godt nøgd er du med x?
@@ -235,10 +241,10 @@ lag_tab_latex = function(dataframe, label, caption, wide = FALSE, ...) {
 #' # På ein skala frå 1-5, kor godt nøgd er du med y?
 #' y = c(1, 2, 1, 1)
 #'
-#' ggplot2::mean_cl_normal(x)
+#' mean_cl_normal(x)
 #' mean_cl_normal_truncated(ymin = 1, ymax = 5)(x)
 #'
-#' d = tibble(spm = rep(c("x", "y"), each = 4), verdi = c(x, y))
+#' d = tibble::tibble(spm = rep(c("x", "y"), each = 4), verdi = c(x, y))
 #' p = ggplot(d, aes(spm, verdi)) +
 #'   geom_point(position = position_dodge2(width = 0.05))
 #'

@@ -129,7 +129,7 @@ lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab
 #' @export
 #'
 #' @examples
-#' d = tibble(dato = as.factor(c("2021-05-05", "2021-06-06")), verdi = c(3, 4))
+#' d = tibble::tibble(dato = as.factor(c("2021-05-05", "2021-06-06")), verdi = c(3, 4))
 #' lag_fig_shewhart(d = d, x = dato, y = verdi, figtype = "xbar")
 lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
                             gruppe = NULL, periode = NULL, x_navn = NULL, y_navn = NULL,
@@ -194,7 +194,7 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
 #'
 #' @export
 #' @examples
-#' d = tibble(gruppe = c("a", "b", "c"), verdi = c(2.6, 2.1, 3.2))
+#' d = tibble::tibble(gruppe = c("a", "b", "c"), verdi = c(2.6, 2.1, 3.2))
 #' lag_fig_soyle(d, gruppe, verdi)
 #' lag_fig_soyle(d, gruppe, verdi, flip = FALSE)
 lag_fig_soyle = function(d, x, y, flip = TRUE, ...) {
@@ -230,7 +230,7 @@ lag_fig_soyle = function(d, x, y, flip = TRUE, ...) {
 #'
 #' @export
 #' @examples
-#' d = tibble(gruppe = c("a", "b", "c"), verdi = c(0.6, 0.1, 0.2))
+#' d = tibble::tibble(gruppe = c("a", "b", "c"), verdi = c(0.6, 0.1, 0.2))
 #' lag_fig_soyle_prosent(d, gruppe, verdi)
 #' lag_fig_soyle_prosent(d, gruppe, verdi, flip = FALSE)
 lag_fig_soyle_prosent = function(d, x, y, flip = TRUE, ...) {
@@ -266,7 +266,7 @@ lag_fig_soyle_prosent = function(d, x, y, flip = TRUE, ...) {
 #' @return Eit søylediagram som ggplot-objekt.
 #'
 #' @examples
-#' d = tibble(gruppe = c("a", "b", "c"), verdi = c(2.6, 2.1, 3.2))
+#' d = tibble::tibble(gruppe = c("a", "b", "c"), verdi = c(2.6, 2.1, 3.2))
 #' rapwhale:::lag_fig_soyle_grunnplott(d, gruppe, verdi)
 #' rapwhale:::lag_fig_soyle_grunnplott(d, gruppe, verdi, flip = FALSE)
 lag_fig_soyle_grunnplott = function(d, x, y, flip = TRUE, ...) {

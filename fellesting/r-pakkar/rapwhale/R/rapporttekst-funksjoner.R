@@ -127,6 +127,9 @@ num = function(x, desimalar = NULL, tabell = lifecycle::deprecated()) {
 #' @return En funksjon med spesifiserte innstillinger for prosentformat.
 #' @export
 #' @examples
+#' # Pakke for å laga figurar
+#' library(ggplot2)
+#'
 #' ggplot(iris, aes(x = Sepal.Length, y = Petal.Width)) +
 #'   geom_point() +
 #'   scale_y_continuous(labels = akse_prosent_format(antall_desimaler = 2))
@@ -155,6 +158,9 @@ akse_prosent_format = function(antall_desimaler = 1, decimal.mark = ",", ...) {
 #' @return En funksjon med spesifiserte innstillinger for tallformat.
 #' @export
 #' @examples
+#' # Pakke for å laga figurar
+#' library(ggplot2)
+#'
 #' a = tibble::tibble(
 #'   x = rnorm(100, 7500, 1000),
 #'   y = runif(100, 0, 1)

@@ -63,6 +63,8 @@ NULL
 #' @export
 #'
 #' @examples
+#' library(styler)
+#'
 #' style_text("call( 1)", style = rapwhale_style, scope = "spaces")
 #' style_text("call( 1)", transformers = rapwhale_style(strict = TRUE))
 #' style_text(c("ab = 3", "a  =3"),
