@@ -208,7 +208,7 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' \code{lag formatspek()} er en hjelpefunksjon som skal sikre at alle argumenter
+#' \code{lag_formatspek()} er en hjelpefunksjon som skal sikre at alle argumenter
 #' i formatspek angis i riktig format og med riktig navn. Formatspek spesifiserer
 #' hvilket format inndata er på og brukes i diverse innlesningsfunksjoner i rapwhale.
 #'
