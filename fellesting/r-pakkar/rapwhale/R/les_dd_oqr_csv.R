@@ -45,6 +45,9 @@ les_varnavn = function(adresse, formatspek) {
 #'
 #' @return
 #'   En vektor som kun inneholder TRUE, FALSE eller NA.
+#'
+#' @export
+#'
 #' @examples
 #' tallvektor = c(-1, 0, 1)
 #' konverter_boolske(tallvektor,
