@@ -123,7 +123,7 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
 
   # Legg til konfidensintervall
   konfint_robust = function(x) {
-    konf = possibly(~ regn_ki_bin(d_sammendrag$ki_teller,
+    konf = purrr::possibly(~ regn_ki_bin(d_sammendrag$ki_teller,
       d_sammendrag$ki_nevner,
       alfa
     ),
