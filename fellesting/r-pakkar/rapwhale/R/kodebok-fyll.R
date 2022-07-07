@@ -49,20 +49,16 @@ NULL
 #' )
 #'
 #' # Fyll in verditekst for alle variabler i kodebok
-#' d %>%
-#'   kb_fyll(kb)
+#' kb_fyll(d, kb)
 #'
 #' # Hvis det kun skal hentes verditekst for en gitt variabel
-#' d %>%
-#'   kb_fyll(kb, kjonn)
+#' kb_fyll(d, kb, kjonn)
 #'
 #' # Variabler kan kobles mot variabel_id med annet navn i kodebok
-#' d %>%
-#'   kb_fyll(kb, kjonn, prem = "gensp")
+#' kb_fyll(d, kb, kjonn, prem = "gensp")
 #'
 #' # Suffiks kan endres fra default "_tekst"
-#' d %>%
-#'   kb_fyll(kb, med, .suffiks = "_hei")
+#' kb_fyll(d, kb, med, .suffiks = "_hei")
 kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
 
   # Stopp viss kodeboka ikkje inneheld dei tre nødvendige kolonnane
