@@ -33,7 +33,7 @@ les_csv_oqr = function(adresse, spesifikasjon) {
     na_verdier = ""
   ) # (1)
 
-  rapwhale::les_csv_base(
+  les_csv_base(
     adresse = adresse,
     spesifikasjon = spesifikasjon,
     formatspek = formatspek_oqr

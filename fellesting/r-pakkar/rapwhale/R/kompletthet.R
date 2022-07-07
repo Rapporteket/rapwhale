@@ -279,7 +279,7 @@ erstatt_ukjent_for_datasett = function(data, ukjent_datasett) {
       variabel_i
     )
 
-    d = rapwhale::erstatt_ukjent(
+    d = erstatt_ukjent(
       data = data %>% select(!!variabel_i),
       variabel = variabel_i,
       na_vektor = na_vektor_i
