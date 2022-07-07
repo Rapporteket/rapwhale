@@ -14,6 +14,8 @@
 #' @details
 #' Lik [styler::wrap_if_else_while_for_fun_multi_line_in_curly],
 #' men der alle uttrykk får krøllparentesar (ikkje berre multi-line).
+#'
+#' @keywords internal
 wrap_if_else_while_for_fun_in_curly_rapwhale = function(pd, indent_by = 2) {
   key_token = purrr::when(
     pd,
@@ -59,6 +61,8 @@ wrap_if_else_while_for_fun_in_curly_rapwhale = function(pd, indent_by = 2) {
 #' @details
 #' Lik [styler::wrap_multiline_curly],
 #' men der alle uttrykk får krøllparentesar (ikkje berre multi-line).
+#'
+#' @keywords internal
 wrap_curly_rapwhale = function(pd,
                                indent_by,
                                space_after = 1,
@@ -110,6 +114,8 @@ wrap_curly_rapwhale = function(pd,
 #' @details
 #' Lik [styler::if_for_while_part_requires_braces],
 #' men der alle uttrykk krev krøllparentesar (ikkje berre multi-line).
+#'
+#' @keywords internal
 if_for_while_part_requires_braces_rapwhale = function(pd, key_token) {
   pos_first_key_token = which(pd$token == key_token)[1]
   child = pd$child[[styler:::next_non_comment(pd, pos_first_key_token)]]
@@ -129,6 +135,8 @@ if_for_while_part_requires_braces_rapwhale = function(pd, key_token) {
 #' @details
 #' Lik `styler:::add_line_break_after_pipe()`,
 #' men der det òg vert lagt til linjeskift etter korte røyr.
+#'
+#' @keywords internal
 add_line_break_after_pipe_rapwhale = function(pd) {
   is_pipe = pd$token %in% c("SPECIAL-PIPE", "PIPE")
   pd$lag_newlines[styler:::lag(is_pipe) & pd$lag_newlines > 1] = 1L

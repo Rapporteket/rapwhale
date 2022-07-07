@@ -6,6 +6,8 @@ NULL
 #' `r lifecycle::badge("experimental")`
 #'
 #' Linter som sjekkar at `=` alltid vert brukt ved tilordning.
+#'
+#' @keywords internal
 assignment_eq_linter = function() {
   Linter(function(source_file) {
     lapply(

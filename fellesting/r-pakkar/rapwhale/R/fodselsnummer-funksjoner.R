@@ -96,6 +96,8 @@ fnr_er_gyldig = function(nummer,
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er syntaktisk korrekt eller ikkje.
 #'
+#' @keywords internal
+#'
 #' @examples
 #' nummer = c("12345612345", "123456789", "123456789ab", "abcdefghijk")
 #'
@@ -116,6 +118,8 @@ er_syntaktisk_fnr = function(nummer) {
 #'
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `dato` alt etter om det høvesvis er ein gyldig dato eller ikkje.
+#'
+#' @keywords internal
 #'
 #' @examples
 #' datoar = c(
@@ -160,6 +164,8 @@ er_gyldig_fnr_dato = function(dato) {
 #'
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis gjev korrekt sjekksum eller ikkje.
+#'
+#' @keywords internal
 #'
 #' @examples
 #' nummer = c(
@@ -216,6 +222,8 @@ er_fnr_sjekksum_korrekt = function(nummer) {
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er eit gyldig F-nummer eller ikkje.
 #'
+#' @keywords internal
+#'
 #' @examples
 #' nummer = c(
 #'   "15076500565", # Gyldig F-nummer
@@ -256,6 +264,8 @@ er_gyldig_f_nummer = function(nummer) {
 #'
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er eit gyldig D-nummer eller ikkje.
+#'
+#' @keywords internal
 #'
 #' @examples
 #' nummer = c(
@@ -306,6 +316,8 @@ er_gyldig_d_nummer = function(nummer) {
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er eit gyldig H-nummer eller ikkje.
 #'
+#' @keywords internal
+#'
 #' @examples
 #' nummer = c(
 #'   "15076500565", # Gyldig F-nummer
@@ -355,6 +367,8 @@ er_gyldig_h_nummer = function(nummer) {
 #'
 #' @return Logisk vektor som gjev ut `TRUE` eller `FALSE` for kvart element
 #' i `nummer` alt etter om det høvesvis er eit gyldig FH-nummer eller ikkje.
+#'
+#' @keywords internal
 #'
 #' @examples
 #' nummer = c(
