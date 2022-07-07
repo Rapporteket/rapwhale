@@ -123,6 +123,36 @@ test_that("Feilmelding hvis ki_antall eller ki_eksponering er missing dersom ki_
   )
 })
 
+test_that("Feilmelding hvis minst en ki_antall er mindre enn 0", {
+  d_antall_lavere_0 = tibble::tibble(
+    ki_antall = c(5, -1, 7),
+    ki_eksponering = c(100, 95, 101),
+    ki_aktuell = c(TRUE, TRUE, FALSE)
+  )
+
+  feilmelding = "«ki_antall» kan ikke være mindre enn 0"
+
+  expect_error(aggreger_ki_rate(d_antall_lavere_0), feilmelding)
+})
+
+test_that("Feilmelding hvis minst en ki_eksponering er mindre enn eller lik 0", {
+  d_eksponering_lavere_0 = tibble::tibble(
+    ki_antall = c(5, NA_real_, 7),
+    ki_eksponering = c(100, 95, 101),
+    ki_aktuell = c(TRUE, TRUE, FALSE)
+  )
+  d_eksponering_lik_0 = tibble::tibble(
+    ki_antall = c(5, NA_real_, 7),
+    ki_eksponering = c(100, 95, 101),
+    ki_aktuell = c(TRUE, TRUE, FALSE)
+  )
+
+  feilmelding = "«ki_eksponering» kan ikke være mindre enn eller lik 0"
+
+  expect_error(aggreger_ki_rate(d_eksponering_lavere_0), feilmelding)
+  expect_error(aggreger_ki_rate(d_eksponering_lik_0), feilmelding)
+})
+
 test_that("Feilmelding hvis alfa ikke er et tall mellom 0 og 1", {
   d_var_ok = tibble::tibble(
     ki_antall = c(5, 2, 7),
@@ -165,6 +195,33 @@ test_that("Feilmelding hvis multiplikator ikke er et positivt heltall", {
   )
 })
 
+test_that("Feilmelding hvis alfa eller multiplikator ikke har lengde 1", {
+  d_var_ok = tibble::tibble(
+    ki_antall = c(5, 2, 7),
+    ki_eksponering = c(100, 95, 101),
+    ki_aktuel = c(TRUE, TRUE, FALSE)
+  )
+
+  feilmelding_alfa = "«alfa» må ha lengde 1"
+  feilmelding_multiplikator = "«multiplikator» må ha lengde 1"
+
+  expect_error(
+    aggreger_ki_rate(d_var_ok, alfa = c()),
+    feilmelding_alfa
+  )
+  expect_error(
+    aggreger_ki_rate(d_var_ok, alfa = c(0.05, 0.1)),
+    feilmelding_alfa
+  )
+  expect_error(
+    aggreger_ki_rate(d_var_ok, multiplikator = c()),
+    feilmelding_multiplikator
+  )
+  expect_error(
+    aggreger_ki_rate(d_var_ok, multiplikator = c(1000, 100)),
+    feilmelding_multiplikator
+  )
+})
 
 
 # Tester med NA og antall = 0 ---------------------------------------------
