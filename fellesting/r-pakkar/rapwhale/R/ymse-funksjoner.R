@@ -52,6 +52,9 @@ normaliser_varnamn = function(x) {
 #' Variant av table()-funksjonen som tar med NA-verdiar om dei finst.
 #' @param ... Tilsvarende argumenter som brukes i table()-funksjonen.
 #' @export
+#'
+#' @examples
+#' tab(c(rpois(95, 5), rep(NA, 5)))
 tab = function(...) {
   table(..., useNA = "ifany")
 }
