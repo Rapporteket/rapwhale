@@ -395,11 +395,6 @@ test_that("Funksjonen gir ut forventet resultat", {
     konfint_nedre = 0.026644437703193836475,
     konfint_ovre = 0.076570304030960267827
   )
-  svar_alle_multiplikator_1000 = tibble::tibble(
-    est = 47.297297297297298257,
-    konfint_nedre = 26.644437703193837308,
-    konfint_ovre = 76.570304030960272712
-  )
 
   svar_alle_multiplikator_1000 = svar_alle * 1000
 
@@ -416,10 +411,6 @@ test_that("Funksjonen gir ut forventet resultat", {
 
   expect_identical(aggreger_ki_rate(d_ingen), svar_ingen)
   expect_identical(aggreger_ki_rate(d_alle), svar_alle)
-  expect_identical(
-    aggreger_ki_rate(d_alle, multiplikator = 1000),
-    svar_alle_multiplikator_1000
-  )
   expect_identical(aggreger_ki_rate(d_noen), svar_noen)
 })
 
@@ -479,6 +470,24 @@ test_that("Funksjonen støtter angivelse av konfidensinvå", {
   expect_identical(
     aggreger_ki_rate(d_antall_ulik_0, alfa = .10),
     svar_antall_ulik_0_10
+  )
+})
+
+test_that("Funksjonen støtter angivelse av multiplikator", {
+  d = tibble::tibble(
+    ki_antall = c(5, 2, 7),
+    ki_eksponering = c(100, 95, 101),
+    ki_aktuell = rep(TRUE, 3)
+  )
+  svar_multiplikator_1000 = tibble::tibble(
+    est = 47.297297297297298257,
+    konfint_nedre = 26.644437703193837308,
+    konfint_ovre = 76.570304030960272712
+  )
+
+  expect_identical(
+    aggreger_ki_rate(d, multiplikator = 1000),
+    svar_multiplikator_1000
   )
 })
 
