@@ -8,14 +8,6 @@
 #' @importFrom tibble tibble
 #' @importFrom purrr map map_chr
 NULL
-
-### Normaliser variabelnamn til å ha _ som skiljeteikn og berre små bokstavar
-
-# Eksempel på bruk:
-#   c("hopp og.SprettTest", "SykdomsAktivitet.PasientGlobalSykdomsaktivitet") %>% normaliser_varnamn
-#   som gjev
-#   c("hopp_og_sprett_test", "sykdoms_aktivitet_pasient_global_sykdomsaktivitet")
-
 #' Normaliser variabelnamn
 #'
 #' @description
@@ -28,6 +20,11 @@ NULL
 #'
 #' @param x Tekststreng med variabelnavn som skal konverteres.
 #' @export
+#'
+#' @examples
+#' normaliser_varnamn(
+#'   c("hopp og.SprettTest", "SykdomsAktivitet.PasientGlobalSykdomsaktivitet")
+#' )
 normaliser_varnamn = function(x) {
   teikn = x %>%
     str_split("") # Splitt i enkeltteikn
