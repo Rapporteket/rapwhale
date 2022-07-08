@@ -61,3 +61,10 @@ Standardverdi er `TRUE` som gjev vertikale søyler.
 - `les_kb_mrs()` har fått støtte for datovariablar utan klokkeslett.
 
 - `utviklingsnivaa()` gjev no ut info om funksjonane er interne eller eksterne.
+
+## Generelle utbetringar
+
+Mange funksjonar har fått:
+
+- Nye eller utbetra eksempel.
+- Utbetra dokumentasjon.
