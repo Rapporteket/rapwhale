@@ -15,6 +15,8 @@ NULL
 #' farger = farger_kvalreg()
 #'
 #' farger
+#'
+#' scales::show_col(unlist(farger))
 farger_kvalreg = function() {
 
   # Dei offisielle fargene
@@ -49,11 +51,18 @@ farger_kvalreg = function() {
 #'
 #' @export
 #' @examples
+#' # Vektor med fargar
+#' fargar = c("#000059", "#084594", "#2171b5")
+#'
 #' # Lag vektor med fargar mørkare
-#' farge_morkare(fargar = c("#000059", "#084594", "#2171b5"))
+#' fargar_morkare = farge_morkare(fargar)
+#' fargar_morkare
 #'
 #' # Lag vektor med fargar lysare
-#' farge_morkare(fargar = c("#000059", "#084594", "#2171b5"), grad = -3)
+#' fargar_lysare = farge_morkare(fargar, grad = -5)
+#' fargar_lysare
+#'
+#' scales::show_col(c(fargar_morkare, fargar, fargar_lysare))
 farge_morkare = function(fargar, grad = 5) {
   farge_lab = as(colorspace::hex2RGB(fargar), "LAB")
   farge_lab@coords[, 1] = pmax(farge_lab@coords[, 1] - grad, 0)
