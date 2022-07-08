@@ -137,13 +137,13 @@ test_that("Feilmelding hvis minst en ki_antall er mindre enn 0", {
 
 test_that("Feilmelding hvis minst en ki_eksponering er mindre enn eller lik 0", {
   d_eksponering_lavere_0 = tibble::tibble(
-    ki_antall = c(5, NA_real_, 7),
-    ki_eksponering = c(100, 95, 101),
+    ki_antall = c(5, 2, 7),
+    ki_eksponering = c(100, -1, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
   d_eksponering_lik_0 = tibble::tibble(
-    ki_antall = c(5, NA_real_, 7),
-    ki_eksponering = c(100, 95, 101),
+    ki_antall = c(5, 2, 7),
+    ki_eksponering = c(100, 0, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
 
@@ -157,7 +157,7 @@ test_that("Feilmelding hvis alfa ikke er et tall mellom 0 og 1", {
   d_var_ok = tibble::tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(100, 95, 101),
-    ki_aktuel = c(TRUE, TRUE, FALSE)
+    ki_aktuell = c(TRUE, TRUE, FALSE)
   )
 
   feilmelding_alfa = "«alfa» må være et tall mellom 0 og 1"
@@ -172,7 +172,7 @@ test_that("Feilmelding hvis multiplikator ikke er et positivt heltall", {
   d_var_ok = tibble::tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(100, 95, 101),
-    ki_aktuel = c(TRUE, TRUE, FALSE)
+    ki_aktuell = c(TRUE, TRUE, FALSE)
   )
 
   feilmelding_multiplikator = "«multiplikator» må være et positivt tall"
@@ -186,7 +186,7 @@ test_that("Feilmelding hvis multiplikator ikke er et positivt heltall", {
     feilmelding_multiplikator
   )
   expect_error(
-    aggreger_ki_rate(d_var_ok, multiplikator = NA_integer_),
+    aggreger_ki_rate(d_var_ok, multiplikator = NA_real_),
     feilmelding_multiplikator
   )
   expect_error(
@@ -199,7 +199,7 @@ test_that("Feilmelding hvis alfa eller multiplikator ikke har lengde 1", {
   d_var_ok = tibble::tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(100, 95, 101),
-    ki_aktuel = c(TRUE, TRUE, FALSE)
+    ki_aktuell = c(TRUE, TRUE, FALSE)
   )
 
   feilmelding_alfa = "«alfa» må ha lengde 1"
@@ -279,6 +279,7 @@ test_that("Funksjonen tillater tilfeller hvor antall observasjoner er 0", {
   ) %>%
     dplyr::group_by(sykehus)
   svar_gruppert = tibble::tibble(
+    sykehus = factor(c("A", "B")),
     est = c(NA_real_, 0),
     konfint_nedre = c(NA_real_, 0),
     konfint_ovre = c(NA_real_, 0.015362729607969183993)
@@ -356,7 +357,7 @@ test_that("Funksjonen returnerer en tom ugruppert tibble med riktige kolonner hv
     sykehus = factor(),
     ki_antall = numeric(),
     ki_eksponering = numeric(),
-    ki_krit_nevner = logical()
+    ki_aktuell = logical()
   ) %>%
     group_by(sykehus)
   svar_tom = tibble::tibble(
@@ -366,7 +367,7 @@ test_that("Funksjonen returnerer en tom ugruppert tibble med riktige kolonner hv
     konfint_ovre = numeric()
   )
 
-  expect_identical(aggreger_ki_prop(d_gruppert_tom), svar_tom)
+  expect_identical(aggreger_ki_rate(d_gruppert_tom), svar_tom)
 })
 
 
@@ -394,6 +395,12 @@ test_that("Funksjonen gir ut forventet resultat", {
     konfint_nedre = 0.026644437703193836475,
     konfint_ovre = 0.076570304030960267827
   )
+  svar_alle_multiplikator_1000 = tibble::tibble(
+    est = 47.297297297297298257,
+    konfint_nedre = 26.644437703193837308,
+    konfint_ovre = 76.570304030960272712
+  )
+
   svar_alle_multiplikator_1000 = svar_alle * 1000
 
   d_noen = tibble::tibble(
@@ -450,27 +457,27 @@ test_that("Funksjonen støtter angivelse av konfidensinvå", {
   )
 
   expect_identical(
-    aggreger_ki_prop(d_antall_lik_0),
+    aggreger_ki_rate(d_antall_lik_0),
     svar_antall_lik_0_05
   ) # Standard skal være 95 %-KI
   expect_identical(
-    aggreger_ki_prop(d_antall_lik_0, alfa = .05),
+    aggreger_ki_rate(d_antall_lik_0, alfa = .05),
     svar_antall_lik_0_05
   )
   expect_identical(
-    aggreger_ki_prop(d_antall_lik_0, alfa = .10),
+    aggreger_ki_rate(d_antall_lik_0, alfa = .10),
     svar_antall_lik_0_10
   )
   expect_identical(
-    aggreger_ki_prop(d_antall_ulik_0),
+    aggreger_ki_rate(d_antall_ulik_0),
     svar_antall_ulik_0_05
   ) # Standard skal være 95 %-KI
   expect_identical(
-    aggreger_ki_prop(d_antall_ulik_0, alfa = .05),
+    aggreger_ki_rate(d_antall_ulik_0, alfa = .05),
     svar_antall_ulik_0_05
   )
   expect_identical(
-    aggreger_ki_prop(d_antall_ulik_0, alfa = .10),
+    aggreger_ki_rate(d_antall_ulik_0, alfa = .10),
     svar_antall_ulik_0_10
   )
 })
@@ -486,8 +493,8 @@ test_that("Funksjonen gjev alltid ut ugrupperte data", {
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
-  expect_length(group_vars(aggreger_ki_prop(group_by(d_test, sjukehus))), 0)
-  expect_length(group_vars(aggreger_ki_prop(group_by(d_test, sjukehus, post))), 0)
+  expect_length(group_vars(aggreger_ki_rate(group_by(d_test, sjukehus))), 0)
+  expect_length(group_vars(aggreger_ki_rate(group_by(d_test, sjukehus, post))), 0)
 })
 
 test_that("Funksjonen gjev ut tibble når inndata er tibble, og data.frame når inndata er data.frame", {
@@ -503,8 +510,8 @@ test_that("Funksjonen gjev ut tibble når inndata er tibble, og data.frame når 
   )
 
   d_test_df = as.data.frame(d_test_tibble)
-  svar_test_df = as.data.frame(d_res_tibble)
+  svar_test_df = as.data.frame(svar_test_tibble)
 
-  expect_identical(aggreger_ki_prop(d_test_tibble), svar_test_tibble)
-  expect_identical(aggreger_ki_prop(d_test_df), svar_test_df)
+  expect_identical(aggreger_ki_rate(d_test_tibble), svar_test_tibble)
+  expect_identical(aggreger_ki_rate(d_test_df), svar_test_df)
 })
