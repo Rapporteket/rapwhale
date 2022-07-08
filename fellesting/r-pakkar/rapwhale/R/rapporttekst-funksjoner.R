@@ -130,9 +130,10 @@ num = function(x, desimalar = NULL, tabell = lifecycle::deprecated()) {
 #' # Pakke for å laga figurar
 #' library(ggplot2)
 #'
-#' ggplot(iris, aes(x = Sepal.Length, y = Petal.Width)) +
+#' ggplot(iris, aes(x = Sepal.Width/Sepal.Length, y = Petal.Width/Petal.Length)) +
 #'   geom_point() +
-#'   scale_y_continuous(labels = akse_prosent_format(antall_desimaler = 2))
+#'   scale_x_continuous(labels = akse_prosent_format()) +
+#'   scale_y_continuous(labels = akse_prosent_format(antall_desimaler = 0))
 akse_prosent_format = function(antall_desimaler = 1, decimal.mark = ",", ...) {
   accuracy = 1 / (10^antall_desimaler)
 
