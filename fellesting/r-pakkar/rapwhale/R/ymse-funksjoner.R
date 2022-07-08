@@ -73,6 +73,11 @@ tab = function(...) {
 #' @param alfa Én minus nivået til konfidensintervallet.
 #'   Standardverdi er 0.05, som tilsvarer et 95 %-konfidensintervall.
 #' @export
+#'
+#' @examples
+#' n_forsok = 1000
+#' n_suksess = sample.int(n_forsok, 1)
+#' regn_ki_bin(n_suksess, n_forsok)
 regn_ki_bin = function(x, n, alfa = 0.05) {
   ki = binom::binom.wilson(x, n, 1 - alfa)
   tibble(
