@@ -96,6 +96,16 @@ regn_ki_bin = function(x, n, alfa = 0.05) {
 #' Konfidenstinervall basert på gjennomsnittet til en  kontinuerlig variabel
 #' med mulighet for bootstrap lagt inn i funksjonen
 #' @export
+#'
+#' @examples
+#' regn_ki_univar(runif(100))
+#'
+#' library(dplyr)
+#'
+#' # Konfidensintervall for drivstofforbruk, gruppert på type girkasse
+#' mtcars %>%
+#'   group_by(am) %>%
+#'   summarise(regn_ki_univar(mpg))
 regn_ki_univar = function(x, bootstrap = FALSE, antall, ...) {
   # Hvis det er for få eller for lite varierende
   # observasjoner til å regne ut konfidensintervall,
