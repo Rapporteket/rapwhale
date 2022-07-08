@@ -20,6 +20,9 @@ NULL
 #' Adressa til .tex-fila, viss den vart kompilert utan feil, usynleg.
 #'
 #' @export
+#'
+#' @examples
+#' \dontrun{kompiler_rnw("H:/adresse/til/fil.Rnw")}
 kompiler_rnw = function(adresse) {
   cat(paste0(basename(adresse), " (knitr): "))
   tex_adresse = str_replace(adresse, ".Rnw", ".tex")
@@ -71,6 +74,9 @@ kompiler_rnw = function(adresse) {
 #' Adressa til .pdf-fila, usynleg.
 #'
 #' @export
+#'
+#' @examples
+#' \dontrun{kompiler_tex("H:/adresse/til/fil.tex")}
 kompiler_tex = function(adresse, maksiter = 5, vis_feilmeldingar = TRUE) {
   # Gjenta kompilering til alle kryssreferansar og
   # slikt er i orden, men maks «maksiter» gongar.
