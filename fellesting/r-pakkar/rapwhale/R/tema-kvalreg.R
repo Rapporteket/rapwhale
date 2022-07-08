@@ -94,6 +94,18 @@ aktiver_kvalregtema = function() {
 #'
 #' @return Objektet `tema` som inneholder temainnstillinger.
 #' @export
+#'
+#' @examples
+#' # Pakke for å laga figurar
+#' library(ggplot2)
+#'
+#' # Sølediagram utan tema_kvalreg()
+#' p = ggplot(mpg, aes(class)) +
+#'   geom_bar()
+#' p
+#'
+#' # Søylediagram med tema_kvalreg()
+#' p + tema_kvalreg()
 tema_kvalreg = function() {
 
   # ggplot2-tema for figurar
