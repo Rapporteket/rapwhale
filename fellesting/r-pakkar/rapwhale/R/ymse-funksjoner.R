@@ -49,8 +49,8 @@ normaliser_varnamn = function(x) {
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' Variant av table()-funksjonen som tar med NA-verdiar om dei finst.
-#' @param ... Tilsvarende argumenter som brukes i table()-funksjonen.
+#' Variant av [base::table()] som tar med NA-verdiar om dei finst.
+#' @param ... Tilsvarende argumenter som brukes i [base::table()].
 #' @export
 #'
 #' @examples
