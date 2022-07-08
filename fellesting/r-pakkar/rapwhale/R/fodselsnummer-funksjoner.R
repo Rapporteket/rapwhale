@@ -55,8 +55,8 @@ NULL
 #'   "70019950032", # Gyldig D-nummer
 #'   "01410199935", # Gyldig H-nummer
 #'   "88888888831", # Gyldig FH-nummer
-#'   "98019800546"
-#' ) # Ugyldig nummer generelt
+#'   "98019800546" # Ugyldig nummer generelt
+#' )
 #'
 #' fnr_er_gyldig(nummer)
 #'
@@ -230,8 +230,8 @@ er_fnr_sjekksum_korrekt = function(nummer) {
 #'   "70019950032", # Gyldig D-nummer
 #'   "01410199935", # Gyldig H-nummer
 #'   "88888888831", # Gyldig FH-nummer
-#'   "98019800546"
-#' ) # Ugyldig nummer generelt
+#'   "98019800546" # Ugyldig nummer generelt
+#' )
 #'
 #' rapwhale:::er_gyldig_f_nummer(nummer)
 er_gyldig_f_nummer = function(nummer) {
@@ -273,8 +273,8 @@ er_gyldig_f_nummer = function(nummer) {
 #'   "70019950032", # Gyldig D-nummer
 #'   "01410199935", # Gyldig H-nummer
 #'   "88888888831", # Gyldig FH-nummer
-#'   "98019800546"
-#' ) # Ugyldig nummer generelt
+#'   "98019800546" # Ugyldig nummer generelt
+#' )
 #'
 #' rapwhale:::er_gyldig_d_nummer(nummer)
 er_gyldig_d_nummer = function(nummer) {
@@ -324,8 +324,8 @@ er_gyldig_d_nummer = function(nummer) {
 #'   "70019950032", # Gyldig D-nummer
 #'   "01410199935", # Gyldig H-nummer
 #'   "88888888831", # Gyldig FH-nummer
-#'   "98019800546"
-#' ) # Ugyldig nummer generelt
+#'   "98019800546" # Ugyldig nummer generelt
+#' )
 #'
 #' rapwhale:::er_gyldig_h_nummer(nummer)
 er_gyldig_h_nummer = function(nummer) {
@@ -376,8 +376,8 @@ er_gyldig_h_nummer = function(nummer) {
 #'   "70019950032", # Gyldig D-nummer
 #'   "01410199935", # Gyldig H-nummer
 #'   "88888888831", # Gyldig FH-nummer
-#'   "98019800546"
-#' ) # Ugyldig nummer generelt
+#'   "98019800546" # Ugyldig nummer generelt
+#' )
 #'
 #' rapwhale:::er_gyldig_fh_nummer(nummer)
 er_gyldig_fh_nummer = function(nummer) {
@@ -415,8 +415,8 @@ er_gyldig_fh_nummer = function(nummer) {
 #'   "70019950032", # Gyldig D-nummer
 #'   "01410199935", # Gyldig H-nummer
 #'   "88888888831", # Gyldig FH-nummer
-#'   "98019800546"
-#' ) # Ugyldig nummer generelt
+#'   "98019800546" # Ugyldig nummer generelt
+#' )
 #'
 #' finn_type_idnummer(nummer)
 finn_type_idnummer = function(nummer) {
