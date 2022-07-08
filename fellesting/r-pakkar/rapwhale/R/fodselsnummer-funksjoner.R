@@ -459,8 +459,8 @@ finn_type_idnummer = function(nummer) {
 #' @export
 #'
 #' @examples
-#' ugyldig_fodselsnummer = "11284968756"
-#' fnr_foresla(ugyldig_fodselsnummer)
+#' feiltastet_fodselsnummer = "15076600565"
+#' fnr_foresla(feiltastet_fodselsnummer)
 fnr_foresla = function(x) {
   stopifnot(length(x) == 1 && is.character(x) && nchar(x) == 11)
 
