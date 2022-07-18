@@ -34,7 +34,9 @@ test_that("Skal stoppa med feilmelding dersom inndata ikkje er gyldig", {
     pasid = 101, vld_varnamn = "vekt", vld_vartype = "tal",
     vld_verdi_intern_tal = 76, vld_verdi_ekstern_logisk = TRUE
   )
-  expect_error(analyser_valideringsdatasett(d_vld_ugyldig))
+  feilmelding_ugyldig = "Datasettet er ikkje på rett format"
+
+  expect_error(analyser_valideringsdatasett(d_vld_ugyldig), feilmelding_ugyldig)
 })
 
 test_that("Gjev ut valideringsdatasettet med info i ekstrakolonne om verdiane
@@ -63,32 +65,38 @@ test_that("Skal stoppa med feilmelding dersom samanliknaren gjev ut NA-verdiar",
   samanliknar_lag_NA = function(verdi1, verdi2, varnamn) {
     return(rep(NA, length(verdi1)))
   }
-  expect_error(analyser_valideringsdatasett(d_vld_gyldig, samanliknar_lag_NA))
+  feilmelding_NA = "NA-verdiar frå samanliknaren"
+
+  expect_error(
+    analyser_valideringsdatasett(d_vld_gyldig, samanliknar_lag_NA),
+    feilmelding_NA
+  )
 })
 
 test_that("Skal stoppa med feilmelding dersom utdata frå samanliknaren har feil lengd", {
   samanliknar_feil_lengd = function(verdi1, verdi2, varnamn) {
     return(c(samanlikn_identisk(verdi1, verdi2, varnamn), TRUE))
   }
-  expect_error(
-    analyser_valideringsdatasett(d_vld_gyldig, samanliknar_feil_lengd),
-    "Utdata frå samanliknaren har feil lengd"
-  )
-
   samanliknar_feil_lengd_kort = function(verdi1, verdi2, varnamn) {
     return(head(samanlikn_identisk(verdi1, verdi2, varnamn), -1))
   }
-  expect_error(
-    analyser_valideringsdatasett(d_vld_gyldig, samanliknar_feil_lengd_kort),
-    "Utdata frå samanliknaren har feil lengd"
-  )
-
   samanliknar_feil_lengd_null = function(verdi1, verdi2, varnamn) {
     return(logical())
   }
+
+  feilmelding_lengd = "Utdata frå samanliknaren har feil lengd"
+
+  expect_error(
+    analyser_valideringsdatasett(d_vld_gyldig, samanliknar_feil_lengd),
+    feilmelding_lengd
+  )
+  expect_error(
+    analyser_valideringsdatasett(d_vld_gyldig, samanliknar_feil_lengd_kort),
+    feilmelding_lengd
+  )
   expect_error(
     analyser_valideringsdatasett(d_vld_gyldig, samanliknar_feil_lengd_null),
-    "Utdata frå samanliknaren har feil lengd"
+    feilmelding_lengd
   )
 })
 
@@ -96,7 +104,13 @@ test_that("Skal stoppa med feilmelding dersom utdata frå samanliknaren ikkje er
   samanliknar_feil_type = function(verdi1, verdi2, varnamn) {
     return(as.character(samanlikn_identisk(verdi1, verdi2, varnamn)))
   }
-  expect_error(analyser_valideringsdatasett(d_vld_gyldig, samanliknar_feil_type))
+
+  feilmelding_type = "Ikkje logisk vektor frå samanliknaren"
+
+  expect_error(
+    analyser_valideringsdatasett(d_vld_gyldig, samanliknar_feil_type),
+    feilmelding_type
+  )
 })
 
 test_that("Skal fungera med grupperte inndata, og utdata skal bevara grupperinga", {
