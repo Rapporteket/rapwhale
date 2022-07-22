@@ -448,7 +448,7 @@ finn_type_idnummer = function(nummer) {
 #' fødselsnummer i DIPS eller andre kilder for å kontrollere at de viser til
 #' rett person.
 #'
-#' @param x tekststreng med ugyldige fødselsnummer som det skal
+#' @param x Tekststreng med ugyldige fødselsnummer som det skal
 #' foreslås lignende fødselsnummer for.
 #'
 #' @return
