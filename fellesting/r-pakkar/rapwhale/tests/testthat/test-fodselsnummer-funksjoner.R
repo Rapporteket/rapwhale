@@ -325,3 +325,35 @@ test_that("finn_type_idnummer() fungerer òg med vektorar av lengd 0", {
 test_that("finn_type_idnummer() gjev feilmelding viss inn-nummera ikkje er av typen tekst", {
   expect_error(fnr_er_gyldig(as.numeric(nummer)))
 })
+
+
+context("fnr_foresla()")
+
+test_that("Gir feilmelding om inndata har lengde ulik 1", {
+  flere_fnr = c("15076500565", "15076500566")
+  expect_error(fnr_foresla(flere_fnr))
+})
+
+test_that("Gir feilmelding om inndata ikke er tekst", {
+  fnr_tall = 15076500565
+  fnr_faktor = as.factor(15076500565)
+
+  expect_error(fnr_foresla(fnr_tall))
+  expect_error(fnr_foresla(fnr_faktor))
+})
+
+test_that("Gir feilmedling om inndata ikke inneholder 11 bokstaver", {
+  fnr_10 = "1507650056"
+  fnr_12 = "150765005655"
+
+  expect_error(fnr_foresla(fnr_10))
+  expect_error(fnr_foresla(fnr_12))
+})
+
+test_that("Gir gydlig fødselsnummer ut", {
+  fnr_ugyldig = "15076500566"
+  fnr_gyldig = "15076500565"
+
+  expect_true(fnr_er_gyldig(fnr_foresla(fnr_ugyldig)))
+  expect_identical(fnr_foresla(fnr_gyldig), fnr_gyldig)
+})
