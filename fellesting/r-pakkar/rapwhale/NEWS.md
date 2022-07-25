@@ -68,3 +68,14 @@ Mange funksjonar har fått:
 
 - Nye eller utbetra eksempel.
 - Utbetra dokumentasjon.
+
+
+# Rapwhale versjon 0.3.3 (og tidlegare)
+
+Me har ikkje skrive endringslogg for rapwhale versjon 0.3.3
+eller tidlegare versjonar.
+Sjå derfor Git-loggen for detaljert informasjon
+om alle tidlegare endringar.
+Versjon 0.3.3 vart offisielt utgjeven 20. oktober 2021.
+Alle endringar i versjon 0.4.0 og seinare
+er altså gjorde *etter* denne datoen.
