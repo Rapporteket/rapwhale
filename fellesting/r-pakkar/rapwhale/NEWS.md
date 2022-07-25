@@ -52,6 +52,49 @@ Desse instillingane får ein no ved å bruka `aktiver_kvalregtema()` eller
 - `lag_fig_soyle()` lagar no som standard horisontale søyler.
 For vertikale søyler bruk `flip = FALSE` (nytt argument, sjå info under).
 
+- I vignetten for ekstern validering fungerte ikkje eksempla som
+  brukte `slice_sample(..., n = Inf)` med (nokre) nyare versjonar av
+  dplyr-pakken.
+  Me har endra eksempla til heller å bruka argumentet `prop = 1`
+  (som strengt tatt òg er meir logisk).
+  Viss du brukar tilsvarande kode,
+  bør du òg endra denne.
+  Sjå relatert feilrapport for dplyr:
+  https://github.com/tidyverse/dplyr/issues/6185
+  
+- LaTeX-klassen kvalreg brukar no pakken numprint i staden
+  for siunitx for automatisk formatering av tal
+  (med tusenskiljeteikn og norsk komma).
+  Det er fleire fordelar med dette:
+  Kompileringa går litt raskare,
+  og me treng ikkje lenger spesialhandtera tal
+  som skal visast i tabellar.
+  
+  R-funksjonen `num()` er oppdatert til å bruka numprint,
+  så all *automatisk* talformatering skal fungera akkurat som før.
+  Men argumentet `tabell` til funksjonen
+  er merkt som utdatert («deprecated») og vert fjerna heilt
+  i *neste* versjon av rapwhale-pakken.
+  Fjern derfor dette argumentet i alle kall til `num()`.
+  
+  Viss du formaterer tal *manuelt* med `\num`-makroen i LaTeX
+  (ikkje anbefalt),
+  må du no bruka `\numprint` (og syntaksen for denne) i staden for.
+  
+- I LaTeX-klassen kvalreg har me no gått tilbake til å bruka
+  polyglossia-pakken i staden for babel-pakken for norsk språkstøtte.
+  Me måtte mellombels bruka babel på grunn av ein feil
+  i luaotfload i TeX Live 2021
+  (sjå https://tex.stackexchange.com/q/594485).
+  
+  I utgangspunktet treng du ikkje gjera nokon endringar i koden din,
+  men viss du har begynt å bruka babel-spesifikke makroar,
+  må du endra desse til tilsvarande polyglossia-makroar.
+  Brukar du for eksempel `\foreignlanguage{british}{English text}`
+  for å skriva engelsk tekst (med automatisk engelsk orddeling),
+  må du endra dette til `\textenglish{English text}`.
+
+
 ## Ny funksjonalitet
 
 - `lag_fig_soyle()` har fått eit nytt argument `flip` som avgjer om søylene
@@ -62,12 +105,36 @@ Standardverdi er `TRUE` som gjev vertikale søyler.
 
 - `utviklingsnivaa()` gjev no ut info om funksjonane er interne eller eksterne.
 
-## Generelle utbetringar
+
+## Feil retta opp
+
+- Bruk av `\kode{}`-makroen frå LaTeX-klassen kvalreg vil
+  no *aldri* gje orddeling etter _-teikn.
+
+- LaTeX-dokument som brukar kvalreg-klassen,
+  får no igjen vassmerket «UTKAST» i bakgrunnen
+  ved kompilering i utkastmodus.
+  (Dette var mellombels fjerna på grunn av ein feil i TeX Live 2021.)
+  
+
+## Forbetringar
 
 Mange funksjonar har fått:
 
-- Nye eller utbetra eksempel.
-- Utbetra dokumentasjon.
+- Nye eller forbetra (og meir realistiske) eksempel.
+- Forbetra dokumentasjon,
+  som skal vera lettare å lesa og meir presis,
+  med nøyaktig informasjon om kva inndata ein funksjon tek
+  (eksempelvis lengd og type/klasse)
+  og kva utdata han gjev ut
+  (òg ved spesialtilfelle der inndataa er NA eller har lengd 0).
+- Meir presise feilmeldingar, og med betre språk.
+- Fleire og betre testar.
+  Dette vil ikkje vera synleg for brukaren,
+  men det sikrar at funksjonane alltid skal fungera slik dei er meint.
+  Feil/manglar som vart avdekte av dei nye testane,
+  er sjølvsagt retta opp.
+  
 
 
 # Rapwhale versjon 0.3.3 (og tidlegare)
