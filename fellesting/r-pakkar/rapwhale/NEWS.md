@@ -1,6 +1,17 @@
-# Rapwhale versjon 0.4.0
+# rapwhale versjon 0.4.0
 
-## Nye funksjoner
+## Samandrag
+
+*fixme*: Legg til samandrag her,
+jf. «Rutine for utlevering av R-pakkar».
+
+
+## Endringar i utviklingsnvå
+
+*fixme*: Legg til oversikt over endringar i utviklingsnivå her,
+jf. «Rutine for utlevering av R-pakkar».
+
+Desse funksjonane er nye:
 
 - Ny funksjon,
 `boy_enhet()`,
@@ -42,6 +53,17 @@ og gjev òg ut loggen viss `vis_feilmeldingar = TRUE`.
 
 - `lag_fig_soyle_prosent()`: Lik `lag_fig_soyle()`,
 men der y-aksen vert vist som prosent.
+
+
+Desse funksjonane utgår:
+
+*fixme: legg til*
+
+
+Desse funksjonane har endra utviklingsnåva:
+
+*fixme: legg til*
+
 
 ## Nytt som krev endringar i *din* kode
 
@@ -137,7 +159,7 @@ Mange funksjonar har fått:
   
 
 
-# Rapwhale versjon 0.3.3 (og tidlegare)
+# rapwhale versjon 0.3.3 (og tidlegare)
 
 Me har ikkje skrive endringslogg for rapwhale versjon 0.3.3
 eller tidlegare versjonar.
