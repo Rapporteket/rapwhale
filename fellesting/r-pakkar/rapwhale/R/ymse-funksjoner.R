@@ -43,6 +43,28 @@ NULL
 #'   c("hopp og.SprettTest", "SykdomsAktivitet.PasientGlobalSykdomsaktivitet")
 #' )
 normaliser_varnamn = function(x) {
+  stopifnot(is.character(x))
+
+  # Variabelnavn trenger ikke inneholde bokstaver, for eksempel er "." et
+  # gyldig variabelnavn. Vi godtar kun variabelnavn som inneholder minst en
+  # bokstav, ellers vil navnet som blir spyttet ut være tomt, "".
+  inneholder_bokstav = str_detect(x, "[a-zA-Z]")
+  if (!all(inneholder_bokstav)) {
+    navn_uten_bokstav = x[!inneholder_bokstav]
+    indeks_uten_bokstav = which(!inneholder_bokstav)
+    navn_uten_bokstav = paste0(
+      "\n  (", indeks_uten_bokstav, ") ", navn_uten_bokstav, collapse = ""
+    )
+    feilmelding = paste0(
+      "Alle variabelnavn må inneholde minst en bokstav.",
+      "\nFølgende variabelnavn inneholder ingen bokstaver ",
+      "(indeks i inndata i parentes):",
+      navn_uten_bokstav,
+      collapse = ""
+    )
+    stop(feilmelding)
+  }
+
   teikn = x %>%
     str_split("") # Splitt i enkeltteikn
 
