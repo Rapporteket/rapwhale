@@ -75,7 +75,7 @@ normaliser_varnamn = function(x) {
   teikn %>%
     map_chr(~ paste0(., collapse = "")) %>% # Slå saman til lange strengar igjen
     str_replace_all("[\\._ ]+", "_") %>% # Erstatt etterfølgjande punktum, mellomrom og/eller _ med éin _,
-    str_replace_all("^_", "") %>% # Fjern ev. _ på starten av strengane
+    str_replace_all("^_|_$", "") %>% # Fjern ev. _ på starten og slutten av strengane
     tolower() # Gjer om til små bokstavar
 }
 
