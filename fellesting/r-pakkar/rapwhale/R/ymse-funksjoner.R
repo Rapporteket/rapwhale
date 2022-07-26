@@ -16,9 +16,26 @@ NULL
 #' Funksjon for å konvertere variabelnavn til standardformat.
 #'
 #' @details
-#' Standardformatering er "snake_case", hvor "_" blir brukt som skilletegn, og kun små bokstaver benyttes.
+#' Standardformatering er "snake_case",
+#' hvor "_" blir brukt som skilletegn,
+#' og kun små bokstaver benyttes.
+#' Om variabelnavnene som blir tatt inn produserer flere like variabelnavn
+#' skrevet i "snake_case" vil man motta en advarsel.
+#'
+#' @note
+#' R tillater variabelnavn uten bokstaver,
+#' for eksempel "._.".
+#' Det gir ikke mening å skrive et slikt variabelnavn i "snake_case".
+#' Derfor tillater
+# `normaliser_varnamn()`
+#' kun variabelnavn som inneholder minst en bokstav.
 #'
 #' @param x Tekststreng med variabelnavn som skal konverteres.
+#'
+#' @return
+#' Returnerer en tekststreng av samme lengde som `x`,
+#' hvor alle elementer er skrevet i "snake_case".
+#'
 #' @export
 #'
 #' @examples
