@@ -72,11 +72,26 @@ normaliser_varnamn = function(x) {
   teikn = teikn %>%
     purrr::map(~ str_replace_all(., "([[:upper:]])", "_\\1"))
 
-  teikn %>%
+  varnavn = teikn %>%
     map_chr(~ paste0(., collapse = "")) %>% # Slå saman til lange strengar igjen
     str_replace_all("[\\._ ]+", "_") %>% # Erstatt etterfølgjande punktum, mellomrom og/eller _ med éin _,
     str_replace_all("^_|_$", "") %>% # Fjern ev. _ på starten og slutten av strengane
     tolower() # Gjer om til små bokstavar
+
+  # Undersøk om to variabelnavn er like
+  unike_varnavn = unique(varnavn)
+  if (length(unike_varnavn) != length(x)) {
+    advarsel = "Utdata inneholder flere like variabelnavn (indeks i parentes): "
+    ikke_unike_navn = varnavn[-match(unike_varnavn, varnavn)]
+    for (navn in ikke_unike_navn) {
+      indeks_ikke_unike_navn = which(varnavn == navn)
+      indeks = paste0(indeks_ikke_unike_navn, collapse = ",")
+      advarsel = paste0(advarsel, "\n  (", indeks, ") ", navn)
+    }
+    warning(advarsel)
+  }
+
+  varnavn
 }
 
 ### Variant av table()-funksjonen som tar med NA-verdiar om dei finst
