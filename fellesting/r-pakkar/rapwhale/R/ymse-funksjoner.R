@@ -123,12 +123,15 @@ tab = function(...) {
 #' and contingency tests: mathematical fundamentals and the evaluation of
 #' alternative methods», av Sean Wallis, University College London.
 #'
-#' Returnerer en tibble med nedre og øvre grense for et
-#' wilson-konfidensintervall på angitt nivå.
 #' @param x Antall suksesser i forsøket.
 #' @param n Antall uavhengige forsøk.
 #' @param alfa Én minus nivået til konfidensintervallet.
 #'   Standardverdi er 0.05, som tilsvarer et 95 %-konfidensintervall.
+#'
+#' @return
+#' Returnerer en tibble med nedre og øvre grense for et
+#' Wilson-konfidensintervall på angitt nivå.
+#'
 #' @export
 #'
 #' @examples
