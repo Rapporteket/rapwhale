@@ -200,25 +200,26 @@ regn_ki_univar = function(x, bootstrap = FALSE, alfa = 0.05) {
       high = NA_real_
     )
   } else {
-
-    # Hvis man ønsker boostrap kjøres denne koden,
-    if (bootstrap) {
-      snitt_ki = function(x) {
-        n = sum(!is.na(x))
-        snitt = mean(x)
-        if ((length(x) > 1) & (sd(x) > 0)) {
-          b = simpleboot::one.boot(x, mean, R = 9999)
-          ki = simpleboot::boot.ci(b, type = "perc")$percent[4:5]
-        } else {
-          ki = c(NA, NA)
+    if (bootstrap) { # Hvis man ønsker boostrap kjøres denne koden,
+      ki_bootstrap = function(x, alfa) {
+        snitt_stat = function(x, idx) {
+          data = x[idx]
+          mean(data)
         }
-        tibble(
-          mean = snitt,
-          low = ki[1],
-          high = ki[2],
-          n = n
+        bootstrap = boot::boot(x, snitt_stat, R = 9999)
+        konfint = boot::boot.ci(
+          boot.out = bootstrap,
+          conf = 1 - alfa,
+          type = "perc"
+        )
+        ki = konfint$percent
+        tibble::tibble(
+          low = ki[4],
+          mean = mean(x, na.rm = TRUE),
+          high = ki[5]
         )
       }
+      ki_bootstrap(x, alfa)
     } else {
       mod = t.test(x, conf.level = 1 - alfa)
       tibble::tibble(
