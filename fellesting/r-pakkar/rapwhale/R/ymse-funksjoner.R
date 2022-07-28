@@ -237,16 +237,27 @@ regn_ki_univar = function(x, bootstrap = FALSE, alfa = 0.05) {
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' For å lage pene LaTeX-tabeller i et standardisert format for alle årsrapporter,
-#' med mulighet for å gjøre den stor nok til hele siden (wide = TRUE).
-#' optional arguments inkluderer colheads=c() og caption = paste0("").
+#' Lager pene LaTeX-tabeller i et standardisert format for alle årsrapporter,
+#' med mulighet for å gjøre den stor nok til å dekke hele siden (`wide = TRUE`).
 #'
-#' @param dataframe dataramme som inneholder data som skal vises i tabell
-#' @param label label for tabellen som brukes for å lage referanser i teksten
-#' @param caption forklaringstekst for tabellen
-#' @param wide valgmulighet for om tabellen skal være breiere enn standard tekstbredde. Må være TRUE eller FALSE, default er FALSE
-#' @param ... Ytterligere argumenter som kan gis til Hmisc::latex funksjon
+#' @param dataframe Dataramme som inneholder data som skal vises i tabell.
+#' @param label Label for tabellen som brukes for å lage referanser i teksten.
+#' @param caption Forklaringstekst for tabellen.
+#' @param wide Valgmulighet for om tabellen skal være breiere enn
+#' standard tekstbredde.
+#' Må være `TRUE` eller `FALSE`,
+#' standard er `FALSE`.
+#' @param ... Ytterligere argumenter som kan gis til [Hmisc::latex()].
+#'
+#' @details
+#' Ytterligere argumenter som kan gis til [Hmisc::latex()] inkluderer
+#' blant annet `colhead = c()`.
+#'
+#' @return
+#' Tekst som, i en LaTeX-kompilator, genererer en tabell.
+#'
 #' @export
+#'
 #' @examples
 #' # Pakke for bruk av tibble-objekt og rør-operatoren
 #' library(dplyr)
