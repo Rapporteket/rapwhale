@@ -192,10 +192,10 @@ regn_ki_bin = function(x, n, alfa = 0.05) {
 regn_ki_univar = function(x) {
   
   if ((length(x) < 2) | (sd(x, na.rm = TRUE) == 0)) {
-    tibble(
-      low = NA,
+    tibble::tibble(
+      low = NA_real_,
       mean = mean(x, na.rm = TRUE),
-      high = NA
+      high = NA_real_
     )
   } else {
     mod = t.test(x)
