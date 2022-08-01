@@ -619,6 +619,91 @@ konfindensintervall for gjennomsnitta. Desse kan brukast der *t*-fordelinga
 ikkje er realistisk.)
 
 
+# Ratedata/Poisson-data
+
+Ein annan type data er ratedata - data som følgjer ein Poissonfordeling.
+
+KI-funksjonar defineres fortsatt på same måte, men denne gang skal dei
+returnera dataramme med (ialffall) desse tre variablane:
+
+- `ki_antall`: Antall hendingar som er blitt observert.
+- `ki_eksponering`: Perioden hendingane er blitt observert i.
+- `ki_aktuell`: Logisk variabel som seier om hendingane og eksponeringsperioden
+  oppfølgde kriteria for å inngå i kvalitetsindikatoren
+  (lignende som `ki_aktuell` for kontinuerlige data,
+  og `ki_krit_nevner` for binomiske data).
+
+Verdiane til `ki_aktuell` må vera sann eller usann,
+og `ki_antall` og `ki_eksponering` må vera eit heiltal (ikkje `NA`) dersom
+`ki_aktuell` er sann. Vidare må `ki_eksponering` vera større enn 0
+(og `ki_antall` naturlegvis minst lik 0).
+
+
+
+## Eksempel: Infeksjonar per liggedøgn
+
+Eit eksempel kan vera antall infeksjonar hos pasienter per liggedøgn.
+
+```{r, echo = FALSE}
+d_reg_rate = d_reg %>%
+  select(pas_id, kjonn, alder, sjukehus) %>%
+  mutate(
+    infeksjonar = c(0, NA, 2, NA, 1, 2),
+    liggedogn = c(10, NA, 8, 11, 7, 11)
+  )
+```
+
+```{r}
+d_reg_rate
+```
+
+I dette tilfellet er indikatoren ferdiutrekna,
+så KI-funksjonen vert svært enkelt:
+
+```{r}
+ki_infeksjonar = function(d_reg) {
+  d_reg %>%
+    mutate(
+      ki_antall = infeksjonar,
+      ki_eksponering = liggedogn,
+      ki_aktuell = !(is.na(infeksjonar) | is.na(liggedogn))
+    )
+}
+```
+
+
+## Aggergeringsfunksjonar for ratedata/Poisson-data
+
+Aggregering av ratedata kan gjøres ved å anvende `aggreger_ki_rate()`:
+
+```{r}
+# Rekn ut kvalitetsindikatoren
+d_infeksjonar = d_reg_rate %>%
+  ki_infeksjonar()
+
+# Rateverdiar for heile registeret
+d_infeksjonar %>%
+  aggreger_ki_rate()
+
+# Rateverdiar fordelt på sjukehus
+d_infeksjonar %>%
+  group_by(sjukehus) %>%
+  aggreger_ki_rate()
+
+# Rateverdiar per uke
+d_infeksjonar %>%
+  group_by(sjukehus) %>%
+  aggreger_ki_rate(multiplikator = 7)
+```
+
+Legg merke til at konfidensintervallet bereknast ved profil-likelihood-metoden.
+Dermed blir ikkje nødvendigvis konfidensintervallet symmetrisk om estimatet.
+Dette skal gi betre estimater når det er få hendingar som er blitt observert.
+Konfidensintervallet blir, som med dei andre aggregerings-funksjonane,
+kun berekna dersom det er mogleg. Ved ratedata er det ikkje mogleg kun dersom
+det ikkje er nokon datapunkt som er aktuelle, som ved sjukehus C i eksempelet.
+
+
 # Generelt og detaljar om rammeverket
 
 (fixme: Etter alle eksempela ser me no på rammeverket generelt.
