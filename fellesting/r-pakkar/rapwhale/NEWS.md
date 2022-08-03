@@ -31,6 +31,21 @@ som erstatter 0 med en valgfri verdi.
 Funksjonen er sannsynligvis mest nyttig sammen med `boy_enhet()`,
 hvor den er standardvalg for `formatering`-argumentet.
 
+- Nye funksjoner
+`beregn_kompletthet_datasett()` og `beregn_kompletthet_datasett_med_ukjent()`, 
+som er laget for å forenkle arbeidet med å beregne kompletthet for registerdata. 
+`beregn_kompletthet_datasett()` beregner antall og andel rader som er 
+eksplisitt NA i et datasett. I enkelte tilfeller ønsker vi også å inkludere 
+verdier som representerer en manglende besvarelse for en variabel. For eksempel
+har enkelte variabler kodet egne verdier for 'Ukjent', 'Vet ikke' og lignende. 
+`beregn_kompletthet_datasett_med_ukjent()` konverterer disse 
+*ukjente* besvarelsene til eksplisitt NA og regner ut kompletthet med og uten 
+denne konverteringen. 
+Hjelpefunksjonene `erstatt_ukjent()`, `beregn_kompletthet()`, 
+`beregn_kompletthet_med_ukjent()` og `erstatt_ukjent_for_datasett()` er også 
+inkludert hvis en kun ønsker å se på enkelt-variabler eller å erstatte alle 
+*ukjente* verdier med NA. Funksjonene er foreløpig å anse som eksperimentelle.  
+
 - `rapwhale_style()`: Fagsenteret sin kodestilguide til bruk med
 [`styler`](https://github.com/r-lib/styler).
 
