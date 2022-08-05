@@ -111,7 +111,7 @@ beregn_kompletthet = function(data, variabel) {
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' Beregner antall og andel NA, både med og uten inkludering av ukjente verdier.
+#' Beregner antall og andel NA, både med og uten ukjente verdier.
 #' Ukjente verdier defineres i na_vektor. Tanken er at besvarelser som
 #' "Velg Verdi", "Ukjent", "Ikke besvart" eller lignende kan inkluderes her.
 #'
@@ -122,14 +122,14 @@ beregn_kompletthet = function(data, variabel) {
 #' erstattes med NA.
 #'
 #' @return
-#' Returnerer et aggregert datasett med kolonnene:
-#' Grupperingsvariabel hvis inndata er gruppert.
-#' Variabel - Navn for variabel det er beregnet kompletthet for.
-#' Totalt_antall - Antall rader per gruppe
-#' Antall_na - Antall NA i opprinnelig data.
-#' Andel_na - Andel NA i opprinnelig data.
-#' Antall_na_med_ukjent - Antall NA når verdier fra NA-vektor er erstattet med NA.
-#' Andel_na_med_ukjent - Andel NA når verdier er NA-vektor er erstattet med NA.
+#' Returnerer et aggregert datasett med kolonnene: \cr
+#' Grupperingsvariabel - hvis inndata er gruppert.\cr
+#' Variabel - Navn for variabel det er beregnet kompletthet for.\cr
+#' Totalt_antall - Antall rader per gruppe.\cr
+#' Antall_na - Antall NA i opprinnelig data.\cr
+#' Andel_na - Andel NA i opprinnelig data.\cr
+#' Antall_na_med_ukjent - Antall NA når verdier fra NA-vektor er erstattet med NA.\cr
+#' Andel_na_med_ukjent - Andel NA når verdier er NA-vektor er erstattet med NA.\cr
 #' @export
 #'
 #' @examples
