@@ -66,7 +66,7 @@ periode_til_tidslinje = function(aar, delnummer, antall_deler) {
   }
 
   # Returnere koordinater
-  (aar + delnummer / antall_deler - (1 / antall_deler) / 2)
+  aar + (delnummer - 0.5) / antall_deler
 }
 
 #' Tid til tidslinje
