@@ -11,6 +11,26 @@
 #' @param antall_deler Heltall som angir hvor mange like deler året skal deles
 #' inn i.
 #'
+#' @details
+#' Funksjonen legger til en desimaltallsverdi til `aar`,
+#' som blir bestemt av `delnummer` og `antall_deler`.
+#' Argumentet `antall_deler` forteller hvor mange intervall man ønsker
+#' å dele året inn i.
+#' Om `delnummer` er 1,
+#' betyr det da at dette
+#' `aar`-elementet skal hører til i det første intervallet.
+#' Hvert intervall blir representert med midtpunktet i intervallet.
+#' Dermed,
+#' om man velge å dele året inn i kvartaler,
+#' blir det første punktet lik `2019.125`,
+#' hvor `aar = 2019`.
+#'
+#' @note
+#' Om man har datoer med måned og dag,
+#' ikke kun årstall,
+#' kan man eventuelt bruke [tid_til_tidslinje()],
+#' som finner `delnummer` automatisk.
+#'
 #' @return
 #' Gir ut en vektor med desimaltall som representerer kordinatene for de ulike
 #' punktene i inndata fordelt på en akse.
