@@ -53,15 +53,15 @@ erstatt_ukjent = function(data, variabel, na_vektor) {
 #'
 #' @param data Tibble/data.frame som inneholder variabel det skal beregnes
 #' kompletthet for.
-#' @param variabel tekststreng med navn på variabel det skal beregnes kompletthet for.
+#' @param variabel Tekststreng med navn på variabel det skal beregnes kompletthet for.
 #'
 #' @return
-#' Returnerer en tibble med følgende kolonner:
+#' Returnerer en tibble med følgende kolonner: \cr
 #' grupperingsvariabel - Hvis inndata er gruppert vil grupperingsvariabel være
-#' med i utdata.
-#' Variabel - Navn på variabel det er beregnet kompletthet for.
-#' Totalt_antall - Totalt antall observasjoner per gruppe i inndata.
-#' Antall_na - Antall observasjoner som er NA i inndata.
+#' med i utdata. \cr
+#' Variabel - Navn på variabel det er beregnet kompletthet for. \cr
+#' Totalt_antall - Totalt antall observasjoner per gruppe i inndata  \cr.
+#' Antall_na - Antall observasjoner som er NA i inndata. \cr 
 #' Andel_na - Andel observasjoner som er NA i inndata.
 #'
 #' @export
