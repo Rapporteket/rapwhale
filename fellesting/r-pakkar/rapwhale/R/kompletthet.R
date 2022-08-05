@@ -208,11 +208,11 @@ beregn_kompletthet_datasett = function(data) {
 #' erstatter ukjente verdier med na for et datasett
 #'
 #' Enkelte variabler har egne verdier for å indikere manglende besvarelse
-#' i tillegg til NA-verdier. Eksempelvis har mange variabler i MRS-register
-#' verdien -1 for verditekst "Velg Verdi" eller "Ukjent verdi".
+#' i tillegg til NA-verdier, for eksempel verdien -1 for 
+#' verditekst "Velg Verdi" eller "Ukjent verdi".
 #' Funksjonen erstatter disse verdiene med NA for å beregne andel manglende
 #' besvarelser inkludert disse ukjente verdiene.
-#' Blir brukt av funksjonen beregn_kompletthet_datasett_med_ukjent().
+#' Blir brukt av funksjonen \code{beregn_kompletthet_datasett_med_ukjent()}.
 #'
 #' @param data Tibble/data.frame som inneholder variablene det skal
 #' erstattes ukjente verdier med NA for.
