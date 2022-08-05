@@ -6,13 +6,13 @@ NULL
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' Erstatter utvalgte 'ukjente' verdier med NA. Noen datasett
-#' (primært MRS-register) har variabler hvor manglende besvarelser får verdi -1,
-#' 99 eller andre mer eller mindre vilkårlige verdier for å indikere at spørsmålet
-#' ikke er besvart. I tillegg kan det også finnes ekte NA-verdier, slik at
-#' beregning av kompletthet kompliseres. Funksjonen tar inn en na_vektor som
-#' indikerer hvilke verdier som skal erstattes med NA, slik at beregning av NA
-#' kan inkludere disse "ukjente" besvarelsene.
+#' Erstatter utvalgte 'ukjente' verdier med NA. Noen datasett har variabler 
+#' hvor manglende besvarelser får verdi -1, 99 eller andre verdier for å 
+#' indikere at spørsmålet ikke er besvart. I tillegg kan det også finnes 
+#' ekte NA-verdier, slik at beregning av kompletthet kompliseres. 
+#' Funksjonen tar inn en na_vektor som indikerer hvilke verdier som 
+#' skal erstattes med NA, slik at beregning av NA kan inkludere 
+#' disse "ukjente" besvarelsene.
 #'
 #' @param data tibble/data.frame som inneholder variabel hvor
 #' ukjente verdier skal erstattes.
