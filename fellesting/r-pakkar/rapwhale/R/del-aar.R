@@ -79,11 +79,43 @@ periode_til_tidslinje = function(aar, delnummer, antall_deler) {
 #' i utregning av koordinat.
 #'
 #' @param dato Vektor med datoer som det skal regnes koordinat for.
-#' @param antall_deler Antall deler året skal deles inn i.
+#' @param antall_deler Heltall som angir antall deler året skal deles inn i.
+#'
+#' @details
+#' Brukes til å dele inn året i `antall_deler` intervaller,
+#' og plasserer `dato` i midten av intervallet datoen hører hjemme.
+#' Funksjonen håndterer `dato`-argument av klassene `Date` og `POSIXt`,
+#' altså dato med og uten klokkeslett.
+#' Om en dato gis utenklokkeslett,
+#' antar funksjonen klokkeslettet 12:00.
+#'
+#' @note
+#' Om man for eksempel ønsker å dele opp året i kvartaler,
+#' vil ikke grensene for hvert kvartal være de vanlige grensene.
+#' Den vanlige grensen vil for første kvartal være frem til
+#' (men ikke inkludert) 1. april 00:00.
+#' Denne funksjonen sier at første kvartal inneholder en fjerdedel av året,
+#' altså `365 / 4 = 91,25` dager.
+#' Da varer første kvartal frem til (men ikke inkludert) 2. april 07:00.
+#' I et skuddår vil grensen for første kvartal her være noe annerledes.
+#' Legg også merke til at dersom man ikke manuelt skriver inn et klokkeslett,
+#' antas klokkeslettet 12:00.
+#' Dermed vil `as.Date("2019-04-02")` bli satt til andre kvartal.
+#' I et skuddår varer første kvartal,
+#' i følge denne funksjonen,
+#' frem til (men ikke inkludert) 1. april 13:00.
+#' Dermed vil 1. april 13:00 være en del av andre kvartal i et skuddår,
+#' og del av første kvartal i et ikke-skuddår.
+#'
+#' På tross av denne feilen,
+#' fører denne løsningen til stor fleksibilitet i hvordan man ønsker å dele
+#' inn året.
+#' Det er for eksempel ikke noe problem å dele inn året i 654 deler.
 #'
 #' @return
 #' Returnerer en vektor med desimaltall som representerer koordinatene for de
 #' ulike datapunktene i inndata.
+#'
 #' @export
 #'
 #' @examples
