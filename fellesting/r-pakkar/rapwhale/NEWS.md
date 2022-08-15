@@ -113,6 +113,7 @@ For vertikale søyler bruk `flip = FALSE` (nytt argument, sjå info under).
   er merkt som utdatert («deprecated») og vert fjerna heilt
   i *neste* versjon av rapwhale-pakken.
   Fjern derfor dette argumentet i alle kall til `num()`.
+  Det same gjeld `prosent()`-funksjonen.
   
   Viss du formaterer tal *manuelt* med `\num`-makroen i LaTeX
   (ikkje anbefalt),
