@@ -12,7 +12,7 @@ av figurar og tal samt funksjonalitet for berekning av komplettheit.
 
 Me har òg fått våre eigne `styler`-innstillingar
 for automatisk finformatering av R-kode. Bruk desse!
-Sjå vignetten `Bruk av styler og lintr` for meir informasjon.
+Sjå vignetten *Bruk av styler og lintr* for meir informasjon.
 
 Og alle funksjonane i pakken har no informasjon om utviklingsnivå.
 Sjå vignetten *Utviklingsnivå for funksjonar i rapwhale-pakken*
