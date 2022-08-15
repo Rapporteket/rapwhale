@@ -2,8 +2,29 @@
 
 ## Samandrag
 
-*fixme*: Legg til samandrag her,
-jf. «Rutine for utlevering av R-pakkar».
+I denne versjonen er det både nye funksjonar,
+forbetra funksjonar og feilretting.
+Generelt er det betre kodekvalitet, og mange funksjonar
+har fått betre dokumentasjon, eksempel, feilmeldingar og testar.
+
+For rapportering finn du nye og endra funksjonar for formatering
+av figurar og tal samt funksjonalitet for berekning av komplettheit.
+
+Me har òg fått våre eigne `styler`-innstillingar
+for automatisk finformatering av R-kode. Bruk desse!
+Sjå vignetten `Bruk av styler og lintr` for meir informasjon.
+
+Og alle funksjonane i pakken har no informasjon om utviklingsnivå.
+Sjå vignetten *Utviklingsnivå for funksjonar i rapwhale-pakken*
+for meir informasjon om korleis denne er meint å brukast.
+Førebels er mange funksjonar merkte som *eksperimentelle*,
+og ved vidare arbeid med pakken vil me prioritera
+å høgna utviklingsnivå til funksjonar basert på *brukarbehov*.
+Meld derfor frå om kva funksjonar du vil ha mest nytte av,
+slik at me kan prioritera dei.
+
+Elles er det fleire endringar som krev endringar i *din* kode.
+Sjå eige punkt om det nedanfor.
 
 
 ## Endringar i utviklingsnvå
