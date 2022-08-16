@@ -38,6 +38,8 @@ NULL
 #' @param oblig Argument for om obligatoriske felt skal sjekkes.
 #' @param rekkefolge Argument for å sjekke om datadump har samme rekkefølge på
 #' variabelnavn som det som er oppgitt i kodeboken.
+#' 
+#' @keywords internal
 lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
 
   # for å lage regler må kodeboka ha følgende kolonner:

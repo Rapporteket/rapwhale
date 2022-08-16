@@ -90,6 +90,8 @@ les_kb_oqr_v2 = function(adresse, valider = TRUE) {
 #' kan inneholde tekst-verdier.
 #'
 #' @param adresse filplassering for kodebok.
+#' 
+#' @keywords internal
 les_kb_oqr_base = function(adresse) {
 
   # Spesifikasjon for OQR-kodebok
@@ -144,6 +146,8 @@ les_kb_oqr_base = function(adresse) {
 #' @param d tekst-vektor som skal konverteres
 #' @param regex regex uttrykk for hvilke format det forventes at teksten innehar.
 #' @param parse_funksjon en parse_*-funksjon fra readr pakken. Foreløpig kun støtte for parse_double og parse_date.
+#' 
+#' @keywords internal
 konverter_tekst = function(d, regex, parse_funksjon, ...) {
   stopifnot(is.character(d))
   # Konverterer alle ikke-regex til NA
@@ -234,6 +238,8 @@ kb_oqr_base_til_std = function(kb_oqr) {
 #' Vi vil kun ha en variabel som gjelder for alle disse skjema innen samme tabell.
 #'
 #' @param kb_mellom kodebok på mellomformat
+#' 
+#' @keywords internal
 reduser_duplikate_variabler = function(kb_mellom) {
   kb_mellom = kb_mellom %>%
     distinct(skjema_id, variabel_id, verdi, verditekst, .keep_all = TRUE)
@@ -250,6 +256,8 @@ reduser_duplikate_variabler = function(kb_mellom) {
 #' Tar inn kodebok og returnerer kodebok med statusvariabler utvidet
 #'
 #' @param kb_mellom Kodebok på mellomformat
+#' 
+#' @keywords internal
 utvid_statusvariabel = function(kb_mellom) {
   # FIXME - Se om vi kan bruke insert_rows, update_rows eller upsert_rows i nye dplyr.
   # Sjekker at det ingen tabeller har flere statusvariabler.
@@ -316,6 +324,8 @@ konverter_oqr_kb = function(kb_mellom) {
 #' @param kb_mellom Kodebok på mellomformat
 #'
 #' @return kodebok på mellomformat, men med standardnavn for variabeltyper
+#' 
+#' @keywords internal
 oqr_til_std_variabeltyper = function(kb_mellom) {
   vartype_oqr_standard = tribble(
     ~type_oqr, ~type_standard,
@@ -357,6 +367,8 @@ oqr_til_std_variabeltyper = function(kb_mellom) {
 #' obligatorisk til nei.
 #'
 #' @param kb_mellom Kodebok på mellomformat
+#' 
+#' @keywords internal
 sjekk_obligatorisk = function(kb_mellom) {
   stopifnot(all(!(is.na(kb_mellom$obligatorisk) |
     is.na(kb_mellom$aktiveringsspoersmaal) |
@@ -381,6 +393,8 @@ sjekk_obligatorisk = function(kb_mellom) {
 #' hentes ut i standard rekkefølge.
 #'
 #' @param kb_mellom Kodebok på mellomformat
+#' 
+#' @keywords internal
 velg_standardkolonner = function(kb_mellom) {
 
   # Fikse rekkefølge for og valg av variabler til kb_std
@@ -407,6 +421,8 @@ velg_standardkolonner = function(kb_mellom) {
 #' Velger første *ledige* navn blant tilgjengelige skjema-id'er.
 #'
 #' @param kb_std Kodebok på standardformat
+#' 
+#' @keywords internal
 tildel_unike_skjemanavn_fra_skjema_id = function(kb_std) {
   # Ordner skjemanavn til å samsvare med hvilken tabell variablene ligger i.
 
@@ -438,11 +454,17 @@ tildel_unike_skjemanavn_fra_skjema_id = function(kb_std) {
 #'
 #' Funksjon for å legge til variabler i kodebok som finnes i datadump, men ikke
 #' er med i kodebok.
-#' Kolonnene skjema_id, skjemanavn, variabel_id, variabeletikett, variabeltype, unik, obligatorisk og desimaler er obligatorisk.
-#' Det er mulig å legge inn flere verdier gitt at det er gyldige kolonner som er i kodebok fra før.
+#' Kolonnene skjema_id, skjemanavn, variabel_id, variabeletikett, variabeltype, 
+#' unik, obligatorisk og desimaler er obligatorisk.
+#' Det er mulig å legge inn flere verdier gitt at det er gyldige kolonner
+#' som er i kodebok fra før.
 #'
 #' @param kb_std kodebok på standardformat
-#' @param ekstra_data Dataramme med variabler som skal legges til skjema. Må inneholde skjema_id, skjemanavn, variabel_id, variabeletikett, variabeltype, unik, obligatorisk og desimaler.
+#' @param ekstra_data Dataramme med variabler som skal legges til skjema. 
+#' Må inneholde skjema_id, skjemanavn, variabel_id, variabeletikett, 
+#' variabeltype, unik, obligatorisk og desimaler.
+#' 
+#' @keywords internal
 legg_til_variabler_kb = function(kb_std, ekstra_data) {
 
   # Se om kolonner i ekstra data finnes i kodebok fra før
@@ -482,6 +504,8 @@ legg_til_variabler_kb = function(kb_std, ekstra_data) {
 #' Tar inn kodebok og returnerer ingenting gitt at kodeboken oppfyller kravene til standardformat.
 #'
 #' @param kodebok Kodebok på standardformat
+#' 
+#' @keywords internal
 valider_kodebok = function(kodebok) {
 
   # Planlagt struktur
@@ -502,8 +526,7 @@ valider_kodebok = function(kodebok) {
 #'
 #' @param kodebok
 #'
-#' @return
-#' @export
+#' @keywords internal
 valider_kb_struktur = function(kodebok) {}
 
 #' Valider skjema
@@ -514,6 +537,8 @@ valider_kb_struktur = function(kodebok) {}
 #' Et sett med tester for å validere kodebok på skjemanivå.
 #'
 #' @param kodebok kodebok på standard format.
+#' 
+#' @keywords internal
 valider_kb_skjema = function(kodebok) {
 
   # Sjekk at skjema_id ikke har flere skjemanavn
@@ -572,6 +597,8 @@ valider_kb_skjema = function(kodebok) {
 #' Et sett med tester for å validere kodebok på kolonnenivå.
 #'
 #' @param kodebok kodebok på standard format
+#' 
+#' @keywords internal
 valider_kb_kolonner = function(kodebok) {
   aksepterte_variabeltyper = c(
     "kategorisk", "tekst", "boolsk",
@@ -631,6 +658,8 @@ valider_kb_kolonner = function(kodebok) {
 #' Et sett med tester for å valider kodebok på variabelnivå.
 #'
 #' @param kodebok kodebok på standardformat
+#' 
+#' @keywords internal
 valider_kb_variabler = function(kodebok) {
 
   # sjekke at variabeltyper er entydige
