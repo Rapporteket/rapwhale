@@ -221,6 +221,9 @@ beregn_kompletthet_datasett = function(data) {
 #' ukjent_datasett må ha.
 #'
 #' @return
+#' Returnerer opprinnelig datasett men verdier oppgitt i *ukjent_datasett* er 
+#' erstattet med NA for de aktuelle variablene. 
+#'  
 #' @export
 #'
 #' @examples
