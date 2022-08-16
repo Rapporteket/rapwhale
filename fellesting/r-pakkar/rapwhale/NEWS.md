@@ -153,6 +153,9 @@ For vertikale søyler bruk `flip = FALSE` (nytt argument, sjå info under).
   for å skriva engelsk tekst (med automatisk engelsk orddeling),
   må du endra dette til `\textenglish{English text}`.
 
+- Hvis du bruker funksjonen `les_kb_mrs()` må du passe på at ekstern
+  tabell for skjemakobling har riktig kolonnenavn. kolonnenavnet 
+  `skjema_id_kodebok_ny` er endret til `skjema_id_kodebok`. 
 
 ## Ny funksjonalitet
 
