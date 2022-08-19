@@ -2,20 +2,22 @@
 title: "Bruk av styler og lintr"
 author: "Per Erik Haugedal"
 output:
-  html_document:
-    toc: yes
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Bruk av styler og lintr}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options:
+  chunk_output_type: console
 ---
 
-```{css, echo=FALSE}
-pre, pre:not([class]), code {
-  background: #f3f1ee;
-  font-family: "Consolas", monospace;
-}
-pre {
-    border: 1px solid #e4e0da;
-}
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
 ```
-
 
 ## Om dette dokumentet
 
