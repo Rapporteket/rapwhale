@@ -68,20 +68,20 @@ Desse er ganske sjølvforklarande,
 og kan altså brukast for å formatera markert tekst,
 aktiv fil, eller aktiv pakke til den valde kodestilen.
 
-![Dei ulike `styler`-vala i Addins-menyen.](screenshots/styler-meny.png)
+![Dei ulike `styler`-vala i Addins-menyen.](../man/figures/styler-meny.png)
 
 For enkel og rask tilgang til desse funksjonane kan ein setja snarvegar
 til dei.
 Dette gjer ein ved å gå på «Tools» på verktøylinja og så
 «Modify keyboard shortcuts».
 
-![Endra snarvegar.](screenshots/snarvegar-meny.png)
+![Endra snarvegar.](../man/figures/snarvegar-meny.png)
 
 Ein kan til dømes byta den gamle snarvegen «Ctrl+Shift+A» frå å vera
 «Reformat Selection» (RStudio) til å bli «Style selection» (styler),
 og «Alt+Shift+A», som er ledig, til å bli «Style active file».
 
-![Nye `styler`-snarvegar.](screenshots/styler-nye-snarvegar.png)
+![Nye `styler`-snarvegar.](../man/figures/styler-nye-snarvegar.png)
 
 Når ein så køyrer `styler` på ei fil eller eit markert område vil koden
 verta endra direkte i fila,
@@ -112,7 +112,7 @@ med liknande framgangsmåte som forklart for `styler` ovanfor.
 I nedtrekksmenyen «Addins» på verktøylinja i RStudio finn ein to val under
 `lintr`, «Lint current file» og «Lint current package».
 
-![Dei ulike `lintr`-vala i Addins-menyen.](screenshots/lintr-meny.png)
+![Dei ulike `lintr`-vala i Addins-menyen.](../man/figures/lintr-meny.png)
 
 På same måte som for `styler` kan ein godt setja opp ein snarveg for
 «Lint current file», som er den mest aktuelle.
@@ -120,7 +120,7 @@ Eit forslag er «Alt+Shift+L», enkelt å hugsa med L for lint.
 Dersom ein brukar denne snarvegen frå før («Unfold Selected»)
 kan ein sjølvsagt velja ein annan.
 
-![Nye `lintr`-snarvegar.](screenshots/lintr-nye-snarvegar.png)
+![Nye `lintr`-snarvegar.](../man/figures/lintr-nye-snarvegar.png)
 
 Når ein så køyrer funksjonen på ei fil får ein opp resultatet i eit nytt panel
 kalla «Markers», der konsollen pleier å vera,
@@ -133,7 +133,7 @@ Ein kan dobbelklikka på meldingane i dette panelet for å koma direkte til
 motsvarande linje i koden.
 Under er eit enkelt eksempel der `lintr` er køyrd på ei fil med nokre feil.
 
-![Eksempel på køyring av `lintr` på ei fil.](screenshots/lintr-eksempel.png)
+![Eksempel på køyring av `lintr` på ei fil.](../man/figures/lintr-eksempel.png)
 
 ### Feil i lintr-pakken
 
