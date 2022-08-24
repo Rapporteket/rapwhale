@@ -88,7 +88,7 @@ og gjev òg ut loggen viss `vis_feilmeldingar = TRUE`.
 men der y-aksen vert vist som prosent.
 
 
-Desse funksjonane har endra utviklingsnåva:
+Desse funksjonane har endra utviklingsnivå:
 
 - `boy_enhet()`: NA → stable
 - `erstatt_0()`: NA → stable
