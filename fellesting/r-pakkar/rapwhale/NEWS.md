@@ -29,9 +29,6 @@ Sjå eige punkt om det nedanfor.
 
 ## Endringar i utviklingsnvå
 
-*fixme*: Legg til oversikt over endringar i utviklingsnivå her,
-jf. «Rutine for utlevering av R-pakkar».
-
 Desse funksjonane er nye:
 
 - Ny funksjon,
@@ -93,7 +90,10 @@ men der y-aksen vert vist som prosent.
 
 Desse funksjonane har endra utviklingsnåva:
 
-*fixme: legg til*
+- `boy_enhet()`: NA → stable
+- `erstatt_0()`: NA → stable
+- Fleire nye eksterne (les om desse ovanfor)
+  og interne funksjonar som har utviklingsnivå experimental.
 
 
 ## Nytt som krev endringar i *din* kode
