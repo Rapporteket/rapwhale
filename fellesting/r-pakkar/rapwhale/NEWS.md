@@ -91,11 +91,6 @@ og gjev òg ut loggen viss `vis_feilmeldingar = TRUE`.
 men der y-aksen vert vist som prosent.
 
 
-Desse funksjonane utgår:
-
-*fixme: legg til*
-
-
 Desse funksjonane har endra utviklingsnåva:
 
 *fixme: legg til*
