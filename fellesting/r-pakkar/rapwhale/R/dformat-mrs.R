@@ -135,10 +135,10 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
 
   # Konvertere kodebok til standard format
   kodebok = kb_mrs_skjema_id %>%
-    fill(Feltnavn, Variabelnavn, Felttype) %>%
+    fill(Visningsnavn, Variabelnavn, Felttype) %>%
     mutate(
       variabel_id = Variabelnavn,
-      variabeletikett = Feltnavn,
+      variabeletikett = Visningsnavn,
       variabeltype = vartype_mrs_standard$type_standard[match(Felttype, vartype_mrs_standard$type_mrs)],
       obligatorisk = "nei",
       verdi = as.integer(str_split(`Mulige verdier`,
@@ -165,7 +165,7 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
       desimalar, kommentar, manglande
     ) %>%
     select(
-      -Feltnavn, -Variabelnavn, -`Mulige verdier`,
+      -Visningsnavn, -Variabelnavn, -`Mulige verdier`,
       -Felttype, -Gyldighet, -Hjelpetekst
     )
 
