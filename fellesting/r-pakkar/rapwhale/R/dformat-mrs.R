@@ -119,8 +119,8 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
     "Dato", "dato",
     "Id (Guid)", "tekst",
     "Numerisk (heltall)", "numerisk", # Men sjå bruk «desimalar» lenger nede
-    "Numerisk (flyttall)", "numerisk"
-  )
+    "Numerisk (flyttall)", "numerisk",
+    "Tall", "numerisk")
 
   nye_vartypar = na.omit(setdiff(
     kb_mrs_skjema_id$Felttype,
