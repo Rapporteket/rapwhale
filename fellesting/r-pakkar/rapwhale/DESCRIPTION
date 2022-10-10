@@ -10,7 +10,7 @@ Authors@R: c(person("Karl Ove", "Hufthammer",
              person("Endre Kvåle", "Evjen",
              email = "endre.kvale.evjen@helse-bergen.no", role = c("aut", "cph")),
              person("Lena Kristin", "Bache-Mathiesen",
-             email = "lena.kristin.bache-mathiesen@helse-bergen.no", role = c("aut", "cph")))
+             email = "lenakba22@gmail.com", role = c("aut", "cph")))
 Description: En rekke funksjoner til nytte i kvalitetsregisterarbeid. Inkluderer bl.a. 
              funksjoner for å validere gyldigheten til kodebøker og gyldigheten til datadumper (gitt informasjon i kodebok),
              og funksjoner for å hente inn data fra ulike utviklere av innregistreringsløsninger ved hjelp av utviklerens kodebok. 
