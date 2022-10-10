@@ -7,6 +7,8 @@ Authors@R: c(person("Karl Ove", "Hufthammer",
              comment = c(ORCID = "0000-0003-3170-9496")),
              person("Per Erik", "Haugedal",
              email = "per.erik.haugedal@helse-bergen.no", role = c("aut", "cph")),
+             person("Endre Kvåle", "Evjen",
+             email = "endre.kvale.evjen@helse-bergen.no", role = c("aut", "cph")),
              person("Lena Kristin", "Bache-Mathiesen",
              email = "lena.kristin.bache-mathiesen@helse-bergen.no", role = c("aut", "cph")))
 Description: En rekke funksjoner til nytte i kvalitetsregisterarbeid. Inkluderer bl.a. 
