@@ -22,6 +22,7 @@ LazyData: TRUE
 Imports:
     dplyr,
     tidyr,
+    knitr,
     magrittr,
     purrr,
     tibble,
