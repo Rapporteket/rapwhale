@@ -31,54 +31,54 @@ Sjå eige punkt om det nedanfor.
 
 Desse funksjonane er nye:
 
-- Ny funksjon,
-`boy_enhet()`,
-som automatisk formaterer tall med tilhørende entalls-/flertallsform.
+- `boy_enhet()`:
+Formater automatisk tall med tilhørende entalls-/flertallsform.
 Funksjonen kan være nyttig om man for eksempel skal skrive en rapport,
 og man ikke er sikker på hvor mange det er av en spesifikk enhet.
 Da kan man for eksempel bruke
 `boy_enhet(x, entall = "pasient", flertall = "pasienter")`
 i stedet for å skrive `paste(x, "pasient(er)")`.
-Funksjonen kan også ta forskjellige formaterings-argument,
+Funksjonen kan også ta forskjellige formateringsargument,
 som kan gjøre tallvektoren om til den formen man måtte ønske,
 for eksempel med et gitt antall desimaler.
 
-- Ny funksjon,
-`erstatt_0()`,
-som erstatter 0 med en valgfri verdi.
+- `erstatt_0()`:
+Erstatt 0 med en valgfri verdi.
 Funksjonen er sannsynligvis mest nyttig sammen med `boy_enhet()`,
 hvor den er standardvalg for `formatering`-argumentet.
 
-- Nye funksjoner
-`beregn_kompletthet_datasett()` og `beregn_kompletthet_datasett_med_ukjent()`, 
-som er laget for å forenkle arbeidet med å beregne kompletthet for registerdata. 
+- `beregn_kompletthet_datasett()` og `beregn_kompletthet_datasett_med_ukjent()`:
+Forenkler arbeidet med å beregne kompletthet for registerdata. 
 `beregn_kompletthet_datasett()` beregner antall og andel rader som er 
-eksplisitt NA i et datasett. I enkelte tilfeller ønsker vi også å inkludere 
+eksplisitt `NA` i et datasett.
+I enkelte tilfeller ønsker vi også å inkludere 
 verdier som representerer en manglende besvarelse for en variabel. For eksempel
-har enkelte variabler kodet egne verdier for 'Ukjent', 'Vet ikke' og lignende. 
+har enkelte variabler kodet egne verdier for «Ukjent», «Vet ikke» og lignende. 
 `beregn_kompletthet_datasett_med_ukjent()` konverterer disse 
-*ukjente* besvarelsene til eksplisitt NA og regner ut kompletthet med og uten 
+*ukjente* besvarelsene til eksplisitt `NA` og regner ut kompletthet med og uten 
 denne konverteringen. 
-Hjelpefunksjonene `erstatt_ukjent()`, `beregn_kompletthet()`, 
-`beregn_kompletthet_med_ukjent()` og `erstatt_ukjent_for_datasett()` er også 
-inkludert hvis en kun ønsker å se på enkelt-variabler eller å erstatte alle 
-*ukjente* verdier med NA. Funksjonene er foreløpig å anse som eksperimentelle.  
+
+- `erstatt_ukjent()` `beregn_kompletthet()`,
+`beregn_kompletthet_med_ukjent()` og `erstatt_ukjent_for_datasett()`:
+Hjelpefunksjoner som kan brukes hvis en kun ønsker å se på enkeltvariabler
+eller å erstatte alle *ukjente* verdier med `NA`.
+Funksjonene er foreløpig å anse som eksperimentelle.  
 
 - `rapwhale_style()`: Fagsenteret sin kodestilguide til bruk med
 [`styler`](https://github.com/r-lib/styler).
 
-- `aktiver_kvalregtema()`: Funksjon som oppdaterer tema,
+- `aktiver_kvalregtema()`: Oppdater tema,
 fargar og andre figurinstillingar til fagsenteret sine standardinnstillingar.
 
-- `assignment_eq_linter()`: Funksjon til bruk med
-[`lintr`](https://github.com/r-lib/lintr) som sjekkar at `=` vert brukt ved
+- `assignment_eq_linter()`: Til bruk med
+[`lintr`](https://github.com/r-lib/lintr) og sjekkar at `=` vert brukt ved
 tilordning i staden for `<-`.
 
-- `kompiler_rnw()`: Funksjon som kompilerer ei .Rnw-fil til ei .tex-fil.
+- `kompiler_rnw()`: Kompiler ei .Rnw-fil til ei .tex-fil.
 Gjev beskjed om kompileringa gjekk bra og slettar eventuelt .tex-fila ved feil
-med kompilering slik at ein då unngår forsøk på kompilering vidare til .pdf.
+med kompilering, slik at ein då unngår forsøk på kompilering vidare til .pdf.
 
-- `kompiler_tex()`: Funksjon som kompilerer ei .tex-fil til ei .pdf-fil.
+- `kompiler_tex()`: Kompiler ei .tex-fil til ei .pdf-fil.
 Funksjonen gjentek kompilering til alle kryssreferansar og slikt er i orden,
 men maks `maksiter` gonger.
 Gjev beskjed om status for kompilering,
@@ -90,10 +90,10 @@ men der y-aksen vert vist som prosent.
 
 Desse funksjonane har endra utviklingsnivå:
 
-- `boy_enhet()`: NA → stable
-- `erstatt_0()`: NA → stable
-- Fleire nye eksterne (les om desse ovanfor)
-  og interne funksjonar som har utviklingsnivå experimental.
+- `boy_enhet()`: ny funksjon, no `stable`
+- `erstatt_0()`: ny funksjon, no `stable`
+- Fleire nye offentlege/eksporterte funksjonar (sjå ovanfor)
+  og interne funksjonar som har utviklingsnivå `experimental`.
 
 
 ## Nytt som krev endringar i *din* kode
