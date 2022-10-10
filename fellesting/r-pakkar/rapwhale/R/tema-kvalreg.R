@@ -9,6 +9,7 @@ NULL
 #' og oppdaterer andre standardverdiar som fargar og punkt-/linjestorleik.
 #'
 #' @return
+#' Returnerer `NULL` usynleg.
 #' @export
 #'
 #' @examples
@@ -82,6 +83,8 @@ aktiver_kvalregtema = function() {
     qic.linecol = skde_bla,
     qic.targetcol = skde_lysebla
   )
+
+  invisible(NULL)
 }
 
 #' Tema for bruk i figurer
