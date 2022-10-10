@@ -122,7 +122,6 @@ lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab
 #' @param periode
 #' @param x_navn
 #' @param y_navn
-#' @param tidsvisning
 #' @param ...
 #'
 #' @return
@@ -133,7 +132,7 @@ lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab
 #' lag_fig_shewhart(d = d, x = dato, y = verdi, figtype = "xbar")
 lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
                             gruppe = NULL, periode = NULL, x_navn = NULL, y_navn = NULL,
-                            tidsvisning = TRUE, ...) {
+                            ...) {
 
   # definerer alle kolonner som skal være tilgjengelig inni datasettet (d)
   qic_x = enexpr(x)
