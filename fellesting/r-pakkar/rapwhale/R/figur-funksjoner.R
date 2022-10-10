@@ -113,18 +113,31 @@ lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab
 #' `r lifecycle::badge("experimental")`
 #'
 #' @param d
+#' Datasett som inkluderer dei variablane som skal brukast shewhart-diagrammet.
 #' @param y
+#' Vektor med tal som skal plottast på y-aksen (teljar).
 #' @param x
+#' Vektor med verdiar som skal plottast på x-aksen, ofte datoar.
 #' @param nevner
+#' Vektor med undergruppestorleikar (nemnar).
 #' @param figtype
+#' Tekstvektor med kva type diagram som skal lagast. Sjå [qicharts2::qic()]
+#' for tilgjengelege typar.
 #' @param tittel
+#' Tekstvektor med tittel på plottet.
 #' @param gruppe
+#' Eventuell variabel det skal grupperast på.
 #' @param periode
+#' Tidsperiode brukt for å aggregera y-verdiar.
+#' Til dømes `"month"` eller `"2 months"`.
 #' @param x_navn
+#' Tekststreng med namnet på x-aksen.
 #' @param y_navn
+#' Tekststreng med namnet på y-aksen.
 #' @param ...
 #'
 #' @return
+#' Eit shewhart-diagram av typen `figtype`.
 #' @export
 #'
 #' @examples
