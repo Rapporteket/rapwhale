@@ -39,8 +39,7 @@ d_gyldig_inn = tibble::tribble(
 
 # Eksempel på utdata (skal være identisk til 'd_gyldig_inn' og i tillegg
 # inneholde kolonner med sumskårer helt til høyre)
-d_gyldig_ut = d_gyldig_inn
-d_gyldig_ut = tibble::add_column(d_gyldig_ut,
+d_gyldig_ut = tibble::add_column(d_gyldig_inn,
   total = c(0.518, 0.775, 1.14),
   psykisk = c(1, -3, -6.5),
   .after = "dato"
