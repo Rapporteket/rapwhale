@@ -54,6 +54,30 @@ test_that("skaar_datasett() fungerer på uproblematiske inndata", {
   )
 })
 
+# Eksempel på skåringstabell med konstantledd
+skaaringstabell_eks_flere_konstantledd = rbind(skaaringstabell_eks,
+  tibble::tibble(
+    delskala = c("total", "psykisk"),
+    variabel = NA,
+    verdi = NA,
+    koeffisient = c(1, 5)
+  )
+)
+d_gyldig_ut_konstantledd = tibble::add_column(d_gyldig_inn,
+  total = c(0.518, 0.775, 1.14) + 1,
+  psykisk = c(1, -3, -6.5) + 5,
+  .after = "dato"
+)
+
+test_that("skaar_datasett() fungerer med skåringstabell med konstantledd", {
+  expect_equal(
+    skaar_datasett(d_gyldig_inn,
+      skaaringstabell = skaaringstabell_eks_flere_konstantledd
+    ),
+    d_gyldig_ut_konstantledd
+  )
+})
+
 test_that("skaar_datasett() fungerer riktig hvis inndatasett er gruppert", {
   expect_equal(
     skaar_datasett(group_by(d_gyldig_inn, kjonn),
@@ -866,14 +890,6 @@ test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer
 
 test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer
           hvis flere delskalaer har konstantledd", {
-  skaaringstabell_eks_flere_konstantledd = rbind(skaaringstabell_eks,
-    tibble::tibble(
-      delskala = c("total", "psykisk"),
-      variabel = NA,
-      verdi = NA,
-      koeffisient = c(1, 5)
-    )
-  )
   sumskaar_tabell_flere_konstantledd = sumskaar_tabell
   sumskaar_tabell_flere_konstantledd$total =
     sumskaar_tabell_flere_konstantledd$total + 1
