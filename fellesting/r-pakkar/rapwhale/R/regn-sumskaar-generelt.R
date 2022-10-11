@@ -113,8 +113,8 @@ skaar_datasett = function(d, skaaringstabell, variabelnavn = NULL,
     ungroup() %>% # Gruppering kan føra til feil i utrekningane nedanfor
     # (men blir likevel bevart i utdataa,
     # jf. legg_til_eller_erstatt_kolonner()-kallet)
-    select(unique(skaaringstabell$variabel))
-  sjekk_variabelnavn(d_std_navn, variabelnavn = skaaringstabell$variabel)
+    select(unique(na.omit(skaaringstabell$variabel)))
+  sjekk_variabelnavn(d_std_navn, variabelnavn = na.omit(skaaringstabell$variabel))
   sjekk_variabelverdier(d_std_navn,
     verditabell = select(skaaringstabell, variabel, verdi),
     godta_manglende = godta_manglende
