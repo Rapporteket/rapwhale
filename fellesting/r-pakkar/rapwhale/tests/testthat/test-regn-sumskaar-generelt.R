@@ -270,6 +270,16 @@ test_that("sjekk_skaaringstabell() gir ingen feilmelding hvis en variabel
   expect_silent(sjekk_skaaringstabell(skaaringstabell_na_i_1_delskala))
 })
 
+test_that("sjekk_skaaringstabell() gir feilmelding hvis en rad har verdien NA
+          i variabelkolonnen *uten* å ha verdien NA i verdikolonnen", {
+  skaaringstabell_ugyldig_na_variabel = tibble::add_row(skaaringstabell_eks,
+      delskala = "total", variabel = NA, verdi = 10, koeffisient = 10
+    )
+  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_na_variabel),
+    "Kan ikke ha verdien NA i 'variabel' uten at 'verdi' også er NA"
+  )
+})
+
 test_that("sjekk_skaaringstabell() gir feilmelding hvis
           koeffisient-kolonnen i skåringstabellen inneholder NA-verdier", {
   skaaringstabell_ugyldig_na_koeffisient = skaaringstabell_eks
