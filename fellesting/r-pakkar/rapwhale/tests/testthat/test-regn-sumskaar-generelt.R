@@ -281,6 +281,18 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis
   )
 })
 
+test_that("sjekk_skaaringstabell() gir feilmelding hvis
+          delskala-kolonnen i skåringstabellen inneholder NA-verdier", {
+  skaaringstabell_ugyldig_na_delskala = tibble::add_row(skaaringstabell_eks,
+    delskala = NA, variabel = NA, verdi = NA, koeffisient = 10
+  )
+
+  expect_error(
+    sjekk_skaaringstabell(skaaringstabell_ugyldig_na_delskala),
+    "Delskala-kolonnen i skåringstabellen kan ikke inneholde NA-verdier"
+  )
+})
+
 test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen
           innholder feil variabeltyper", {
   feilmelding_kolonneformat = "'delskala' og 'variabel' må være tekstvariabler og 'verdi' og 'koeffisient' må være numeriske"
