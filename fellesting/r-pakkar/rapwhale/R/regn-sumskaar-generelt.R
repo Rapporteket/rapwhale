@@ -192,6 +192,10 @@ sjekk_skaaringstabell = function(skaaringstabell) {
     stop(oversikt_komb_mangl)
   }
 
+  if (any(is.na(skaaringstabell$variabel) & !is.na(skaaringstabell$verdi))) {
+    stop("Kan ikke ha verdien NA i 'variabel' uten at 'verdi' også er NA")
+  }
+
   if (any(is.na(skaaringstabell$koeffisient))) {
     stop("Koeffisient-kolonnen i skåringstabellen kan ikke inneholde NA-verdier")
   }
