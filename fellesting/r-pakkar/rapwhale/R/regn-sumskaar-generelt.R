@@ -43,9 +43,17 @@ NULL
 #' livskvalitet.) For hver rad i `d` og hver `delskala` i `skaaringstabell`
 #' blir sumskåren `delskala` i `d` lik summen av de tallene i `koeffisient`
 #' der `verdi` for variabelen `variabel` i skåringstabellen er lik
-#' verdien av tilhørende variabel i `d`.
+#' verdien av tilhørende variabel i `d`,
+#' pluss et eventuelt konstantledd.
 #'
-#' Merk at `verdi` også *kan* være `NA`. Da blir manglende svar
+#' For å legge til et konstantledd for en sumskår legger man til en rad i
+#' `skaaringstabell`.
+#' I raden skal `delskala` være sumskåren konstantleddet skal gjelde for,
+#' `variabel` og `verdi` begge være `NA`,
+#' og `koeffisient` være verdien til konstantleddet.
+#'
+#' Merk at `verdi` også *kan* være `NA` utenom konstantleddtilfellet.
+#' Da blir manglende svar
 #' (dvs. `NA-verdier`) for tilhørende variabel og delskala regnet som
 #' gyldig svar og har en tilhørende `koeffisient` (som ikke er `NA`).
 #' Dette kan være nyttig i tilfeller hvor svaralternativ som «Vet ikke»
@@ -132,7 +140,9 @@ skaar_datasett = function(d, skaaringstabell, variabelnavn = NULL,
 #' `delskala` (tekst), `variabel` (tekst), `verdi` (numerisk) og
 #' `koeffisient` (numerisk), og det skal bare finnes én rad
 #' per kombinasjon av `delskala`, `variabel` og `verdi`.
-#' Kolonnen `koeffisient` kan ikke ha `NA`-verdier.
+#' Kolonnene `delskala` og `koeffisient` kan ikke ha `NA`-verdier.
+#' Viss en rad har verdien `NA` i kolonnen `variabel`,
+#' *må* den også ha verdien `NA` i kolonnen `verdi`.
 #'
 #' I tillegg må hver variabel som inngår i en gitt delskala,
 #' ha oppføringer for alle ikke-`NA`-verdiene som variabelen
@@ -450,10 +460,22 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
   d_med_koeff = d_svar %>%
     left_join(skaaringstabell, by = c("variabel", "verdi"))
 
+  # Legg til eventuelle konstantledd
+  skaaringstabell_konstantledd = skaaringstabell %>%
+    filter(is.na(variabel)) %>%
+    select(delskala, konstantledd = koeffisient)
+  d_med_koeff = d_med_koeff %>%
+    left_join(skaaringstabell_konstantledd, by = "delskala") %>%
+    mutate(
+      konstantledd = if_else(is.na(konstantledd), 0, konstantledd)
+    )
+
   # Rekn ut sumskår for alle delskalaane, per person
   d_med_skaarar = d_med_koeff %>%
-    group_by(person_id, delskala) %>%
+    group_by(person_id, delskala, konstantledd) %>%
     summarise(skaar = sum(koeffisient), .groups = "drop") %>%
+    mutate(skaar = skaar + konstantledd) %>%
+    select(-konstantledd) %>%
     pivot_wider(names_from = "delskala", values_from = "skaar")
 
   # For sikkerheits skuld, sorter etter opphavleg radnummer,
