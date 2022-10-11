@@ -178,19 +178,10 @@ skaar_rand12 = function(d, variabelnavn = NULL,
     "rand12_mcs", "rand_7", 2, -4.19005,
     "rand12_mcs", "rand_7", 3, -3.20648,
     "rand12_mcs", "rand_7", 4, -1.71673,
-    "rand12_mcs", "rand_7", 5, 0
+    "rand12_mcs", "rand_7", 5, 0,
+    "rand12_pcs", NA, NA, 62.37966,
+    "rand12_mcs", NA, NA, 65.38813
   )
 
-  d_orig_inkl_sumskaarer = skaar_datasett(
-    d, skaaringstabell,
-    variabelnavn, godta_manglende
-  )
-
-  # Legger til konstantledd i sumskår-kolonnene hvor det ikke er NA-verdier
-  d_orig_inkl_sumskaarer = dplyr::mutate(d_orig_inkl_sumskaarer,
-    rand12_pcs = rand12_pcs + 62.37966,
-    rand12_mcs = rand12_mcs + 65.38813
-  )
-
-  d_orig_inkl_sumskaarer
+  skaar_datasett(d, skaaringstabell, variabelnavn, godta_manglende)
 }
