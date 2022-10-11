@@ -848,6 +848,47 @@ test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer i
   )
 })
 
+test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer
+          hvis én delskala har konstantledd", {
+  skaaringstabell_eks_ett_konstantledd = tibble::add_row(skaaringstabell_eks,
+      delskala = "total", variabel = NA, verdi = NA, koeffisient = 1
+    )
+  sumskaar_tabell_ett_konstantledd = sumskaar_tabell
+  sumskaar_tabell_ett_konstantledd$total =
+    sumskaar_tabell_ett_konstantledd$total + 1
+  expect_equal(
+    skaar_datasett_uten_validering(
+      d_gyldig_alle_verdier,
+      skaaringstabell_eks_ett_konstantledd
+    ),
+    sumskaar_tabell_ett_konstantledd
+  )
+})
+
+test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer
+          hvis flere delskalaer har konstantledd", {
+  skaaringstabell_eks_flere_konstantledd = rbind(skaaringstabell_eks,
+    tibble::tibble(
+      delskala = c("total", "psykisk"),
+      variabel = NA,
+      verdi = NA,
+      koeffisient = c(1, 5)
+    )
+  )
+  sumskaar_tabell_flere_konstantledd = sumskaar_tabell
+  sumskaar_tabell_flere_konstantledd$total =
+    sumskaar_tabell_flere_konstantledd$total + 1
+  sumskaar_tabell_flere_konstantledd$psykisk =
+    sumskaar_tabell_flere_konstantledd$psykisk + 5
+  expect_equal(
+    skaar_datasett_uten_validering(
+      d_gyldig_alle_verdier,
+      skaaringstabell_eks_flere_konstantledd
+    ),
+    sumskaar_tabell_flere_konstantledd
+  )
+})
+
 
 context("legg_til_na_i_skaaringstabell")
 
