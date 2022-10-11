@@ -196,6 +196,10 @@ sjekk_skaaringstabell = function(skaaringstabell) {
     stop("Koeffisient-kolonnen i skåringstabellen kan ikke inneholde NA-verdier")
   }
 
+  if (any(is.na(skaaringstabell$delskala))) {
+    stop("Delskala-kolonnen i skåringstabellen kan ikke inneholde NA-verdier")
+  }
+
   invisible()
 }
 
