@@ -13,7 +13,15 @@ d_inn_eks = tibble::tribble(
   1, 3, 3, 2, 2, 1, 1, 5, 2, 4, 1, 3, # tilfeldig
   3, 2, 1, 1, 2, 1, 2, 3, 3, 5, 2, 1, # tilfeldig
   5, 1, 2, 1, 1, 2, 2, 4, 3, 5, 5, 4, # tilfeldig
-  2, 3, 1, NA, 2, 2, 2, 1, 2, 1, 1, 2 # tilfeldig med NA
+  2, 3, 1, NA, 2, 2, 2, 1, 2, 1, 1, 2, # tilfeldig med NA
+  # Eksempel som inkluderer alle svaralternativ
+  # slik at alle koeffisientar vert testa
+  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+  2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+  3, 3, 3, 2, 2, 2, 2, 3, 3, 3, 3, 3,
+  4, 3, 3, 2, 2, 2, 2, 4, 4, 4, 4, 4,
+  5, 3, 3, 2, 2, 2, 2, 5, 5, 5, 5, 5,
+  5, 3, 3, 2, 2, 2, 2, 5, 6, 6, 6, 5
 )
 
 # Sumskårer for d_inn_eks (regnet ut ved hjelp av SPSS-syntaksen)
@@ -28,7 +36,13 @@ d_sumskaarer_oblique = tibble::tribble(
   43.46585, 28.85581,
   37.3071, 31.57685,
   27.95627, 41.86409,
-  NA, NA
+  NA, NA,
+  42.22016, 39.07913,
+  49.99838, 44.54356,
+  48.89000, 43.53075,
+  44.78949, 42.28766,
+  39.82644, 39.57456,
+  38.55395, 37.79646
 )
 
 # Kombinerer d_inn_eks og d_sumskaarer_oblique
