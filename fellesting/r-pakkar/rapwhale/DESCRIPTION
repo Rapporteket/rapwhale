@@ -46,7 +46,11 @@ Imports:
     lifecycle,
     devtools,
     lintr (>= 3.0.0),
-    styler (>= 1.8.1)
+    styler (>= 1.8.1),
+    Hmisc,
+    callr,
+    processx,
+    pkgload
 RdMacros: Rdpack
 RoxygenNote: 7.2.1
 Roxygen: list(markdown = TRUE)
