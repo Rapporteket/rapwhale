@@ -51,7 +51,5 @@ RdMacros: Rdpack
 RoxygenNote: 7.2.1
 Roxygen: list(markdown = TRUE)
 Suggests: 
-    knitr,
-    rmarkdown,
-    lifecycle
+    rmarkdown
 VignetteBuilder: knitr
