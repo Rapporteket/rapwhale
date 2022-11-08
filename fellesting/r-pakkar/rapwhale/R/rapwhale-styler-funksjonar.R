@@ -19,10 +19,10 @@
 wrap_if_else_while_for_fun_in_curly_rapwhale = function(pd, indent_by = 2) {
   key_token = purrr::when(
     pd,
-    styler:::is_cond_expr(.) ~ "')'",
-    styler:::is_while_expr(.) ~ "')'",
-    styler:::is_for_expr(.) ~ "forcond",
-    styler:::is_function_dec(.) ~ "')'"
+    styler::is_conditional_expr(.) ~ "')'",
+    styler::is_while_expr(.) ~ "')'",
+    styler::is_for_expr(.) ~ "forcond",
+    styler::is_function_declaration(.) ~ "')'"
   )
   if (length(key_token) > 0) {
     pd = pd %>%
@@ -31,7 +31,7 @@ wrap_if_else_while_for_fun_in_curly_rapwhale = function(pd, indent_by = 2) {
         key_token = key_token
       )
   }
-  if (styler:::is_cond_expr(pd)) {
+  if (styler::is_conditional_expr(pd)) {
     pd = pd %>%
       styler:::wrap_else_multiline_curly(indent_by, space_after = 0)
   }
@@ -67,7 +67,7 @@ wrap_curly_rapwhale = function(pd,
                                indent_by,
                                space_after = 1,
                                key_token) {
-  to_be_wrapped_expr_with_child = styler:::next_non_comment(
+  to_be_wrapped_expr_with_child = styler::next_non_comment(
     pd,
     which(pd$token == key_token)[1]
   )
@@ -118,8 +118,8 @@ wrap_curly_rapwhale = function(pd,
 #' @keywords internal
 if_for_while_part_requires_braces_rapwhale = function(pd, key_token) {
   pos_first_key_token = which(pd$token == key_token)[1]
-  child = pd$child[[styler:::next_non_comment(pd, pos_first_key_token)]]
-  !styler:::is_curly_expr(child)
+  child = pd$child[[styler::next_non_comment(pd, pos_first_key_token)]]
+  !styler::is_curly_expr(child)
 }
 
 #' Add line break after pipe
