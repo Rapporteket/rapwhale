@@ -71,7 +71,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
     # har en verdi i en aktuelle kolonnen
     kb_utsnitt = kodebok %>%
       filter(!is.na(kodebok[kolonne])) %>%
-      select(variabel_id, kolonne) %>%
+      select(variabel_id, all_of(kolonne)) %>%
       rename(varnamn = "variabel_id")
     # rename funksjonen støtter ikke expressions.
     # altså kan man ikke ha gverdi = past0(kolonne) i kallet til rename() ovenfor
