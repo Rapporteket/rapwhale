@@ -206,7 +206,8 @@ lag_tab_latex = function(dataframe, label, caption, wide = FALSE, ...) {
       where = "htbp", booktabs = TRUE, numeric.dollar = FALSE, ...
     ))
     if (wide) {
-      tabell %<>% stringr::str_replace("^\\\\(begin|end)\\{table\\}", "\\\\\\1\\{widetable\\}") # Superrobust ... ;)
+      tabell = tabell %>%
+        stringr::str_replace("^\\\\(begin|end)\\{table\\}", "\\\\\\1\\{widetable\\}") # Superrobust ... ;)
     }
     tabell = paste0(tabell, sep = "\n")
   }
