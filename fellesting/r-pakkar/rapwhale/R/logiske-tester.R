@@ -47,7 +47,7 @@
 #' bosted_aasane %impl% bosted_bergen
 #' @export
 impl = function(a, b) {
-  if (class(a) != "logical" | class(b) != "logical") {
+  if (!is(a, "logical") | !is(b, "logical")) {
     stop("a og b må være logiske vektorer")
   }
 

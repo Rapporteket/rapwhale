@@ -94,7 +94,7 @@ analyser_valideringsdatasett = function(d_vld, samanliknar = samanlikn_identisk)
       stop("NA-verdiar frå samanliknaren")
     }
 
-    if (class(er_like) != "logical") {
+    if (!inherits(er_like, "logical")) {
       stop("Ikkje logisk vektor frå samanliknaren")
     }
 
