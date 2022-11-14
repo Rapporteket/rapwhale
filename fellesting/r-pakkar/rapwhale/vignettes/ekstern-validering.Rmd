@@ -671,8 +671,7 @@ filadresse = paste0(mappe_vld, filnamn)
 dir.create(mappe_vld, showWarnings = FALSE, recursive = TRUE)
 
 # Lagra valideringsdatasett på SPSS-format
-library(haven)
-write_sav(d_vld, filadresse)
+haven::write_sav(d_vld, filadresse)
 ```
 
 For lesing av ferdigredigerte valideringsfiler
