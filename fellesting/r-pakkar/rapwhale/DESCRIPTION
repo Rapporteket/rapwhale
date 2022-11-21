@@ -56,5 +56,6 @@ Roxygen: list(markdown = TRUE)
 Suggests: 
     rmarkdown,
     kableExtra,
-    tidyverse
+    tidyverse,
+    hms
 VignetteBuilder: knitr
