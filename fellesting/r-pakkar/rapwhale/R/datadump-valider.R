@@ -319,6 +319,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
 #' @param kodebok Kodebok med informasjon om variablene i valgt datadump.
 #' Skal være kodebok på kanonisk form og på Nasjonalt servicemiljø for medisinske kvalitetsregistre region vest (NASERVE)
 #' sitt standard kodebokformat.
+#' @param ... Eventuelle argument som blir gitt videre til [lag_regelsett()].
 #' @export
 dd_er_gyldig = function(d, kodebok, ...) {
   regelsett = lag_regelsett(kodebok, ...)

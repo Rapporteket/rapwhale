@@ -49,10 +49,12 @@ flytt_opp = function(y, tekst, hoyde = .015) {
 #' @param ylab tekst på y-aksen (standardverdi: NULL (tom))
 #' @param angle viss sann, vis verdiane på x-aksen på skrå (for å få plass til fleire)
 #' @param konfint Legg til konfidensintervall på kvar punkt
+#' @param point_size Storleik på punkt i grafen. Standardverdi er 2.
 #' @export
 #' @examples
+#' library(ggplot2)
 #' d = data.frame("År" = c(2016, 2017, 2018), "Andel" = c(0.25, 0.5, 0.6))
-#' p = ggplot2::ggplot(d,
+#' p = ggplot(d,
 #'   aes(x = År, y = Andel, ymin = c(0.2, 0.4, 0.5), ymax = c(0.3, 0.6, 0.7))
 #' )
 #'
@@ -137,6 +139,7 @@ lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab
 #' @param y_navn
 #' Tekststreng med namnet på y-aksen.
 #' @param ...
+#' Eventuelle andre argument som vert gjeve vidare til [qicharts2::qic()].
 #'
 #' @return
 #' Eit shewhart-diagram av typen `figtype`.

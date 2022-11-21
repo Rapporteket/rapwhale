@@ -20,7 +20,7 @@ NULL
 #' @param df Datasett som inkluderer de kategoriske variablene.
 #' @param kb Kodebok for registeret.
 #' @param ... Ytterligere argumenter.
-#' @param suffiks Suffiks for variabelnavn som kobles på det opprinnelige variabelnavnet. Default er "_tekst".
+#' @param .suffiks Suffiks for variabelnavn som kobles på det opprinnelige variabelnavnet. Default er "_tekst".
 #' @export
 #' @examples
 #' # Pakke for bruk av tibble-objekt og rør-operatoren

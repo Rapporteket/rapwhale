@@ -180,6 +180,14 @@ kb_til_kanonisk_form = function(kb) {
 #' formatert i henhold til fagsenterets standardformat.
 #' @param sjekk_varnamn Skal variabelnavn også sjekkes for gyldighet?
 #' Godkjente variabelnavn er i snake-case; små bokstaver og "_" som mellomrom.
+#' @param ... Eventuelle argument `skjemaprefiks` og `fald_bokstavar`,
+#' brukt ved sjekking av variabelnamn.
+#' Viss `skjemaprefiks` er sann, må òg namna vera
+#' gyldige dersom me fjernar teksten fram til
+#' og med første «_»-teikn.
+#' Viss `fald_bokstavar` er sann, vert namna gjort
+#' om til små bokstavar før testing, dvs. store bokstavar
+#' og ei blanding av små og store bokstavar vert godtatt.
 #' @export
 kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
 

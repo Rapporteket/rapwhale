@@ -8,7 +8,10 @@
 #' @details
 #' Returnerer en vektor med variabelnavn slik de er i datafilen.
 #'
-#' @param adresse Filplassering for datafil som skal leses inn. Henter kun ut variabelnavn.
+#' @param adresse
+#' Filplassering for datafil som skal leses inn. Henter kun ut variabelnavn.
+#' @param formatspek
+#' Liste med formatspesifikasjon.
 #' @export
 les_varnavn = function(adresse, formatspek) {
   stopifnot(is.character(adresse) & length(adresse) == 1)
