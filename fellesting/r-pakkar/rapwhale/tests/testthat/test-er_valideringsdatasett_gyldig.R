@@ -73,9 +73,9 @@ test_that("Gyldige inndata vert rekna som gyldige sjølv om «vld_varnamn» og �
           òg har attributt eller andre klassar i tillegg til «character»", {
   # Realistisk eksempel på data me kan få frå SPSS (med haven::read_spss())
   d_vld_med_label = d_vld_gyldig
-  class(d_vld_med_label$vld_varnamn) = c("haven_labelled", "vctrs_vctr", "character")
+  class(d_vld_med_label$vld_varnamn) = c("haven_labelled", "character")
   attr(d_vld_med_label$vld_varnamn, "label") = "Variabelnamn"
-  class(d_vld_med_label$vld_vartype) = c("haven_labelled", "vctrs_vctr", "character")
+  class(d_vld_med_label$vld_vartype) = c("haven_labelled", "character")
   attr(d_vld_med_label$vld_vartype, "label") = "Variabeltype"
   attr(d_vld_med_label$vld_vartype, "labels") = c(
     "Heiltal og desimaltal" = "tal",
