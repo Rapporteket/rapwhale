@@ -35,10 +35,10 @@ aktiver_kvalregtema = function() {
   kontrastfarge = farger$farger_kontr
 
   update_geom_defaults("point", list(size = 2, colour = skde_bla))
-  update_geom_defaults("line", list(size = 1, colour = skde_bla))
-  update_geom_defaults("linerange", list(size = 0.5, colour = skde_bla))
-  update_geom_defaults("hline", list(size = 0.5, colour = skde_morkebla))
-  update_geom_defaults("vline", list(size = 0.5, colour = skde_morkebla))
+  update_geom_defaults("line", list(linewidth = 1, colour = skde_bla))
+  update_geom_defaults("linerange", list(linewidth = 0.5, colour = skde_bla))
+  update_geom_defaults("hline", list(linewidth = 0.5, colour = skde_morkebla))
+  update_geom_defaults("vline", list(linewidth = 0.5, colour = skde_morkebla))
   update_geom_defaults("bar", list(fill = skde_bla))
   update_geom_defaults("col", list(fill = skde_bla))
 
