@@ -148,7 +148,7 @@ regn_ki_bin = function(x, n, alfa = 0.05) {
 
 
 
-#' Konfidenstinervall for gjennomsnittet til en kontinuerlig variabel
+#' Konfidenstinervall basert på gjennomsnittet til en  kontinuerlig variabel
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
@@ -189,8 +189,10 @@ regn_ki_bin = function(x, n, alfa = 0.05) {
 #' mtcars %>%
 #'   group_by(am) %>%
 #'   summarise(regn_ki_univar(mpg))
-regn_ki_univar = function(x) {
-  
+regn_ki_univar = function(x, bootstrap = FALSE, antall, ...) {
+  # Hvis det er for få eller for lite varierende
+  # observasjoner til å regne ut konfidensintervall,
+  # returner NA for konfidensintervallene
   if ((length(x) < 2) | (sd(x, na.rm = TRUE) == 0)) {
     tibble::tibble(
       low = NA_real_,
@@ -198,12 +200,33 @@ regn_ki_univar = function(x) {
       high = NA_real_
     )
   } else {
-    mod = t.test(x)
-    tibble(
-      low = mod$conf.int[1],
-      mean = mod$estimate,
-      high = mod$conf.int[2]
-    )
+
+    # Hvis man ønsker boostrap kjøres denne koden,
+    if (bootstrap) {
+      snitt_ki = function(x) {
+        n = sum(!is.na(x))
+        snitt = mean(x)
+        if ((length(x) > 1) & (sd(x) > 0)) {
+          b = simpleboot::one.boot(x, mean, R = 9999)
+          ki = simpleboot::boot.ci(b, type = "perc")$percent[4:5]
+        } else {
+          ki = c(NA, NA)
+        }
+        tibble(
+          mean = snitt,
+          low = ki[1],
+          high = ki[2],
+          n = n
+        )
+      }
+    } else {
+      mod = t.test(x)
+      tibble(
+        low = mod$conf.int[1],
+        mean = mod$estimate,
+        high = mod$conf.int[2]
+      )
+    }
   }
 }
 
