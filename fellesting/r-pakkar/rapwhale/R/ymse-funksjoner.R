@@ -149,20 +149,43 @@ regn_ki_bin = function(x, n, alfa = 0.05) {
 
 
 #' Konfidenstinervall for gjennomsnittet til en kontinuerlig variabel
-
+#'
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' Konfidensintervall for gjennomsnittet til en kontinuerlig variabel. 
-#' Ved færre enn to observasjoner returneres NA for øvre og nedre grense.  
+#' Finner konfidenstinervall basert på gjennomsnittet til en
+#' kontinuerlig variabel med mulighet for bootstrap lagt inn i funksjonen.
+#'
+#' @param x Numerisk vektor man ønsker å lage et konfidensintervall for.
+#' @param bootstrap Logisk verdi for om man ønsker å bruke bootstrap-metoden
+#' eller ei.
+#' Standardverdi er `FALSE`,
+#' altså å ikke bruke bootstrap.
+#' @param alfa Numerisk verdi som angir konfidensnivået.
+#' Standardverdi er 0.05,
+#' som tilsvarer et 95 %-konfidensintervall.
+#'
+#' @details
+#' Inndatasettet kan enten være en vektor,
+#' eller en kolonne i en tibble/dataramme.
+#' Om man anvender en tibble/dataramme,
+#' kan man for eksempel bruke funksjonen inni [dplyr::summarise()].
+#' Hvis inndataene er gruppert,
+#' blir resultatet regnet ut på gruppenivå,
+#' med én rad per gruppe.
+#'
+#' @return
+#' Returnerer en tibble med nedre og øvre grense for konfidensintervall,
+#' samt gjennomsnittsverdien av `x`.
+#'
 #' @export
 #'
 #' @examples
 #' regn_ki_univar(runif(100))
 #'
+#' # Konfidensintervall for drivstofforbruk, gruppert på type girkasse
 #' library(dplyr)
 #'
-#' # Konfidensintervall for drivstofforbruk, gruppert på type girkasse
 #' mtcars %>%
 #'   group_by(am) %>%
 #'   summarise(regn_ki_univar(mpg))
