@@ -189,7 +189,7 @@ regn_ki_bin = function(x, n, alfa = 0.05) {
 #' mtcars %>%
 #'   group_by(am) %>%
 #'   summarise(regn_ki_univar(mpg))
-regn_ki_univar = function(x, bootstrap = FALSE, antall, ...) {
+regn_ki_univar = function(x, bootstrap = FALSE, alfa = 0.05) {
   # Hvis det er for få eller for lite varierende
   # observasjoner til å regne ut konfidensintervall,
   # returner NA for konfidensintervallene
@@ -220,8 +220,8 @@ regn_ki_univar = function(x, bootstrap = FALSE, antall, ...) {
         )
       }
     } else {
-      mod = t.test(x)
-      tibble(
+      mod = t.test(x, conf.level = 1 - alfa)
+      tibble::tibble(
         low = mod$conf.int[1],
         mean = mod$estimate,
         high = mod$conf.int[2]
