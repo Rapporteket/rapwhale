@@ -1,7 +1,7 @@
 #' Regn ut kvalitetsindikator for rater
 #'
 #' @description
-#' `r lifecycle::badge("experimental)`
+#' `r lifecycle::badge("experimental")`
 #'
 #' Regner ut kvalitetsindikator for rater (antall delt på eksponering),
 #' basert på et standard datasett for ratedata/Poisson-data.
@@ -49,7 +49,7 @@
 #' Poisson-fordelt,
 #' og blir da beregnet ved profil-likelihood-metoden.
 #'
-#' @seeother
+#' @seealso
 #' Om du heller er interessert i andelsdata (teller/nevner),
 #' altså data som følger en binomisk fordeling,
 #' bruk [aggreger_ki_prop()].
@@ -58,14 +58,14 @@
 #' Ugruppert `tibble` eller `data.frame`
 #' (avhengig av inndataene)
 #' med følgende kolonner:
-#' \item{est} Kvalitetsindikatoren, dvs. estimert rate
-#' (sum(`ki_antall`)/sum(`ki_eksponering`)*`multiplikator`).
-#' \item{konfint_nedre} Nedre konfidensgrense for `est`.
-#' \item{konfint_ovre} Øvre konfidensgrense for `est`.
+#' \item{est}{Kvalitetsindikatoren, dvs. estimert rate
+#' (sum(`ki_antall`)/sum(`ki_eksponering`)*`multiplikator`).}
+#' \item{konfint_nedre}{Nedre konfidensgrense for `est`.}
+#' \item{konfint_ovre}{Øvre konfidensgrense for `est`.}
 #'
 #' @export
 #'
-#' @example
+#' @examples
 #' #Pakke for bruk av tibble-objekt og rør-operatoren
 #' library(dplyr)
 #'
