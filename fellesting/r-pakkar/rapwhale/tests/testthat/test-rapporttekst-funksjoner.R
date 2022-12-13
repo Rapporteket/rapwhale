@@ -16,15 +16,15 @@ test_that("num() gir ut riktig verdi når kun «x»-argumentet er gitt", {
 test_that("num() gir ut riktig verdi med «desimalar»-argumentet", {
   expect_identical(
     num(12, desimalar = 0),
-    "{\\numprint{12}"
+    "{\\numprint{12}}"
   )
   expect_identical(
     num(12, desimalar = 2),
-    "{\\numprint{12.00}"
+    "{\\numprint{12.00}}"
   )
   expect_identical(
     num(c(12.34, 3.1415), desimalar = 3),
-    c("{\\numprint{12.340}", "{\\numprint{3.142}")
+    c("{\\numprint{12.340}}", "{\\numprint{3.142}}")
   )
 })
 
