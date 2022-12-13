@@ -178,7 +178,7 @@ aggreger_ki_rate = function(d_ki_ind, alfa = 0.05, multiplikator = 1) {
         family = "poisson",
         offset = log(sum(eksponering))
       ) %>%
-        profile() %>%
+        MASS:::profile.glm() %>%
         confint(level = 1 - alfa) %>%
         exp()
       konfint_nedre = konfint[[1]]
