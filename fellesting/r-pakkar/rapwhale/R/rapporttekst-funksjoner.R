@@ -92,7 +92,7 @@ num = function(x, desimalar = NULL, tabell = lifecycle::deprecated()) {
   # at alle elementa får like mange desimalar (viss «desimalar» er NULL)
   x_form = purrr::map_chr(x, format, nsmall = nsmall, scientific = FALSE)
   x_form = paste0("\\numprint{", x_form, "}")
-  x_form[is.na(x)] = "\textendash{}"
+  x_form[is.na(x)] = "\\textendash{}"
   
   # Me legg *heile* LaTeX-kommandoen
   # mellom {} for å hindra problem ved bruk for eksempel inni shortcap-delen
