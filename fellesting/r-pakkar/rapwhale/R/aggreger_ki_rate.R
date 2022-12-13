@@ -76,7 +76,7 @@
 #'   "Helse Midt",
 #'   "Helse Nord"
 #' )
-#' populasjon = c(1100000, 3100000, 700000, 480000),
+#' populasjon = c(1100000, 3100000, 700000, 480000)
 #' antall_behandlinger = c(650000, 1670000, 450000, 350000)
 #' d = tibble(
 #'   helseforetak = helseforetak,
