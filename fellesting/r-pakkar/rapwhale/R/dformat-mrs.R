@@ -154,7 +154,7 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
         NA_integer_
       ),
       kommentar = Hjelpetekst,
-      manglande = ifelse(verditekst %in% c("---", "Velg verdi", "Ikke valgt"),
+      manglande = ifelse(verditekst %in% c("---", "Unknown", "None", "Velg verdi", "Ikke valgt"),
         "ja",
         "nei"
       )
