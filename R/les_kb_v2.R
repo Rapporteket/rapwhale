@@ -688,7 +688,7 @@ valider_kb_variabler = function(kodebok) {
   flere_verditekster = kodebok %>%
     filter(variabeltype == "kategorisk") %>%
     group_by(variabel_id, verdi) %>%
-    summarise(antall_verditekst = n_distinct(verditekst, .keep_all = TRUE)) %>%
+    summarise(antall_verditekst = n_distinct(verditekst)) %>%
     filter(antall_verditekst > 1)
 
   if (nrow(flere_verditekster) > 0) {
