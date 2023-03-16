@@ -465,7 +465,7 @@ fnr_foresla = function(x) {
   stopifnot(length(x) == 1 && is.character(x) && nchar(x) == 11)
 
   # Bytt ut einskildsiffer med eit (vilkårleg) anna
-  moglege_fnr_1 = str_c(
+  moglege_fnr_1 = paste0(
     str_sub(x, 1, 0:10),
     rep(0:9, each = 11),
     str_sub(x, 2:12, 11)
