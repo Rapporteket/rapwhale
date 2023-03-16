@@ -111,10 +111,10 @@ rapwhale_style = function(scope = "tokens", strict = TRUE, indent_by = 2,
 
   # if, else osv. skal alltid ha krøllparentesar
   temp_style$token = temp_style$token %>%
-    purrr::prepend(c(
+    append(c(
       wrap_if_else_while_for_fun_in_curly_rapwhale =
         wrap_if_else_while_for_fun_in_curly_rapwhale
-    ))
+    ), after = 0)
 
   # Alltid linjeskift etter røyr, også med berre eitt røyr
   temp_style$line_break$add_line_break_after_pipe =
