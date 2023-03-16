@@ -17,13 +17,18 @@
 #'
 #' @keywords internal
 wrap_if_else_while_for_fun_in_curly_rapwhale = function(pd, indent_by = 2) {
-  key_token = purrr::when(
-    pd,
-    styler::is_conditional_expr(.) ~ "')'",
-    styler::is_while_expr(.) ~ "')'",
-    styler::is_for_expr(.) ~ "forcond",
-    styler::is_function_declaration(.) ~ "')'"
-  )
+  key_token = NULL
+
+  if (styler::is_conditional_expr(pd)) {
+    key_token = "')'"
+  } else if (styler::is_while_expr(pd)) {
+    key_token = "')'"
+  } else if (styler::is_for_expr(pd)) {
+    key_token = "forcond"
+  } else if (styler::is_function_declaration(pd)) {
+    key_token = "')'"
+  }
+
   if (length(key_token) > 0) {
     pd = pd %>%
       wrap_curly_rapwhale(indent_by,
