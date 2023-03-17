@@ -40,7 +40,6 @@ Imports:
     binom,
     scales (>= 1.1.1),
     qicharts2,
-    testthat,
     Rdpack,
     lifecycle,
     devtools,
@@ -57,5 +56,6 @@ Suggests:
     rmarkdown,
     kableExtra,
     tidyverse,
-    hms
+    hms,
+    testthat
 VignetteBuilder: knitr
