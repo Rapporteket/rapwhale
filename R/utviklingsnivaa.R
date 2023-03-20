@@ -6,7 +6,7 @@
 #' Sjekkar alle .Rd-filer i ei mappe, og lagar ein oversikt over utviklingsnivåa.
 #'
 #' @param mappe
-#' Adresse til mappe med hjelpefiler. Standard er here::here("man").
+#' Adresse til mappe med hjelpefiler. Standard er "man".
 #'
 #' @details
 #' Funksjonen tek inn adressa til ei mappe, og ser etter utviklingsnivå
@@ -23,7 +23,7 @@
 #' utviklingsnivaa()
 #'
 #' utviklingsnivaa("H:\\kvalreg\\fellesting\\r-pakkar\\rapwhale\\man")
-utviklingsnivaa = function(mappe = here::here("man")) {
+utviklingsnivaa = function(mappe = "man") {
   # Lag vektor med filnamn
   funksjonar = list.files(mappe, pattern = "\\.Rd$")
 
