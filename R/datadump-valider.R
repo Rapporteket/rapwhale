@@ -70,7 +70,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
     # henter ut delen av kodeboka som
     # har en verdi i en aktuelle kolonnen
     kb_utsnitt = kodebok %>%
-      filter(!is.na(kodebok[kolonne])) %>%
+      filter(!is.na(!!as.symbol(kolonne))) %>%
       select(variabel_id, all_of(kolonne)) %>%
       rename(varnamn = "variabel_id")
     # rename funksjonen støtter ikke expressions.
