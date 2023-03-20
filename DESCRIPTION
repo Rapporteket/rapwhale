@@ -42,13 +42,9 @@ Imports:
     qicharts2,
     Rdpack,
     lifecycle,
-    devtools,
     lintr (>= 3.0.0),
     styler (>= 1.8.1),
-    Hmisc,
-    callr,
-    processx,
-    pkgload
+    Hmisc
 RdMacros: Rdpack
 RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
@@ -57,5 +53,9 @@ Suggests:
     kableExtra,
     tidyverse,
     hms,
-    testthat
+    testthat,
+    devtools,
+    processx,
+    callr,
+    pkgload
 VignetteBuilder: knitr
