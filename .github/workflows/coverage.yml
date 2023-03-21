@@ -22,8 +22,12 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::covr
-          needs: coverage
+          extra-packages: any::covr, any::roxygen2
+          needs: coverage, roxygen2
+
+      - name: Document
+        run: roxygen2::roxygenise()
+        shell: Rscript {0}
 
       - name: Test coverage
         run: covr::codecov()
