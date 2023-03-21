@@ -1,4 +1,3 @@
-#' @importFrom magrittr %>%
 #' @importFrom stringr str_subset str_extract
 NULL
 #' Bygg og installer pakker
@@ -8,15 +7,14 @@ NULL
 #'
 #' Dokumenterer, bygger og installerer pakker (tar.gz-filer).
 #'
-#' @param pakkemapper Tekstvektor med mappeadresser til pakker. Standard er NULL.
+#' @param pakkemapper Tekstvektor med mappeadresser til R-pakker.
 #' @param installer Logisk variabel. Skal pakkene installeres? Standard er TRUE.
 #' @param stille Logisk variabel. Skal det kun gis ut oppsummerte advarsler og
 #'     feilmeldinger? Standard er TRUE.
 #'
 #' @details
-#' Funksjonen dokumenterer, bygger og eventuelt installerer pakkene som finnes i
-#' `pakkemapper`. Hvis `pakkemapper = NULL` (standard) velges alle pakker som
-#' ligger i mapper som heter `r-pakke` eller `r-pakkar` under `H:/kvalreg/`.
+#' For hver mappeadresse i `pakkemapper` bygges først pakkedokumentasjonen
+#' og så pakken (som en `.tar.gz`-pakkefil).
 #' Hvis `installer = TRUE` blir pakkene installert. Hvis `stille = TRUE` blir
 #' det kun gitt ut oppsummerte advarsler og feilmeldinger.
 #'
@@ -25,20 +23,21 @@ NULL
 #'
 #' @examples
 #' \dontrun{
-#' bygg_og_installer_pakker()
+#' # Finn først alle DESCRIPTION-filer, som indikerer
+#' # at tilhørende foreldermappe er en R-pakkemappe
+#' desc_filer = list.files(
+#'   "m:\\r-pakker\\",
+#'   pattern = "^DESCRIPTION$",
+#'   full.names = TRUE, recursive = TRUE
+#' )
+#' 
+#' # Hent ut mappeadressene, og bygg og installer pakkene
+#' pakkemapper = dirname(desc_filer)
+#' bygg_og_installer_pakker(pakkemapper)
 #' }
-bygg_og_installer_pakker = function(pakkemapper = NULL,
+bygg_og_installer_pakker = function(pakkemapper,
                                     installer = TRUE,
                                     stille = TRUE) {
-  if (is.null(pakkemapper)) {
-    pakkemapper = list.files("H:/kvalreg",
-      pattern = "r-pakk(e|ar)",
-      recursive = TRUE, full.names = TRUE,
-      include.dirs = TRUE
-    ) %>%
-      list.files(pattern = "^[[:alnum:]]*$", full.names = TRUE)
-  }
-
   for (pakkemappe in pakkemapper) {
     pakke = str_extract(pakkemappe, "[[:alnum:]]*$")
     cat("Dokumenter og bygg tar.gz-fil:", pakke, "\n")
