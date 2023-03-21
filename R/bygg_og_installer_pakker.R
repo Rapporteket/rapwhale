@@ -1,22 +1,23 @@
 #' @importFrom stringr str_subset str_extract
 NULL
-#' Bygg og installer pakker
+#' Bygg og installer R-pakker
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' Dokumenterer, bygger og installerer pakker (tar.gz-filer).
+#' Dokumenterer, bygger og installerer R-pakker.
 #'
 #' @param pakkemapper Tekstvektor med mappeadresser til R-pakker.
-#' @param installer Logisk variabel. Skal pakkene installeres? Standard er TRUE.
+#' @param installer Logisk variabel. Skal pakkene installeres (som standard ja).
 #' @param stille Logisk variabel. Skal det kun gis ut oppsummerte advarsler og
-#'     feilmeldinger? Standard er TRUE.
+#'     feilmeldinger (som standard ja)?
 #'
 #' @details
 #' For hver mappeadresse i `pakkemapper` bygges først pakkedokumentasjonen
 #' og så pakken (som en `.tar.gz`-pakkefil).
-#' Hvis `installer = TRUE` blir pakkene installert. Hvis `stille = TRUE` blir
-#' det kun gitt ut oppsummerte advarsler og feilmeldinger.
+#' Hvis `installer = TRUE`, blir også pakken installert.
+#' Hvis `stille = TRUE`,
+#' blir det kun gitt ut oppsummerte advarsler og feilmeldinger.
 #'
 #' @return `NULL`
 #' @export
