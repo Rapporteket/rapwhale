@@ -1,5 +1,3 @@
-#' @importFrom stringr str_subset str_extract
-NULL
 #' Bygg og installer R-pakker
 #'
 #' @description
@@ -40,7 +38,7 @@ bygg_og_installer_pakker = function(pakkemapper,
                                     installer = TRUE,
                                     stille = TRUE) {
   for (pakkemappe in pakkemapper) {
-    pakke = str_extract(pakkemappe, "[[:alnum:]]*$")
+    pakke = basename(pakkemappe)
     cat("Dokumenter og bygg tar.gz-fil:", pakke, "\n")
     devtools::document(pakkemappe,
       roclets = c("rd", "collate", "namespace"),
