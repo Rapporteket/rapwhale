@@ -20,9 +20,11 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' utviklingsnivaa()
 #'
 #' utviklingsnivaa("H:\\kvalreg\\fellesting\\r-pakkar\\rapwhale\\man")
+#' }
 utviklingsnivaa = function(mappe = "man") {
   # Lag vektor med filnamn
   funksjonar = list.files(mappe, pattern = "\\.Rd$")
