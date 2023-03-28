@@ -151,7 +151,10 @@ beregn_kompletthet_med_ukjent = function(data, variabel, na_vektor) {
     )
 
   data_ut = d_na %>%
-    left_join(d_na_ukjent) %>%
+    left_join(d_na_ukjent,
+      by = c(group_vars(data), "variabel", "totalt_antall"),
+      relationship = "one-to-one"
+    ) %>%
     arrange(desc(totalt_antall))
 
   data_ut
