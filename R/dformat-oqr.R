@@ -434,8 +434,8 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
     "kl", "t"
   )
   spek_innlesing = tibble(variabel_id = varnamn_kb) %>%
-    left_join(kb_info, by = "variabel_id") %>%
-    left_join(spek_csv_oqr, by = "variabeltype")
+    left_join(kb_info, by = "variabel_id", relationship = "one-to-one") %>%
+    left_join(spek_csv_oqr, by = "variabeltype", relationship = "many-to-one")
 
   # Har kodeboka variablar av ein type me ikkje har lagt inn støtte for?
   # Dette skal ikkje skje, så avbryt om så er tilfelle.

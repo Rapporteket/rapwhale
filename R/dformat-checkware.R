@@ -93,7 +93,10 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
     select(variabel_id, variabel_id_checkware) %>%
     na.omit()
   kb_kanonisk = kb_kanonisk %>%
-    left_join(variabel_id_checkware, by = "variabel_id")
+    left_join(variabel_id_checkware,
+      by = "variabel_id",
+      relationship = "many-to-one"
+    )
   kb_kanonisk
 }
 # kan teste at funksjonen funker med koden under
@@ -223,7 +226,10 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
   )
 
   kb_skjema = kb_skjema %>%
-    left_join(spek_csv_checkware, by = "variabeltype")
+    left_join(spek_csv_checkware,
+      by = "variabeltype",
+      relationship = "many-to-one"
+    )
 
   # de kategoriske variablene som koder med tekst-verdier skal få character
 

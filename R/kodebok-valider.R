@@ -272,7 +272,10 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
     "kommentar", "character"
   )
   format_kb = tibble(kol_namn = names(kb_stdkols), kol_klasse = purrr::map_chr(kb_stdkols, ~ class(.x)[1]))
-  format = left_join(format_std, format_kb, by = "kol_namn")
+  format = left_join(format_std, format_kb,
+    by = "kol_namn",
+    relationship = "one-to-one"
+  )
   format_feil = format %>%
     filter(kol_klasse_std != kol_klasse)
   if (nrow(format_feil) > 0) {

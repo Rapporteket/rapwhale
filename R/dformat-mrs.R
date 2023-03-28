@@ -102,7 +102,10 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
 
   # legger til "riktige" skjema_id
   kb_mrs_skjema_id = kb_mrs %>%
-    left_join(d_skjema_id, by = c("skjema_id" = "skjema_id_kodebok")) %>%
+    left_join(d_skjema_id,
+      by = c("skjema_id" = "skjema_id_kodebok"),
+      relationship = "many-to-many"
+    ) %>%
     mutate(skjema_id = skjema_id_datadump) %>%
     select(-skjema_id_datadump)
 
@@ -330,8 +333,8 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
     "numerisk_heiltal", "i"
   )
   spek_innlesing = tibble(variabel_id = varnamn_fil) %>%
-    left_join(kb_info, by = "variabel_id") %>%
-    left_join(spek_csv_mrs, by = "variabeltype")
+    left_join(kb_info, by = "variabel_id", relationship = "one-to-one") %>%
+    left_join(spek_csv_mrs, by = "variabeltype", relationship = "many-to-one")
 
   # Har kodeboka variablar av ein type me ikkje har lagt inn støtte for?
   # Dette skal ikkje skje, så avbryt om så er tilfelle.
