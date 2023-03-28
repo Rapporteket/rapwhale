@@ -512,7 +512,7 @@ slik at det vert lettare å finna pasienten i pasientjournalen.)
 ```{r fjern rader med logikk}
 # Koplar tabellen med kjønn på valideringsdatasettet
 d_vld_med_kjonn = d_vld %>%
-  left_join(d_pas, by = c("pasid"))
+  left_join(d_pas, by = "pasid", relationship = "many-to-one")
 
 # Filtrerer vekk rader som gjeld graviditet for «ikkje-kvinner» (inkl. NA-kjønn)
 d_vld_med_kjonn %>%
@@ -567,7 +567,10 @@ d_vld_utval_utkast = d_vld %>%
 d_reg_biverk = select(d_reg, pasid, dato_inn, biverk)
 varnamn_undervar = c("biverk_hovud", "biverk_mage", "biverk_fot")
 d_vld_utval_endeleg = d_vld_utval_utkast %>%
-  left_join(d_reg_biverk) %>%
+  left_join(d_reg_biverk,
+    by = c("pasid", "dato_inn"),
+    relationship = "many-to-one"
+  ) %>%
   group_by(pasid, dato_inn) %>%
   filter(impl(vld_varnamn %in% !!varnamn_undervar, biverk))
 
@@ -705,7 +708,10 @@ per sjukehus og lagra desse datasetta i separate filer:
 ```{r eval=FALSE}
 # Hekt på sjukehusnamn
 d_vld_med_sjukehus = d_vld %>%
-  left_join(d_forlopsinfo, by = c("pasid", "dato_inn"))
+  left_join(d_forlopsinfo,
+    by = c("pasid", "dato_inn"),
+    relationship = "many-to-one"
+  )
 
 # Generer maskinvennlege filadresser
 library(snakecase)

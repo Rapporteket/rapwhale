@@ -446,7 +446,7 @@ ki_oppf_innan_normtid = function(d_oper, d_oppf, dato_datasett, oppf_aar, slingr
 
   # For kvar operasjon, legg til info om eventuelle oppfølgingar
   d_reg = d_oper %>%
-    left_join(d_oppf, by = "pas_id")
+    left_join(d_oppf, by = "pas_id", relationship = "one-to-many")
 
   # For kvar oppfølging, rekn ut kriterievariablar
   d_ki_per_oppf = d_reg %>%
