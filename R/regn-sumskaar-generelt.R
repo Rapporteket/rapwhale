@@ -468,7 +468,10 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
     filter(is.na(variabel)) %>%
     select(delskala, konstantledd = koeffisient)
   d_med_koeff = d_med_koeff %>%
-    left_join(skaaringstabell_konstantledd, by = "delskala", multiple = "all") %>%
+    left_join(skaaringstabell_konstantledd,
+      by = "delskala",
+      relationship = "many-to-one"
+    ) %>%
     mutate(
       konstantledd = if_else(is.na(konstantledd), 0, konstantledd)
     )
