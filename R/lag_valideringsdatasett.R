@@ -89,7 +89,7 @@ lag_valideringsdatasett = function(d_reg, indvars) {
   d_vld$vld_varnamn = rep(list(datavars), nrow(d_reg))
   d_vld = d_vld %>%
     unnest(vld_varnamn) %>%
-    left_join(d_kopling, by = "vld_varnamn")
+    left_join(d_kopling, by = "vld_varnamn", relationship = "many-to-one")
   antal_rader = nrow(d_vld)
   d_vld$rekkjefolgje = seq_len(antal_rader)
 
