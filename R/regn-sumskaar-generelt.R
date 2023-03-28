@@ -186,7 +186,7 @@ sjekk_skaaringstabell = function(skaaringstabell) {
   d_delskala_var = distinct(skaaringstabell_uten_na, delskala, variabel)
   d_var_verdi = distinct(skaaringstabell_uten_na, variabel, verdi)
   d_komb_mangl = d_delskala_var %>%
-    full_join(d_var_verdi, by = "variabel", multiple = "all") %>%
+    full_join(d_var_verdi, by = "variabel", relationship = "many-to-many") %>%
     anti_join(skaaringstabell, by = c("delskala", "variabel", "verdi"))
   if (nrow(d_komb_mangl) > 0) {
     oversikt_komb_mangl =
@@ -458,7 +458,10 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
   # For kvart svar, legg til tilhøyrande koeffisientar
   # (kan vera fleire per svar, dersom det finst fleire delskalaar)
   d_med_koeff = d_svar %>%
-    left_join(skaaringstabell, by = c("variabel", "verdi"), multiple = "all")
+    left_join(skaaringstabell,
+      by = c("variabel", "verdi"),
+      relationship = "many-to-many"
+    )
 
   # Legg til eventuelle konstantledd
   skaaringstabell_konstantledd = skaaringstabell %>%
