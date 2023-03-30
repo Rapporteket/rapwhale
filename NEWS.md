@@ -1,3 +1,87 @@
+# rapwhale versjon 0.5.0
+
+## Samandrag
+
+rapwhale-pakken er no eit eige git-depot,
+og er tilgjengeleg på [GitHub](https://github.com/Rapporteket/rapwhale).
+
+
+## Nytt som krev endringar i *din* kode
+
+- dplyr versjon 1.1.1 eller nyare er no kravd i rapwhale-pakken.
+- Som nemnt i versjon 0.4.0 vert argumentet `tabell` i funksjonane
+  `num()` og `prosent()` fjerna i denne versjonen.
+  Sjå versjonsloggen for v0.4.0 nedanfor for detaljar om endringa.
+
+
+## Ny funksjonalitet
+
+- `skaar_datasett()` har fått støtte for konstantledd.
+  For å leggja til eit konstantledd for ein sumskår legg ein til ei rad i
+  `skaaringstabell`.
+  I rada skal `delskala` vera sumskåren konstantleddet skal gjelda for,
+  `variabel` og `verdi` begge vera `NA`,
+  og `koeffisient` vera verdien til konstantleddet.
+- `regn_ki_univar()` har fått eit nytt argument `alfa` for val av konfidensnivå.
+
+
+## Feil retta opp
+
+- `num()` hadde ein feil som gjorde at `num(NA)` ikkje vart til LaTeX-kommandoen
+  `\textendash`,
+  men teksten «textendash» i staden.
+
+
+## Forbetringar
+
+Det sett opp automatisk køyring av testane i rapwhale-pakken på GitHub.
+Dette vil gje endå betre sikring mot at nye feil vert innført,
+og oppdateringar i andre pakkar som fører til endringar i rapwhale
+vil oppdagast raskare.
+
+Alle kall av `*_join()`-funksjonane frå dplyr-pakken brukar no det nye
+argumentet `relationship`,
+som vart introdusert i dplyr versjon 1.1.1.
+I dette argumentet spesifiserer ein kva type matching ein ventar
+(éin-til-éin, mange-til-éin, éin-til-mange eller mange-til-mange).
+Dette gjer koden sikrare ved at ein får feilmelding ved forsøk på
+joining med uventa tal på treff per rad.
+Denne endringa gjer at rapwhale krev versjon 1.1.1 eller nyare av dplyr-pakken.
+
+Ein del funksjonar frå styler-pakken som er brukt i rapwhale,
+som tidlegare var interne og vart kalla ved bruk av `:::`-operatoren,
+er gjort eksterne.
+Desse er tekne i bruk,
+og vert kalla på vanleg måte.
+
+Oppdatert importerte og føreslegne pakkar:
+- Lagt til manglande pakkar i bruk i funksjonar under imports.
+- Lagt til manglande pakkar i bruk vignettar og testar under suggests.
+- Fjerna pakkar som ikkje var i bruk frå imports.
+- Flytta nokre pakkar frå imports til suggests
+  (pakkar som ikkje er nødvendige for funksjonaliteten til rapwhale,
+  t.d. pakkar berre brukt i testar).
+
+Funksjonalitet som har vorte utdatert (deprecated) i andre pakkar er oppdatert:
+
+- `all_of()` eller `any_of()` i staden for ekstern vektor i tidyselect.
+- `linewidth` i staden for `size` i linjer i ggplot2.
+- `as.symbol()` i staden for filtrering på éin-kolonne-matriser i `filter()`.
+
+Fleire funksjonar har fått:
+
+- Utbetra dokumentasjon,
+  blant anna for nokre argument som mangla dette i nokre funksjonar.
+- Fleire og betre testar.
+  Dette vil ikkje vera synleg for brukaren,
+  men det sikrar at funksjonane alltid skal fungera slik dei er meint.
+  Feil/manglar som vart avdekte av dei nye testane,
+  er sjølvsagt retta opp.
+- Køyrbar kode i eksempla (t.d. ved manglande lasting av pakke).
+- Mindre feilrettingar og utbetringar.
+
+
+
 # rapwhale versjon 0.4.0
 
 ## Samandrag
