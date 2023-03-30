@@ -21,9 +21,6 @@ NULL
 #' 
 #' @param x Vektor med tala ein ønskjer å få ut på LaTeX-format.
 #' @param desimalar Kor mange desimalar skal visast etter kommaet?
-#' @param tabell `r lifecycle::badge("deprecated")` Utdatert og ikkje
-#'   lenger nødvendig argument.
-#'   Vert fjerna i neste versjon av pakken.
 #'   
 #' @details
 #' Tala vert viste med tusenskiljeteikn («12 345», ikkje «12345»),
@@ -65,16 +62,7 @@ NULL
 #' paste0("Store tal som ", num(123456789), " får mellomrom som tusenskiljeteikn.")
 #' paste0("Pi avrunda til fire desimalar er ", num(pi, desimalar = 4), ".")
 #' paste0("Nulldesimalar vert òg viste: ", num(12, desimalar = 2))
-num = function(x, desimalar = NULL, tabell = lifecycle::deprecated()) {
-  # Åtvar viss nokon brukar det utdaterte «tabell»-argumentet
-  if (lifecycle::is_present(tabell)) {
-    lifecycle::deprecate_warn(
-      when = "0.4.0", 
-      what = "num(tabell)",
-      details = "It will be completely dropped in the next version."
-    )
-  }
-
+num = function(x, desimalar = NULL) {
   if (!is.null(desimalar)) {
     # LaTeX-kommandoen kan runda av for oss,
     # men me rundar av i R for å sikra at avrundinga
@@ -188,9 +176,6 @@ akse_tall_format = function(antall_desimaler = 2, decimal.mark = ",", big.mark =
 #' Tar inn et tall og konverterer det til LaTeX-kommando for å skrive prosent-tegn i tekst.
 #' @param x Tallet som skal skrives som prosentverdi.
 #' @param desimalar Antall desimaler som skal vises.
-#' @param tabell `r lifecycle::badge("deprecated")` Utdatert og ikke
-#'   lenger nødvendig argument. Blir fjernet i neste versjon av pakken.
-
 #' @export
 #' @examples
 #' menn = 5
@@ -199,15 +184,7 @@ akse_tall_format = function(antall_desimaler = 2, decimal.mark = ",", big.mark =
 #'
 #' # Til bruk i setning i latex
 #' paste0("Andel menn er ", prosent(andel_menn), ".")
-prosent = function(x, desimalar = 0, tabell = lifecycle::deprecated()) {
-  # Åtvar viss nokon brukar det utdaterte «tabell»-argumentet
-  if (lifecycle::is_present(tabell)) {
-    lifecycle::deprecate_warn(
-      when = "0.4.0", 
-      what = "prosent(tabell)",
-      details = "It will be completely dropped in the next version."
-    )
-  }
+prosent = function(x, desimalar = 0) {
   prosent_tekst = x %>%
     purrr::map_chr(~ num(100 * .x, desimalar) %>%
       stringr::str_c("\\prosent"))
