@@ -6,6 +6,21 @@ rapwhale-pakken er no eit eige git-depot,
 og er tilgjengeleg på [GitHub](https://github.com/Rapporteket/rapwhale).
 
 
+## Endringar i utviklingsnvå
+
+Desse funksjonane er nye:
+
+- `aggreger_ki_rate()`:
+  Funksjon for utrekning av kvalitetsindikatorar for ratar.
+  Sjå hjelpesida for funksjonen eller oppdatert vignett
+  «Kvalitetsindikatorfunksjonar» for detaljar.
+
+
+Desse funksjonane har endra utviklingsnivå:
+
+- `aggreger_ki_rate()`: ny funksjon, `experimental`.
+
+
 ## Nytt som krev endringar i *din* kode
 
 - dplyr versjon 1.1.1 eller nyare er no kravd i rapwhale-pakken.
@@ -23,6 +38,13 @@ og er tilgjengeleg på [GitHub](https://github.com/Rapporteket/rapwhale).
   `variabel` og `verdi` begge vera `NA`,
   og `koeffisient` vera verdien til konstantleddet.
 - `regn_ki_univar()` har fått eit nytt argument `alfa` for val av konfidensnivå.
+- I `normaliser_varnamn()` vart variabelnamn utan bokstavar gjort om til
+  tomme tekstvektorar.
+  Funksjonen krev no variabelnamn med minst éin bokstav,
+  og gjev feilmelding elles.
+- `normaliser_varnamn()` gjev no åtvaring viss utdata får to eller fleire like
+  variabelnamn.
+- `les_kb_mrs()` tolkar no `"None"` og `"Unknown"` som manglande verdiar.
 
 
 ## Feil retta opp
@@ -30,6 +52,10 @@ og er tilgjengeleg på [GitHub](https://github.com/Rapporteket/rapwhale).
 - `num()` hadde ein feil som gjorde at `num(NA)` ikkje vart til LaTeX-kommandoen
   `\textendash`,
   men teksten «textendash» i staden.
+- `regn_ki_univar()` kalla ein funksjon `simpleboot::boot.ci()` som ikkje fanst
+  i den pakken.
+  Funksjonen brukar no pakken `boot` i staden for `simpleboot`,
+  og bootstrapping funkar igjen.
 
 
 ## Forbetringar
@@ -67,6 +93,11 @@ Funksjonalitet som har vorte utdatert (deprecated) i andre pakkar er oppdatert:
 - `all_of()` eller `any_of()` i staden for ekstern vektor i tidyselect.
 - `linewidth` i staden for `size` i linjer i ggplot2.
 - `as.symbol()` i staden for filtrering på éin-kolonne-matriser i `filter()`.
+- `append(after = 0)` i staden for `purrr::prepend()`.
+- `if()`/`else()` i staden for `purrr::when()`.
+- `paste0()` i staden for `stringr::str_c()` ved resirkulering av vektor med
+  anna lengd enn 1.
+- Anonyme funksjonar i staden for `...` i `dplyr::across()`.
 
 Fleire funksjonar har fått:
 
