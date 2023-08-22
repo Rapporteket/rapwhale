@@ -20,6 +20,16 @@ test_that("regn_ki_univar() gjev forventa resultat", {
   expect_identical(sepal_length_resultat, sepal_length_forventa)
 })
 
+test_that("regn_ki_univar() gjev forventa resultat ved val av alfa", {
+  sepal_length_alfa_resultat = regn_ki_univar(iris$Sepal.Length, alfa = 0.1)
+  sepal_length_alfa_forventa = tibble::tibble(
+    low = 5.731426832856339359523190069012343883514404296875,
+    mean = 5.843333333333333712289459072053432464599609375,
+    high = 5.955239833810328065055728075094521045684814453125
+  )
+  expect_identical(sepal_length_alfa_resultat, sepal_length_alfa_forventa)
+})
+
 test_that("regn_ki_univar() funkar med grupperte inndata", {
   sepal_length_gruppert_resultat = iris %>%
     group_by(Species) %>%
