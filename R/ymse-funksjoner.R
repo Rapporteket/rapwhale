@@ -148,7 +148,7 @@ regn_ki_bin = function(x, n, alfa = 0.05) {
 
 
 
-#' Konfidenstinervall basert på gjennomsnittet til en  kontinuerlig variabel
+#' Konfidenstinervall basert på gjennomsnittet til en kontinuerlig variabel
 #'
 #' @description
 #' `r lifecycle::badge("experimental")`
