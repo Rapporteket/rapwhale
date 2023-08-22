@@ -164,6 +164,10 @@ regn_ki_bin = function(x, n, alfa = 0.05) {
 #' @param alfa Numerisk verdi som angir konfidensnivået.
 #' Standardverdi er 0.05,
 #' som tilsvarer et 95 %-konfidensintervall.
+#' @param R
+#' Antall bootstrap-replikasjoner.
+#' Kun i bruk når `bootstrap` er `TRUE`.
+#' Standardverdi = 9999.
 #'
 #' @details
 #' Inndatasettet kan enten være en vektor,
@@ -191,7 +195,7 @@ regn_ki_bin = function(x, n, alfa = 0.05) {
 #' mtcars %>%
 #'   group_by(am) %>%
 #'   summarise(regn_ki_univar(mpg))
-regn_ki_univar = function(x, bootstrap = FALSE, alfa = 0.05) {
+regn_ki_univar = function(x, bootstrap = FALSE, alfa = 0.05, R = 9999) {
   # Fjern eventuelle NA-verdier
   x = x[!is.na(x)]
 
@@ -211,7 +215,7 @@ regn_ki_univar = function(x, bootstrap = FALSE, alfa = 0.05) {
           data = x[idx]
           mean(data)
         }
-        bootstrap = boot::boot(x, snitt_stat, R = 9999)
+        bootstrap = boot::boot(x, snitt_stat, R = R)
         konfint = boot::boot.ci(
           boot.out = bootstrap,
           conf = 1 - alfa,
