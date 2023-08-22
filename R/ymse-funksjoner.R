@@ -202,10 +202,10 @@ regn_ki_univar = function(x, bootstrap = FALSE, alfa = 0.05, R = 9999) {
   # Hvis det er for få eller for lite varierende
   # observasjoner til å regne ut konfidensintervall,
   # returner NA for konfidensintervallene
-  if ((length(x) < 2) | (sd(x, na.rm = TRUE) == 0)) {
+  if ((length(x) < 2) | (sd(x) == 0)) {
     tibble::tibble(
       low = NA_real_,
-      mean = mean(x, na.rm = TRUE),
+      mean = mean(x),
       high = NA_real_
     )
   } else {
@@ -224,7 +224,7 @@ regn_ki_univar = function(x, bootstrap = FALSE, alfa = 0.05, R = 9999) {
         ki = konfint$percent
         tibble::tibble(
           low = ki[4],
-          mean = mean(x, na.rm = TRUE),
+          mean = mean(x),
           high = ki[5]
         )
       }
