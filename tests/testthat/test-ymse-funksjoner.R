@@ -56,3 +56,14 @@ test_that("regn_ki_univar() ignorerer NA-verdiar i inndata", {
     expected = regn_ki_univar(fleire_pluss_na[!is.na(fleire_pluss_na)])
   )
 })
+
+test_that("regn_ki_univar() med bootstrapping gjev ikkje feilmelding med NA-verdiar i inndata", {
+  expect_error(regn_ki_univar(alle_na, bootstrap = TRUE), NA)
+  expect_error(regn_ki_univar(ein_pluss_na, bootstrap = TRUE), NA)
+  expect_error(regn_ki_univar(fleire_pluss_na, bootstrap = TRUE), NA)
+
+  # Seed som i utgangspunktet gav feilmelding med bootstrap
+  set.seed(11111)
+  to_pluss_na = c(1, 2, rep(NA_real_, 5))
+  expect_error(regn_ki_univar(to_pluss_na, bootstrap = TRUE), NA)
+})
