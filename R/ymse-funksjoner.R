@@ -233,7 +233,7 @@ regn_ki_univar = function(x, bootstrap = FALSE, alfa = 0.05, R = 9999) {
       mod = t.test(x, conf.level = 1 - alfa)
       tibble::tibble(
         low = mod$conf.int[1],
-        mean = mod$estimate,
+        mean = unname(mod$estimate),
         high = mod$conf.int[2]
       )
     }
