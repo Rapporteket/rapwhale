@@ -174,6 +174,8 @@ regn_ki_bin = function(x, n, alfa = 0.05) {
 #' blir resultatet regnet ut på gruppenivå,
 #' med én rad per gruppe.
 #'
+#' Funksjonen ignorerer `NA`-verdier i `x`.
+#'
 #' @return
 #' Returnerer en tibble med nedre og øvre grense for konfidensintervall,
 #' samt gjennomsnittsverdien av `x`.
