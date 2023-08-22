@@ -77,6 +77,53 @@ test_that("regn_ki_univar() ignorerer NA-verdiar i inndata", {
   )
 })
 
+test_that("regn_ki_univar() med bootstrapping gjev forventa resultat", {
+  set.seed(12345)
+  sepal_length_boot_resultat = regn_ki_univar(iris$Sepal.Length,
+    bootstrap = TRUE
+  )
+  sepal_length_boot_forventa = tibble::tibble(
+    low = 5.71266666666666633744853243115358054637908935546875,
+    mean = 5.843333333333333712289459072053432464599609375,
+    high = 5.97866666666666635165938714635558426380157470703125
+  )
+  expect_identical(sepal_length_boot_resultat, sepal_length_boot_forventa)
+})
+
+test_that("regn_ki_univar() med bootstrapping gjev forventa resultat ved val av alfa", {
+  set.seed(55555)
+  sepal_length_boot_alfa_resultat = regn_ki_univar(iris$Sepal.Length,
+    bootstrap = TRUE,
+    alfa = 0.1
+  )
+  sepal_length_boot_alfa_forventa = tibble::tibble(
+    low = 5.73333333333333339254522798000834882259368896484375,
+    mean = 5.843333333333333712289459072053432464599609375,
+    high = 5.9546666666666663303431050735525786876678466796875
+  )
+  expect_identical(
+    object = sepal_length_boot_alfa_resultat,
+    expected = sepal_length_boot_alfa_forventa
+  )
+})
+
+test_that("regn_ki_univar() med bootstrapping gjev forventa resultat ved val av tal replikasjonar", {
+  set.seed(247385)
+  sepal_length_boot_alfa_resultat = regn_ki_univar(iris$Sepal.Length,
+    bootstrap = TRUE,
+    R = 500
+  )
+  sepal_length_boot_alfa_forventa = tibble::tibble(
+    low = 5.7243555705374244979566356050781905651092529296875,
+    mean = 5.843333333333333712289459072053432464599609375,
+    high = 5.9787553907549995102499451604671776294708251953125
+  )
+  expect_identical(
+    object = sepal_length_boot_alfa_resultat,
+    expected = sepal_length_boot_alfa_forventa
+  )
+})
+
 test_that("regn_ki_univar() med bootstrapping gjev ikkje feilmelding med NA-verdiar i inndata", {
   expect_error(regn_ki_univar(alle_na, bootstrap = TRUE), NA)
   expect_error(regn_ki_univar(ein_pluss_na, bootstrap = TRUE), NA)
