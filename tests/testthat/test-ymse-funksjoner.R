@@ -1,5 +1,15 @@
 # Testar for regn_ki_univar()
 
+test_that("Gir NA-verdier i ki om for få elementer eller for lav varians", {
+  x_faa_element = 1
+  x_lav_varians = rep(1, 4)
+
+  fasit = tibble::tibble(low = NA_real_, mean = 1, high = NA_real_)
+
+  expect_identical(regn_ki_univar(x_faa_element), fasit)
+  expect_identical(regn_ki_univar(x_lav_varians), fasit)
+})
+
 test_that("regn_ki_univar() gjev forventa resultat", {
   sepal_length_resultat = regn_ki_univar(iris$Sepal.Length)
   sepal_length_forventa = tibble::tibble(
