@@ -37,3 +37,22 @@ test_that("regn_ki_univar() funkar med grupperte inndata", {
     expected = sepal_length_gruppert_forventa
   )
 })
+
+alle_na = rep(NA_real_, 5)
+ein_pluss_na = c(1, rep(NA_real_, 5))
+fleire_pluss_na = c(1, 0.9, 0.8, 1.05, 1.1, 0.95, 1, rep(NA_real_, 5))
+
+test_that("regn_ki_univar() ignorerer NA-verdiar i inndata", {
+  expect_identical(
+    object = regn_ki_univar(alle_na),
+    expected = regn_ki_univar(numeric())
+  )
+  expect_identical(
+    object = regn_ki_univar(ein_pluss_na),
+    expected = regn_ki_univar(ein_pluss_na[!is.na(ein_pluss_na)])
+  )
+  expect_identical(
+    object = regn_ki_univar(fleire_pluss_na),
+    expected = regn_ki_univar(fleire_pluss_na[!is.na(fleire_pluss_na)])
+  )
+})
