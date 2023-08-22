@@ -35,7 +35,6 @@ Imports:
     readr,
     forcats,
     glue,
-    simpleboot,
     colorspace,
     binom,
     scales (>= 1.1.1),
