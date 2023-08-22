@@ -192,6 +192,9 @@ regn_ki_bin = function(x, n, alfa = 0.05) {
 #'   group_by(am) %>%
 #'   summarise(regn_ki_univar(mpg))
 regn_ki_univar = function(x, bootstrap = FALSE, alfa = 0.05) {
+  # Fjern eventuelle NA-verdier
+  x = x[!is.na(x)]
+
   # Hvis det er for få eller for lite varierende
   # observasjoner til å regne ut konfidensintervall,
   # returner NA for konfidensintervallene
