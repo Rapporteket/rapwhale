@@ -20,14 +20,16 @@ test_that("regn_ki_univar() gjev forventa resultat", {
   expect_identical(sepal_length_resultat, sepal_length_forventa)
 })
 
-test_that("regn_ki_univar() gjev forventa resultat ved val av alfa", {
-  sepal_length_alfa_resultat = regn_ki_univar(iris$Sepal.Length, alfa = 0.1)
-  sepal_length_alfa_forventa = tibble::tibble(
+test_that("regn_ki_univar() gjev forventa resultat ved val av konfidensnivå", {
+  sepal_length_konf_resultat = regn_ki_univar(iris$Sepal.Length,
+    konf_niva = 0.9
+  )
+  sepal_length_konf_forventa = tibble::tibble(
     low = 5.731426832856339359523190069012343883514404296875,
     mean = 5.843333333333333712289459072053432464599609375,
     high = 5.955239833810328065055728075094521045684814453125
   )
-  expect_identical(sepal_length_alfa_resultat, sepal_length_alfa_forventa)
+  expect_identical(sepal_length_konf_resultat, sepal_length_konf_forventa)
 })
 
 test_that("regn_ki_univar() funkar med grupperte inndata", {
@@ -90,20 +92,20 @@ test_that("regn_ki_univar() med bootstrapping gjev forventa resultat", {
   expect_identical(sepal_length_boot_resultat, sepal_length_boot_forventa)
 })
 
-test_that("regn_ki_univar() med bootstrapping gjev forventa resultat ved val av alfa", {
+test_that("regn_ki_univar() med bootstrapping gjev forventa resultat ved val av konfidensnivå", {
   set.seed(55555)
-  sepal_length_boot_alfa_resultat = regn_ki_univar(iris$Sepal.Length,
+  sepal_length_boot_konf_resultat = regn_ki_univar(iris$Sepal.Length,
     bootstrap = TRUE,
-    alfa = 0.1
+    konf_niva = 0.9
   )
-  sepal_length_boot_alfa_forventa = tibble::tibble(
+  sepal_length_boot_konf_forventa = tibble::tibble(
     low = 5.73333333333333339254522798000834882259368896484375,
     mean = 5.843333333333333712289459072053432464599609375,
     high = 5.9546666666666663303431050735525786876678466796875
   )
   expect_identical(
-    object = sepal_length_boot_alfa_resultat,
-    expected = sepal_length_boot_alfa_forventa
+    object = sepal_length_boot_konf_resultat,
+    expected = sepal_length_boot_konf_forventa
   )
 })
 
