@@ -109,18 +109,18 @@ test_that("regn_ki_univar() med bootstrapping gjev forventa resultat ved val av 
 
 test_that("regn_ki_univar() med bootstrapping gjev forventa resultat ved val av tal replikasjonar", {
   set.seed(247385)
-  sepal_length_boot_alfa_resultat = regn_ki_univar(iris$Sepal.Length,
+  sepal_length_boot_repl_resultat = regn_ki_univar(iris$Sepal.Length,
     bootstrap = TRUE,
     R = 500
   )
-  sepal_length_boot_alfa_forventa = tibble::tibble(
+  sepal_length_boot_repl_forventa = tibble::tibble(
     low = 5.7243555705374244979566356050781905651092529296875,
     mean = 5.843333333333333712289459072053432464599609375,
     high = 5.9787553907549995102499451604671776294708251953125
   )
   expect_identical(
-    object = sepal_length_boot_alfa_resultat,
-    expected = sepal_length_boot_alfa_forventa
+    object = sepal_length_boot_repl_resultat,
+    expected = sepal_length_boot_repl_forventa
   )
 })
 
