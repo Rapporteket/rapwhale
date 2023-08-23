@@ -1,13 +1,20 @@
 # Testar for regn_ki_univar()
 
 test_that("Gir NA-verdier i ki om for få elementer eller for lav varians", {
-  x_faa_element = 1
+  x_ingen_element = numeric()
+  x_fa_element = 1
   x_lav_varians = rep(1, 4)
 
-  fasit = tibble::tibble(low = NA_real_, mean = 1, high = NA_real_)
+  fasit_ingen_element = tibble::tibble(
+    low = NA_real_,
+    mean = NaN,
+    high = NA_real_
+  )
+  fasit_fa_element = tibble::tibble(low = NA_real_, mean = 1, high = NA_real_)
 
-  expect_identical(regn_ki_univar(x_faa_element), fasit)
-  expect_identical(regn_ki_univar(x_lav_varians), fasit)
+  expect_identical(regn_ki_univar(x_ingen_element), fasit_ingen_element)
+  expect_identical(regn_ki_univar(x_fa_element), fasit_fa_element)
+  expect_identical(regn_ki_univar(x_lav_varians), fasit_fa_element)
 })
 
 test_that("regn_ki_univar() gjev forventa resultat", {
