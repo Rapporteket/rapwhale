@@ -161,8 +161,8 @@ regn_ki_bin = function(x, n, alfa = 0.05) {
 #' eller ei.
 #' Standardverdi er `FALSE`,
 #' altså å ikke bruke bootstrap.
-#' @param alfa Numerisk verdi som angir konfidensnivået.
-#' Standardverdi er 0.05,
+#' @param konf_niva Numerisk verdi som angir konfidensnivået.
+#' Standardverdi er 0.95,
 #' som tilsvarer et 95 %-konfidensintervall.
 #' @param R
 #' Antall bootstrap-replikasjoner.
@@ -195,7 +195,7 @@ regn_ki_bin = function(x, n, alfa = 0.05) {
 #' mtcars %>%
 #'   group_by(am) %>%
 #'   summarise(regn_ki_univar(mpg))
-regn_ki_univar = function(x, bootstrap = FALSE, alfa = 0.05, R = 9999) {
+regn_ki_univar = function(x, bootstrap = FALSE, konf_niva = 0.95, R = 9999) {
   # Fjern eventuelle NA-verdier
   x = x[!is.na(x)]
 
@@ -210,7 +210,7 @@ regn_ki_univar = function(x, bootstrap = FALSE, alfa = 0.05, R = 9999) {
     )
   } else {
     if (bootstrap) { # Hvis man ønsker boostrap kjøres denne koden,
-      ki_bootstrap = function(x, alfa) {
+      ki_bootstrap = function(x, konf_niva) {
         snitt_stat = function(x, idx) {
           data = x[idx]
           mean(data)
@@ -218,7 +218,7 @@ regn_ki_univar = function(x, bootstrap = FALSE, alfa = 0.05, R = 9999) {
         bootstrap = boot::boot(x, snitt_stat, R = R)
         konfint = boot::boot.ci(
           boot.out = bootstrap,
-          conf = 1 - alfa,
+          conf = konf_niva,
           type = "perc"
         )
         ki = konfint$percent
@@ -228,9 +228,9 @@ regn_ki_univar = function(x, bootstrap = FALSE, alfa = 0.05, R = 9999) {
           high = ki[5]
         )
       }
-      ki_bootstrap(x, alfa)
+      ki_bootstrap(x, konf_niva)
     } else {
-      mod = t.test(x, conf.level = 1 - alfa)
+      mod = t.test(x, conf.level = konf_niva)
       tibble::tibble(
         low = mod$conf.int[1],
         mean = unname(mod$estimate),
