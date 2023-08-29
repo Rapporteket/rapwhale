@@ -1,6 +1,6 @@
 # tester for tidslinje-funksjon:
 
-# Tester - Funksjon 1 -----------------------------------------------------
+# Tester - Periode til tidslinje -----------------------------------------------------
 
 context("periode_til_tidslinje: feilmeldinger ved ugyldige inndata")
 
