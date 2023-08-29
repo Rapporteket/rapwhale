@@ -245,3 +245,7 @@ test_that("Funksjonen fungerer med kun én del", {
   dato = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
   expect_equal(tid_til_tidslinje(dato, 1), c(2019.5, 2019.5, 2019.5, 2019.5))
 })
+
+test_that("Funksjonen fungerer ved ikke-etterfølgende årstall", {
+  expect_equal(tid_til_tidslinje(as.Date(c("2019-01-01", "2022-01-01")), 2), c(2019.25, 2022.25))
+})
