@@ -159,10 +159,6 @@ tid_til_tidslinje = function(dato, antall_deler) {
       lubridate::tz(dato) = "UTC"
     }
 
-    # Hvis format er POSIXlt, men time, minutt og sekund er 0 settes tidspunkt til 1200.
-    if (all(unlist(dato[1])[1:3] == 0)) {
-      lubridate::hour(dato) = 12
-    }
   }
 
   if (any(is.na(dato) == TRUE)) {
