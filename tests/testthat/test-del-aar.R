@@ -218,10 +218,14 @@ test_that("Vi får ønsket utverdi når dato er i POSIXct-format med klokkeslett
 test_that("Vi får ønsket utverdi når dato er i POSIXlt-format med klokkeslett", {
   dato_lt_med_klokke = as.POSIXlt(c("2019-01-01 12:00", "2019-04-01 12:00", "2019-08-01 12:00", "2019-12-01 12:00"))
   dato_lt_med_klokke_diff = as.POSIXlt(c("2019-01-01 02:00", "2019-04-01 02:00", "2019-08-01 02:00", "2019-12-01 02:00"))
+  dato_lt_med_klokke_midnatt = as.POSIXlt(c("2019-01-01 00:00:00", "2019-05-31 13:00:00", "2019-07-01 00:00:00", "2019-12-01 12:00:00"),
+    tz = "UTC"
+  )
   dato_Date = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
 
   expect_identical(tid_til_tidslinje(dato_lt_med_klokke, 5), tid_til_tidslinje(dato_Date, 5))
   expect_true(any(tid_til_tidslinje(dato_lt_med_klokke_diff, 500) != tid_til_tidslinje(dato_Date, 500)))
+  expect_identical(tid_til_tidslinje(dato_lt_med_klokke_midnatt, 500), c(2019.001, 2019.413,2019.495, 2019.917))
 })
 
 test_that("Vi får ønsket utverdi når dato og tid er like over nyttår (01:00:00)", {
