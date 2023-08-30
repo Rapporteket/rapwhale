@@ -181,7 +181,7 @@ tid_til_tidslinje = function(dato, antall_deler) {
     x = lubridate::decimal_date(dato),
     vec = aar, rightmost.closed = FALSE,
     left.open = FALSE
-  ) # (2019,2020]
+  ) 
 
   # Returnerer koordinater
   (aar_midtpunkt[nye_pkt])
