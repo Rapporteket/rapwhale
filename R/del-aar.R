@@ -168,10 +168,10 @@ tid_til_tidslinje = function(dato, antall_deler) {
   # Finne midtpunkt for alle årstall som er representert i dato.
   endepunkt = (1:antall_deler) * (1 / antall_deler)
 
-  unike_ar = sort(unique(lubridate::year(dato)))
-  aar = c(min(unike_ar), endepunkt + rep(unike_ar, each = length(endepunkt)))
-
-  aar_midtpunkt = numeric(length = length(unike_ar) * antall_deler)
+  unike_ar = unique(lubridate::year(dato))
+  aar = unique(sort(c(unike_ar, endepunkt + rep(unike_ar, each = length(endepunkt)))))
+  
+  aar_midtpunkt = numeric(length = length(aar)-1)
   for (i in 1:length(aar_midtpunkt)) {
     aar_midtpunkt[i] = (aar[i] + aar[i + 1]) / 2
   }
