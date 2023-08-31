@@ -251,5 +251,11 @@ test_that("Funksjonen fungerer med kun én del", {
 })
 
 test_that("Funksjonen fungerer ved ikke-etterfølgende årstall", {
-  expect_equal(tid_til_tidslinje(as.Date(c("2019-01-01", "2022-01-01")), 2), c(2019.25, 2022.25))
+  expect_identical(tid_til_tidslinje(dato = as.POSIXlt(c(
+    "2019-12-31 23:59:00", "2020-01-01 00:00:01", "2020-12-31 23:59:59", "2022-01-01 00:00:01")), 500),
+    c(2019.999, 2020.001, 2020.999, 2022.001))
+  expect_identical(tid_til_tidslinje(dato = as.Date(c("2000-01-01", "2022-01-01", "2022-12-31", "2014-01-01")), 2), 
+                   c(2000.25, 2022.25, 2022.75, 2014.25))
+  expect_equal(tid_til_tidslinje(dato = as.Date(c("2000-01-01", "2019-01-11", "2020-12-31", "2022-01-21")), 52), 
+               c(2000.009615, 2019.028846, 2020.990385, 2022.048077))
 })
