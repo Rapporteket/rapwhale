@@ -305,6 +305,9 @@ erstatt_ukjent_for_datasett = function(data, ukjent_datasett) {
 
 #' Beregn kompletthet med og uten ukjente verdier
 #'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
 #' Funksjonen beregner antall og andel missing med og uten ukjente verdier.
 #' Først beregnes antall og andel missing NA-verdier direkte.
 #' I tillegg erstattes ukjente verdier oppgitt i ukjent_datasett med NA
