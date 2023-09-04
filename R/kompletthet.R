@@ -163,13 +163,14 @@ beregn_kompletthet_med_ukjent = function(data, variabel, na_vektor) {
 
 # beregn_kompletthet_datasett ---------------------------------------------
 
-# Tar inn et datasett det skal beregnes kompletthet for og returnerer en
-# tibble med oversikt over kompletthet for samtlige variabler. Tar ikke
-# hensyn til Ukjent/ikke besvart etc.
-
 #' Beregn kompletthet for datasett
 #'
-#' Funksjonen beregner andel NA verdier for alle variabler i et gitt datasett.
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
+#' Tar inn et datasett det skal beregnes kompletthet for og returnerer en
+#' tibble med oversikt over kompletthet for samtlige variabler. Tar ikke
+#' hensyn til Ukjent/ikke besvart etc.
 #'
 #' @param data Datasett det skal beregnes kompletthet for.
 #'
@@ -208,8 +209,11 @@ beregn_kompletthet_datasett = function(data) {
 
 # Erstatt_ukjent_for_datasett -------------------------------------------------
 
-#' erstatter ukjente verdier med na for et datasett
-#'
+#' Erstatt ukjent for datasett
+#' 
+#' @description
+#' `r lifecycle::badge("experimental")`
+#' 
 #' Enkelte variabler har egne verdier for å indikere manglende besvarelse
 #' i tillegg til NA-verdier, for eksempel verdien -1 for 
 #' verditekst "Velg Verdi" eller "Ukjent verdi".
