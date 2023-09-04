@@ -1,4 +1,4 @@
-# Testar for regn_ki_univar()
+# Testar for regn_konfint_univar()
 
 test_that("Gir NA-verdier i ki om for få elementer eller for lav varians", {
   x_ingen_element = numeric()
@@ -12,13 +12,13 @@ test_that("Gir NA-verdier i ki om for få elementer eller for lav varians", {
   )
   fasit_fa_element = tibble::tibble(low = NA_real_, mean = 1, high = NA_real_)
 
-  expect_identical(regn_ki_univar(x_ingen_element), fasit_ingen_element)
-  expect_identical(regn_ki_univar(x_fa_element), fasit_fa_element)
-  expect_identical(regn_ki_univar(x_lav_varians), fasit_fa_element)
+  expect_identical(regn_konfint_univar(x_ingen_element), fasit_ingen_element)
+  expect_identical(regn_konfint_univar(x_fa_element), fasit_fa_element)
+  expect_identical(regn_konfint_univar(x_lav_varians), fasit_fa_element)
 })
 
-test_that("regn_ki_univar() gjev forventa resultat", {
-  sepal_length_resultat = regn_ki_univar(iris$Sepal.Length)
+test_that("regn_konfint_univar() gjev forventa resultat", {
+  sepal_length_resultat = regn_konfint_univar(iris$Sepal.Length)
   sepal_length_forventa = tibble::tibble(
     low = 5.70973248150668855060985151794739067554473876953125,
     mean = 5.843333333333333712289459072053432464599609375,
@@ -27,8 +27,8 @@ test_that("regn_ki_univar() gjev forventa resultat", {
   expect_identical(sepal_length_resultat, sepal_length_forventa)
 })
 
-test_that("regn_ki_univar() gjev forventa resultat ved val av konfidensnivå", {
-  sepal_length_konf_resultat = regn_ki_univar(iris$Sepal.Length,
+test_that("regn_konfint_univar() gjev forventa resultat ved val av konfidensnivå", {
+  sepal_length_konf_resultat = regn_konfint_univar(iris$Sepal.Length,
     konf_niva = 0.9
   )
   sepal_length_konf_forventa = tibble::tibble(
@@ -39,10 +39,10 @@ test_that("regn_ki_univar() gjev forventa resultat ved val av konfidensnivå", {
   expect_identical(sepal_length_konf_resultat, sepal_length_konf_forventa)
 })
 
-test_that("regn_ki_univar() funkar med grupperte inndata", {
+test_that("regn_konfint_univar() funkar med grupperte inndata", {
   sepal_length_gruppert_resultat = iris %>%
     group_by(Species) %>%
-    summarise(regn_ki_univar(Sepal.Length))
+    summarise(regn_konfint_univar(Sepal.Length))
   sepal_length_gruppert_forventa = tibble::tibble(
     Species = as.factor(c("setosa", "versicolor", "virginica")),
     low = c(
@@ -71,24 +71,24 @@ alle_na = rep(NA_real_, 5)
 ein_pluss_na = c(1, rep(NA_real_, 5))
 fleire_pluss_na = c(1, 0.9, 0.8, 1.05, 1.1, 0.95, 1, rep(NA_real_, 5))
 
-test_that("regn_ki_univar() ignorerer NA-verdiar i inndata", {
+test_that("regn_konfint_univar() ignorerer NA-verdiar i inndata", {
   expect_identical(
-    object = regn_ki_univar(alle_na),
-    expected = regn_ki_univar(numeric())
+    object = regn_konfint_univar(alle_na),
+    expected = regn_konfint_univar(numeric())
   )
   expect_identical(
-    object = regn_ki_univar(ein_pluss_na),
-    expected = regn_ki_univar(ein_pluss_na[!is.na(ein_pluss_na)])
+    object = regn_konfint_univar(ein_pluss_na),
+    expected = regn_konfint_univar(ein_pluss_na[!is.na(ein_pluss_na)])
   )
   expect_identical(
-    object = regn_ki_univar(fleire_pluss_na),
-    expected = regn_ki_univar(fleire_pluss_na[!is.na(fleire_pluss_na)])
+    object = regn_konfint_univar(fleire_pluss_na),
+    expected = regn_konfint_univar(fleire_pluss_na[!is.na(fleire_pluss_na)])
   )
 })
 
-test_that("regn_ki_univar() med bootstrapping gjev forventa resultat", {
+test_that("regn_konfint_univar() med bootstrapping gjev forventa resultat", {
   set.seed(12345)
-  sepal_length_boot_resultat = regn_ki_univar(iris$Sepal.Length,
+  sepal_length_boot_resultat = regn_konfint_univar(iris$Sepal.Length,
     bootstrap = TRUE
   )
   sepal_length_boot_forventa = tibble::tibble(
@@ -99,9 +99,9 @@ test_that("regn_ki_univar() med bootstrapping gjev forventa resultat", {
   expect_identical(sepal_length_boot_resultat, sepal_length_boot_forventa)
 })
 
-test_that("regn_ki_univar() med bootstrapping gjev forventa resultat ved val av konfidensnivå", {
+test_that("regn_konfint_univar() med bootstrapping gjev forventa resultat ved val av konfidensnivå", {
   set.seed(55555)
-  sepal_length_boot_konf_resultat = regn_ki_univar(iris$Sepal.Length,
+  sepal_length_boot_konf_resultat = regn_konfint_univar(iris$Sepal.Length,
     bootstrap = TRUE,
     konf_niva = 0.9
   )
@@ -116,9 +116,9 @@ test_that("regn_ki_univar() med bootstrapping gjev forventa resultat ved val av 
   )
 })
 
-test_that("regn_ki_univar() med bootstrapping gjev forventa resultat ved val av tal replikasjonar", {
+test_that("regn_konfint_univar() med bootstrapping gjev forventa resultat ved val av tal replikasjonar", {
   set.seed(247385)
-  sepal_length_boot_repl_resultat = regn_ki_univar(iris$Sepal.Length,
+  sepal_length_boot_repl_resultat = regn_konfint_univar(iris$Sepal.Length,
     bootstrap = TRUE,
     R = 500
   )
@@ -133,13 +133,13 @@ test_that("regn_ki_univar() med bootstrapping gjev forventa resultat ved val av 
   )
 })
 
-test_that("regn_ki_univar() med bootstrapping gjev ikkje feilmelding med NA-verdiar i inndata", {
-  expect_error(regn_ki_univar(alle_na, bootstrap = TRUE), NA)
-  expect_error(regn_ki_univar(ein_pluss_na, bootstrap = TRUE), NA)
-  expect_error(regn_ki_univar(fleire_pluss_na, bootstrap = TRUE), NA)
+test_that("regn_konfint_univar() med bootstrapping gjev ikkje feilmelding med NA-verdiar i inndata", {
+  expect_error(regn_konfint_univar(alle_na, bootstrap = TRUE), NA)
+  expect_error(regn_konfint_univar(ein_pluss_na, bootstrap = TRUE), NA)
+  expect_error(regn_konfint_univar(fleire_pluss_na, bootstrap = TRUE), NA)
 
   # Seed som i utgangspunktet gav feilmelding med bootstrap
   set.seed(11111)
   to_pluss_na = c(1, 2, rep(NA_real_, 5))
-  expect_error(regn_ki_univar(to_pluss_na, bootstrap = TRUE), NA)
+  expect_error(regn_konfint_univar(to_pluss_na, bootstrap = TRUE), NA)
 })

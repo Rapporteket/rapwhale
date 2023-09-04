@@ -137,8 +137,8 @@ tab = function(...) {
 #' @examples
 #' n_forsok = 1000
 #' n_suksess = sample.int(n_forsok, 1)
-#' regn_ki_bin(n_suksess, n_forsok)
-regn_ki_bin = function(x, n, alfa = 0.05) {
+#' regn_konfint_bin(n_suksess, n_forsok)
+regn_konfint_bin = function(x, n, alfa = 0.05) {
   ki = binom::binom.wilson(x, n, 1 - alfa)
   tibble(
     lower = pmax(0, ki$lower), # Fiks for at grensene av og til kan gå *bitte litt* utanfor [0,1]
@@ -187,15 +187,15 @@ regn_ki_bin = function(x, n, alfa = 0.05) {
 #' @export
 #'
 #' @examples
-#' regn_ki_univar(runif(100))
+#' regn_konfint_univar(runif(100))
 #'
 #' # Konfidensintervall for drivstofforbruk, gruppert på type girkasse
 #' library(dplyr)
 #'
 #' mtcars %>%
 #'   group_by(am) %>%
-#'   summarise(regn_ki_univar(mpg))
-regn_ki_univar = function(x, bootstrap = FALSE, konf_niva = 0.95, R = 9999) {
+#'   summarise(regn_konfint_univar(mpg))
+regn_konfint_univar = function(x, bootstrap = FALSE, konf_niva = 0.95, R = 9999) {
   # Fjern eventuelle NA-verdier
   x = x[!is.na(x)]
 
