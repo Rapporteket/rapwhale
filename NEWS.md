@@ -8,7 +8,7 @@ og er [tilgjengeleg på GitHub](https://github.com/Rapporteket/rapwhale).
 
 ## Endringar i utviklingsnvå
 
-Desse funksjonane er nye:
+Denne funksjonen er ny:
 
 - `aggreger_ki_rate()`:
   Funksjon for utrekning av kvalitetsindikatorar for ratar.
