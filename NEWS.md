@@ -71,8 +71,10 @@ Denne funksjonen er ny:
   `variabel` og `verdi` begge vera `NA`,
   og `koeffisient` vera verdien til konstantleddet.
 - `regn_konfint_univar()` har fått to nye argument.
-  Dei er `konf_niva` for val av konfidensnivå,
-  og `R` for val av tal på replikasjonar når `bootstrap` er sett til `TRUE`.
+  Dei er `konf_niva`,
+  for val av konfidensnivå,
+  og `R`,
+  for val av tal på replikasjonar når `bootstrap` er sett til `TRUE`.
   Talet på bootstrap-replikasjonar var tidlegare hardkoda til 9999.
 - I `normaliser_varnamn()` vart variabelnamn utan bokstavar gjorde om til
   tomme tekstvektorar.
