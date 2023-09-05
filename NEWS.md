@@ -2,8 +2,33 @@
 
 ## Samandrag
 
-rapwhale-pakken er no eit eige git-depot
+Den største endringa i denne versjonen er
+at rapwhale-pakken no er eit eige git-depot
 og er [tilgjengeleg på GitHub](https://github.com/Rapporteket/rapwhale).
+Her kan de blant anna følgja med på kva endringar me gjer,
+prøva ut utviklingsversjonar og melda inn feil.
+
+Men merk at det berre er dei *offisielle* utgjevingane me offisielt støttar
+og tilrår å bruka i kvalitetsregisterarbeid.
+Desse er merkte med merkelappar (*tags*).
+De finn ei oversikt over alle merkelappane på
+https://github.com/Rapporteket/rapwhale/tags
+eller ved å skriva `git tag -l` i ein klon av depotet.
+
+På «issues»-sida kan de melda inn feil,
+endringsønske eller ønske om ny funksjonalitet,
+eller stilla spørsmål om rapwhale-pakken:
+https://github.com/Rapporteket/rapwhale/issues
+
+Dette er vår føretrekte kanal for slike førespurnadar.
+Men merk at det er ei offentleg side,
+så alt de legg inn der,
+vert tilgjengeleg for heile verda.
+
+Elles er det ein del mindre forbetringar og feilrettingar
+i denne versjonen.
+Det er òg noko nytt som krev endringar i *dokkar* kode.
+Alt dette kan de lesa meir om nedanfor.
 
 
 ## Endringar i utviklingsnvå
