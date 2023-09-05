@@ -24,9 +24,18 @@ Desse funksjonane har endra utviklingsnivå:
 ## Nytt som krev endringar i *din* kode
 
 - dplyr versjon 1.1.1 eller nyare er no kravd i rapwhale-pakken.
+- Funksjonane `regn_ki_univar()` og `regn_ki_bin()` har bytt namn
+  til `regn_konfint_univar()` og `regn_konfint_univar()`.
+  Dette er gjort for å unngå forveksling med funksjonar
+  der `ki` tyder kvalitetsindikator, eksempelvis `aggreger_ki_snitt()`.
+  Frå no av vil `ki` i funksjonsnamn alltid tyda kvalitetsindikator.
 - Som nemnt i versjon 0.4.0 vert argumentet `tabell` i funksjonane
   `num()` og `prosent()` fjerna i denne versjonen.
   Sjå versjonsloggen for v0.4.0 nedanfor for detaljar om endringa.
+- Brukar du `bygg_og_installer_pakker()`, må du no eksplisitt
+  oppgje pakkemappene. Det følgjer med eit eksempel som viser
+  korleis du lett kan søka opp mapper som inneheld R-pakkar,
+  for å automatisera dette.
 
 
 ## Ny funksjonalitet
@@ -37,7 +46,7 @@ Desse funksjonane har endra utviklingsnivå:
   I rada skal `delskala` vera sumskåren konstantleddet skal gjelda for,
   `variabel` og `verdi` begge vera `NA`,
   og `koeffisient` vera verdien til konstantleddet.
-- `regn_ki_univar()` har fått eit nytt argument `alfa` for val av konfidensnivå.
+- `regn_konfint_univar()` har fått eit nytt argument `konf_niva` for val av konfidensnivå.
 - I `normaliser_varnamn()` vart variabelnamn utan bokstavar gjort om til
   tomme tekstvektorar.
   Funksjonen krev no variabelnamn med minst éin bokstav,
