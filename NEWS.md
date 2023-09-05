@@ -3,7 +3,7 @@
 ## Samandrag
 
 rapwhale-pakken er no eit eige git-depot
-og er tilgjengeleg på [GitHub](https://github.com/Rapporteket/rapwhale).
+og er [tilgjengeleg på GitHub](https://github.com/Rapporteket/rapwhale).
 
 
 ## Endringar i utviklingsnvå
