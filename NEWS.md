@@ -96,6 +96,7 @@ Desse er tekne i bruk,
 og vert kalla på vanleg måte.
 
 Tekniske endringar for importerte og føreslegne pakkar:
+
 - Lagt til manglande pakkar i bruk i funksjonar under `Imports`.
 - Lagt til manglande pakkar i bruk vignettar og testar under `Suggests`.
 - Fjerna pakkar som ikkje var i bruk frå `Imports`.
