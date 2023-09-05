@@ -16,14 +16,13 @@ Desse funksjonane er nye:
   «Kvalitetsindikatorfunksjonar» for detaljar.
 
 
-Desse funksjonane har endra utviklingsnivå:
-
-- `aggreger_ki_rate()`: ny funksjon, `experimental`.
-
-
 ## Nytt som krev endringar i *din* kode
 
-- dplyr versjon 1.1.1 eller nyare er no kravd i rapwhale-pakken.
+- Du må ha dplyr versjon 1.1.1 eller nyare installert.
+  Denne har fleire endringar som kanskje krev endringar i koden din.
+  Sjå for eksempel tekst lenger nede om endringar i `*_join()`-funksjonane.
+  Du kan lesa meir om alle endringane i dplyr-pakken her:
+  https://cran.r-project.org/web/packages/dplyr/news/news.html#dplyr-1.1.1
 - Funksjonane `regn_ki_univar()` og `regn_ki_bin()` har bytt namn
   til `regn_konfint_univar()` og `regn_konfint_univar()`.
   Dette er gjort for å unngå forveksling med funksjonar
@@ -47,7 +46,7 @@ Desse funksjonane har endra utviklingsnivå:
   `variabel` og `verdi` begge vera `NA`,
   og `koeffisient` vera verdien til konstantleddet.
 - `regn_konfint_univar()` har fått eit nytt argument `konf_niva` for val av konfidensnivå.
-- I `normaliser_varnamn()` vart variabelnamn utan bokstavar gjort om til
+- I `normaliser_varnamn()` vart variabelnamn utan bokstavar gjorde om til
   tomme tekstvektorar.
   Funksjonen krev no variabelnamn med minst éin bokstav,
   og gjev feilmelding elles.
@@ -78,7 +77,7 @@ Desse funksjonane har endra utviklingsnivå:
 
 Det sett opp automatisk køyring av testane i rapwhale-pakken på GitHub.
 Dette vil gje endå betre sikring mot at nye feil vert innført,
-og oppdateringar i andre pakkar som fører til endringar i rapwhale
+og oppdateringar i andre pakkar som fører til endringar i rapwhale,
 vil oppdagast raskare.
 
 Alle kall av `*_join()`-funksjonane frå dplyr-pakken brukar no det nye
@@ -96,15 +95,16 @@ er gjort eksterne.
 Desse er tekne i bruk,
 og vert kalla på vanleg måte.
 
-Oppdatert importerte og føreslegne pakkar:
-- Lagt til manglande pakkar i bruk i funksjonar under imports.
-- Lagt til manglande pakkar i bruk vignettar og testar under suggests.
-- Fjerna pakkar som ikkje var i bruk frå imports.
-- Flytta nokre pakkar frå imports til suggests
+Tekniske endringar for importerte og føreslegne pakkar:
+- Lagt til manglande pakkar i bruk i funksjonar under `Imports`.
+- Lagt til manglande pakkar i bruk vignettar og testar under `Suggests`.
+- Fjerna pakkar som ikkje var i bruk frå `Imports`.
+- Flytta nokre pakkar frå `Imports` til `Suggests`
   (pakkar som ikkje er nødvendige for funksjonaliteten til rapwhale,
   t.d. pakkar berre brukt i testar).
 
-Funksjonalitet som har vorte utdatert (deprecated) i andre pakkar er oppdatert:
+Funksjonalitet som har vorte utdatert (*deprecated*) i andre pakkar,
+er oppdatert:
 
 - `all_of()` eller `any_of()` i staden for ekstern vektor i tidyselect.
 - `linewidth` i staden for `size` i linjer i ggplot2.
