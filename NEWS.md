@@ -56,6 +56,13 @@ Desse funksjonane har endra utviklingsnivå:
   i den pakken.
   Funksjonen brukar no pakken `boot` i staden for `simpleboot`,
   og bootstrapping funkar igjen.
+- Funksjonen `tid_til_tidslinje()` hadde en feil som gjorde at punkter ble 
+  plassert mellom eksisterende datapunkt, og ikke på riktig plassering innen 
+  hvert aktuelle år. Ved ikke-etterfølgende årstall i inndata kunne dermed 
+  punktene bli plassert i feil år. 
+  Har også fjernet omkoding av klokkeslett for datovariabler med klokkeslett 
+  hvor registrert tid var '00:00:00'. Disse vil nå behandles som korrekte 
+  klokkeslett. 
 
 
 ## Forbetringar
