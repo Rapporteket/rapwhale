@@ -109,4 +109,21 @@ test_that("Alle kolonnar vld_verdi_intern_x skal ha rette verdiar", {
 })
 
 
+test_that("Håndterer variabler med subklasser (flere klasser), eks. POSIXct-variabler",{
+  d_inn = tibble(
+    pasid = 5:6,
+    dato_inn = as.POSIXct(c('2022-12-30 00:28:00', '2023-12-30 13:44:00'))
+  )
+  d_fasit = tibble(pasid = d_inn$pasid,
+                   vld_varnamn = "dato_inn",
+                   vld_vartype = "POSIXct_POSIXt",
+                   vld_verdi_intern_POSIXct_POSIXt = d_inn$dato_inn,
+                   vld_verdi_ekstern_POSIXct_POSIXt = d_inn$dato_inn)
+  d_fasit$vld_verdi_ekstern_POSIXct_POSIXt[] = NA_real_
+  
+  expect_identical(lag_valideringsdatasett(d_inn, indvars = "pasid"), d_fasit)
+  expect_error(lag_valideringsdatasett(d_inn, indvars = "pasid"), NA)
+})
+
+
 # Sjå på aktuelle testar/sjekkar i gamal funksjon i ekstern_validering.R
