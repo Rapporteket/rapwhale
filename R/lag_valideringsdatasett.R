@@ -73,18 +73,24 @@ lag_valideringsdatasett = function(d_reg, indvars) {
 
   # Lag oversikt over variabeltypar
   vartypar = map(d_reg[datavars], ~ class(.x)) %>%
-    map_chr(first) %>%
     unname()
   unike_vartypar = unique(vartypar)
 
+  # Slå sammen elementer fra samme klass i en string
+  vartypar_sammenlagt = c()
+  for( i in seq_len(length(vartypar))){
+    vartypar_sammenlagt[i] = paste(vartypar[[i]], collapse = "_")
+  }
+  
+  unike_vartypar_sammenlagt = unique(vartypar_sammenlagt)
+  
   # Lag koplingstabell med datavariablar, vartypar og info om kvar resultatet
   # skal lagrast
-  d_kopling = tibble(vld_varnamn = datavars, vld_vartype = vartypar) %>%
+  d_kopling = tibble(vld_varnamn = datavars,  vld_vartype = vartypar_sammenlagt) %>%
     mutate(res_kol = paste0("vld_verdi_intern_", vld_vartype))
 
 
   # Lag valideringsdatasett
-
   d_vld = d_reg
   d_vld$vld_varnamn = rep(list(datavars), nrow(d_reg))
   d_vld = d_vld %>%
@@ -92,18 +98,15 @@ lag_valideringsdatasett = function(d_reg, indvars) {
     left_join(d_kopling, by = "vld_varnamn", relationship = "many-to-one")
   antal_rader = nrow(d_vld)
   d_vld$rekkjefolgje = seq_len(antal_rader)
-
   # Legg til aktuelle resultatkolonnar, med rett variabelklasse
   prefiksverdiar = c("vld_verdi_intern_", "vld_verdi_ekstern_")
   for (i in seq_len(length(unike_vartypar))) {
-    vartype = unike_vartypar[i]
     for (prefiks in prefiksverdiar) {
-      vld_varnamn = paste0(prefiks, vartype)
-      d_vld[[vld_varnamn]] = NA_real_
-      class(d_vld[[vld_varnamn]]) = vartype
+      vld_varnamn = paste0(prefiks, unike_vartypar_sammenlagt[i])
+      d_vld[vld_varnamn] = NA_real_
+      class(d_vld[[vld_varnamn]]) = unike_vartypar[[i]]
     }
   }
-
   # Funksjon for å flytta dataverdiane til rett kolonne
   # (er laga for å køyrast på datarammer med *éin unik* verdi for res_kol)
   #
@@ -122,10 +125,10 @@ lag_valideringsdatasett = function(d_reg, indvars) {
       purrr::map_df(flytt_resultat) %>%
       ungroup()
   }
-
   # Fjern gamle datavariabelkolonnar og hjelpekolonne
   d_vld = d_vld %>%
     arrange(rekkjefolgje) %>%
     select(-all_of(datavars), -c("res_kol", "rekkjefolgje"))
   d_vld
 }
+
