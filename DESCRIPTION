@@ -48,7 +48,9 @@ Imports:
     Rdpack,
     lintr (>= 3.0.0),
     styler (>= 1.8.1),
-    Hmisc
+    Hmisc,
+    MASS,
+    boot
 RdMacros: Rdpack
 RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
