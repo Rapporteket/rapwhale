@@ -24,7 +24,7 @@
 #' Ein kan fritt velja kva verdiar ein brukar for `vld_vartype`
 #' (for eksempel `"tal"`, `"tall"`, `"heiltal"` eller `"int32"`),
 #' men verdien må starta med ein bokstav og berre innehalda
-#' bokstavar og/eller siffer.
+#' bokstavar, understrek og/eller siffer.
 #'
 #' For kvar unike `vld_vartype` skal det finnast verdivariablar –
 #' variablar med prefiksa `vld_verdi_intern_` og `vld_verdi_ekstern_`.
@@ -101,7 +101,7 @@ er_valideringsdatasett_gyldig = function(d_vld) {
   # vld_vartype må starta med ein bokstav, og berre innehalda bokstavar og/eller siffer
   vartypar_er_gyldige = stringr::str_detect(
     d_vld$vld_vartype,
-    "^[[:alpha:]][[:alnum:]]*$"
+    "^[[:alpha:]][[[:alnum:]]_]*$"
   )
   if (!all(vartypar_er_gyldige)) {
     return(FALSE)
@@ -111,7 +111,7 @@ er_valideringsdatasett_gyldig = function(d_vld) {
   # ugyldige («vld_» er reservert prefiks)
   regexp_gyldige_kolnamn = paste0(
     "^vld_varnamn|vld_vartype|",
-    "vld_verdi_(intern|ekstern)_[[:alpha:]][[:alnum:]]*$"
+    "vld_verdi_(intern|ekstern)_[[:alpha:]][[[:alnum:]]_]*$"
   )
   gyldige_kolnamn = stringr::str_detect(kolnamn_vld, regexp_gyldige_kolnamn)
   if (!all(gyldige_kolnamn)) {

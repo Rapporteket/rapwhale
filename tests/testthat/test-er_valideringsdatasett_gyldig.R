@@ -111,9 +111,7 @@ test_that("Sjekkar at «vld_vartype» må starta med ein bokstav, og berre inneh
   }
   # Nokre ugyldige
   expect_false(er_valideringsdatasett_gyldig(lag_datasett("32int")))
-  expect_false(er_valideringsdatasett_gyldig(lag_datasett("tal_32")))
   expect_false(er_valideringsdatasett_gyldig(lag_datasett("tal og tull")))
-  expect_false(er_valideringsdatasett_gyldig(lag_datasett("t_")))
   expect_false(er_valideringsdatasett_gyldig(lag_datasett(""))) # Er òg testa annan plass
 
   # Nokre gyldige
@@ -122,6 +120,8 @@ test_that("Sjekkar at «vld_vartype» må starta med ein bokstav, og berre inneh
   expect_true(er_valideringsdatasett_gyldig(lag_datasett("idé")))
   expect_true(er_valideringsdatasett_gyldig(lag_datasett("a")))
   expect_true(er_valideringsdatasett_gyldig(lag_datasett("Ô")))
+  expect_true(er_valideringsdatasett_gyldig(lag_datasett("t_")))
+  expect_true(er_valideringsdatasett_gyldig(lag_datasett("tal_32")))
 })
 
 test_that("Datasett med kolonnar med namn som «vld_tull» vert rekna som ugyldige («vld_» er reservert prefiks)", {
