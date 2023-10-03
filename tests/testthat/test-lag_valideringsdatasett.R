@@ -108,7 +108,6 @@ test_that("Alle kolonnar vld_verdi_intern_x skal ha rette verdiar", {
   expect_identical(verdiar_reg, verdiar_vld)
 })
 
-
 test_that("Håndterer variabler med subklasser (flere klasser), eks. POSIXct-variabler",{
   d_inn = tibble(
     pasid = 5:6,
@@ -123,6 +122,15 @@ test_that("Håndterer variabler med subklasser (flere klasser), eks. POSIXct-var
   
   expect_identical(lag_valideringsdatasett(d_inn, indvars = "pasid"), d_fasit)
   expect_error(lag_valideringsdatasett(d_inn, indvars = "pasid"), NA)
+})
+
+test_that("Funksjonen stoppar med eksplisitt feilmelding viss samanslåing av klassane til dei ulike variabeltypane ikkje gjev eintydige resultat", {
+  d = tibble(ind = 1:2, x = 3:4, y = 5:6)
+  class(d$x) = c("foo_bar", "numeric")
+  class(d$y) = c("foo", "bar", "numeric")
+
+  feilmelding = "Samanslåing av klassane til dei ulike variabeltypane gjev ikkje eintydige resultat"
+  expect_error(lag_valideringsdatasett(d, "ind"), feilmelding)
 })
 
 
