@@ -1090,11 +1090,11 @@ test_that("funksjonen gir feilmelding hvis kommentar_rimelig finnes,
     )
 
   expect_error(
-    valider_kb_variabler(kb_kommentar_rimeleg_feil %>% slice(1:3)),
+    valider_kb_variabler(kb_kommentar_rimeleg_feil[1:3, ]),
     "Kommentar_rimeleg er fylt ut, men det finnes ingen min_rimeleg eller maks_rimeleg\nvariabel_id: vekt3"
   )
   expect_error(
-    valider_kb_variabler(kb_kommentar_rimeleg_feil %>% slice(4:6)),
+    valider_kb_variabler(kb_kommentar_rimeleg_feil[4:6, ]),
     "Kommentar_rimeleg er fylt ut, men det finnes ingen min_rimeleg eller maks_rimeleg\nvariabel_id: dato3"
   )
 })
