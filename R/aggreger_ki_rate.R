@@ -164,6 +164,21 @@ aggreger_ki_rate = function(d_ki_ind, alfa = 0.05, multiplikator = 1) {
   if (any(group_size(d_ki_ind) == 0)) {
     warning("Det finnes grupper uten observasjoner i grupperingsvariabel")
   }
+  
+  # I R versjon >= 4.4.0 er profile.glm() flytta
+  # frå MASS-pakken til stats-pakken.
+  # For å støtta *alle* R-versjonar vekslar me derfor
+  # mellom gammal og ny funksjon basert på R-versjon.
+  # fixme: Koden kan fjernast når R >= 4.4.0 er
+  #        vanleg å ha installert og alle automatisk
+  #        sjekkar på GitHub har såpass ny versjon.
+  #        Då kan òg MASS-pakken fjernast frå DESCRIPTION
+  #        (med mindre me har fått anna som brukar MASS).
+  if (getRversion() >= "4.4.0") {
+    profile_funk = stats::profile
+  } else {
+    profile_funk = MASS:::profile.glm
+  }
 
   konfint = function(antall, eksponering) {
     if (length(antall) == 0 | length(eksponering) == 0) {
@@ -178,7 +193,7 @@ aggreger_ki_rate = function(d_ki_ind, alfa = 0.05, multiplikator = 1) {
         family = "poisson",
         offset = log(sum(eksponering))
       ) %>%
-        MASS:::profile.glm() %>%
+        profile_funk() %>%
         confint(level = 1 - alfa) %>%
         exp()
       konfint_nedre = konfint[[1]]
