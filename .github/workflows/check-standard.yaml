@@ -52,4 +52,3 @@ jobs:
         with:
           args: '"--no-manual"'
           upload-snapshots: true
-          error-on: '"error"'
