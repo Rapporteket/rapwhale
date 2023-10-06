@@ -71,32 +71,33 @@ lag_valideringsdatasett = function(d_reg, indvars) {
   datavars = vars %>%
     setdiff(indvars)
 
-  # Lag oversikt over variabeltypar
-  vartypar = map(d_reg[datavars], ~ class(.x)) %>%
-    unname()
 
-  # Slå sammen elementer fra samme klass i en string
-  vartypar_sammenlagt = map_chr(vartypar, \(x) paste(x, collapse = "_"))
-  
+  d_vartypar = tibble::tibble(
+    vartypar = map(d_reg[datavars], ~ class(.x)) %>%
+      unname(), # Lag oversikt over variabeltypar
 
-  d_vartyper = tibble::tibble(vartypar = vartypar, 
-                              vartypar_sammenlagt = vartypar_sammenlagt
-                              )
-  d_vartyper_distinct = distinct(d_vartyper)
-  
-  
-  if (any(duplicated(d_vartyper_distinct$vartypar_sammenlagt))){
+    vartypar_sammenlagt = map_chr(
+      vartypar,
+      \(x) paste(x,
+        collapse = "_"
+      )
+    ) # Slå sammen elementer fra samme klass i en string
+  )
+  d_vartypar_distinct = distinct(d_vartypar)
+
+
+  if (any(duplicated(d_vartypar_distinct$vartypar_sammenlagt))) {
     stop("Samanslåing av klassane til dei ulike variabeltypane gjev ikkje eintydige resultat")
   }
 
   # Lag koplingstabell med datavariablar, vartypar og info om kvar resultatet
   # skal lagrast
-  d_kopling = tibble(vld_varnamn = datavars, vld_vartype = d_vartyper$vartypar_sammenlagt) %>%
+  d_kopling = tibble(vld_varnamn = datavars, vld_vartype = d_vartypar$vartypar_sammenlagt) %>%
     mutate(res_kol = paste0("vld_verdi_intern_", vld_vartype))
 
 
   # Lag valideringsdatasett
-  
+
   d_vld = d_reg
   d_vld$vld_varnamn = rep(list(datavars), nrow(d_reg))
   d_vld = d_vld %>%
@@ -104,17 +105,17 @@ lag_valideringsdatasett = function(d_reg, indvars) {
     left_join(d_kopling, by = "vld_varnamn", relationship = "many-to-one")
   antal_rader = nrow(d_vld)
   d_vld$rekkjefolgje = seq_len(antal_rader)
-  
+
   # Legg til aktuelle resultatkolonnar, med rett variabelklasse
   prefiksverdiar = c("vld_verdi_intern_", "vld_verdi_ekstern_")
-  for (i in seq_len(nrow(d_vartyper_distinct))) {
+  for (i in seq_len(nrow(d_vartypar_distinct))) {
     for (prefiks in prefiksverdiar) {
-      vld_varnamn = paste0(prefiks, d_vartyper_distinct$vartypar_sammenlagt[i])
+      vld_varnamn = paste0(prefiks, d_vartypar_distinct$vartypar_sammenlagt[i])
       d_vld[vld_varnamn] = NA_real_
-      class(d_vld[[vld_varnamn]]) = d_vartyper_distinct$vartypar[[i]]
+      class(d_vld[[vld_varnamn]]) = d_vartypar_distinct$vartypar[[i]]
     }
   }
-  
+
   # Funksjon for å flytta dataverdiane til rett kolonne
   # (er laga for å køyrast på datarammer med *éin unik* verdi for res_kol)
   #
@@ -133,7 +134,7 @@ lag_valideringsdatasett = function(d_reg, indvars) {
       purrr::map_df(flytt_resultat) %>%
       ungroup()
   }
-  
+
   # Fjern gamle datavariabelkolonnar og hjelpekolonne
   d_vld = d_vld %>%
     arrange(rekkjefolgje) %>%
