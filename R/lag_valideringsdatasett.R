@@ -7,6 +7,13 @@
 #' fyllast ut med og sjekkast opp mot data frå ein gullstandard (typisk
 #' pasientjournal).
 #'
+#' @importFrom tibble tibble
+#' @importFrom purrr map_chr map_df map
+#' @importFrom dplyr select arrange left_join distinct group_indices
+#' @importFrom magrittr %>%
+#' @importFrom tidyr unnest
+#' @importFrom lubridate setdiff
+#' 
 #' @param d_reg Datasett (dataramme/tibble).
 #' @param indvars Vektor med indeksvariablar.
 #'
