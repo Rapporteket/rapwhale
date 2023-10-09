@@ -74,21 +74,16 @@ lag_valideringsdatasett = function(d_reg, indvars) {
   }
 
   # Lag oversikt over datavariablar
-  datavars = vars %>%
-    setdiff(indvars)
-
-
+  datavars = setdiff(vars, indvars)
   d_vartypar = tibble::tibble(
-    vartypar = map(d_reg[datavars], ~ class(.x)) %>%
+    vartypar = map(d_reg[datavars], ~ class(.x)) |>
       unname(),
     vartypar_sammenlagt = map_chr(
       vartypar,
       \(x) paste(x, collapse = "_")
     )
   )
-
   d_vartypar_distinct = distinct(d_vartypar)
-
 
   if (any(duplicated(d_vartypar_distinct$vartypar_sammenlagt))) {
     stop("Samanslåing av klassane til dei ulike variabeltypane gjev ikkje eintydige resultat")
@@ -96,16 +91,15 @@ lag_valideringsdatasett = function(d_reg, indvars) {
 
   # Lag koplingstabell med datavariablar, vartypar og info om kvar resultatet
   # skal lagrast
-  d_kopling = tibble(vld_varnamn = datavars, vld_vartype = d_vartypar$vartypar_sammenlagt) %>%
+  d_kopling = tibble(vld_varnamn = datavars, vld_vartype = d_vartypar$vartypar_sammenlagt) |>
     mutate(res_kol = paste0("vld_verdi_intern_", vld_vartype))
 
 
   # Lag valideringsdatasett
-
   d_vld = d_reg
   d_vld$vld_varnamn = rep(list(datavars), nrow(d_reg))
-  d_vld = d_vld %>%
-    unnest(vld_varnamn) %>%
+  d_vld = d_vld |>
+    unnest(vld_varnamn) |>
     left_join(d_kopling, by = "vld_varnamn", relationship = "many-to-one")
   antal_rader = nrow(d_vld)
   d_vld$rekkjefolgje = seq_len(antal_rader)
@@ -132,16 +126,15 @@ lag_valideringsdatasett = function(d_reg, indvars) {
 
   # For kvar variabel, flytt verdiane til rett kolonne
   if (antal_rader > 0) {
-    d_vld = d_vld %>%
-      group_by(vld_varnamn) %>%
-      split(group_indices(.)) %>%
-      purrr::map_df(flytt_resultat) %>%
+    d_vld_gruppert = group_by(d_vld, vld_varnamn)
+    d_vld = split(d_vld_gruppert, group_indices(d_vld_gruppert)) |>
+      purrr::map_df(flytt_resultat) |>
       ungroup()
   }
 
   # Fjern gamle datavariabelkolonnar og hjelpekolonne
-  d_vld = d_vld %>%
-    arrange(rekkjefolgje) %>%
+  d_vld = d_vld |>
+    arrange(rekkjefolgje) |>
     select(-all_of(datavars), -c("res_kol", "rekkjefolgje"))
   d_vld
 }
