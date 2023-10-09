@@ -74,15 +74,13 @@ lag_valideringsdatasett = function(d_reg, indvars) {
 
   d_vartypar = tibble::tibble(
     vartypar = map(d_reg[datavars], ~ class(.x)) %>%
-      unname(), # Lag oversikt over variabeltypar
-
+      unname(), 
     vartypar_sammenlagt = map_chr(
       vartypar,
-      \(x) paste(x,
-        collapse = "_"
-      )
-    ) # Slå sammen elementer fra samme klass i en string
+      \(x) paste(x, collapse = "_")
+    )
   )
+
   d_vartypar_distinct = distinct(d_vartypar)
 
 
