@@ -119,8 +119,8 @@ er_valideringsdatasett_gyldig = function(d_vld) {
   }
 
   # Viss vld_verdi_intern_x finst, finst også vld_verdi_ekstern_x, og vice versa
-  vartypar_i_verdikol = kolnamn_verdikol %>%
-    stringr::str_replace("^vld_verdi_(intern|ekstern)_", "") %>%
+  vartypar_i_verdikol = kolnamn_verdikol |>
+    stringr::str_replace("^vld_verdi_(intern|ekstern)_", "") |>
     unique()
   lag_kolnamn_verdikol = function(vartypar) {
     if (length(vartypar) > 0) {
