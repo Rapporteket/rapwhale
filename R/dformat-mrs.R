@@ -1,6 +1,5 @@
 # Lesing/tolking av det elendige kodebokformatet til MRS :(
 
-#' @importFrom magrittr %>%
 #' @importFrom lubridate as_date
 #' @importFrom stringr str_c
 #' @importFrom rlang !!
@@ -41,8 +40,8 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
     dato = dir(mappe_dd,
       pattern = "^[0-9]{4}-[0-1][0-9]-[0-9]{2}$",
       full.names = FALSE
-    ) %>%
-      sort() %>%
+    ) |>
+      sort() |>
       last()
   }
 
@@ -66,12 +65,12 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
 
   # funksjon for å hente inn alle ark og sette dem 1 objekt, med skjema_id lik ark-navnet
   les_excel_ark = function(ark_id) {
-    readxl::read_excel(adresse_kb, col_types = kb_mrs_koltyper, sheet = ark_id) %>%
+    readxl::read_excel(adresse_kb, col_types = kb_mrs_koltyper, sheet = ark_id) |>
       mutate(skjema_id = !!ark_id)
   }
 
   # henter inn kodebok
-  kb_mrs = ark %>%
+  kb_mrs = ark |>
     purrr::map_df(les_excel_ark)
 
   # ark-navnene er horrible. De er avkuttede versjoner av menneskelig-vennlige skjemanavn
@@ -101,12 +100,12 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   )
 
   # legger til "riktige" skjema_id
-  kb_mrs_skjema_id = kb_mrs %>%
+  kb_mrs_skjema_id = kb_mrs |>
     left_join(d_skjema_id,
       by = c("skjema_id" = "skjema_id_kodebok"),
       relationship = "many-to-many"
-    ) %>%
-    mutate(skjema_id = skjema_id_datadump) %>%
+    ) |>
+    mutate(skjema_id = skjema_id_datadump) |>
     select(-skjema_id_datadump)
 
   # Oversikt over variabeltypar i MRS og tilhøyrande standardnamn som me brukar
@@ -137,8 +136,8 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   }
 
   # Konvertere kodebok til standard format
-  kodebok = kb_mrs_skjema_id %>%
-    fill(Visningsnavn, Variabelnavn, Felttype) %>%
+  kodebok = kb_mrs_skjema_id |>
+    fill(Visningsnavn, Variabelnavn, Felttype) |>
     mutate(
       variabel_id = Variabelnavn,
       variabeletikett = Visningsnavn,
@@ -161,12 +160,12 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
         "ja",
         "nei"
       )
-    ) %>%
+    ) |>
     relocate(
       skjema_id, variabel_id, variabeletikett,
       variabeltype, obligatorisk, verdi, verditekst,
       desimalar, kommentar, manglande
-    ) %>%
+    ) |>
     select(
       -Visningsnavn, -Variabelnavn, -`Mulige verdier`,
       -Felttype, -Gyldighet, -Hjelpetekst
@@ -238,8 +237,8 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
-    dato = dir(mappe_dd, pattern = "^[0-9]{4}-[0-1][0-9]-[0-9]{2}$", full.names = FALSE) %>%
-      sort() %>%
+    dato = dir(mappe_dd, pattern = "^[0-9]{4}-[0-1][0-9]-[0-9]{2}$", full.names = FALSE) |>
+      sort() |>
       last()
   }
   dato = as_date(dato) # I tilfelle det var ein tekstreng
@@ -249,7 +248,7 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
     kodebok = les_kb_mrs(mappe_dd, dato)
   }
   # Hent ut variabelinfo frå kodeboka for det gjeldande skjemaet
-  kb_akt = kodebok %>%
+  kb_akt = kodebok |>
     filter(skjema_id == !!skjema_id)
 
   # Adressen til datadumpen gitt datoen som vi har fått
@@ -284,7 +283,7 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
   # Hent ut første linje frå kodeboka, dvs. den linja som
   # inneheld aktuell informasjon
   # Henter ut den aktuelle delen av kodeboka
-  kb_info = kb_akt %>%
+  kb_info = kb_akt |>
     distinct(variabel_id, .keep_all = TRUE)
 
   # Me skil berre mellom heiltals- og flyttalsvariablar
@@ -293,7 +292,7 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
   # kunna handtera dette riktig (les: strengt) ved
   # innlesing av data, legg me derfor til ein kunstig
   # «numerisk_heiltal»-variabeltype.
-  kb_info = kb_info %>%
+  kb_info = kb_info |>
     mutate(variabeltype = replace(
       variabeltype,
       (variabeltype == "numerisk") & (desimalar == 0),
@@ -332,8 +331,8 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
     "numerisk", "d",
     "numerisk_heiltal", "i"
   )
-  spek_innlesing = tibble(variabel_id = varnamn_fil) %>%
-    left_join(kb_info, by = "variabel_id", relationship = "one-to-one") %>%
+  spek_innlesing = tibble(variabel_id = varnamn_fil) |>
+    left_join(kb_info, by = "variabel_id", relationship = "one-to-one") |>
     left_join(spek_csv_mrs, by = "variabeltype", relationship = "many-to-one")
 
   # Har kodeboka variablar av ein type me ikkje har lagt inn støtte for?
@@ -416,20 +415,20 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
 
   # datadumpen har ikke alle variablene som er nevnt i kodeboka, så vi filtrerer dem bort
   # fixme! disse må være med når vi får dem i datadumpen
-  boolske_var = spek_innlesing %>%
-    filter(variabeltype == "boolsk") %>%
+  boolske_var = spek_innlesing |>
+    filter(variabeltype == "boolsk") |>
     pull(variabel_id)
-  d = d %>%
+  d = d |>
     mutate_at(boolske_var, mrs_boolsk_til_boolsk)
 
   # Gjer om tidsvariablar til ekte tidsvariablar
   # Fixme: Nødvendig pga. https://github.com/tidyverse/readr/issues/642
   #        Fjern når denne feilen er fiksa (rett då òg fixme-en
   #        lenger oppe som også handlar om dette)
-  tid_var = spek_innlesing %>%
-    filter(variabeltype == "dato_kl") %>%
+  tid_var = spek_innlesing |>
+    filter(variabeltype == "dato_kl") |>
     pull(variabel_id)
-  d = d %>%
+  d = d |>
     mutate_at(tid_var, readr::parse_datetime, format = "%d.%m.%Y %H:%M:%S")
 
   # Fila har (ved ein feil) ekstra semikolon på slutten, som fører
