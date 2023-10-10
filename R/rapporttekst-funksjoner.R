@@ -1,7 +1,6 @@
 # Dette skriptet inneholder en rekke funksjoner som er potensielt nyttige
 # (og noen, uunnværlige) i registersammenheng og i andre sammenheng.
 
-#' @importFrom magrittr %>%
 #' @importFrom stringr str_flatten
 NULL
 
@@ -185,8 +184,8 @@ akse_tall_format = function(antall_desimaler = 2, decimal.mark = ",", big.mark =
 #' # Til bruk i setning i latex
 #' paste0("Andel menn er ", prosent(andel_menn), ".")
 prosent = function(x, desimalar = 0) {
-  prosent_tekst = x %>%
-    purrr::map_chr(~ num(100 * .x, desimalar) %>%
+  prosent_tekst = x |>
+    purrr::map_chr(~ num(100 * .x, desimalar) |>
       stringr::str_c("\\prosent"))
   ifelse(is.na(x), "\\textendash{}", prosent_tekst)
 }

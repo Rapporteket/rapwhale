@@ -1,6 +1,5 @@
 # Innlesing av kodebøker og datadumpar frå OQR.
 
-#' @importFrom magrittr %>%
 #' @importFrom lubridate as_date
 #' @importFrom stringr str_c str_to_lower str_detect
 #' @importFrom readr col_character col_integer
@@ -45,8 +44,8 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
-    dato = dir(mappe_dd, pattern = "^[0-9]{4}-[0-1][0-9]-[0-9]{2}$", full.names = FALSE) %>%
-      sort() %>%
+    dato = dir(mappe_dd, pattern = "^[0-9]{4}-[0-1][0-9]-[0-9]{2}$", full.names = FALSE) |>
+      sort() |>
       last()
   }
   dato = as_date(dato) # I tilfelle det var ein tekstreng
@@ -108,7 +107,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
   #
   # fixme: Vårt kodebokformat bør nok oppdaterast til
   #        å støtta min- og maks-verdiar for datoar òg.
-  kodebok = kodebok_oqr_format %>%
+  kodebok = kodebok_oqr_format |>
     mutate(
       skjema_id = tabell,
       skjemanamn = skjemanavn,
@@ -201,7 +200,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
   # aktiveringsspoersmaal-kolonnen i klokeboken beskriver en variabel åpner opp nye variabler for bruker "Ja" eller ikke "Nei".
   # Er denne "Ja" er den alltid synlig for bruker,
   # og vi kan vite at den da vil være obligatorisk (hvis den også er markert som obligatorisk)
-  kodebok = kodebok %>%
+  kodebok = kodebok |>
     mutate(obligatorisk = ifelse(aktiveringsspoersmaal == "Ja" & obligatorisk == "ja", "ja", "nei"))
 
   # I tillegg til dei definerte variablane har datadumpane seks ekstra
@@ -224,9 +223,9 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
     kb_utvida = bind_rows(kb_ekstra[1:2, ], kb, kb_ekstra[3:8, ])
     kb_utvida
   }
-  kodebok = kodebok %>%
-    tidyr::nest(skjema_kb = c(-skjema_id, -skjemanamn)) %>%
-    mutate(skjema_kb = purrr::map(skjema_kb, legg_til_ekstravar)) %>%
+  kodebok = kodebok |>
+    tidyr::nest(skjema_kb = c(-skjema_id, -skjemanamn)) |>
+    mutate(skjema_kb = purrr::map(skjema_kb, legg_til_ekstravar)) |>
     tidyr::unnest(cols = c(skjema_kb))
 
   # fixme: Sjekk at verdiane til variablane faktiske er *like* på alle tabellane
@@ -241,7 +240,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
   # (tre ulike skjemanamn), vil det finnast tre separate oppføringar for
   # «type_kompl», eitt for kvart skjema. Me skal berre ha første. (Men
   # merk at denne kan bestå av fleire *rader*, for kategoriske variablar.)
-  kodebok = kodebok %>%
+  kodebok = kodebok |>
     distinct(skjema_id, variabel_id, verdi, verditekst, .keep_all = TRUE)
 
   # Dei variabel-/kolonnenamna me brukar, i standard/fornuftig rekkjefølgje
@@ -255,7 +254,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
 
   # Bruk vidare berre standardkolonnne, og i standard/fornuftig rekkjefølgje
   # (Må stå etter legg_til_ekstravar(), sidan denne endrar rekkjefølgja)
-  kodebok = kodebok %>%
+  kodebok = kodebok |>
     select(!!std_namn)
 
   # Skjemanamna heng ikkje saman med tabellnamna(!). Det ser ut til
@@ -299,7 +298,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
   # slik at variablar kjem hulter til bulter. Fiksar derfor dette.
   # Men sorterer *ikkje* alfabetisk, sidan den naturlege rekkjefølgja
   # ofte er meir logisk.
-  kodebok = kodebok %>%
+  kodebok = kodebok |>
     arrange(forcats::fct_inorder(skjema_id))
 
   # Sjekk eventuelt at kodeboka er gyldig
@@ -353,8 +352,8 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
                       valider_kb = is.null(kodebok), valider_dd = TRUE) {
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
-    dato = dir(mappe_dd, pattern = "^[0-9]{4}-[0-1][0-9]-[0-9]{2}$", full.names = FALSE) %>%
-      sort() %>%
+    dato = dir(mappe_dd, pattern = "^[0-9]{4}-[0-1][0-9]-[0-9]{2}$", full.names = FALSE) |>
+      sort() |>
       last()
   }
   dato = as_date(dato) # I tilfelle det var ein tekstreng
@@ -364,7 +363,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
     kodebok = les_kb_oqr(mappe_dd, reg_id, dato, valider_kb = valider_kb)
   }
   # Hent ut variabelinfo frå kodeboka for det gjeldande skjemaet
-  kb_akt = kodebok %>%
+  kb_akt = kodebok |>
     filter(skjema_id == !!skjema_id)
 
   # Kodeboka må ha informasjon om variablane i
@@ -419,7 +418,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
 
   # Hent ut første linje frå kodeboka, dvs. den linja som
   # inneheld aktuell informasjon
-  kb_info = kodebok %>%
+  kb_info = kodebok |>
     distinct(variabel_id, .keep_all = TRUE)
 
   # Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
@@ -433,8 +432,8 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
     "dato", "D",
     "kl", "t"
   )
-  spek_innlesing = tibble(variabel_id = varnamn_kb) %>%
-    left_join(kb_info, by = "variabel_id", relationship = "one-to-one") %>%
+  spek_innlesing = tibble(variabel_id = varnamn_kb) |>
+    left_join(kb_info, by = "variabel_id", relationship = "one-to-one") |>
     left_join(spek_csv_oqr, by = "variabeltype", relationship = "many-to-one")
 
   # Har kodeboka variablar av ein type me ikkje har lagt inn støtte for?
@@ -469,7 +468,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
   # Filtrer vekk skjema som ikkje har rett statusvariabel
   # (som standard vert berre ferdigstilte skjema tekne med)
   if (!is.null(status)) {
-    d = d %>%
+    d = d |>
       filter(status %in% !!status)
   }
 
@@ -499,14 +498,14 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
   # stopifnot(all(!er_tal(c("a", "2B", "F42.7", "-x", "1e-7", "3.", ".7")))) # Ev. godta "3." og .7"?
 
   # Finn dei kategoriske variablane som har berre numeriske verdiar ...
-  vars_num = kb_akt %>%
-    filter(variabeltype == "kategorisk") %>%
-    group_by(variabel_id) %>%
-    summarise(er_talkat = all(er_tal(verdi))) %>%
-    filter(er_talkat) %>%
+  vars_num = kb_akt |>
+    filter(variabeltype == "kategorisk") |>
+    group_by(variabel_id) |>
+    summarise(er_talkat = all(er_tal(verdi))) |>
+    filter(er_talkat) |>
     pull(variabel_id)
   # ... og gjer tilhøyrande innlesne variablar (om det er nokon) om til talvariablar
-  d = d %>%
+  d = d |>
     mutate_at(vars_num, as.numeric)
 
   # Gjer eventuelle boolske variablar om til ekte boolske variablar
@@ -520,7 +519,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
     }
   }
   vars_boolsk = spek_innlesing$variabel_id[spek_innlesing$variabeltype == "boolsk"]
-  d = d %>%
+  d = d |>
     mutate_at(vars_boolsk, oqr_boolsk_til_boolsk)
 
   # Gjer eventuelle tidsvariablar om til ekte tidsvariablar
@@ -528,7 +527,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
   #        Fjern når denne feilen er fiksa (rett då òg fixme-en
   #        lenger oppe som også handlar om dette)
   vars_datokl = spek_innlesing$variabel_id[spek_innlesing$variabeltype == "dato_kl"]
-  d = d %>%
+  d = d |>
     mutate_at(vars_datokl, readr::parse_datetime,
       format = "%Y-%m-%d %H:%M:%OS",
       locale = oqr_lokale
