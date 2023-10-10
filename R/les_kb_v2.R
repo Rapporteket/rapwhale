@@ -568,13 +568,8 @@ valider_kb_skjema = function(kodebok) {
     }
 
     # Sjekker at alle skjema har kategori i første rad
-    mangler_kat_rad_en = kodebok |>
-      group_by(skjema_id) |>
-      slice(1) |>
-      filter(is.na(kategori)) |>
-      pull(skjema_id)
-
-    if (length(mangler_kat_rad_en) > 0) {
+    kb_rad_en_per_skjema_id = distinct(kodebok, skjema_id, .keep_all = TRUE)
+    if (any(is.na(kb_rad_en_per_skjema_id$kategori))) {
       stop("Hvis kategorier brukes må det være oppgitt kategori i første rad for alle skjema")
     }
   }
