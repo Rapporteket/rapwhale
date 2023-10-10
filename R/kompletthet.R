@@ -192,17 +192,10 @@ beregn_kompletthet_med_ukjent = function(data, variabel, na_vektor) {
 #'
 #' beregn_kompletthet_datasett(data = d_eksempel)
 beregn_kompletthet_datasett = function(data) {
-  variabel = names(data)
-  d_na = tibble()
-
-  for (i in seq_along(variabel)) {
-    d = beregn_kompletthet(data[variabel[i]], variabel[i])
-
-
-    d_na = bind_rows(d_na, d)
-  }
-
-  d_na
+  data |>
+    names() |>
+    purrr::map(\(var) beregn_kompletthet(data[var], var)) |>
+    purrr::list_rbind()
 }
 
 # Erstatt_ukjent_for_datasett -------------------------------------------------
@@ -272,32 +265,28 @@ beregn_kompletthet_datasett = function(data) {
 #'   ukjent_datasett = ukjent_datasett_eksempel
 #' )
 erstatt_ukjent_for_datasett = function(data, ukjent_datasett) {
-  data_uten_ukjent = tibble::tibble_row()
-
   hjelpefunksjon_na_vektor =
-    possibly(~ (filter(.x, variabel == .y) |>
-      select(
-        where(~ !all(is.na(.x))),
-        -variabel
-      ) |>
-      pull()), otherwise = NULL)
-
-  for (i in seq_len(ncol(data))) {
-    variabel_i = names(data)[i]
-    na_vektor_i = hjelpefunksjon_na_vektor(
-      ukjent_datasett,
-      variabel_i
+    purrr::possibly(
+      .f = \(d, var) (d |>
+        filter(variabel == var) |>
+        select(
+          where(\(x) !all(is.na(x))),
+          -variabel
+        ) |>
+        pull()),
+      otherwise = NULL
     )
 
-    d = erstatt_ukjent(
-      data = select(data, !!variabel_i),
-      variabel = variabel_i,
-      na_vektor = na_vektor_i
-    )
-
-    data_uten_ukjent = bind_cols(data_uten_ukjent, d)
-  }
-  data_uten_ukjent
+  data |>
+    names() |>
+    purrr::map(
+      \(var) erstatt_ukjent(
+        data = data[var],
+        variabel = var,
+        na_vektor = hjelpefunksjon_na_vektor(ukjent_datasett, var)
+      )
+    ) |>
+    purrr::list_cbind()
 }
 
 # beregn_kompletthet_datasett_med_ukjent ----------------------------------
