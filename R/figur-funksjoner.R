@@ -151,7 +151,6 @@ lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab
 lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
                             gruppe = NULL, periode = NULL, x_navn = NULL, y_navn = NULL,
                             ...) {
-
   # definerer alle kolonner som skal være tilgjengelig inni datasettet (d)
   qic_x = enexpr(x)
   qic_y = enexpr(y)
