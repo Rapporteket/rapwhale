@@ -300,15 +300,13 @@ utvid_statusvariabel = function(kb_mellom) {
 #' @return kodebok på standardformat
 #' @export
 konverter_oqr_kb = function(kb_mellom) {
-  kb_mellom = oqr_til_std_variabeltyper(kb_mellom)
-  kb_std = velg_standardkolonner(kb_mellom)
-  kb_std = tildel_unike_skjemanavn_fra_skjema_id(kb_std)
-
-  # Ordne rekkefølge for variabler slik variabler fra samme tabell kommer samlet
-  kb_std = kb_std %>%
+  kb_mellom |>
+    oqr_til_std_variabeltyper() |>
+    velg_standardkolonner() |>
+    tildel_unike_skjemanavn_fra_skjema_id() |>
+    # Ordne rekkefølge for variabler slik at
+    # variabler fra samme tabell kommer samlet
     arrange(forcats::fct_inorder(skjema_id))
-
-  kb_std
 }
 
 
