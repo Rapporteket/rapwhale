@@ -5,7 +5,7 @@
 #' @importFrom tidyr unnest
 NULL
 #' Lag valideringsdatasett
-#' 
+#'
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
@@ -13,8 +13,6 @@ NULL
 #' fyllast ut med og sjekkast opp mot data frå ein gullstandard (typisk
 #' pasientjournal).
 #'
-
-#' 
 #' @param d_reg Datasett (dataramme/tibble).
 #' @param indvars Vektor med indeksvariablar.
 #'
@@ -82,7 +80,7 @@ lag_valideringsdatasett = function(d_reg, indvars) {
 
   d_vartypar = tibble::tibble(
     vartypar = map(d_reg[datavars], ~ class(.x)) %>%
-      unname(), 
+      unname(),
     vartypar_sammenlagt = map_chr(
       vartypar,
       \(x) paste(x, collapse = "_")
