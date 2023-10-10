@@ -546,6 +546,7 @@ valider_kb_skjema = function(kodebok) {
   }
 
   if (any(!is.na(kodebok$kategori))) {
+    # FIXME Kan gjerast enklare med group_by() og summarise()?
     # Sjekker om alle skjema har minst én kategori
     skjema_id = kodebok |>
       distinct(skjema_id) |>
@@ -651,6 +652,7 @@ valider_kb_kolonner = function(kodebok) {
 #'
 #' @keywords internal
 valider_kb_variabler = function(kodebok) {
+  # FIXME Fleire av filtreringane under kan gjerast enklare med distinct()?
   # sjekke at variabeltyper er entydige
   ulike_vartyper = kodebok |>
     group_by(variabel_id) |>
