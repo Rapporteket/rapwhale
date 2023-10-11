@@ -311,47 +311,45 @@ test_that("funksjonen gir feilmelding om inndata ikke er en tekstvektor", {
 context("kb_oqr_base_til_std")
 
 test_that("funksjonen fjerner duplikate variabler i samme tabell, men godtar duplikat i ulike tabeller", {
-  kb_duplikate_variabler = kb_tom %>%
-    tibble::add_row(
-      tabell = c(
-        "pasreg", "pasreg", "pasreg",
-        "pasreg", "basereg", "basereg"
-      ),
-      skjemanavn = c(
-        "Oppfølging 1 år", "Oppfølging 1 år",
-        "Oppfølging 2 år", "Oppfølging 2 år",
-        "Basisregistrering", "Basisregistrering"
-      ),
-      fysisk_feltnavn = "død",
-      type = "Listevariabel",
-      listeverdier = c("1", "2", "1", "2", "1", "2"),
-      obligatorisk = "nei",
-      aktiveringsspoersmaal = "nei",
-      underspoersmaal = "nei",
-      listetekst = c(
-        "ja", "nei", "ja",
-        "nei", "ja", "nei"
-      )
+  kb_duplikate_variabler = tibble::add_row(kb_tom,
+    tabell = c(
+      "pasreg", "pasreg", "pasreg",
+      "pasreg", "basereg", "basereg"
+    ),
+    skjemanavn = c(
+      "Oppfølging 1 år", "Oppfølging 1 år",
+      "Oppfølging 2 år", "Oppfølging 2 år",
+      "Basisregistrering", "Basisregistrering"
+    ),
+    fysisk_feltnavn = "død",
+    type = "Listevariabel",
+    listeverdier = c("1", "2", "1", "2", "1", "2"),
+    obligatorisk = "nei",
+    aktiveringsspoersmaal = "nei",
+    underspoersmaal = "nei",
+    listetekst = c(
+      "ja", "nei", "ja",
+      "nei", "ja", "nei"
     )
+  )
 
-  kb_duplikat_resultat = kb_tom_std %>%
-    tibble::add_row(
-      skjema_id = c(
-        "pasreg", "pasreg",
-        "basereg", "basereg"
-      ),
-      skjemanavn = c(
-        "Oppfølging 1 år", "Oppfølging 1 år",
-        "Basisregistrering", "Basisregistrering"
-      ),
-      variabel_id = "død",
-      variabeltype = "kategorisk",
-      obligatorisk = "nei",
-      unik = "nei",
-      manglande = "nei",
-      verdi = c("1", "2", "1", "2"),
-      verditekst = c("ja", "nei", "ja", "nei")
-    )
+  kb_duplikat_resultat = tibble::add_row(kb_tom_std,
+    skjema_id = c(
+      "pasreg", "pasreg",
+      "basereg", "basereg"
+    ),
+    skjemanavn = c(
+      "Oppfølging 1 år", "Oppfølging 1 år",
+      "Basisregistrering", "Basisregistrering"
+    ),
+    variabel_id = "død",
+    variabeltype = "kategorisk",
+    obligatorisk = "nei",
+    unik = "nei",
+    manglande = "nei",
+    verdi = c("1", "2", "1", "2"),
+    verditekst = c("ja", "nei", "ja", "nei")
+  )
 
   expect_identical(kb_oqr_base_til_std(kb_duplikate_variabler), kb_duplikat_resultat)
 })
@@ -359,35 +357,32 @@ test_that("funksjonen fjerner duplikate variabler i samme tabell, men godtar dup
 context("utvid_statusvariabel")
 
 test_that("funksjonen godtar flere statusvariabler når de er i ulike tabeller", {
-  kb_flere_status_ok = kb_tom_mellom %>%
-    tibble::add_row(
-      skjema_id = c("basereg", "pasient"),
-      variabeltype = c("Statusvariabel", "Statusvariabel")
-    )
+  kb_flere_status_ok = tibble::add_row(kb_tom_mellom,
+    skjema_id = c("basereg", "pasient"),
+    variabeltype = c("Statusvariabel", "Statusvariabel")
+  )
 
-  kb_flere_status_ok_res = kb_tom_mellom %>%
-    tibble::add_row(
-      skjema_id = c(rep("basereg", 3), rep("pasient", 3)),
-      variabeltype = c(
-        "Listevariabel", "Listevariabel", "Listevariabel",
-        "Listevariabel", "Listevariabel", "Listevariabel"
-      ),
-      verdi = c("-1", "0", "1", "-1", "0", "1"),
-      verditekst = c(
-        "Opprettet", "Lagret", "Ferdigstilt",
-        "Opprettet", "Lagret", "Ferdigstilt"
-      )
+  kb_flere_status_ok_res = tibble::add_row(kb_tom_mellom,
+    skjema_id = c(rep("basereg", 3), rep("pasient", 3)),
+    variabeltype = c(
+      "Listevariabel", "Listevariabel", "Listevariabel",
+      "Listevariabel", "Listevariabel", "Listevariabel"
+    ),
+    verdi = c("-1", "0", "1", "-1", "0", "1"),
+    verditekst = c(
+      "Opprettet", "Lagret", "Ferdigstilt",
+      "Opprettet", "Lagret", "Ferdigstilt"
     )
+  )
 
   expect_identical(utvid_statusvariabel(kb_flere_status_ok), kb_flere_status_ok_res)
 })
 
 test_that("funksjonen gir feilmelding hvis det er flere statusvariabler i samme tabell", {
-  kb_flere_status_samme = kb_tom_mellom %>%
-    tibble::add_row(
-      skjema_id = c("basereg", "basereg", "pasient"),
-      variabeltype = c("Statusvariabel", "Statusvariabel", "Statusvariabel")
-    )
+  kb_flere_status_samme = tibble::add_row(kb_tom_mellom,
+    skjema_id = c("basereg", "basereg", "pasient"),
+    variabeltype = c("Statusvariabel", "Statusvariabel", "Statusvariabel")
+  )
 
   expect_error(utvid_statusvariabel(kb_flere_status_samme))
 })
@@ -397,25 +392,28 @@ test_that("funksjonen gir feilmelding hvis det er flere statusvariabler i samme 
 context("oqr_til_std_variabeltyper")
 
 test_that("funksjonen returnerer riktige navn for variabeltype etter konvertering", {
-  kb_ok_navn = kb_tom_mellom %>%
-    tibble::add_row(variabeltype = c(
+  kb_ok_navn = tibble::add_row(kb_tom_mellom,
+    variabeltype = c(
       "Listevariabel", "Tekstvariabel", "Stor tekstvariabel",
       "Avkrysningsboks", "Datovariabel", "Skjult variabel",
       "Tallvariabel", "Tidsvariabel", "TIMESTAMP"
-    ))
+    )
+  )
 
-  kb_ok_resultat = kb_tom_mellom %>%
-    tibble::add_row(variabeltype = c(
+  kb_ok_resultat = tibble::add_row(kb_tom_mellom,
+    variabeltype = c(
       "kategorisk", "tekst", "tekst", "boolsk",
       "dato", "tekst", "numerisk", "kl", "dato_kl"
-    ))
+    )
+  )
 
   expect_identical(oqr_til_std_variabeltyper(kb_ok_navn), kb_ok_resultat)
 })
 
 test_that("funksjonen gir feilmelding ved ukjente variabeltyper", {
-  kb_ny_vartype = kb_tom_mellom %>%
-    tibble::add_row(variabeltype = c("Listevariabel", "Tekstvariabel", "Tellevariabel"))
+  kb_ny_vartype = tibble::add_row(kb_tom_mellom,
+    variabeltype = c("Listevariabel", "Tekstvariabel", "Tellevariabel")
+  )
 
   expect_error(
     oqr_til_std_variabeltyper(kb_ny_vartype),
@@ -425,42 +423,42 @@ test_that("funksjonen gir feilmelding ved ukjente variabeltyper", {
 
 context("sjekk_obligatorisk")
 test_that("funksjonen gir forventet verdi for obligatorisk", {
-  kb_obligatorisk = kb_tom_mellom %>%
-    tibble::add_row(
-      obligatorisk = c("ja", "ja", "nei", "nei"),
-      aktiveringsspoersmaal = c("ja", "nei", "ja", "nei"),
-      underspoersmaal = "nei"
-    )
+  kb_obligatorisk = tibble::add_row(kb_tom_mellom,
+    obligatorisk = c("ja", "ja", "nei", "nei"),
+    aktiveringsspoersmaal = c("ja", "nei", "ja", "nei"),
+    underspoersmaal = "nei"
+  )
 
-  kb_oblig_ok_ja = kb_obligatorisk %>%
-    dplyr::filter(obligatorisk == "ja", aktiveringsspoersmaal == "ja")
+  kb_oblig_ok_ja = dplyr::filter(kb_obligatorisk,
+    obligatorisk == "ja", aktiveringsspoersmaal == "ja"
+  )
 
-  kb_oblig_ok_ja_res = kb_tom_mellom %>%
-    tibble::add_row(
-      obligatorisk = "ja",
-      aktiveringsspoersmaal = "ja",
-      underspoersmaal = "nei"
-    )
+  kb_oblig_ok_ja_res = tibble::add_row(kb_tom_mellom,
+    obligatorisk = "ja",
+    aktiveringsspoersmaal = "ja",
+    underspoersmaal = "nei"
+  )
 
-  kb_oblig_ok_nei = kb_obligatorisk %>%
-    dplyr::filter(obligatorisk == "ja", aktiveringsspoersmaal == "nei")
+  kb_oblig_ok_nei = dplyr::filter(kb_obligatorisk,
+    obligatorisk == "ja", aktiveringsspoersmaal == "nei"
+  )
 
-  kb_oblig_ok_nei_res = kb_tom_mellom %>%
-    tibble::add_row(
-      obligatorisk = "nei",
-      aktiveringsspoersmaal = "nei",
-      underspoersmaal = "nei"
-    )
+  kb_oblig_ok_nei_res = tibble::add_row(kb_tom_mellom,
+    obligatorisk = "nei",
+    aktiveringsspoersmaal = "nei",
+    underspoersmaal = "nei"
+  )
 
-  kb_oblig_ok_nei_2 = kb_obligatorisk %>%
-    dplyr::filter(obligatorisk == "nei", aktiveringsspoersmaal == "ja")
+  kb_oblig_ok_nei_2 = dplyr::filter(
+    kb_obligatorisk,
+    obligatorisk == "nei", aktiveringsspoersmaal == "ja"
+  )
 
-  kb_oblig_ok_nei_res_2 = kb_tom_mellom %>%
-    tibble::add_row(
-      obligatorisk = "nei",
-      aktiveringsspoersmaal = "ja",
-      underspoersmaal = "nei"
-    )
+  kb_oblig_ok_nei_res_2 = tibble::add_row(kb_tom_mellom,
+    obligatorisk = "nei",
+    aktiveringsspoersmaal = "ja",
+    underspoersmaal = "nei"
+  )
 
   expect_identical(sjekk_obligatorisk(kb_oblig_ok_ja), kb_oblig_ok_ja_res)
   expect_identical(sjekk_obligatorisk(kb_oblig_ok_nei), kb_oblig_ok_nei_res)
@@ -468,24 +466,21 @@ test_that("funksjonen gir forventet verdi for obligatorisk", {
 })
 
 test_that("funksjonen gir feilmelding hvis obligatorisk, aktiveringsspoersmaal eller underspoersmaal er NA", {
-  kb_oblig_NA = kb_tom_mellom %>%
-    tibble::add_row(
-      variabeltype = "Listevariabel",
-      aktiveringsspoersmaal = "nei",
-      underspoersmaal = "nei"
-    )
-  kb_aktiv_NA = kb_tom_mellom %>%
-    tibble::add_row(
-      variabeltype = "Listevariabel",
-      obligatorisk = "ja",
-      underspoersmaal = "nei"
-    )
-  kb_under_NA = kb_tom_mellom %>%
-    tibble::add_row(
-      variabeltype = "Listevariabel",
-      obligatorisk = "ja",
-      aktiveringsspoersmaal = "nei"
-    )
+  kb_oblig_NA = tibble::add_row(kb_tom_mellom,
+    variabeltype = "Listevariabel",
+    aktiveringsspoersmaal = "nei",
+    underspoersmaal = "nei"
+  )
+  kb_aktiv_NA = tibble::add_row(kb_tom_mellom,
+    variabeltype = "Listevariabel",
+    obligatorisk = "ja",
+    underspoersmaal = "nei"
+  )
+  kb_under_NA = tibble::add_row(kb_tom_mellom,
+    variabeltype = "Listevariabel",
+    obligatorisk = "ja",
+    aktiveringsspoersmaal = "nei"
+  )
 
   expect_error(valider_oqr_kb(kb_oblig_NA))
   expect_error(valider_oqr_kb(kb_aktiv_NA))
@@ -494,8 +489,12 @@ test_that("funksjonen gir feilmelding hvis obligatorisk, aktiveringsspoersmaal e
 
 context("velg_standardkolonner")
 test_that("funksjonen fungerer som forventet med riktig input og ekstra kolonner", {
-  kb_ekstra = kb_tom_mellom %>%
-    tibble::add_column(ekstra = character(), ekstra2 = numeric(), ekstra3 = logical()) %>%
+  kb_ekstra = kb_tom_mellom |>
+    tibble::add_column(
+      ekstra = character(),
+      ekstra2 = numeric(),
+      ekstra3 = logical()
+    ) |>
     dplyr::select(ekstra, variabel_id, desimaler, ekstra2, everything())
   kb_ekstra_resultat = kb_tom_std
 
@@ -503,8 +502,7 @@ test_that("funksjonen fungerer som forventet med riktig input og ekstra kolonner
 })
 
 test_that("funksjonen gir feilmelding hvis kolonne ikke finnes i inndata", {
-  kb_manglende = kb_tom_mellom %>%
-    dplyr::select(-variabel_id)
+  kb_manglende = dplyr::select(kb_tom_mellom, -variabel_id)
 
   expect_error(velg_standardkolonner(kb_manglende))
 })
@@ -512,39 +510,36 @@ test_that("funksjonen gir feilmelding hvis kolonne ikke finnes i inndata", {
 context("tildel_unike_skjemanavn_fra_skjema_id")
 
 test_that("funksjonen gir forventede skjemanavn", {
-  kb_skjemanavn = kb_tom_std %>%
-    tibble::add_row(
-      skjema_id = c(
-        "pasreg", "basereg", "basereg",
-        "pasreg", "op", "op", "ev", "basereg"
-      ),
-      skjemanavn = c(
-        "Pasient", "Basis", "Basis", "Opskjema",
-        "Pasient", "Opskjema", "Opskjema", "Basis"
-      )
+  kb_skjemanavn = tibble::add_row(kb_tom_std,
+    skjema_id = c(
+      "pasreg", "basereg", "basereg",
+      "pasreg", "op", "op", "ev", "basereg"
+    ),
+    skjemanavn = c(
+      "Pasient", "Basis", "Basis", "Opskjema",
+      "Pasient", "Opskjema", "Opskjema", "Basis"
     )
+  )
 
-  kb_skjemanavn_res = kb_tom_std %>%
-    tibble::add_row(
-      skjema_id = c(
-        "pasreg", "basereg", "basereg",
-        "pasreg", "op", "op", "ev", "basereg"
-      ),
-      skjemanavn = c(
-        "Pasient", "Basis", "Basis", "Pasient",
-        "Opskjema", "Opskjema", "ev", "Basis"
-      )
+  kb_skjemanavn_res = tibble::add_row(kb_tom_std,
+    skjema_id = c(
+      "pasreg", "basereg", "basereg",
+      "pasreg", "op", "op", "ev", "basereg"
+    ),
+    skjemanavn = c(
+      "Pasient", "Basis", "Basis", "Pasient",
+      "Opskjema", "Opskjema", "ev", "Basis"
     )
+  )
 
   expect_identical(tildel_unike_skjemanavn_fra_skjema_id(kb_skjemanavn), kb_skjemanavn_res)
 })
 
 test_that("funksjonen gir feilmelding hvis skjemanavn og skjema_id er overlappende uten 1-1 samsvar mellom de to", {
-  kb_skjema = kb_tom_std %>%
-    tibble::add_row(
-      skjema_id = c("a", "b", "c"),
-      skjemanavn = c("a", "c", "c")
-    )
+  kb_skjema = tibble::add_row(kb_tom_std,
+    skjema_id = c("a", "b", "c"),
+    skjemanavn = c("a", "c", "c")
+  )
 
   expect_error(
     tildel_unike_skjemanavn_fra_skjema_id(kb_skjema),
@@ -555,20 +550,19 @@ test_that("funksjonen gir feilmelding hvis skjemanavn og skjema_id er overlappen
 # legg_til_variabler_kb ---------------------------------------------------
 context("legg_til_variabler_kb")
 
-kb_legg_til_base = kb_tom_std %>%
-  tibble::add_row(
-    skjema_id = c(rep("basereg", 3), "pasreg"),
-    skjemanavn = c(rep("basisregistrering", 3), "pasientskjema"),
-    variabel_id = c("a", "b", "c", "pasientId"),
-    variabeltype = c(rep("tekst", 3), "numerisk"),
-    variabeletikett = c(rep("normal", 3), "id"),
-    unik = c(rep("nei", 3), "ja"),
-    obligatorisk = "ja",
-    desimaler = c(rep(NA, 3), 0L)
-  )
+kb_legg_til_base = tibble::add_row(kb_tom_std,
+  skjema_id = c(rep("basereg", 3), "pasreg"),
+  skjemanavn = c(rep("basisregistrering", 3), "pasientskjema"),
+  variabel_id = c("a", "b", "c", "pasientId"),
+  variabeltype = c(rep("tekst", 3), "numerisk"),
+  variabeletikett = c(rep("normal", 3), "id"),
+  unik = c(rep("nei", 3), "ja"),
+  obligatorisk = "ja",
+  desimaler = c(rep(NA, 3), 0L)
+)
 
 test_that("funksjonen legger til ekstra variabler som forventet", {
-  kb_legg_til_res = kb_legg_til_base %>%
+  kb_legg_til_res = kb_legg_til_base |>
     tibble::add_row(
       skjema_id = c("basereg", "pasreg", "basereg"),
       skjemanavn = c("basisregistrering", "pasientskjema", "basisregistrering"),
@@ -578,7 +572,7 @@ test_that("funksjonen legger til ekstra variabler som forventet", {
       unik = c("nei", "nei", "nei"),
       obligatorisk = c("ja", "nei", "nei"),
       desimaler = c(NA, NA, 0L)
-    ) %>%
+    ) |>
     dplyr::arrange(forcats::fct_inorder(skjema_id))
 
   ekstra_data = tibble::tribble(
@@ -631,14 +625,14 @@ test_that("det går an å legge inn ekstra kolonner som ikke er obligatorisk,
     "basereg", "basisregistrering", "hoyde", "numerisk", "cm", "nei", "ja", 0, 200, 267, "verdi"
   )
 
-  ekstra_data_ok_res = kb_legg_til_base %>%
+  ekstra_data_ok_res = kb_legg_til_base |>
     tibble::add_row(
       skjema_id = "basereg", skjemanavn = "basisregistrering",
       variabel_id = "hoyde", variabeltype = "numerisk",
       variabeletikett = "cm", unik = "nei",
       obligatorisk = "ja", desimaler = 0,
       maks_rimeleg = 200, maks = 267, verdi = "verdi"
-    ) %>%
+    ) |>
     dplyr::arrange(forcats::fct_inorder(skjema_id))
 
   ekstra_data_ikke_ok = tibble::tribble(
@@ -694,11 +688,12 @@ context("valider kb_skjema")
 
 # Sjekke at skjemanavn er unikt innenfor skjemaid
 test_that("funksjonen gir feilmelding hvis en skjemaid har flere skjemanavn", {
-  kb_samme_navn = kb_tom_std %>%
-    tibble::add_row(
-      skjema_id = c("base", "base", "pasient", "pasient"),
-      skjemanavn = c("basisregistrering", "basisregistrering", "pasient", "pasientregistrering")
+  kb_samme_navn = tibble::add_row(kb_tom_std,
+    skjema_id = c("base", "base", "pasient", "pasient"),
+    skjemanavn = c(
+      "basisregistrering", "basisregistrering", "pasient", "pasientregistrering"
     )
+  )
 
   expect_error(
     valider_kb_skjema(kb_samme_navn),
@@ -710,11 +705,10 @@ test_that("funksjonen gir feilmelding hvis en skjemaid har flere skjemanavn", {
 # Alle skjema skal ha minst én kategori
 test_that("funksjonen gir feilmelding hvis det finnes kategorier,
           men ikke for alle skjema", {
-  kb_manglende_kategori = kb_tom_std %>%
-    tibble::add_row(
-      skjema_id = c("base", "pasient", "tredje"),
-      kategori = c("basiskategori", "pasientkategori", NA_character_)
-    )
+  kb_manglende_kategori = tibble::add_row(kb_tom_std,
+    skjema_id = c("base", "pasient", "tredje"),
+    kategori = c("basiskategori", "pasientkategori", NA_character_)
+  )
 
   expect_error(
     valider_kb_skjema(kb_manglende_kategori),
@@ -725,18 +719,15 @@ test_that("funksjonen gir feilmelding hvis det finnes kategorier,
 # Kategorioversikt i første rad
 test_that("funksjonen gir feilmelding hvis kategorier brukes,
           men det ikke er oppgitt kategori i første rad på alle skjema", {
-  kb_manglende_kategori_rad_1 = kb_tom_std %>%
-    tibble::add_row(
-      skjema_id = c(
-        "base", "base", "base",
-        "pasient", "pasient"
-      ),
-      kategori = c(
-        NA_character_, "basiskategori",
-        "basiskategori", "pasientkategori",
-        NA_character_
-      )
+  kb_manglende_kategori_rad_1 = tibble::add_row(kb_tom_std,
+    skjema_id = c(
+      "base", "base", "base", "pasient", "pasient"
+    ),
+    kategori = c(
+      NA_character_, "basiskategori", "basiskategori",
+      "pasientkategori", NA_character_
     )
+  )
 
   expect_error(
     valider_kb_skjema(kb_manglende_kategori_rad_1),
@@ -749,8 +740,9 @@ test_that("funksjonen gir feilmelding hvis kategorier brukes,
 context("valider kb_kolonner")
 # Sjekke at alle variabeltyper er kjent og akseptert
 test_that("funksjonen gir feilmelding hvis det finnes variabeltyper som ikke er i standardsett", {
-  kb_ny_vartype = kb_tom_std %>%
-    add_row(variabeltype = c("tekst", "numerisk", "farge"))
+  kb_ny_vartype = add_row(kb_tom_std,
+    variabeltype = c("tekst", "numerisk", "farge")
+  )
 
   expect_error(
     valider_kb_kolonner(kb_ny_vartype),
@@ -760,57 +752,46 @@ test_that("funksjonen gir feilmelding hvis det finnes variabeltyper som ikke er 
 
 # Sjekke obligatorisk-kolonnen
 test_that("funksjonen gir feilmelding hvis obligatorisk kolonnen ikke er tekstformat", {
-  kb_obligatorisk_logisk = kb_tom_std %>%
-    mutate(obligatorisk = as.logical(obligatorisk))
+  kb_obligatorisk_logisk = mutate(kb_tom_std,
+    obligatorisk = as.logical(obligatorisk)
+  )
 
   expect_error(valider_kb_kolonner(kb_obligatorisk_logisk))
 })
 
 # Sjekke Ja/Nei kolonner
 test_that("funksjonen gir feilmelding hvis Ja/nei kolonner inneholder noe annet enn 'ja' og 'nei'", {
-  kb_ja_nei = kb_tom_std %>%
-    add_row(
-      variabeltype = "tekst",
-      obligatorisk = c("niks", "nei", "ja"),
-      unik = c("nei", "ikke", "ja"),
-      manglande = c("ja", "ja", "nope")
-    )
+  kb_ja_nei = add_row(kb_tom_std,
+    variabeltype = "tekst",
+    obligatorisk = c("niks", "nei", "ja"),
+    unik = c("nei", "ikke", "ja"),
+    manglande = c("ja", "ja", "nope")
+  )
   feilmelding_ja_nei = "Kolonnene obligatorisk, unik og manglande kan bare inneholde 'ja' eller 'nei'"
 
 
-  expect_error(
-    valider_kb_kolonner(kb_ja_nei %>% slice(1)),
-    feilmelding_ja_nei
-  )
-  expect_error(
-    valider_kb_kolonner(kb_ja_nei %>% slice(2)),
-    feilmelding_ja_nei
-  )
-  expect_error(
-    valider_kb_kolonner(kb_ja_nei %>% slice(3)),
-    feilmelding_ja_nei
-  )
+  expect_error(valider_kb_kolonner(kb_ja_nei[1, ]), feilmelding_ja_nei)
+  expect_error(valider_kb_kolonner(kb_ja_nei[2, ]), feilmelding_ja_nei)
+  expect_error(valider_kb_kolonner(kb_ja_nei[3, ]), feilmelding_ja_nei)
 })
 
 # Sjekke desimaler-kolonnen
 test_that("funksjonen gir feilmelding hvis desimalkolonnen inneholder verdier mindre enn null", {
-  kb_desimal_negativ = kb_tom_std %>%
-    add_row(
-      variabeltype = "numerisk",
-      obligatorisk = "nei",
-      unik = "nei",
-      manglande = "nei",
-      desimaler = c(-1L, 0L, 3L)
-    )
+  kb_desimal_negativ = add_row(kb_tom_std,
+    variabeltype = "numerisk",
+    obligatorisk = "nei",
+    unik = "nei",
+    manglande = "nei",
+    desimaler = c(-1L, 0L, 3L)
+  )
 
-  kb_desimal_ikke_heltall = kb_tom_std %>%
-    add_row(
-      variabeltype = "numerisk",
-      obligatorisk = "nei",
-      unik = "nei",
-      manglande = "nei",
-      desimaler = c(2, 3, 4.0)
-    )
+  kb_desimal_ikke_heltall = add_row(kb_tom_std,
+    variabeltype = "numerisk",
+    obligatorisk = "nei",
+    unik = "nei",
+    manglande = "nei",
+    desimaler = c(2, 3, 4.0)
+  )
 
   feilmelding_desimal = "Desimalkolonnen må være et ikke-negativt heltall"
 
@@ -823,14 +804,13 @@ test_that("funksjonen gir feilmelding hvis desimalkolonnen inneholder verdier mi
 
 # Sjekke eining-kolonnen
 test_that("funksjonen gir feilmelding hvis eining er en tom tekststreng", {
-  kb_feil_eining = kb_tom_std %>%
-    add_row(
-      variabeltype = "tekst",
-      obligatorisk = "nei",
-      unik = "nei",
-      manglande = "nei",
-      eining = c(NA_character_, "liter", "kilo", "")
-    )
+  kb_feil_eining = add_row(kb_tom_std,
+    variabeltype = "tekst",
+    obligatorisk = "nei",
+    unik = "nei",
+    manglande = "nei",
+    eining = c(NA_character_, "liter", "kilo", "")
+  )
 
   expect_error(
     valider_kb_kolonner(kb_feil_eining),
@@ -840,14 +820,13 @@ test_that("funksjonen gir feilmelding hvis eining er en tom tekststreng", {
 
 # Sjekke variabelnavn
 test_that("funksjonen gir feilmelding hvis variabelnavn ikke starter med en bokstav, eller inneholder annet enn tall, bokstaver og '_'", {
-  kb_feil_variabel_id = kb_tom_std %>%
-    add_row(
-      variabel_id = c("vekt", "høyde_i_cm", "2_ukers_vekt", "SUPER!"),
-      variabeltype = "tekst",
-      obligatorisk = "nei",
-      unik = "nei",
-      manglande = "nei"
-    )
+  kb_feil_variabel_id = add_row(kb_tom_std,
+    variabel_id = c("vekt", "høyde_i_cm", "2_ukers_vekt", "SUPER!"),
+    variabeltype = "tekst",
+    obligatorisk = "nei",
+    unik = "nei",
+    manglande = "nei"
+  )
 
   expect_error(
     valider_kb_kolonner(kb_feil_variabel_id),
@@ -860,12 +839,11 @@ context("valider kb_variabler")
 
 # Variabelnivå:
 test_that("funksjonen gir feilmelding hvis en variabel har flere variabeltyper", {
-  kb_flere_variabeltyper = kb_tom_std %>%
-    add_row(
-      skjema_id = c("base", "base", "pasient", "pasient"),
-      variabel_id = c("vekt", "høyde", "vekt", "høyde"),
-      variabeltype = c("tekst", "numerisk", "numerisk", "numerisk")
-    )
+  kb_flere_variabeltyper = add_row(kb_tom_std,
+    skjema_id = c("base", "base", "pasient", "pasient"),
+    variabel_id = c("vekt", "høyde", "vekt", "høyde"),
+    variabeltype = c("tekst", "numerisk", "numerisk", "numerisk")
+  )
 
   expect_error(
     valider_kb_variabler(kb_flere_variabeltyper),
@@ -873,13 +851,12 @@ test_that("funksjonen gir feilmelding hvis en variabel har flere variabeltyper",
   )
 })
 test_that("funksjonen gir feilmelding hvis en variabel har flere variabeletiketter", {
-  kb_flere_variabeletiketter = kb_tom_std %>%
-    add_row(
-      skjema_id = c("base", "pasient"),
-      variabel_id = "vekt",
-      variabeltype = "numerisk",
-      variabeletikett = c("vekt i kg", "vekt i gram")
-    )
+  kb_flere_variabeletiketter = add_row(kb_tom_std,
+    skjema_id = c("base", "pasient"),
+    variabel_id = "vekt",
+    variabeltype = "numerisk",
+    variabeletikett = c("vekt i kg", "vekt i gram")
+  )
 
   expect_error(
     valider_kb_variabler(kb_flere_variabeletiketter),
@@ -888,14 +865,13 @@ test_that("funksjonen gir feilmelding hvis en variabel har flere variabeletikett
 })
 
 test_that("funksjonen gir feilmelding hvis en faktor har ulike verditekster for samme verdi på tvers av skjema", {
-  kb_ulike_faktornivaa = kb_tom_std %>%
-    add_row(
-      skjema_id = c("base", "base", "base", "pasient", "pasient", "pasient"),
-      variabel_id = "komplikasjon",
-      variabeltype = "kategorisk",
-      verdi = c("1", "2", "3", "1", "2", "3"),
-      verditekst = c("hoste", "svette", "grining", "hoste", "svette", "latterkrampe")
-    )
+  kb_ulike_faktornivaa = add_row(kb_tom_std,
+    skjema_id = c("base", "base", "base", "pasient", "pasient", "pasient"),
+    variabel_id = "komplikasjon",
+    variabeltype = "kategorisk",
+    verdi = c("1", "2", "3", "1", "2", "3"),
+    verditekst = c("hoste", "svette", "grining", "hoste", "svette", "latterkrampe")
+  )
 
   expect_error(
     valider_kb_variabler(kb_ulike_faktornivaa),
@@ -904,85 +880,102 @@ test_that("funksjonen gir feilmelding hvis en faktor har ulike verditekster for 
 })
 
 test_that("funksjonen gir feilmelding hvis en boolsk variabel har 'Obligatorisk' = Nei, og 'Unik' = Ja", {
-  kb_boolsk_feil = kb_tom_std %>%
-    add_row(
-      variabel_id = "oblig_feil",
-      variabeltype = "boolsk",
-      obligatorisk = "nei",
-      unik = "ja"
-    )
+  kb_boolsk_feil = add_row(kb_tom_std,
+    variabel_id = "oblig_feil",
+    variabeltype = "boolsk",
+    obligatorisk = "nei",
+    unik = "ja"
+  )
 
   expect_error(
-    valider_kb_variabler(kb_boolsk_feil %>% slice(1)),
+    valider_kb_variabler(kb_boolsk_feil[1, ]),
     "Boolske variabler kan ikke ha Obligatorisk = 'nei' og Unik = 'ja'\nVariabel: oblig_feil"
   )
 })
 
 test_that("funksjonen gir feilmelding hvis en kategorisk variabel har duplikate verdier", {
-  kb_kategorisk_feil = kb_tom_std %>%
-    add_row(
-      variabel_id = "komplikasjon",
-      variabeltype = "kategorisk",
-      verdi = c("1", "1", "2", NA_character_),
-      verditekst = c("hevelse", "hevelse", "hoste", "skjelving")
-    )
+  kb_kategorisk_feil = add_row(kb_tom_std,
+    variabel_id = "komplikasjon",
+    variabeltype = "kategorisk",
+    verdi = c("1", "1", "2", NA_character_),
+    verditekst = c("hevelse", "hevelse", "hoste", "skjelving")
+  )
 
   expect_error(
-    valider_kb_variabler(kb_kategorisk_feil %>% slice(1:3)),
+    valider_kb_variabler(kb_kategorisk_feil[1:3, ]),
     "Kategoriske variabler må ha unike verdier\nVariabel: komplikasjon"
   )
   expect_error(
-    valider_kb_variabler(kb_kategorisk_feil %>% slice(2:4)),
+    valider_kb_variabler(kb_kategorisk_feil[2:4, ]),
     "Kategoriske variabler kan ikke ha NA som verdi\nVariabel: komplikasjon"
   )
   expect_error(
-    valider_kb_variabler(kb_kategorisk_feil %>% slice(1)),
+    valider_kb_variabler(kb_kategorisk_feil[1, ]),
     "Kategoriske variabler må ha minst to svaralternativ\nVariabel: komplikasjon"
   )
 })
 
 test_that("funksjonen gir feilmelding hvis en numerisk variabel har noe annet enn NA i kolonnene:
           verdi, verditekst, min_dato, maks_dato, min_rimeleg_dato, maks_rimeleg_dato", {
-  kb_numerisk_feil = kb_tom_std %>%
-    add_row(
-      variabeltype = "numerisk",
-      verdi = c("1", rep(NA_character_, 5)),
-      verditekst = c(NA_character_, "tekst", rep(NA_character_, 4)),
-      min_dato = as.Date(c(rep(NA_character_, 2), "10-01-2020", rep(NA_character_, 3))),
-      maks_dato = as.Date(c(rep(NA_character_, 3), "10-01-2020", rep(NA_character_, 2))),
-      min_rimeleg_dato = as.Date(c(rep(NA_character_, 4), "10-01-2020", NA_character_)),
-      maks_rimeleg_dato = as.Date(c(rep(NA_character_, 5), "10-10-2020"))
-    )
+  kb_numerisk_feil = add_row(kb_tom_std,
+    variabeltype = "numerisk",
+    verdi = c("1", rep(NA_character_, 5)),
+    verditekst = c(NA_character_, "tekst", rep(NA_character_, 4)),
+    min_dato = as.Date(
+      c(rep(NA_character_, 2), "10-01-2020", rep(NA_character_, 3))
+    ),
+    maks_dato = as.Date(
+      c(rep(NA_character_, 3), "10-01-2020", rep(NA_character_, 2))
+    ),
+    min_rimeleg_dato = as.Date(
+      c(rep(NA_character_, 4), "10-01-2020", NA_character_)
+    ),
+    maks_rimeleg_dato = as.Date(c(rep(NA_character_, 5), "10-10-2020"))
+  )
 
   feilmelding_numeriske = "Numeriske variabler kan ikke ha informasjon i kolonnene:\nverdi, verditekst, min_dato, maks_dato, min_rimeleg_dato, maks_rimeleg_dato"
 
   for (i in 1:6) {
-    expect_error(valider_kb_variabler(kb_numerisk_feil %>% slice(i)), feilmelding_numeriske)
+    expect_error(
+      object = valider_kb_variabler(kb_numerisk_feil[i, ]),
+      regexp = feilmelding_numeriske
+    )
   }
 })
 
 test_that("funksjonen gir feilmelding hvis en tekstvariabel har noe annet enn NA i kolonnene:
           verdi, verditekst, desimaler, eining, min, maks, min_rimeleg, maks_rimeleg,
           min_dato, maks_dato, min_rimeleg_dato, maks_rimeleg_dato, kommentar_rimeleg, utrekningsformel, logikk", {
-  kb_tekst_feil = kb_tom_std %>%
-    add_row(
-      variabeltype = "tekst",
-      verdi = c("1", rep(NA_character_, 14)),
-      verditekst = c(rep(NA_character_, 1), "tekst", rep(NA_character_, 13)),
-      desimaler = c(rep(NA_integer_, 2), 1, rep(NA_integer_, 12)),
-      eining = c(rep(NA_character_, 3), "kilo", rep(NA_character_, 11)),
-      min = c(rep(NA_real_, 4), 3.5, rep(NA_real_, 10)),
-      maks = c(rep(NA_real_, 5), 4.5, rep(NA_real_, 9)),
-      min_rimeleg = c(rep(NA_real_, 6), 3.7, rep(NA_real_, 8)),
-      maks_rimeleg = c(rep(NA_real_, 7), 4.3, rep(NA_real_, 7)),
-      min_dato = as.Date(c(rep(NA_character_, 8), "01-01-2020", rep(NA_character_, 6))),
-      maks_dato = as.Date(c(rep(NA_character_, 9), "01-01-2020", rep(NA_character_, 5))),
-      min_rimeleg_dato = as.Date(c(rep(NA_character_, 10), "01-01-2020", rep(NA_character_, 4))),
-      maks_rimeleg_dato = as.Date(c(rep(NA_character_, 11), "01-01-2020", rep(NA_character_, 3))),
-      kommentar_rimeleg = c(rep(NA_character_, 12), "rimelige resultat", rep(NA_character_, 2)),
-      utrekningsformel = c(rep(NA_character_, 13), "a + b", rep(NA_character_, 1)),
-      logikk = c(rep(NA_character_, 14), "logikk")
-    )
+  kb_tekst_feil = add_row(kb_tom_std,
+    variabeltype = "tekst",
+    verdi = c("1", rep(NA_character_, 14)),
+    verditekst = c(rep(NA_character_, 1), "tekst", rep(NA_character_, 13)),
+    desimaler = c(rep(NA_integer_, 2), 1, rep(NA_integer_, 12)),
+    eining = c(rep(NA_character_, 3), "kilo", rep(NA_character_, 11)),
+    min = c(rep(NA_real_, 4), 3.5, rep(NA_real_, 10)),
+    maks = c(rep(NA_real_, 5), 4.5, rep(NA_real_, 9)),
+    min_rimeleg = c(rep(NA_real_, 6), 3.7, rep(NA_real_, 8)),
+    maks_rimeleg = c(rep(NA_real_, 7), 4.3, rep(NA_real_, 7)),
+    min_dato = as.Date(
+      c(rep(NA_character_, 8), "01-01-2020", rep(NA_character_, 6))
+    ),
+    maks_dato = as.Date(
+      c(rep(NA_character_, 9), "01-01-2020", rep(NA_character_, 5))
+    ),
+    min_rimeleg_dato = as.Date(
+      c(rep(NA_character_, 10), "01-01-2020", rep(NA_character_, 4))
+    ),
+    maks_rimeleg_dato = as.Date(
+      c(rep(NA_character_, 11), "01-01-2020", rep(NA_character_, 3))
+    ),
+    kommentar_rimeleg = c(
+      rep(NA_character_, 12), "rimelige resultat", rep(NA_character_, 2)
+    ),
+    utrekningsformel = c(
+      rep(NA_character_, 13), "a + b", rep(NA_character_, 1)
+    ),
+    logikk = c(rep(NA_character_, 14), "logikk")
+  )
 
   feilmelding_tekst = "Tekstvariabler kan ikke inneholde informasjon i
 kolonnene:\nverdi, verditekst, desimaler, eining, min, maks, min_rimeleg,
@@ -990,83 +983,102 @@ maks_rimeleg, min_dato, maks_dato, min_rimeleg_dato, maks_rimeleg_dato,
 kommentar_rimeleg, utrekningsformel, logikk"
 
   for (i in 1:15) {
-    expect_error(valider_kb_variabler(kb_tekst_feil %>% slice(i)), feilmelding_tekst)
+    expect_error(valider_kb_variabler(kb_tekst_feil[i, ]), feilmelding_tekst)
   }
 })
 
 test_that("funksjonen gir feilmelding hvis en kategorisk variabel har noe annet enn NA i kolonnene:
           eining, desimaler, min, maks, min_rimeleg, maks_rimeleg, min_dato, maks_dato,
           min_rimeleg_dato, maks_rimeleg_dato, kommentar_rimeleg, utrekningsformel, logikk", {
-  kb_feil_kategorisk = kb_tom_std %>%
-    add_row(
-      variabel_id = c(rep("komplikasjon", 26)),
-      variabeltype = "kategorisk",
-      verdi = c(rep(c("hoste", "oppkast"), 13)),
-      desimaler = c(1, rep(NA_integer_, 25)),
-      eining = c(rep(NA_character_, 2), "kilo", rep(NA_character_, 23)),
-      min = c(rep(NA_real_, 4), 3.5, rep(NA_real_, 21)),
-      maks = c(rep(NA_real_, 6), 4.5, rep(NA_real_, 19)),
-      min_rimeleg = c(rep(NA_real_, 8), 3.7, rep(NA_real_, 17)),
-      maks_rimeleg = c(rep(NA_real_, 10), 4.3, rep(NA_real_, 15)),
-      min_dato = as.Date(c(rep(NA_character_, 12), "01-01-2020", rep(NA_character_, 13))),
-      maks_dato = as.Date(c(rep(NA_character_, 14), "01-01-2020", rep(NA_character_, 11))),
-      min_rimeleg_dato = as.Date(c(rep(NA_character_, 16), "01-01-2020", rep(NA_character_, 9))),
-      maks_rimeleg_dato = as.Date(c(rep(NA_character_, 18), "01-01-2020", rep(NA_character_, 7))),
-      kommentar_rimeleg = c(rep(NA_character_, 20), "rimelige resultat", rep(NA_character_, 5)),
-      utrekningsformel = c(rep(NA_character_, 22), "a + b", rep(NA_character_, 3)),
-      logikk = c(rep(NA_character_, 24), "logikk", NA_character_)
-    )
+  kb_feil_kategorisk = add_row(kb_tom_std,
+    variabel_id = c(rep("komplikasjon", 26)),
+    variabeltype = "kategorisk",
+    verdi = c(rep(c("hoste", "oppkast"), 13)),
+    desimaler = c(1, rep(NA_integer_, 25)),
+    eining = c(rep(NA_character_, 2), "kilo", rep(NA_character_, 23)),
+    min = c(rep(NA_real_, 4), 3.5, rep(NA_real_, 21)),
+    maks = c(rep(NA_real_, 6), 4.5, rep(NA_real_, 19)),
+    min_rimeleg = c(rep(NA_real_, 8), 3.7, rep(NA_real_, 17)),
+    maks_rimeleg = c(rep(NA_real_, 10), 4.3, rep(NA_real_, 15)),
+    min_dato = as.Date(
+      c(rep(NA_character_, 12), "01-01-2020", rep(NA_character_, 13))
+    ),
+    maks_dato = as.Date(
+      c(rep(NA_character_, 14), "01-01-2020", rep(NA_character_, 11))
+    ),
+    min_rimeleg_dato = as.Date(
+      c(rep(NA_character_, 16), "01-01-2020", rep(NA_character_, 9))
+    ),
+    maks_rimeleg_dato = as.Date(
+      c(rep(NA_character_, 18), "01-01-2020", rep(NA_character_, 7))
+    ),
+    kommentar_rimeleg = c(
+      rep(NA_character_, 20), "rimelige resultat", rep(NA_character_, 5)
+    ),
+    utrekningsformel = c(
+      rep(NA_character_, 22), "a + b", rep(NA_character_, 3)
+    ),
+    logikk = c(rep(NA_character_, 24), "logikk", NA_character_)
+  )
 
   feilmelding_kategorisk = "Kategoriske variabler kan ikke ha informasjon i kolonnene:\n
 eining, desimaler, min, maks, min_rimeleg, maks_rimeleg, min_dato, maks_dato,min_rimeleg_dato, maks_rimeleg_dato,kommentar_rimeleg, utrekningsformel, logikk"
 
   for (i in seq(from = 1, to = 25, by = 2)) {
-    expect_error(valider_kb_variabler(kb_feil_kategorisk %>% slice(c(i, i + 1))), feilmelding_kategorisk)
+    expect_error(valider_kb_variabler(kb_feil_kategorisk[i:(i + 1), ]),
+      regexp = feilmelding_kategorisk
+    )
   }
 })
 
 test_that("funksjonen gir feilmelding hvis en ikke-kategorisk variabel har manglende = Ja", {
-  kb_ikke_kat_manglande = kb_tom_std %>%
-    add_row(
-      variabel_id = c("navn", "vekt", "gladsak", "gladsak"),
-      variabeltype = c("tekst", "numerisk", "kategorisk", "kategorisk"),
-      verdi = c(NA_character_, NA_character_, "1", "2"),
-      verditekst = c(NA_character_, NA_character_, "ja", "nei"),
-      manglande = c("ja", "nei", "nei", "nei")
-    )
+  kb_ikke_kat_manglande = add_row(kb_tom_std,
+    variabel_id = c("navn", "vekt", "gladsak", "gladsak"),
+    variabeltype = c("tekst", "numerisk", "kategorisk", "kategorisk"),
+    verdi = c(NA_character_, NA_character_, "1", "2"),
+    verditekst = c(NA_character_, NA_character_, "ja", "nei"),
+    manglande = c("ja", "nei", "nei", "nei")
+  )
 
   feilmelding_ikke_kategorisk_manglande = "Ikke-kategoriske variabler kan ikke ha manglende = 'ja'\nvariabel_id: navn"
 
   expect_error(
-    valider_kb_variabler(kb_ikke_kat_manglande %>% slice(1)),
-    feilmelding_ikke_kategorisk_manglande
+    valider_kb_variabler(kb_ikke_kat_manglande[1, ]),
+    regexp = feilmelding_ikke_kategorisk_manglande
   )
 })
 
 test_that("funskjonen gir feilmelding hvis relasjoner mellom minimumverdier og maksverdier er feil", {
-  kb_min_maks_feil = kb_tom_std %>%
-    add_row(
-      variabeltype = c(rep("numerisk", 4), rep("dato", 4)),
-      variabel_id = c(rep("vekt", 4), rep("dato", 4)),
-      min = c(10, 10, rep(NA_real_, 6)),
-      maks = c(5, rep(NA_real_, 2), 5, rep(NA_real_, 4)),
-      min_rimeleg = c(NA_real_, 5, 10, rep(NA_real_, 5)),
-      maks_rimeleg = c(rep(NA_real_, 2), 5, 10, rep(NA_real_, 4)),
-      min_dato = as.Date(c(rep(NA_character_, 4), "2020-01-10", "2020-01-10", rep(NA_character_, 2))),
-      maks_dato = as.Date(c(rep(NA_character_, 4), "2020-01-01", rep(NA_character_, 2), "2020-01-01")),
-      min_rimeleg_dato = as.Date(c(rep(NA_character_, 5), "2020-01-01", "2020-01-10", NA_character_)),
-      maks_rimeleg_dato = as.Date(c(rep(NA_character_, 6), "2020-01-01", "2020-01-10"))
+  kb_min_maks_feil = add_row(kb_tom_std,
+    variabeltype = c(rep("numerisk", 4), rep("dato", 4)),
+    variabel_id = c(rep("vekt", 4), rep("dato", 4)),
+    min = c(10, 10, rep(NA_real_, 6)),
+    maks = c(5, rep(NA_real_, 2), 5, rep(NA_real_, 4)),
+    min_rimeleg = c(NA_real_, 5, 10, rep(NA_real_, 5)),
+    maks_rimeleg = c(rep(NA_real_, 2), 5, 10, rep(NA_real_, 4)),
+    min_dato = as.Date(c(
+      rep(NA_character_, 4), "2020-01-10", "2020-01-10", rep(NA_character_, 2)
+    )),
+    maks_dato = as.Date(c(
+      rep(NA_character_, 4), "2020-01-01", rep(NA_character_, 2), "2020-01-01"
+    )),
+    min_rimeleg_dato = as.Date(
+      c(rep(NA_character_, 5), "2020-01-01", "2020-01-10", NA_character_)
+    ),
+    maks_rimeleg_dato = as.Date(
+      c(rep(NA_character_, 6), "2020-01-01", "2020-01-10")
     )
+  )
 
   for (i in 1:4) {
     expect_error(
-      valider_kb_variabler(kb_min_maks_feil %>% slice(i)),
+      valider_kb_variabler(kb_min_maks_feil[i, ]),
       "Relasjon mellom minimum og maksimum verdier er ikke ivaretatt\nvariabel_id: vekt"
     )
   }
   for (i in 5:8) {
     expect_error(
-      valider_kb_variabler(kb_min_maks_feil %>% slice(i)),
+      valider_kb_variabler(kb_min_maks_feil[i, ]),
       "Relasjon mellom minimum og maksimum verdier er ikke ivaretatt\nvariabel_id: dato"
     )
   }
@@ -1074,27 +1086,26 @@ test_that("funskjonen gir feilmelding hvis relasjoner mellom minimumverdier og m
 
 test_that("funksjonen gir feilmelding hvis kommentar_rimelig finnes,
           men ingen av min_rimelig eller maks_rimelig", {
-  kb_kommentar_rimeleg_feil = kb_tom_std %>%
-    add_row(
-      variabel_id = c("vekt1", "vekt2", "vekt3", "dato1", "dato2", "dato3"),
-      variabeltype = c("numerisk", "numerisk", "numerisk", "dato", "dato", "dato"),
-      min = c(rep(10, 3), rep(NA_real_, 3)),
-      maks = c(rep(100, 3), rep(NA_real_, 3)),
-      min_rimeleg = c(50, rep(NA_real_, 5)),
-      maks_rimeleg = c(NA_real_, 80, rep(NA_real_, 4)),
-      min_dato = as.Date(c(rep(NA_character_, 3), "01-01-2020", "01-01-2020", "01-01-2020")),
-      maks_dato = as.Date(c(rep(NA_character_, 3), "10-01-2020", "10-01-2020", "10-01-2020")),
-      min_rimeleg_dato = as.Date(c(rep(NA_character_, 3), "01-01-2020", NA_character_, NA_character_)),
-      maks_rimeleg_dato = as.Date(c(rep(NA_character_, 4), "01-01-2020", NA_character_)),
-      kommentar_rimeleg = "kommentar"
-    )
+  kb_kommentar_rimeleg_feil = add_row(kb_tom_std,
+    variabel_id = c("vekt1", "vekt2", "vekt3", "dato1", "dato2", "dato3"),
+    variabeltype = c("numerisk", "numerisk", "numerisk", "dato", "dato", "dato"),
+    min = c(rep(10, 3), rep(NA_real_, 3)),
+    maks = c(rep(100, 3), rep(NA_real_, 3)),
+    min_rimeleg = c(50, rep(NA_real_, 5)),
+    maks_rimeleg = c(NA_real_, 80, rep(NA_real_, 4)),
+    min_dato = as.Date(c(rep(NA_character_, 3), "01-01-2020", "01-01-2020", "01-01-2020")),
+    maks_dato = as.Date(c(rep(NA_character_, 3), "10-01-2020", "10-01-2020", "10-01-2020")),
+    min_rimeleg_dato = as.Date(c(rep(NA_character_, 3), "01-01-2020", NA_character_, NA_character_)),
+    maks_rimeleg_dato = as.Date(c(rep(NA_character_, 4), "01-01-2020", NA_character_)),
+    kommentar_rimeleg = "kommentar"
+  )
 
   expect_error(
-    valider_kb_variabler(kb_kommentar_rimeleg_feil %>% slice(1:3)),
+    valider_kb_variabler(kb_kommentar_rimeleg_feil[1:3, ]),
     "Kommentar_rimeleg er fylt ut, men det finnes ingen min_rimeleg eller maks_rimeleg\nvariabel_id: vekt3"
   )
   expect_error(
-    valider_kb_variabler(kb_kommentar_rimeleg_feil %>% slice(4:6)),
+    valider_kb_variabler(kb_kommentar_rimeleg_feil[4:6, ]),
     "Kommentar_rimeleg er fylt ut, men det finnes ingen min_rimeleg eller maks_rimeleg\nvariabel_id: dato3"
   )
 })

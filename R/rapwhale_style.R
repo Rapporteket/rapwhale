@@ -93,7 +93,7 @@ rapwhale_style = function(scope = "tokens", strict = TRUE, indent_by = 2,
   )
 
   temp_style$style_guide_name = "rapwhale::rapwhale_style()"
-  temp_style$style_guide_version = packageVersion("rapwhale") %>%
+  temp_style$style_guide_version = packageVersion("rapwhale") |>
     as.character()
 
   # Bruk = i staden for <-
@@ -110,7 +110,7 @@ rapwhale_style = function(scope = "tokens", strict = TRUE, indent_by = 2,
   }
 
   # if, else osv. skal alltid ha krøllparentesar
-  temp_style$token = temp_style$token %>%
+  temp_style$token = temp_style$token |>
     append(c(
       wrap_if_else_while_for_fun_in_curly_rapwhale =
         wrap_if_else_while_for_fun_in_curly_rapwhale

@@ -22,8 +22,8 @@ les_varnavn = function(adresse, formatspek) {
     col_names = FALSE,
     na = formatspek$na_verdier,
     locale = readr::locale(encoding = formatspek$tegnkoding)
-  ) %>%
-    unlist(., use.names = FALSE) %>%
+  ) |>
+    unlist(use.names = FALSE) |>
     tidyr::replace_na("")
 
   varnavn
