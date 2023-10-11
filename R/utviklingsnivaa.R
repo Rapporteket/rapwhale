@@ -30,13 +30,12 @@ utviklingsnivaa = function(mappe = "man") {
   funksjonar = list.files(mappe, pattern = "\\.Rd$")
 
   # Lag vektor med funksjonsnamn
-  funksjonar_namn = funksjonar %>%
-    stringr::str_replace("\\.Rd", "()")
+  funksjonar_namn = stringr::str_replace(funksjonar, "\\.Rd", "()")
 
   # Les inn linjene i hjelpefilene
   parse_Rd_mapper = purrr::as_mapper(~ tools::parse_Rd(., permissive = TRUE))
-  funksjonar_parsed = paste0(mappe, "/", funksjonar) %>%
-    purrr::map(parse_Rd_mapper)
+  funksjonsadresser = paste0(mappe, "/", funksjonar)
+  funksjonar_parsed = purrr::map(funksjonsadresser, parse_Rd_mapper)
 
   # Hent utviklingsnivå for en funksjon
   hent_nivaa = function(funksjon_rd) {
@@ -44,8 +43,8 @@ utviklingsnivaa = function(mappe = "man") {
       funksjon_rd,
       ~ attr(., "Rd_tag") == "\\description"
     )
-    nivaa = unlist(desc_rd) %>%
-      stringr::str_subset("^lifecycle-[[:alpha:]]+\\.svg$") %>%
+    nivaa = unlist(desc_rd) |>
+      stringr::str_subset("^lifecycle-[[:alpha:]]+\\.svg$") |>
       stringr::str_remove_all("lifecycle-|\\.svg")
     if (length(nivaa) == 0) {
       NA_character_
@@ -65,6 +64,10 @@ utviklingsnivaa = function(mappe = "man") {
   }
   intern = map_lgl(funksjonar_parsed, er_intern)
 
-  tibble::tibble(funksjon = funksjonar_namn, utviklingsnivaa = nivaa, intern = intern) %>%
+  tibble::tibble(
+    funksjon = funksjonar_namn,
+    utviklingsnivaa = nivaa,
+    intern = intern
+  ) |>
     dplyr::arrange(utviklingsnivaa)
 }

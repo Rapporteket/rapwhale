@@ -92,8 +92,8 @@
 #' aggreger_ki_rate(d, alfa = 0.1)
 #'
 #' # Gruppert på helseforetak, per 1000
-#' d %>%
-#'   group_by(helseforetak) %>%
+#' d |>
+#'   group_by(helseforetak) |>
 #'   aggreger_ki_rate(multiplikator = 1000)
 #'
 #' # Merk at helseforetakene ovenfor blir vist i alfabetisk rekkefølge,
@@ -102,8 +102,8 @@
 #' d = mutate(d, helsefortak = factor(helseforetak,
 #'   levels = c("Helse Nord", "Helse Midt", "Helse Vest", "Helse Sør-Øst")
 #' ))
-#' d %>%
-#'   group_by(helseforetak) %>%
+#' d |>
+#'   group_by(helseforetak) |>
 #'   aggreger_ki_rate()
 aggreger_ki_rate = function(d_ki_ind, alfa = 0.05, multiplikator = 1) {
   # Teste inndata
@@ -192,9 +192,9 @@ aggreger_ki_rate = function(d_ki_ind, alfa = 0.05, multiplikator = 1) {
         sum(antall) ~ 1,
         family = "poisson",
         offset = log(sum(eksponering))
-      ) %>%
-        profile_funk() %>%
-        confint(level = 1 - alfa) %>%
+      ) |>
+        profile_funk() |>
+        confint(level = 1 - alfa) |>
         exp()
       konfint_nedre = konfint[[1]]
       konfint_ovre = konfint[[2]]
@@ -202,21 +202,21 @@ aggreger_ki_rate = function(d_ki_ind, alfa = 0.05, multiplikator = 1) {
     c(konfint_nedre, konfint_ovre)
   }
 
-  d_ki_ind %>%
+  d_ki_ind |>
     dplyr::summarise(
       est = (sum(ki_antall[ki_aktuell], na.rm = TRUE) /
-        sum(ki_eksponering[ki_aktuell], na.rm = TRUE)) %>%
+        sum(ki_eksponering[ki_aktuell], na.rm = TRUE)) |>
         replace_na(NA), # Gjør NaN om til NA
       konfint = list(
         konfint(ki_antall[ki_aktuell], ki_eksponering[ki_aktuell])
       ),
       .groups = "keep"
-    ) %>%
+    ) |>
     dplyr::mutate(
       est = est * multiplikator,
       konfint_nedre = map_dbl(konfint, pluck, 1) * multiplikator,
       konfint_ovre = map_dbl(konfint, pluck, 2) * multiplikator
-    ) %>%
-    dplyr::select(group_cols(d_ki_ind), est, konfint_nedre, konfint_ovre) %>%
+    ) |>
+    dplyr::select(group_cols(d_ki_ind), est, konfint_nedre, konfint_ovre) |>
     dplyr::ungroup()
 }

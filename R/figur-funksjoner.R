@@ -1,7 +1,6 @@
 # Dette skriptet inneholder en rekke funksjoner som er potensielt nyttige
 # (og noen, uunnværlige) i registersammenheng og i andre sammenheng.
 
-#' @importFrom magrittr %>%
 #' @importFrom rlang enexpr syms eval_bare maybe_missing
 #' @importFrom qicharts2 qic
 #' @import ggplot2
@@ -22,8 +21,8 @@ NULL
 flytt_opp = function(y, tekst, hoyde = .015) {
   tekst_ny = tekst[order(y)]
   y = y[order(y)]
-  linjer = tekst_ny %>%
-    stringr::str_split("\n") %>%
+  linjer = tekst_ny |>
+    stringr::str_split("\n") |>
     sapply(length)
   nedre = y - linjer * hoyde / 2
   ovre = y + linjer * hoyde / 2

@@ -71,8 +71,8 @@ NULL
 #' aggreger_ki_prop(d, alfa = 0.1)
 #'
 #' # Gruppert på sykehusnivå
-#' d %>%
-#'   group_by(sykehus) %>%
+#' d |>
+#'   group_by(sykehus) |>
 #'   aggreger_ki_prop()
 #'
 #' # Merk at sykehusene ovenfor blir vist i alfabetisk rekkefølge,
@@ -81,8 +81,8 @@ NULL
 #' d = mutate(d, sykehus = factor(sykehus,
 #'   levels = c("Haukeland", "Førde", "Voss")
 #' ))
-#' d %>%
-#'   group_by(sykehus) %>%
+#' d |>
+#'   group_by(sykehus) |>
 #'   aggreger_ki_prop()
 aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
   # Teste inndata
@@ -111,14 +111,14 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
   }
 
   # Beregne utdata
-  d_sammendrag = d_ki_ind %>%
+  d_sammendrag = d_ki_ind |>
     summarise(
       ki_teller = sum(ki_krit_teller, na.rm = TRUE),
       ki_nevner = sum(ki_krit_nevner),
       est = ki_teller / ki_nevner,
       .groups = "keep"
-    ) %>%
-    select(group_cols(d_ki_ind), est, ki_teller, ki_nevner) %>%
+    ) |>
+    select(group_cols(d_ki_ind), est, ki_teller, ki_nevner) |>
     ungroup()
 
   # Legg til konfidensintervall
@@ -145,7 +145,7 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
 
   # Sørg for at manglende estimat alltid blir returnert som NA
   # (og ikke for eksempel NaN, som vi får ved 0/0)
-  d_sammendrag = d_sammendrag %>%
+  d_sammendrag = d_sammendrag |>
     mutate(across(c(est, konfint_nedre, konfint_ovre),
       \(x) tidyr::replace_na(x, replace = NA)
     ))

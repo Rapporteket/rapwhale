@@ -58,11 +58,10 @@ les_kb_oqr_v2 = function(adresse, valider = TRUE) {
   )
 
   # Endrer "Ja" og "Nei" til lower_case
-  kb_oqr = kb_oqr %>%
-    mutate(
-      aktiveringsspoersmaal = str_to_lower(aktiveringsspoersmaal),
-      underspoersmaal = str_to_lower(underspoersmaal)
-    )
+  kb_oqr = mutate(kb_oqr,
+    aktiveringsspoersmaal = str_to_lower(aktiveringsspoersmaal),
+    underspoersmaal = str_to_lower(underspoersmaal)
+  )
 
   kb_std = kb_oqr_base_til_std(kb_oqr)
 
@@ -89,10 +88,9 @@ les_kb_oqr_v2 = function(adresse, valider = TRUE) {
 #' kan inneholde tekst-verdier.
 #'
 #' @param adresse filplassering for kodebok.
-#' 
+#'
 #' @keywords internal
 les_kb_oqr_base = function(adresse) {
-
   # Spesifikasjon for OQR-kodebok
   kb_spek_oqr = tribble(
     ~varnavn_kilde, ~varnavn_resultat, ~vartype,
@@ -145,7 +143,7 @@ les_kb_oqr_base = function(adresse) {
 #' @param d tekst-vektor som skal konverteres
 #' @param regex regex uttrykk for hvilke format det forventes at teksten innehar.
 #' @param parse_funksjon en parse_*-funksjon fra readr pakken. Foreløpig kun støtte for parse_double og parse_date.
-#' 
+#'
 #' @keywords internal
 konverter_tekst = function(d, regex, parse_funksjon, ...) {
   stopifnot(is.character(d))
@@ -183,36 +181,35 @@ kb_oqr_base_til_std = function(kb_oqr) {
 
   # Utkast til standardformat for kodebok.
   # FIXME - bli enige om hva som skal være inkludert i vårt standardformat
-  kb_mellom = kb_oqr %>%
-    mutate(
-      skjema_id = tabell,
-      skjemanavn = skjemanavn,
-      variabel_id = str_to_lower(fysisk_feltnavn),
-      obligatorisk = str_to_lower(obligatorisk),
-      variabeletikett = ledetekst,
-      forklaring = hjelpetekst,
-      variabeltype = type,
-      verdi = listeverdier,
-      verditekst = listetekst,
-      desimaler = desimaler,
-      min = maksintervall_start_numerisk,
-      maks = maksintervall_slutt_numerisk,
-      min_rimeleg = normalintervall_start_numerisk,
-      maks_rimeleg = normalintervall_slutt_numerisk,
-      min_dato = maksintervall_start_dato,
-      maks_dato = maksintervall_slutt_dato,
-      min_rimeleg_dato = normalintervall_start_dato,
-      maks_rimeleg_dato = normalintervall_slutt_dato,
-      kommentar = kommentar,
-      kategori = NA_character_,
-      innleiing = NA_character_,
-      eining = NA_character_,
-      unik = "nei",
-      manglande = "nei",
-      kommentar_rimeleg = NA_character_,
-      utrekningsformel = NA_character_,
-      logikk = NA_character_
-    )
+  kb_mellom = mutate(kb_oqr,
+    skjema_id = tabell,
+    skjemanavn = skjemanavn,
+    variabel_id = str_to_lower(fysisk_feltnavn),
+    obligatorisk = str_to_lower(obligatorisk),
+    variabeletikett = ledetekst,
+    forklaring = hjelpetekst,
+    variabeltype = type,
+    verdi = listeverdier,
+    verditekst = listetekst,
+    desimaler = desimaler,
+    min = maksintervall_start_numerisk,
+    maks = maksintervall_slutt_numerisk,
+    min_rimeleg = normalintervall_start_numerisk,
+    maks_rimeleg = normalintervall_slutt_numerisk,
+    min_dato = maksintervall_start_dato,
+    maks_dato = maksintervall_slutt_dato,
+    min_rimeleg_dato = normalintervall_start_dato,
+    maks_rimeleg_dato = normalintervall_slutt_dato,
+    kommentar = kommentar,
+    kategori = NA_character_,
+    innleiing = NA_character_,
+    eining = NA_character_,
+    unik = "nei",
+    manglande = "nei",
+    kommentar_rimeleg = NA_character_,
+    utrekningsformel = NA_character_,
+    logikk = NA_character_
+  )
 
   kb_mellom = reduser_duplikate_variabler(kb_mellom)
   kb_mellom = utvid_statusvariabel(kb_mellom)
@@ -237,10 +234,10 @@ kb_oqr_base_til_std = function(kb_oqr) {
 #' Vi vil kun ha en variabel som gjelder for alle disse skjema innen samme tabell.
 #'
 #' @param kb_mellom kodebok på mellomformat
-#' 
+#'
 #' @keywords internal
 reduser_duplikate_variabler = function(kb_mellom) {
-  kb_mellom = kb_mellom %>%
+  kb_mellom = kb_mellom |>
     distinct(skjema_id, variabel_id, verdi, verditekst, .keep_all = TRUE)
 }
 
@@ -255,14 +252,14 @@ reduser_duplikate_variabler = function(kb_mellom) {
 #' Tar inn kodebok og returnerer kodebok med statusvariabler utvidet
 #'
 #' @param kb_mellom Kodebok på mellomformat
-#' 
+#'
 #' @keywords internal
 utvid_statusvariabel = function(kb_mellom) {
   # FIXME - Se om vi kan bruke insert_rows, update_rows eller upsert_rows i nye dplyr.
   # Sjekker at det ingen tabeller har flere statusvariabler.
-  stopifnot(all(kb_mellom %>%
-    group_by(skjema_id) %>%
-    tally(variabeltype == "Statusvariabel") %>%
+  stopifnot(all(kb_mellom |>
+    group_by(skjema_id) |>
+    tally(variabeltype == "Statusvariabel") |>
     pull(n) <= 1))
 
   while (any(kb_mellom$variabeltype == "Statusvariabel")) {
@@ -321,7 +318,7 @@ konverter_oqr_kb = function(kb_mellom) {
 #' @param kb_mellom Kodebok på mellomformat
 #'
 #' @return kodebok på mellomformat, men med standardnavn for variabeltyper
-#' 
+#'
 #' @keywords internal
 oqr_til_std_variabeltyper = function(kb_mellom) {
   vartype_oqr_standard = tribble(
@@ -364,21 +361,20 @@ oqr_til_std_variabeltyper = function(kb_mellom) {
 #' obligatorisk til nei.
 #'
 #' @param kb_mellom Kodebok på mellomformat
-#' 
+#'
 #' @keywords internal
 sjekk_obligatorisk = function(kb_mellom) {
   stopifnot(all(!(is.na(kb_mellom$obligatorisk) |
     is.na(kb_mellom$aktiveringsspoersmaal) |
     is.na(kb_mellom$underspoersmaal))))
 
-  kb_mellom = kb_mellom %>%
-    mutate(
-      obligatorisk =
-        if_else(aktiveringsspoersmaal == "ja" &
-          obligatorisk == "ja",
-        true = "ja", false = "nei"
-        )
-    )
+  mutate(kb_mellom,
+    obligatorisk =
+      if_else(aktiveringsspoersmaal == "ja" & obligatorisk == "ja",
+        true = "ja",
+        false = "nei"
+      )
+  )
 }
 
 #' Velg standardkolonner
@@ -390,10 +386,9 @@ sjekk_obligatorisk = function(kb_mellom) {
 #' hentes ut i standard rekkefølge.
 #'
 #' @param kb_mellom Kodebok på mellomformat
-#' 
+#'
 #' @keywords internal
 velg_standardkolonner = function(kb_mellom) {
-
   # Fikse rekkefølge for og valg av variabler til kb_std
   std_namn = c(
     "skjema_id", "skjemanavn", "kategori", "innleiing", "variabel_id",
@@ -404,9 +399,7 @@ velg_standardkolonner = function(kb_mellom) {
     "utrekningsformel", "logikk", "kommentar"
   )
 
-  kb_std = kb_mellom %>%
-    select(!!std_namn)
-  kb_std
+  select(kb_mellom, !!std_namn)
 }
 
 #' Tildel unike skjemanavn fra tabellnavn
@@ -418,7 +411,7 @@ velg_standardkolonner = function(kb_mellom) {
 #' Velger første *ledige* navn blant tilgjengelige skjema-id'er.
 #'
 #' @param kb_std Kodebok på standardformat
-#' 
+#'
 #' @keywords internal
 tildel_unike_skjemanavn_fra_skjema_id = function(kb_std) {
   # Ordner skjemanavn til å samsvare med hvilken tabell variablene ligger i.
@@ -451,19 +444,18 @@ tildel_unike_skjemanavn_fra_skjema_id = function(kb_std) {
 #'
 #' Funksjon for å legge til variabler i kodebok som finnes i datadump, men ikke
 #' er med i kodebok.
-#' Kolonnene skjema_id, skjemanavn, variabel_id, variabeletikett, variabeltype, 
+#' Kolonnene skjema_id, skjemanavn, variabel_id, variabeletikett, variabeltype,
 #' unik, obligatorisk og desimaler er obligatorisk.
 #' Det er mulig å legge inn flere verdier gitt at det er gyldige kolonner
 #' som er i kodebok fra før.
 #'
 #' @param kb_std kodebok på standardformat
-#' @param ekstra_data Dataramme med variabler som skal legges til skjema. 
-#' Må inneholde skjema_id, skjemanavn, variabel_id, variabeletikett, 
+#' @param ekstra_data Dataramme med variabler som skal legges til skjema.
+#' Må inneholde skjema_id, skjemanavn, variabel_id, variabeletikett,
 #' variabeltype, unik, obligatorisk og desimaler.
-#' 
+#'
 #' @keywords internal
 legg_til_variabler_kb = function(kb_std, ekstra_data) {
-
   # Se om kolonner i ekstra data finnes i kodebok fra før
   ekstra_kol = colnames(ekstra_data)[!colnames(ekstra_data) %in% colnames(kb_std)]
   if (length(ekstra_kol) > 0) {
@@ -475,8 +467,8 @@ legg_til_variabler_kb = function(kb_std, ekstra_data) {
 
   # Se om variabler i ekstra_data finnes i kb fra før:
   overlapp = intersect(
-    kb_std %>% select(skjema_id, variabel_id),
-    ekstra_data %>% select(skjema_id, variabel_id)
+    select(kb_std, skjema_id, variabel_id),
+    select(ekstra_data, skjema_id, variabel_id)
   )
   if (nrow(overlapp) > 0) {
     stop(
@@ -485,11 +477,9 @@ legg_til_variabler_kb = function(kb_std, ekstra_data) {
     )
   }
 
-  kb_std = kb_std %>%
-    bind_rows(ekstra_data) %>%
+  kb_std |>
+    bind_rows(ekstra_data) |>
     arrange(forcats::fct_inorder(skjema_id))
-
-  kb_std
 }
 
 #' Valider kodebok
@@ -501,10 +491,9 @@ legg_til_variabler_kb = function(kb_std, ekstra_data) {
 #' Tar inn kodebok og returnerer ingenting gitt at kodeboken oppfyller kravene til standardformat.
 #'
 #' @param kodebok Kodebok på standardformat
-#' 
+#'
 #' @keywords internal
 valider_kodebok = function(kodebok) {
-
   # Planlagt struktur
   # valider_kb_struktur(kodebok)
   valider_kb_skjema(kodebok)
@@ -534,37 +523,35 @@ valider_kb_struktur = function(kodebok) {}
 #' Et sett med tester for å validere kodebok på skjemanivå.
 #'
 #' @param kodebok kodebok på standard format.
-#' 
+#'
 #' @keywords internal
 valider_kb_skjema = function(kodebok) {
-
   # Sjekk at skjema_id ikke har flere skjemanavn
-  skjemaid_navn_kombinasjoner = kodebok %>%
-    distinct(skjema_id, skjemanavn) %>%
+  skjemaid_navn_kombinasjoner = kodebok |>
+    distinct(skjema_id, skjemanavn) |>
     nrow()
 
-  n_skjemaid = kodebok %>%
-    distinct(skjema_id) %>%
+  n_skjemaid = kodebok |>
+    distinct(skjema_id) |>
     nrow()
 
   if (skjemaid_navn_kombinasjoner != n_skjemaid) {
-    skjema_id_duplikat = kodebok %>%
-      distinct(skjema_id, skjemanavn) %>%
-      filter(duplicated(skjema_id)) %>%
+    skjema_id_duplikat = kodebok |>
+      distinct(skjema_id, skjemanavn) |>
+      filter(duplicated(skjema_id)) |>
       pull(skjema_id)
     stop(paste0("skjema_id har ikke entydig skjemanavn\nskjema_id: ", skjema_id_duplikat))
   }
 
   if (any(!is.na(kodebok$kategori))) {
-
     # Sjekker om alle skjema har minst én kategori
-    skjema_id = kodebok %>%
-      distinct(skjema_id) %>%
+    skjema_id = kodebok |>
+      distinct(skjema_id) |>
       pull(skjema_id)
 
-    skjema_id_kategori = kodebok %>%
-      filter(!is.na(kategori)) %>%
-      distinct(skjema_id) %>%
+    skjema_id_kategori = kodebok |>
+      filter(!is.na(kategori)) |>
+      distinct(skjema_id) |>
       pull(skjema_id)
 
     mangler_kategori = setdiff(skjema_id, skjema_id_kategori)
@@ -574,10 +561,10 @@ valider_kb_skjema = function(kodebok) {
     }
 
     # Sjekker at alle skjema har kategori i første rad
-    mangler_kat_rad_en = kodebok %>%
-      group_by(skjema_id) %>%
-      slice(1) %>%
-      filter(is.na(kategori)) %>%
+    mangler_kat_rad_en = kodebok |>
+      group_by(skjema_id) |>
+      slice(1) |>
+      filter(is.na(kategori)) |>
       pull(skjema_id)
 
     if (length(mangler_kat_rad_en) > 0) {
@@ -594,7 +581,7 @@ valider_kb_skjema = function(kodebok) {
 #' Et sett med tester for å validere kodebok på kolonnenivå.
 #'
 #' @param kodebok kodebok på standard format
-#' 
+#'
 #' @keywords internal
 valider_kb_kolonner = function(kodebok) {
   aksepterte_variabeltyper = c(
@@ -655,15 +642,14 @@ valider_kb_kolonner = function(kodebok) {
 #' Et sett med tester for å valider kodebok på variabelnivå.
 #'
 #' @param kodebok kodebok på standardformat
-#' 
+#'
 #' @keywords internal
 valider_kb_variabler = function(kodebok) {
-
   # sjekke at variabeltyper er entydige
-  ulike_vartyper = kodebok %>%
-    group_by(variabel_id) %>%
-    summarise(antall_ulike = n_distinct(variabeltype)) %>%
-    filter(antall_ulike > 1) %>%
+  ulike_vartyper = kodebok |>
+    group_by(variabel_id) |>
+    summarise(antall_ulike = n_distinct(variabeltype)) |>
+    filter(antall_ulike > 1) |>
     pull(variabel_id)
 
   if (length(ulike_vartyper) > 0) {
@@ -671,10 +657,10 @@ valider_kb_variabler = function(kodebok) {
   }
 
   # sjekk at variabeletiketter er entydige
-  ulike_variabeletiketter = kodebok %>%
-    group_by(variabel_id) %>%
-    summarise(antall_ulike = n_distinct(variabeletikett)) %>%
-    filter(antall_ulike > 1) %>%
+  ulike_variabeletiketter = kodebok |>
+    group_by(variabel_id) |>
+    summarise(antall_ulike = n_distinct(variabeletikett)) |>
+    filter(antall_ulike > 1) |>
     pull(variabel_id)
 
   if (length(ulike_variabeletiketter > 0)) {
@@ -682,10 +668,10 @@ valider_kb_variabler = function(kodebok) {
   }
 
   # sjekk at kategoriske variabler har tilsvarende verditekst for hver verdi på tvers av skjema
-  flere_verditekster = kodebok %>%
-    filter(variabeltype == "kategorisk") %>%
-    group_by(variabel_id, verdi) %>%
-    summarise(antall_verditekst = n_distinct(verditekst)) %>%
+  flere_verditekster = kodebok |>
+    filter(variabeltype == "kategorisk") |>
+    group_by(variabel_id, verdi) |>
+    summarise(antall_verditekst = n_distinct(verditekst)) |>
     filter(antall_verditekst > 1)
 
   if (nrow(flere_verditekster) > 0) {
@@ -698,11 +684,11 @@ valider_kb_variabler = function(kodebok) {
   }
 
   # sjekk at boolske variabler ikke har Obligatorisk = Nei og Unik = Ja
-  feil_boolsk = kodebok %>%
+  feil_boolsk = kodebok |>
     filter(
       variabeltype == "boolsk",
       obligatorisk == "nei" & unik == "ja"
-    ) %>%
+    ) |>
     pull(variabel_id)
 
   if (length(feil_boolsk) > 0) {
@@ -710,26 +696,26 @@ valider_kb_variabler = function(kodebok) {
   }
 
   # sjekke diverse ting med kategoriske variabler
-  duplikat_verdi = kodebok %>%
-    filter(variabeltype == "kategorisk") %>%
-    group_by(skjema_id, variabel_id) %>%
-    add_count(verdi, name = "antall_av_verdi") %>%
-    filter(antall_av_verdi > 1) %>%
-    distinct(variabel_id) %>%
+  duplikat_verdi = kodebok |>
+    filter(variabeltype == "kategorisk") |>
+    group_by(skjema_id, variabel_id) |>
+    add_count(verdi, name = "antall_av_verdi") |>
+    filter(antall_av_verdi > 1) |>
+    distinct(variabel_id) |>
     pull(variabel_id)
 
-  na_verdi = kodebok %>%
+  na_verdi = kodebok |>
     filter(
       variabeltype == "kategorisk",
       is.na(verdi)
-    ) %>%
+    ) |>
     pull(variabel_id)
 
-  antall_alternativ = kodebok %>%
-    filter(variabeltype == "kategorisk") %>%
-    group_by(variabel_id) %>%
-    summarise(antall_alternativ = n()) %>%
-    filter(antall_alternativ < 2) %>%
+  antall_alternativ = kodebok |>
+    filter(variabeltype == "kategorisk") |>
+    group_by(variabel_id) |>
+    summarise(antall_alternativ = n()) |>
+    filter(antall_alternativ < 2) |>
     pull(variabel_id)
 
   if (length(duplikat_verdi > 0)) {
@@ -754,23 +740,25 @@ valider_kb_variabler = function(kodebok) {
   }
 
   # sjekker at variabler ikke har informasjon i kolonner som ikke er relevant for variabeltypen:
-  feil_info_numerisk = kodebok %>%
-    filter(variabeltype == "numerisk") %>%
-    filter(!is.na(verdi) | !is.na(verditekst) |
+  feil_info_numerisk = filter(kodebok,
+    variabeltype == "numerisk",
+    !is.na(verdi) | !is.na(verditekst) |
       !is.na(min_dato) | !is.na(maks_dato) |
-      !is.na(min_rimeleg_dato) | !is.na(maks_rimeleg_dato))
+      !is.na(min_rimeleg_dato) | !is.na(maks_rimeleg_dato)
+  )
 
   if (nrow(feil_info_numerisk) > 0) {
     stop("Numeriske variabler kan ikke ha informasjon i kolonnene:\nverdi, verditekst, min_dato, maks_dato, min_rimeleg_dato, maks_rimeleg_dato")
   }
 
-  feil_info_tekst = kodebok %>%
-    filter(variabeltype == "tekst") %>%
-    filter(!is.na(verdi) | !is.na(verditekst) | !is.na(desimaler) | !is.na(eining) |
+  feil_info_tekst = filter(    kodebok,
+    variabeltype == "tekst",
+    !is.na(verdi) | !is.na(verditekst) | !is.na(desimaler) | !is.na(eining) |
       !is.na(min) | !is.na(maks) | !is.na(min_rimeleg) |
       !is.na(maks_rimeleg) | !is.na(min_dato) | !is.na(maks_dato) |
       !is.na(min_rimeleg_dato) | !is.na(maks_rimeleg_dato) |
-      !is.na(kommentar_rimeleg) | !is.na(utrekningsformel) | !is.na(logikk))
+      !is.na(kommentar_rimeleg) | !is.na(utrekningsformel) | !is.na(logikk)
+  )
 
   if (nrow(feil_info_tekst) > 0) {
     stop("Tekstvariabler kan ikke inneholde informasjon i
@@ -779,13 +767,14 @@ maks_rimeleg, min_dato, maks_dato, min_rimeleg_dato, maks_rimeleg_dato,
 kommentar_rimeleg, utrekningsformel, logikk")
   }
 
-  feil_info_kategorisk = kodebok %>%
-    filter(variabeltype == "kategorisk") %>%
-    filter(!is.na(eining) | !is.na(desimaler) | !is.na(min) | !is.na(maks) |
+  feil_info_kategorisk = filter(kodebok,
+    variabeltype == "kategorisk",
+    !is.na(eining) | !is.na(desimaler) | !is.na(min) | !is.na(maks) |
       !is.na(min_rimeleg) | !is.na(maks_rimeleg) | !is.na(min_dato) |
       !is.na(maks_dato) | !is.na(min_rimeleg_dato) |
       !is.na(maks_rimeleg_dato) | !is.na(kommentar_rimeleg) |
-      !is.na(utrekningsformel) | !is.na(logikk))
+      !is.na(utrekningsformel) | !is.na(logikk)
+  )
 
   if (nrow(feil_info_kategorisk) > 0) {
     stop("Kategoriske variabler kan ikke ha informasjon i kolonnene:\n
@@ -793,11 +782,11 @@ eining, desimaler, min, maks, min_rimeleg, maks_rimeleg, min_dato, maks_dato,min
   }
 
   # sjekke at ikke-kategoriske variabler ikke har manglende = 'ja'
-  ikke_kat_manglande = kodebok %>%
+  ikke_kat_manglande = kodebok |>
     filter(
       variabeltype != "kategorisk",
       manglande == "ja"
-    ) %>%
+    ) |>
     pull(variabel_id)
 
   if (length(ikke_kat_manglande) > 0) {
@@ -808,7 +797,7 @@ eining, desimaler, min, maks, min_rimeleg, maks_rimeleg, min_dato, maks_dato,min
   }
 
   # sjekke for feil i relasjon mellom min og maks-verdier
-  feil_relasjon = kodebok %>%
+  feil_relasjon = kodebok |>
     filter(min > maks |
       min_rimeleg < min |
       min_rimeleg > maks_rimeleg |
@@ -816,7 +805,7 @@ eining, desimaler, min, maks, min_rimeleg, maks_rimeleg, min_dato, maks_dato,min
       min_dato > maks_dato |
       min_rimeleg_dato < min_dato |
       min_rimeleg_dato > maks_rimeleg_dato |
-      maks_rimeleg_dato > maks_dato) %>%
+      maks_rimeleg_dato > maks_dato) |>
     pull(variabel_id)
 
   if (length(feil_relasjon) > 0) {
@@ -824,10 +813,10 @@ eining, desimaler, min, maks, min_rimeleg, maks_rimeleg, min_dato, maks_dato,min
   }
 
   # sjekke at rimeleg-verdier finnes hvis kommentar_rimeleg finnes
-  kommentar_uten_verdier = kodebok %>%
+  kommentar_uten_verdier = kodebok |>
     filter(!is.na(kommentar_rimeleg) &
       (is.na(min_rimeleg) & is.na(maks_rimeleg) &
-        is.na(min_rimeleg_dato) & is.na(maks_rimeleg_dato))) %>%
+        is.na(min_rimeleg_dato) & is.na(maks_rimeleg_dato))) |>
     pull(variabel_id)
 
   if (length(kommentar_uten_verdier) > 0) {

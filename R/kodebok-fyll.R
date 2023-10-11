@@ -2,7 +2,6 @@
 #
 # Sjå fila kodebok-fyll-kravspek.pdf for detaljert kravspek for implementasjon
 
-#' @importFrom magrittr %>%
 #' @importFrom stringr str_c
 #' @importFrom rlang has_name quos
 #' @importFrom dplyr filter
@@ -69,8 +68,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
   # Sjå vidare berre på kategoriske variablar (dersom kodeboka
   # har informasjon om kva som er kategoriske variablar)
   if (rlang::has_name(kb, "variabeltype")) {
-    kb = kb %>%
-      filter(variabeltype == "kategorisk")
+    kb = filter(kb, variabeltype == "kategorisk")
   }
 
   # Stopp viss nokre av dei tre nødvendige kolonnane har ugyldige verdiar
@@ -86,7 +84,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
 
   # Namn på variablar som skal fyllast ut
   arg = quos(...)
-  vnamn_d = rlang::quos_auto_name(arg) %>%
+  vnamn_d = rlang::quos_auto_name(arg) |>
     names() # Namn i datasettet
   # Viss ein ikkje har valt variablar, bruk alle som finst i kodeboka
   if (length(vnamn_d) == 0) {
@@ -132,8 +130,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
     vnamn = vnamn_d[i]
 
     # Delen av kodeboka som gjeld den aktuelle variabelen
-    koder = kb %>%
-      filter(variabel_id %in% vnamn_kb[i])
+    koder = filter(kb, variabel_id %in% vnamn_kb[i])
 
     # Det nye namnet på variabelen
     nytt_namn = str_c(vnamn, .suffiks)

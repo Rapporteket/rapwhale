@@ -37,9 +37,7 @@ erstatt_ukjent = function(data, variabel, na_vektor) {
     stop(paste0("'", variabel, "' mangler i inndata"))
   }
 
-  d = data %>%
-    mutate(across(all_of(variabel), ~ replace(., . %in% na_vektor, NA)))
-  d
+  mutate(data, across(all_of(variabel), ~ replace(., . %in% na_vektor, NA)))
 }
 
 
@@ -83,7 +81,7 @@ erstatt_ukjent = function(data, variabel, na_vektor) {
 #'   pas_id = c(1, 2, 3, 4, 5, 6),
 #'   sykehus = c("HUS", "HUS", "SVG", "SVG", "SVG", "OUS"),
 #'   var_1 = c(1, 2, -1, 99, NA, 5)
-#' ) %>%
+#' ) |>
 #'   group_by(sykehus)
 #'
 #' beregn_kompletthet(data = d, variabel = "var_1")
@@ -92,14 +90,14 @@ beregn_kompletthet = function(data, variabel) {
     stop(paste0("'", variabel, "' mangler i inndata"))
   }
 
-  data_ut = data %>%
+  data_ut = data |>
     summarise(
       variabel = variabel,
       totalt_antall = n(),
       antall_na = sum(is.na(!!sym(variabel))),
       andel_na = sum(is.na(!!sym(variabel))) / n(),
       .groups = "drop"
-    ) %>%
+    ) |>
     arrange(desc(totalt_antall))
 
   data_ut
@@ -142,19 +140,17 @@ beregn_kompletthet = function(data, variabel) {
 beregn_kompletthet_med_ukjent = function(data, variabel, na_vektor) {
   d_na = beregn_kompletthet(data, variabel = variabel)
   data_uten_ukjent = erstatt_ukjent(data, variabel = variabel, na_vektor = na_vektor)
-  d_na_ukjent = beregn_kompletthet(data_uten_ukjent, variabel = variabel)
-
-  d_na_ukjent = d_na_ukjent %>%
+  d_na_ukjent = beregn_kompletthet(data_uten_ukjent, variabel = variabel) |>
     rename(
       antall_na_med_ukjent = antall_na,
       andel_na_med_ukjent = andel_na
     )
 
-  data_ut = d_na %>%
+  data_ut = d_na |>
     left_join(d_na_ukjent,
       by = c(group_vars(data), "variabel", "totalt_antall"),
       relationship = "one-to-one"
-    ) %>%
+    ) |>
     arrange(desc(totalt_antall))
 
   data_ut
@@ -200,8 +196,7 @@ beregn_kompletthet_datasett = function(data) {
     d = beregn_kompletthet(data[variabel[i]], variabel[i])
 
 
-    d_na = d_na %>%
-      bind_rows(d)
+    d_na = bind_rows(d_na, d)
   }
 
   d_na
@@ -275,11 +270,11 @@ erstatt_ukjent_for_datasett = function(data, ukjent_datasett) {
   data_uten_ukjent = tibble::tibble_row()
 
   hjelpefunksjon_na_vektor =
-    purrr::possibly(~ (.x %>% filter(variabel == .y) %>%
+    purrr::possibly(~ (filter(.x, variabel == .y) |>
       select(
         where(~ !all(is.na(.x))),
         -variabel
-      ) %>%
+      ) |>
       pull()), otherwise = NULL)
 
   for (i in 1:ncol(data)) {
@@ -290,13 +285,12 @@ erstatt_ukjent_for_datasett = function(data, ukjent_datasett) {
     )
 
     d = erstatt_ukjent(
-      data = data %>% select(!!variabel_i),
+      data = select(data, !!variabel_i),
       variabel = variabel_i,
       na_vektor = na_vektor_i
     )
 
-    data_uten_ukjent = data_uten_ukjent %>%
-      bind_cols(d)
+    data_uten_ukjent = bind_cols(data_uten_ukjent, d)
   }
   data_uten_ukjent
 }
@@ -371,16 +365,14 @@ beregn_kompletthet_datasett_med_ukjent = function(data, ukjent_datasett) {
   data_uten_ukjent = erstatt_ukjent_for_datasett(data = data, ukjent_datasett = ukjent_datasett)
 
   # regner ut kompletthet inkludert ukjente verdier
-  d_na_ukjent = beregn_kompletthet_datasett(data_uten_ukjent)
-
-  d_na_ukjent = d_na_ukjent %>%
+  d_na_ukjent = beregn_kompletthet_datasett(data_uten_ukjent) |>
     rename(
       antall_na_med_ukjent = antall_na,
       andel_na_med_ukjent = andel_na
     )
 
-  data_ut = d_na %>%
-    left_join(d_na_ukjent) %>%
+  data_ut = d_na |>
+    left_join(d_na_ukjent) |>
     arrange(desc(totalt_antall))
 
   data_ut

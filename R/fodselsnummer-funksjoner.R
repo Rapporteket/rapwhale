@@ -176,7 +176,7 @@ er_gyldig_fnr_dato = function(dato) {
 #' rapwhale:::er_fnr_sjekksum_korrekt(nummer)
 er_fnr_sjekksum_korrekt = function(nummer) {
   # Del fødselsnummera opp i siffer
-  siffer = str_split_fixed(nummer, "", n = 11) %>%
+  siffer = str_split_fixed(nummer, "", n = 11) |>
     t()
 
   # Sidan as.numeric() mistar matrisedimensjonane,
@@ -472,7 +472,7 @@ fnr_foresla = function(x) {
   )
 
   # Byt om på to etterfølgjande siffer
-  x_mat = str_split_fixed(x, "", 11) %>%
+  x_mat = str_split_fixed(x, "", 11) |>
     matrix(ncol = 11, nrow = 10, byrow = TRUE)
   for (nr in 1:10) {
     x_mat[nr, nr:(nr + 1)] = x_mat[nr, (nr + 1):nr]
