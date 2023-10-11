@@ -77,7 +77,7 @@ test_that("Rekkjefølgja på pasientforløpa er teke vare på", {
 })
 
 test_that("Rekkjefølgja på datavariablane er teke vare på", {
-  datavars = names(d_reg) %>%
+  datavars = names(d_reg) |>
     setdiff(indvars)
   varnamn = unique(d_vld$vld_varnamn)
   expect_identical(datavars, varnamn)
@@ -98,7 +98,7 @@ test_that("Alle kolonnar vld_verdi_intern_x skal ha rette verdiar", {
     vekt = 78, biverk = TRUE
   )
   d_vld_liten = lag_valideringsdatasett(d_reg_liten, indvars)
-  verdiar_vld = d_vld_liten %>%
+  verdiar_vld = d_vld_liten |>
     select(starts_with("vld_verdi_intern_"))
   verdiar_reg = tibble::tribble(
     ~vld_verdi_intern_numeric, ~vld_verdi_intern_logical,
