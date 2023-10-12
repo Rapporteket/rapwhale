@@ -751,7 +751,7 @@ valider_kb_variabler = function(kodebok) {
     stop("Numeriske variabler kan ikke ha informasjon i kolonnene:\nverdi, verditekst, min_dato, maks_dato, min_rimeleg_dato, maks_rimeleg_dato")
   }
 
-  feil_info_tekst = filter(    kodebok,
+  feil_info_tekst = filter(kodebok,
     variabeltype == "tekst",
     !is.na(verdi) | !is.na(verditekst) | !is.na(desimaler) | !is.na(eining) |
       !is.na(min) | !is.na(maks) | !is.na(min_rimeleg) |
