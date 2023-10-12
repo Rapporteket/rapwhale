@@ -738,6 +738,7 @@ test_that("funksjonen gir feilmelding hvis det finnes kategorier,
 })
 
 # Kategorioversikt i første rad
+
 test_that("funksjonen gir feilmelding hvis kategorier brukes,
           men det ikke er oppgitt kategori i første rad på alle skjema", {
   kb_manglende_kategori_rad_1 = add_row(kb_tom_std,
@@ -755,6 +756,21 @@ test_that("funksjonen gir feilmelding hvis kategorier brukes,
     "Hvis kategorier brukes må det være oppgitt kategori i første rad for alle skjema"
   )
 })
+
+test_that("Funksjonen gir IKKE feilmelding hvis kategorier brukes,
+          og det er oppgitt kategori i første rad på alle skjema", {
+  kb_kategori_rad_1 = tibble::add_row(kb_tom_std,
+    skjema_id = c("base", "base", "base", "pasient", "pasient"),
+    kategori = c(
+      "basiskategori", NA_character_, NA_character_, "pasientkategori",
+      NA_character_
+    )
+  )
+
+  expect_no_error(valider_kb_skjema(kb_kategori_rad_1))
+})
+
+
 
 
 # Valider_kb_kolonner ---------------------------------------------
