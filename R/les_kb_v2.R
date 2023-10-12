@@ -301,8 +301,6 @@ konverter_oqr_kb = function(kb_mellom) {
     oqr_til_std_variabeltyper() |>
     velg_standardkolonner() |>
     tildel_unike_skjemanavn_fra_skjema_id() |>
-    # Ordne rekkefølge for variabler slik at
-    # variabler fra samme tabell kommer samlet
     arrange(forcats::fct_inorder(skjema_id))
 }
 
