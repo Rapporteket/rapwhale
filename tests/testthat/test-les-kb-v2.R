@@ -449,9 +449,9 @@ test_that("funksjonen gir forventet verdi for obligatorisk", {
     underspoersmaal = "nei"
   )
 
-  kb_oblig_ok_nei_2 = dplyr::filter(
-    kb_obligatorisk,
-    obligatorisk == "nei", aktiveringsspoersmaal == "ja"
+  kb_oblig_ok_nei_2 = dplyr::filter(kb_obligatorisk,
+    obligatorisk == "nei",
+    aktiveringsspoersmaal == "ja"
   )
 
   kb_oblig_ok_nei_res_2 = tibble::add_row(kb_tom_mellom,
