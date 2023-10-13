@@ -73,7 +73,6 @@ lag_valideringsdatasett = function(d_reg, indvars) {
   }
 
   # Lag oversikt over datavariablar
-  
   datavars = setdiff(vars, indvars)
   d_vartypar = tibble::tibble(
     vartypar = map(d_reg[datavars], ~ class(.x)) |>
