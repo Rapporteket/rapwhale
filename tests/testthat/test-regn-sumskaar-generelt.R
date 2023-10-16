@@ -305,7 +305,7 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis en rad har verdien NA
 
 test_that("sjekk_skaaringstabell() gir feilmelding hvis flere rader har verdien
           NA i variabelkolonnen for *samme* delskala", {
-  skaaringstabell_ugyldig_na_variabel_dobbel = skaaringstabell_eks %>%
+  skaaringstabell_ugyldig_na_variabel_dobbel = skaaringstabell_eks |> 
     rbind(tibble::tibble(
       delskala = "total", variabel = NA, verdi = NA, koeffisient = c(10, 5)
     ))

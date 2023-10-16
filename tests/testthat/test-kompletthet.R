@@ -9,14 +9,14 @@ data_inn = tibble::tibble(
   var_2 = c(1L, 2L, 3L, NA_integer_, -1L, -1L)
 )
 
-data_inn_gruppert = data_inn %>%
+data_inn_gruppert = data_inn |> 
   group_by(sykehus)
 
 
 
 # Inndata -----------------------------------------------------------------
 test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {
-  data_uten_var = data_inn %>%
+  data_uten_var = data_inn |> 
     select(-var_1)
   feilmelding = "'var_1' mangler i inndata"
   expect_error(
@@ -35,29 +35,29 @@ test_that("Feilmelding hvis 'variabel' ikke er en streng", {
 # Utdata ------------------------------------------------------------------
 
 test_that("Fungerer uavhengig av hvilken datatype 'variabel' er", {
-  data_med_andre_vartyper = data_inn %>%
+  data_med_andre_vartyper = data_inn  |> 
     tibble::add_column(
       var_tekst = c("glad", "sliten", "sulten", "ikke svart", "ikke svart", NA),
       var_desimal = c(0.2, 0.1, -1.0, NA, 1.0, 99.0),
       var_heltall = c(1L, 3L, 6L, -1L, 99L, 9L)
     )
 
-  data_ut_var_tekst = data_med_andre_vartyper %>%
-    select(-var_tekst) %>%
+  data_ut_var_tekst = data_med_andre_vartyper |> 
+    select(-var_tekst) |> 
     tibble::add_column(
       var_tekst = c("glad", "sliten", "sulten", NA_character_, NA_character_, NA_character_),
       .before = 5
     )
 
-  data_ut_var_desimal = data_med_andre_vartyper %>%
-    select(-var_desimal) %>%
+  data_ut_var_desimal = data_med_andre_vartyper |> 
+    select(-var_desimal) |> 
     tibble::add_column(
       var_desimal = c(0.2, 0.1, NA_real_, NA_real_, 1.0, NA_real_),
       .before = 6
     )
 
-  data_ut_var_heltall = data_med_andre_vartyper %>%
-    select(-var_heltall) %>%
+  data_ut_var_heltall = data_med_andre_vartyper |> 
+    select(-var_heltall) |> 
     tibble::add_column(var_heltall = c(1L, 3L, 6L, NA_integer_, NA_integer_, 9L))
 
   expect_identical(
@@ -110,7 +110,7 @@ test_that("Fungerer med grupperte inndata og ugrupperte inndata", {
       NA_integer_, 2L, NA_integer_
     ),
     var_2 = c(1L, 2L, 3L, NA_integer_, -1L, -1L)
-  ) %>%
+  ) |> 
     group_by(sykehus)
 
 
@@ -131,8 +131,8 @@ test_that("Fungerer med grupperte inndata og ugrupperte inndata", {
 })
 
 test_that("Konverterer flere verdier hvis det er oppgitt i na_vektor", {
-  data_ut = data_inn %>%
-    select(-var_1) %>%
+  data_ut = data_inn  |> 
+    select(-var_1) |> 
     tibble::add_column(var_1 = c(
       1L, NA_integer_, NA_integer_,
       NA_integer_, 2L, NA_integer_
@@ -161,7 +161,7 @@ test_that("Gjør ingenting hvis inndata mangler verdier fra na_vektor", {
 context("Beregn_kompletthet")
 
 test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {
-  data_uten_var = data_inn %>%
+  data_uten_var = data_inn |> 
     select(-var_1)
   feilmelding = "'var_1' mangler i inndata"
   expect_error(
@@ -209,7 +209,7 @@ test_that("Gir feilmelding hvis variabel ikke er tekststreng", {
 context("Beregn_kompletthet_med_ukjent")
 
 test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {
-  data_uten_var_1 = data_inn %>%
+  data_uten_var_1 = data_inn  |> 
     select(-var_1)
   feilmelding = "'var_1' mangler i inndata"
 
