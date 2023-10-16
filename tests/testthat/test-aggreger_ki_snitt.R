@@ -60,7 +60,7 @@ test_that("Forventet utdata når inndata er gruppert og ugruppert", {
   d_gruppert = tibble::tibble(
     sykehus = factor(c("B", "B", "B", "A", "A", "A", "A")),
     ki_x = c(seq(1, 7, 1)), ki_aktuell = c(rep(TRUE, 7))
-  ) %>%
+  ) |> 
     dplyr::group_by(sykehus)
   d_gruppert_ut = tibble::tibble(
     sykehus = factor(c("A", "B")),
@@ -109,7 +109,7 @@ test_that("Tilfeller hvor det kun er ett individ i en gruppe", {
     sykehus = factor(rep(c("A", "B"), each = 3)),
     ki_x = c(5, NA_real_, 11, 1, 2, 3),
     ki_aktuell = c(TRUE, FALSE, FALSE, TRUE, TRUE, TRUE)
-  ) %>%
+  ) |> 
     dplyr::group_by(sykehus)
   d_gruppe_alene_ut = tibble::tibble(
     sykehus = factor(c("A", "B")),
@@ -123,7 +123,7 @@ test_that("Tilfeller hvor en gruppe bare har 'ki_aktuell' som er FALSE", {
   d_gruppe_tom = tibble::tibble(
     sykehus = factor(rep(c("A", "B"), each = 3)),
     ki_x = c(1:6), ki_aktuell = c(rep(c(TRUE, FALSE), each = 3))
-  ) %>%
+  ) |> 
     group_by(sykehus)
   d_gruppe_tom_ut = tibble::tibble(
     sykehus = factor(c("A", "B")),
@@ -138,7 +138,7 @@ test_that("Tilfeller hvor standardavvik er 0", {
     sykehus = factor(rep(c("A", "B"), each = 3)),
     ki_x = c(rep(3, 3), 4, 5, 6),
     ki_aktuell = rep(TRUE, 6)
-  ) %>%
+  ) |> 
     group_by(sykehus)
   d_sd_lik_null_ut = tibble::tibble(
     sykehus = factor(c("A", "B")),
