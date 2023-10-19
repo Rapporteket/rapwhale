@@ -148,8 +148,8 @@ test_that("Ikkje åtvaring eller feilmelding viss datasettet inneheld NA-verdiar
   d2 = d
   d2$kjonn[3] = NA
 
-  expect_warning(kb_fyll(d2, kb), NA)
-  expect_error(kb_fyll(d2, kb), NA)
+  expect_no_warning(kb_fyll(d2, kb))
+  expect_no_error(kb_fyll(d2, kb))
 })
 
 test_that("Åtvaring (men resultat) viss kodeboka ikkje inneheld *nokon* variablar som finst i datasettet", {
@@ -167,8 +167,8 @@ test_that("Feilmelding viss kodeboka ikkje inneheld dei nødvendige kolonnane (s
   expect_error(kb_fyll(d, kb[-1]), feilmelding)
   expect_error(kb_fyll(d, kb[-2]), feilmelding)
   expect_error(kb_fyll(d, kb[-3]), feilmelding)
-  expect_error(kb_fyll(d, kb[3:1]), NA) # Godta forskjellig rekkjefølgje
-  expect_error(kb_fyll(d, cbind(x = 1:nrow(kb), kb[3:1], y = 1:nrow(kb))), NA) # Godta ekstrakolonnar
+  expect_no_error(kb_fyll(d, kb[3:1])) # Godta forskjellig rekkjefølgje
+  expect_no_error(kb_fyll(d, cbind(x = 1:nrow(kb), kb[3:1], y = 1:nrow(kb)))) # Godta ekstrakolonnar
 })
 
 test_that("NA-verdiar i kodeboka vert oppdaga", {
@@ -202,8 +202,8 @@ test_that("Dupliserte verdiar i kodeboka vert oppdaga", {
 
   expect_error(kb_fyll(d2, kb2), "Ugyldig kodebok. Variabelen 'med' har dupliserte verdiar i kolonnen 'verdi'.")
   expect_error(kb_fyll(d, kb3), "Ugyldig kodebok. Variabelen 'med' har dupliserte verdiar i kolonnen 'verditekst'.")
-  expect_error(kb_fyll(d, kb4), NA)
-  expect_error(kb_fyll(d, kb5), NA)
+  expect_no_error(kb_fyll(d, kb4))
+  expect_no_error(kb_fyll(d, kb5))
 })
 
 test_that("NA-verdiar i 'verdi' vert godtekne så lenge dei berre er blant ikkje-kategoriske variablar", {
@@ -218,8 +218,8 @@ test_that("NA-verdiar i 'verdi' vert godtekne så lenge dei berre er blant ikkje
 
   # Skal ikkje gje åtvaring eller feilmelding, sidan
   # NA-verdiane ikkje er blant dei kategoriske variablane
-  expect_error(kb_fyll(d, kb2), NA)
-  expect_warning(kb_fyll(d, kb2), NA)
+  expect_no_error(kb_fyll(d, kb2))
+  expect_no_warning(kb_fyll(d, kb2))
 })
 
 test_that("Kodebokkolonnar lagra som faktorar vert oppdaga (og straffa!)", {
@@ -232,7 +232,7 @@ test_that("Kodebokkolonnar lagra som faktorar vert oppdaga (og straffa!)", {
   expect_error(kb_fyll(d, kb2), "Ugyldig kodebok. Kolonnen 'variabel_id' er faktor.")
   expect_error(kb_fyll(d, kb3), "Ugyldig kodebok. Kolonnen 'verdi' er faktor.")
   expect_error(kb_fyll(d, kb4), "Ugyldig kodebok. Kolonnen 'verditekst' er faktor.")
-  expect_error(kb_fyll(d, kb5), NA) # Skal ikkje gje åtvaring
+  expect_no_error(kb_fyll(d, kb5)) # Skal ikkje gje åtvaring
 })
 
 

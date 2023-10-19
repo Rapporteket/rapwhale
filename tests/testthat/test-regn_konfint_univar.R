@@ -134,12 +134,12 @@ test_that("regn_konfint_univar() med bootstrapping gjev forventa resultat ved va
 })
 
 test_that("regn_konfint_univar() med bootstrapping gjev ikkje feilmelding med NA-verdiar i inndata", {
-  expect_error(regn_konfint_univar(alle_na, bootstrap = TRUE), NA)
-  expect_error(regn_konfint_univar(ein_pluss_na, bootstrap = TRUE), NA)
-  expect_error(regn_konfint_univar(fleire_pluss_na, bootstrap = TRUE), NA)
+  expect_no_error(regn_konfint_univar(alle_na, bootstrap = TRUE))
+  expect_no_error(regn_konfint_univar(ein_pluss_na, bootstrap = TRUE))
+  expect_no_error(regn_konfint_univar(fleire_pluss_na, bootstrap = TRUE))
 
   # Seed som i utgangspunktet gav feilmelding med bootstrap
   set.seed(11111)
   to_pluss_na = c(1, 2, rep(NA_real_, 5))
-  expect_error(regn_konfint_univar(to_pluss_na, bootstrap = TRUE), NA)
+  expect_no_error(regn_konfint_univar(to_pluss_na, bootstrap = TRUE))
 })
