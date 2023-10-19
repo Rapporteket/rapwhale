@@ -60,8 +60,8 @@ test_that("aggreger_ki_prop() fungerer (utan feilmelding) viss Â«ki_krit_nevnerÂ
   d_teller_ok_men_false = tibble::tibble(ki_krit_teller = c(FALSE, TRUE, FALSE), ki_krit_nevner = c(TRUE, TRUE, FALSE))
   d_teller_ok_men_na_res = tibble::tibble(est = 0.5, ki_teller = 1L, ki_nevner = 2L, konfint_nedre = 0.094531205734230739, konfint_ovre = 0.90546879426576921)
 
-  expect_error(aggreger_ki_prop(d_teller_ok_men_na), NA)
-  expect_error(aggreger_ki_prop(d_teller_ok_men_false), NA)
+  expect_no_error(aggreger_ki_prop(d_teller_ok_men_na))
+  expect_no_error(aggreger_ki_prop(d_teller_ok_men_false))
   expect_identical(aggreger_ki_prop(d_teller_ok_men_na), d_teller_ok_men_na_res)
   expect_identical(aggreger_ki_prop(d_teller_ok_men_false), d_teller_ok_men_na_res)
 })

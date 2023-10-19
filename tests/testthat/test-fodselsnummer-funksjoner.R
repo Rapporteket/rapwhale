@@ -70,7 +70,7 @@ test_that("fnr_er_gyldig() gjev ikkje feilmeldingar (men rett svar) dersom innda
     "  15076500565  ", "abc", NA_character_
   )
   fasit = rep(FALSE, length(nummer_med_feil_syntaks))
-  expect_error(fnr_er_gyldig(nummer_med_feil_syntaks), NA)
+  expect_no_error(fnr_er_gyldig(nummer_med_feil_syntaks))
   expect_identical(fnr_er_gyldig(nummer_med_feil_syntaks), fasit)
   expect_identical(
     fnr_er_gyldig(c(nummer_med_feil_syntaks, "15076500565")),

@@ -123,7 +123,7 @@ test_that("Håndterer variabler med subklasser (flere klasser), eks. POSIXct-var
   d_fasit$vld_verdi_ekstern_POSIXct_POSIXt[] = NA_real_
 
   expect_identical(lag_valideringsdatasett(d_inn, indvars = "pasid"), d_fasit)
-  expect_error(lag_valideringsdatasett(d_inn, indvars = "pasid"), NA)
+  expect_no_error(lag_valideringsdatasett(d_inn, indvars = "pasid"))
 })
 
 test_that("Funksjonen stoppar med eksplisitt feilmelding viss samanslåing av klassane til dei ulike variabeltypane ikkje gjev eintydige resultat", {

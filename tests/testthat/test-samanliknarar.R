@@ -85,5 +85,5 @@ test_that("samanlikn_identisk() gjev feilmelding dersom «varnamn» ikkje er tek
 })
 
 test_that("samanlikn_identisk() fungerer òg dersom «varnamn» er NULL", {
-  expect_error(samanlikn_identisk(verdi1 = 74, verdi2 = 74, varnamn = NULL), NA)
+  expect_no_error(samanlikn_identisk(verdi1 = 74, verdi2 = 74, varnamn = NULL))
 })

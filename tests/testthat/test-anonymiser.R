@@ -75,12 +75,12 @@ pas_id = paste0("P", pas_nr)
 n_unik = dplyr::n_distinct(pas_id)
 
 test_that("Funksjonen kan køyrast (utan åtvaringar/feilmeldingar)", {
-  expect_warning(anonymiser(pas_id), NA)
-  expect_warning(anonymiser(pas_nr), NA)
-  expect_warning(anonymiser(pas_dato), NA)
-  expect_error(anonymiser(pas_id), NA)
-  expect_error(anonymiser(pas_nr), NA)
-  expect_error(anonymiser(pas_dato), NA)
+  expect_no_warning(anonymiser(pas_id))
+  expect_no_warning(anonymiser(pas_nr))
+  expect_no_warning(anonymiser(pas_dato))
+  expect_no_error(anonymiser(pas_id))
+  expect_no_error(anonymiser(pas_nr))
+  expect_no_error(anonymiser(pas_dato))
 })
 
 # Vidare testar me *stort sett* berre tekstversjonen
@@ -137,9 +137,9 @@ test_that("Anonymisering av faktorar med ubrukte nivå eller NA fungerer òg", {
   pas_id_na = factor(c("d", "a", NA))
 
   # Skal ikkje gje åtvaringar/feilmeldingar
-  expect_warning(anonymiser(pas_id_ekstra), NA)
-  expect_error(anonymiser(pas_id_ekstra), NA)
-  expect_error(suppressWarnings(anonymiser(pas_id_na)), NA)
+  expect_no_warning(anonymiser(pas_id_ekstra))
+  expect_no_error(anonymiser(pas_id_ekstra))
+  expect_no_error(suppressWarnings(anonymiser(pas_id_na)))
 
   ok_anonymisert_ekstra = function(x) {
     identical(x, c(1001L, 1002L)) ||
@@ -212,7 +212,7 @@ x_med_na = c("p1", "p2", NA, "p1", NA)
 
 test_that("Gjev åtvaring (men ikkje feilmelding) ved NA-verdiar", {
   expect_warning(anonymiser(x_med_na), "ID-vektoren inneheld NA-verdiar", fixed = TRUE)
-  expect_error(suppressWarnings(anonymiser(x_med_na)), NA)
+  expect_no_error(suppressWarnings(anonymiser(x_med_na)))
 })
 
 test_that("NA-verdiar kjem ut som NA-verdiar (og andre verdiar vert OK)", {
