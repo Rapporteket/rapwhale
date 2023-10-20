@@ -9,15 +9,13 @@ data_inn = tibble::tibble(
   var_2 = c(1L, 2L, 3L, NA_integer_, -1L, -1L)
 )
 
-data_inn_gruppert = data_inn |> 
-  group_by(sykehus)
+data_inn_gruppert = group_by(data_inn , sykehus)
 
 
 
 # Inndata -----------------------------------------------------------------
 test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {
-  data_uten_var = data_inn |> 
-    select(-var_1)
+  data_uten_var = select(data_inn, -var_1)
   feilmelding = "'var_1' mangler i inndata"
   expect_error(
     erstatt_ukjent(data_uten_var, variabel = "var_1", na_vektor = -1L),
@@ -161,8 +159,7 @@ test_that("Gjør ingenting hvis inndata mangler verdier fra na_vektor", {
 context("Beregn_kompletthet")
 
 test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {
-  data_uten_var = data_inn |> 
-    select(-var_1)
+  data_uten_var = select(data_inn, -var_1)
   feilmelding = "'var_1' mangler i inndata"
   expect_error(
     beregn_kompletthet(data = data_uten_var, variabel = "var_1"),
@@ -209,8 +206,7 @@ test_that("Gir feilmelding hvis variabel ikke er tekststreng", {
 context("Beregn_kompletthet_med_ukjent")
 
 test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {
-  data_uten_var_1 = data_inn  |> 
-    select(-var_1)
+  data_uten_var_1 = select(data_inn, -var_1)
   feilmelding = "'var_1' mangler i inndata"
 
   expect_error(
