@@ -1,8 +1,5 @@
 #' @import dplyr
-#' @importFrom tibble tribble tibble
-#' @importFrom stringr str_detect str_c str_to_lower
 NULL
-
 #' Funksjon for å lese inn kodebok for OQR-register
 #'
 #' @description

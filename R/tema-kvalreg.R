@@ -1,5 +1,3 @@
-#' @importFrom ggplot2 theme_set update_geom_defaults
-NULL
 #' Slå på kvalregtema for ggplot2 og qicharts2
 #'
 #' @description

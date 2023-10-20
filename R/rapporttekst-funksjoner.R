@@ -1,9 +1,6 @@
 # Dette skriptet inneholder en rekke funksjoner som er potensielt nyttige
 # (og noen, uunnværlige) i registersammenheng og i andre sammenheng.
 
-#' @importFrom stringr str_flatten
-NULL
-
 # LaTeX-/rapportskrivingsfunksjoner ---------------------------------------
 
 ### Funksjon for å legge inn tall i en rapport som bruker LaTeX

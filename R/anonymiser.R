@@ -1,6 +1,3 @@
-#' @importFrom rlang is_empty
-NULL
-
 #' Lag funksjon for anonymisering av datavektorar
 #'
 #' @description

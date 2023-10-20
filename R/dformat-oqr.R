@@ -1,12 +1,5 @@
 # Innlesing av kodebøker og datadumpar frå OQR.
 
-#' @importFrom lubridate as_date
-#' @importFrom stringr str_c str_to_lower str_detect
-#' @importFrom readr col_character col_integer
-#' @importFrom dplyr mutate select distinct arrange filter left_join mutate_at group_by summarise pull bind_rows
-#' @importFrom tibble tibble tribble
-NULL
-
 # Les inn kodebok og gjer om til standardformat ---------------------------
 
 # Les inn OQR-kodebok på dokumentert format og

@@ -2,11 +2,6 @@
 #
 # Sjå fila kodebok-fyll-kravspek.pdf for detaljert kravspek for implementasjon
 
-#' @importFrom stringr str_c
-#' @importFrom rlang has_name quos
-#' @importFrom dplyr filter
-NULL
-
 #' Hent variabeltekst for kategoriske variabler
 #'
 #' @description

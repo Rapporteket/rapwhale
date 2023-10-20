@@ -1,5 +1,3 @@
-#' @importFrom colorspace coords
-NULL
 #' Lagre offisielle fargekoder i miljøet
 #'
 #' @description

@@ -1,14 +1,5 @@
 # Valider kodebok (som skal vera på vårt standardformat)
 
-#' @importFrom rlang enquo quo_text quos quo_name
-#' @importFrom magrittr %>%
-#' @importFrom stringr str_c str_detect str_to_lower str_split_fixed
-#' @importFrom tidyr nest fill
-#' @importFrom purrr walk map_lgl
-#' @importFrom dplyr ungroup mutate group_by arrange select left_join filter pull n
-#' @importFrom tibble tribble tibble
-NULL
-
 # Gjer kodeboka om til kanonisk form, dvs. slik at
 # implisitte verdiar er fylde ut.
 # fixme! funksjonen mangler å ta inn den nye variabelen nokkel (per i dag blir den kastet ut av kodeboka)

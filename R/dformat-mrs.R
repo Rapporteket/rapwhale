@@ -1,11 +1,5 @@
 # Lesing/tolking av det elendige kodebokformatet til MRS :(
 
-#' @importFrom lubridate as_date
-#' @importFrom stringr str_c
-#' @importFrom rlang !!
-#' @importFrom dplyr mutate left_join select filter pull distinct mutate_at
-NULL
-
 # Lag standardisert kodebok -----------------------------------------------
 
 # Gjer om MRS-kodebok til kodebok på normalform

@@ -1,5 +1,3 @@
-#' @importFrom lintr Linter Lint ids_with_token with_id
-NULL
 #' Equals-assignment linter
 #'
 #' @description
