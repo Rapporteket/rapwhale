@@ -70,8 +70,7 @@ dd_ok_hel = tibble::tibble(
   Theeta = hms::as_hms(c("17:00:00", "14:30:00", "12:00:00", "15:05:00"))
 )
 
-dd_ok_hel_na = dd_ok_hel |> 
-  tibble::add_row(.before = 3)
+dd_ok_hel_na = tibble::add_row(dd_ok_hel, .before = 3)
 
 # Spesifikasjon
 specs_dd_ok_hel = tibble::tribble(
