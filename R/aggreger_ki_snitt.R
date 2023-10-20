@@ -1,7 +1,3 @@
-#' @importFrom purrr possibly map_dbl pluck
-#' @importFrom tidyr replace_na
-#' @importFrom dplyr summarise mutate select groups
-NULL
 #' Regn ut kvalitetsindikator for gjennomsnitt
 #'
 #' @description

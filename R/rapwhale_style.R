@@ -1,6 +1,3 @@
-#' @importFrom styler tidyverse_style tidyverse_reindention tidyverse_math_token_spacing
-NULL
-
 #' Rapwhale-kodestil
 #'
 #' @description

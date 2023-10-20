@@ -1,6 +1,3 @@
-#' @importFrom tibble tibble tribble
-#' @importFrom Rdpack reprompt
-NULL
 #' Skår RAND-12-/SF-12-spørreskjema
 #'
 #' @description

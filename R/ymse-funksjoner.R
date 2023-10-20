@@ -3,11 +3,6 @@
 # Disse funksjonene tilhører ingen annen kategori,
 # og er ikke flere enn én i samme kategori, derav navnet ymse.
 
-#' @importFrom magrittr %>%
-#' @importFrom stringr str_replace_all str_split
-#' @importFrom tibble tibble
-#' @importFrom purrr map map_chr
-NULL
 #' Normaliser variabelnamn
 #'
 #' @description

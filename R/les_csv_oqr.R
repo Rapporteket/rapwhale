@@ -1,4 +1,3 @@
-
 #' Les inn csv-fil med OQR formatspesifikasjon
 #'
 #' @description

@@ -1,7 +1,3 @@
-#' @importFrom rlang sym !!
-#' @importFrom tibble as_tibble
-#' @importFrom dplyr group_by summarise case_when bind_cols groups
-NULL
 #' Regn ut kvalitetsindikator for andeler
 #'
 #' @description

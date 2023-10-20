@@ -1,14 +1,5 @@
 # Dette er eit R-skript med ein funksjon for lesing av CheckWare-data og kodebok.
 
-#---------------------------innhenting av pakker og funksjoner--------------------------------
-
-#' @importFrom magrittr %>%
-#' @importFrom dplyr mutate select group_by case_when left_join last filter rename distinct pull mutate_at
-#' @importFrom lubridate as_date
-#' @importFrom tibble tribble
-#' @importFrom tidyr nest unnest
-NULL
-
 # Les inn kodebok og gjer om til standardformat ---------------------------
 
 # Les inn OQR-kodebok på dokumentert format og

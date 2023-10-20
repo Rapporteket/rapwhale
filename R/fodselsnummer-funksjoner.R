@@ -1,5 +1,3 @@
-#' @importFrom stringr str_detect str_c str_sub str_split_fixed
-NULL
 #' Sjekk om fødselsnummmer eller liknande er gyldige
 #'
 #' @description

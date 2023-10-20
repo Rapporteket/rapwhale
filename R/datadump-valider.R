@@ -8,15 +8,6 @@
 # Hvis datadumpen ikke er gydlig, vil man få en oppsummering av feilene og hvor de er
 # å finne, på format utarbeidet av ruler-pakken.
 
-#' @importFrom magrittr %>%
-#' @importFrom purrr pmap
-#' @importFrom tidyr nest
-#' @importFrom rlang expr new_function
-#' @importFrom ruler cell_packs rules col_packs data_packs any_breaker
-#' @importFrom dplyr filter select rename distinct transmute_at vars summarise_at
-#' @importFrom stringr str_c
-NULL
-
 # Funksjon for å lage regler basert på informasjon
 # fra kodeboka. Krever en kodebok.
 # Argumentet "oblig" gjør det mulig å velge om man ønsker å sjekke obligatoriske felt.

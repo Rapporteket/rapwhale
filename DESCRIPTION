@@ -50,7 +50,8 @@ Imports:
     styler (>= 1.8.1),
     Hmisc,
     MASS,
-    boot
+    boot,
+    tidyselect
 RdMacros: Rdpack
 RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)

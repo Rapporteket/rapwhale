@@ -1,7 +1,4 @@
 #' @import dplyr
-#' @importFrom tibble tibble rowid_to_column add_row
-#' @importFrom magrittr %>%
-#' @importFrom tidyr pivot_longer pivot_wider nest unnest
 NULL
 #' Skår spørreskjema basert på skåringstabell
 #'
