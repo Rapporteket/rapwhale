@@ -36,7 +36,7 @@ test_that("Skal gje feilmelding ved ukjende ID-ar (utenom NA-ID-ar)", {
   # Utfunksjonen skal *ikkje* gje feilmeldinga "ID-vektoren inneheld nye (ukjende) ID-ar"
   # dersom alle dei nye (ukjende) verdiane berre er NA-verdiar,
   # berre åtvaring om det finst NA-verdiar
-  expect_error(suppressWarnings(anonymiser_mittreg(c(pas_ids, NA)), NA))
+  expect_no_error(suppressWarnings(anonymiser_mittreg(c(pas_ids, NA))))
   expect_warning(anonymiser_mittreg(c(pas_ids, NA)), "ID-vektoren inneheld NA-verdiar", all = TRUE)
 })
 
