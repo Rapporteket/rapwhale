@@ -1,5 +1,3 @@
-#' @import dplyr
-NULL
 #' Funksjon for å lese inn kodebok for OQR-register
 #'
 #' @description

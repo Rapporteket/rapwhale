@@ -1,7 +1,5 @@
 # Dette skriptet inneholder en rekke funksjoner som er potensielt nyttige
 # (og noen, uunnværlige) i registersammenheng og i andre sammenheng.
-#' @import ggplot2
-NULL
 
 # Graffunksjoner ----------------------------------------------------------
 
