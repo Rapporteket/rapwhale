@@ -1,5 +1,3 @@
-#' @import dplyr
-NULL
 #' Skår spørreskjema basert på skåringstabell
 #'
 #' @description
