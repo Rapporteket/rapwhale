@@ -65,7 +65,8 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
 
   # henter inn kodebok
   kb_mrs = ark |>
-    purrr::map_df(les_excel_ark)
+    purrr::map(les_excel_ark) |>
+    purrr::list_rbind()
 
   # ark-navnene er horrible. De er avkuttede versjoner av menneskelig-vennlige skjemanavn
   # De samsvarer ikke med skjemanavnet slik det er skrevet i filnavnet til datadumpen

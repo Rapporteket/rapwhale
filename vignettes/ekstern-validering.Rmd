@@ -735,8 +735,9 @@ kan me enkelt lasta dei alle inn *til eitt stort datasett* slik:
 
 ```{r eval = FALSE}
 filadresser = list.files(mappe_vld, pattern = "\\.sav$", full.names = TRUE)
-d_vld_utfylt = filadresser %>%
-  map_dfr(read_sav)
+d_vld_utfylt = filadresser |>
+  map(read_sav) |>
+  purrr::list_rbind()
 ```
 
 
