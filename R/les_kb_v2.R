@@ -459,7 +459,7 @@ legg_til_variabler_kb = function(kb_std, ekstra_data) {
   }
 
   # Se om variabler i ekstra_data finnes i kb fra før:
-  overlapp = intersect(
+  overlapp = dplyr::intersect(
     select(kb_std, skjema_id, variabel_id),
     select(ekstra_data, skjema_id, variabel_id)
   )

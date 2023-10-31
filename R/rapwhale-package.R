@@ -22,7 +22,6 @@
 #' @importFrom dplyr group_vars
 #' @importFrom dplyr groups
 #' @importFrom dplyr if_else
-#' @importFrom dplyr intersect
 #' @importFrom dplyr last
 #' @importFrom dplyr left_join
 #' @importFrom dplyr mutate
