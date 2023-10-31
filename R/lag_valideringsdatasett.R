@@ -123,7 +123,8 @@ lag_valideringsdatasett = function(d_reg, indvars) {
   if (antal_rader > 0) {
     d_vld_gruppert = group_by(d_vld, vld_varnamn)
     d_vld = split(d_vld_gruppert, group_indices(d_vld_gruppert)) |>
-      purrr::map_df(flytt_resultat) |>
+      purrr::map(flytt_resultat) |>
+      purrr::list_rbind() |>
       ungroup()
   }
 
