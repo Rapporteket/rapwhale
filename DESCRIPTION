@@ -66,3 +66,5 @@ Suggests:
     callr,
     pkgload
 VignetteBuilder: knitr
+Depends: 
+    R (>= 4.1)
