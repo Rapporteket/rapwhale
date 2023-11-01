@@ -13,7 +13,8 @@ test_that("<- vert gjort om til =", {
       "rapwhale-style",
       "^left_assign",
       transformer = style_text_rapwhale,
-      dry = "on"
+      dry = "on",
+      write_tree = FALSE
     ),
     NA
   )
@@ -25,7 +26,8 @@ test_that("= vert ikkje endra", {
       "rapwhale-style",
       "^equals",
       transformer = style_text_rapwhale,
-      dry = "on"
+      dry = "on",
+      write_tree = FALSE
     ),
     NA
   )
@@ -43,7 +45,8 @@ test_that("<- vert ikkje endra viss 'tokens' ikkje er med i 'scope'", {
       "rapwhale-style",
       "^unchanged_token",
       transformer = style_text_rapwhale_line_breaks,
-      dry = "on"
+      dry = "on",
+      write_tree = FALSE
     ),
     NA
   )
@@ -55,7 +58,8 @@ test_that("Single-line if, else, while, for og function får krøllparentesar", 
       "rapwhale-style",
       "^single_line_",
       transformer = style_text_rapwhale,
-      dry = "on"
+      dry = "on",
+      write_tree = FALSE
     ),
     NA
   )
@@ -67,7 +71,8 @@ test_that("Korte røyr får òg linjeskift", {
       "rapwhale-style",
       "^short_pipes",
       transformer = style_text_rapwhale,
-      dry = "on"
+      dry = "on",
+      write_tree = FALSE
     ),
     NA
   )
