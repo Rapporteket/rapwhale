@@ -39,7 +39,7 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
       last()
   }
 
-  dato = as_date(dato) # I tilfelle det var ein tekstreng
+  dato = lubridate::as_date(dato) # I tilfelle det var ein tekstreng
 
   # Sammensatt adresse til kodeboka
   adresse_kb = paste0(mappe_dd, "\\", dato, "\\rapport.xlsx")
@@ -236,7 +236,7 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
       sort() |>
       last()
   }
-  dato = as_date(dato) # I tilfelle det var ein tekstreng
+  dato = lubridate::as_date(dato) # I tilfelle det var ein tekstreng
 
   # Les inn kodeboka dersom ho ikkje er spesifisert
   if (is.null(kodebok)) {

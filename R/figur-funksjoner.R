@@ -146,10 +146,10 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
                             gruppe = NULL, periode = NULL, x_navn = NULL, y_navn = NULL,
                             ...) {
   # definerer alle kolonner som skal være tilgjengelig inni datasettet (d)
-  qic_x = enexpr(x)
-  qic_y = enexpr(y)
-  qic_n = enexpr(nevner)
-  qic_facet = enexpr(gruppe)
+  qic_x = rlang::enexpr(x)
+  qic_y = rlang::enexpr(y)
+  qic_n = rlang::enexpr(nevner)
+  qic_facet = rlang::enexpr(gruppe)
 
   if (lubridate::is.Date(d[[qic_x]])) {
     skal_flippes = FALSE
@@ -158,7 +158,7 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
   }
 
   # lager grunnplottet med alt som alle shewhart-diagram trenger + eventuelle tilleggsvalg, og ggplot2 tema
-  plot = rlang::eval_bare(rlang::expr(qic(
+  plot = rlang::eval_bare(rlang::expr(qicharts2::qic(
     data = d, y = !!qic_y, n = rlang::maybe_missing(!!qic_n), x = !!qic_x, chart = figtype,
     title = tittel, xlab = x_navn, ylab = y_navn, show.labels = FALSE, x.period = periode, facets = ~ (!!qic_facet),
     flip = skal_flippes, ...
