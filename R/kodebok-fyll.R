@@ -78,7 +78,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
   }
 
   # Namn på variablar som skal fyllast ut
-  arg = quos(...)
+  arg = rlang::quos(...)
   vnamn_d = rlang::quos_auto_name(arg) |>
     names() # Namn i datasettet
   # Viss ein ikkje har valt variablar, bruk alle som finst i kodeboka
@@ -89,7 +89,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
       warning("Kodeboka inneheld ingen variablar som finst i datasettet.")
     }
   } else {
-    vnamn_kb = purrr::map_chr(arg, quo_name) # Tilsvarande namn i kodeboka
+    vnamn_kb = purrr::map_chr(arg, rlang::quo_name) # Tilsvarande namn i kodeboka
   }
 
   # Feilmeldingar eller åtvaringar dersom datasettet og/eller

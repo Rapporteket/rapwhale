@@ -26,7 +26,7 @@ kb_til_kanonisk_form = function(kb) {
 
   # Legg til standardverdiar for kolonnen 'kolnamn' dersom kolonnen manglar
   leggtil_std = function(df, kolnamn, verdiar) {
-    kolnamn = quo_text(enquo(kolnamn))
+    kolnamn = rlang::quo_text(rlang::enquo(kolnamn))
     if (!hasName(df, kolnamn)) {
       df[[kolnamn]] = verdiar
     }
@@ -73,7 +73,7 @@ kb_til_kanonisk_form = function(kb) {
 
   # Gjer kodeboka om til ikkje-glissen form,
   # dvs. at skjema_id, variabel_id og sånt er gjentatt nedover.
-  mogleg_glisne_kol = quos(skjema_id, variabel_id)
+  mogleg_glisne_kol = rlang::quos(skjema_id, variabel_id)
   kb = kb %>%
     fill(!!!mogleg_glisne_kol)
 
@@ -82,7 +82,7 @@ kb_til_kanonisk_form = function(kb) {
   # gjentakast nedanfor, men skal ikkje kryssa variabelgrenser
   # (noko som kunne skje viss me brukte metoden over, sidan «forklaring»
   # òg skal kunna stå tom).
-  mogleg_glisne_kol = quos(variabeletikett, forklaring, variabeltype, unik, obligatorisk)
+  mogleg_glisne_kol = rlang::quos(variabeletikett, forklaring, variabeltype, unik, obligatorisk)
   kb = kb %>%
     mutate(radnr = 1:n()) %>%
     group_by(variabel_id) %>% # Endrar rekkjefølgja på radene
@@ -92,7 +92,7 @@ kb_til_kanonisk_form = function(kb) {
     select(-radnr)
 
   # Tilsvarande men no innanfor skjema_id
-  mogleg_glisne_kol = quos(skjemanamn, kategori)
+  mogleg_glisne_kol = rlang::quos(skjemanamn, kategori)
   kb = kb %>%
     mutate(radnr = 1:n()) %>%
     group_by(skjema_id) %>% # Endrar rekkjefølgja på radene
@@ -310,7 +310,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   # dvs. at alle unike verdiar kjem samanhengande nedover, utan nokre hòl
   # (eks. «xxxyy» er OK, men «xxyyx» er det ikkje).
   sjekk_dup = function(kb, idkol) {
-    idkol = quo_name(enquo(idkol))
+    idkol = rlang::quo_name(rlang::enquo(idkol))
     ids = rle(kb[[idkol]])$values
     if (any(duplicated(ids))) {
       warning(
@@ -330,8 +330,8 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
 
   # Sjekk at valt variabel berre har éin verdi innanfor kvar gruppe
   sjekk_ikkjevar = function(df, gruppe, varid) {
-    gruppe_tekst = quo_name(enquo(gruppe))
-    varid_tekst = quo_name(enquo(varid))
+    gruppe_tekst = rlang::quo_name(rlang::enquo(gruppe))
+    varid_tekst = rlang::quo_name(rlang::enquo(varid))
     nest_cols = setdiff(names(df), gruppe_tekst)
     df_grupper = df %>%
       tidyr::nest(data = !!nest_cols)

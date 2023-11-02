@@ -7,12 +7,12 @@
 #'
 #' @keywords internal
 assignment_eq_linter = function() {
-  Linter(function(source_file) {
+  lintr::Linter(function(source_file) {
     lapply(
-      ids_with_token(source_file, "LEFT_ASSIGN"),
+      lintr::ids_with_token(source_file, "LEFT_ASSIGN"),
       function(id) {
-        parsed = with_id(source_file, id)
-        Lint(
+        parsed = lintr::with_id(source_file, id)
+        lintr::Lint(
           filename = source_file$filename,
           line_number = parsed$line1,
           column_number = parsed$col1,

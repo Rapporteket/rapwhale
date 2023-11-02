@@ -123,8 +123,8 @@ tema_kvalreg = function() {
   tema$panel.grid.major$colour = tema$strip.background$colour
   tema$panel.grid.minor$colour = tema$strip.background$fill
   tema$axis.title.y$angle = 0
-  tema$axis.title.y$margin = margin(r = 5)
-  tema$axis.title.x$margin = margin(t = 5)
+  tema$axis.title.y$margin = ggplot2::margin(r = 5)
+  tema$axis.title.x$margin = ggplot2::margin(t = 5)
 
   # Fjern luft til venstre for y-akseteksten og legg
   # til ekstra luft til høgre for han, fjern luft under
@@ -135,9 +135,9 @@ tema_kvalreg = function() {
   # (Merk: Me set den ytre margen til 3 punkt
   # opp og nede i staden for 0 punkt for å sikra at at
   # kantane på alle bokstavane alltid vert med.)
-  tema$axis.title.y$margin = margin(r = tema$text$size / 2)
-  tema$axis.title.x$margin = margin(t = tema$text$size / 2)
-  tema$plot.margin = margin(3, 3, 3, 3)
+  tema$axis.title.y$margin = ggplot2::margin(r = tema$text$size / 2)
+  tema$axis.title.x$margin = ggplot2::margin(t = tema$text$size / 2)
+  tema$plot.margin = ggplot2::margin(3, 3, 3, 3)
 
   tema
 }

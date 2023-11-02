@@ -80,7 +80,7 @@ er_valideringsdatasett_gyldig = function(d_vld) {
 
   # Inndata må vera data.frame/tibble og må ha tekstkolonnar vld_varnamn og vld_vartype
   if (!(is.data.frame(d_vld) &&
-    all(has_name(d_vld, c("vld_varnamn", "vld_vartype")))
+    all(rlang::has_name(d_vld, c("vld_varnamn", "vld_vartype")))
   )) {
     return(FALSE)
   }

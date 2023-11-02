@@ -46,7 +46,7 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
       sort() %>%
       last()
   }
-  dato = as_date(dato) # I tilfelle det var ein tekstreng
+  dato = lubridate::as_date(dato) # I tilfelle det var ein tekstreng
 
   # Adressen til kodeboka
   adresse_kb = paste0(mappe_dd, dato, "/kodebok.xlsx")
@@ -169,7 +169,7 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
       sort() %>%
       last()
   }
-  dato = as_date(dato) # I tilfelle det var ein tekstreng
+  dato = lubridate::as_date(dato) # I tilfelle det var ein tekstreng
 
   # Les inn kodeboka dersom ho ikkje er spesifisert
   # her sjekkes også gyldigheten av kodeboka

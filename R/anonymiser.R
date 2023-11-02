@@ -80,7 +80,7 @@ lag_anonymiseringsfunksjon = function(x, startnr = 1001) {
     if (any(is.na(x_utvalg))) {
       warning("ID-vektoren inneheld NA-verdiar")
     }
-    if (!is_empty(na.omit(setdiff(x_utvalg, x)))) {
+    if (!rlang::is_empty(na.omit(setdiff(x_utvalg, x)))) {
       stop("ID-vektoren inneheld nye (ukjende) ID-ar")
     }
     til[match(x_utvalg, fra)]

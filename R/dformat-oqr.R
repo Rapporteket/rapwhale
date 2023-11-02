@@ -41,7 +41,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
       sort() |>
       last()
   }
-  dato = as_date(dato) # I tilfelle det var ein tekstreng
+  dato = lubridate::as_date(dato) # I tilfelle det var ein tekstreng
 
   # Les inn kodeboka
   adresse_kb = paste0(
@@ -349,7 +349,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
       sort() |>
       last()
   }
-  dato = as_date(dato) # I tilfelle det var ein tekstreng
+  dato = lubridate::as_date(dato) # I tilfelle det var ein tekstreng
 
   # Les inn kodeboka dersom ho ikkje er spesifisert
   if (is.null(kodebok)) {

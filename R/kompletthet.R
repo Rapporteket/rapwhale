@@ -30,7 +30,7 @@
 #' )
 #' erstatt_ukjent(data = d, variabel = "var_1", na_vektor = c(-1, 99))
 erstatt_ukjent = function(data, variabel, na_vektor) {
-  if (!has_name(data, variabel)) {
+  if (!rlang::has_name(data, variabel)) {
     stop(paste0("'", variabel, "' mangler i inndata"))
   }
 
@@ -83,7 +83,7 @@ erstatt_ukjent = function(data, variabel, na_vektor) {
 #'
 #' beregn_kompletthet(data = d, variabel = "var_1")
 beregn_kompletthet = function(data, variabel) {
-  if (!has_name(data, variabel)) {
+  if (!rlang::has_name(data, variabel)) {
     stop(paste0("'", variabel, "' mangler i inndata"))
   }
 
@@ -91,8 +91,8 @@ beregn_kompletthet = function(data, variabel) {
     summarise(
       variabel = variabel,
       totalt_antall = n(),
-      antall_na = sum(is.na(!!sym(variabel))),
-      andel_na = sum(is.na(!!sym(variabel))) / n(),
+      antall_na = sum(is.na(!!rlang::sym(variabel))),
+      andel_na = sum(is.na(!!rlang::sym(variabel))) / n(),
       .groups = "drop"
     ) |>
     arrange(desc(totalt_antall))
