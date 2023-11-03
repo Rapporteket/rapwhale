@@ -198,8 +198,6 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
 #' Ekstra argument som vert gjeve vidare til [lag_fig_soyle_grunnplott()]
 #' (og så vidare igjen til [ggplot2::geom_col()]).
 #'
-#' @details
-#'
 #' @return Eit søylediagram som ggplot-objekt.
 #'
 #' @export
@@ -233,8 +231,6 @@ lag_fig_soyle = function(d, x, y, flip = TRUE, ...) {
 #' @param ...
 #' Ekstra argument som vert gjeve vidare til [lag_fig_soyle_grunnplott()]
 #' (og så vidare igjen til [ggplot2::geom_col()]).
-#'
-#' @details
 #'
 #' @return Eit søylediagram som ggplot-objekt.
 #'
@@ -270,8 +266,6 @@ lag_fig_soyle_prosent = function(d, x, y, flip = TRUE, ...) {
 #' Logisk variabel som seier om plottet skal flippast. Standard verdi = `TRUE`.
 #' @param ...
 #' Ekstra argument som vert gjeve vidare til [ggplot2::geom_col()].
-#'
-#' @details
 #'
 #' @return Eit søylediagram som ggplot-objekt.
 #'
