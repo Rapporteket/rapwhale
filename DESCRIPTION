@@ -51,7 +51,8 @@ Imports:
     Hmisc,
     MASS,
     boot,
-    tidyselect
+    tidyselect,
+    methods
 RdMacros: Rdpack
 RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
