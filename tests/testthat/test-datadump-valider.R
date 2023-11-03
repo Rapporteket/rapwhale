@@ -4,7 +4,7 @@
 # en del feil som skal oppdages i valider_datadump-funksjonen
 context("Datadump er gyldig")
 
-d = dplyr::tribble(
+d = tribble(
   ~pasid, ~kjonn, ~alder, ~vekt, ~frisk,
   11, 0, 16.23, 30, TRUE,
   12, 1, 22, 50, FALSE,
@@ -15,7 +15,7 @@ d = dplyr::tribble(
 
 # lager en fiktiv kodebok som hører til det fiktive datasettet
 
-kb = dplyr::tribble(
+kb = tribble(
   ~variabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
   "pasid", "tekst", NA, NA, TRUE, NA, NA, NA,
   "alder", "numerisk", 18, NA, TRUE, 0, NA, NA,
@@ -30,8 +30,8 @@ kb = dplyr::tribble(
 # Test 1 Feilmelding hvis testen ikke finner nødvendige kolonner i KB
 
 testthat::test_that("Feilmelding ved nødvendige variabler som ikke finnes i kodeboka.", {
-  kb_mangler_varid = dplyr::tribble(~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst)
-  kb_mangler_desimalar_og_varid = dplyr::tribble(~variabeltype, ~min, ~maks, ~obligatorisk, ~verdi, ~verditekst)
+  kb_mangler_varid = tribble(~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst)
+  kb_mangler_desimalar_og_varid = tribble(~variabeltype, ~min, ~maks, ~obligatorisk, ~verdi, ~verditekst)
 
   testthat::expect_error(lag_regelsett(kb_mangler_varid), "Kodeboka mangler obligatoriske kolonner: 'variabel_id'.")
   testthat::expect_error(lag_regelsett(kb_mangler_desimalar_og_varid), "Kodeboka mangler obligatoriske kolonner: 'variabel_id', 'desimalar'.")
@@ -39,7 +39,7 @@ testthat::test_that("Feilmelding ved nødvendige variabler som ikke finnes i kod
 
 # Test 2 Feilmedling hvis KB mangler verdier for variabeltype eller variabel_id
 testthat::test_that("Funksjonen stopper og rapporterer en feilmelding hvis kodeboka mangler verdier for variabel_id eller variabel_type.", {
-  kb_feil = dplyr::tribble(
+  kb_feil = tribble(
     ~variabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
     "pasid", "tekst", NA, NA, TRUE, NA, NA, NA,
     "alder", NA, 18, NA, TRUE, 0, NA, NA,
@@ -53,7 +53,7 @@ testthat::test_that("Funksjonen stopper og rapporterer en feilmelding hvis kodeb
 
 # Test 3 Feilmedling hvis KB mangler verdier for variabeltype eller variabel_id
 testthat::test_that("Funksjonen stopper og rapporterer en feilmelding hvis kategoriske variabler mangler verdi.", {
-  kb_kat_feil_verdi = dplyr::tribble(
+  kb_kat_feil_verdi = tribble(
     ~variabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
     "kjonn", "kategorisk", NA, NA, TRUE, NA, 0, "kvinne",
     "kjonn", "kategorisk", NA, NA, TRUE, NA, NA, "mann"
@@ -65,7 +65,7 @@ testthat::test_that("Funksjonen stopper og rapporterer en feilmelding hvis kateg
 
 # testthat::test_that("Skal kunne navngi enkeltkolonner i KB.", {
 #
-#   kb_annet_navn = dplyr::tribble(
+#   kb_annet_navn = tribble(
 #     ~variabel_id, ~variabeltype, ~min_verdi, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
 #     "pasid", "tekst", NA, NA, TRUE, NA, NA, NA,
 #     "alder", "numerisk", 18,  NA, TRUE,       0,     NA,         NA,
