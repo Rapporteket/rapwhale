@@ -65,7 +65,7 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
 
   # henter inn kodebok
   kb_mrs = ark |>
-    purrr::map(les_excel_ark) |>
+    map(les_excel_ark) |>
     purrr::list_rbind()
 
   # ark-navnene er horrible. De er avkuttede versjoner av menneskelig-vennlige skjemanavn
@@ -104,7 +104,7 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
     select(-skjema_id_datadump)
 
   # Oversikt over variabeltypar i MRS og tilhøyrande standardnamn som me brukar
-  vartype_mrs_standard = tibble::tribble(
+  vartype_mrs_standard = tribble(
     ~type_mrs, ~type_standard,
     "Enum", "kategorisk",
     "Enkeltvalg", "kategorisk",
@@ -316,7 +316,7 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
   #
   #        Programmeringsmessig blir anbefalt løysing litt komplisert,
   #        men det skal me få til!
-  spek_csv_mrs = tibble::tribble(
+  spek_csv_mrs = tribble(
     ~variabeltype, ~csv_bokstav,
     "kategorisk", "i",
     "tekst", "c",

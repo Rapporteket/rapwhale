@@ -103,7 +103,7 @@ test_that("Variablar med faktornivå i spesiell rekkjefølgje fungerer", {
   # Dette skal bli resultatet, uavhengig av kva kodebokvariant ein brukar
   d_fylt = d2 |>
     mutate(hei_tekst = factor(hei, levels = kb2$verdi, labels = kb2$verditekst)) |>
-    dplyr::select(pasid, hei, hei_tekst, alder)
+    select(pasid, hei, hei_tekst, alder)
   expect_identical(kb_fyll(d2, kb2), d_fylt)
   expect_identical(kb_fyll(d2, kb3), d_fylt)
 })
@@ -124,8 +124,8 @@ test_that("Feilmelding ved bruk av variabel med eksplisitt namn som ikkje finst 
 })
 
 test_that("Feilmelding ved bruk av variabel med eksplisitt namn som ikkje finst i datasettet (men i kodeboka)", {
-  d2 = dplyr::select(d, -med)
-  d3 = dplyr::select(d, -med, -kjonn)
+  d2 = select(d, -med)
+  d3 = select(d, -med, -kjonn)
   expect_error(kb_fyll(d2, kb, med), "Variabel finst ikkje i datasettet: 'med'")
   expect_error(kb_fyll(d3, kb, med, kjonn), "Variablar finst ikkje i datasettet: 'med', 'kjonn'")
 })
@@ -208,7 +208,7 @@ test_that("Dupliserte verdiar i kodeboka vert oppdaga", {
 
 test_that("NA-verdiar i 'verdi' vert godtekne så lenge dei berre er blant ikkje-kategoriske variablar", {
   # Legg til eit par ikkje-kategoriske variablar først i kodeboka
-  kb2 = dplyr::bind_rows(kb[1:2, ], kb)
+  kb2 = bind_rows(kb[1:2, ], kb)
   kb2$variabel_id[1:2] = c("pasient_fnr", "alder")
   kb2$verdi[1:2] = NA
   kb2$verditekst[1:2] = NA
@@ -292,7 +292,7 @@ test_that("Overskriving av variablar ved *ikkje-tomt* suffiks gjev også åtvari
 context("Grensetilfelle og småplukk")
 
 test_that("Variabelkolonnar som står heilt først eller sist i datasettet fungerer òg", {
-  d2 = dplyr::select(d, kjonn, med)
+  d2 = select(d, kjonn, med)
   d_fylt = tribble(
     ~kjonn, ~med,
     "kvinne", "Ibux",

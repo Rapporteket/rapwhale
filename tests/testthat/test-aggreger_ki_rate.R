@@ -4,7 +4,7 @@
 # Feilmeldinger -----------------------------------------------------------
 
 test_that("Feilmelding hvis ikke tibble/data.frame med nødvendige kolonner", {
-  d = tibble::tibble(
+  d = tibble(
     ki_antall = 1,
     ki_eksponering = 1,
     ki_aktuell = TRUE
@@ -15,54 +15,54 @@ test_that("Feilmelding hvis ikke tibble/data.frame med nødvendige kolonner", {
     "«ki_eksponering» og «ki_aktuell»"
   )
 
-  expect_error(aggreger_ki_rate(dplyr::select(d, -ki_antall)), feilmelding_kol)
-  expect_error(aggreger_ki_rate(dplyr::select(d, -ki_eksponering)), feilmelding_kol)
-  expect_error(aggreger_ki_rate(dplyr::select(d, -ki_aktuell)), feilmelding_kol)
+  expect_error(aggreger_ki_rate(select(d, -ki_antall)), feilmelding_kol)
+  expect_error(aggreger_ki_rate(select(d, -ki_eksponering)), feilmelding_kol)
+  expect_error(aggreger_ki_rate(select(d, -ki_aktuell)), feilmelding_kol)
   expect_error(aggreger_ki_rate(unclass(d)), feilmelding_kol)
 })
 
 test_that("Feilmelding hvis data av feil type", {
-  d_feil_antall_tekst = tibble::tibble(
+  d_feil_antall_tekst = tibble(
     ki_antall = c("5", "2", "7"),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
-  d_feil_eksponering_tekst = tibble::tibble(
+  d_feil_eksponering_tekst = tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c("100", "95", "101"),
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
-  d_feil_aktuell_tekst = tibble::tibble(
+  d_feil_aktuell_tekst = tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = c("TRUE", "TRUE", "FALSE")
   )
-  d_feil_antall_fak = tibble::tibble(
+  d_feil_antall_fak = tibble(
     ki_antall = factor(c(5, 2, 7)),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
-  d_feil_eksponering_fak = tibble::tibble(
+  d_feil_eksponering_fak = tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = factor(c(100, 95, 101)),
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
-  d_feil_aktuell_fak = tibble::tibble(
+  d_feil_aktuell_fak = tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = factor(c(TRUE, TRUE, FALSE))
   )
-  d_feil_antall_log = tibble::tibble(
+  d_feil_antall_log = tibble(
     ki_antall = c(TRUE, TRUE, FALSE),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
-  d_feil_eksponering_log = tibble::tibble(
+  d_feil_eksponering_log = tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(TRUE, TRUE, FALSE),
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
-  d_feil_aktuell_num = tibble::tibble(
+  d_feil_aktuell_num = tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = c(1, 1, 0)
@@ -85,7 +85,7 @@ test_that("Feilmelding hvis data av feil type", {
 })
 
 test_that("Feilmelding hvis ki_aktuell inneholder annet enn TRUE eller FALSE", {
-  d_aktuell_ikke_ok = tibble::tibble(
+  d_aktuell_ikke_ok = tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = c(TRUE, NA, FALSE)
@@ -97,12 +97,12 @@ test_that("Feilmelding hvis ki_aktuell inneholder annet enn TRUE eller FALSE", {
 })
 
 test_that("Feilmelding hvis ki_antall eller ki_eksponering er missing dersom ki_aktuell er TRUE", {
-  d_antall_ikke_ok = tibble::tibble(
+  d_antall_ikke_ok = tibble(
     ki_antall = c(5, NA_real_, 7),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
-  d_eksponering_ikke_ok = tibble::tibble(
+  d_eksponering_ikke_ok = tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(100, NA_real_, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
@@ -124,7 +124,7 @@ test_that("Feilmelding hvis ki_antall eller ki_eksponering er missing dersom ki_
 })
 
 test_that("Feilmelding hvis minst en ki_antall er mindre enn 0", {
-  d_antall_lavere_0 = tibble::tibble(
+  d_antall_lavere_0 = tibble(
     ki_antall = c(5, -1, 7),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
@@ -136,12 +136,12 @@ test_that("Feilmelding hvis minst en ki_antall er mindre enn 0", {
 })
 
 test_that("Feilmelding hvis minst en ki_eksponering er mindre enn eller lik 0", {
-  d_eksponering_lavere_0 = tibble::tibble(
+  d_eksponering_lavere_0 = tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(100, -1, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
-  d_eksponering_lik_0 = tibble::tibble(
+  d_eksponering_lik_0 = tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(100, 0, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
@@ -154,7 +154,7 @@ test_that("Feilmelding hvis minst en ki_eksponering er mindre enn eller lik 0", 
 })
 
 test_that("Feilmelding hvis alfa ikke er et tall mellom 0 og 1", {
-  d_var_ok = tibble::tibble(
+  d_var_ok = tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
@@ -169,7 +169,7 @@ test_that("Feilmelding hvis alfa ikke er et tall mellom 0 og 1", {
 })
 
 test_that("Feilmelding hvis multiplikator ikke er et positivt heltall", {
-  d_var_ok = tibble::tibble(
+  d_var_ok = tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
@@ -196,7 +196,7 @@ test_that("Feilmelding hvis multiplikator ikke er et positivt heltall", {
 })
 
 test_that("Feilmelding hvis alfa eller multiplikator ikke har lengde 1", {
-  d_var_ok = tibble::tibble(
+  d_var_ok = tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
@@ -227,23 +227,23 @@ test_that("Feilmelding hvis alfa eller multiplikator ikke har lengde 1", {
 # Tester med NA og antall = 0 ---------------------------------------------
 
 test_that("aggreger_ki_rate() fungerer (uten feilmelding) om ki_aktuell er FALSE (og ellers er gyldig)", {
-  d_antall_ok_men_na = tibble::tibble(
+  d_antall_ok_men_na = tibble(
     ki_antall = c(5, 2, NA),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
-  svar_antall_ok_man_na = tibble::tibble(
+  svar_antall_ok_man_na = tibble(
     est = 0.035897435897435894803,
     konfint_nedre = 0.015422856627814649638,
     konfint_ovre = 0.069418816705480224094
   )
 
-  d_eksponering_ok_men_na = tibble::tibble(
+  d_eksponering_ok_men_na = tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(100, 95, NA),
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
-  svar_eksponering_ok_man_na = tibble::tibble(
+  svar_eksponering_ok_man_na = tibble(
     est = 0.035897435897435894803,
     konfint_nedre = 0.015422856627814649638,
     konfint_ovre = 0.069418816705480224094
@@ -260,25 +260,25 @@ test_that("aggreger_ki_rate() fungerer (uten feilmelding) om ki_aktuell er FALSE
 })
 
 test_that("Funksjonen tillater tilfeller hvor antall observasjoner er 0", {
-  d_ugruppert = tibble::tibble(
+  d_ugruppert = tibble(
     ki_antall = rep(0, 3),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
-  svar_ugruppert = tibble::tibble(
+  svar_ugruppert = tibble(
     est = 0,
     konfint_nedre = 0,
     konfint_ovre = 0.015362729607969183993
   )
 
-  d_gruppert = tibble::tibble(
+  d_gruppert = tibble(
     sykehus = factor(rep(c("B", "A"), each = 3)),
     ki_antall = rep(0, 6),
     ki_eksponering = c(100, 95, 101, 200, 190, 202),
     ki_aktuell = c(TRUE, TRUE, FALSE, rep(FALSE, 3))
   ) %>%
-    dplyr::group_by(sykehus)
-  svar_gruppert = tibble::tibble(
+    group_by(sykehus)
+  svar_gruppert = tibble(
     sykehus = factor(c("A", "B")),
     est = c(NA_real_, 0),
     konfint_nedre = c(NA_real_, 0),
@@ -294,15 +294,15 @@ test_that("Funksjonen tillater tilfeller hvor antall observasjoner er 0", {
 
 test_that("Funksjonen returnerer «NA» for de grupperte verdiene som ikke har noen øvrig gruppetilhørighet", {
   d_gruppert_med_na = suppressWarnings({
-    tibble::tibble(
+    tibble(
       sykehus = factor(rep(c("B", "A", NA), each = 3)),
       ki_antall = c(rep(0, 6), 5, 2, 7),
       ki_eksponering = c(100, 95, 101, 200, 190, 202, 50, 47, 51),
       ki_aktuell = c(rep(c(TRUE, FALSE), each = 3), FALSE, TRUE, FALSE)
     ) %>%
-      dplyr::group_by(sykehus)
+      group_by(sykehus)
   })
-  svar_gruppert_med_na = tibble::tibble(
+  svar_gruppert_med_na = tibble(
     sykehus = factor(c("A", "B", NA)),
     est = c(NA_real_, 0, 2 / 47),
     konfint_nedre = c(
@@ -321,14 +321,14 @@ test_that("Funksjonen returnerer «NA» for de grupperte verdiene som ikke har n
 })
 
 test_that("Funksjonen gir en advarsel når det finnes ubrukte nivå i grupperingsvariabel (men likevel en rad for hvert *mulige* nivå)", {
-  d_gruppert_ekstra_levels = tibble::tibble(
+  d_gruppert_ekstra_levels = tibble(
     sykehus = factor(rep(c("B", "A"), each = 3), levels = LETTERS[1:4]),
     ki_antall = c(rep(0, 6)),
     ki_eksponering = c(100, 95, 101, 200, 190, 202),
     ki_aktuell = c(rep(c(TRUE, FALSE), each = 3))
   ) %>%
-    dplyr::group_by(sykehus, .drop = FALSE)
-  svar_gruppert_ekstra_levels = tibble::tibble(
+    group_by(sykehus, .drop = FALSE)
+  svar_gruppert_ekstra_levels = tibble(
     sykehus = factor(LETTERS[1:4], levels = LETTERS[1:4]),
     est = c(NA_real_, 0, NA_real_, NA_real_),
     konfint_nedre = c(NA_real_, 0, NA_real_, NA_real_),
@@ -353,14 +353,14 @@ test_that("Funksjonen gir en advarsel når det finnes ubrukte nivå i gruppering
 })
 
 test_that("Funksjonen returnerer en tom ugruppert tibble med riktige kolonner hvis inndata er gruppert med null rader", {
-  d_gruppert_tom = tibble::tibble(
+  d_gruppert_tom = tibble(
     sykehus = factor(),
     ki_antall = numeric(),
     ki_eksponering = numeric(),
     ki_aktuell = logical()
   ) %>%
     group_by(sykehus)
-  svar_tom = tibble::tibble(
+  svar_tom = tibble(
     sykehus = factor(),
     est = numeric(),
     konfint_nedre = numeric(),
@@ -374,23 +374,23 @@ test_that("Funksjonen returnerer en tom ugruppert tibble med riktige kolonner hv
 # Rigktig resultat --------------------------------------------------------
 
 test_that("Funksjonen gir ut forventet resultat", {
-  d_ingen = tibble::tibble(
+  d_ingen = tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = rep(FALSE, 3)
   )
-  svar_ingen = tibble::tibble(
+  svar_ingen = tibble(
     est = NA_real_,
     konfint_nedre = NA_real_,
     konfint_ovre = NA_real_
   )
 
-  d_alle = tibble::tibble(
+  d_alle = tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = rep(TRUE, 3)
   )
-  svar_alle = tibble::tibble(
+  svar_alle = tibble(
     est = 0.047297297297297299923,
     konfint_nedre = 0.026644437703193836475,
     konfint_ovre = 0.076570304030960267827
@@ -398,12 +398,12 @@ test_that("Funksjonen gir ut forventet resultat", {
 
   svar_alle_multiplikator_1000 = svar_alle * 1000
 
-  d_noen = tibble::tibble(
+  d_noen = tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
-  svar_noen = tibble::tibble(
+  svar_noen = tibble(
     est = 0.035897435897435894803,
     konfint_nedre = 0.015422856627814649638,
     konfint_ovre = 0.069418816705480224094
@@ -415,33 +415,33 @@ test_that("Funksjonen gir ut forventet resultat", {
 })
 
 test_that("Funksjonen støtter angivelse av konfidensinvå", {
-  d_antall_lik_0 = tibble::tibble(
+  d_antall_lik_0 = tibble(
     ki_antall = rep(0, 3),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
-  svar_antall_lik_0_05 = tibble::tibble(
+  svar_antall_lik_0_05 = tibble(
     est = 0,
     konfint_nedre = 0,
     konfint_ovre = 0.015362729607969183993
   )
-  svar_antall_lik_0_10 = tibble::tibble(
+  svar_antall_lik_0_10 = tibble(
     est = 0,
     konfint_nedre = 0,
     konfint_ovre = 0.011808128682020746503
   )
 
-  d_antall_ulik_0 = tibble::tibble(
+  d_antall_ulik_0 = tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
-  svar_antall_ulik_0_05 = tibble::tibble(
+  svar_antall_ulik_0_05 = tibble(
     est = 7 / 195,
     konfint_nedre = 0.015422856627814649638,
     konfint_ovre = 0.069418816705480224094
   )
-  svar_antall_ulik_0_10 = tibble::tibble(
+  svar_antall_ulik_0_10 = tibble(
     est = 7 / 195,
     konfint_nedre = 0.017943117460240590177,
     konfint_ovre = 0.063051223283699317501
@@ -474,12 +474,12 @@ test_that("Funksjonen støtter angivelse av konfidensinvå", {
 })
 
 test_that("Funksjonen støtter angivelse av multiplikator", {
-  d = tibble::tibble(
+  d = tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = rep(TRUE, 3)
   )
-  svar_multiplikator_1000 = tibble::tibble(
+  svar_multiplikator_1000 = tibble(
     est = 47.297297297297298257,
     konfint_nedre = 26.644437703193837308,
     konfint_ovre = 76.570304030960272712
@@ -495,7 +495,7 @@ test_that("Funksjonen støtter angivelse av multiplikator", {
 # Utdata på riktig format -------------------------------------------------
 
 test_that("Funksjonen gjev alltid ut ugrupperte data", {
-  d_test = tibble::tibble(
+  d_test = tibble(
     sjukehus = factor(c("A", "B", "B")),
     post = factor(c("1", "1", "2")),
     ki_antall = c(5, 2, 7),
@@ -507,12 +507,12 @@ test_that("Funksjonen gjev alltid ut ugrupperte data", {
 })
 
 test_that("Funksjonen gjev ut tibble når inndata er tibble, og data.frame når inndata er data.frame", {
-  d_test_tibble = tibble::tibble(
+  d_test_tibble = tibble(
     ki_antall = 5,
     ki_eksponering = 100,
     ki_aktuell = FALSE
   )
-  svar_test_tibble = tibble::tibble(
+  svar_test_tibble = tibble(
     est = NA_real_,
     konfint_nedre = NA_real_,
     konfint_ovre = NA_real_

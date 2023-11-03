@@ -217,9 +217,9 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
     kb_utvida
   }
   kodebok = kodebok |>
-    tidyr::nest(skjema_kb = c(-skjema_id, -skjemanamn)) |>
-    mutate(skjema_kb = purrr::map(skjema_kb, legg_til_ekstravar)) |>
-    tidyr::unnest(cols = c(skjema_kb))
+    nest(skjema_kb = c(-skjema_id, -skjemanamn)) |>
+    mutate(skjema_kb = map(skjema_kb, legg_til_ekstravar)) |>
+    unnest(cols = c(skjema_kb))
 
   # fixme: Sjekk at verdiane til variablane faktiske er *like* på alle tabellane
   # Det er ein føresetnad for at det nedanfor skal fungera. Viss for eksempel

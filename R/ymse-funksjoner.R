@@ -65,7 +65,7 @@ normaliser_varnamn = function(x) {
 
   # Putt inn _ før alle store bokstavar (utanom første teikn i strengen)
   teikn = teikn %>%
-    purrr::map(~ str_replace_all(., "([[:upper:]])", "_\\1"))
+    map(~ str_replace_all(., "([[:upper:]])", "_\\1"))
 
   varnavn = teikn %>%
     map_chr(~ paste0(., collapse = "")) %>% # Slå saman til lange strengar igjen
@@ -198,7 +198,7 @@ regn_konfint_univar = function(x, bootstrap = FALSE, konf_niva = 0.95, R = 9999)
   # observasjoner til å regne ut konfidensintervall,
   # returner NA for konfidensintervallene
   if ((length(x) < 2) | (sd(x) == 0)) {
-    tibble::tibble(
+    tibble(
       low = NA_real_,
       mean = mean(x),
       high = NA_real_
@@ -217,7 +217,7 @@ regn_konfint_univar = function(x, bootstrap = FALSE, konf_niva = 0.95, R = 9999)
           type = "perc"
         )
         ki = konfint$percent
-        tibble::tibble(
+        tibble(
           low = ki[4],
           mean = mean(x),
           high = ki[5]
@@ -226,7 +226,7 @@ regn_konfint_univar = function(x, bootstrap = FALSE, konf_niva = 0.95, R = 9999)
       ki_bootstrap(x, konf_niva)
     } else {
       mod = t.test(x, conf.level = konf_niva)
-      tibble::tibble(
+      tibble(
         low = mod$conf.int[1],
         mean = unname(mod$estimate),
         high = mod$conf.int[2]
@@ -303,7 +303,7 @@ lag_tab_latex = function(dataframe, label, caption, wide = FALSE, ...) {
     ))
     if (wide) {
       tabell = tabell %>%
-        stringr::str_replace("^\\\\(begin|end)\\{table\\}", "\\\\\\1\\{widetable\\}") # Superrobust ... ;)
+        str_replace("^\\\\(begin|end)\\{table\\}", "\\\\\\1\\{widetable\\}") # Superrobust ... ;)
     }
     tabell = paste0(tabell, sep = "\n")
   }

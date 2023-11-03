@@ -1,7 +1,7 @@
 # Testing av impl() og ekviv()
 
 # Eksempeldata
-d_gyldig_eks = tibble::tribble(
+d_gyldig_eks = tribble(
   ~pas_id, ~bosted_by, ~bosted_bydel, ~operert, ~komplikasjoner,
   1, "Bergen", "Åsane", "Ja", "Nei",
   2, "Bergen", "Landås", "Ja", "Nei",

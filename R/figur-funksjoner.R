@@ -17,7 +17,7 @@ flytt_opp = function(y, tekst, hoyde = .015) {
   tekst_ny = tekst[order(y)]
   y = y[order(y)]
   linjer = tekst_ny |>
-    stringr::str_split("\n") |>
+    str_split("\n") |>
     sapply(length)
   nedre = y - linjer * hoyde / 2
   ovre = y + linjer * hoyde / 2
@@ -88,9 +88,9 @@ lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab
     )
   )
   if (angle) {
-    grafdel = append(grafdel, list(ggplot2::theme(
+    grafdel = append(grafdel, list(theme(
       axis.text.x =
-        ggplot2::element_text(angle = 45, vjust = 0.5)
+        element_text(angle = 45, vjust = 0.5)
     )))
   }
   grafdel
@@ -165,7 +165,7 @@ lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
   ))) +
     fjern_x() +
     fjern_y() +
-    ggplot2::theme(legend.position = "none")
+    theme(legend.position = "none")
 
   # legger på ekstra tema under visse forhold
   if (figtype == "p") { # hvis det er p-chart ønsker vi norske prosenter fra funksjon i dette r-skriptet

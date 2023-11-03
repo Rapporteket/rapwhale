@@ -2,7 +2,7 @@
 
 # Eksempel på inndata (inneholder besvarelser som gir max- og min
 # sumskår + tilfeldige besvarelser)
-d_inn_eks = tibble::tribble(
+d_inn_eks = tribble(
   ~rand_1, ~rand_2a, ~rand_2b, ~rand_3a, ~rand_3b, ~rand_4a, ~rand_4b, ~rand_5, ~rand_6a, ~rand_6b, ~rand_6c, ~rand_7,
   1, 3, 3, 2, 2, 2, 2, 1, 1, 1, 6, 5, # max PCS12
   5, 1, 1, 1, 1, 1, 1, 5, 6, 6, 1, 2, # min PCS12
@@ -25,7 +25,7 @@ d_inn_eks = tibble::tribble(
 )
 
 # Sumskårer for d_inn_eks (regnet ut ved hjelp av SPSS-syntaksen)
-d_sumskaarer_oblique = tibble::tribble(
+d_sumskaarer_oblique = tribble(
   ~rand12_pcs, ~rand12_mcs,
   62.37966, 65.38813,
   17.67266, 10.81346,
@@ -46,7 +46,7 @@ d_sumskaarer_oblique = tibble::tribble(
 )
 
 # Kombinerer d_inn_eks og d_sumskaarer_oblique
-d_inn_inkl_sumskaarer = tibble::tibble(d_inn_eks, d_sumskaarer_oblique)
+d_inn_inkl_sumskaarer = tibble(d_inn_eks, d_sumskaarer_oblique)
 
 test_that("skaar_rand12() gir ut det originale datasettet inkludert
           riktig utregnede sumskårer hvis sumskårer ikke finnes fra før", {
@@ -79,7 +79,7 @@ test_that("skaar_rand12() fungerer hvis man oppgir variabelnavn", {
     g_h_1 = rand_1,
     r_e_3 = rand_4b
   )
-  d_inn_eks_feil_varnavn_inkl_sumskaarer = tibble::tibble(
+  d_inn_eks_feil_varnavn_inkl_sumskaarer = tibble(
     d_inn_eks_feil_varnavn,
     d_sumskaarer_oblique
   )

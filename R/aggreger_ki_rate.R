@@ -203,7 +203,7 @@ aggreger_ki_rate = function(d_ki_ind, alfa = 0.05, multiplikator = 1) {
   }
 
   d_ki_ind |>
-    dplyr::summarise(
+    summarise(
       est = (sum(ki_antall[ki_aktuell], na.rm = TRUE) /
         sum(ki_eksponering[ki_aktuell], na.rm = TRUE)) |>
         replace_na(NA), # Gjør NaN om til NA
@@ -212,11 +212,11 @@ aggreger_ki_rate = function(d_ki_ind, alfa = 0.05, multiplikator = 1) {
       ),
       .groups = "keep"
     ) |>
-    dplyr::mutate(
+    mutate(
       est = est * multiplikator,
       konfint_nedre = map_dbl(konfint, pluck, 1) * multiplikator,
       konfint_ovre = map_dbl(konfint, pluck, 2) * multiplikator
     ) |>
-    dplyr::select(group_cols(d_ki_ind), est, konfint_nedre, konfint_ovre) |>
-    dplyr::ungroup()
+    select(group_cols(d_ki_ind), est, konfint_nedre, konfint_ovre) |>
+    ungroup()
 }

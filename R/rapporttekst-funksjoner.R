@@ -74,7 +74,7 @@ num = function(x, desimalar = NULL) {
   }
   # Må køyra format() separat på kvart element for å unngå
   # at alle elementa får like mange desimalar (viss «desimalar» er NULL)
-  x_form = purrr::map_chr(x, format, nsmall = nsmall, scientific = FALSE)
+  x_form = map_chr(x, format, nsmall = nsmall, scientific = FALSE)
   x_form = paste0("\\numprint{", x_form, "}")
   x_form[is.na(x)] = "\\textendash{}"
   
@@ -182,7 +182,7 @@ akse_tall_format = function(antall_desimaler = 2, decimal.mark = ",", big.mark =
 #' paste0("Andel menn er ", prosent(andel_menn), ".")
 prosent = function(x, desimalar = 0) {
   prosent_tekst = x |>
-    purrr::map_chr(~ num(100 * .x, desimalar) |>
-      stringr::str_c("\\prosent"))
+    map_chr(~ num(100 * .x, desimalar) |>
+      str_c("\\prosent"))
   ifelse(is.na(x), "\\textendash{}", prosent_tekst)
 }

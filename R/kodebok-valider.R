@@ -262,7 +262,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
     "logikk", "character",
     "kommentar", "character"
   )
-  format_kb = tibble(kol_namn = names(kb_stdkols), kol_klasse = purrr::map_chr(kb_stdkols, ~ class(.x)[1]))
+  format_kb = tibble(kol_namn = names(kb_stdkols), kol_klasse = map_chr(kb_stdkols, ~ class(.x)[1]))
   format = left_join(format_std, format_kb,
     by = "kol_namn",
     relationship = "one-to-one"
@@ -334,7 +334,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
     varid_tekst = rlang::quo_name(rlang::enquo(varid))
     nest_cols = setdiff(names(df), gruppe_tekst)
     df_grupper = df %>%
-      tidyr::nest(data = !!nest_cols)
+      nest(data = !!nest_cols)
 
     ikkjeunike = df_grupper$data %>%
       map_lgl(~ length(unique(.x[[varid_tekst]])) > 1)
