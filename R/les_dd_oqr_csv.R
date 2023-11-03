@@ -16,12 +16,12 @@
 les_varnavn = function(adresse, formatspek) {
   stopifnot(is.character(adresse) & length(adresse) == 1)
 
-  varnavn = readr::read_delim(adresse,
+  varnavn = read_delim(adresse,
     delim = formatspek$skilletegn,
     n_max = 1,
     col_names = FALSE,
     na = formatspek$na_verdier,
-    locale = readr::locale(encoding = formatspek$tegnkoding)
+    locale = locale(encoding = formatspek$tegnkoding)
   ) |>
     unlist(use.names = FALSE) |>
     replace_na("")
@@ -169,10 +169,10 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
   stopifnot(all(!is.na(radnr)))
   spesifikasjon = spesifikasjon[radnr, ]
 
-  d = readr::read_delim(adresse,
+  d = read_delim(adresse,
     delim = formatspek$skilletegn, skip = 1,
     na = formatspek$na_verdier,
-    locale = readr::locale(
+    locale = locale(
       decimal_mark = formatspek$desimaltegn,
       date_format = formatspek$dato,
       time_format = formatspek$klokkeslett,

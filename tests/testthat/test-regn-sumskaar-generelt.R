@@ -39,7 +39,7 @@ d_gyldig_inn = tribble(
 
 # Eksempel på utdata (skal være identisk til 'd_gyldig_inn' og i tillegg
 # inneholde kolonner med sumskårer helt til høyre)
-d_gyldig_ut = tibble::add_column(d_gyldig_inn,
+d_gyldig_ut = add_column(d_gyldig_inn,
   total = c(0.518, 0.775, 1.14),
   psykisk = c(1, -3, -6.5),
   .after = "dato"
@@ -63,7 +63,7 @@ skaaringstabell_eks_flere_konstantledd = rbind(skaaringstabell_eks,
     koeffisient = c(1, 5)
   )
 )
-d_gyldig_ut_konstantledd = tibble::add_column(d_gyldig_inn,
+d_gyldig_ut_konstantledd = add_column(d_gyldig_inn,
   total = c(0.518, 0.775, 1.14) + 1,
   psykisk = c(1, -3, -6.5) + 5,
   .after = "dato"
@@ -99,7 +99,7 @@ test_that("skaar_datasett() fungerer riktig hvis skåringstabellen er gruppert",
 
 # Eksempel på inndata hvor sumskår-kolonner finnes fra før
 d_inn_inkl_sumskaarer = d_gyldig_inn
-d_inn_inkl_sumskaarer = tibble::add_column(d_inn_inkl_sumskaarer,
+d_inn_inkl_sumskaarer = add_column(d_inn_inkl_sumskaarer,
   total = NA, psykisk = 5,
   .after = "psyk2"
 )
@@ -111,7 +111,7 @@ test_that("skaar_datasett() fungerer hvis en av de to sumskår-kolonnene
 
   d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit = d_inn_inkl_1_sumskaar
   d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit$total = c(0.518, 0.775, 1.14)
-  d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit = tibble::add_column(
+  d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit = add_column(
     d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit,
     psykisk = c(1, -3, -6.5), .after = "dato"
   )

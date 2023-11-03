@@ -48,7 +48,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
     mappe_dd, "\\", dato, "\\",
     reg_id, "_klokeboken_", dato, ".csv"
   )
-  kodebok_oqr_format = readr::stop_for_problems(readr::read_delim(
+  kodebok_oqr_format = readr::stop_for_problems(read_delim(
     adresse_kb,
     delim = ";", quote = "\"",
     col_types = readr::cols(
@@ -292,7 +292,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
   # Men sorterer *ikkje* alfabetisk, sidan den naturlege rekkjefølgja
   # ofte er meir logisk.
   kodebok = kodebok |>
-    arrange(forcats::fct_inorder(skjema_id))
+    arrange(fct_inorder(skjema_id))
 
   # Sjekk eventuelt at kodeboka er gyldig
   if (valider_kb) {
@@ -444,12 +444,12 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
 
   # Les inn datasettet
   kol_typar = str_c(spek_innlesing$csv_bokstav, collapse = "")
-  oqr_lokale = readr::locale(
+  oqr_lokale = locale(
     decimal_mark = ",", grouping_mark = "",
     date_format = "%Y-%m-%d", time_format = "%H:%M:%S",
     tz = "Europe/Oslo"
   ) # Vert brukt både her og seinare
-  d = readr::read_delim(adresse_dd,
+  d = read_delim(adresse_dd,
     delim = ";", quote = "\"", trim_ws = FALSE, na = "",
     escape_double = TRUE,
     col_names = spek_innlesing$variabel_id, col_types = kol_typar,

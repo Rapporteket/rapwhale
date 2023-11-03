@@ -195,8 +195,8 @@ test_that("Gjev rett svar når det er mange (unike/ikkje-unike) element", {
   x = sample(n, replace = TRUE)
   res = anonymiser(x)
   expect_identical(
-    as.numeric(forcats::fct_inorder(factor(x))),
-    as.numeric(forcats::fct_inorder(factor(res)))
+    as.numeric(fct_inorder(factor(x))),
+    as.numeric(fct_inorder(factor(res)))
   )
 })
 

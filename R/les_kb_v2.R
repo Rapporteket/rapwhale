@@ -296,7 +296,7 @@ konverter_oqr_kb = function(kb_mellom) {
     oqr_til_std_variabeltyper() |>
     velg_standardkolonner() |>
     tildel_unike_skjemanavn_fra_skjema_id() |>
-    arrange(forcats::fct_inorder(skjema_id))
+    arrange(fct_inorder(skjema_id))
 }
 
 
@@ -472,7 +472,7 @@ legg_til_variabler_kb = function(kb_std, ekstra_data) {
 
   kb_std |>
     bind_rows(ekstra_data) |>
-    arrange(forcats::fct_inorder(skjema_id))
+    arrange(fct_inorder(skjema_id))
 }
 
 #' Valider kodebok

@@ -83,10 +83,10 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   }
 
   # Leser inn skjema_id_kobling
-  d_skjema_id = readr::read_delim(
+  d_skjema_id = read_delim(
     adresse_skjema_id,
     delim = ";",
-    locale = readr::locale(encoding = "windows-1252"),
+    locale = locale(encoding = "windows-1252"),
     col_types =
       readr::cols(
         skjema_id_datadump = col_character(),
@@ -360,11 +360,11 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
 
   # Les inn datasettet
   kol_typar = str_c(spek_innlesing$csv_bokstav, collapse = "")
-  lokale_mrs = readr::locale(
+  lokale_mrs = locale(
     decimal_mark = ",", grouping_mark = "",
     date_format = "%d.%m.%Y", time_format = "%H:%M:%S"
   )
-  d = readr::read_delim(adresse_dd,
+  d = read_delim(adresse_dd,
     delim = ";", quote = "\"", trim_ws = FALSE, na = "",
     col_names = spek_innlesing$variabel_id, col_types = kol_typar, skip = 1, # Hopp over overskriftsrada
     locale = lokale_mrs

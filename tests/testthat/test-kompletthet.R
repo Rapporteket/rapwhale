@@ -34,7 +34,7 @@ test_that("Feilmelding hvis 'variabel' ikke er en streng", {
 
 test_that("Fungerer uavhengig av hvilken datatype 'variabel' er", {
   data_med_andre_vartyper = data_inn  |> 
-    tibble::add_column(
+    add_column(
       var_tekst = c("glad", "sliten", "sulten", "ikke svart", "ikke svart", NA),
       var_desimal = c(0.2, 0.1, -1.0, NA, 1.0, 99.0),
       var_heltall = c(1L, 3L, 6L, -1L, 99L, 9L)
@@ -42,21 +42,21 @@ test_that("Fungerer uavhengig av hvilken datatype 'variabel' er", {
 
   data_ut_var_tekst = data_med_andre_vartyper |> 
     select(-var_tekst) |> 
-    tibble::add_column(
+    add_column(
       var_tekst = c("glad", "sliten", "sulten", NA_character_, NA_character_, NA_character_),
       .before = 5
     )
 
   data_ut_var_desimal = data_med_andre_vartyper |> 
     select(-var_desimal) |> 
-    tibble::add_column(
+    add_column(
       var_desimal = c(0.2, 0.1, NA_real_, NA_real_, 1.0, NA_real_),
       .before = 6
     )
 
   data_ut_var_heltall = data_med_andre_vartyper |> 
     select(-var_heltall) |> 
-    tibble::add_column(var_heltall = c(1L, 3L, 6L, NA_integer_, NA_integer_, 9L))
+    add_column(var_heltall = c(1L, 3L, 6L, NA_integer_, NA_integer_, 9L))
 
   expect_identical(
     erstatt_ukjent(data_med_andre_vartyper,
@@ -131,7 +131,7 @@ test_that("Fungerer med grupperte inndata og ugrupperte inndata", {
 test_that("Konverterer flere verdier hvis det er oppgitt i na_vektor", {
   data_ut = data_inn  |> 
     select(-var_1) |> 
-    tibble::add_column(var_1 = c(
+    add_column(var_1 = c(
       1L, NA_integer_, NA_integer_,
       NA_integer_, 2L, NA_integer_
     ), .before = 3)
