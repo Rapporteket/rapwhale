@@ -29,16 +29,16 @@ kb = tribble(
 
 # Test 1 Feilmelding hvis testen ikke finner nødvendige kolonner i KB
 
-testthat::test_that("Feilmelding ved nødvendige variabler som ikke finnes i kodeboka.", {
+test_that("Feilmelding ved nødvendige variabler som ikke finnes i kodeboka.", {
   kb_mangler_varid = tribble(~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst)
   kb_mangler_desimalar_og_varid = tribble(~variabeltype, ~min, ~maks, ~obligatorisk, ~verdi, ~verditekst)
 
-  testthat::expect_error(lag_regelsett(kb_mangler_varid), "Kodeboka mangler obligatoriske kolonner: 'variabel_id'.")
-  testthat::expect_error(lag_regelsett(kb_mangler_desimalar_og_varid), "Kodeboka mangler obligatoriske kolonner: 'variabel_id', 'desimalar'.")
+  expect_error(lag_regelsett(kb_mangler_varid), "Kodeboka mangler obligatoriske kolonner: 'variabel_id'.")
+  expect_error(lag_regelsett(kb_mangler_desimalar_og_varid), "Kodeboka mangler obligatoriske kolonner: 'variabel_id', 'desimalar'.")
 })
 
 # Test 2 Feilmedling hvis KB mangler verdier for variabeltype eller variabel_id
-testthat::test_that("Funksjonen stopper og rapporterer en feilmelding hvis kodeboka mangler verdier for variabel_id eller variabel_type.", {
+test_that("Funksjonen stopper og rapporterer en feilmelding hvis kodeboka mangler verdier for variabel_id eller variabel_type.", {
   kb_feil = tribble(
     ~variabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
     "pasid", "tekst", NA, NA, TRUE, NA, NA, NA,
@@ -48,22 +48,22 @@ testthat::test_that("Funksjonen stopper og rapporterer en feilmelding hvis kodeb
     NA, "kategorisk", NA, NA, TRUE, NA, 1, "mann",
     "frisk", "boolsk", NA, NA, TRUE, NA, NA, NA
   )
-  testthat::expect_error(lag_regelsett(kb_feil), "Kodeboka har manglende verdier for variabel_id og/eller variabeltype.")
+  expect_error(lag_regelsett(kb_feil), "Kodeboka har manglende verdier for variabel_id og/eller variabeltype.")
 })
 
 # Test 3 Feilmedling hvis KB mangler verdier for variabeltype eller variabel_id
-testthat::test_that("Funksjonen stopper og rapporterer en feilmelding hvis kategoriske variabler mangler verdi.", {
+test_that("Funksjonen stopper og rapporterer en feilmelding hvis kategoriske variabler mangler verdi.", {
   kb_kat_feil_verdi = tribble(
     ~variabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
     "kjonn", "kategorisk", NA, NA, TRUE, NA, 0, "kvinne",
     "kjonn", "kategorisk", NA, NA, TRUE, NA, NA, "mann"
   )
-  testthat::expect_error(lag_regelsett(kb_kat_feil_verdi), "Kategoriske variabler mangler verdier for verdi.")
+  expect_error(lag_regelsett(kb_kat_feil_verdi), "Kategoriske variabler mangler verdier for verdi.")
 })
 
 #  Skal være mulig å ha bruke KB på ikke vårt standardformat, med å si at f.eks "min" heter "min_verdi" eller andre.
 
-# testthat::test_that("Skal kunne navngi enkeltkolonner i KB.", {
+# test_that("Skal kunne navngi enkeltkolonner i KB.", {
 #
 #   kb_annet_navn = tribble(
 #     ~variabel_id, ~variabeltype, ~min_verdi, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
@@ -74,6 +74,6 @@ testthat::test_that("Funksjonen stopper og rapporterer en feilmelding hvis kateg
 #     "kjonn", "kategorisk", NA, NA, TRUE, NA, 1, "mann",
 #     "frisk", "boolsk", NA, NA, TRUE, NA, NA, NA
 #   )
-#   testthat::expect_identical(lag_regelsett(kb_annet_navn), lag_regelsett(kb))
+#   expect_identical(lag_regelsett(kb_annet_navn), lag_regelsett(kb))
 # }
 # )
