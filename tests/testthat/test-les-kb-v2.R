@@ -190,7 +190,7 @@ test_that("funksjonen håndterer konvertering til desimaltall", {
     konverter_tekst(tekst_til_tall_komma,
       regex = "^[-]?\\d+[,]?\\d*$",
       parse_funksjon = readr::parse_double,
-      locale = readr::locale(decimal_mark = ",")
+      locale = locale(decimal_mark = ",")
     ),
     tekst_til_tall_resultat
   )
@@ -221,7 +221,7 @@ test_that("verdier som ikke tolkes som tall blir konvertert til NA", {
     konverter_tekst(tekst_til_tall_med_na_komma,
       regex = "^[-]?\\d+[,]?\\d*$",
       parse_funksjon = readr::parse_double,
-      locale = readr::locale(decimal_mark = ",")
+      locale = locale(decimal_mark = ",")
     ),
     tekst_til_tall_resultat
   )
@@ -490,7 +490,7 @@ test_that("funksjonen gir feilmelding hvis obligatorisk, aktiveringsspoersmaal e
 context("velg_standardkolonner")
 test_that("funksjonen fungerer som forventet med riktig input og ekstra kolonner", {
   kb_ekstra = kb_tom_mellom |>
-    tibble::add_column(
+    add_column(
       ekstra = character(),
       ekstra2 = numeric(),
       ekstra3 = logical()
@@ -573,7 +573,7 @@ test_that("funksjonen legger til ekstra variabler som forventet", {
       obligatorisk = c("ja", "nei", "nei"),
       desimaler = c(NA, NA, 0L)
     ) |>
-    arrange(forcats::fct_inorder(skjema_id))
+    arrange(fct_inorder(skjema_id))
 
   ekstra_data = tribble(
     ~skjema_id, ~skjemanavn, ~variabel_id, ~variabeltype, ~variabeletikett, ~unik, ~obligatorisk, ~desimaler,
@@ -633,7 +633,7 @@ test_that("det går an å legge inn ekstra kolonner som ikke er obligatorisk,
       obligatorisk = "ja", desimaler = 0,
       maks_rimeleg = 200, maks = 267, verdi = "verdi"
     ) |>
-    arrange(forcats::fct_inorder(skjema_id))
+    arrange(fct_inorder(skjema_id))
 
   ekstra_data_ikke_ok = tribble(
     ~skjema_id, ~skjemanavn, ~variabel_id,
