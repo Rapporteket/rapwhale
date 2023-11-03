@@ -28,7 +28,9 @@
 #'
 #' @return Logisk vektor som elementvis sier om `a = TRUE` impliserer `b = TRUE`.
 #' @examples
-#' d = tibble::tribble(
+#' library(tibble)
+#'
+#' d = tribble(
 #'   ~pas_id, ~bosted_by, ~bosted_bydel,
 #'   1, "Bergen", "Åsane",
 #'   2, "Bergen", "Landås",
@@ -87,7 +89,9 @@ impl = function(a, b) {
 #' @return Logisk vektor som elementvis sier om `a = TRUE` er ekvivalent
 #'         med `b = TRUE`.
 #' @examples
-#' d = tibble::tribble(
+#' library(tibble)
+#'
+#' d = tribble(
 #'   ~pas_id, ~operert, ~komplikasjoner,
 #'   1, "Ja", "Nei",
 #'   2, "Ja", "Nei",

@@ -345,6 +345,7 @@ lag_tab_latex = function(dataframe, label, caption, wide = FALSE, ...) {
 #' @examples
 #' # Pakke for å laga figurar
 #' library(ggplot2)
+#' library(tibble)
 #'
 #' # Vektorar med eksempel på svar frå undersøkjing
 #'
@@ -356,7 +357,7 @@ lag_tab_latex = function(dataframe, label, caption, wide = FALSE, ...) {
 #' mean_cl_normal(x)
 #' mean_cl_normal_truncated(ymin = 1, ymax = 5)(x)
 #'
-#' d = tibble::tibble(spm = rep(c("x", "y"), each = 4), verdi = c(x, y))
+#' d = tibble(spm = rep(c("x", "y"), each = 4), verdi = c(x, y))
 #' p = ggplot(d, aes(spm, verdi)) +
 #'   geom_point(position = position_dodge2(width = 0.05))
 #'

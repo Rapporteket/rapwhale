@@ -45,22 +45,25 @@
 #' @export
 #'
 #' @examples
-#' d_operasjon = tibble::tibble(
+#' library(tibble)
+#' library(dplyr)
+#'
+#' d_operasjon = tibble(
 #'   pasient_id = c(2, 5, 7, 5, 8),
 #'   sjukehus = c(
 #'     "Bergen", "Oslo", "Stavanger",
 #'     "Oslo", "Stavanger"
 #'   )
 #' )
-#' d_oppfolging = tibble::tibble(
+#' d_oppfolging = tibble(
 #'   pasient_id = c(7, 8),
 #'   komplikasjonar = c(TRUE, FALSE)
 #' )
 #'
 #' anonymiser_pasids = lag_anonymiseringsfunksjon(d_operasjon$pasient_id)
 #'
-#' d_operasjon_ano = dplyr::mutate(d_operasjon, pasient_id = anonymiser_pasids(pasient_id))
-#' d_oppfolging_ano = dplyr::mutate(d_oppfolging, pasient_id = anonymiser_pasids(pasient_id))
+#' d_operasjon_ano = mutate(d_operasjon, pasient_id = anonymiser_pasids(pasient_id))
+#' d_oppfolging_ano = mutate(d_oppfolging, pasient_id = anonymiser_pasids(pasient_id))
 #' d_operasjon_ano
 #' d_oppfolging_ano
 lag_anonymiseringsfunksjon = function(x, startnr = 1001) {
@@ -119,7 +122,10 @@ lag_anonymiseringsfunksjon = function(x, startnr = 1001) {
 #' @export
 #'
 #' @examples
-#' d = tibble::tibble(
+#' library(tibble)
+#' library(dplyr)
+#'
+#' d = tibble(
 #'   pasient_id = c(2, 5, 7, 5, 8),
 #'   sjukehus = c(
 #'     "Bergen", "Oslo", "Stavanger",
@@ -127,7 +133,7 @@ lag_anonymiseringsfunksjon = function(x, startnr = 1001) {
 #'   )
 #' )
 #'
-#' dplyr::mutate(d,
+#' mutate(d,
 #'   pasient_id_ano = anonymiser(pasient_id),
 #'   sjukehus_ano = anonymiser(sjukehus, startnr = 11)
 #' )

@@ -45,11 +45,13 @@
 #' @export
 #'
 #' @examples
+#' library(tibble)
+#'
 #' # Eksempel på gyldig valideringsdatasett med to ulike variabeltypar,
 #' # "tal" («double») og "logisk" («logical»). Merk at variabelen «vekt»
 #' # har to verdiar for same pasient, men det er OK, sidan det var på to
 #' # ulike operasjonsdatoar.
-#' d_vld_gyldig = tibble::tibble(
+#' d_vld_gyldig = tibble(
 #'   pasient_id = c(5, 5, 5, 7),
 #'   dato_operasjon = as.Date(c("2020-06-07", "2020-12-13", "2020-12-13", "2021-02-05")),
 #'   kjonn = c("mann", "mann", "mann", "kvinne"),

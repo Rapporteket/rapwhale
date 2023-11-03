@@ -46,9 +46,11 @@
 #' @export
 #'
 #' @examples
+#' library(tibble)
+#'
 #' # Eksempel på gyldig valideringsdatasett med både «like» og ikkje «like»
 #' # verdiar i følgje standard samanliknar `samanlikn_identisk()`.
-#' d_vld = tibble::tibble(
+#' d_vld = tibble(
 #'   pasient_id = c(5, 5, 5, 7),
 #'   dato_operasjon = as.Date(c("2020-06-07", "2020-12-13", "2020-12-13", "2021-02-05")),
 #'   kjonn = c("mann", "mann", "mann", "kvinne"),

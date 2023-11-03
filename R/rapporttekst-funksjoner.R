@@ -145,8 +145,9 @@ akse_prosent_format = function(antall_desimaler = 1, decimal.mark = ",", ...) {
 #' @examples
 #' # Pakke for å laga figurar
 #' library(ggplot2)
+#' library(tibble)
 #'
-#' a = tibble::tibble(
+#' a = tibble(
 #'   x = rnorm(100, 7500, 1000),
 #'   y = runif(100, 0, 1)
 #' )
