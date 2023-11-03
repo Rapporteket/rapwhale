@@ -36,8 +36,10 @@
 #' @export
 #'
 #' @examples
+#' library(tibble)
+#'
 #' # Eksempel på datasett frå eit register:
-#' d_reg = tibble::tribble(
+#' d_reg = tribble(
 #'   ~pasid, ~dato_inn, ~dato_ut, ~vekt, ~hogd, ~biverk, ~biverk_hovud, ~biverk_mage, ~biverk_fot,
 #'   5, as.Date("2020-06-07"), as.Date("2020-06-15"), 78, 183, TRUE, FALSE, TRUE, TRUE,
 #'   5, as.Date("2020-12-13"), as.Date("2020-12-13"), 50, 179, TRUE, FALSE, TRUE, TRUE,

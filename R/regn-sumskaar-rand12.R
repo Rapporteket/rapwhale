@@ -65,7 +65,9 @@
 #'   der den er, men overskrevet med nyutregnet sumskår. Det blir i så
 #'   fall gitt ut en advarsel.
 #' @examples
-#' d_eks = tibble::tribble(
+#' library(tibble)
+#'
+#' d_eks = tribble(
 #'   ~rand_1, ~rand_2a, ~rand_2b, ~rand_3a, ~rand_3b, ~rand_4a, ~rand_4b, ~rand_5, ~rand_6a, ~rand_6b, ~rand_6c, ~rand_7,
 #'   5, 1, 1, 1, 1, 1, 1, 5, 6, 6, 1, 2, # Min PCS12
 #'   1, 3, 3, 2, 2, 2, 2, 1, 1, 1, 6, 5, # Maks PCS12

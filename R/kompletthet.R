@@ -24,7 +24,9 @@
 #' @export
 #'
 #' @examples
-#' d = tibble::tibble(
+#' library(tibble)
+#'
+#' d = tibble(
 #'   pas_id = c(1, 2, 3, 4, 5, 6),
 #'   var_1 = c(1, 2, -1, 99, NA, 5)
 #' )
@@ -128,7 +130,9 @@ beregn_kompletthet = function(data, variabel) {
 #' @export
 #'
 #' @examples
-#' d = tibble::tibble(
+#' library(tibble)
+#'
+#' d = tibble(
 #'   pas_id = c(1, 2, 3, 4, 5, 6),
 #'   sykehus = c("A", "A", "B", "B", "B", "C"),
 #'   var_1 = c(1, 2, -1, 99, NA, 5)
@@ -173,8 +177,10 @@ beregn_kompletthet_med_ukjent = function(data, variabel, na_vektor) {
 #' @export
 #'
 #' @examples
+#' library(tibble)
+#'
 #' # Datasett det skal beregnes kompletthet for
-#' d_eksempel = tibble::tibble(
+#' d_eksempel = tibble(
 #'   pas_id = c(1L, 2L, 3L, 4L, 5L, 6L),
 #'   sykehus = c("HUS", "HUS", "SUS", "SUS", "SUS", "OUS"),
 #'   vekt = c(60L, NA_integer_, 100L, NA_integer_, 99L, -1L),
@@ -226,7 +232,9 @@ beregn_kompletthet_datasett = function(data) {
 #' @export
 #'
 #' @examples
-#' d_eksempel = tibble::tibble(
+#' library(tibble)
+#'
+#' d_eksempel = tibble(
 #'   pas_id = c(1L, 2L, 3L, 4L, 5L, 6L),
 #'   sykehus = c("HUS", "HUS", "SUS", "SUS", "SUS", "OUS"),
 #'   vekt = c(60L, NA_integer_, 100L, NA_integer_, 99L, -1L),
@@ -236,7 +244,7 @@ beregn_kompletthet_datasett = function(data) {
 #'   test_logisk = c(TRUE, FALSE, NA, NA, FALSE, TRUE)
 #' )
 #'
-#' ukjent_datasett_eksempel = tibble::tibble(
+#' ukjent_datasett_eksempel = tibble(
 #'   variabel = c(
 #'     "pas_id",
 #'     "sykehus", rep("vekt", 2),
@@ -317,8 +325,10 @@ erstatt_ukjent_for_datasett = function(data, ukjent_datasett) {
 #' @export
 #'
 #' @examples
+#' library(tibble)
+#'
 #' # Datasett det skal beregnes kompletthet for
-#' d_eksempel = tibble::tibble(
+#' d_eksempel = tibble(
 #'   pas_id = c(1L, 2L, 3L, 4L, 5L, 6L),
 #'   sykehus = c("HUS", "HUS", "SUS", "SUS", "SUS", "OUS"),
 #'   vekt = c(60L, NA_integer_, 100L, NA_integer_, 99L, -1L),
@@ -329,7 +339,7 @@ erstatt_ukjent_for_datasett = function(data, ukjent_datasett) {
 #' )
 #'
 #' # Oversikt over hvilke verdier som skal erstattes med NA for hvilke variabler.
-#' ukjent_datasett = tibble::tibble(
+#' ukjent_datasett = tibble(
 #'   variabel = c(
 #'     "pas_id", "sykehus", rep("vekt", 2), rep("vekt_2", 2),
 #'     "hoyde", rep("symptom", 2), "test_logisk"

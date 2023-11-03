@@ -73,13 +73,15 @@
 #' @export
 #'
 #' @examples
-#' d_eks = tibble::tribble(
+#' library(tibble)
+#'
+#' d_eks = tribble(
 #'   ~pas_id, ~var_a, ~var_b, ~dato,
 #'   146, 1, 2, "2020-05-15",
 #'   211, NA, 3, "2020-08-17"
 #' )
 #'
-#' skaaringstabell_eks = tibble::tribble(
+#' skaaringstabell_eks = tribble(
 #'   ~delskala, ~variabel, ~verdi, ~koeffisient,
 #'   "total", "var_a", 1, 5,
 #'   "total", "var_a", 2, 10,
