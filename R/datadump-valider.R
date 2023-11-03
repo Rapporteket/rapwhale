@@ -29,10 +29,9 @@
 #' @param oblig Argument for om obligatoriske felt skal sjekkes.
 #' @param rekkefolge Argument for å sjekke om datadump har samme rekkefølge på
 #' variabelnavn som det som er oppgitt i kodeboken.
-#' 
+#'
 #' @keywords internal
 lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
-
   # for å lage regler må kodeboka ha følgende kolonner:
   nodvar = c("variabel_id", "variabeltype", "min", "maks", "desimalar", "verdi", "verditekst", "obligatorisk")
   # kolonner i kodebok
@@ -57,7 +56,6 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   # i en datadump, så trenger man bare informasjon om min-verdier
   # for variabler som faktisk *har* min-verdier.
   kb_filter = function(kodebok, kolonne) {
-
     # henter ut delen av kodeboka som
     # har en verdi i en aktuelle kolonnen
     kb_utsnitt = kodebok %>%
@@ -173,7 +171,6 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   #---------------------------------------obligatoriske felt----------------------------------------------
 
   if (oblig) {
-    
     # Lager "rules" på at obligatoriske variabler ikke skal ha noen missing.
     sjekk_oblig = kb_oblig %>%
       pmap(function(varnamn, gverdi) {
