@@ -72,7 +72,7 @@ context("Anonymisering: Anonymisering fungerer (på eksempeldata)")
 pas_nr = c(3, 5, 1, 1, 6, 3, 7, 3, 10, 12)
 pas_dato = as.Date(pas_nr, "2000-01-01")
 pas_id = paste0("P", pas_nr)
-n_unik = dplyr::n_distinct(pas_id)
+n_unik = n_distinct(pas_id)
 
 test_that("Funksjonen kan køyrast (utan åtvaringar/feilmeldingar)", {
   expect_no_warning(anonymiser(pas_id))

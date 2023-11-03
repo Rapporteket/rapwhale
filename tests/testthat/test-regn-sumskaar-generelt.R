@@ -1,7 +1,7 @@
 # Testing av generelle sumskårfunksjonar -------------------------------
 
 # Eksempel på gyldig skåringstabell
-skaaringstabell_eks = tibble::tribble(
+skaaringstabell_eks = tribble(
   ~delskala, ~variabel, ~verdi, ~koeffisient,
   "total", "gen", 1, 0.2,
   "total", "gen", 2, 0.4,
@@ -30,7 +30,7 @@ context("skaar_datasett")
 
 # Eksempel på inndata som inkluderer både basisvariabler og
 # spørreskjema-variabler
-d_gyldig_inn = tibble::tribble(
+d_gyldig_inn = tribble(
   ~pas_id, ~kjonn, ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2, ~dato,
   1, 1, 1, 2, 1, 10, 20, "2020-01-10",
   2, 2, 2, 1, 2, 20, 10, "2020-02-20",
@@ -56,7 +56,7 @@ test_that("skaar_datasett() fungerer på uproblematiske inndata", {
 
 # Eksempel på skåringstabell med konstantledd
 skaaringstabell_eks_flere_konstantledd = rbind(skaaringstabell_eks,
-  tibble::tibble(
+  tibble(
     delskala = c("total", "psykisk"),
     variabel = NA,
     verdi = NA,
@@ -265,7 +265,7 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen
 
 # Eksempel på ugyldig skåringstabell hvor en variabel
 # mangler en oppføring for en verdi i en delskala
-skaaringstabell_manglende_oppforinger_i_delskala = tibble::tribble(
+skaaringstabell_manglende_oppforinger_i_delskala = tribble(
   ~delskala, ~variabel, ~verdi, ~koeffisient,
   "fys", "var_a", 1, 0,
   "fys", "var_a", 2, 0,
@@ -295,7 +295,7 @@ test_that("sjekk_skaaringstabell() gir ingen feilmelding hvis en variabel
 
 test_that("sjekk_skaaringstabell() gir feilmelding hvis en rad har verdien NA
           i variabelkolonnen *uten* å ha verdien NA i verdikolonnen", {
-  skaaringstabell_ugyldig_na_variabel = tibble::add_row(skaaringstabell_eks,
+  skaaringstabell_ugyldig_na_variabel = add_row(skaaringstabell_eks,
       delskala = "total", variabel = NA, verdi = 10, koeffisient = 10
     )
   expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_na_variabel),
@@ -306,7 +306,7 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis en rad har verdien NA
 test_that("sjekk_skaaringstabell() gir feilmelding hvis flere rader har verdien
           NA i variabelkolonnen for *samme* delskala", {
   skaaringstabell_ugyldig_na_variabel_dobbel = skaaringstabell_eks |> 
-    rbind(tibble::tibble(
+    rbind(tibble(
       delskala = "total", variabel = NA, verdi = NA, koeffisient = c(10, 5)
     ))
   expect_error(
@@ -327,7 +327,7 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis
 
 test_that("sjekk_skaaringstabell() gir feilmelding hvis
           delskala-kolonnen i skåringstabellen inneholder NA-verdier", {
-  skaaringstabell_ugyldig_na_delskala = tibble::add_row(skaaringstabell_eks,
+  skaaringstabell_ugyldig_na_delskala = add_row(skaaringstabell_eks,
     delskala = NA, variabel = NA, verdi = NA, koeffisient = 10
   )
 
@@ -426,7 +426,7 @@ context("sjekk_variabelverdier")
 # skåringstabellen.
 
 # Eksempeldata med bare gyldige tallverdier
-d_gyldig_eks1 = tibble::tribble(
+d_gyldig_eks1 = tribble(
   ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2,
   1, 1, 1, 10, 10,
   2, 2, 2, 20, 20,
@@ -573,7 +573,7 @@ test_that("finn_ugyldige_verdier() gir ut korrekt feiloversikt,
     kjonn = c(2, 1, 1, 3),
     livskvalitet = c(0, 10, 99, 0)
   )
-  ugyldighetstabell = tibble::tibble(
+  ugyldighetstabell = tibble(
     radnr = c(3L, 4L),
     variabel = c("livskvalitet", "kjonn"),
     feilverdi = c(99, 3)
@@ -594,7 +594,7 @@ test_that("finn_ugyldige_verdier() håndterer NA som ugyldig
     livskvalitet = c(0, 10, NA, 0)
   )
   verditabell_med_na = add_row(verditabell, variabel = "kjonn", verdi = NA)
-  ugyldighetstabell = tibble::tibble(
+  ugyldighetstabell = tibble(
     radnr = 3L, variabel = "livskvalitet", feilverdi = NA_real_
   )
   expect_identical(
@@ -658,7 +658,7 @@ context("skaar_datasett_uten_validering")
 # Eksempeldata som bare inneholder verdier som finnes i skåringstabellen
 # (datasettet inneholder alle mulige verdier for hver variabel minst en
 # gang)
-d_gyldig_alle_verdier = tibble::tribble(
+d_gyldig_alle_verdier = tribble(
   ~gen, ~fys1, ~fys2, ~psyk1, ~psyk2,
   1, 2, 1, 10, 20,
   2, 1, 2, 20, 10,
@@ -674,7 +674,7 @@ sumskaar_total_rad3 = 0.8 + 0 + 0.35 + (-0.01) + 0
 sumskaar_psykisk_rad3 = 2 + (-0.5) + (-8)
 
 # Utregnede sumskårer for d_gyldig_alle_verdier
-sumskaar_tabell = tibble::tribble(
+sumskaar_tabell = tribble(
   ~total, ~psykisk,
   sumskaar_total_rad1, sumskaar_psykisk_rad1,
   sumskaar_total_rad2, sumskaar_psykisk_rad2,
@@ -707,7 +707,7 @@ sumskaar_na_psykisk_rad3 = sumskaar_psykisk_rad3
 
 # Utregnede sumskårer for eksempeldata som inneholder en NA-verdi uten
 # tilknyttet koeffisient
-sumskaar_na_tabell = tibble::tribble(
+sumskaar_na_tabell = tribble(
   ~total, ~psykisk,
   sumskaar_na_total_rad1, sumskaar_na_psykisk_rad1,
   sumskaar_na_total_rad2, sumskaar_na_psykisk_rad2,
@@ -737,7 +737,7 @@ sumskaar_1_besvarelse_bare_na_psykisk_rad3 = sumskaar_psykisk_rad3
 
 # Utregnede sumskårer eksempeldata hvor 1 av besvarelsene har NA-verdier
 # på alle spørsmål
-sumskaar_1_besvarelse_bare_na_tabell = tibble::tribble(
+sumskaar_1_besvarelse_bare_na_tabell = tribble(
   ~total, ~psykisk,
   sumskaar_1_besvarelse_bare_na_total_rad1, sumskaar_1_besvarelse_bare_na_psykisk_rad1,
   sumskaar_1_besvarelse_bare_na_total_rad2, sumskaar_1_besvarelse_bare_na_psykisk_rad2,
@@ -770,7 +770,7 @@ sumskaar_alle_besvarelser_bare_na_psykisk_rad3 = NA_real_
 
 # Utregnede sumskårer for eksempeldata hvor alle besvarelsene har
 # NA-verdier på alle spørsmål
-sumskaar_alle_besvarelser_bare_na_tabell = tibble::tribble(
+sumskaar_alle_besvarelser_bare_na_tabell = tribble(
   ~total, ~psykisk,
   sumskaar_alle_besvarelser_bare_na_total_rad1, sumskaar_alle_besvarelser_bare_na_psykisk_rad1,
   sumskaar_alle_besvarelser_bare_na_total_rad2, sumskaar_alle_besvarelser_bare_na_psykisk_rad2,
@@ -798,7 +798,7 @@ sumskaar_1_besvarelse_total = sumskaar_total_rad2
 sumskaar_1_besvarelse_psykisk = sumskaar_psykisk_rad2
 
 # Utregnede sumskårer for eksempeldata som bare inneholder 1 besvarelse
-sumskaar_1_besvarelse_tabell = tibble::tribble(
+sumskaar_1_besvarelse_tabell = tribble(
   ~total, ~psykisk,
   sumskaar_1_besvarelse_total, sumskaar_1_besvarelse_psykisk
 )
@@ -829,7 +829,7 @@ test_that("skaar_datasett_uten_validering() gir ut 0-rads resultat med
 
 test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer i
           samme rekkefølge som i delskala-kolonnen i skåringstabellen", {
-  skaaringstabell_flere_delskalaer = tibble::tribble(
+  skaaringstabell_flere_delskalaer = tribble(
     ~delskala, ~variabel, ~verdi, ~koeffisient,
     "b", "fys", 1, 0.2,
     "b", "fys", 2, 0.3,
@@ -849,14 +849,14 @@ test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer i
     "c", "psyk", 2, -0.01,
   )
 
-  d_enkelt_eks_inn = tibble::tribble(
+  d_enkelt_eks_inn = tribble(
     ~fys, ~psyk,
     1, 2,
     2, 1,
     2, 1
   )
 
-  d_enkelt_eks_ut = tibble::tribble(
+  d_enkelt_eks_ut = tribble(
     ~b, ~a, ~d, ~c,
     0.4, 0.8, 0.3, 0.34,
     0.7, 0.9, 0.6, 0.47,
@@ -873,7 +873,7 @@ test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer i
 
 test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer
           hvis én delskala har konstantledd", {
-  skaaringstabell_eks_ett_konstantledd = tibble::add_row(skaaringstabell_eks,
+  skaaringstabell_eks_ett_konstantledd = add_row(skaaringstabell_eks,
       delskala = "total", variabel = NA, verdi = NA, koeffisient = 1
     )
   sumskaar_tabell_ett_konstantledd = sumskaar_tabell
@@ -910,7 +910,7 @@ context("legg_til_na_i_skaaringstabell")
 test_that("legg_til_na_i_skaaringstabell() fungerer", {
 
   # Original skåringstabell (merk at éi rad òg har NA-verdiar)
-  skaaringstabell_orig = tibble::tribble(
+  skaaringstabell_orig = tribble(
     ~delskala, ~variabel, ~verdi, ~koeffisient,
     "total", "var_a", 1, 5,
     "total", "var_a", 2, 10,
@@ -920,7 +920,7 @@ test_that("legg_til_na_i_skaaringstabell() fungerer", {
   )
 
   # Skåringstabell med NA fylt ut
-  skaaringstabell_med_na = tibble::tribble(
+  skaaringstabell_med_na = tribble(
     ~delskala, ~variabel, ~verdi, ~koeffisient,
     "total", "var_a", 1, 5,
     "total", "var_a", 2, 10,
@@ -954,7 +954,7 @@ test_that("legg_til_na_i_skaaringstabell() overskriv ikkje eksisterande
 
   # Skåringstabell med NA-verdi som skal gje ut koeffisient som *ikkje*
   # er NA
-  skaaringstabell_med_na = tibble::tribble(
+  skaaringstabell_med_na = tribble(
     ~delskala, ~variabel, ~verdi, ~koeffisient,
     "total", "var_a", 1, 5,
     "total", "var_a", NA, 10
@@ -970,7 +970,7 @@ test_that("legg_til_na_i_skaaringstabell() overskriv ikkje eksisterande
 
 context("legg_til_eller_erstatt_kolonner")
 
-d_eks_inkl_sumskaar = tibble::tribble(
+d_eks_inkl_sumskaar = tribble(
   ~pas_id, ~fys, ~psyk, ~dato, ~sumskaar_total, ~sumskaar_psykisk,
   1, 2, 3, "2020-05-15", 4, 5
 )

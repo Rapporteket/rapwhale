@@ -59,7 +59,7 @@ test_that("Gir feilmelding ved ugyldige variabeltyper", {
 context("les_csv_base")
 
 # Forventet resultat av å lese inn dd_ok_hel
-dd_ok_hel = tibble::tibble(
+dd_ok_hel = tibble(
   Apple = c("Gruppe_1", "Gruppe_2", "Gruppe_2", "Gruppe_1"),
   Beto = c("dette", "er", "en", "tekst"),
   Gammo = c(0.5, 0.12, 0.73, 1.241),
@@ -70,10 +70,10 @@ dd_ok_hel = tibble::tibble(
   Theeta = hms::as_hms(c("17:00:00", "14:30:00", "12:00:00", "15:05:00"))
 )
 
-dd_ok_hel_na = tibble::add_row(dd_ok_hel, .before = 3)
+dd_ok_hel_na = add_row(dd_ok_hel, .before = 3)
 
 # Spesifikasjon
-specs_dd_ok_hel = tibble::tribble(
+specs_dd_ok_hel = tribble(
   ~varnavn_kilde, ~varnavn_resultat, ~vartype,
   "alfa", "Apple", "tekst",
   "beta", "Beto", "tekst",
@@ -149,7 +149,7 @@ test_that("Funksjonen gir feilmelding hvis format tid i data ikke tilsvarer form
 })
 
 test_that("Funksjonen tolker ikke NA som manglende verdi med mindre den blir bedt om det", {
-  dd_spek = tibble::tibble(varnavn_kilde = "land", varnavn_resultat = "land", vartype = "tekst")
+  dd_spek = tibble(varnavn_kilde = "land", varnavn_resultat = "land", vartype = "tekst")
   formatspek_na_som_manglende = formatspek_ok_hel
   formatspek_na_som_manglende$na_verdier = c("null", "NA")
 
@@ -186,7 +186,7 @@ test_that("Funksjonen fungerer som forventet når inndata er med annen tegnkodin
     na_verdier = c("", "null")
   )
 
-  dd_ok_hel_win1252 = tibble::tibble(
+  dd_ok_hel_win1252 = tibble(
     Apple = c("Gruppe_1", "Gruppe_2", "Gruppe_2", "Gruppe_1"),
     Beto = c("dette", "er", "en", "†"),
     Gammo = c(0.5, 0.12, 0.73, 1.241),

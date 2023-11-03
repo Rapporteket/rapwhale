@@ -89,7 +89,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
       warning("Kodeboka inneheld ingen variablar som finst i datasettet.")
     }
   } else {
-    vnamn_kb = purrr::map_chr(arg, rlang::quo_name) # Tilsvarande namn i kodeboka
+    vnamn_kb = map_chr(arg, rlang::quo_name) # Tilsvarande namn i kodeboka
   }
 
   # Feilmeldingar eller åtvaringar dersom datasettet og/eller

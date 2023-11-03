@@ -1,4 +1,4 @@
-d_reg = tibble::tribble(
+d_reg = tribble(
   ~pasid, ~dato_inn, ~dato_ut, ~vekt, ~hogd, ~biverk, ~biverk_hovud, ~biverk_mage, ~biverk_fot,
   5, as.Date("2020-06-07"), as.Date("2020-06-15"), 78, 183, TRUE, FALSE, TRUE, TRUE,
   5, as.Date("2020-12-13"), as.Date("2020-12-13"), 50, 179, TRUE, FALSE, TRUE, TRUE,
@@ -100,7 +100,7 @@ test_that("Alle kolonnar vld_verdi_intern_x skal ha rette verdiar", {
   d_vld_liten = lag_valideringsdatasett(d_reg_liten, indvars)
   verdiar_vld = d_vld_liten |>
     select(starts_with("vld_verdi_intern_"))
-  verdiar_reg = tibble::tribble(
+  verdiar_reg = tribble(
     ~vld_verdi_intern_numeric, ~vld_verdi_intern_logical,
     78, NA,
     NA, TRUE

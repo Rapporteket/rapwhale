@@ -187,7 +187,7 @@ beregn_kompletthet_med_ukjent = function(data, variabel, na_vektor) {
 #' beregn_kompletthet_datasett(data = d_eksempel)
 beregn_kompletthet_datasett = function(data) {
   variabel = names(data)
-  d_na = tibble::tibble()
+  d_na = tibble()
 
   for (i in 1:length(variabel)) {
     d = beregn_kompletthet(data[variabel[i]], variabel[i])
@@ -267,7 +267,7 @@ erstatt_ukjent_for_datasett = function(data, ukjent_datasett) {
   data_uten_ukjent = tibble::tibble_row()
 
   hjelpefunksjon_na_vektor =
-    purrr::possibly(~ (filter(.x, variabel == .y) |>
+    possibly(~ (filter(.x, variabel == .y) |>
       select(
         where(~ !all(is.na(.x))),
         -variabel

@@ -74,8 +74,8 @@ er_valideringsdatasett_gyldig = function(d_vld) {
   # Oversikt over alle kolonnenamn og kolonnenamn for «vld_»-kolonnane,
   # for seinare bruk
   kolnamn_alle = names(d_vld)
-  kolnamn_vld = stringr::str_subset(kolnamn_alle, "^vld_")
-  kolnamn_verdikol = stringr::str_subset(kolnamn_vld, "^vld_verdi_")
+  kolnamn_vld = str_subset(kolnamn_alle, "^vld_")
+  kolnamn_verdikol = str_subset(kolnamn_vld, "^vld_verdi_")
   kolnamn_indekskol = setdiff(kolnamn_alle, c(kolnamn_verdikol, "vld_vartype"))
 
   # Inndata må vera data.frame/tibble og må ha tekstkolonnar vld_varnamn og vld_vartype
@@ -99,7 +99,7 @@ er_valideringsdatasett_gyldig = function(d_vld) {
   }
 
   # vld_vartype må starta med ein bokstav, og berre innehalda bokstavar og/eller siffer
-  vartypar_er_gyldige = stringr::str_detect(
+  vartypar_er_gyldige = str_detect(
     d_vld$vld_vartype,
     "^[[:alpha:]][[[:alnum:]]_]*$"
   )
@@ -113,14 +113,14 @@ er_valideringsdatasett_gyldig = function(d_vld) {
     "^vld_varnamn|vld_vartype|",
     "vld_verdi_(intern|ekstern)_[[:alpha:]][[[:alnum:]]_]*$"
   )
-  gyldige_kolnamn = stringr::str_detect(kolnamn_vld, regexp_gyldige_kolnamn)
+  gyldige_kolnamn = str_detect(kolnamn_vld, regexp_gyldige_kolnamn)
   if (!all(gyldige_kolnamn)) {
     return(FALSE)
   }
 
   # Viss vld_verdi_intern_x finst, finst også vld_verdi_ekstern_x, og vice versa
   vartypar_i_verdikol = kolnamn_verdikol |>
-    stringr::str_replace("^vld_verdi_(intern|ekstern)_", "") |>
+    str_replace("^vld_verdi_(intern|ekstern)_", "") |>
     unique()
   lag_kolnamn_verdikol = function(vartypar) {
     if (length(vartypar) > 0) {
@@ -164,7 +164,7 @@ er_valideringsdatasett_gyldig = function(d_vld) {
   # Viss vld_vartype = x, så må vld_verdi_intern_y og
   # vld_verdi_ekstern_y vera tomme viss x != y
   for (kolnamn in kolnamn_verdikol) {
-    vartype_akt_kol = stringr::str_replace(kolnamn, "^vld_verdi_(intern|ekstern)_", "")
+    vartype_akt_kol = str_replace(kolnamn, "^vld_verdi_(intern|ekstern)_", "")
     radnr_ikkje_akt_vartype = which(d_vld$vld_vartype != vartype_akt_kol)
     verdiar = d_vld[[kolnamn]][radnr_ikkje_akt_vartype]
     if (!all(is.na(verdiar))) {

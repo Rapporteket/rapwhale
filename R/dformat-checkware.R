@@ -247,7 +247,7 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
     group_by(variabel_id) %>%
     nest()
   kb_skjema_nest$data = kb_skjema_nest$data %>%
-    purrr::map(tekst_eller_heiltall)
+    map(tekst_eller_heiltall)
   kb_skjema = unnest(kb_skjema_nest, cols = c(data)) %>%
     ungroup()
 
@@ -263,7 +263,7 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
   # henter ut variabelnavn og variabeltype
   var_info = kb_skjema %>%
     distinct(variabel_id, variabel_id_checkware, variabeltype, csv_bokstav)
-  kol_typar = stringr::str_c(var_info$csv_bokstav, collapse = "")
+  kol_typar = str_c(var_info$csv_bokstav, collapse = "")
 
   # Les inn datasettet
   filnamn = paste0(skjema_id, ".csv")

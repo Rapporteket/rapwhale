@@ -51,7 +51,7 @@ impl = function(a, b) {
     stop("a og b må være logiske vektorer")
   }
 
-  (is.na(a) | !a) | tidyr::replace_na(b, FALSE) # eg. (!a | b), men håndterer NA
+  (is.na(a) | !a) | replace_na(b, FALSE) # eg. (!a | b), men håndterer NA
 }
 
 #' @describeIn impl [impl()] som infiks-operator

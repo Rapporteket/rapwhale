@@ -2,7 +2,7 @@
 context("Erstatt_ukjent")
 
 # Baseobjekter for testdata
-data_inn = tibble::tibble(
+data_inn = tibble(
   pas_id = c(1L, 2L, 3L, 4L, 5L, 6L),
   sykehus = c("HUS", "HUS", "SVG", "SVG", "SVG", "OUS"),
   var_1 = c(1L, NA_integer_, NA_integer_, -1L, 2L, 99L),
@@ -84,7 +84,7 @@ test_that("Fungerer uavhengig av hvilken datatype 'variabel' er", {
 })
 
 test_that("Fungerer med grupperte inndata og ugrupperte inndata", {
-  data_ut_ugruppert = tibble::tibble(
+  data_ut_ugruppert = tibble(
     pas_id = c(1L:6L),
     sykehus = c(
       "HUS", "HUS", "SVG",
@@ -97,7 +97,7 @@ test_that("Fungerer med grupperte inndata og ugrupperte inndata", {
     var_2 = c(1L, 2L, 3L, NA_integer_, -1L, -1L)
   )
 
-  data_ut_gruppert = tibble::tibble(
+  data_ut_gruppert = tibble(
     pas_id = c(1L:6L),
     sykehus = c(
       "HUS", "HUS", "SVG",
@@ -169,7 +169,7 @@ test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {
 
 test_that("Gir riktig resultat for antall og andel missing for ugrupperte data", {
   data_forventet_ut_ugruppert =
-    tibble::tibble(
+    tibble(
       variabel = "var_1",
       totalt_antall = 6L,
       antall_na = 2L,
@@ -183,7 +183,7 @@ test_that("Gir riktig resultat for antall og andel missing for ugrupperte data",
 })
 
 test_that("Gir forventet utdata med grupperte data", {
-  data_forventet_ut_gruppert = tibble::tibble(
+  data_forventet_ut_gruppert = tibble(
     sykehus = c("SVG", "HUS", "OUS"),
     variabel = c(rep("var_1", 3)),
     totalt_antall = c(3L, 2L, 1L),
@@ -226,7 +226,7 @@ test_that("Feilmelding hvis na_vektor er tom", {
 })
 
 test_that("Gir riktig resultat for antall og andel missing", {
-  data_forventet_ut_med_ukjent_ugruppert = tibble::tibble(
+  data_forventet_ut_med_ukjent_ugruppert = tibble(
     variabel = "var_1",
     totalt_antall = 6L,
     antall_na = 2L,
@@ -246,7 +246,7 @@ test_that("Gir riktig resultat for antall og andel missing", {
 })
 
 test_that("Gir forventet utdata med grupperte data", {
-  data_forventet_ut_med_ukjent_gruppert = tibble::tibble(
+  data_forventet_ut_med_ukjent_gruppert = tibble(
     sykehus = c("SVG", "HUS", "OUS"),
     variabel = c(rep("var_1", 3)),
     totalt_antall = c(3L, 2L, 1L),
@@ -276,7 +276,7 @@ test_that("Gir feilmelding hvis variabel ikke er tekststreng", {
 # beregn_kompletthet_datasett ---------------------------------------------
 context("beregn_kompletthet_datasett")
 
-d_test = tibble::tibble(
+d_test = tibble(
   pas_id = c(1L, 2L, 3L, 4L, 5L, 6L),
   sykehus = c("HUS", "HUS", "SUS", "SUS", "SUS", "OUS"),
   vekt = c(60L, NA_integer_, 100L, NA_integer_, 99L, -1L),
@@ -286,7 +286,7 @@ d_test = tibble::tibble(
   test_logisk = c(TRUE, FALSE, NA, NA, FALSE, TRUE)
 )
 
-ukjent_datasett = tibble::tibble(
+ukjent_datasett = tibble(
   variabel = c("pas_id", "sykehus", rep("vekt", 2), rep("vekt_2", 2), "hoyde", rep("symptom", 2), "test_logisk"),
   ukjent_verdi_integer = c(NA_integer_, NA_integer_, 99, -1, 99, -1, NA_integer_, NA_integer_, NA_integer_, NA_integer_),
   ukjent_verdi_real = c(NA_real_, NA_real_, NA_real_, NA_real_, NA_real_, NA_real_, 99.9, NA_real_, NA_real_, NA_real_),
@@ -294,14 +294,14 @@ ukjent_datasett = tibble::tibble(
 )
 
 
-d_test_ut_uten_ukjent = tibble::tibble(
+d_test_ut_uten_ukjent = tibble(
   variabel = c("pas_id", "sykehus", "vekt", "vekt_2", "hoyde", "symptom", "test_logisk"),
   totalt_antall = c(rep(6L, 7L)),
   antall_na = c(0L, 0L, 2L, 2L, 2L, 1L, 2L),
   andel_na = c(0L / 6L, 0L / 6L, 2L / 6L, 2L / 6L, 2L / 6L, 1L / 6L, 2L / 6L)
 )
 
-d_test_ut_med_ukjent = tibble::tibble(
+d_test_ut_med_ukjent = tibble(
   variabel = c("pas_id", "sykehus", "vekt", "vekt_2", "hoyde", "symptom", "test_logisk"),
   totalt_antall = c(rep(6L, 7L)),
   antall_na = c(0L, 0L, 2L, 2L, 2L, 1L, 2L),
