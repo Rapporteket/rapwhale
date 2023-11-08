@@ -102,7 +102,7 @@ konverter_boolske = function(x, boolsk_usann, boolsk_sann, na_verdier = NA) {
 #' Returnerer en sammenslått tekststreng med gyldige coltypes for bruk i \code{read_*()}-funksjoner fra readr-pakken.
 #' Se \code{read_delim()}
 #'
-#' @param vartyper Vektor med variabeltyper oppgitt på standardformat.
+#' @param vartype Vektor med variabeltyper oppgitt på standardformat.
 #' Mulige typer er: tekst, desimalltall, heltall, boolsk, dato, dato_kl og kl.
 #' 
 #' @keywords internal
