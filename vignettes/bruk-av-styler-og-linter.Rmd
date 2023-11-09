@@ -134,23 +134,3 @@ motsvarande linje i koden.
 Under er eit enkelt eksempel der `lintr` er køyrd på ei fil med nokre feil.
 
 ![Eksempel på køyring av `lintr` på ei fil.](../man/figures/lintr-eksempel.png)
-
-### Feil i lintr-pakken
-
-Førebels er det ein feil
-(jf. [https://github.com/r-lib/lintr/issues/879])
-ved linting av linjer med kode på fylgjande format:
-
-```{r lintr-feil, eval=FALSE}
-`r ...`
-```
-
-Feilen gjer at eit ikkje får ut noko resultat ved linting av filer
-som inneheld slike linjer.
-For oss vil dette seia at me førebels ikkje kan bruka `lintr` på
-funksjonsfilene i `rapwhale` (i alle fall ikkje direkte),
-då alle desse filene har `lifecycle`-nivåskilt på formatet:
-
-```{r lifecycle-skilt, eval=FALSE}
-#' `r lifecycle::badge("maturing")`
-```
