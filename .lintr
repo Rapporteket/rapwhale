@@ -1,0 +1,7 @@
+linters: with_defaults(
+    assignment_linter = rapwhale:::assignment_eq_linter(),
+    object_usage_linter = NULL,
+    indentation_linter = NULL,
+    line_length_linter(120),
+    object_length_linter(40)
+  )
