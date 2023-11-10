@@ -115,9 +115,11 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
       pmap(function(varnamn, gverdi) {
         rlang::new_function(
           alist(df = ),
-          rlang::expr(transmute_at(df,
-            .vars = vars(foo = !!varnamn),
-            .funs = ruler::rules(min_ok = (. >= !!gverdi) | is.na(.))
+          rlang::expr(mutate(df,
+            across(c(foo = !!varnamn),
+              .fns = ruler::rules(min_ok = (. >= !!gverdi) | is.na(.))
+            ),
+            .keep = "none"
           ))
         )
       }) %>%
@@ -134,9 +136,11 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
       pmap(function(varnamn, gverdi) {
         rlang::new_function(
           alist(df = ),
-          rlang::expr(transmute_at(df,
-            .vars = vars(foo = !!varnamn),
-            .funs = ruler::rules(maks_ok = (. <= !!gverdi) | is.na(.))
+          rlang::expr(mutate(df,
+            across(c(foo = !!varnamn),
+              .fns = ruler::rules(maks_ok = (. <= !!gverdi) | is.na(.))
+            ),
+            .keep = "none"
           ))
         )
       }) %>%
@@ -156,9 +160,11 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
       pmap(function(varnamn, gverdi) {
         rlang::new_function(
           alist(df = ),
-          rlang::expr(transmute_at(df,
-            .vars = vars(foo = !!varnamn),
-            .funs = ruler::rules(des_ok = is.na(.) | (round(., gverdi) == .))
+          rlang::expr(mutate(df,
+            across(c(foo = !!varnamn),
+              .fns = ruler::rules(des_ok = is.na(.) | (round(., gverdi) == .))
+            ),
+            .keep = "none"
           ))
         )
       }) %>%
@@ -176,9 +182,11 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
       pmap(function(varnamn, gverdi) {
         rlang::new_function(
           alist(df = ),
-          rlang::expr(transmute_at(df,
-            .vars = vars(foo = !!varnamn),
-            .funs = ruler::rules(gverdi = !is.na(.))
+          rlang::expr(mutate(df,
+            across(c(foo = !!varnamn),
+              .fns = ruler::rules(gverdi = !is.na(.))
+            ),
+            .keep = "none"
           ))
         )
       }) %>%
@@ -199,9 +207,11 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
         gverdi = data$gverdi
         rlang::new_function(
           alist(df = ),
-          rlang::expr(transmute_at(df,
-            .vars = vars(foo = !!varnamn),
-            .funs = ruler::rules(gyl_kat = . %in% !!gverdi | is.na(.))
+          rlang::expr(mutate(df,
+            across(c(foo = !!varnamn),
+              .fns = ruler::rules(gyl_kat = . %in% !!gverdi | is.na(.))
+            ),
+            .keep = "none"
           ))
         )
       }) %>%
@@ -221,9 +231,11 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
       pmap(function(varnamn) {
         rlang::new_function(
           alist(df = ),
-          rlang::expr(summarise_at(df,
-            .vars = vars(foo = !!varnamn),
-            .funs = ruler::rules(vartype_ok = is.numeric(.))
+          rlang::expr(summarise(
+            df,
+            across(c(foo = !!varnamn),
+              .fns = ruler::rules(vartype_ok = is.numeric(.))
+            )
           ))
         )
       }) %>%
@@ -237,9 +249,11 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
       pmap(function(varnamn) {
         rlang::new_function(
           alist(df = ),
-          rlang::expr(summarise_at(df,
-            .vars = vars(foo = !!varnamn),
-            .funs = ruler::rules(vartype_ok = is.logical(.))
+          rlang::expr(summarise(
+            df,
+            across(c(foo = !!varnamn),
+              .fns = ruler::rules(vartype_ok = is.logical(.))
+            )
           ))
         )
       }) %>%
@@ -253,9 +267,11 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
       pmap(function(varnamn) {
         rlang::new_function(
           alist(df = ),
-          rlang::expr(summarise_at(df,
-            .vars = vars(foo = !!varnamn),
-            .funs = ruler::rules(vartype_ok = is.character(.))
+          rlang::expr(summarise(
+            df,
+            across(c(foo = !!varnamn),
+              .fns = ruler::rules(vartype_ok = is.character(.))
+            )
           ))
         )
       }) %>%

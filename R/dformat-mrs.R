@@ -414,7 +414,7 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
     filter(variabeltype == "boolsk") |>
     pull(variabel_id)
   d = d |>
-    mutate_at(boolske_var, mrs_boolsk_til_boolsk)
+    mutate(across(boolske_var, ~ mrs_boolsk_til_boolsk))
 
   # Gjer om tidsvariablar til ekte tidsvariablar
   # Fixme: Nødvendig pga. https://github.com/tidyverse/readr/issues/642
@@ -424,7 +424,7 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
     filter(variabeltype == "dato_kl") |>
     pull(variabel_id)
   d = d |>
-    mutate_at(tid_var, readr::parse_datetime, format = "%d.%m.%Y %H:%M:%S")
+    mutate(across(tid_var, ~ readr::parse_datetime(.x, format = "%d.%m.%Y %H:%M:%S")))
 
   # Fila har (ved ein feil) ekstra semikolon på slutten, som fører
   # til ekstra kolonne som har tomt namn (men får prefikset mrs_).

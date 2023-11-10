@@ -499,7 +499,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
     pull(variabel_id)
   # ... og gjer tilhøyrande innlesne variablar (om det er nokon) om til talvariablar
   d = d |>
-    mutate_at(vars_num, as.numeric)
+    mutate(across(vars_num, as.numeric))
 
   # Gjer eventuelle boolske variablar om til ekte boolske variablar
   oqr_boolsk_til_boolsk = function(x) {
@@ -513,18 +513,20 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
   }
   vars_boolsk = spek_innlesing$variabel_id[spek_innlesing$variabeltype == "boolsk"]
   d = d |>
-    mutate_at(vars_boolsk, oqr_boolsk_til_boolsk)
-
+    mutate(across(vars_boolsk, oqr_boolsk_til_boolsk))
+  
   # Gjer eventuelle tidsvariablar om til ekte tidsvariablar
   # Fixme: Nødvendig pga. https://github.com/tidyverse/readr/issues/642
   #        Fjern når denne feilen er fiksa (rett då òg fixme-en
   #        lenger oppe som også handlar om dette)
   vars_datokl = spek_innlesing$variabel_id[spek_innlesing$variabeltype == "dato_kl"]
   d = d |>
-    mutate_at(vars_datokl, readr::parse_datetime,
-      format = "%Y-%m-%d %H:%M:%OS",
-      locale = oqr_lokale
-    )
+    mutate(across(
+      vars_datokl,
+      ~ readr::parse_datetime(.x,
+                              format = "%Y-%m-%d %H:%M:%OS",
+                              locale = oqr_lokale)
+    ))
 
   # Sjekk eventuelt at datadumpen er gyldig
   if (valider_dd) {
