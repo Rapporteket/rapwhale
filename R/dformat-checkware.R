@@ -72,7 +72,7 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
   # Sjekk gyldigheten til kodeboka
   # Mulighet for å hoppe over sjekk hvis man setter valider_kb = FALSE
   if (valider_kb) {
-    kb_er_gyldig(kb)
+    stopifnot(kb_er_gyldig(kb))
   }
 
   # gjør om kodeboka til kanonisk form
@@ -81,11 +81,12 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
   # fixme! kb_kanonisk støtter ikke andre kolonner utenom standardkolonnene,
   # derfor left_joiner vi variabel_id_checkware tilbake inn. Fix når kb_til_kanonisk er oppdatert.
   variabel_id_checkware = kb %>%
-    select(variabel_id, variabel_id_checkware) %>%
+    fill(skjema_id) %>% 
+    select(skjema_id, variabel_id, variabel_id_checkware) %>%
     na.omit()
   kb_kanonisk = kb_kanonisk %>%
     left_join(variabel_id_checkware,
-      by = "variabel_id",
+      by = c("skjema_id", "variabel_id"),
       relationship = "many-to-one"
     )
   kb_kanonisk
@@ -174,13 +175,13 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
   # Les inn kodeboka dersom ho ikkje er spesifisert
   # her sjekkes også gyldigheten av kodeboka
   if (is.null(kodebok)) {
-    kodebok = les_kb_checkware(mappe_dd)
+    kodebok = les_kb_checkware(mappe_dd, dato = dato)
   }
 
   # Sjekk gyldigheten til kodeboka
   # Mulighet for å hoppe over sjekk hvis man setter valider_kb = FALSE
   if (valider_kb) {
-    kb_er_gyldig(kodebok)
+    stopifnot(kb_er_gyldig(kodebok))
   }
 
   # Lager objekt med filter på kodebok til å bare innneholde informasjon om aktuelt skjema til datadumpen
@@ -291,7 +292,7 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
     distinct(variabel_id) %>%
     pull("variabel_id")
   d = d %>%
-    mutate_at(dato_kl_var, readr::parse_datetime, format = "%Y-%m-%d %H:%M:%S")
+    mutate(across(dato_kl_var, ~ readr::parse_datetime(.x, format = "%Y-%m-%d %H:%M:%S")))
 
   # I CheckWare vert boolske verdiar koda som "1" for sann og NA for usann.
   # Kodar derfor om til ekte boolske verdiar.
@@ -309,7 +310,7 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
     }
   }
   d = d %>%
-    mutate_at(boolsk_var, cw_til_boolsk)
+    mutate(across(boolsk_var, ~ cw_til_boolsk))
 
   # Filtrer vekk rader som ikke har riktig kontekst
   # (som standard blir bare T0, T1 og T2 tatt med)
