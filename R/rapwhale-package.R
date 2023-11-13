@@ -34,7 +34,6 @@
 #' @importFrom dplyr summarise
 #' @importFrom dplyr tally
 #' @importFrom dplyr ungroup
-#' @importFrom dplyr vars
 #' @importFrom forcats fct_inorder
 #' @importFrom ggplot2 aes
 #' @importFrom ggplot2 coord_flip
