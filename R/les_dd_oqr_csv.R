@@ -104,7 +104,7 @@ konverter_boolske = function(x, boolsk_usann, boolsk_sann, na_verdier = NA) {
 #'
 #' @param vartype Vektor med variabeltyper oppgitt på standardformat.
 #' Mulige typer er: tekst, desimalltall, heltall, boolsk, dato, dato_kl og kl.
-#' 
+#'
 #' @keywords internal
 std_koltype_til_readr_koltype = function(vartype) {
   if (length(vartype) == 0) {
@@ -157,7 +157,7 @@ erstatt_med_na = function(x, na_verdi) {
 #' @param adresse Filplassering for datadump som skal leses inn.
 #' @param spesifikasjon Tibble med tre kolonner. Inneholder varnavn_kilde, varnavn_resultat og vartype.
 #' @param formatspek Liste som inneholder informasjon om hvordan csv-fil er spesifisert. Gjelder desimaltegn, datoformat, klokkeslettformat, tidssone, boolsk_sann, boolsk_usann
-#' 
+#'
 #' @keywords internal
 les_csv_base = function(adresse, spesifikasjon, formatspek) {
 
@@ -233,7 +233,7 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
 #' @param boolsk_sann Angir hvilke verdier som tolkes som TRUE for boolske variabler
 #' @param boolsk_usann Angir hvilke verdier som tolkes som FALSE for boolske variabler
 #' @param na_verdier Angir hvilke verdier som tolkes som NA
-#' 
+#'
 #' @keywords internal
 lag_formatspek = function(skilletegn, desimaltegn, dato, klokkeslett, dato_kl,
                           tidssone, tegnkoding, boolsk_sann, boolsk_usann,
