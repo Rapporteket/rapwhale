@@ -598,8 +598,8 @@ valider_kb_kolonner = function(kodebok) {
 
   # sjekk at kolonnene obligatorisk, unik og manglende kun
   # inneholder "ja" eller "nei".
-  if (any(!kodebok$obligatorisk %in% c("ja", "nei")) |
-    any(!kodebok$unik %in% c("ja", "nei")) |
+  if (any(!kodebok$obligatorisk %in% c("ja", "nei")) ||
+    any(!kodebok$unik %in% c("ja", "nei")) ||
     any(!kodebok$manglande %in% c("ja", "nei"))) {
     stop("Kolonnene obligatorisk, unik og manglande kan bare inneholde 'ja' eller 'nei'")
   }
