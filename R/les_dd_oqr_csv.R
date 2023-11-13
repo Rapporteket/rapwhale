@@ -160,7 +160,6 @@ erstatt_med_na = function(x, na_verdi) {
 #'
 #' @keywords internal
 les_csv_base = function(adresse, spesifikasjon, formatspek) {
-
   # Lager en kolonnenavn streng basert på innmat. Sorterer variabelrekkefølge etter datadump
   kolnavn_fil = les_varnavn(adresse, formatspek)
   kolnavn_spek = spesifikasjon$varnavn_kilde
@@ -189,27 +188,32 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
   # fixme: Fjern denne og oppdater std_koltype_til_readr_koltype() når
   #        https://github.com/tidyverse/readr/issues/642 er fiksa
   varnavn_dato_kl = spesifikasjon$varnavn_resultat[spesifikasjon$vartype == "dato_kl"]
-  d = mutate(d,
-             across(
-               all_of(varnavn_dato_kl),
-               ~ readr::stop_for_problems(
-                 readr::parse_datetime(.x,
-                                       format = formatspek$dato_kl,
-                                       na = formatspek$na_verdier)
-               )
-             ))
+  d = mutate(
+    d,
+    across(
+      all_of(varnavn_dato_kl),
+      ~ readr::stop_for_problems(
+        readr::parse_datetime(.x,
+          format = formatspek$dato_kl,
+          na = formatspek$na_verdier
+        )
+      )
+    )
+  )
 
   # Konverter boolske
   varnavn_boolske = spesifikasjon$varnavn_resultat[spesifikasjon$vartype == "boolsk"]
-  d = mutate(d,
-             across(
-               all_of(varnavn_boolske),
-               ~ konverter_boolske(
-                 .x,
-                 boolsk_usann = formatspek$boolsk_usann,
-                 boolsk_sann = formatspek$boolsk_sann
-               )
-             ))
+  d = mutate(
+    d,
+    across(
+      all_of(varnavn_boolske),
+      ~ konverter_boolske(
+        .x,
+        boolsk_usann = formatspek$boolsk_usann,
+        boolsk_sann = formatspek$boolsk_sann
+      )
+    )
+  )
 
   d
 }
