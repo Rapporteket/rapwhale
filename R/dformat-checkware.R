@@ -81,7 +81,7 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
   # fixme! kb_kanonisk støtter ikke andre kolonner utenom standardkolonnene,
   # derfor left_joiner vi variabel_id_checkware tilbake inn. Fix når kb_til_kanonisk er oppdatert.
   variabel_id_checkware = kb %>%
-    fill(skjema_id) %>% 
+    fill(skjema_id) %>%
     select(skjema_id, variabel_id, variabel_id_checkware) %>%
     na.omit()
   kb_kanonisk = kb_kanonisk %>%
