@@ -499,7 +499,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
     pull(variabel_id)
   # ... og gjer tilhøyrande innlesne variablar (om det er nokon) om til talvariablar
   d = d |>
-    mutate(across(vars_num, as.numeric))
+    mutate(across(all_of(vars_num), as.numeric))
 
   # Gjer eventuelle boolske variablar om til ekte boolske variablar
   oqr_boolsk_til_boolsk = function(x) {
@@ -513,7 +513,7 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
   }
   vars_boolsk = spek_innlesing$variabel_id[spek_innlesing$variabeltype == "boolsk"]
   d = d |>
-    mutate(across(vars_boolsk, oqr_boolsk_til_boolsk))
+    mutate(across(all_of(vars_boolsk), oqr_boolsk_til_boolsk))
 
   # Gjer eventuelle tidsvariablar om til ekte tidsvariablar
   # Fixme: Nødvendig pga. https://github.com/tidyverse/readr/issues/642

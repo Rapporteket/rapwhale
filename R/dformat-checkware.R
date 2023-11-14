@@ -292,7 +292,7 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
     distinct(variabel_id) %>%
     pull("variabel_id")
   d = d %>%
-    mutate(across(dato_kl_var, ~ readr::parse_datetime(.x, format = "%Y-%m-%d %H:%M:%S")))
+    mutate(across(all_of(dato_kl_var), ~ readr::parse_datetime(.x, format = "%Y-%m-%d %H:%M:%S")))
 
   # I CheckWare vert boolske verdiar koda som "1" for sann og NA for usann.
   # Kodar derfor om til ekte boolske verdiar.
@@ -310,7 +310,7 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
     }
   }
   d = d %>%
-    mutate(across(boolsk_var, ~ cw_til_boolsk))
+    mutate(across(all_of(boolsk_var), cw_til_boolsk))
 
   # Filtrer vekk rader som ikke har riktig kontekst
   # (som standard blir bare T0, T1 og T2 tatt med)

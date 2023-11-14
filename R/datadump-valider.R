@@ -116,7 +116,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
         rlang::new_function(
           alist(df = ),
           rlang::expr(mutate(df,
-            across(c(foo = !!varnamn),
+            across(all_of(varnamn),
               .fns = ruler::rules(min_ok = (. >= !!gverdi) | is.na(.))
             ),
             .keep = "none"
@@ -137,7 +137,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
         rlang::new_function(
           alist(df = ),
           rlang::expr(mutate(df,
-            across(c(foo = !!varnamn),
+            across(all_of(varnamn),
               .fns = ruler::rules(maks_ok = (. <= !!gverdi) | is.na(.))
             ),
             .keep = "none"
@@ -161,7 +161,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
         rlang::new_function(
           alist(df = ),
           rlang::expr(mutate(df,
-            across(c(foo = !!varnamn),
+            across(all_of(varnamn),
               .fns = ruler::rules(des_ok = is.na(.) | (round(., gverdi) == .))
             ),
             .keep = "none"
@@ -183,7 +183,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
         rlang::new_function(
           alist(df = ),
           rlang::expr(mutate(df,
-            across(c(foo = !!varnamn),
+            across(all_of(varnamn),
               .fns = ruler::rules(gverdi = !is.na(.))
             ),
             .keep = "none"
@@ -208,7 +208,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
         rlang::new_function(
           alist(df = ),
           rlang::expr(mutate(df,
-            across(c(foo = !!varnamn),
+            across(all_of(varnamn),
               .fns = ruler::rules(gyl_kat = . %in% !!gverdi | is.na(.))
             ),
             .keep = "none"
@@ -233,7 +233,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
           alist(df = ),
           rlang::expr(summarise(
             df,
-            across(c(foo = !!varnamn),
+            across(all_of(varnamn),
               .fns = ruler::rules(vartype_ok = is.numeric(.))
             )
           ))
@@ -251,7 +251,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
           alist(df = ),
           rlang::expr(summarise(
             df,
-            across(c(foo = !!varnamn),
+            across(all_of(varnamn),
               .fns = ruler::rules(vartype_ok = is.logical(.))
             )
           ))
@@ -269,7 +269,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
           alist(df = ),
           rlang::expr(summarise(
             df,
-            across(c(foo = !!varnamn),
+            across(all_of(varnamn),
               .fns = ruler::rules(vartype_ok = is.character(.))
             )
           ))
