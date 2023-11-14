@@ -300,12 +300,12 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
     distinct(variabel_id) %>%
     pull("variabel_id")
   cw_til_boolsk = function(x) {
-    if (skjema_id != "treatments") { # treatments skjema har boolske variabler kodet som true/false,
+    if (skjema_id == "treatments") { # treatments skjema har boolske variabler kodet som true/false,
       # i motsetning til alle andre skjema. treatments er felles for alle registre.
+      as.logical(ifelse(x, 1, 0))
+    } else {
       stopifnot(all(x %in% c("1", NA)))
       !is.na(x)
-    } else {
-      as.logical(ifelse("false", 0, 1))
     }
   }
   d = d %>%
