@@ -521,11 +521,11 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
   #        lenger oppe som også handlar om dette)
   vars_datokl = spek_innlesing$variabel_id[spek_innlesing$variabeltype == "dato_kl"]
   d = d |>
-    mutate(across(
-      vars_datokl,
-      ~ readr::parse_datetime(.x,
-                              format = "%Y-%m-%d %H:%M:%OS",
-                              locale = oqr_lokale)
+    mutate(across(all_of(vars_datokl),
+      .fns = ~ readr::parse_datetime(.x,
+        format = "%Y-%m-%d %H:%M:%OS",
+        locale = oqr_lokale
+      )
     ))
 
   # Sjekk eventuelt at datadumpen er gyldig

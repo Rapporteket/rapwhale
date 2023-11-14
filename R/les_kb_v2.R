@@ -27,29 +27,29 @@ les_kb_oqr_v2 = function(adresse, valider = TRUE) {
   # FIXME! - Se JIRA-sak https://issuetracker.helsenord.no/browse/ABN-372 for hvordan dette løses fremover.
   til_dato_apo = c("maksintervall_start_dato", "maksintervall_slutt_dato")
 
-  kb_oqr = mutate(kb_oqr,
-    across(all_of(til_desimal),
-    ~ konverter_tekst(.x,
-    regex = "^[-]?\\d+[.]?\\d*$",
-    readr::parse_double)
+  kb_oqr = mutate(kb_oqr, across(all_of(til_desimal),
+    .fns = ~ konverter_tekst(.x,
+      regex = "^[-]?\\d+[.]?\\d*$",
+      readr::parse_double
+    )
   ))
 
-  kb_oqr = mutate(kb_oqr,
-    across(all_of(til_dato),
-    ~ konverter_tekst(.x,
-    regex = "^\\d{4}-\\d{2}-\\d{2}$",
-    readr::parse_date,
-    format = "%Y-%m-%d")
+  kb_oqr = mutate(kb_oqr, across(all_of(til_dato),
+    .fns = ~ konverter_tekst(.x,
+      regex = "^\\d{4}-\\d{2}-\\d{2}$",
+      readr::parse_date,
+      format = "%Y-%m-%d"
+    )
   ))
 
   # FIXME! - Denne bør revideres når vi får svar på JIRA-sak (https://issuetracker.helsenord.no/browse/ABN-372)
   # Se også test som dekker dette.
-  kb_oqr = mutate(kb_oqr,
-    across(all_of(til_dato_apo),
-    ~ konverter_tekst(.x,
-    regex = "^\\d{4}-\\d{2}-\\d{2}$",
-    readr::parse_date,
-    format = "'%Y-%m-%d'")
+  kb_oqr = mutate(kb_oqr, across(all_of(til_dato_apo),
+    .fns = ~ konverter_tekst(.x,
+      regex = "^\\d{4}-\\d{2}-\\d{2}$",
+      readr::parse_date,
+      format = "'%Y-%m-%d'"
+    )
   ))
 
   # Endrer "Ja" og "Nei" til lower_case
