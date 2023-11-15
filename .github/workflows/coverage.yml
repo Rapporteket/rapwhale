@@ -1,8 +1,10 @@
 on:
   push:
     branches: [ "main" ]
+    paths: ["R/**", "tests/**"]
   pull_request:
     branches: [ "main" ]
+    paths: ["R/**", "tests/**"]
 
 name: test-coverage
 
