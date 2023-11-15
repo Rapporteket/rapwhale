@@ -292,7 +292,11 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
     distinct(variabel_id) %>%
     pull("variabel_id")
   d = d %>%
-    mutate(across(all_of(dato_kl_var), ~ readr::parse_datetime(.x, format = "%Y-%m-%d %H:%M:%S")))
+    mutate(across(all_of(dato_kl_var),
+      .fns = \(dato_kl_vektor) readr::parse_datetime(dato_kl_vektor,
+        format = "%Y-%m-%d %H:%M:%S"
+      )
+    ))
 
   # I CheckWare vert boolske verdiar koda som "1" for sann og NA for usann.
   # Kodar derfor om til ekte boolske verdiar.
