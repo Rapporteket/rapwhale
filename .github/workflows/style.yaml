@@ -60,7 +60,7 @@ jobs:
             ${{ runner.os }}-
 
       - name: Style
-        run: styler::style_pkg(style = rapwhale::rapwhale_style)
+        run: styler::style_pkg(style = rapwhale::rapwhale_style, exclude_dirs = "tests/testthat/rapwhale-style")
         shell: Rscript {0}
 
       - name: Filer som ikkje følgjer kodestilen vår
