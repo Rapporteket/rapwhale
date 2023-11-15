@@ -3,6 +3,7 @@
 on:
   pull_request:
     branches: [main, master]
+    paths: ["**.[rR]", "**.[qrR]md", "**.[rR]markdown", "**.[rR]nw", "**.[rR]profile"]
 
 name: lint-changed-files
 
