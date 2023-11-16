@@ -65,7 +65,8 @@ Suggests:
     devtools,
     processx,
     callr,
-    pkgload
+    pkgload,
+    withr
 VignetteBuilder: knitr
 Depends: 
     R (>= 4.1)
