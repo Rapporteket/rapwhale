@@ -15,6 +15,20 @@ test_that("Temaet får dei faktisk ynskja verdiane", {
   expect_identical(test_tema$plot.margin, ggplot2::margin(3, 3, 3, 3))
 })
 
+test_that("Rett skriftstorleik vert brukt viss han finst frå før", {
+  skriftstorleik = 12
+  withr::with_environment(environment(), {
+    test_tema_skriftstorleik = tema_kvalreg()
+  })
+  expect_identical(test_tema_skriftstorleik$text$size, skriftstorleik)
+  expect_identical(test_tema_skriftstorleik$axis.title.y$margin,
+    expected = ggplot2::margin(r = skriftstorleik / 2)
+  )
+  expect_identical(test_tema_skriftstorleik$axis.title.x$margin,
+    expected = ggplot2::margin(t = skriftstorleik / 2)
+  )
+})
+
 # Testing av expand_soyle() og expand_soyle_str_fig()
 
 test_that("expand_soyle() gir ut riktig tallvektor", {
