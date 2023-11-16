@@ -118,7 +118,7 @@ tema_kvalreg = function() {
   tema$strip.background$fill = "#f3f1ee"
   tema$strip.background$colour = "#e4e0da"
   tema$strip.text.x = element_text(colour = "black")
-  tema$panel.spacing = unit("13", "pt")
+  tema$panel.spacing = ggplot2::unit("13", "pt")
   tema$panel.border$colour = tema$strip.background$colour
   tema$panel.grid.major$colour = tema$strip.background$colour
   tema$panel.grid.minor$colour = tema$strip.background$fill
