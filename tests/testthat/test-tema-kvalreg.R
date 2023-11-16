@@ -67,6 +67,32 @@ test_that("Rett skriftstorleik vert brukt viss han finst frå før", {
   )
 })
 
+# Testar for fjern_*()
+p = ggplot(mtcars, aes(wt, mpg)) +
+  ggplot2::geom_point()
+
+test_that("fjern_x() fjernar det han skal", {
+  p_x = p + fjern_x()
+  expect_identical(p_x$theme$panel.grid.major.x, element_blank())
+  expect_identical(p_x$theme$panel.grid.minor.x, element_blank())
+})
+
+test_that("fjern_x_ticks() fjernar det han skal", {
+  p_x_ticks = p + fjern_x_ticks()
+  expect_identical(p_x_ticks$theme$axis.ticks.x, element_blank())
+})
+
+test_that("fjern_y() fjernar det han skal", {
+  p_y = p + fjern_y()
+  expect_identical(p_y$theme$panel.grid.major.y, element_blank())
+  expect_identical(p_y$theme$panel.grid.minor.y, element_blank())
+})
+
+test_that("fjern_y_ticks() fjernar det han skal", {
+  p_y_ticks = p + fjern_y_ticks()
+  expect_identical(p_y_ticks$theme$axis.ticks.y, element_blank())
+})
+
 # Testing av expand_soyle() og expand_soyle_str_fig()
 
 test_that("expand_soyle() gir ut riktig tallvektor", {
