@@ -114,7 +114,6 @@ tema_kvalreg = function() {
     skriftstorleik = 9
   }
   tema = theme_light(base_size = skriftstorleik)
-  tema$panel.grid.minor$colour = "white"
   tema$strip.background$fill = "#f3f1ee"
   tema$strip.background$colour = "#e4e0da"
   tema$strip.text.x = element_text(colour = "black")
@@ -123,8 +122,6 @@ tema_kvalreg = function() {
   tema$panel.grid.major$colour = tema$strip.background$colour
   tema$panel.grid.minor$colour = tema$strip.background$fill
   tema$axis.title.y$angle = 0
-  tema$axis.title.y$margin = ggplot2::margin(r = 5)
-  tema$axis.title.x$margin = ggplot2::margin(t = 5)
 
   # Fjern luft til venstre for y-akseteksten og legg
   # til ekstra luft til høgre for han, fjern luft under
