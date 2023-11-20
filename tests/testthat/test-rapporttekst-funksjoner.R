@@ -113,3 +113,33 @@ test_that("akse_tall_format() gir ut en tom tekstvektor hvis den tar
   tall_format = akse_tall_format()
   expect_identical(tall_format(integer()), character())
 })
+
+# Testing av prosent()
+
+test_that("prosent() gir ut tankestrek når «x»-argumentet inneholder NA", {
+  expect_identical(prosent(NA_real_), "\\textendash{}")
+})
+
+test_that("prosent() gir ut riktig verdi når kun «x»-argumentet er gitt", {
+  expect_identical(prosent(numeric()), logical(0))
+  expect_identical(prosent(0.1234), "{\\numprint{12}}\\prosent")
+  expect_identical(
+    prosent(c(0.1234, 0.31415)),
+    c("{\\numprint{12}}\\prosent", "{\\numprint{31}}\\prosent")
+  )
+})
+
+test_that("prosent() gir ut riktig verdi med «desimalar»-argumentet", {
+  expect_identical(
+    prosent(0.1234, desimalar = 0),
+    "{\\numprint{12}}\\prosent"
+  )
+  expect_identical(
+    prosent(0.1234, desimalar = 2),
+    "{\\numprint{12.34}}\\prosent"
+  )
+  expect_identical(
+    prosent(c(0.1234, 0.31), desimalar = 3),
+    c("{\\numprint{12.340}}\\prosent", "{\\numprint{31.000}}\\prosent")
+  )
+})
