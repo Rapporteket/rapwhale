@@ -170,9 +170,40 @@ akse_tall_format = function(antall_desimaler = 2, decimal.mark = ",", big.mark =
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' Tar inn et tall og konverterer det til LaTeX-kommando for å skrive prosent-tegn i tekst.
-#' @param x Tallet som skal skrives som prosentverdi.
-#' @param desimalar Antall desimaler som skal vises.
+#' Tar inn en vektor med tall som konverteres til prosent
+#' og gir ut en vektor med LaTeX-kommandoer for finformatert
+#' visning av tallene med prosenttegn.
+#' Tallene blir avrundet til et bestemt antall desimaler.
+#' 
+#' @param x Vektor med tallene en ønsker å konvertere til prosent og få ut på LaTeX-format.
+#' @param desimalar Antall desimaler som skal vises etter kommaet.
+#' 
+#' @details
+#' Tallene blir konvertert til prosent og blir vist med prosenttegn
+#' («0.1234» blir «12.34 %»);
+#' desimaltegnet blir (dersom språket er norsk)
+#' komma («3,14»),
+#' istedenfor punktum («3.14»);
+#' negative tall blir vist med ekte minustegn («−42»),
+#' istedenfor bindestrek («-42»);
+#' og `NA`-verdier blir vist som en kort tankestrek («–»).
+#' 
+#' Tallene blir avrundet til `desimalar` desimalar
+#' med den vanlige avrundingsregelen i R.
+#' hVis `desimalar` er NULL,
+#' blir det vist så mange desimaler som
+#' [format()]-funksjonen viser som standard.
+#' (Men,
+#' i motsetning til den funksjonen,
+#' blir tallene aldri viste i eksponentiell notasjon.)
+#' 
+#' Det blir brukt en funksjon gjort tilgjengeleg av
+#' `kvalreg-rapport`-klassen
+#' for formatering av tallene.
+#' Nøyaktig hvilken funksjon som blir brukt,
+#' kan endres i fremtiden,
+#' men funksjonaliteten vil forbli lik.
+#' 
 #' @export
 #' @examples
 #' menn = 5
@@ -181,6 +212,7 @@ akse_tall_format = function(antall_desimaler = 2, decimal.mark = ",", big.mark =
 #'
 #' # Til bruk i setning i latex
 #' paste0("Andel menn er ", prosent(andel_menn), ".")
+#' paste0("Andel menn med 2 desimaler er ", prosent(andel_menn, desimalar = 2), ".")
 prosent = function(x, desimalar = 0) {
   prosent_tekst = x |>
     map_chr(~ num(100 * .x, desimalar) |>
