@@ -10,13 +10,13 @@
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' Tar inn ein vektor med tal og gjev ut ein ein vektor
+#' Tar inn ein vektor med tal og gjev ut ein vektor
 #' med' LaTeX-kommandoar for finformatert vising av tala,
 #' for eksempel med tusenskiljeteikn
 #' og med avrunding til eit fast tal desimalar.
 #' 
 #' @param x Vektor med tala ein ønskjer å få ut på LaTeX-format.
-#' @param desimalar Kor mange desimalar skal visast etter kommaet?
+#' @param desimalar Kor mange desimalar som skal visast etter kommaet.
 #'   
 #' @details
 #' Tala vert viste med tusenskiljeteikn («12 345», ikkje «12345»),
@@ -35,7 +35,7 @@
 #' [format()]-funksjonen viser som standard.
 #' (Men,
 #' i motsetning til den funksjonen,
-#' vil vert tala aldri viste i eksponentiell notasjon.)
+#' vert tala aldri viste i eksponentiell notasjon.)
 #' 
 #' Merk at funksjonen berre skal brukast på vanlege tal,
 #' ikkje årstal,
