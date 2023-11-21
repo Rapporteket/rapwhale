@@ -188,9 +188,9 @@ akse_tall_format = function(antall_desimaler = 2, decimal.mark = ",", big.mark =
 #' istedenfor bindestrek («-42»);
 #' og `NA`-verdier blir vist som en kort tankestrek («–»).
 #' 
-#' Tallene blir avrundet til `desimalar` desimalar
+#' Tallene blir avrundet til `desimalar` desimaler
 #' med den vanlige avrundingsregelen i R.
-#' hVis `desimalar` er NULL,
+#' hvis `desimalar` er NULL,
 #' blir det vist så mange desimaler som
 #' [format()]-funksjonen viser som standard.
 #' (Men,
