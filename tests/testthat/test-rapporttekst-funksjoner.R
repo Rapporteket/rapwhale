@@ -5,7 +5,7 @@ test_that("num() gir ut tankestrek når «x»-argumentet inneholder NA", {
 })
 
 test_that("num() gir ut riktig verdi når kun «x»-argumentet er gitt", {
-  expect_identical(num(numeric()), "{\\numprint{}}")
+  expect_identical(num(numeric()), character(0))
   expect_identical(num(1234), "{\\numprint{1234}}")
   expect_identical(
     num(c(12.34, 3.1415)),
