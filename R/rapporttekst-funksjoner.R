@@ -14,10 +14,10 @@
 #' med' LaTeX-kommandoar for finformatert vising av tala,
 #' for eksempel med tusenskiljeteikn
 #' og med avrunding til eit fast tal desimalar.
-#' 
+#'
 #' @param x Vektor med tala ein ønskjer å få ut på LaTeX-format.
 #' @param desimalar Kor mange desimalar som skal visast etter kommaet.
-#'   
+#'
 #' @details
 #' Tala vert viste med tusenskiljeteikn («12 345», ikkje «12345»),
 #' desimalteiknet vert
@@ -27,7 +27,7 @@
 #' negative tal vert viste med ekte minusteikn («−42»),
 #' ikkje bindestrek («-42»)
 #' og `NA`-verdiar vert viste som ein kort tankestrek («–»).
-#' 
+#'
 #' Tala vert avrunda til `desimalar` desimalar
 #' med den vanlege avrundingsregelen i R.
 #' Viss `desimalar` er NULL,
@@ -36,22 +36,22 @@
 #' (Men,
 #' i motsetning til den funksjonen,
 #' vert tala aldri viste i eksponentiell notasjon.)
-#' 
+#'
 #' Merk at funksjonen berre skal brukast på vanlege tal,
 #' ikkje årstal,
 #' fødselsnummer eller liknande.
-#' 
+#'
 #' Det vert brukt ein funksjon gjort tilgjengeleg av
 #' `kvalreg-rapport`-klassen
 #' for formatering av tala.
 #' Nøyaktig kva funksjon som vert brukt,
 #' kan endrast i framtida,
 #' men funksjonaliteten vil vera lik.
-#' 
+#'
 #' @note Viss `desimalar` er oppgjeve,
 #'   vert det alltid vist *nøyaktig* så mange desimalar,
 #'   sjølv om dei siste vert 0.
-#'   
+#'
 #' @export
 #' @examples
 #' # Til bruk i setningar i LaTeX
@@ -86,8 +86,6 @@ num = function(x, desimalar = NULL) {
 
   x_form
 }
-
-
 ### Prosent med norsk stavemåte i aksenotasjoner
 
 # fixme: Bør rydda opp i prosentfunksjonane slik at dei alle
@@ -114,7 +112,7 @@ num = function(x, desimalar = NULL) {
 #' # Pakke for å laga figurar
 #' library(ggplot2)
 #'
-#' ggplot(iris, aes(x = Sepal.Width/Sepal.Length, y = Petal.Width/Petal.Length)) +
+#' ggplot(iris, aes(x = Sepal.Width / Sepal.Length, y = Petal.Width / Petal.Length)) +
 #'   geom_point() +
 #'   scale_x_continuous(labels = akse_prosent_format()) +
 #'   scale_y_continuous(labels = akse_prosent_format(antall_desimaler = 0))
@@ -174,10 +172,10 @@ akse_tall_format = function(antall_desimaler = 2, decimal.mark = ",", big.mark =
 #' og gir ut en vektor med LaTeX-kommandoer for finformatert
 #' visning av tallene med prosenttegn.
 #' Tallene blir avrundet til et bestemt antall desimaler.
-#' 
+#'
 #' @param x Vektor med tallene en ønsker å konvertere til prosent og få ut på LaTeX-format.
 #' @param desimalar Antall desimaler som skal vises etter kommaet.
-#' 
+#'
 #' @details
 #' Tallene blir konvertert til prosent og blir vist med prosenttegn
 #' («0.1234» blir «12.34 %»);
@@ -187,7 +185,7 @@ akse_tall_format = function(antall_desimaler = 2, decimal.mark = ",", big.mark =
 #' negative tall blir vist med ekte minustegn («−42»),
 #' istedenfor bindestrek («-42»);
 #' og `NA`-verdier blir vist som en kort tankestrek («–»).
-#' 
+#'
 #' Tallene blir avrundet til `desimalar` desimaler
 #' med den vanlige avrundingsregelen i R.
 #' hvis `desimalar` er NULL,
@@ -196,14 +194,14 @@ akse_tall_format = function(antall_desimaler = 2, decimal.mark = ",", big.mark =
 #' (Men,
 #' i motsetning til den funksjonen,
 #' blir tallene aldri viste i eksponentiell notasjon.)
-#' 
+#'
 #' Det blir brukt en funksjon gjort tilgjengeleg av
 #' `kvalreg-rapport`-klassen
 #' for formatering av tallene.
 #' Nøyaktig hvilken funksjon som blir brukt,
 #' kan endres i fremtiden,
 #' men funksjonaliteten vil forbli lik.
-#' 
+#'
 #' @export
 #' @examples
 #' menn = 5
