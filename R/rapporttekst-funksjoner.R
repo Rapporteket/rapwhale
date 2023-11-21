@@ -59,6 +59,8 @@
 #' paste0("Pi avrunda til fire desimalar er ", num(pi, desimalar = 4), ".")
 #' paste0("Nulldesimalar vert òg viste: ", num(12, desimalar = 2))
 num = function(x, desimalar = NULL) {
+  assert_numeric(x)
+
   if (!is.null(desimalar)) {
     # LaTeX-kommandoen kan runda av for oss,
     # men me rundar av i R for å sikra at avrundinga
