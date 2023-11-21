@@ -215,5 +215,5 @@ prosent = function(x, desimalar = 0) {
   prosent_tekst = x |>
     map_chr(\(x) num(100 * x, desimalar) |>
       str_c("\\prosent"))
-  ifelse(is.na(x), "\\textendash{}", prosent_tekst)
+  if_else(is.na(x), "\\textendash{}", prosent_tekst)
 }
