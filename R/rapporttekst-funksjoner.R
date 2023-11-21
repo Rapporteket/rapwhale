@@ -11,7 +11,7 @@
 #' `r lifecycle::badge("experimental")`
 #'
 #' Tar inn ein vektor med tal og gjev ut ein vektor
-#' med' LaTeX-kommandoar for finformatert vising av tala,
+#' med LaTeX-kommandoar for finformatert vising av tala,
 #' for eksempel med tusenskiljeteikn
 #' og med avrunding til eit fast tal desimalar.
 #'
