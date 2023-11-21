@@ -66,7 +66,7 @@ num = function(x, desimalar = NULL) {
     # me ikkje brukar LaTeX
     x = round(x, desimalar)
   }
-  
+
   nsmall = if (is.null(desimalar)) {
     0L
   } else {
@@ -77,13 +77,13 @@ num = function(x, desimalar = NULL) {
   x_form = map_chr(x, format, nsmall = nsmall, scientific = FALSE)
   x_form = paste0("\\numprint{", x_form, "}")
   x_form[is.na(x)] = "\\textendash{}"
-  
+
   # Me legg *heile* LaTeX-kommandoen
   # mellom {} for å hindra problem ved bruk for eksempel inni shortcap-delen
   # av \caption[shortcap]{longcap} (eventuelle ]-teikn vert elles tolka
   # til å avslutta shortcap-argumentet, jf. https://tex.stackexchange.com/a/78416)
   x_form = paste0("{", x_form, "}")
-  
+
   x_form
 }
 
