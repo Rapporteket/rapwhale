@@ -121,7 +121,7 @@ test_that("prosent() gir ut tankestrek når «x»-argumentet inneholder NA", {
 })
 
 test_that("prosent() gir ut riktig verdi når kun «x»-argumentet er gitt", {
-  expect_identical(prosent(numeric()), logical(0))
+  expect_identical(prosent(numeric()), character(0))
   expect_identical(prosent(0.1234), "{\\numprint{12}}\\prosent")
   expect_identical(
     prosent(c(0.1234, 0.31415)),
