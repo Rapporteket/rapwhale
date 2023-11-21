@@ -28,6 +28,15 @@ test_that("num() gir ut riktig verdi med «desimalar»-argumentet", {
   )
 })
 
+test_that("num() gir error om «x»-argument er i tekstform", {
+  expect_error(num("12"), 
+    "Assertion on 'x' failed: Must be of type 'numeric', not 'character'."
+  )
+  expect_error(num(c(12, "3.14")), 
+    "Assertion on 'x' failed: Must be of type 'numeric', not 'character'."
+  )
+})
+
 # Testing av akse_prosent_format()
 
 test_that("akse_prosent_format() gir ut verdier på riktig format ved
