@@ -49,6 +49,13 @@ test_that("num() gir error om «x»-argument er i tekstform", {
   )
 })
 
+test_that("num() ikke konverterer store tall til 
+          eksponentiell notasjon", {
+  expect_identical(num(120000000), "{\\numprint{120000000}}")
+  expect_identical(num(1.2e+08), "{\\numprint{120000000}}")
+  expect_identical(num(120000000.34), "{\\numprint{120000000}}")
+})
+
 # Testing av akse_prosent_format()
 
 test_that("akse_prosent_format() gir ut verdier på riktig format ved
