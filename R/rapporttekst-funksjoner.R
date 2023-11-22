@@ -64,32 +64,34 @@
 #' paste0("Nulldesimalar vert òg viste: ", num(12, desimalar = 2))
 num = function(x, desimalar = NULL) {
   assert_numeric(x)
-
-  if (!is.null(desimalar)) {
-    # LaTeX-kommandoen kan runda av for oss,
-    # men me rundar av i R for å sikra at avrundinga
-    # vert identisk som ved andre plassar der
-    # me ikkje brukar LaTeX
-    x = round(x, desimalar)
-  }
-
-  nsmall = if (is.null(desimalar)) {
-    0L
+  if (is_empty(x)) {
+    x_form = as.character(x)
   } else {
-    desimalar
+    if (!is.null(desimalar)) {
+      # LaTeX-kommandoen kan runda av for oss,
+      # men me rundar av i R for å sikra at avrundinga
+      # vert identisk som ved andre plassar der
+      # me ikkje brukar LaTeX
+      x = round(x, desimalar)
+    }
+
+    nsmall = if (is.null(desimalar)) {
+      0L
+    } else {
+      desimalar
+    }
+    # Må køyra format() separat på kvart element for å unngå
+    # at alle elementa får like mange desimalar (viss «desimalar» er NULL)
+    x_form = map_chr(x, format, nsmall = nsmall, scientific = FALSE)
+    x_form = paste0("\\numprint{", x_form, "}")
+    x_form[is.na(x)] = "\\textendash{}"
+
+    # Me legg *heile* LaTeX-kommandoen
+    # mellom {} for å hindra problem ved bruk for eksempel inni shortcap-delen
+    # av \caption[shortcap]{longcap} (eventuelle ]-teikn vert elles tolka
+    # til å avslutta shortcap-argumentet, jf. https://tex.stackexchange.com/a/78416)
+    x_form = paste0("{", x_form, "}")
   }
-  # Må køyra format() separat på kvart element for å unngå
-  # at alle elementa får like mange desimalar (viss «desimalar» er NULL)
-  x_form = map_chr(x, format, nsmall = nsmall, scientific = FALSE)
-  x_form = paste0("\\numprint{", x_form, "}")
-  x_form[is.na(x)] = "\\textendash{}"
-
-  # Me legg *heile* LaTeX-kommandoen
-  # mellom {} for å hindra problem ved bruk for eksempel inni shortcap-delen
-  # av \caption[shortcap]{longcap} (eventuelle ]-teikn vert elles tolka
-  # til å avslutta shortcap-argumentet, jf. https://tex.stackexchange.com/a/78416)
-  x_form = paste0("{", x_form, "}")
-
   x_form
 }
 ### Prosent med norsk stavemåte i aksenotasjoner
