@@ -60,17 +60,14 @@ normaliser_varnamn = function(x) {
     stop(feilmelding)
   }
 
-  teikn = x %>%
-    str_split("") # Splitt i enkeltteikn
+  teikn = str_split(x, "") # Splitt i enkeltteikn
 
   # Putt inn _ før alle store bokstavar (utanom første teikn i strengen)
-  teikn = teikn %>%
-    map(~ str_replace_all(., "([[:upper:]])", "_\\1"))
+  teikn = map(teikn, ~ str_replace_all(., "([[:upper:]])", "_\\1"))
 
-  varnavn = teikn %>%
-    map_chr(~ paste0(., collapse = "")) %>% # Slå saman til lange strengar igjen
-    str_replace_all("[\\._ ]+", "_") %>% # Erstatt etterfølgjande punktum, mellomrom og/eller _ med éin _,
-    str_replace_all("^_|_$", "") %>% # Fjern ev. _ på starten og slutten av strengane
+  varnavn = map_chr(teikn, ~ paste0(., collapse = "")) |>  # Slå saman til lange strengar igjen
+    str_replace_all("[\\._ ]+", "_") |>  # Erstatt etterfølgjande punktum, mellomrom og/eller _ med éin _,
+    str_replace_all("^_|_$", "") |>  # Fjern ev. _ på starten og slutten av strengane
     tolower() # Gjer om til små bokstavar
 
   # Undersøk om to variabelnavn er like
@@ -187,8 +184,8 @@ regn_konfint_bin = function(x, n, alfa = 0.05) {
 #' # Konfidensintervall for drivstofforbruk, gruppert på type girkasse
 #' library(dplyr)
 #'
-#' mtcars %>%
-#'   group_by(am) %>%
+#' mtcars |> 
+#'   group_by(am) |> 
 #'   summarise(regn_konfint_univar(mpg))
 regn_konfint_univar = function(x, bootstrap = FALSE, konf_niva = 0.95, R = 9999) {
   # Fjern eventuelle NA-verdier
@@ -266,8 +263,8 @@ regn_konfint_univar = function(x, bootstrap = FALSE, konf_niva = 0.95, R = 9999)
 #' # Pakke for bruk av tibble-objekt og rør-operatoren
 #' library(dplyr)
 #'
-#' cars_top_mpg = mtcars %>%
-#'   arrange(desc(mpg)) %>%
+#' cars_top_mpg = mtcars |> 
+#'   arrange(desc(mpg)) |> 
 #'   head()
 #' cars_top_mpg_tab = lag_tab_latex(cars_top_mpg,
 #'   label = "mpg_table",
@@ -302,8 +299,7 @@ lag_tab_latex = function(dataframe, label, caption, wide = FALSE, ...) {
       where = "htbp", booktabs = TRUE, numeric.dollar = FALSE, ...
     ))
     if (wide) {
-      tabell = tabell %>%
-        str_replace("^\\\\(begin|end)\\{table\\}", "\\\\\\1\\{widetable\\}") # Superrobust ... ;)
+      tabell = str_replace(tabell, "^\\\\(begin|end)\\{table\\}", "\\\\\\1\\{widetable\\}") # Superrobust ... ;)
     }
     tabell = paste0(tabell, sep = "\n")
   }

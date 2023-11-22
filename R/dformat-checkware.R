@@ -42,8 +42,8 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
-    dato = dir(mappe_dd, pattern = "[0-9]{4}-[0-1]{2}-[0-9]{2}", full.names = FALSE) %>%
-      sort() %>%
+    dato = dir(mappe_dd, pattern = "[0-9]{4}-[0-1]{2}-[0-9]{2}", full.names = FALSE) |> 
+      sort() |> 
       last()
   }
   dato = lubridate::as_date(dato) # I tilfelle det var ein tekstreng
@@ -65,8 +65,8 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
   # read_excel har ingen mulighet for å skille "numeric" i forhold til "integer" i col_types spesifikasjonen.
   # vi endrer desimalar manuelt til å være dette for å kunne komme gjennom kb_er_gyldig.
   # standard kodebok er at første ark inneholder informasjon. Vi har ikke satt noe standard for ark-navn.
-  kb = readxl::read_excel(adresse_kb, col_types = kb_koltyper, sheet = 1) %>%
-    mutate(desimalar = as.integer(desimalar))
+  kb = readxl::read_excel(adresse_kb, col_types = kb_koltyper, sheet = 1)
+  kb = mutate(kb, desimalar = as.integer(desimalar))
 
 
   # Sjekk gyldigheten til kodeboka
@@ -80,15 +80,15 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
 
   # fixme! kb_kanonisk støtter ikke andre kolonner utenom standardkolonnene,
   # derfor left_joiner vi variabel_id_checkware tilbake inn. Fix når kb_til_kanonisk er oppdatert.
-  variabel_id_checkware = kb %>%
-    fill(skjema_id) %>%
-    select(skjema_id, variabel_id, variabel_id_checkware) %>%
+  variabel_id_checkware = kb |>
+    fill(skjema_id) |>
+    select(skjema_id, variabel_id, variabel_id_checkware) |>
     na.omit()
-  kb_kanonisk = kb_kanonisk %>%
-    left_join(variabel_id_checkware,
-      by = c("skjema_id", "variabel_id"),
-      relationship = "many-to-one"
-    )
+  kb_kanonisk = left_join(kb_kanonisk,
+    variabel_id_checkware,
+    by = c("skjema_id", "variabel_id"),
+    relationship = "many-to-one"
+  )
   kb_kanonisk
 }
 # kan teste at funksjonen funker med koden under
@@ -166,8 +166,8 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
-    dato = dir(mappe_dd, pattern = "[0-9]{4}-[0-1]{2}-[0-9]{2}", full.names = FALSE) %>%
-      sort() %>%
+    dato = dir(mappe_dd, pattern = "[0-9]{4}-[0-1]{2}-[0-9]{2}", full.names = FALSE) |> 
+      sort() |> 
       last()
   }
   dato = lubridate::as_date(dato) # I tilfelle det var ein tekstreng
@@ -187,11 +187,9 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
   # Lager objekt med filter på kodebok til å bare innneholde informasjon om aktuelt skjema til datadumpen
   # Alle datadumper kommer med ett skjema + metadata, bortsett fra treatments, som ikke inneholder metadata, bortsett fra r_id.
   if (skjema_id == "treatments") {
-    kb_skjema = kodebok %>%
-      filter(skjema_id == !!skjema_id)
+    kb_skjema = filter(kodebok, skjema_id == !!skjema_id)
   } else {
-    kb_skjema = kodebok %>%
-      filter(skjema_id == "meta" | skjema_id == !!skjema_id)
+    kb_skjema = filter(kodebok, skjema_id == "meta" | skjema_id == !!skjema_id)
   }
   # Me skil berre mellom heiltals- og flyttalsvariablar
   # i vår kodebok ved hjelp av «desimalar»-feltet (begge
@@ -199,12 +197,13 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
   # kunna handtera dette riktig (les: strengt) ved
   # innlesing av data, legg me derfor til ein kunstig
   # «numerisk_heiltal»-variabeltype.
-  kb_skjema = kb_skjema %>%
-    mutate(variabeltype = replace(
+  kb_skjema = mutate(kb_skjema,
+    variabeltype = replace(
       variabeltype,
       (variabeltype == "numerisk") & (desimalar == 0),
       "numerisk_heiltal"
-    ))
+    )
+  )
 
   # Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
   spek_csv_checkware = tribble(
@@ -217,11 +216,11 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
     "numerisk_heiltal", "i"
   )
 
-  kb_skjema = kb_skjema %>%
-    left_join(spek_csv_checkware,
-      by = "variabeltype",
-      relationship = "many-to-one"
-    )
+  kb_skjema = left_join(kb_skjema,
+    spek_csv_checkware,
+    by = "variabeltype",
+    relationship = "many-to-one"
+  )
 
   # de kategoriske variablene som koder med tekst-verdier skal få character
 
@@ -234,22 +233,19 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
   # Funksjon som lager variabel i kodeboka som beskriver om det er heltall eller ikke
   tekst_eller_heiltall = function(kb) {
     if (er_heiltal(kb$verdi)) {
-      kb = kb %>%
-        mutate(verdi_type = "heiltal")
+      kb = mutate(kb, verdi_type = "heiltal")
     } else {
-      kb = kb %>%
-        mutate(verdi_type = "tekst")
+      kb = mutate(kb, verdi_type = "tekst")
     }
     kb
   }
 
   # Lager variabel som beskriver om en kategorisk variabel er heltall eller ikke
-  kb_skjema_nest = kb_skjema %>%
-    group_by(variabel_id) %>%
+  kb_skjema_nest = kb_skjema |> 
+    group_by(variabel_id) |> 
     nest()
-  kb_skjema_nest$data = kb_skjema_nest$data %>%
-    map(tekst_eller_heiltall)
-  kb_skjema = unnest(kb_skjema_nest, cols = c(data)) %>%
+  kb_skjema_nest$data = map(kb_skjema_nest$data, tekst_eller_heiltall)
+  kb_skjema = unnest(kb_skjema_nest, cols = c(data)) |> 
     ungroup()
 
   # vi bruker case_when for å få inn csv_bokstav for variablene
@@ -262,8 +258,10 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
     ))
 
   # henter ut variabelnavn og variabeltype
-  var_info = kb_skjema %>%
-    distinct(variabel_id, variabel_id_checkware, variabeltype, csv_bokstav)
+  var_info = distinct(
+    kb_skjema,
+    variabel_id, variabel_id_checkware, variabeltype, csv_bokstav
+  )
   kol_typar = str_c(var_info$csv_bokstav, collapse = "")
 
   # Les inn datasettet
@@ -279,20 +277,18 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
   ))
 
   # setter på fine variabelnavn
-  kolnamn = var_info$variabel_id_checkware %>%
+  kolnamn = var_info$variabel_id_checkware |> 
     setNames(var_info$variabel_id)
-  d = d %>%
-    rename(!!!kolnamn)
+  d = rename(d, !!!kolnamn)
 
   # siden datetime blir hentet inn som character
   # fikser vi disse til å være datetime her
   # (jf. https://github.com/tidyverse/readr/issues/642 (!fixme til "T" når denne er fiksa))
-  dato_kl_var = kb_skjema %>%
-    filter(variabeltype == "dato_kl") %>%
-    distinct(variabel_id) %>%
+  dato_kl_var = kb_skjema |> 
+    filter(variabeltype == "dato_kl") |> 
+    distinct(variabel_id) |> 
     pull("variabel_id")
-  d = d %>%
-    mutate(across(all_of(dato_kl_var),
+  d = mutate(d, across(all_of(dato_kl_var),
       .fns = \(dato_kl_vektor) readr::parse_datetime(dato_kl_vektor,
         format = "%Y-%m-%d %H:%M:%S"
       )
@@ -300,9 +296,9 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
 
   # I CheckWare vert boolske verdiar koda som "1" for sann og NA for usann.
   # Kodar derfor om til ekte boolske verdiar.
-  boolsk_var = kb_skjema %>%
-    filter(variabeltype == "boolsk") %>%
-    distinct(variabel_id) %>%
+  boolsk_var = kb_skjema |> 
+    filter(variabeltype == "boolsk") |> 
+    distinct(variabel_id) |> 
     pull("variabel_id")
   cw_til_boolsk = function(x) {
     if (skjema_id == "treatments") { # treatments skjema har boolske variabler kodet som true/false,
@@ -313,14 +309,12 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
       !is.na(x)
     }
   }
-  d = d %>%
-    mutate(across(all_of(boolsk_var), cw_til_boolsk))
+  d = mutate(d, across(all_of(boolsk_var), cw_til_boolsk))
 
   # Filtrer vekk rader som ikke har riktig kontekst
   # (som standard blir bare T0, T1 og T2 tatt med)
   if (!is.null(kontekst)) {
-    d = d %>%
-      filter(a_inst_context_label %in% !!kontekst)
+    d = filter(d, a_inst_context_label %in% !!kontekst)
   }
 
   # validerer datadumpen

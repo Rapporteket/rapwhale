@@ -106,8 +106,8 @@ skaar_datasett = function(d, skaaringstabell, variabelnavn = NULL,
   skaaringstabell = ungroup(skaaringstabell) # Gruppering kan føra til feil i utrekningane
   sjekk_skaaringstabell(skaaringstabell)
 
-  d_std_navn = d_std_navn %>%
-    ungroup() %>% # Gruppering kan føra til feil i utrekningane nedanfor
+  d_std_navn = d_std_navn |> 
+    ungroup() |>  # Gruppering kan føra til feil i utrekningane nedanfor
     # (men blir likevel bevart i utdataa,
     # jf. legg_til_eller_erstatt_kolonner()-kallet)
     select(unique(na.omit(skaaringstabell$variabel)))
@@ -171,8 +171,7 @@ sjekk_skaaringstabell = function(skaaringstabell) {
   }
 
   # Antall dubletter for hver kombinasjon av 'delskala', 'variabel' og 'verdi'
-  d_med_ant_dupl = skaaringstabell %>%
-    count(delskala, variabel, verdi, name = "n_rader")
+  d_med_ant_dupl = count(skaaringstabell, delskala, variabel, verdi, name = "n_rader")
   if (any(d_med_ant_dupl$n_rader != 1)) {
     stop("Skåringstabellen kan ikke inneholde dupliserte verdier for en variabel innenfor samme delskala")
   }
@@ -182,8 +181,8 @@ sjekk_skaaringstabell = function(skaaringstabell) {
   skaaringstabell_uten_na = filter(skaaringstabell, !is.na(verdi))
   d_delskala_var = distinct(skaaringstabell_uten_na, delskala, variabel)
   d_var_verdi = distinct(skaaringstabell_uten_na, variabel, verdi)
-  d_komb_mangl = d_delskala_var %>%
-    full_join(d_var_verdi, by = "variabel", relationship = "many-to-many") %>%
+  d_komb_mangl = d_delskala_var |> 
+    full_join(d_var_verdi, by = "variabel", relationship = "many-to-many") |> 
     anti_join(skaaringstabell, by = c("delskala", "variabel", "verdi"))
   if (nrow(d_komb_mangl) > 0) {
     oversikt_komb_mangl =
@@ -350,10 +349,10 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 #' # Berre gyldige verdier
 #' rapwhale:::finn_ugyldige_verdier(d[1:2, ], verditabell)
 finn_ugyldige_verdier = function(d, verditabell) {
-  d %>%
-    rowid_to_column("radnr") %>%
-    pivot_longer(-radnr, names_to = "variabel", values_to = "feilverdi") %>%
-    anti_join(verditabell, by = c("variabel", feilverdi = "verdi")) %>%
+  d |> 
+    rowid_to_column("radnr") |> 
+    pivot_longer(-radnr, names_to = "variabel", values_to = "feilverdi") |> 
+    anti_join(verditabell, by = c("variabel", feilverdi = "verdi")) |> 
     arrange(radnr)
 }
 
@@ -376,13 +375,13 @@ finn_ugyldige_verdier = function(d, verditabell) {
 #'     verdier, returneres tekststrengen `"Alle verdiene er gyldige"`.
 oppsummer_ugyldige_verdier = function(d_ugyldige) {
   if (nrow(d_ugyldige) > 0) {
-    oppsummert = d_ugyldige %>%
-      group_by(variabel) %>%
-      summarise(feil_verdier = paste0(feilverdi, collapse = ", ")) %>%
+    oppsummert = d_ugyldige |> 
+      group_by(variabel) |> 
+      summarise(feil_verdier = paste0(feilverdi, collapse = ", ")) |> 
       summarise(feil_variabler_verdier = paste0(variabel, ": ",
         feil_verdier,
         collapse = "\n"
-      )) %>%
+      )) |> 
       summarise(feiltekst = paste0(
         "Fant ", nrow(d_ugyldige),
         " ugyldige verdier:\n",
@@ -443,8 +442,8 @@ oppsummer_ugyldige_verdier = function(d_ugyldige) {
 skaar_datasett_uten_validering = function(d, skaaringstabell) {
   # Gjer om til éi rad per svar, med ein person-ID
   # som seier kva rad svaret opphavleg kom frå
-  d_svar = d %>%
-    rowid_to_column("person_id") %>%
+  d_svar = d |> 
+    rowid_to_column("person_id") |> 
     pivot_longer(-person_id, names_to = "variabel", values_to = "verdi")
 
   # Legg til rader med NA-verdiar i skåringstabellen, slik at
@@ -454,37 +453,36 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
 
   # For kvart svar, legg til tilhøyrande koeffisientar
   # (kan vera fleire per svar, dersom det finst fleire delskalaar)
-  d_med_koeff = d_svar %>%
-    left_join(skaaringstabell,
-      by = c("variabel", "verdi"),
-      relationship = "many-to-many"
-    )
+  d_med_koeff = left_join(d_svar, skaaringstabell,
+    by = c("variabel", "verdi"),
+    relationship = "many-to-many"
+  )
 
   # Legg til eventuelle konstantledd
-  skaaringstabell_konstantledd = skaaringstabell %>%
-    filter(is.na(variabel)) %>%
+  skaaringstabell_konstantledd = skaaringstabell |> 
+    filter(is.na(variabel)) |> 
     select(delskala, konstantledd = koeffisient)
-  d_med_koeff = d_med_koeff %>%
+  d_med_koeff = d_med_koeff |> 
     left_join(skaaringstabell_konstantledd,
       by = "delskala",
       relationship = "many-to-one"
-    ) %>%
+    ) |> 
     mutate(
       konstantledd = if_else(is.na(konstantledd), 0, konstantledd)
     )
 
   # Rekn ut sumskår for alle delskalaane, per person
-  d_med_skaarar = d_med_koeff %>%
-    group_by(person_id, delskala, konstantledd) %>%
-    summarise(skaar = sum(koeffisient), .groups = "drop") %>%
-    mutate(skaar = skaar + konstantledd) %>%
-    select(-konstantledd) %>%
+  d_med_skaarar = d_med_koeff |> 
+    group_by(person_id, delskala, konstantledd) |> 
+    summarise(skaar = sum(koeffisient), .groups = "drop") |> 
+    mutate(skaar = skaar + konstantledd) |> 
+    select(-konstantledd) |> 
     pivot_wider(names_from = "delskala", values_from = "skaar")
 
   # For sikkerheits skuld, sorter etter opphavleg radnummer,
   # og fjern så radnummeret
-  d_med_skaarar = d_med_skaarar %>%
-    arrange(person_id) %>%
+  d_med_skaarar = d_med_skaarar |> 
+    arrange(person_id) |> 
     select(-person_id)
 
   # Inndata med 0 rader må handterast spesielt
@@ -492,10 +490,10 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
     # Brukar pivot_wider() også her, for å sikra at rekkjefølgja
     # på sumskårkolonnane vert lik som for datasett *med* svar
     # (jf. pivot_wider() si handtering av faktorvariablar)
-    d_med_skaarar = skaaringstabell %>%
-      distinct(delskala, .keep_all = TRUE) %>%
-      select(delskala, koeffisient) %>% # Treng «koeffisient» for å få riktig variabeltype
-      pivot_wider(names_from = "delskala", values_from = koeffisient) %>%
+    d_med_skaarar = skaaringstabell |> 
+      distinct(delskala, .keep_all = TRUE) |> 
+      select(delskala, koeffisient) |>  # Treng «koeffisient» for å få riktig variabeltype
+      pivot_wider(names_from = "delskala", values_from = koeffisient) |> 
       head(0)
   }
 
@@ -540,9 +538,8 @@ legg_til_na_i_skaaringstabell = function(skaaringstabell) {
     }
     df
   }
-  skaaringstabell %>%
-    nest(data = c(verdi, koeffisient)) %>%
-    mutate(data = map(data, legg_til_na_rad)) %>%
+    nest(skaaringstabell, data = c(verdi, koeffisient)) |> 
+    mutate(data = map(data, legg_til_na_rad)) |> 
     unnest(cols = c(data))
 }
 
