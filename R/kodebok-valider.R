@@ -36,46 +36,28 @@ kb_til_kanonisk_form = function(kb) {
   # Det kan vera at nokre ikkje-essensielle kolonnar manglar.
   # Då legg med dei til, med NA-verdiar eller eksempeldata,
   # alt etter kva som trengst.
-  kb = kb %>%
-    leggtil_std(skjema_id, "fiktiv_skjema_id")
-  kb = kb %>%
-    leggtil_std(skjemanamn, paste0("Skjemanamn for ", kb$skjema_id))
-  kb = kb %>%
-    leggtil_std(kategori, NA_character_)
-  kb = kb %>%
-    leggtil_std(innleiing, NA_character_)
-  kb = kb %>%
-    leggtil_std(variabeletikett, NA_character_)
-  kb = kb %>%
-    leggtil_std(forklaring, NA_character_)
-  kb = kb %>%
-    leggtil_std(manglande, NA_character_)
-  kb = kb %>%
-    leggtil_std(eining, NA_character_)
-  kb = kb %>%
-    leggtil_std(unik, "nei")
-  kb = kb %>%
-    leggtil_std(min, NA_real_)
-  kb = kb %>%
-    leggtil_std(maks, NA_real_)
-  kb = kb %>%
-    leggtil_std(min_rimeleg, NA_real_)
-  kb = kb %>%
-    leggtil_std(maks_rimeleg, NA_real_)
-  kb = kb %>%
-    leggtil_std(kommentar_rimeleg, NA_character_)
-  kb = kb %>%
-    leggtil_std(utrekningsformel, NA_character_)
-  kb = kb %>%
-    leggtil_std(logikk, NA_character_)
-  kb = kb %>%
-    leggtil_std(kommentar, NA_character_)
+  kb = leggtil_std(kb, skjema_id, "fiktiv_skjema_id")
+  kb = leggtil_std(kb, skjemanamn, paste0("Skjemanamn for ", kb$skjema_id))
+  kb = leggtil_std(kb, kategori, NA_character_)
+  kb = leggtil_std(kb, innleiing, NA_character_)
+  kb = leggtil_std(kb, variabeletikett, NA_character_)
+  kb = leggtil_std(kb, forklaring, NA_character_)
+  kb = leggtil_std(kb, manglande, NA_character_)
+  kb = leggtil_std(kb, eining, NA_character_)
+  kb = leggtil_std(kb, unik, "nei")
+  kb = leggtil_std(kb, min, NA_real_)
+  kb = leggtil_std(kb, maks, NA_real_)
+  kb = leggtil_std(kb, min_rimeleg, NA_real_)
+  kb = leggtil_std(kb, maks_rimeleg, NA_real_)
+  kb = leggtil_std(kb, kommentar_rimeleg, NA_character_)
+  kb = leggtil_std(kb, utrekningsformel, NA_character_)
+  kb = leggtil_std(kb, logikk, NA_character_)
+  kb = leggtil_std(kb, kommentar, NA_character_)
 
   # Gjer kodeboka om til ikkje-glissen form,
   # dvs. at skjema_id, variabel_id og sånt er gjentatt nedover.
   mogleg_glisne_kol = rlang::quos(skjema_id, variabel_id)
-  kb = kb %>%
-    fill(!!!mogleg_glisne_kol)
+  kb = fill(kb, !!!mogleg_glisne_kol)
 
   # Nokre andre kolonnar må òg gjerast om til ikkje-glissen form,
   # men no berre innanfor variabel-ID. For eksempel skal «forklaring»
@@ -83,22 +65,22 @@ kb_til_kanonisk_form = function(kb) {
   # (noko som kunne skje viss me brukte metoden over, sidan «forklaring»
   # òg skal kunna stå tom).
   mogleg_glisne_kol = rlang::quos(variabeletikett, forklaring, variabeltype, unik, obligatorisk)
-  kb = kb %>%
-    mutate(radnr = 1:n()) %>%
-    group_by(variabel_id) %>% # Endrar rekkjefølgja på radene
-    fill(!!!mogleg_glisne_kol) %>%
-    ungroup() %>%
-    arrange(radnr) %>% # Gjenopprett radrekkefølgja
+  kb = kb  |> 
+    mutate(radnr = 1:n()) |> 
+    group_by(variabel_id) |>  # Endrar rekkjefølgja på radene
+    fill(!!!mogleg_glisne_kol)  |> 
+    ungroup() |> 
+    arrange(radnr)  |>  # Gjenopprett radrekkefølgja
     select(-radnr)
 
   # Tilsvarande men no innanfor skjema_id
   mogleg_glisne_kol = rlang::quos(skjemanamn, kategori)
-  kb = kb %>%
-    mutate(radnr = 1:n()) %>%
-    group_by(skjema_id) %>% # Endrar rekkjefølgja på radene
-    fill(!!!mogleg_glisne_kol) %>%
-    ungroup() %>%
-    arrange(radnr) %>% # Gjenopprett radrekkefølgja
+  kb = kb |> 
+    mutate(radnr = 1:n()) |> 
+    group_by(skjema_id) |>  # Endrar rekkjefølgja på radene
+    fill(!!!mogleg_glisne_kol) |> 
+    ungroup() |> 
+    arrange(radnr) |> # Gjenopprett radrekkefølgja
     select(-radnr)
 
   # Fyll ut implisitte obligatoriskverdiar og unikverdiar
@@ -146,8 +128,7 @@ kb_til_kanonisk_form = function(kb) {
       paste0(ekstravars, collapse = ", ")
     ))
   }
-  kb = kb %>%
-    select(!!std_namn)
+  kb = select(kb, !!std_namn)
 
   # Returner kodeboka på kanonisk form
   kb
@@ -267,12 +248,15 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
     by = "kol_namn",
     relationship = "one-to-one"
   )
-  format_feil = format %>%
-    filter(kol_klasse_std != kol_klasse)
+  format_feil = filter(format, kol_klasse_std != kol_klasse)
+  
   if (nrow(format_feil) > 0) {
     warning(
       "Feil format på kolonnar:\n",
-      format_feil %>% as.data.frame() %>% capture.output() %>% paste0(sep = "\n")
+      format_feil |> 
+        as.data.frame() |>
+        capture.output() |> 
+        paste0(sep = "\n")
     )
     gyldig = FALSE
   }
@@ -284,20 +268,16 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   kb = kb_til_kanonisk_form(kb_glissen)
 
   # lager objekt for numeriske/utrekna variabler
-  kb_num = kb %>%
-    filter(variabeltype == "numerisk" | variabeltype == "utrekna")
+  kb_num = filter(kb, variabeltype == "numerisk" | variabeltype == "utrekna")
 
   # lager objekt for kategoriske variabler
-  kb_kat = kb %>%
-    filter(variabeltype == "kategorisk")
+  kb_kat = filter(kb, variabeltype == "kategorisk")
 
   # lager objekt for boolske variabler
-  kb_bool = kb %>%
-    filter(variabeltype == "boolsk")
+  kb_bool = filter(kb, variabeltype == "boolsk")
 
   # lager objekt for de som har kommentar_rimeleg
-  kb_kom_rimeleg = kb %>%
-    filter(!is.na(kommentar_rimeleg))
+  kb_kom_rimeleg = filter(kb, !is.na(kommentar_rimeleg))
 
   # mange av advarselene starter med samme teksten
   # er nynorsken helt på tryne kan den rettes her
@@ -323,22 +303,18 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   }
   sjekk_dup(kb, skjema_id)
   sjekk_dup(kb, skjemanamn)
-  kb_per_skjema = kb %>%
-    split(.$skjema_id)
-  kb_per_skjema %>%
-    walk(~ sjekk_dup(., variabel_id)) # Skal vera unik, men det held at det berre er innanfor skjema
-
+  
+  kb_per_skjema = split(kb, kb$skjema_id)
+  walk(kb_per_skjema, ~ sjekk_dup(., variabel_id)) # Skal vera unik, men det held at det berre er innanfor skjema
+  
   # Sjekk at valt variabel berre har éin verdi innanfor kvar gruppe
   sjekk_ikkjevar = function(df, gruppe, varid) {
     gruppe_tekst = rlang::quo_name(rlang::enquo(gruppe))
     varid_tekst = rlang::quo_name(rlang::enquo(varid))
     nest_cols = setdiff(names(df), gruppe_tekst)
-    df_grupper = df %>%
-      nest(data = !!nest_cols)
+    df_grupper = nest(df, data = !!nest_cols)
 
-    ikkjeunike = df_grupper$data %>%
-      map_lgl(~ length(unique(.x[[varid_tekst]])) > 1)
-
+    ikkjeunike = map_lgl(df_grupper$data, ~ length(unique(.x[[varid_tekst]])) > 1)
     if (any(ikkjeunike)) {
       warning(
         "Varierande/inkonsistente '", varid_tekst, "'-verdiar for desse '", gruppe_tekst, "'-verdiane:\n",
@@ -357,20 +333,20 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   # då det ikkje er *så* farleg om dei varierer på
   # tvers av skjema.)
   sjekk_ikkjevar(kb, variabel_id, variabeltype)
-  kb_per_skjema %>%
-    walk(~ sjekk_ikkjevar(., variabel_id, variabeletikett))
-  kb_per_skjema %>%
-    walk(~ sjekk_ikkjevar(., variabel_id, forklaring))
+  
+  walk(kb_per_skjema, ~ sjekk_ikkjevar(., variabel_id, variabeletikett))
+  walk(kb_per_skjema, ~ sjekk_ikkjevar(., variabel_id, forklaring))
   sjekk_ikkjevar(kb, variabel_id, unik)
-  kb_per_skjema %>%
-    walk(~ sjekk_ikkjevar(., variabel_id, obligatorisk))
+  
+  walk(kb_per_skjema, ~ sjekk_ikkjevar(., variabel_id, obligatorisk))
   sjekk_ikkjevar(kb, variabel_id, kategori) # Variablar kan ikkje kryssa kategori- eller skjemagrenser
 
   # Sjekk at alle verdiar for kategoriske variablar er unike og ingen er NA
-  kb_kat_nest = kb_kat %>%
+  kb_kat_nest = kb_kat |>
     nest(data = c(-variabel_id, -skjema_id))
-  verdi_ok = kb_kat_nest$data %>%
-    map_lgl(~ (!any(duplicated(.x$verdi) | is.na(.x$verdi))))
+
+  verdi_ok = map_lgl(kb_kat_nest$data, ~ (!any(duplicated(.x$verdi) | is.na(.x$verdi))))
+
   if (any(!verdi_ok)) {
     warning(
       advar_tekst, " dupliserte 'verdi'-ar eller NA som 'verdi':\n",
@@ -380,8 +356,8 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   }
 
   # Sjekk at kategoriske variablar har minst *to* svaralternativ
-  verdi_ok = kb_kat_nest$data %>%
-    map_lgl(~ nrow(.) >= 2)
+  verdi_ok = map_lgl(kb_kat_nest$data, ~ nrow(.) >= 2)
+  
   if (any(!verdi_ok)) {
     warning(
       advar_tekst, " færre enn to svaralternativ:\n",
@@ -395,10 +371,8 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   # sjekk at alle skjema startar med ei kategorioverskrift
   # (me sjekkar tidlegare oppe at desse er unike innanfor variabel_id)
   if (any(!is.na(kb$kategori))) {
-    kb_skjema = kb %>%
-      nest(data = -skjema_id)
-    har_kat = kb_skjema$data %>%
-      map_lgl(~ (!is.na(.x$kategori[1])) & (.x$kategori[1] != ""))
+    kb_skjema = nest(kb, data = -skjema_id)
+    har_kat = map_lgl(kb_skjema$data, ~ (!is.na(.x$kategori[1])) & (.x$kategori[1] != ""))
     if (any(!har_kat)) {
       warning(
         "Nokre skjema manglar kategorioverskrift (i førsterader):\n",
@@ -413,9 +387,9 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   # hentet fra dokumentasjon om standardformen. Kan utvides.
   gyldige_vartyper = c("numerisk", "kategorisk", "boolsk", "dato", "dato_kl", "kl", "utrekna", "tekst", "tekst*", "fritekst")
   if (any(!kb$variabeltype %in% gyldige_vartyper)) {
-    ugyldig_vartyp = kb %>%
-      filter(!variabeltype %in% gyldige_vartyper) %>%
-      pull(variabel_id) %>%
+    ugyldig_vartyp = kb |> 
+      filter(!variabeltype %in% gyldige_vartyper) |> 
+      pull(variabel_id) |> 
       unique()
     warning(
       advar_tekst, " ugyldige variabeltypar:\n",
@@ -426,9 +400,9 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
 
   # Test på eining. Eining kan ikkje vera tom ("") (men kan vera NA)
   if (any(kb$eining %in% "")) {
-    tom_eining = kb %>%
-      filter(eining == "") %>%
-      pull(variabel_id) %>%
+    tom_eining = kb |> 
+      filter(eining == "") |> 
+      pull(variabel_id) |> 
       unique()
     warning(
       advar_tekst, " ugyldig eining, kor ein eller fleire har tomme tekststrengar:\n",
@@ -483,9 +457,9 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
       ikke_ok_num = ikke_num & (!is.na(kb[[kolonnetype]]))
 
       if (any(ikke_ok_num)) {
-        ugyldig_var = kb %>%
-          filter(ikke_ok_num) %>%
-          pull(variabel_id) %>%
+        ugyldig_var = kb |> 
+          filter(ikke_ok_num)|> 
+          pull(variabel_id) |> 
           unique()
         warning(
           lag_tekst(vartype = "numerisk", kolonnetype),
@@ -498,9 +472,9 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
       ikke_ok_kat = ikke_kat & (!is.na(kb[[kolonnetype]]))
 
       if (any(ikke_ok_kat)) {
-        ugyldig_var = kb %>%
-          filter(ikke_ok_kat) %>%
-          pull(variabel_id) %>%
+        ugyldig_var = kb |> 
+          filter(ikke_ok_kat) |> 
+          pull(variabel_id) |> 
           unique()
         warning(
           lag_tekst(vartype = "kategorisk", kolonnetype),
@@ -513,9 +487,9 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
       ikke_ok_mangl = ikke_kat & (!is.na(kb[[kolonnetype]]) & kb[[kolonnetype]] == "ja")
 
       if (any(ikke_ok_mangl)) {
-        ugyldig_var = kb %>%
-          filter(ikke_ok_mangl) %>%
-          pull(variabel_id) %>%
+        ugyldig_var = kb |> 
+          filter(ikke_ok_mangl) |> 
+          pull(variabel_id) |> 
           unique()
         warning(
           lag_tekst(vartype = "kategorisk", kolonnetype),
@@ -551,9 +525,9 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
     # Tester at observasjoner fra objektet over er "False".
     # Gir advarsel hvis testen ikke oppfyller dette.
     if (any(!er_ja_nei)) {
-      ugyldig_ja_nei = kb %>%
-        filter(!er_ja_nei) %>%
-        pull(variabel_id) %>%
+      ugyldig_ja_nei = kb |> 
+        filter(!er_ja_nei) |> 
+        pull(variabel_id) |> 
         unique()
       warning(
         advar_tekst, " har ein verdi for ", kolonnetype, " som ikkje er ja eller nei:\n",
@@ -569,12 +543,11 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   sjekk_ja_nei(kb_kat, "manglande")
 
   # tester om desimalar kun er 0, positive eller missing.
-  kb_num = kb_num %>%
-    mutate(des_ok = (desimalar >= 0) | is.na(desimalar))
+  kb_num = mutate(kb_num, des_ok = (desimalar >= 0) | is.na(desimalar))
   if (!all(kb_num$des_ok)) {
-    ugyldig_des = kb_num %>%
-      filter(!des_ok) %>%
-      pull(variabel_id) %>%
+    ugyldig_des = kb_num |> 
+      filter(!des_ok) |> 
+      pull(variabel_id) |> 
       unique()
     warning(
       advar_tekst, "har ein desimal som ikke er 0 eller positiv:\n",
@@ -593,9 +566,9 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   sjekk_op = function(kb, op, x, y) {
     op_ok = op(kb[[x]], kb[[y]]) | is.na(kb[[x]]) | is.na(kb[[y]])
     if (!all(op_ok)) {
-      ugyldig_op = kb %>%
-        filter(!op_ok) %>%
-        pull(variabel_id) %>%
+      ugyldig_op = kb |> 
+        filter(!op_ok) |> 
+        pull(variabel_id) |> 
         unique()
       warning(
         advar_tekst, " ", x, "-verdi som er større enn ", y, "-verdi:\n",
@@ -616,9 +589,9 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
 
   # gir advarsel hvis testen ikke er oppfylt
   if (!all(ok_kom_rimeleg)) {
-    ugyldig_kom_rimeleg = kb_kom_rimeleg %>%
-      filter(!ok_kom_rimeleg) %>%
-      pull(variabel_id) %>%
+    ugyldig_kom_rimeleg = kb_kom_rimeleg |> 
+      filter(!ok_kom_rimeleg) |> 
+      pull(variabel_id) |> 
       unique()
     warning(
       advar_tekst, " verdi for kommentar_rimeleg, men ingen verdi for min- eller maks_rimeleg:\n",
@@ -632,9 +605,9 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
 
   # gir advarsel hvis testen ikke er oppfylt
   if (!all(ok_boolsk)) {
-    ugyldig_bool = kb_bool %>%
-      filter(!ok_boolsk) %>%
-      pull(variabel_id) %>%
+    ugyldig_bool = kb_bool |> 
+      filter(!ok_boolsk) |> 
+      pull(variabel_id) |> 
       unique()
     warning(
       advar_tekst, " obligatorisk = nei eller unik = ja selv om variabelen er boolsk:\n",

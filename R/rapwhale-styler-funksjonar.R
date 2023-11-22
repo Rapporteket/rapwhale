@@ -30,14 +30,14 @@ wrap_if_else_while_for_fun_in_curly_rapwhale = function(pd, indent_by = 2) {
   }
 
   if (length(key_token) > 0) {
-    pd = pd %>%
+    pd = pd |>
       wrap_curly_rapwhale(indent_by,
         space_after = ifelse(styler:::contains_else_expr(pd), 1, 0),
         key_token = key_token
       )
   }
   if (styler::is_conditional_expr(pd)) {
-    pd = pd %>%
+    pd = pd |>
       styler:::wrap_else_multiline_curly(indent_by, space_after = 0)
   }
   pd

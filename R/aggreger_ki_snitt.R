@@ -73,8 +73,8 @@
 #' aggreger_ki_snitt(d, alfa = 0.1)
 #'
 #' # Gruppert på sykehusnivå
-#' d %>%
-#'   group_by(sykehus) %>%
+#' d |>
+#'   group_by(sykehus) |>
 #'   aggreger_ki_snitt()
 #'
 #' # Merk at sykehusene ovenfor blir vist i alfabetisk rekkefølge,
@@ -83,8 +83,8 @@
 #' d = mutate(d, sykehus = factor(sykehus,
 #'   levels = c("Haukeland", "Førde", "Voss")
 #' ))
-#' d %>%
-#'   group_by(sykehus) %>%
+#' d |>
+#'   group_by(sykehus) |>
 #'   aggreger_ki_snitt()
 aggreger_ki_snitt = function(d_ki_ind, alfa = 0.05) {
   if (!(is.data.frame(d_ki_ind) && all(hasName(d_ki_ind, c("ki_x", "ki_aktuell"))))) {
