@@ -11,7 +11,7 @@
 #' `r lifecycle::badge("experimental")`
 #'
 #' Tar inn ein vektor med tal og gjev ut ein vektor
-#' med LaTeX-kommandoar for finformatert vising av tala,
+#' med LaTeX-kode for finformatert vising av tala,
 #' for eksempel med tusenskiljeteikn
 #' og med avrunding til eit fast tal desimalar.
 #'
@@ -25,8 +25,9 @@
 #' komma («3,14»),
 #' ikkje punktum («3.14»),
 #' negative tal vert viste med ekte minusteikn («−42»),
-#' ikkje bindestrek («-42»)
-#' og `NA`-verdiar vert viste som ein kort tankestrek («–»).
+#' ikkje bindestrek («-42»),
+#' `NA`-verdiar vert viste som ein kort tankestrek («–»)
+#' og `NULL`-verdiar returnerar ein tom tekstvektor.
 #'
 #' Tala vert avrunda til `desimalar` desimalar
 #' med den vanlege avrundingsregelen i R.
@@ -51,6 +52,9 @@
 #' @note Viss `desimalar` er oppgjeve,
 #'   vert det alltid vist *nøyaktig* så mange desimalar,
 #'   sjølv om dei siste vert 0.
+#'   
+#' @return
+#' Vektor med LaTeX-kode.
 #'
 #' @export
 #' @examples
