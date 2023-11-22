@@ -26,6 +26,18 @@ test_that("num() gir ut riktig verdi med «desimalar»-argumentet", {
     num(c(12.34, 3.1415), desimalar = 3),
     c("{\\numprint{12.340}}", "{\\numprint{3.142}}")
   )
+  expect_identical(
+    num(c(12.34, 3.1415), desimalar = NULL),
+    c("{\\numprint{12.34}}", "{\\numprint{3.1415}}")
+  )
+  expect_identical(
+    num(c(12, 3.14), desimalar = NULL),
+    c("{\\numprint{12}}", "{\\numprint{3.14}}")
+  )
+  expect_identical(
+    num(12.00, desimalar = NULL),
+    c("{\\numprint{12}}")
+  )
 })
 
 test_that("num() gir error om «x»-argument er i tekstform", {
