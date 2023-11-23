@@ -177,7 +177,7 @@ akse_tall_format = function(antall_desimaler = 2, decimal.mark = ",", big.mark =
 #' `r lifecycle::badge("experimental")`
 #'
 #' Tar inn en vektor med tall som konverteres til prosent
-#' og gir ut en vektor med LaTeX-kommandoer for finformatert
+#' og gir ut en vektor med LaTeX-kode for finformatert
 #' visning av tallene med prosenttegn.
 #' Tallene blir avrundet til et bestemt antall desimaler.
 #'
@@ -185,31 +185,16 @@ akse_tall_format = function(antall_desimaler = 2, decimal.mark = ",", big.mark =
 #' @param desimalar Antall desimaler som skal vises etter kommaet.
 #'
 #' @details
-#' Tallene blir konvertert til prosent og blir vist med prosenttegn
-#' («0.1234» blir «12.34 %»);
-#' desimaltegnet blir (dersom språket er norsk)
-#' komma («3,14»),
-#' istedenfor punktum («3.14»);
-#' negative tall blir vist med ekte minustegn («−42»),
-#' istedenfor bindestrek («-42»);
-#' og `NA`-verdier blir vist som en kort tankestrek («–»).
+#' Tallene blir konvertert til prosent og blir vist med LaTeX-kode
+#' for formatering til prosenttegn
+#' («0.1234» blir «12.34 %»).
+#' 
+#' Funksjonen [num()] blir brukt til finformatering av tallene.
+#' Funksjonaliteten til `num` er gitt i [beskrivelsen av funksjonen][num()].
 #'
-#' Tallene blir avrundet til `desimalar` desimaler
-#' med den vanlige avrundingsregelen i R.
-#' hvis `desimalar` er NULL,
-#' blir det vist så mange desimaler som
-#' [format()]-funksjonen viser som standard.
-#' (Men,
-#' i motsetning til den funksjonen,
-#' blir tallene aldri viste i eksponentiell notasjon.)
-#'
-#' Det blir brukt en funksjon gjort tilgjengeleg av
-#' `kvalreg-rapport`-klassen
-#' for formatering av tallene.
-#' Nøyaktig hvilken funksjon som blir brukt,
-#' kan endres i fremtiden,
-#' men funksjonaliteten vil forbli lik.
-#'
+#' @return
+#' Vektor med LaTeX-kode
+#' 
 #' @export
 #' @examples
 #' menn = 5
