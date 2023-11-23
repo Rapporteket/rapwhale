@@ -60,7 +60,7 @@ test_that("Forventet utdata når inndata er gruppert og ugruppert", {
   d_gruppert = tibble(
     sykehus = factor(c("B", "B", "B", "A", "A", "A", "A", "B", "A")),
     ki_x = 1:9, ki_aktuell = c(rep(TRUE, 7), FALSE, FALSE)
-  ) |> 
+  ) |>
     group_by(sykehus)
   d_gruppert_ut = tibble(
     sykehus = factor(c("A", "B")),
@@ -106,7 +106,7 @@ test_that("Gir ut NA-konfidensgrenser hvis det kun er ett individ i en gruppe", 
     sykehus = factor(rep(c("A", "B"), each = 3)),
     ki_x = c(5, NA_real_, 11, 1, 2, 3),
     ki_aktuell = c(TRUE, FALSE, FALSE, TRUE, TRUE, TRUE)
-  ) |> 
+  ) |>
     group_by(sykehus)
   d_gruppe_alene_ut = tibble(
     sykehus = factor(c("A", "B")),
@@ -120,7 +120,7 @@ test_that("Gir NA-konfidensgrenser/-estimat hvis en gruppe bare har FALSE «ki_a
   d_gruppe_tom = tibble(
     sykehus = factor(rep(c("A", "B"), each = 3)),
     ki_x = 1:6, ki_aktuell = rep(c(TRUE, FALSE), each = 3)
-  ) |> 
+  ) |>
     group_by(sykehus)
   d_gruppe_tom_ut = tibble(
     sykehus = factor(c("A", "B")),
@@ -135,7 +135,7 @@ test_that("Gir NA-konfidensgrenser hvis standardavvik er 0 i en gruppe", {
     sykehus = factor(rep(c("A", "B"), each = 3)),
     ki_x = c(rep(3, 3), 4, 5, 6),
     ki_aktuell = rep(TRUE, 6)
-  ) |> 
+  ) |>
     group_by(sykehus)
   d_sd_lik_null_ut = tibble(
     sykehus = factor(c("A", "B")),
