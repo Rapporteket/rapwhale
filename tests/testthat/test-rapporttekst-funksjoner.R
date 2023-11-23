@@ -41,10 +41,12 @@ test_that("num() gir ut riktig verdi med «desimalar»-argumentet", {
 })
 
 test_that("num() gir error om «x»-argument er i tekstform", {
-  expect_error(num("12"), 
+  expect_error(
+    num("12"),
     "Assertion on 'x' failed: Must be of type 'numeric', not 'character'."
   )
-  expect_error(num(c(12, "3.14")), 
+  expect_error(
+    num(c(12, "3.14")),
     "Assertion on 'x' failed: Must be of type 'numeric', not 'character'."
   )
 })
@@ -169,5 +171,16 @@ test_that("prosent() gir ut riktig verdi med «desimalar»-argumentet", {
   expect_identical(
     prosent(c(0.1234, 0.31), desimalar = 3),
     c("{\\numprint{12.340}}\\prosent", "{\\numprint{31.000}}\\prosent")
+  )
+})
+
+test_that("prosent() gir error om «x»-argument er i tekstform", {
+  expect_error(
+    prosent("0.12"),
+    "Assertion on 'x' failed: Must be of type 'numeric', not 'character'."
+  )
+  expect_error(
+    prosent(c(0.12, "0.031")),
+    "Assertion on 'x' failed: Must be of type 'numeric', not 'character'."
   )
 })
