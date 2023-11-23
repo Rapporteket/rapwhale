@@ -113,10 +113,10 @@ aggreger_ki_snitt = function(d_ki_ind, alfa = 0.05) {
 
   d_ki_ind %>%
     summarise(
-      est = mean(ki_x[ki_aktuell], na.rm = TRUE) %>%
+      est = mean(ki_x[ki_aktuell]) |> 
         replace_na(NA), # Gjør NaN om til NA
       konfint = list(konfint(ki_x[ki_aktuell])),
-      n_aktuell = sum(ki_aktuell, na.rm = TRUE),
+      n_aktuell = sum(ki_aktuell),
       .groups = "keep"
     ) %>%
     mutate(
