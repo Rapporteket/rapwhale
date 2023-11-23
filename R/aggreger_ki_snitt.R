@@ -108,18 +108,15 @@ aggreger_ki_snitt = function(d_ki_ind, alfa = 0.05) {
     otherwise = c(NA_real_, NA_real_)
   )
 
-  d_ki_ind %>%
+  d_ki_ind |>
     summarise(
-      est = mean(ki_x[ki_aktuell]) |> 
+      est = mean(ki_x[ki_aktuell]) |>
         replace_na(NA), # Gjør NaN om til NA
       konfint = list(konfint(ki_x[ki_aktuell])),
-      n_aktuell = sum(ki_aktuell),
-      .groups = "keep"
-    ) %>%
-    mutate(
       konfint_nedre = map_dbl(konfint, pluck, 1),
-      konfint_ovre = map_dbl(konfint, pluck, 2)
-    ) %>%
-    select(group_cols(d_ki_ind), est, konfint_nedre, konfint_ovre, n_aktuell) %>%
-    ungroup()
+      konfint_ovre = map_dbl(konfint, pluck, 2),
+      n_aktuell = sum(ki_aktuell),
+      .groups = "drop"
+    ) |>
+    select(-konfint)
 }
