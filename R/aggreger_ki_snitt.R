@@ -89,18 +89,17 @@ aggreger_ki_snitt = function(d_ki_ind, alfa = 0.05) {
 
   # Teste inndata
   if (!(is.data.frame(d_ki_ind) && all(hasName(d_ki_ind, c("ki_x", "ki_aktuell"))))) {
-    stop("Inndata må være tibble/data.frame med kolonnene 'ki_x' og 'ki_aktuell'")
+    stop("Inndata må være tibble/data.frame med kolonnene «ki_x» og «ki_aktuell»")
   }
   if (any(is.na(d_ki_ind$ki_aktuell)) || (!(is.logical(d_ki_ind$ki_aktuell)))) {
-    stop("'ki_aktuell' må være TRUE eller FALSE")
+    stop("«ki_aktuell» må være TRUE eller FALSE")
   }
   if (!(is.numeric(d_ki_ind$ki_x))) {
-    stop("'ki_x' må være numerisk")
+    stop("«ki_x» må være numerisk")
   }
   if (any(d_ki_ind$ki_aktuell & is.na(d_ki_ind$ki_x))) {
-    stop("'ki_x' må være en numerisk verdi hvis 'ki_aktuell' er TRUE")
+    stop("«ki_x» må være en numerisk verdi hvis «ki_aktuell» er TRUE")
   }
-
   if (!is.numeric(alfa) | alfa <= 0 | alfa >= 1) {
     stop("«alfa» må være et tall mellom 0 og 1")
   }

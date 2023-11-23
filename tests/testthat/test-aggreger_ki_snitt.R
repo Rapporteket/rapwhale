@@ -8,7 +8,7 @@ test_that("Feilmelding hvis ikke tibble/data.frame med nødvendige kolonner", {
   d_uten_begge = tibble(foo = 1:3)
   liste = list(ki_x = c(FALSE, TRUE, TRUE), ki_aktuell = c(TRUE, TRUE, TRUE))
 
-  feilmelding_kol = "Inndata må være tibble/data.frame med kolonnene 'ki_x' og 'ki_aktuell'"
+  feilmelding_kol = "Inndata må være tibble/data.frame med kolonnene «ki_x» og «ki_aktuell»"
   expect_error(aggreger_ki_snitt(liste), feilmelding_kol)
   expect_error(aggreger_ki_snitt(d_uten_aktuell), feilmelding_kol)
   expect_error(aggreger_ki_snitt(d_uten_x), feilmelding_kol)
@@ -22,7 +22,7 @@ test_that("Feilmelding hvis data av feil type", {
   d_feil_aktuell_num = tibble(ki_x = c(13, 14, 16), ki_aktuell = c(TRUE, TRUE, 2))
   d_feil_aktuell_na = tibble(ki_x = 1:6, ki_aktuell = c(TRUE, TRUE, FALSE, FALSE, NA, TRUE))
 
-  feilmelding_aktuell = "'ki_aktuell' må være TRUE eller FALSE"
+  feilmelding_aktuell = "«ki_aktuell» må være TRUE eller FALSE"
   expect_error(aggreger_ki_snitt(d_feil_aktuell_tekst), feilmelding_aktuell)
   expect_error(aggreger_ki_snitt(d_feil_aktuell_num), feilmelding_aktuell)
   expect_error(aggreger_ki_snitt(d_feil_aktuell_fak), feilmelding_aktuell)
@@ -32,19 +32,19 @@ test_that("Feilmelding hvis data av feil type", {
   d_feil_x_fak = tibble(ki_x = factor(c("5", "5", "5")), ki_aktuell = c(FALSE, TRUE, TRUE))
   d_feil_x_lgl = tibble(ki_x = c(FALSE, TRUE, TRUE), ki_aktuell = c(TRUE, TRUE, TRUE))
 
-  feilmelding_x = "'ki_x' må være numerisk"
+  feilmelding_x = "«ki_x» må være numerisk"
   expect_error(aggreger_ki_snitt(d_feil_x_tekst), feilmelding_x)
   expect_error(aggreger_ki_snitt(d_feil_x_fak), feilmelding_x)
   expect_error(aggreger_ki_snitt(d_feil_x_lgl), feilmelding_x)
 })
 
-test_that("Feilmelding hvis 'ki_x' er missing når 'ki_aktuell' er TRUE", {
+test_that("Feilmelding hvis «ki_x» er missing når «ki_aktuell» er TRUE", {
   d_x_na = tibble(ki_x = c(15, 12, NA_real_), ki_aktuell = c(TRUE, TRUE, TRUE))
-  feilmelding_x_na = "'ki_x' må være en numerisk verdi hvis 'ki_aktuell' er TRUE"
+  feilmelding_x_na = "«ki_x» må være en numerisk verdi hvis «ki_aktuell» er TRUE"
   expect_error(aggreger_ki_snitt(d_x_na), feilmelding_x_na)
 })
 
-test_that("Feilmelding hvis 'alfa' ikke er et tall mellom 0 og 1", {
+test_that("Feilmelding hvis «alfa» ikke er et tall mellom 0 og 1", {
   d_test = tibble(
     ki_x = c(15, 12, 12),
     ki_aktuell = c(TRUE, TRUE, TRUE)
