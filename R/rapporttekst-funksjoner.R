@@ -205,8 +205,8 @@ akse_tall_format = function(antall_desimaler = 2, decimal.mark = ",", big.mark =
 #' paste0("Andel menn er ", prosent(andel_menn), ".")
 #' paste0("Andel menn med 2 desimaler er ", prosent(andel_menn, desimalar = 2), ".")
 prosent = function(x, desimalar = 0) {
-  prosent_tekst = x |>
-    map_chr(\(x) num(100 * x, desimalar) |>
-      str_c("\\prosent"))
+  assert_numeric(x)
+  prosent_tekst = num(100 * x, desimalar) |>
+    str_c("\\prosent")
   if_else(is.na(x), "\\textendash{}", prosent_tekst)
 }
