@@ -93,7 +93,7 @@ test_that("Forventet utdata når alfa endres fra standard", {
   expect_equal(aggreger_ki_snitt(d_test, alfa = 0.1), d_test_ut)
 })
 
-test_that("Funksjonen gir alltid ut ugrupperte data", {
+test_that("Gir alltid ut ugrupperte data", {
   d_test = tibble(
     sjukehus = factor(c("A", "B", "B")),
     post = factor(c("1", "1", "2")),
@@ -104,7 +104,7 @@ test_that("Funksjonen gir alltid ut ugrupperte data", {
   expect_length(group_vars(aggreger_ki_snitt(group_by(d_test, sjukehus, post))), 0)
 })
 
-test_that("Tilfeller hvor det kun er ett individ i en gruppe", {
+test_that("Gir ut NA-konfidensgrenser hvis det kun er ett individ i en gruppe", {
   d_gruppe_alene = tibble(
     sykehus = factor(rep(c("A", "B"), each = 3)),
     ki_x = c(5, NA_real_, 11, 1, 2, 3),
@@ -119,7 +119,7 @@ test_that("Tilfeller hvor det kun er ett individ i en gruppe", {
   expect_equal(aggreger_ki_snitt(d_gruppe_alene), d_gruppe_alene_ut)
 })
 
-test_that("Tilfeller hvor en gruppe bare har 'ki_aktuell' som er FALSE", {
+test_that("Gir NA-konfidensgrenser/-estimat hvis en gruppe bare har FALSE «ki_aktuell»", {
   d_gruppe_tom = tibble(
     sykehus = factor(rep(c("A", "B"), each = 3)),
     ki_x = 1:6, ki_aktuell = rep(c(TRUE, FALSE), each = 3)
@@ -133,7 +133,7 @@ test_that("Tilfeller hvor en gruppe bare har 'ki_aktuell' som er FALSE", {
   expect_equal(aggreger_ki_snitt(d_gruppe_tom), d_gruppe_tom_ut)
 })
 
-test_that("Tilfeller hvor standardavvik er 0", {
+test_that("Gir NA-konfidensgrenser hvis standardavvik er 0 i en gruppe", {
   d_sd_lik_null = tibble(
     sykehus = factor(rep(c("A", "B"), each = 3)),
     ki_x = c(rep(3, 3), 4, 5, 6),
