@@ -64,7 +64,7 @@
 #' paste0("Nulldesimalar vert òg viste: ", num(12, desimalar = 2))
 num = function(x, desimalar = NULL) {
   checkmate::assert_numeric(x)
-  if (is_empty(x)) {
+  if (rlang::is_empty(x)) {
     x_form = as.character(x)
   } else {
     if (!is.null(desimalar)) {
