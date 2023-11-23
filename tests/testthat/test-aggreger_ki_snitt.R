@@ -18,8 +18,8 @@ test_that("Feilmelding hvis ikke tibble/data.frame med nødvendige kolonner", {
 # test for feil variabeltyper
 test_that("Feilmelding hvis data av feil type", {
   d_feil_aktuell_tekst = tibble(ki_x = c(15, 12.2, 12.5), ki_aktuell = c("0", "1", "1"))
-  d_feil_aktuell_fak = tibble(ki_x = c(15, 12.2, 12.2), ki_aktuell = c(factor(c("5", "5", "5"))))
-  d_feil_aktuell_num = tibble(ki_x = c(13, 14, 16), ki_aktuell = c(TRUE, TRUE, 2))
+  d_feil_aktuell_fak = tibble(ki_x = c(15, 12.2, 12.2), ki_aktuell = factor(c("5", "5", "5")))
+  d_feil_aktuell_num = tibble(ki_x = c(13, 14, 16), ki_aktuell = c(1, 1, 2))
   d_feil_aktuell_na = tibble(ki_x = 1:6, ki_aktuell = c(TRUE, TRUE, FALSE, FALSE, NA, TRUE))
 
   feilmelding_aktuell = "«ki_aktuell» må være TRUE eller FALSE"
@@ -122,7 +122,7 @@ test_that("Tilfeller hvor det kun er ett individ i en gruppe", {
 test_that("Tilfeller hvor en gruppe bare har 'ki_aktuell' som er FALSE", {
   d_gruppe_tom = tibble(
     sykehus = factor(rep(c("A", "B"), each = 3)),
-    ki_x = c(1:6), ki_aktuell = c(rep(c(TRUE, FALSE), each = 3))
+    ki_x = 1:6, ki_aktuell = rep(c(TRUE, FALSE), each = 3)
   ) |> 
     group_by(sykehus)
   d_gruppe_tom_ut = tibble(
