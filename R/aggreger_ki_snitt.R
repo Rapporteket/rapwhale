@@ -87,8 +87,6 @@
 #'   group_by(sykehus) %>%
 #'   aggreger_ki_snitt()
 aggreger_ki_snitt = function(d_ki_ind, alfa = 0.05) {
-
-  # Teste inndata
   if (!(is.data.frame(d_ki_ind) && all(hasName(d_ki_ind, c("ki_x", "ki_aktuell"))))) {
     stop("Inndata må være tibble/data.frame med kolonnene «ki_x» og «ki_aktuell»")
   }
