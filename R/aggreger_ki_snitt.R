@@ -45,8 +45,9 @@
 #' @return
 #' Ugruppert tibble eller `data.frame` (avhengig av inndataene) med følgende
 #' kolonner:
-#' \item{est}{Kvalitetsindikatoren, dvs. estimert gjennomsnitt
-#' (sum(`ki_x`)/sum(`ki_aktuell`)).}
+#' \item{est}{Kvalitetsindikatoren, dvs. gjennomsnittet
+#' av `ki_x` for radene som har sanne `ki_aktuell`-verdier
+#' (eventuelt per gruppe).}
 #' \item{konfint_nedre}{Nedre konfidensgrense for `est`.}
 #' \item{konfint_ovre}{Øvre konfidensgrense for `est`.}
 #' \item{n_aktuell}{Antall observasjoner som er inkludert i
