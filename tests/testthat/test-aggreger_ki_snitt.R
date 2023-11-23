@@ -58,8 +58,8 @@ test_that("Feilmelding hvis «alfa» ikke er et tall mellom 0 og 1", {
 
 test_that("Forventet utdata når inndata er gruppert og ugruppert", {
   d_gruppert = tibble(
-    sykehus = factor(c("B", "B", "B", "A", "A", "A", "A")),
-    ki_x = c(seq(1, 7, 1)), ki_aktuell = c(rep(TRUE, 7))
+    sykehus = factor(c("B", "B", "B", "A", "A", "A", "A", "B", "A")),
+    ki_x = 1:9, ki_aktuell = c(rep(TRUE, 7), FALSE, FALSE)
   ) |> 
     group_by(sykehus)
   d_gruppert_ut = tibble(
@@ -69,10 +69,7 @@ test_that("Forventet utdata når inndata er gruppert og ugruppert", {
   )
   expect_equal(aggreger_ki_snitt(d_gruppert), d_gruppert_ut)
 
-  d_ugruppert = tibble(
-    sykehus = factor(c("B", "B", "B", "A", "A", "A", "A")),
-    ki_x = 1:7, ki_aktuell = rep(TRUE, 7)
-  )
+  d_ugruppert = ungroup(d_gruppert)
   d_ugruppert_ut = tibble(
     est = 4, konfint_nedre = 2.0021048397085996,
     konfint_ovre = 5.9978951602913995, n_aktuell = 7L
@@ -149,18 +146,4 @@ test_that("Gir NA-konfidensgrenser hvis standardavvik er 0 i en gruppe", {
   )
 
   expect_equal(aggreger_ki_snitt(d_sd_lik_null), d_sd_lik_null_ut)
-})
-
-test_that("'ki_aktuell' inkluderes i 'n_aktuell' kun når den er TRUE", {
-  d_ki_akt_variert = tibble(
-    ki_x = 1:6,
-    ki_aktuell = c(TRUE, FALSE, TRUE, TRUE, TRUE, FALSE)
-  )
-  d_ki_akt_variert_ut = tibble(
-    est = 3.25,
-    konfint_nedre = 0.53246911620398474,
-    konfint_ovre = 5.96753088379601504,
-    n_aktuell = 4L
-  )
-  expect_equal(aggreger_ki_snitt(d_ki_akt_variert), d_ki_akt_variert_ut)
 })
