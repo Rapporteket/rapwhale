@@ -51,7 +51,7 @@
 #' \item{konfint_nedre}{Nedre konfidensgrense for `est`.}
 #' \item{konfint_ovre}{Øvre konfidensgrense for `est`.}
 #' \item{n_aktuell}{Antall observasjoner som er inkludert i
-#' beregningen av `est`(antall sanne `ki_aktuell`).}
+#' beregningen av `est` (antall sanne `ki_aktuell`).}
 #' I tillegg vil det være kolonner for alle grupperingsvariablene.
 #' @export
 #' @examples
