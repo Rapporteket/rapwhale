@@ -63,7 +63,7 @@
 #' paste0("Pi avrunda til fire desimalar er ", num(pi, desimalar = 4), ".")
 #' paste0("Nulldesimalar vert òg viste: ", num(12, desimalar = 2))
 num = function(x, desimalar = NULL) {
-  assert_numeric(x)
+  checkmate::assert_numeric(x)
   if (is_empty(x)) {
     x_form = as.character(x)
   } else {
@@ -205,7 +205,7 @@ akse_tall_format = function(antall_desimaler = 2, decimal.mark = ",", big.mark =
 #' paste0("Andel menn er ", prosent(andel_menn), ".")
 #' paste0("Andel menn med 2 desimaler er ", prosent(andel_menn, desimalar = 2), ".")
 prosent = function(x, desimalar = 0) {
-  assert_numeric(x)
+  checkmate::assert_numeric(x)
   prosent_tekst = num(100 * x, desimalar) |>
     str_c("\\prosent")
   if_else(is.na(x), "\\textendash{}", prosent_tekst)
