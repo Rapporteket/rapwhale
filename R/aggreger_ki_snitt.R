@@ -99,7 +99,7 @@ aggreger_ki_snitt = function(d_ki_ind, alfa = 0.05) {
   if (any(d_ki_ind$ki_aktuell & is.na(d_ki_ind$ki_x))) {
     stop("«ki_x» må være en numerisk verdi hvis «ki_aktuell» er TRUE")
   }
-  if (!is.numeric(alfa) | alfa <= 0 | alfa >= 1) {
+  if (!is.numeric(alfa) || alfa <= 0 || alfa >= 1) {
     stop("«alfa» må være et tall mellom 0 og 1")
   }
 
