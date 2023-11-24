@@ -27,7 +27,7 @@
 #' negative tal vert viste med ekte minusteikn («−42»),
 #' ikkje bindestrek («-42»),
 #' `NA`-verdiar vert viste som ein kort tankestrek («–»)
-#' og `NULL`-verdiar returnerar ein tom tekstvektor.
+#' og `NULL`-verdiar returnerer ein tom tekstvektor.
 #'
 #' Tala vert avrunda til `desimalar` desimalar
 #' med den vanlege avrundingsregelen i R.
@@ -52,7 +52,7 @@
 #' @note Viss `desimalar` er oppgjeve,
 #'   vert det alltid vist *nøyaktig* så mange desimalar,
 #'   sjølv om dei siste vert 0.
-#'   
+#'
 #' @return
 #' Vektor med LaTeX-kode.
 #'
@@ -188,13 +188,13 @@ akse_tall_format = function(antall_desimaler = 2, decimal.mark = ",", big.mark =
 #' Tallene blir konvertert til prosent og blir vist med LaTeX-kode
 #' for formatering til prosenttegn
 #' («0.1234» blir «12.34 %»).
-#' 
+#'
 #' Funksjonen [num()] blir brukt til finformatering av tallene.
 #' Funksjonaliteten til `num` er gitt i [beskrivelsen av funksjonen][num()].
 #'
 #' @return
-#' Vektor med LaTeX-kode
-#' 
+#' Vektor med LaTeX-kode.
+#'
 #' @export
 #' @examples
 #' menn = 5
