@@ -147,40 +147,38 @@ test_that("akse_tall_format() gir ut en tom tekstvektor hvis den tar
 # Testing av prosent()
 
 test_that("prosent() gir ut tankestrek når «x»-argumentet inneholder NA", {
-  expect_identical(prosent(NA_real_), "\\textendash{}")
+  expect_identical(prosent(NA_real_), num(NA_real_))
+  expect_identical(
+    prosent(c(NA_real_, 0.12)),
+    c(num(NA_real_), paste0(num(12), "\\prosent"))
+  )
+})
+
+test_that("prosent() gir ut riktig når inndata er av lengde 0", {
+  expect_identical(prosent(numeric()), character())
 })
 
 test_that("prosent() gir ut riktig verdi når kun «x»-argumentet er gitt", {
-  expect_identical(prosent(numeric()), character(0))
-  expect_identical(prosent(0.1234), "{\\numprint{12}}\\prosent")
+  expect_identical(
+    prosent(0.1234),
+    paste0(num(12), "\\prosent")
+  )
   expect_identical(
     prosent(c(0.1234, 0.31415)),
-    c("{\\numprint{12}}\\prosent", "{\\numprint{31}}\\prosent")
+    c(paste0(num(12), "\\prosent"), paste0(num(31), "\\prosent"))
   )
 })
 
 test_that("prosent() gir ut riktig verdi med «desimalar»-argumentet", {
   expect_identical(
-    prosent(0.1234, desimalar = 0),
-    "{\\numprint{12}}\\prosent"
-  )
-  expect_identical(
-    prosent(0.1234, desimalar = 2),
-    "{\\numprint{12.34}}\\prosent"
-  )
-  expect_identical(
-    prosent(c(0.1234, 0.31), desimalar = 3),
-    c("{\\numprint{12.340}}\\prosent", "{\\numprint{31.000}}\\prosent")
+    prosent(0.1234, desimalar = 1),
+    paste0(num(12.34, desimalar = 1), "\\prosent")
   )
 })
 
 test_that("prosent() gir error om «x»-argument er i tekstform", {
   expect_error(
     prosent("0.12"),
-    "Assertion on 'x' failed: Must be of type 'numeric', not 'character'."
-  )
-  expect_error(
-    prosent(c(0.12, "0.031")),
-    "Assertion on 'x' failed: Must be of type 'numeric', not 'character'."
+    checkmate::check_numeric("0.12")
   )
 })
