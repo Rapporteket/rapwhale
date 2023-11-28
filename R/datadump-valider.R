@@ -58,9 +58,9 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   kb_filter = function(kodebok, kolonne) {
     # henter ut delen av kodeboka som
     # har en verdi i en aktuelle kolonnen
-    kb_utsnitt = kodebok |> 
-      filter(!is.na(!!as.symbol(kolonne))) |> 
-      select(variabel_id, all_of(kolonne)) |> 
+    kb_utsnitt = kodebok |>
+      filter(!is.na(!!as.symbol(kolonne))) |>
+      select(variabel_id, all_of(kolonne)) |>
       rename(varnamn = "variabel_id")
     # rename funksjonen støtter ikke expressions.
     # altså kan man ikke ha gverdi = past0(kolonne) i kallet til rename() ovenfor
@@ -75,23 +75,23 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   kb_min = kb_filter(kodebok, "min")
   kb_maks = kb_filter(kodebok, "maks")
   kb_des = kb_filter(kodebok, "desimalar")
-  kb_oblig = kb_filter(kodebok, "obligatorisk") |> 
+  kb_oblig = kb_filter(kodebok, "obligatorisk") |>
     filter(gverdi == "ja")
 
   # trenger 4 filter for kodeboka for ulike typer variabel
   kb_rename = rename(kodebok, varnamn = "variabel_id") # bruker denne lenger nede også
-  kb_kat = kb_rename |> 
-    filter(variabeltype == "kategorisk") |> 
-    select(varnamn, verdi) |> 
+  kb_kat = kb_rename |>
+    filter(variabeltype == "kategorisk") |>
+    select(varnamn, verdi) |>
     rename(gverdi = "verdi")
-  kb_num = kb_rename |> 
-    filter(variabeltype == "numerisk" | variabeltype == "utrekna") |> 
+  kb_num = kb_rename |>
+    filter(variabeltype == "numerisk" | variabeltype == "utrekna") |>
     distinct(varnamn)
-  kb_boolsk = kb_rename |> 
-    filter(variabeltype == "boolsk") |> 
+  kb_boolsk = kb_rename |>
+    filter(variabeltype == "boolsk") |>
     select(varnamn)
-  kb_tekst = kb_rename |> 
-    filter(variabeltype == "tekst") |> 
+  kb_tekst = kb_rename |>
+    filter(variabeltype == "tekst") |>
     select(varnamn)
 
   # Stopp hvis kategoriske variabler mangler verdi eller verditekst
@@ -111,16 +111,16 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
 
   if (nrow(kb_min) > 0) {
     sjekk_min = pmap(kb_min, function(varnamn, gverdi) {
-        rlang::new_function(
-          alist(df = ),
-          rlang::expr(mutate(df,
-            across(all_of(varnamn),
-              .fns = ruler::rules(min_ok = (. >= !!gverdi) | is.na(.))
-            ),
-            .keep = "none"
-          ))
-        )
-      }) |> 
+      rlang::new_function(
+        alist(df = ),
+        rlang::expr(mutate(df,
+          across(all_of(varnamn),
+            .fns = ruler::rules(min_ok = (. >= !!gverdi) | is.na(.))
+          ),
+          .keep = "none"
+        ))
+      )
+    }) |>
       setNames(paste0("min_", kb_min$varnamn))
 
     # fyller regelen i lista
@@ -131,16 +131,16 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   # Lager "rules" som tester maks-verdier
   if (nrow(kb_maks) > 0) {
     sjekk_maks = pmap(kb_maks, function(varnamn, gverdi) {
-        rlang::new_function(
-          alist(df = ),
-          rlang::expr(mutate(df,
-            across(all_of(varnamn),
-              .fns = ruler::rules(maks_ok = (. <= !!gverdi) | is.na(.))
-            ),
-            .keep = "none"
-          ))
-        )
-      }) |> 
+      rlang::new_function(
+        alist(df = ),
+        rlang::expr(mutate(df,
+          across(all_of(varnamn),
+            .fns = ruler::rules(maks_ok = (. <= !!gverdi) | is.na(.))
+          ),
+          .keep = "none"
+        ))
+      )
+    }) |>
       setNames(paste0("maks_", kb_maks$varnamn))
     # fyller regelen i lista
     l_min_maks = append(l_min_maks, sjekk_maks)
@@ -154,16 +154,16 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   sjekk_des = list()
   if (nrow(kb_des) > 0) {
     sjekk_des = pmap(kb_des, function(varnamn, gverdi) {
-        rlang::new_function(
-          alist(df = ),
-          rlang::expr(mutate(df,
-            across(all_of(varnamn),
-              .fns = ruler::rules(des_ok = is.na(.) | (round(., gverdi) == .))
-            ),
-            .keep = "none"
-          ))
-        )
-      }) |> 
+      rlang::new_function(
+        alist(df = ),
+        rlang::expr(mutate(df,
+          across(all_of(varnamn),
+            .fns = ruler::rules(des_ok = is.na(.) | (round(., gverdi) == .))
+          ),
+          .keep = "none"
+        ))
+      )
+    }) |>
       setNames(paste0("des_", kb_des$varnamn))
   }
 
@@ -175,16 +175,16 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   if (oblig) {
     # Lager "rules" på at obligatoriske variabler ikke skal ha noen missing.
     sjekk_oblig = pmap(kb_oblig, function(varnamn, gverdi) {
-        rlang::new_function(
-          alist(df = ),
-          rlang::expr(mutate(df,
-            across(all_of(varnamn),
-              .fns = ruler::rules(gverdi = !is.na(.))
-            ),
-            .keep = "none"
-          ))
-        )
-      }) |> 
+      rlang::new_function(
+        alist(df = ),
+        rlang::expr(mutate(df,
+          across(all_of(varnamn),
+            .fns = ruler::rules(gverdi = !is.na(.))
+          ),
+          .keep = "none"
+        ))
+      )
+    }) |>
       setNames(paste0("oblig_", kb_oblig$varnamn))
 
     # lager en cell-pack med oblig-sjekkene
@@ -197,17 +197,17 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   if (nrow(kb_kat) != 0) {
     kb_kat_kompakt = nest(kb_kat, data = c(gverdi))
     sjekk_kat = pmap(kb_kat_kompakt, function(varnamn, data) {
-        gverdi = data$gverdi
-        rlang::new_function(
-          alist(df = ),
-          rlang::expr(mutate(df,
-            across(all_of(varnamn),
-              .fns = ruler::rules(gyl_kat = . %in% !!gverdi | is.na(.))
-            ),
-            .keep = "none"
-          ))
-        )
-      }) |> 
+      gverdi = data$gverdi
+      rlang::new_function(
+        alist(df = ),
+        rlang::expr(mutate(df,
+          across(all_of(varnamn),
+            .fns = ruler::rules(gyl_kat = . %in% !!gverdi | is.na(.))
+          ),
+          .keep = "none"
+        ))
+      )
+    }) |>
       setNames(paste0("kat_", kb_kat_kompakt$varnamn))
 
     # lager en cell-pack med verdi-sjekkene
@@ -221,16 +221,16 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   # en sjekk for numeriske variabler
   if (nrow(kb_num) > 0) {
     sjekk_num = pmap(kb_num, function(varnamn) {
-        rlang::new_function(
-          alist(df = ),
-          rlang::expr(summarise(
-            df,
-            across(all_of(varnamn),
-              .fns = ruler::rules(vartype_ok = is.numeric(.))
-            )
-          ))
-        )
-      }) |> 
+      rlang::new_function(
+        alist(df = ),
+        rlang::expr(summarise(
+          df,
+          across(all_of(varnamn),
+            .fns = ruler::rules(vartype_ok = is.numeric(.))
+          )
+        ))
+      )
+    }) |>
       setNames(paste0("num_", kb_num$varnamn))
     # appender regelen til lista
     l_vartype = append(l_vartype, sjekk_num)
@@ -238,16 +238,16 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   # boolske
   if (nrow(kb_boolsk) > 0) {
     sjekk_boolsk = pmap(kb_boolsk, function(varnamn) {
-        rlang::new_function(
-          alist(df = ),
-          rlang::expr(summarise(
-            df,
-            across(all_of(varnamn),
-              .fns = ruler::rules(vartype_ok = is.logical(.))
-            )
-          ))
-        )
-      }) |> 
+      rlang::new_function(
+        alist(df = ),
+        rlang::expr(summarise(
+          df,
+          across(all_of(varnamn),
+            .fns = ruler::rules(vartype_ok = is.logical(.))
+          )
+        ))
+      )
+    }) |>
       setNames(paste0("boolsk_", kb_boolsk$varnamn))
     # appender regelen til lista
     l_vartype = append(l_vartype, sjekk_boolsk)
@@ -255,16 +255,16 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   # tekstvariabler
   if (nrow(kb_tekst) > 0) {
     sjekk_tekst = pmap(kb_tekst, function(varnamn) {
-        rlang::new_function(
-          alist(df = ),
-          rlang::expr(summarise(
-            df,
-            across(all_of(varnamn),
-              .fns = ruler::rules(vartype_ok = is.character(.))
-            )
-          ))
-        )
-      }) |> 
+      rlang::new_function(
+        alist(df = ),
+        rlang::expr(summarise(
+          df,
+          across(all_of(varnamn),
+            .fns = ruler::rules(vartype_ok = is.character(.))
+          )
+        ))
+      )
+    }) |>
       setNames(paste0("tekst_", kb_tekst$varnamn))
     # appender regelen til lista
     l_vartype = append(l_vartype, sjekk_tekst)
@@ -286,7 +286,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   # sjekk at rekkefølgen på kolonner er lik mellom data og kodebok
   if (rekkefolge) {
     er_lik_rekkefolge = ruler::data_packs(
-      sjekk_rekkefolge = .|> summarise(rekkefolge_varnavn = identical(names(.), (kodebok |> distinct(variabel_id))$variabel_id))
+      sjekk_rekkefolge = . |> summarise(rekkefolge_varnavn = identical(names(.), (kodebok |> distinct(variabel_id))$variabel_id))
     )
   }
   regelsett = list(
@@ -373,7 +373,7 @@ dd_er_gyldig = function(d, kodebok, ...) {
 #
 # # Finner feil og rapporterer hvilken pasient og variabel som gjelder
 # # for feil i variabelnavn
-# ruler::expose(d, er_samme_navn) |> 
+# ruler::expose(d, er_samme_navn) |>
 # ruler::get_report()
 
 # fixme! testen over burde generelaiseres til å kjøre testen for hver variabel i datarammen.
@@ -381,7 +381,7 @@ dd_er_gyldig = function(d, kodebok, ...) {
 # det skal være en data_pack()
 # Lager "rules" som tester om en variabelnavn i datadumpen
 # ikke eksisterer i kodeboka
-# sjekk_navn = (kb |> distinct(variabel_id) |> rename(varnamn = "variabel_id")) |> 
+# sjekk_navn = (kb |> distinct(variabel_id) |> rename(varnamn = "variabel_id")) |>
 #   pmap(function(varnamn) {
 #     rlang::new_function(alist(df=),
 #                  rlang::expr(summarise(df, navn_ok = names(.)[.] %in% varnamn))
@@ -393,5 +393,5 @@ dd_er_gyldig = function(d, kodebok, ...) {
 #
 # # Finner feil og rapporterer hvilken pasient og variabel som gjelder
 # # for feil i variabelnavn
-# ruler::expose(d, er_samme_navn) |> 
+# ruler::expose(d, er_samme_navn) |>
 #   ruler::get_report()

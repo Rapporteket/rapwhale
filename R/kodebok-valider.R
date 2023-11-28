@@ -65,21 +65,21 @@ kb_til_kanonisk_form = function(kb) {
   # (noko som kunne skje viss me brukte metoden over, sidan «forklaring»
   # òg skal kunna stå tom).
   mogleg_glisne_kol = rlang::quos(variabeletikett, forklaring, variabeltype, unik, obligatorisk)
-  kb = kb  |> 
-    mutate(radnr = 1:n()) |> 
-    group_by(variabel_id) |>  # Endrar rekkjefølgja på radene
-    fill(!!!mogleg_glisne_kol)  |> 
-    ungroup() |> 
-    arrange(radnr)  |>  # Gjenopprett radrekkefølgja
+  kb = kb |>
+    mutate(radnr = 1:n()) |>
+    group_by(variabel_id) |> # Endrar rekkjefølgja på radene
+    fill(!!!mogleg_glisne_kol) |>
+    ungroup() |>
+    arrange(radnr) |> # Gjenopprett radrekkefølgja
     select(-radnr)
 
   # Tilsvarande men no innanfor skjema_id
   mogleg_glisne_kol = rlang::quos(skjemanamn, kategori)
-  kb = kb |> 
-    mutate(radnr = 1:n()) |> 
-    group_by(skjema_id) |>  # Endrar rekkjefølgja på radene
-    fill(!!!mogleg_glisne_kol) |> 
-    ungroup() |> 
+  kb = kb |>
+    mutate(radnr = 1:n()) |>
+    group_by(skjema_id) |> # Endrar rekkjefølgja på radene
+    fill(!!!mogleg_glisne_kol) |>
+    ungroup() |>
     arrange(radnr) |> # Gjenopprett radrekkefølgja
     select(-radnr)
 
@@ -162,7 +162,6 @@ kb_til_kanonisk_form = function(kb) {
 #' og ei blanding av små og store bokstavar vert godtatt.
 #' @export
 kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
-
   # Antar i utgangspunktet at kodeboken er gyldig
   gyldig = TRUE
 
@@ -249,13 +248,13 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
     relationship = "one-to-one"
   )
   format_feil = filter(format, kol_klasse_std != kol_klasse)
-  
+
   if (nrow(format_feil) > 0) {
     warning(
       "Feil format på kolonnar:\n",
-      format_feil |> 
+      format_feil |>
         as.data.frame() |>
-        capture.output() |> 
+        capture.output() |>
         paste0(sep = "\n")
     )
     gyldig = FALSE
@@ -303,10 +302,10 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   }
   sjekk_dup(kb, skjema_id)
   sjekk_dup(kb, skjemanamn)
-  
+
   kb_per_skjema = split(kb, kb$skjema_id)
   walk(kb_per_skjema, ~ sjekk_dup(., variabel_id)) # Skal vera unik, men det held at det berre er innanfor skjema
-  
+
   # Sjekk at valt variabel berre har éin verdi innanfor kvar gruppe
   sjekk_ikkjevar = function(df, gruppe, varid) {
     gruppe_tekst = rlang::quo_name(rlang::enquo(gruppe))
@@ -333,11 +332,11 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   # då det ikkje er *så* farleg om dei varierer på
   # tvers av skjema.)
   sjekk_ikkjevar(kb, variabel_id, variabeltype)
-  
+
   walk(kb_per_skjema, ~ sjekk_ikkjevar(., variabel_id, variabeletikett))
   walk(kb_per_skjema, ~ sjekk_ikkjevar(., variabel_id, forklaring))
   sjekk_ikkjevar(kb, variabel_id, unik)
-  
+
   walk(kb_per_skjema, ~ sjekk_ikkjevar(., variabel_id, obligatorisk))
   sjekk_ikkjevar(kb, variabel_id, kategori) # Variablar kan ikkje kryssa kategori- eller skjemagrenser
 
@@ -357,7 +356,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
 
   # Sjekk at kategoriske variablar har minst *to* svaralternativ
   verdi_ok = map_lgl(kb_kat_nest$data, ~ nrow(.) >= 2)
-  
+
   if (any(!verdi_ok)) {
     warning(
       advar_tekst, " færre enn to svaralternativ:\n",
@@ -387,9 +386,9 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   # hentet fra dokumentasjon om standardformen. Kan utvides.
   gyldige_vartyper = c("numerisk", "kategorisk", "boolsk", "dato", "dato_kl", "kl", "utrekna", "tekst", "tekst*", "fritekst")
   if (any(!kb$variabeltype %in% gyldige_vartyper)) {
-    ugyldig_vartyp = kb |> 
-      filter(!variabeltype %in% gyldige_vartyper) |> 
-      pull(variabel_id) |> 
+    ugyldig_vartyp = kb |>
+      filter(!variabeltype %in% gyldige_vartyper) |>
+      pull(variabel_id) |>
       unique()
     warning(
       advar_tekst, " ugyldige variabeltypar:\n",
@@ -400,9 +399,9 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
 
   # Test på eining. Eining kan ikkje vera tom ("") (men kan vera NA)
   if (any(kb$eining %in% "")) {
-    tom_eining = kb |> 
-      filter(eining == "") |> 
-      pull(variabel_id) |> 
+    tom_eining = kb |>
+      filter(eining == "") |>
+      pull(variabel_id) |>
       unique()
     warning(
       advar_tekst, " ugyldig eining, kor ein eller fleire har tomme tekststrengar:\n",
@@ -428,7 +427,6 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   # og hvilken variabeltype som er den gyldige - "numerisk" eller "kategorisk".
 
   sjekk_gyldig_vartype = function(kb, kolonnetype, vartype) {
-
     # alle tester for om variabeltypen er gyldig mht. kolonnetypen
     # har omtrent den samme teksten. lager en funksjon
     # for tekst til numerisk og kategoriske tester
@@ -457,9 +455,9 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
       ikke_ok_num = ikke_num & (!is.na(kb[[kolonnetype]]))
 
       if (any(ikke_ok_num)) {
-        ugyldig_var = kb |> 
-          filter(ikke_ok_num)|> 
-          pull(variabel_id) |> 
+        ugyldig_var = kb |>
+          filter(ikke_ok_num) |>
+          pull(variabel_id) |>
           unique()
         warning(
           lag_tekst(vartype = "numerisk", kolonnetype),
@@ -472,9 +470,9 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
       ikke_ok_kat = ikke_kat & (!is.na(kb[[kolonnetype]]))
 
       if (any(ikke_ok_kat)) {
-        ugyldig_var = kb |> 
-          filter(ikke_ok_kat) |> 
-          pull(variabel_id) |> 
+        ugyldig_var = kb |>
+          filter(ikke_ok_kat) |>
+          pull(variabel_id) |>
           unique()
         warning(
           lag_tekst(vartype = "kategorisk", kolonnetype),
@@ -487,9 +485,9 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
       ikke_ok_mangl = ikke_kat & (!is.na(kb[[kolonnetype]]) & kb[[kolonnetype]] == "ja")
 
       if (any(ikke_ok_mangl)) {
-        ugyldig_var = kb |> 
-          filter(ikke_ok_mangl) |> 
-          pull(variabel_id) |> 
+        ugyldig_var = kb |>
+          filter(ikke_ok_mangl) |>
+          pull(variabel_id) |>
           unique()
         warning(
           lag_tekst(vartype = "kategorisk", kolonnetype),
@@ -518,16 +516,15 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   # som skal testes, og en for kolonnetypen
   # som ikke kan ha noen andre verdier enn "ja" og "nei".
   sjekk_ja_nei = function(kb, kolonnetype) {
-
     # objekt som tester at kolonnetypen er innenfor ja og nei
     er_ja_nei = kb[[kolonnetype]] %in% c("ja", "nei")
 
     # Tester at observasjoner fra objektet over er "False".
     # Gir advarsel hvis testen ikke oppfyller dette.
     if (any(!er_ja_nei)) {
-      ugyldig_ja_nei = kb |> 
-        filter(!er_ja_nei) |> 
-        pull(variabel_id) |> 
+      ugyldig_ja_nei = kb |>
+        filter(!er_ja_nei) |>
+        pull(variabel_id) |>
         unique()
       warning(
         advar_tekst, " har ein verdi for ", kolonnetype, " som ikkje er ja eller nei:\n",
@@ -545,9 +542,9 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   # tester om desimalar kun er 0, positive eller missing.
   kb_num = mutate(kb_num, des_ok = (desimalar >= 0) | is.na(desimalar))
   if (!all(kb_num$des_ok)) {
-    ugyldig_des = kb_num |> 
-      filter(!des_ok) |> 
-      pull(variabel_id) |> 
+    ugyldig_des = kb_num |>
+      filter(!des_ok) |>
+      pull(variabel_id) |>
       unique()
     warning(
       advar_tekst, "har ein desimal som ikke er 0 eller positiv:\n",
@@ -566,9 +563,9 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   sjekk_op = function(kb, op, x, y) {
     op_ok = op(kb[[x]], kb[[y]]) | is.na(kb[[x]]) | is.na(kb[[y]])
     if (!all(op_ok)) {
-      ugyldig_op = kb |> 
-        filter(!op_ok) |> 
-        pull(variabel_id) |> 
+      ugyldig_op = kb |>
+        filter(!op_ok) |>
+        pull(variabel_id) |>
         unique()
       warning(
         advar_tekst, " ", x, "-verdi som er større enn ", y, "-verdi:\n",
@@ -589,9 +586,9 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
 
   # gir advarsel hvis testen ikke er oppfylt
   if (!all(ok_kom_rimeleg)) {
-    ugyldig_kom_rimeleg = kb_kom_rimeleg |> 
-      filter(!ok_kom_rimeleg) |> 
-      pull(variabel_id) |> 
+    ugyldig_kom_rimeleg = kb_kom_rimeleg |>
+      filter(!ok_kom_rimeleg) |>
+      pull(variabel_id) |>
       unique()
     warning(
       advar_tekst, " verdi for kommentar_rimeleg, men ingen verdi for min- eller maks_rimeleg:\n",
@@ -605,9 +602,9 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
 
   # gir advarsel hvis testen ikke er oppfylt
   if (!all(ok_boolsk)) {
-    ugyldig_bool = kb_bool |> 
-      filter(!ok_boolsk) |> 
-      pull(variabel_id) |> 
+    ugyldig_bool = kb_bool |>
+      filter(!ok_boolsk) |>
+      pull(variabel_id) |>
       unique()
     warning(
       advar_tekst, " obligatorisk = nei eller unik = ja selv om variabelen er boolsk:\n",
