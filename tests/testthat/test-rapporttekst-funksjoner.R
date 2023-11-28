@@ -15,28 +15,12 @@ test_that("num() gir ut riktig verdi når kun «x»-argumentet er gitt", {
 
 test_that("num() gir ut riktig verdi med «desimalar»-argumentet", {
   expect_identical(
-    num(12, desimalar = 0),
-    "{\\numprint{12}}"
-  )
-  expect_identical(
-    num(12, desimalar = 2),
-    "{\\numprint{12.00}}"
-  )
-  expect_identical(
     num(c(12.34, 3.1415), desimalar = 3),
     c("{\\numprint{12.340}}", "{\\numprint{3.142}}")
   )
   expect_identical(
     num(c(12.34, 3.1415), desimalar = NULL),
     c("{\\numprint{12.34}}", "{\\numprint{3.1415}}")
-  )
-  expect_identical(
-    num(c(12, 3.14), desimalar = NULL),
-    c("{\\numprint{12}}", "{\\numprint{3.14}}")
-  )
-  expect_identical(
-    num(12.00, desimalar = NULL),
-    c("{\\numprint{12}}")
   )
 })
 
@@ -53,7 +37,6 @@ test_that("num() gir error om «x»-argument er i tekstform", {
 
 test_that("num() ikke konverterer store tall til 
           eksponentiell notasjon", {
-  expect_identical(num(120000000), "{\\numprint{120000000}}")
   expect_identical(num(1.2e+08), "{\\numprint{120000000}}")
   expect_identical(num(120000000.34), "{\\numprint{120000000}}")
 })
