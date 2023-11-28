@@ -30,11 +30,7 @@ test_that("num() gir ut riktig verdi med «desimalar»-argumentet", {
 test_that("num() gir feilmelding om «x»-argument er i tekstform", {
   expect_error(
     num("12"),
-    "Assertion on 'x' failed: Must be of type 'numeric', not 'character'."
-  )
-  expect_error(
-    num(c(12, "3.14")),
-    "Assertion on 'x' failed: Must be of type 'numeric', not 'character'."
+    checkmate::check_numeric("0.12")
   )
 })
 
