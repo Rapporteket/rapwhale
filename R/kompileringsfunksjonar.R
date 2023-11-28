@@ -17,7 +17,9 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{kompiler_rnw("H:/adresse/til/fil.Rnw")}
+#' \dontrun{
+#' kompiler_rnw("H:/adresse/til/fil.Rnw")
+#' }
 kompiler_rnw = function(adresse) {
   cat(paste0(basename(adresse), " (knitr): "))
   tex_adresse = str_replace(adresse, ".Rnw", ".tex")
@@ -26,7 +28,8 @@ kompiler_rnw = function(adresse) {
   old_wd = setwd(dirname(adresse))
 
   knit_res = try(
-    callr::r(function(...) {
+    callr::r(
+      function(...) {
         knitr::knit(..., quiet = TRUE, envir = globalenv())
       },
       args = list(input = adresse)
@@ -71,7 +74,9 @@ kompiler_rnw = function(adresse) {
 #' @export
 #'
 #' @examples
-#' \dontrun{kompiler_tex("H:/adresse/til/fil.tex")}
+#' \dontrun{
+#' kompiler_tex("H:/adresse/til/fil.tex")
+#' }
 kompiler_tex = function(adresse, maksiter = 5, vis_feilmeldingar = TRUE) {
   # Gjenta kompilering til alle kryssreferansar og
   # slikt er i orden, men maks «maksiter» gongar.
@@ -118,8 +123,8 @@ kompiler_tex = function(adresse, maksiter = 5, vis_feilmeldingar = TRUE) {
 
     # Skil loggen inn i separate «loggmeldingar», som me definerer
     # til å vera tekst etterfølgt av ei *tom* linje
-    loggmeldingar = str_c(logg, collapse = "\n")  |> 
-      str_split("\n\n+")  |> 
+    loggmeldingar = str_c(logg, collapse = "\n") |>
+      str_split("\n\n+") |>
       pluck(1)
     # Hent ut aktuelle loggmeldingar
     logg_akt = str_subset(loggmeldingar, "([Ww]arning|[Ee]rror):")

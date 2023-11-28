@@ -39,11 +39,10 @@
 #' Hvis man ønsker å ikke validere kodebok med kb_er_gyldig, kan man sette denne til FALSE. Default er TRUE.
 #' @export
 les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
-
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
-    dato = dir(mappe_dd, pattern = "[0-9]{4}-[0-1]{2}-[0-9]{2}", full.names = FALSE) |> 
-      sort() |> 
+    dato = dir(mappe_dd, pattern = "[0-9]{4}-[0-1]{2}-[0-9]{2}", full.names = FALSE) |>
+      sort() |>
       last()
   }
   dato = lubridate::as_date(dato) # I tilfelle det var ein tekstreng
@@ -163,11 +162,10 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
 #' @param valider_kb Om man ønsker å validere kodeboka ja/nei (TRUE/FALSE). Hvis man ønsker å ikke validere kodebok med kb_er_gyldig, kan man sette denne til FALSE. Default er TRUE.
 #' @export
 les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"), dato = NULL, kodebok = NULL, valider_dd = TRUE, valider_kb = TRUE) {
-
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
-    dato = dir(mappe_dd, pattern = "[0-9]{4}-[0-1]{2}-[0-9]{2}", full.names = FALSE) |> 
-      sort() |> 
+    dato = dir(mappe_dd, pattern = "[0-9]{4}-[0-1]{2}-[0-9]{2}", full.names = FALSE) |>
+      sort() |>
       last()
   }
   dato = lubridate::as_date(dato) # I tilfelle det var ein tekstreng
@@ -241,11 +239,11 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
   }
 
   # Lager variabel som beskriver om en kategorisk variabel er heltall eller ikke
-  kb_skjema_nest = kb_skjema |> 
-    group_by(variabel_id) |> 
+  kb_skjema_nest = kb_skjema |>
+    group_by(variabel_id) |>
     nest()
   kb_skjema_nest$data = map(kb_skjema_nest$data, tekst_eller_heiltall)
-  kb_skjema = unnest(kb_skjema_nest, cols = c(data)) |> 
+  kb_skjema = unnest(kb_skjema_nest, cols = c(data)) |>
     ungroup()
 
   # vi bruker case_when for å få inn csv_bokstav for variablene
@@ -277,28 +275,28 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
   ))
 
   # setter på fine variabelnavn
-  kolnamn = var_info$variabel_id_checkware |> 
+  kolnamn = var_info$variabel_id_checkware |>
     setNames(var_info$variabel_id)
   d = rename(d, !!!kolnamn)
 
   # siden datetime blir hentet inn som character
   # fikser vi disse til å være datetime her
   # (jf. https://github.com/tidyverse/readr/issues/642 (!fixme til "T" når denne er fiksa))
-  dato_kl_var = kb_skjema |> 
-    filter(variabeltype == "dato_kl") |> 
-    distinct(variabel_id) |> 
+  dato_kl_var = kb_skjema |>
+    filter(variabeltype == "dato_kl") |>
+    distinct(variabel_id) |>
     pull("variabel_id")
   d = mutate(d, across(all_of(dato_kl_var),
-      .fns = \(dato_kl_vektor) readr::parse_datetime(dato_kl_vektor,
-        format = "%Y-%m-%d %H:%M:%S"
-      )
-    ))
+    .fns = \(dato_kl_vektor) readr::parse_datetime(dato_kl_vektor,
+      format = "%Y-%m-%d %H:%M:%S"
+    )
+  ))
 
   # I CheckWare vert boolske verdiar koda som "1" for sann og NA for usann.
   # Kodar derfor om til ekte boolske verdiar.
-  boolsk_var = kb_skjema |> 
-    filter(variabeltype == "boolsk") |> 
-    distinct(variabel_id) |> 
+  boolsk_var = kb_skjema |>
+    filter(variabeltype == "boolsk") |>
+    distinct(variabel_id) |>
     pull("variabel_id")
   cw_til_boolsk = function(x) {
     if (skjema_id == "treatments") { # treatments skjema har boolske variabler kodet som true/false,
