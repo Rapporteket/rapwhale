@@ -58,6 +58,11 @@ test_that("num() ikke konverterer store tall til
   expect_identical(num(120000000.34), "{\\numprint{120000000}}")
 })
 
+test_that("num() ikke konverterer små tall til
+          eksponentiell notasjon", {
+  expect_identical(num(1e-12), "{\\numprint{0.000000000001}}")
+})
+
 # Testing av akse_prosent_format()
 
 test_that("akse_prosent_format() gir ut verdier på riktig format ved
