@@ -83,11 +83,11 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
     fill(skjema_id) |>
     select(skjema_id, variabel_id, variabel_id_checkware) |>
     na.omit()
-  kb_kanonisk = left_join(kb_kanonisk,
-    variabel_id_checkware,
-    by = c("skjema_id", "variabel_id"),
-    relationship = "many-to-one"
-  )
+  kb_kanonisk = kb_kanonisk |>
+    left_join(variabel_id_checkware,
+      by = c("skjema_id", "variabel_id"),
+      relationship = "many-to-one"
+    )
   kb_kanonisk
 }
 # kan teste at funksjonen funker med koden under
@@ -196,10 +196,9 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
   # innlesing av data, legg me derfor til ein kunstig
   # «numerisk_heiltal»-variabeltype.
   kb_skjema = mutate(kb_skjema,
-    variabeltype = replace(
-      variabeltype,
-      (variabeltype == "numerisk") & (desimalar == 0),
-      "numerisk_heiltal"
+    variabeltype = replace(variabeltype,
+      list = (variabeltype == "numerisk") & (desimalar == 0),
+      values = "numerisk_heiltal"
     )
   )
 
@@ -214,11 +213,11 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
     "numerisk_heiltal", "i"
   )
 
-  kb_skjema = left_join(kb_skjema,
-    spek_csv_checkware,
-    by = "variabeltype",
-    relationship = "many-to-one"
-  )
+  kb_skjema = kb_skjema |>
+    left_join(spek_csv_checkware,
+      by = "variabeltype",
+      relationship = "many-to-one"
+    )
 
   # de kategoriske variablene som koder med tekst-verdier skal få character
 
@@ -256,7 +255,7 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
     ))
 
   # henter ut variabelnavn og variabeltype
-  var_info = kb_skjema |> 
+  var_info = kb_skjema |>
     distinct(variabel_id, variabel_id_checkware, variabeltype, csv_bokstav)
   kol_typar = str_c(var_info$csv_bokstav, collapse = "")
 
