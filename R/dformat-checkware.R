@@ -256,10 +256,8 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
     ))
 
   # henter ut variabelnavn og variabeltype
-  var_info = distinct(
-    kb_skjema,
-    variabel_id, variabel_id_checkware, variabeltype, csv_bokstav
-  )
+  var_info = kb_skjema |> 
+    distinct(variabel_id, variabel_id_checkware, variabeltype, csv_bokstav)
   kol_typar = str_c(var_info$csv_bokstav, collapse = "")
 
   # Les inn datasettet
