@@ -213,5 +213,5 @@ prosent = function(x, desimalar = 0) {
   checkmate::assert_numeric(x)
   prosent_tekst = num(100 * x, desimalar) |>
     str_c("\\prosent")
-  if_else(is.na(x), "\\textendash{}", prosent_tekst)
+  if_else(is.na(x), num(x), prosent_tekst)
 }
