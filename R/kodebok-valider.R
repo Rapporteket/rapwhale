@@ -36,23 +36,23 @@ kb_til_kanonisk_form = function(kb) {
   # Det kan vera at nokre ikkje-essensielle kolonnar manglar.
   # Då legg med dei til, med NA-verdiar eller eksempeldata,
   # alt etter kva som trengst.
-  kb = leggtil_std(kb, skjema_id, "fiktiv_skjema_id")
-  kb = leggtil_std(kb, skjemanamn, paste0("Skjemanamn for ", kb$skjema_id))
-  kb = leggtil_std(kb, kategori, NA_character_)
-  kb = leggtil_std(kb, innleiing, NA_character_)
-  kb = leggtil_std(kb, variabeletikett, NA_character_)
-  kb = leggtil_std(kb, forklaring, NA_character_)
-  kb = leggtil_std(kb, manglande, NA_character_)
-  kb = leggtil_std(kb, eining, NA_character_)
-  kb = leggtil_std(kb, unik, "nei")
-  kb = leggtil_std(kb, min, NA_real_)
-  kb = leggtil_std(kb, maks, NA_real_)
-  kb = leggtil_std(kb, min_rimeleg, NA_real_)
-  kb = leggtil_std(kb, maks_rimeleg, NA_real_)
-  kb = leggtil_std(kb, kommentar_rimeleg, NA_character_)
-  kb = leggtil_std(kb, utrekningsformel, NA_character_)
-  kb = leggtil_std(kb, logikk, NA_character_)
-  kb = leggtil_std(kb, kommentar, NA_character_)
+  kb = leggtil_std(kb, skjema_id, "fiktiv_skjema_id") |>
+    leggtil_std(skjemanamn, paste0("Skjemanamn for ", kb$skjema_id)) |>
+    leggtil_std(kategori, NA_character_) |>
+    leggtil_std(innleiing, NA_character_) |>
+    leggtil_std(variabeletikett, NA_character_) |>
+    leggtil_std(forklaring, NA_character_) |>
+    leggtil_std(manglande, NA_character_) |>
+    leggtil_std(eining, NA_character_) |>
+    leggtil_std(unik, "nei") |>
+    leggtil_std(min, NA_real_) |>
+    leggtil_std(maks, NA_real_) |>
+    leggtil_std(min_rimeleg, NA_real_) |>
+    leggtil_std(maks_rimeleg, NA_real_) |>
+    leggtil_std(kommentar_rimeleg, NA_character_) |>
+    leggtil_std(utrekningsformel, NA_character_) |>
+    leggtil_std(logikk, NA_character_) |>
+    leggtil_std(kommentar, NA_character_)
 
   # Gjer kodeboka om til ikkje-glissen form,
   # dvs. at skjema_id, variabel_id og sånt er gjentatt nedover.
