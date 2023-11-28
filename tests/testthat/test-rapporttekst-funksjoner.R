@@ -4,8 +4,11 @@ test_that("num() gir ut tankestrek når «x»-argumentet inneholder NA", {
   expect_identical(num(NA_real_), "{\\textendash{}}")
 })
 
+test_that("num() gir ut riktig når inndata er av lengde 0", {
+  expect_identical(num(numeric()), character())
+})
+
 test_that("num() gir ut riktig verdi når kun «x»-argumentet er gitt", {
-  expect_identical(num(numeric()), character(0))
   expect_identical(num(1234), "{\\numprint{1234}}")
   expect_identical(
     num(c(12.34, 3.1415)),
