@@ -45,12 +45,13 @@
 #' @return
 #' Ugruppert tibble eller `data.frame` (avhengig av inndataene) med følgende
 #' kolonner:
-#' \item{est}{Kvalitetsindikatoren, dvs. estimert gjennomsnitt
-#' (sum(`ki_x`)/sum(`ki_aktuell`)).}
+#' \item{est}{Kvalitetsindikatoren, dvs. gjennomsnittet
+#' av `ki_x` for radene som har sanne `ki_aktuell`-verdier
+#' (eventuelt per gruppe).}
 #' \item{konfint_nedre}{Nedre konfidensgrense for `est`.}
 #' \item{konfint_ovre}{Øvre konfidensgrense for `est`.}
 #' \item{n_aktuell}{Antall observasjoner som er inkludert i
-#' beregningen av `est`(antall sanne `ki_aktuell`).}
+#' beregningen av `est` (antall sanne `ki_aktuell`).}
 #' I tillegg vil det være kolonner for alle grupperingsvariablene.
 #' @export
 #' @examples
@@ -86,45 +87,36 @@
 #'   group_by(sykehus) %>%
 #'   aggreger_ki_snitt()
 aggreger_ki_snitt = function(d_ki_ind, alfa = 0.05) {
-
-  # Teste inndata
   if (!(is.data.frame(d_ki_ind) && all(hasName(d_ki_ind, c("ki_x", "ki_aktuell"))))) {
-    stop("Inndata må være tibble/data.frame med kolonnene 'ki_x' og 'ki_aktuell'")
+    stop("Inndata må være tibble/data.frame med kolonnene «ki_x» og «ki_aktuell»")
   }
   if (any(is.na(d_ki_ind$ki_aktuell)) || (!(is.logical(d_ki_ind$ki_aktuell)))) {
-    stop("'ki_aktuell' må være TRUE eller FALSE")
+    stop("«ki_aktuell» må være TRUE eller FALSE")
   }
   if (!(is.numeric(d_ki_ind$ki_x))) {
-    stop("'ki_x' må være numerisk")
+    stop("«ki_x» må være numerisk")
   }
   if (any(d_ki_ind$ki_aktuell & is.na(d_ki_ind$ki_x))) {
-    stop("'ki_x' må være en numerisk verdi hvis 'ki_aktuell' er TRUE")
+    stop("«ki_x» må være en numerisk verdi hvis «ki_aktuell» er TRUE")
   }
-
-  if (!is.numeric(alfa) | alfa <= 0 | alfa >= 1) {
+  if (!is.numeric(alfa) || alfa <= 0 || alfa >= 1) {
     stop("«alfa» må være et tall mellom 0 og 1")
   }
 
-  konfint = function(x) {
-    konfint_robust = possibly(
-      ~ t.test(.x, conf.level = 1 - alfa)$conf.int,
-      otherwise = c(NA_real_, NA_real_)
-    )
-    konfint_robust(x)
-  }
+  konfint = possibly(
+    \(x) t.test(x, conf.level = 1 - alfa)$conf.int,
+    otherwise = c(NA_real_, NA_real_)
+  )
 
-  d_ki_ind %>%
+  d_ki_ind |>
     summarise(
-      est = mean(ki_x[ki_aktuell], na.rm = TRUE) %>%
+      est = mean(ki_x[ki_aktuell]) |>
         replace_na(NA), # Gjør NaN om til NA
       konfint = list(konfint(ki_x[ki_aktuell])),
-      n_aktuell = sum(ki_aktuell, na.rm = TRUE),
-      .groups = "keep"
-    ) %>%
-    mutate(
       konfint_nedre = map_dbl(konfint, pluck, 1),
-      konfint_ovre = map_dbl(konfint, pluck, 2)
-    ) %>%
-    select(group_cols(d_ki_ind), est, konfint_nedre, konfint_ovre, n_aktuell) %>%
-    ungroup()
+      konfint_ovre = map_dbl(konfint, pluck, 2),
+      n_aktuell = sum(ki_aktuell),
+      .groups = "drop"
+    ) |>
+    select(-konfint)
 }
