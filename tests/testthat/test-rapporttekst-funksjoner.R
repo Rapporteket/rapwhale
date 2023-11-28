@@ -167,7 +167,7 @@ test_that("prosent() gir ut riktig verdi med «desimalar»-argumentet", {
   )
 })
 
-test_that("prosent() gir error om «x»-argument er i tekstform", {
+test_that("prosent() gir feilmelding om «x»-argument er i tekstform", {
   expect_error(
     prosent("0.12"),
     checkmate::check_numeric("0.12")
