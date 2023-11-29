@@ -277,8 +277,8 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   # Test sjekker at alle variablenavn i datadump er med i kodeboka (samtidig)
   # og at alle varibelnavn i kodebok er med i datadump
   alle_var_er_med = ruler::data_packs(
-    sjekk_alle_varnavn_dd = \(.) summarise(., alle_varnavn = all(names(.) %in% distinct(kodebok, variabel_id)$variabel_id)),
-    sjekk_alle_varnavn_kb = \(.) summarise(., all(alle_varnavn = distinct(kodebok, variabel_id)$variabel_id %in% names(.)))
+    sjekk_alle_varnavn_dd = \(datasett) summarise(datasett, alle_varnavn = all(names(datasett) %in% distinct(kodebok, variabel_id)$variabel_id)),
+    sjekk_alle_varnavn_kb = \(datasett) summarise(datasett, alle_varnavn = all(distinct(kodebok, variabel_id)$variabel_id %in% names(datasett)))
   )
 
   #-------------------------------------lik rekkefølge på variabelnavn som i kodebok----------------------------------
@@ -286,7 +286,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   # sjekk at rekkefølgen på kolonner er lik mellom data og kodebok
   if (rekkefolge) {
     er_lik_rekkefolge = ruler::data_packs(
-      sjekk_rekkefolge = \(.) summarise(rekkefolge_varnavn = identical(names(.), distinct(kodebok, variabel_id)$variabel_id))
+      sjekk_rekkefolge = \(datasett) summarise(rekkefolge_varnavn = identical(names(datasett), distinct(kodebok, variabel_id)$variabel_id))
     )
   }
   regelsett = list(
