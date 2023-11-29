@@ -40,8 +40,8 @@ test_that("regn_konfint_univar() gjev forventa resultat ved val av konfidensnivÃ
 })
 
 test_that("regn_konfint_univar() funkar med grupperte inndata", {
-  sepal_length_gruppert_resultat = iris %>%
-    group_by(Species) %>%
+  sepal_length_gruppert_resultat = iris |>
+    group_by(Species) |>
     summarise(regn_konfint_univar(Sepal.Length))
   sepal_length_gruppert_forventa = tibble(
     Species = as.factor(c("setosa", "versicolor", "virginica")),

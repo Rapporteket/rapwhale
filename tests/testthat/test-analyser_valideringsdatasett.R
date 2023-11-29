@@ -114,7 +114,7 @@ test_that("Skal stoppa med feilmelding dersom utdata frå samanliknaren ikkje er
 })
 
 test_that("Skal fungera med grupperte inndata, og utdata skal bevara grupperinga", {
-  d_vld_gruppert = d_vld_gyldig %>%
+  d_vld_gruppert = d_vld_gyldig |>
     group_by(kjonn, sjukehus)
   d_vld_gruppert_resultat = bind_cols(d_vld_gruppert,
     ki_krit_teller = c(

@@ -276,7 +276,7 @@ test_that("Funksjonen tillater tilfeller hvor antall observasjoner er 0", {
     ki_antall = rep(0, 6),
     ki_eksponering = c(100, 95, 101, 200, 190, 202),
     ki_aktuell = c(TRUE, TRUE, FALSE, rep(FALSE, 3))
-  ) %>%
+  ) |>
     group_by(sykehus)
   svar_gruppert = tibble(
     sykehus = factor(c("A", "B")),
@@ -299,7 +299,7 @@ test_that("Funksjonen returnerer «NA» for de grupperte verdiene som ikke har n
       ki_antall = c(rep(0, 6), 5, 2, 7),
       ki_eksponering = c(100, 95, 101, 200, 190, 202, 50, 47, 51),
       ki_aktuell = c(rep(c(TRUE, FALSE), each = 3), FALSE, TRUE, FALSE)
-    ) %>%
+    ) |>
       group_by(sykehus)
   })
   svar_gruppert_med_na = tibble(
@@ -326,7 +326,7 @@ test_that("Funksjonen gir en advarsel når det finnes ubrukte nivå i gruppering
     ki_antall = c(rep(0, 6)),
     ki_eksponering = c(100, 95, 101, 200, 190, 202),
     ki_aktuell = c(rep(c(TRUE, FALSE), each = 3))
-  ) %>%
+  ) |>
     group_by(sykehus, .drop = FALSE)
   svar_gruppert_ekstra_levels = tibble(
     sykehus = factor(LETTERS[1:4], levels = LETTERS[1:4]),
@@ -358,7 +358,7 @@ test_that("Funksjonen returnerer en tom ugruppert tibble med riktige kolonner hv
     ki_antall = numeric(),
     ki_eksponering = numeric(),
     ki_aktuell = logical()
-  ) %>%
+  ) |>
     group_by(sykehus)
   svar_tom = tibble(
     sykehus = factor(),
