@@ -36,8 +36,10 @@ kb_til_kanonisk_form = function(kb) {
   # Det kan vera at nokre ikkje-essensielle kolonnar manglar.
   # Då legg med dei til, med NA-verdiar eller eksempeldata,
   # alt etter kva som trengst.
-  kb = leggtil_std(kb, skjema_id, "fiktiv_skjema_id") |>
-    leggtil_std(skjemanamn, paste0("Skjemanamn for ", kb$skjema_id)) |>
+  # Legger til en eventuelt manglende skjema_id først, slik at 
+  # skjemanamn alltid har en kolonne å hente skjema_id fra. 
+  kb = leggtil_std(kb, skjema_id, "fiktiv_skjema_id")
+  kb = leggtil_std(kb, skjemanamn, paste0("Skjemanamn for ", kb$skjema_id)) |>
     leggtil_std(kategori, NA_character_) |>
     leggtil_std(innleiing, NA_character_) |>
     leggtil_std(variabeletikett, NA_character_) |>
