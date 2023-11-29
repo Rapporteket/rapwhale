@@ -211,7 +211,6 @@ akse_tall_format = function(antall_desimaler = 2,
 #' paste0("Andel menn med 2 desimaler er ", prosent(andel_menn, desimalar = 2), ".")
 prosent = function(x, desimalar = 0) {
   checkmate::assert_numeric(x)
-  prosent_tekst = num(100 * x, desimalar) |>
-    str_c("\\prosent")
-  if_else(is.na(x), num(x), prosent_tekst)
+  prosent_tall = num(100 * x, desimalar)
+  if_else(is.na(x), prosent_tall, str_c(prosent_tall, "\\prosent"))
 }
