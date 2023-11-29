@@ -34,21 +34,18 @@ test_that("num() gir feilmelding om «x»-argument er i tekstform", {
   )
 })
 
-test_that("num() ikke konverterer store tall til 
-          eksponentiell notasjon", {
+test_that("num() ikke konverterer store tall til eksponentiell notasjon", {
   expect_identical(num(1.2e+08), "{\\numprint{120000000}}")
   expect_identical(num(120000000.34), "{\\numprint{120000000}}")
 })
 
-test_that("num() ikke konverterer små tall til
-          eksponentiell notasjon", {
+test_that("num() ikke konverterer små tall til eksponentiell notasjon", {
   expect_identical(num(1e-12), "{\\numprint{0.000000000001}}")
 })
 
 # Testing av akse_prosent_format()
 
-test_that("akse_prosent_format() gir ut verdier på riktig format ved
-           0, 1 og 2 desimaler", {
+test_that("akse_prosent_format() gir ut verdier på riktig format ved 0, 1 og 2 desimaler", {
   prosent_format_0_desimaler = akse_prosent_format(antall_desimaler = 0)
   expect_identical(
     prosent_format_0_desimaler(c(0.0036, 0.0468, 0.78)),
@@ -69,8 +66,7 @@ test_that("akse_prosent_format() gir ut verdier på riktig format ved
 })
 
 
-test_that("akse_prosent_format() gir ut verdier på riktig format ved å
-           oppgi punktum som desimalskilletegn", {
+test_that("akse_prosent_format() gir ut verdier på riktig format ved å oppgi punktum som desimalskilletegn", {
   prosent_format_punktum_skilletegn = akse_prosent_format(decimal.mark = ".")
   expect_identical(
     prosent_format_punktum_skilletegn(c(0.0036, 0.0468, 0.78)),
@@ -78,16 +74,14 @@ test_that("akse_prosent_format() gir ut verdier på riktig format ved å
   )
 })
 
-test_that("akse_prosent_format() gir ut en tom tekstvektor hvis den tar
-          inn en en tom tallvektor", {
+test_that("akse_prosent_format() gir ut en tom tekstvektor hvis den tar inn en tom tallvektor", {
   prosent_format = akse_prosent_format()
   expect_identical(prosent_format(integer()), character())
 })
 
 # Testing av akse_tall_format()
 
-test_that("akse_tall_format() gir ut verdier på riktig format ved
-           0, 1 og 2 desimaler", {
+test_that("akse_tall_format() gir ut verdier på riktig format ved 0, 1 og 2 desimaler", {
   tall_format_0_desimaler = akse_tall_format(antall_desimaler = 0)
   expect_identical(
     tall_format_0_desimaler(c(468.999, 7685.87, 65473.3, 256473)),
@@ -107,8 +101,7 @@ test_that("akse_tall_format() gir ut verdier på riktig format ved
   )
 })
 
-test_that("akse_tall_format() gir ut verdier på riktig format ved å
-           oppgi punktum som desimalskilletegn", {
+test_that("akse_tall_format() gir ut verdier på riktig format ved å oppgi punktum som desimalskilletegn", {
   tall_format_punktum_skilletegn = akse_tall_format(decimal.mark = ".")
   expect_identical(
     tall_format_punktum_skilletegn(c(468.999, 7685.87, 65473.3, 256473)),
@@ -116,8 +109,7 @@ test_that("akse_tall_format() gir ut verdier på riktig format ved å
   )
 })
 
-test_that("akse_tall_format() gir ut verdier på riktig format ved å
-           oppgi XX som tusenskille", {
+test_that("akse_tall_format() gir ut verdier på riktig format ved å oppgi XX som tusenskille", {
   tall_format_uten_tusenskille = akse_tall_format(big.mark = "XX")
   expect_identical(
     tall_format_uten_tusenskille(c(468.999, 7685.87, 65473.3, 256473)),
@@ -125,8 +117,7 @@ test_that("akse_tall_format() gir ut verdier på riktig format ved å
   )
 })
 
-test_that("akse_tall_format() gir ut en tom tekstvektor hvis den tar
-          inn en en tom tallvektor", {
+test_that("akse_tall_format() gir ut en tom tekstvektor hvis den tar inn en tom tallvektor", {
   tall_format = akse_tall_format()
   expect_identical(tall_format(integer()), character())
 })
