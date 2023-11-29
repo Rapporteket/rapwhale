@@ -73,7 +73,7 @@ test_that("Funksjonen tillater tilfeller hvor ingen observasjoner oppfyller krit
     sykehus = factor(rep(c("B", "A"), each = 3)),
     ki_krit_teller = c(rep(FALSE, 6)),
     ki_krit_nevner = c(rep(c(TRUE, FALSE), each = 3))
-  ) %>%
+  ) |>
     group_by(sykehus)
 
   svar_ugruppert = tibble(
@@ -100,7 +100,7 @@ test_that("Funksjonen returnerer «NA» for de grupperte verdiene som ikke har n
       sykehus = factor(rep(c("B", "A", NA), each = 3)),
       ki_krit_teller = c(rep(FALSE, 7), TRUE, FALSE),
       ki_krit_nevner = c(rep(c(TRUE, FALSE), each = 3), FALSE, TRUE, FALSE)
-    ) %>%
+    ) |>
       group_by(sykehus)
   })
 
@@ -121,7 +121,7 @@ test_that("Funksjonen gir en advarsel når det finnes ubrukte nivå i gruppering
     sykehus = factor(rep(c("B", "A"), each = 3), levels = LETTERS[1:4]),
     ki_krit_teller = c(rep(FALSE, 6)),
     ki_krit_nevner = c(rep(c(TRUE, FALSE), each = 3))
-  ) %>%
+  ) |>
     group_by(sykehus, .drop = FALSE)
 
   d_svar_gruppert_ekstra_levels = tibble(
@@ -149,7 +149,7 @@ test_that("Funksjonen returnerer verdier for alle grupper i inndata, selv de gru
     sykehus = factor(rep(c("B", "A", "C"), each = 3)),
     ki_krit_teller = c(rep(FALSE, 6), TRUE, TRUE, FALSE),
     ki_krit_nevner = c(rep(c(TRUE, FALSE), each = 3), TRUE, TRUE, FALSE)
-  ) %>%
+  ) |>
     group_by(sykehus)
 
   svar_uten_innhold = tibble(
@@ -167,7 +167,7 @@ test_that("Funksjonen returnerer en tom ugruppert tibble med riktige kolonner hv
     sykehus = factor(),
     ki_krit_teller = logical(),
     ki_krit_nevner = logical()
-  ) %>%
+  ) |>
     group_by(sykehus)
 
   svar_tom = tibble(
