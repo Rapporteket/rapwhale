@@ -68,7 +68,7 @@ kb_til_kanonisk_form = function(kb) {
   # òg skal kunna stå tom).
   mogleg_glisne_kol = rlang::quos(variabeletikett, forklaring, variabeltype, unik, obligatorisk)
   kb = kb |>
-    mutate(radnr = 1:n()) |>
+    mutate(radnr = seq_len(n())) |>
     group_by(variabel_id) |> # Endrar rekkjefølgja på radene
     fill(!!!mogleg_glisne_kol) |>
     ungroup() |>
@@ -78,7 +78,7 @@ kb_til_kanonisk_form = function(kb) {
   # Tilsvarande men no innanfor skjema_id
   mogleg_glisne_kol = rlang::quos(skjemanamn, kategori)
   kb = kb |>
-    mutate(radnr = 1:n()) |>
+    mutate(radnr = seq_len(n())) |>
     group_by(skjema_id) |> # Endrar rekkjefølgja på radene
     fill(!!!mogleg_glisne_kol) |>
     ungroup() |>
