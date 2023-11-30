@@ -324,19 +324,6 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   regelsett
 }
 
-# Funksjon som automatisk lager et regelsett basert på en kodebok,
-# og sjekker at datadumpen er gyldig gitt dette regelsettet.
-# Returner sann viss og berre viss datadumpen er gyldig
-# er reglane som følgjer frå kodeboka.
-# Hvis FALSE, vil funksjonen gi ut en oppsummering
-# på et format fra ruler-pakken på hva som er feil og hvor disse er å finne.
-# Trenger
-# d = datasett som skal valideres.
-# kodebok = kodebok med informasjon om variablene i valgt datadump.
-#           Skal være kodebok på kanonisk form og på
-#           Nasjonalt servicemiljø for medisinske kvalitetsregistre region vest (NASERVE) sitt standard kodebokformat.
-
-
 #' Validering av datadump
 #'
 #' @description
@@ -366,47 +353,3 @@ dd_er_gyldig = function(d, kodebok, ...) {
   attr(er_gyldig, "rapport") = rapport
   er_gyldig
 }
-
-# sjekk at funksjonen funker
-# dd_er_gyldig(d, kb)
-#
-#
-# # # Test at funksjonen fungerer
-# library(testthat)
-# test_adr = "h:/kvalreg/felles/r-kode/datadump-valider-testar.R"
-#  test_file(test_adr, reporter="minimal") # *Veldig* kort og konsist samandrag
-#  test_file(test_adr, reporter="check")   # 13-linjes samandrag
-#  test_file(test_adr, reporter="summary") # Alt (tar stor plass viss det er mange mislykka testar)
-
-#--------------------------------------er samme variabelnavn som i kodebok------------------------------------------
-
-# # sjekker at hver enktelt av variabelnavna er de samme som i kodeboka
-# er_samme_navn = ruler::data_packs(
-#   sjekk_pasid = . |> summarise(navn_pasid = names(.)[1] %in% (kb$variabel_id)),
-#   sjekk_kjonn = . |> summarise(navn_kjonn = names(.)[2] %in% (kb$variabel_id))
-# )
-#
-# # Finner feil og rapporterer hvilken pasient og variabel som gjelder
-# # for feil i variabelnavn
-# ruler::expose(d, er_samme_navn) |>
-# ruler::get_report()
-
-# fixme! testen over burde generelaiseres til å kjøre testen for hver variabel i datarammen.
-# et forsøk nedenfor er en start, men denne fungerer ikke.
-# det skal være en data_pack()
-# Lager "rules" som tester om en variabelnavn i datadumpen
-# ikke eksisterer i kodeboka
-# sjekk_navn = (kb |> distinct(variabel_id) |> rename(varnamn = "variabel_id")) |>
-#   pmap(function(varnamn) {
-#     rlang::new_function(alist(df=),
-#                  rlang::expr(summarise(df, navn_ok = names(.)[.] %in% varnamn))
-#   )
-#   }) |> setNames(paste0("namn_", names(.)[.]))
-#
-# er_samme_navn = ruler::data_packs(sjekk_navn)
-#
-#
-# # Finner feil og rapporterer hvilken pasient og variabel som gjelder
-# # for feil i variabelnavn
-# ruler::expose(d, er_samme_navn) |>
-#   ruler::get_report()
