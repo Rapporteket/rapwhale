@@ -110,7 +110,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   l_min_maks = list()
 
   if (nrow(kb_min) > 0) {
-    sjekk_min = pmap(kb_min, function(varnamn, gverdi) {
+    sjekk_min = pmap(kb_min, \(varnamn, gverdi) {
       rlang::new_function(
         alist(df = ),
         rlang::expr(mutate(df,
@@ -130,7 +130,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
 
   # Lager "rules" som tester maks-verdier
   if (nrow(kb_maks) > 0) {
-    sjekk_maks = pmap(kb_maks, function(varnamn, gverdi) {
+    sjekk_maks = pmap(kb_maks, \(varnamn, gverdi) {
       rlang::new_function(
         alist(df = ),
         rlang::expr(mutate(df,
@@ -153,7 +153,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   # Lager "rules" som tester at variablene har riktig antall desimaler
   sjekk_des = list()
   if (nrow(kb_des) > 0) {
-    sjekk_des = pmap(kb_des, function(varnamn, gverdi) {
+    sjekk_des = pmap(kb_des, \(varnamn, gverdi) {
       rlang::new_function(
         alist(df = ),
         rlang::expr(mutate(df,
@@ -174,7 +174,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
 
   if (oblig) {
     # Lager "rules" på at obligatoriske variabler ikke skal ha noen missing.
-    sjekk_oblig = pmap(kb_oblig, function(varnamn, gverdi) {
+    sjekk_oblig = pmap(kb_oblig, \(varnamn, gverdi) {
       rlang::new_function(
         alist(df = ),
         rlang::expr(mutate(df,
@@ -196,7 +196,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   # Lager "rules" som sier at verdiene til kategoriske variabler må være tilstede i kodeboka
   if (nrow(kb_kat) != 0) {
     kb_kat_kompakt = nest(kb_kat, data = c(gverdi))
-    sjekk_kat = pmap(kb_kat_kompakt, function(varnamn, data) {
+    sjekk_kat = pmap(kb_kat_kompakt, \(varnamn, data) {
       gverdi = data$gverdi
       rlang::new_function(
         alist(df = ),
@@ -220,7 +220,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   # Lager "rules" som tester om en kolonne i datasettet er samme som i kodeboka.
   # en sjekk for numeriske variabler
   if (nrow(kb_num) > 0) {
-    sjekk_num = pmap(kb_num, function(varnamn) {
+    sjekk_num = pmap(kb_num, \(varnamn) {
       rlang::new_function(
         alist(df = ),
         rlang::expr(summarise(
@@ -237,7 +237,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   }
   # boolske
   if (nrow(kb_boolsk) > 0) {
-    sjekk_boolsk = pmap(kb_boolsk, function(varnamn) {
+    sjekk_boolsk = pmap(kb_boolsk, \(varnamn) {
       rlang::new_function(
         alist(df = ),
         rlang::expr(summarise(
@@ -254,7 +254,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   }
   # tekstvariabler
   if (nrow(kb_tekst) > 0) {
-    sjekk_tekst = pmap(kb_tekst, function(varnamn) {
+    sjekk_tekst = pmap(kb_tekst, \(varnamn) {
       rlang::new_function(
         alist(df = ),
         rlang::expr(summarise(
