@@ -36,8 +36,8 @@ kb_til_kanonisk_form = function(kb) {
   # Det kan vera at nokre ikkje-essensielle kolonnar manglar.
   # Då legg med dei til, med NA-verdiar eller eksempeldata,
   # alt etter kva som trengst.
-  # Legger til en eventuelt manglende skjema_id først, slik at 
-  # skjemanamn alltid har en kolonne å hente skjema_id fra. 
+  # Legger til en eventuelt manglende skjema_id først, slik at
+  # skjemanamn alltid har en kolonne å hente skjema_id fra.
   kb = leggtil_std(kb, skjema_id, "fiktiv_skjema_id")
   kb = leggtil_std(kb, skjemanamn, paste0("Skjemanamn for ", kb$skjema_id)) |>
     leggtil_std(kategori, NA_character_) |>
@@ -306,7 +306,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   sjekk_dup(kb, skjemanamn)
 
   kb_per_skjema = split(kb, kb$skjema_id)
-  walk(kb_per_skjema, ~ sjekk_dup(., variabel_id)) # Skal vera unik, men det held at det berre er innanfor skjema
+  walk(kb_per_skjema, \(kb) sjekk_dup(kb, variabel_id)) # Skal vera unik, men det held at det berre er innanfor skjema
 
   # Sjekk at valt variabel berre har éin verdi innanfor kvar gruppe
   sjekk_ikkjevar = function(df, gruppe, varid) {
@@ -315,7 +315,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
     nest_cols = setdiff(names(df), gruppe_tekst)
     df_grupper = nest(df, data = !!nest_cols)
 
-    ikkjeunike = map_lgl(df_grupper$data, ~ length(unique(.x[[varid_tekst]])) > 1)
+    ikkjeunike = map_lgl(df_grupper$data, \(df) length(unique(df[[varid_tekst]])) > 1)
     if (any(ikkjeunike)) {
       warning(
         "Varierande/inkonsistente '", varid_tekst, "'-verdiar for desse '", gruppe_tekst, "'-verdiane:\n",
@@ -335,18 +335,18 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   # tvers av skjema.)
   sjekk_ikkjevar(kb, variabel_id, variabeltype)
 
-  walk(kb_per_skjema, ~ sjekk_ikkjevar(., variabel_id, variabeletikett))
-  walk(kb_per_skjema, ~ sjekk_ikkjevar(., variabel_id, forklaring))
+  walk(kb_per_skjema, \(kb) sjekk_ikkjevar(kb, variabel_id, variabeletikett))
+  walk(kb_per_skjema, \(kb) sjekk_ikkjevar(kb, variabel_id, forklaring))
   sjekk_ikkjevar(kb, variabel_id, unik)
 
-  walk(kb_per_skjema, ~ sjekk_ikkjevar(., variabel_id, obligatorisk))
+  walk(kb_per_skjema, \(kb) sjekk_ikkjevar(kb, variabel_id, obligatorisk))
   sjekk_ikkjevar(kb, variabel_id, kategori) # Variablar kan ikkje kryssa kategori- eller skjemagrenser
 
   # Sjekk at alle verdiar for kategoriske variablar er unike og ingen er NA
   kb_kat_nest = kb_kat |>
     nest(data = c(-variabel_id, -skjema_id))
 
-  verdi_ok = map_lgl(kb_kat_nest$data, ~ (!any(duplicated(.x$verdi) | is.na(.x$verdi))))
+  verdi_ok = map_lgl(kb_kat_nest$data, \(kb_var) (!any(duplicated(kb_var$verdi) | is.na(kb_var$verdi))))
 
   if (any(!verdi_ok)) {
     warning(
@@ -357,7 +357,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   }
 
   # Sjekk at kategoriske variablar har minst *to* svaralternativ
-  verdi_ok = map_lgl(kb_kat_nest$data, ~ nrow(.) >= 2)
+  verdi_ok = map_lgl(kb_kat_nest$data, \(kb_var) nrow(kb_var) >= 2)
 
   if (any(!verdi_ok)) {
     warning(
@@ -373,7 +373,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   # (me sjekkar tidlegare oppe at desse er unike innanfor variabel_id)
   if (any(!is.na(kb$kategori))) {
     kb_skjema = nest(kb, data = -skjema_id)
-    har_kat = map_lgl(kb_skjema$data, ~ (!is.na(.x$kategori[1])) & (.x$kategori[1] != ""))
+    har_kat = map_lgl(kb_skjema$data, \(kb_skjema) (!is.na(kb_skjema$kategori[1])) & (kb_skjema$kategori[1] != ""))
     if (any(!har_kat)) {
       warning(
         "Nokre skjema manglar kategorioverskrift (i førsterader):\n",
