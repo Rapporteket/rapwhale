@@ -168,7 +168,9 @@ test_that("Feilmelding viss kodeboka ikkje inneheld dei nødvendige kolonnane (s
   expect_error(kb_fyll(d, kb[-2]), feilmelding)
   expect_error(kb_fyll(d, kb[-3]), feilmelding)
   expect_no_error(kb_fyll(d, kb[3:1])) # Godta forskjellig rekkjefølgje
-  expect_no_error(kb_fyll(d, cbind(x = 1:nrow(kb), kb[3:1], y = 1:nrow(kb)))) # Godta ekstrakolonnar
+  expect_no_error(kb_fyll(d,
+    kb = cbind(x = seq_len(nrow(kb)), kb[3:1], y = seq_len(nrow(kb))) # Godta ekstrakolonnar
+  ))
 })
 
 test_that("NA-verdiar i kodeboka vert oppdaga", {

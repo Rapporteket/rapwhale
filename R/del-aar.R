@@ -169,7 +169,7 @@ tid_til_tidslinje = function(dato, antall_deler) {
   aar = unique(sort(c(unike_ar, endepunkt + rep(unike_ar, each = length(endepunkt)))))
 
   aar_midtpunkt = numeric(length = length(aar) - 1)
-  for (i in 1:length(aar_midtpunkt)) {
+  for (i in seq_along(aar_midtpunkt)) {
     aar_midtpunkt[i] = (aar[i] + aar[i + 1]) / 2
   }
 

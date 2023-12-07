@@ -363,9 +363,9 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen
   )
 
   skaaringstabell_ugyldig_variabel_kolonne = skaaringstabell_eks
-  skaaringstabell_ugyldig_variabel_kolonne$variabel = 1:nrow(
+  skaaringstabell_ugyldig_variabel_kolonne$variabel = seq_len(nrow(
     skaaringstabell_ugyldig_variabel_kolonne
-  )
+  ))
   expect_error(sjekk_skaaringstabell(
     skaaringstabell_ugyldig_variabel_kolonne
   ), feilmelding_kolonneformat)
