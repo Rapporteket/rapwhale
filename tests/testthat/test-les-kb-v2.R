@@ -617,7 +617,7 @@ test_that("funksjonen gir feilmelding hvis variabel eksisterer fra før", {
       skjema = "basereg",
       variabler = duplikat_variabel
     ),
-    error = "Variabelen:\n 'a' finnes i skjema fra før"
+    regexp = "Variabelen:\n 'a' finnes i skjema fra før"
   )
 })
 
@@ -632,7 +632,7 @@ test_that("funksjonen gir feilmelding hvis ikke alle nødvendige verdier er inkl
       skjema = "basereg",
       variabler = ingen_variabeltype
     ),
-    error = "Det mangler kolonner for nye variabler:\n variabeltype"
+    regexp = "Det mangler kolonner for nye variabler:\n variabeltype"
   )
 })
 
