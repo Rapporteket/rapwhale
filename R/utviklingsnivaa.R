@@ -33,7 +33,7 @@ utviklingsnivaa = function(mappe = "man") {
   funksjonar_namn = str_replace(funksjonar, "\\.Rd", "()")
 
   # Les inn linjene i hjelpefilene
-  parse_Rd_mapper = purrr::as_mapper(~ tools::parse_Rd(., permissive = TRUE))
+  parse_Rd_mapper = purrr::as_mapper(\(x) tools::parse_Rd(x, permissive = TRUE))
   funksjonsadresser = paste0(mappe, "/", funksjonar)
   funksjonar_parsed = map(funksjonsadresser, parse_Rd_mapper)
 
@@ -41,7 +41,7 @@ utviklingsnivaa = function(mappe = "man") {
   hent_nivaa = function(funksjon_rd) {
     desc_rd = purrr::keep(
       funksjon_rd,
-      ~ attr(., "Rd_tag") == "\\description"
+      \(x) attr(x, "Rd_tag") == "\\description"
     )
     nivaa = unlist(desc_rd) |>
       str_subset("^lifecycle-[[:alpha:]]+\\.svg$") |>
@@ -58,7 +58,7 @@ utviklingsnivaa = function(mappe = "man") {
   er_intern = function(funksjon_rd) {
     funksjon_rd = purrr::keep(
       funksjon_rd,
-      ~ attr(., "Rd_tag") == "\\keyword"
+      \(x) attr(x, "Rd_tag") == "\\keyword"
     )
     any(map_chr(funksjon_rd, 1) == "internal")
   }
