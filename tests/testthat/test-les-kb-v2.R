@@ -616,7 +616,7 @@ test_that("funksjonen gir feilmelding hvis variabel eksisterer fra før", {
     object = legg_til_variabler_kb(kb_legg_til_base,
       ekstra_data = duplikat_variabel
     ),
-    regexp = "Variabelen:\n 'a' finnes i skjema fra før"
+    regexp = "Variabel i ekstra_data eksisterer i skjema fra før:\na"
   )
 })
 
