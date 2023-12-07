@@ -118,7 +118,7 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
     ungroup()
 
   # Legg til konfidensintervall
-  konfint_robust = function(x) {
+  konfint_robust = function() {
     konf = possibly(
       .f = \() regn_konfint_bin(
         x = d_sammendrag$ki_teller,
@@ -134,7 +134,7 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
         upper = NA_real_
       )
     )
-    konf(x)
+    konf()
   }
 
   konfint = konfint_robust()
