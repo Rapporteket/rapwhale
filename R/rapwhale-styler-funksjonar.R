@@ -81,7 +81,7 @@ wrap_curly_rapwhale = function(pd,
   )$text
   requires_braces = if_for_while_part_requires_braces_rapwhale(pd, key_token) &&
     !any(pd$stylerignore)
-  if (requires_braces | next_terminal == "return") {
+  if (requires_braces || next_terminal == "return") {
     closing_brace_ind = which(pd$token == key_token)[1]
     pd$spaces[closing_brace_ind] = 1L
     all_to_be_wrapped_ind = rlang::seq2(

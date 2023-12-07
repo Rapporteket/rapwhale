@@ -195,7 +195,7 @@ regn_konfint_univar = function(x, bootstrap = FALSE, konf_niva = 0.95, R = 9999)
   # Hvis det er for få eller for lite varierende
   # observasjoner til å regne ut konfidensintervall,
   # returner NA for konfidensintervallene
-  if ((length(x) < 2) | (sd(x) == 0)) {
+  if ((length(x) < 2) || (sd(x) == 0)) {
     tibble(
       low = NA_real_,
       mean = mean(x),
