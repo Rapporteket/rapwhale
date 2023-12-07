@@ -92,7 +92,7 @@ lag_valideringsdatasett = function(d_reg, indvars) {
 
 
   # Lag valideringsdatasett
-  
+
   d_vld = d_reg
   d_vld$vld_varnamn = rep(list(datavars), nrow(d_reg))
   d_vld = d_vld |>

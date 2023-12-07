@@ -54,7 +54,6 @@
 #' # Suffiks kan endres fra default "_tekst"
 #' kb_fyll(d, kb, med, .suffiks = "_hei")
 kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
-
   # Stopp viss kodeboka ikkje inneheld dei tre nødvendige kolonnane
   if (!all(c("variabel_id", "verdi", "verditekst") %in% names(kb))) {
     stop("Ugyldig kodebok. Obligatoriske kolonnar er 'variabel_id', 'verdi' og 'verditekst'.")

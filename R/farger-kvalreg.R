@@ -16,7 +16,6 @@
 #'
 #' scales::show_col(unlist(farger))
 farger_kvalreg = function() {
-
   # Dei offisielle fargene
   colPrim = c(
     "#000059", "#084594", "#2171b5",

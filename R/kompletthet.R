@@ -3,12 +3,12 @@
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' Erstatter utvalgte 'ukjente' verdier med NA. Noen datasett har variabler 
-#' hvor manglende besvarelser får verdi -1, 99 eller andre verdier for å 
-#' indikere at spørsmålet ikke er besvart. I tillegg kan det også finnes 
-#' ekte NA-verdier, slik at beregning av kompletthet kompliseres. 
-#' Funksjonen tar inn en na_vektor som indikerer hvilke verdier som 
-#' skal erstattes med NA, slik at beregning av NA kan inkludere 
+#' Erstatter utvalgte 'ukjente' verdier med NA. Noen datasett har variabler
+#' hvor manglende besvarelser får verdi -1, 99 eller andre verdier for å
+#' indikere at spørsmålet ikke er besvart. I tillegg kan det også finnes
+#' ekte NA-verdier, slik at beregning av kompletthet kompliseres.
+#' Funksjonen tar inn en na_vektor som indikerer hvilke verdier som
+#' skal erstattes med NA, slik at beregning av NA kan inkludere
 #' disse "ukjente" besvarelsene.
 #'
 #' @param data tibble/data.frame som inneholder variabel hvor
@@ -58,7 +58,7 @@ erstatt_ukjent = function(data, variabel, na_vektor) {
 #' med i utdata. \cr
 #' Variabel - Navn på variabel det er beregnet kompletthet for. \cr
 #' Totalt_antall - Totalt antall observasjoner per gruppe i inndata  \cr.
-#' Antall_na - Antall observasjoner som er NA i inndata. \cr 
+#' Antall_na - Antall observasjoner som er NA i inndata. \cr
 #' Andel_na - Andel observasjoner som er NA i inndata.
 #'
 #' @export
@@ -208,12 +208,12 @@ beregn_kompletthet_datasett = function(data) {
 # Erstatt_ukjent_for_datasett -------------------------------------------------
 
 #' Erstatt ukjent for datasett
-#' 
+#'
 #' @description
 #' `r lifecycle::badge("experimental")`
-#' 
+#'
 #' Enkelte variabler har egne verdier for å indikere manglende besvarelse
-#' i tillegg til NA-verdier, for eksempel verdien -1 for 
+#' i tillegg til NA-verdier, for eksempel verdien -1 for
 #' verditekst "Velg Verdi" eller "Ukjent verdi".
 #' Funksjonen erstatter disse verdiene med NA for å beregne andel manglende
 #' besvarelser inkludert disse ukjente verdiene.
@@ -226,9 +226,9 @@ beregn_kompletthet_datasett = function(data) {
 #' ukjent_datasett må ha.
 #'
 #' @return
-#' Returnerer opprinnelig datasett men verdier oppgitt i *ukjent_datasett* er 
-#' erstattet med NA for de aktuelle variablene. 
-#'  
+#' Returnerer opprinnelig datasett men verdier oppgitt i *ukjent_datasett* er
+#' erstattet med NA for de aktuelle variablene.
+#'
 #' @export
 #'
 #' @examples
@@ -365,7 +365,6 @@ erstatt_ukjent_for_datasett = function(data, ukjent_datasett) {
 #'   ukjent_datasett = ukjent_datasett
 #' )
 beregn_kompletthet_datasett_med_ukjent = function(data, ukjent_datasett) {
-
   # Beregner kompletthet for datasett ekskludert ukjente
   d_na = beregn_kompletthet_datasett(data = data)
 

@@ -1,4 +1,3 @@
-
 # regn_ki_bin() -----------------------------------------------------------
 
 test_that("Funksjonen gir konfindensintervall med øvre grense 1 og nedre nedre grense 0", {

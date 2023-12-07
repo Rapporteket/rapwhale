@@ -66,7 +66,7 @@
 #' @export
 #'
 #' @examples
-#' #Pakke for bruk av tibble-objekt og rør-operatoren
+#' # Pakke for bruk av tibble-objekt og rør-operatoren
 #' library(dplyr)
 #'
 #' # Eksempeldata
@@ -164,7 +164,7 @@ aggreger_ki_rate = function(d_ki_ind, alfa = 0.05, multiplikator = 1) {
   if (any(group_size(d_ki_ind) == 0)) {
     warning("Det finnes grupper uten observasjoner i grupperingsvariabel")
   }
-  
+
   # I R versjon >= 4.4.0 er profile.glm() flytta
   # frå MASS-pakken til stats-pakken.
   # For å støtta *alle* R-versjonar vekslar me derfor

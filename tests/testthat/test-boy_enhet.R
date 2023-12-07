@@ -98,15 +98,17 @@ test_that("Gir feilmelding ved ugyldig type inndata", {
 })
 
 test_that("Gir feilmelding hvis utdata fra formatering() ikke har rett lengde", {
-  expect_error(boy_enhet(
-    1:3, "operasjon", "operasjoner",
-    formatering = \(x) x[1]
-  ),
-  paste0(
-    "Utdata fra formatering() må ha samme lengde som «x» ",
-    "(har hhv. lengde 1 og 3)"
-  ),
-  fixed = TRUE
+  expect_error(
+    object = boy_enhet(1:3,
+      entall = "operasjon",
+      flertall = "operasjoner",
+      formatering = \(x) x[1]
+    ),
+    regexp = paste0(
+      "Utdata fra formatering() må ha samme lengde som «x» ",
+      "(har hhv. lengde 1 og 3)"
+    ),
+    fixed = TRUE
   )
 })
 
@@ -116,19 +118,13 @@ test_that("Gir feilmelding ved ugyldig type argument-verdi for 'entall'- og
     "Argumentene «entall» og «flertall» må begge være av ",
     "klasse «character» og lengde 1"
   )
+  expect_error(boy_enhet(1, 1, "operasjoner"), feilmelding_argument)
+  expect_error(boy_enhet(123, "operasjon", 123), feilmelding_argument)
   expect_error(
-    boy_enhet(1, 1, "operasjoner"),
-    feilmelding_argument
-  )
-  expect_error(
-    boy_enhet(123, "operasjon", 123),
-    feilmelding_argument
-  )
-  expect_error(
-    boy_enhet(
-      c(1, 5), c("sykepleier", "lege"),
-      c("sykepleiere", "leger")
+    object = boy_enhet(c(1, 5),
+      entall = c("sykepleier", "lege"),
+      flertall = c("sykepleiere", "leger")
     ),
-    feilmelding_argument
+    regexp = feilmelding_argument
   )
 })
