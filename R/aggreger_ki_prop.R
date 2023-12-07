@@ -96,7 +96,10 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
       ((d_ki_ind$ki_krit_teller %in% c(TRUE, FALSE) & d_ki_ind$ki_krit_nevner) |
         (d_ki_ind$ki_krit_teller %in% c(FALSE, NA) & !d_ki_ind$ki_krit_nevner))
   )) {
-    stop("«ki_krit_teller» må være TRUE eller FALSE hvis «ki_krit_nevner» er TRUE, og FALSE eller NA hvis «ki_krit_nevner» er FALSE")
+    stop(paste0(
+      "«ki_krit_teller» må være TRUE eller FALSE hvis «ki_krit_nevner» ",
+      "er TRUE, og FALSE eller NA hvis «ki_krit_nevner» er FALSE"
+    ))
   }
   if (any(group_size(d_ki_ind) == 0)) {
     warning("Det finnes grupper uten observasjoner i grupperingsvariabel")

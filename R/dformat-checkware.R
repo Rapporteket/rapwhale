@@ -6,9 +6,12 @@
 # gjer om til vårt standardformat (kanonisk form)
 
 # Inndata:
-#   mappe_dd: Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
+#   mappe_dd: Adressa til datadump-mappa
+#             (som inneheld éi undermappe,
+#             med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
 #   reg_id:   ID som identifiserer registeret og er prefiks til alle filnamna
-#   dato:     Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
+#   dato:     Datoen ein skal henta ut kodeboka for (tekststreng eller dato).
+#             Kan òg vera NULL, for å henta nyaste kodebok.
 #
 # Utdata:
 #   kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar
@@ -32,11 +35,18 @@
 #'
 #' Returnerer kodeboken på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar.
 #'
-#' @param mappe_dd Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD,
-#' for kvart uttak) Her er det gitt at nyeste kodebok legges i samme mappe som nedhentede datadumper.
-#' @param dato Hvis man ønsker å hente kodebok fra en spesifikk dato. Hvis ikke hentes dette fra nyeste dato. Default er NULL.
-#' @param valider_kb Om man ønsker å validere kodeboka ja/nei (TRUE/FALSE).
-#' Hvis man ønsker å ikke validere kodebok med kb_er_gyldig, kan man sette denne til FALSE. Default er TRUE.
+#' @param mappe_dd
+#' Adressa til datadump-mappa
+#' (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak).
+#' Her er det gitt at nyeste kodebok legges i samme mappe
+#' som nedhentede datadumper.
+#' @param dato
+#' Hvis man ønsker å hente kodebok fra en spesifikk dato.
+#' Hvis ikke hentes dette fra nyeste dato. Default er NULL.
+#' @param valider_kb
+#' Om man ønsker å validere kodeboka ja/nei (TRUE/FALSE).
+#' Hvis man ønsker å ikke validere kodebok med kb_er_gyldig,
+#' kan man sette denne til FALSE. Default er TRUE.
 #' @export
 les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
@@ -52,7 +62,8 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
 
   # kodebok-kolonnetyper som skal brukes når man henter inn kodeboka
   # Noen ganger har kodeboka tomme kolonner, og kolonnetypen må defineres på forhånd uansett
-  # Kodeboka er laget i excel, og dessverre må disse per i dag defineres manuelt # fixme! automatiser ved automatisert kodebok.
+  # Kodeboka er laget i excel, og dessverre må disse per i dag defineres manuelt
+  # fixme! automatiser ved automatisert kodebok.
   # Excel har heller ikke så mange, presise variabeltyper
   # I standardrekkefølgen på kolonner til Fagsenterets standard kodebokformat skal de 15 første kolonnene
   # skjema_id, skjema_namn, kategori, innleiing, varibel_id_checkware, variabel_id, variabeletikett, forklaring,
@@ -94,7 +105,8 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
 # mappe = "***FJERNA-ADRESSE***"
 # kb = les_kb_checkware(mappe)
 
-#------------------------------------------------lag datadump checkware------------------------
+
+#---------------------------------lag datadump checkware------------------------
 
 
 # Funksjon for å tilrettelegge checkware-data basert på kodebok,
@@ -120,7 +132,8 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
 # Argumenter:
 #   mappe_dd:  Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
 #   skjema_id: ID til skjemaet ein vil henta inn (brukt i filnamnet til datadumpen og i kolonnen «skjema_id» i kodeboka)
-#   dato:      Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
+#   dato:      Datoen ein skal henta ut kodeboka for (tekststreng eller dato).
+#              Kan òg vera NULL, for å henta nyaste kodebok.
 #   kb:        Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
 #   valider_dd: Om man ønsker å validere datadumpen ja/nei (TRUE/FALSE).
 #             Hvis man ønsker å ikke validere datadump med dd_er_gyldig, kan man sette denne til FALSE. Default er TRUE.
@@ -150,18 +163,42 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
 #' ein har kodeboka frå ei anna kjelde eller viss ein vil bruka ei modifisert
 #' kodebok (generelt farleg!).
 #'
-#' Returnerer et R-datasett for det aktuelle skjemaet, med variabelnamn gjort om til ønnskede, tilsvarende verdier funnet i kodeboka.
-#'   (I stedet for Q1, Q2, Q3 osv. som CheckWare ofte oppgir)
+#' Returnerer et R-datasett for det aktuelle skjemaet,
+#' med variabelnamn gjort om til ønnskede,
+#' tilsvarende verdier funnet i kodeboka.
+#' (I stedet for Q1, Q2, Q3 osv. som CheckWare ofte oppgir)
 #'
-#' @param mappe_dd Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak).
-#' @param skjema_id ID til skjemaet ein vil henta inn (brukt i filnamnet til datadumpen og i kolonnen «skjema_id» i kodeboka).
-#' @param kontekst Berre ta med rader med kontekstverdi like disse (standard: T0, T1 eller T2). Sett til NULL for å ta med alle.
-#' @param dato Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
-#' @param kodebok Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
-#' @param valider_dd Om man ønsker å validere datadumpen ja/nei (TRUE/FALSE). Hvis man ønsker å ikke validere datadump med dd_er_gyldig, kan man sette denne til FALSE. Default er TRUE.
-#' @param valider_kb Om man ønsker å validere kodeboka ja/nei (TRUE/FALSE). Hvis man ønsker å ikke validere kodebok med kb_er_gyldig, kan man sette denne til FALSE. Default er TRUE.
+#' @param mappe_dd
+#' Adressa til datadump-mappa
+#' (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak).
+#' @param skjema_id
+#' ID til skjemaet ein vil henta inn
+#' (brukt i filnamnet til datadumpen og i kolonnen «skjema_id» i kodeboka).
+#' @param kontekst
+#' Berre ta med rader med kontekstverdi like disse (standard: T0, T1 eller T2).
+#' Sett til NULL for å ta med alle.
+#' @param dato
+#' Datoen ein skal henta ut kodeboka for (tekststreng eller dato).
+#' Kan òg vera NULL, for å henta nyaste kodebok.
+#' @param kodebok
+#' Kodebok på kanonisk form.
+#' Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
+#' @param valider_dd
+#' Om man ønsker å validere datadumpen ja/nei (TRUE/FALSE).
+#' Hvis man ønsker å ikke validere datadump med dd_er_gyldig,
+#' kan man sette denne til FALSE. Default er TRUE.
+#' @param valider_kb
+#' Om man ønsker å validere kodeboka ja/nei (TRUE/FALSE).
+#' Hvis man ønsker å ikke validere kodebok med kb_er_gyldig,
+#' kan man sette denne til FALSE. Default er TRUE.
 #' @export
-les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"), dato = NULL, kodebok = NULL, valider_dd = TRUE, valider_kb = TRUE) {
+les_dd_checkware = function(mappe_dd,
+                            skjema_id,
+                            kontekst = c("T0", "T1", "T2"),
+                            dato = NULL,
+                            kodebok = NULL,
+                            valider_dd = TRUE,
+                            valider_kb = TRUE) {
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
     dato = dir(mappe_dd, pattern = "[0-9]{4}-[0-1]{2}-[0-9]{2}", full.names = FALSE) |>
@@ -183,7 +220,8 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
   }
 
   # Lager objekt med filter på kodebok til å bare innneholde informasjon om aktuelt skjema til datadumpen
-  # Alle datadumper kommer med ett skjema + metadata, bortsett fra treatments, som ikke inneholder metadata, bortsett fra r_id.
+  # Alle datadumper kommer med ett skjema + metadata, bortsett fra treatments,
+  # som ikke inneholder metadata, bortsett fra r_id.
   if (skjema_id == "treatments") {
     kb_skjema = filter(kodebok, skjema_id == !!skjema_id)
   } else {
@@ -221,7 +259,8 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
 
   # de kategoriske variablene som koder med tekst-verdier skal få character
 
-  # kategoriske variabler skal være integer hvis de er heltall, og character hvis de har koder som ikke er tall (type ICD-10)
+  # kategoriske variabler skal være integer hvis de er heltall,
+  # og character hvis de har koder som ikke er tall (type ICD-10)
   # funksjoner som sjekker om en vector er et heltall, donert av Dr. Hufthammer
   er_heiltal = function(x) {
     isTRUE(all(x == suppressWarnings(as.integer(x))))

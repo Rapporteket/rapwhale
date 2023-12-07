@@ -287,10 +287,22 @@ d_test = tibble(
 )
 
 ukjent_datasett = tibble(
-  variabel = c("pas_id", "sykehus", rep("vekt", 2), rep("vekt_2", 2), "hoyde", rep("symptom", 2), "test_logisk"),
-  ukjent_verdi_integer = c(NA_integer_, NA_integer_, 99, -1, 99, -1, NA_integer_, NA_integer_, NA_integer_, NA_integer_),
-  ukjent_verdi_real = c(NA_real_, NA_real_, NA_real_, NA_real_, NA_real_, NA_real_, 99.9, NA_real_, NA_real_, NA_real_),
-  ukjent_verdi_tekst = c(NA_character_, NA_character_, NA_character_, NA_character_, NA_character_, NA_character_, NA_character_, "vet ikke", "Ukjent", NA_character_)
+  variabel = c(
+    "pas_id", "sykehus", rep("vekt", 2), rep("vekt_2", 2),
+    "hoyde", rep("symptom", 2), "test_logisk"
+  ),
+  ukjent_verdi_integer = c(
+    NA_integer_, NA_integer_, 99, -1, 99, -1,
+    NA_integer_, NA_integer_, NA_integer_, NA_integer_
+  ),
+  ukjent_verdi_real = c(
+    NA_real_, NA_real_, NA_real_, NA_real_, NA_real_,
+    NA_real_, 99.9, NA_real_, NA_real_, NA_real_
+  ),
+  ukjent_verdi_tekst = c(
+    NA_character_, NA_character_, NA_character_, NA_character_, NA_character_,
+    NA_character_, NA_character_, "vet ikke", "Ukjent", NA_character_
+  )
 )
 
 

@@ -99,7 +99,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
     stop(paste0("Kategoriske variabler mangler verdier for verdi."))
   }
 
-  #---------------------------------------------min-verdier------------------------------------------------------
+  #------------------min-verdier------------------------------------------------
 
   # Lager regel for at verdier i data
   # skal være større eller lik min-verdi i kodebok.
@@ -126,7 +126,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
     # fyller regelen i lista
     l_min_maks = append(l_min_maks, sjekk_min)
   }
-  #  -----------------------------maks-------------------------------------------
+  #  -----------------------------maks------------------------------------------
 
   # Lager "rules" som tester maks-verdier
   if (nrow(kb_maks) > 0) {
@@ -148,7 +148,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   # lager en cell-pack med maks-sjekkene
   er_innfor_min_og_maks = ruler::cell_packs(l_min_maks)
 
-  #-----------------------------------------desimaler-------------------------------------------------
+  #----------------------desimaler----------------------------------------------
 
   # Lager "rules" som tester at variablene har riktig antall desimaler
   sjekk_des = list()
@@ -170,7 +170,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   # lager en cell-pack med des-sjekkene
   har_riktig_ant_des = ruler::cell_packs(sjekk_des)
 
-  #---------------------------------------obligatoriske felt----------------------------------------------
+  #--------------------obligatoriske felt---------------------------------------
 
   if (oblig) {
     # Lager "rules" på at obligatoriske variabler ikke skal ha noen missing.
@@ -191,7 +191,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
     oblig_har_ingen_missing = ruler::cell_packs(sjekk_oblig)
     oblig_har_ingen_missing
   }
-  #------------------------------------------kategoriske verdier----------------------------------------
+  #--------------------kategoriske verdier--------------------------------------
 
   # Lager "rules" som sier at verdiene til kategoriske variabler må være tilstede i kodeboka
   if (nrow(kb_kat) != 0) {
@@ -213,7 +213,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
     # lager en cell-pack med verdi-sjekkene
     kat_er_innfor_verdier = ruler::cell_packs(sjekk_kat)
   }
-  #-----------------------------------------variabeltype--------------------------------------------------------
+  #--------------------variabeltype---------------------------------------------
 
   # lager en liste for å få inn regler avhengig av hvilke som eksisterer i kodeboka
   l_vartype = list()
@@ -273,7 +273,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   # lager en col-pack med variabeltype-sjekkene
   er_riktig_variabeltype = ruler::col_packs(l_vartype)
 
-  #-----------------------------------------alle variabelnavn tilstede-------------------------------------------------------
+  #----------------------alle variabelnavn tilstede-----------------------------
   # Test sjekker at alle variablenavn i datadump er med i kodeboka (samtidig)
   # og at alle varibelnavn i kodebok er med i datadump
   alle_var_er_med = ruler::data_packs(
@@ -289,7 +289,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
     }
   )
 
-  #-------------------------------------lik rekkefølge på variabelnavn som i kodebok----------------------------------
+  #---------------------lik rekkefølge på variabelnavn som i kodebok------------
 
   # sjekk at rekkefølgen på kolonner er lik mellom data og kodebok
   if (rekkefolge) {
@@ -337,7 +337,8 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
 #'
 #' @param d Datasett som skal valideres.
 #' @param kodebok Kodebok med informasjon om variablene i valgt datadump.
-#' Skal være kodebok på kanonisk form og på Nasjonalt servicemiljø for medisinske kvalitetsregistre region vest (NASERVE)
+#' Skal være kodebok på kanonisk form og på Nasjonalt servicemiljø for
+#' medisinske kvalitetsregistre region vest (NASERVE)
 #' sitt standard kodebokformat.
 #' @param ... Eventuelle argument som blir gitt videre til [lag_regelsett()].
 #' @export

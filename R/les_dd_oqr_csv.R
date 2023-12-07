@@ -82,7 +82,10 @@ konverter_boolske = function(x, boolsk_usann, boolsk_sann, na_verdier = NA) {
   if (!all(er_gyldig)) {
     ugyldige = paste0(er_ugyldig, collapse = ",")
     mulige = paste0(mulige_verdier, collapse = ",")
-    stop(error = paste0("Det finnes ugyldige verdier for en boolsk variabel: ", ugyldige, "\nMulige verdier er: ", mulige))
+    stop(error = paste0(
+      "Det finnes ugyldige verdier for en boolsk variabel: ", ugyldige,
+      "\nMulige verdier er: ", mulige
+    ))
   }
 
   # Konverterer til logisk vektor
@@ -153,9 +156,15 @@ erstatt_med_na = function(x, na_verdi) {
 #' Variabelnavn kan endres ved å inkludere en vektor med nye variabelnavn.
 #' Aksepterte variabeltyper er: tekst, desimaltall, heltall, boolsk, dato, dato_kl og klokkeslett.
 #'
-#' @param adresse Filplassering for datadump som skal leses inn.
-#' @param spesifikasjon Tibble med tre kolonner. Inneholder varnavn_kilde, varnavn_resultat og vartype.
-#' @param formatspek Liste som inneholder informasjon om hvordan csv-fil er spesifisert. Gjelder desimaltegn, datoformat, klokkeslettformat, tidssone, boolsk_sann, boolsk_usann
+#' @param adresse
+#' Filplassering for datadump som skal leses inn.
+#' @param spesifikasjon
+#' Tibble med tre kolonner.
+#' Inneholder varnavn_kilde, varnavn_resultat og vartype.
+#' @param formatspek
+#' Liste som inneholder informasjon om hvordan csv-fil er spesifisert.
+#' Gjelder desimaltegn, datoformat, klokkeslettformat,
+#' tidssone, boolsk_sann, boolsk_usann.
 #'
 #' @keywords internal
 les_csv_base = function(adresse, spesifikasjon, formatspek) {

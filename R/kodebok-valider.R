@@ -2,10 +2,16 @@
 
 # Gjer kodeboka om til kanonisk form, dvs. slik at
 # implisitte verdiar er fylde ut.
-# fixme! funksjonen mangler å ta inn den nye variabelen nokkel (per i dag blir den kastet ut av kodeboka)
-# fixme! funksjonen håndterer ikke ekstra variabler som f.eks variabel_id_checkware.
-# Når man er på det, bør funksjonen heller ha en option hvor man kan skrive inn kolonner man ønsker å godta selv
-# om det ikke er en del av standard-kolonnene. Da kan man ha med variabel_id_checkware, maal_id, nokkel og andre aktuelle kolonner
+# fixme! funksjonen mangler å ta inn den nye variabelen nokkel
+# (per i dag blir den kastet ut av kodeboka)
+# fixme! funksjonen håndterer ikke ekstra variabler
+# som f.eks variabel_id_checkware.
+# Når man er på det,
+# bør funksjonen heller ha en option hvor man kan skrive inn kolonner
+# man ønsker å godta selv
+# om det ikke er en del av standard-kolonnene.
+# Da kan man ha med variabel_id_checkware,
+# maal_id, nokkel og andre aktuelle kolonner
 
 
 #' Valider kodebok
@@ -123,7 +129,10 @@ kb_til_kanonisk_form = function(kb) {
     "min", "maks", "min_rimeleg", "maks_rimeleg", "kommentar_rimeleg",
     "utrekningsformel", "logikk", "kommentar"
   )
-  ekstravars = setdiff(names(kb), c("variabel_id_checkware", std_namn)) # fixme: "variabel_id_checkware" er mellombels løysing berre for å kunna støtta CheckWare-datasett (fjern òg lag betre løysing på problemet)
+  # fixme: "variabel_id_checkware" er mellombels løysing berre
+  # for å kunna støtta CheckWare-datasett
+  # (fjern òg lag betre løysing på problemet)
+  ekstravars = setdiff(names(kb), c("variabel_id_checkware", std_namn))
   if (length(ekstravars) > 0) {
     warning(paste0(
       "Fjernar kolonnar som ikkje skal vera med i kodeboka:\n",
@@ -386,7 +395,10 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   # Tester at bare gyldige variabeltyper er med i kodeboka
   # Objekt med gyldige variabeltyper til kanonisk standardform av kodebok,
   # hentet fra dokumentasjon om standardformen. Kan utvides.
-  gyldige_vartyper = c("numerisk", "kategorisk", "boolsk", "dato", "dato_kl", "kl", "utrekna", "tekst", "tekst*", "fritekst")
+  gyldige_vartyper = c(
+    "numerisk", "kategorisk", "boolsk", "dato", "dato_kl", "kl",
+    "utrekna", "tekst", "tekst*", "fritekst"
+  )
   if (any(!kb$variabeltype %in% gyldige_vartyper)) {
     ugyldig_vartyp = kb |>
       filter(!variabeltype %in% gyldige_vartyper) |>
@@ -645,7 +657,8 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
     # tilfelle må variabelnamna vera gyldige sjølv om
     # me strippar vekk skjemaprefiksa
     if (skjemaprefiks) {
-      varnamn_slutt = str_split_fixed(varnamn, "_", n = 2)[, 2] # Delen av variabelnamnet etter første _ (dvs. utan skjemaprefiks)
+      # Delen av variabelnamnet etter første _ (dvs. utan skjemaprefiks)
+      varnamn_slutt = str_split_fixed(varnamn, "_", n = 2)[, 2]
       ugyldig = (ugyldig | !str_detect(varnamn_slutt, reg_ok))
     }
 
