@@ -614,8 +614,7 @@ test_that("funksjonen gir feilmelding hvis variabel eksisterer fra før", {
 
   expect_error(
     object = legg_til_variabler_kb(kb_legg_til_base,
-      skjema = "basereg",
-      variabler = duplikat_variabel
+      ekstra_data = duplikat_variabel
     ),
     regexp = "Variabelen:\n 'a' finnes i skjema fra før"
   )
@@ -629,8 +628,7 @@ test_that("funksjonen gir feilmelding hvis ikke alle nødvendige verdier er inkl
 
   expect_error(
     object = legg_til_variabler_kb(kb_legg_til_base,
-      skjema = "basereg",
-      variabler = ingen_variabeltype
+      ekstra_data = ingen_variabeltype
     ),
     regexp = "Det mangler kolonner for nye variabler:\n variabeltype"
   )
