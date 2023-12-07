@@ -52,7 +52,10 @@ test_that("Valideringsdatasett med 0 rader vert rekna som gyldige (viss resten e
 
   # Skal faktisk vera lov å ikkje ha nokon verdikolonnar
   # (dersom me har null rader)
-  d_null_rader_null_verdikol = d_vld_gyldig[c(), c("pasid", "dato_inn", "kjonn", "sjukehus", "vld_varnamn", "vld_vartype")]
+  d_null_rader_null_verdikol = d_vld_gyldig[
+    c(),
+    c("pasid", "dato_inn", "kjonn", "sjukehus", "vld_varnamn", "vld_vartype")
+  ]
   expect_true(er_valideringsdatasett_gyldig(d_null_rader_null_verdikol))
 })
 
@@ -163,7 +166,10 @@ test_that("Datasett der «vld_verdi_intern_x» og «vld_verdi_ekstern_x» har ul
   expect_false(er_valideringsdatasett_gyldig(d_vld_ugyldig))
 })
 
-test_that("Datasett der «vld_verdi_intern_x» og «vld_verdi_ekstern_x» har likt klassehierarki (men med meir enn eitt nivå) vert rekna som gyldige", {
+test_that(paste0(
+  "Datasett der «vld_verdi_intern_x» og «vld_verdi_ekstern_x» har likt ",
+  "klassehierarki (men med meir enn eitt nivå) vert rekna som gyldige"
+), {
   d_vld_fleire_klassar = d_vld_gyldig
   class(d_vld_fleire_klassar$vld_verdi_intern_tal) = c("foo", "numeric")
   class(d_vld_fleire_klassar$vld_verdi_ekstern_tal) = c("foo", "numeric")

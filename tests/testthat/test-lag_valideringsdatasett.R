@@ -126,7 +126,10 @@ test_that("Håndterer variabler med subklasser (flere klasser), eks. POSIXct-var
   expect_no_error(lag_valideringsdatasett(d_inn, indvars = "pasid"))
 })
 
-test_that("Funksjonen stoppar med eksplisitt feilmelding viss samanslåing av klassane til dei ulike variabeltypane ikkje gjev eintydige resultat", {
+test_that(paste0(
+  "Funksjonen stoppar med eksplisitt feilmelding viss samanslåing av klassane ",
+  "til dei ulike variabeltypane ikkje gjev eintydige resultat"
+), {
   d = tibble(ind = 1:2, x = 3:4, y = 5:6)
   class(d$x) = c("foo_bar", "numeric")
   class(d$y) = c("foo", "bar", "numeric")

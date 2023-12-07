@@ -320,7 +320,10 @@ test_that("Funksjonen returnerer «NA» for de grupperte verdiene som ikke har n
   expect_identical(aggreger_ki_rate(d_gruppert_med_na), svar_gruppert_med_na)
 })
 
-test_that("Funksjonen gir en advarsel når det finnes ubrukte nivå i grupperingsvariabel (men likevel en rad for hvert *mulige* nivå)", {
+test_that(paste0(
+  "Funksjonen gir en advarsel når det finnes ubrukte nivå i ",
+  "grupperingsvariabel (men likevel en rad for hvert *mulige* nivå)"
+), {
   d_gruppert_ekstra_levels = tibble(
     sykehus = factor(rep(c("B", "A"), each = 3), levels = LETTERS[1:4]),
     ki_antall = c(rep(0, 6)),
@@ -352,7 +355,10 @@ test_that("Funksjonen gir en advarsel når det finnes ubrukte nivå i gruppering
   )
 })
 
-test_that("Funksjonen returnerer en tom ugruppert tibble med riktige kolonner hvis inndata er gruppert med null rader", {
+test_that(paste0(
+  "Funksjonen returnerer en tom ugruppert tibble med riktige ",
+  "kolonner hvis inndata er gruppert med null rader"
+), {
   d_gruppert_tom = tibble(
     sykehus = factor(),
     ki_antall = numeric(),

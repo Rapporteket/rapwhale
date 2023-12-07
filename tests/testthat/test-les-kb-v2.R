@@ -150,10 +150,25 @@ kb_eksempel = data.frame(
   tabell = c("patient", "patient", "patient", "basereg"),
   fysisk_feltnavn = c("ID", "REGISTERED_DATE", "SSN", "DEBUT_ARYT_AAR"),
   kommentar = c(NA_character_, NA_character_, NA_character_, NA_character_),
-  variabel_id = c("PATIENT_ID", "PATIENT_REGISTERED_DATE", "PATIENT_SSN", "BASEREG_DEBUT_ARYT_AAR"),
+  variabel_id = c(
+    "PATIENT_ID", "PATIENT_REGISTERED_DATE",
+    "PATIENT_SSN", "BASEREG_DEBUT_ARYT_AAR"
+  ),
   hjelpetekst = c(
     "Pasient ID - automatisk løpenummer i databasen.",
-    "Skriv inn dato for innhentings tidspunkt for opplysninger. Dato skrives på formatet yyyymmdd. Skriver du inn kun dag (dd), så autfylles nåværende måned og år. Skriver du inn måned og dato (mmdd), så autofylles nåværende år. Eksempel: For dato 23.11.1980 er følgende verdier gyldig: 801123, eller 19801123, eller 1980-11-23", "Skriv inn fødselsnummer, 11 siffer. Følgende format for fødselsnummer: ddmmyyxxxxx", "Angi årstall for debut arytmi"
+    paste0(
+      "Skriv inn dato for innhentings tidspunkt for opplysninger. ",
+      "Dato skrives på formatet yyyymmdd. ",
+      "Skriver du inn kun dag (dd), så autfylles nåværende måned og år. ",
+      "Skriver du inn måned og dato (mmdd), så autofylles nåværende år. ",
+      "Eksempel: For dato 23.11.1980 er følgende verdier gyldig: ",
+      "801123, eller 19801123, eller 1980-11-23"
+    ),
+    paste0(
+      "Skriv inn fødselsnummer, 11 siffer. ",
+      "Følgende format for fødselsnummer: ddmmyyxxxxx"
+    ),
+    "Angi årstall for debut arytmi"
   )
 )
 kb_eksempel = as_tibble(kb_eksempel)
@@ -824,7 +839,10 @@ test_that("funksjonen gir feilmelding hvis eining er en tom tekststreng", {
 })
 
 # Sjekke variabelnavn
-test_that("funksjonen gir feilmelding hvis variabelnavn ikke starter med en bokstav, eller inneholder annet enn tall, bokstaver og '_'", {
+test_that(paste0(
+  "Funksjonen gir feilmelding hvis variabelnavn ikke starter med en bokstav, ",
+  "eller inneholder annet enn tall, bokstaver og '_'"
+), {
   kb_feil_variabel_id = add_row(kb_tom_std,
     variabel_id = c("vekt", "høyde_i_cm", "2_ukers_vekt", "SUPER!"),
     variabeltype = "tekst",
@@ -938,7 +956,11 @@ test_that("funksjonen gir feilmelding hvis en numerisk variabel har noe annet en
     maks_rimeleg_dato = as.Date(c(rep(NA_character_, 5), "10-10-2020"))
   )
 
-  feilmelding_numeriske = "Numeriske variabler kan ikke ha informasjon i kolonnene:\nverdi, verditekst, min_dato, maks_dato, min_rimeleg_dato, maks_rimeleg_dato"
+  feilmelding_numeriske = paste0(
+    "Numeriske variabler kan ikke ha informasjon i kolonnene:\n",
+    "verdi, verditekst, min_dato, maks_dato, ",
+    "min_rimeleg_dato, maks_rimeleg_dato"
+  )
 
   for (i in 1:6) {
     expect_error(
@@ -1026,8 +1048,12 @@ test_that("funksjonen gir feilmelding hvis en kategorisk variabel har noe annet 
     logikk = c(rep(NA_character_, 24), "logikk", NA_character_)
   )
 
-  feilmelding_kategorisk = "Kategoriske variabler kan ikke ha informasjon i kolonnene:\n
-eining, desimaler, min, maks, min_rimeleg, maks_rimeleg, min_dato, maks_dato,min_rimeleg_dato, maks_rimeleg_dato,kommentar_rimeleg, utrekningsformel, logikk"
+  feilmelding_kategorisk = paste0(
+    "Kategoriske variabler kan ikke ha informasjon i kolonnene:\n",
+    "eining, desimaler, min, maks, min_rimeleg, maks_rimeleg, min_dato, ",
+    "maks_dato,min_rimeleg_dato, maks_rimeleg_dato,kommentar_rimeleg, ",
+    "utrekningsformel, logikk"
+  )
 
   for (i in seq(from = 1, to = 25, by = 2)) {
     expect_error(valider_kb_variabler(kb_feil_kategorisk[i:(i + 1), ]),

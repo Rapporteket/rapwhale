@@ -33,12 +33,19 @@ test_that("Feilmelding ved nødvendige variabler som ikke finnes i kodeboka.", {
   kb_mangler_varid = tribble(~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst)
   kb_mangler_desimalar_og_varid = tribble(~variabeltype, ~min, ~maks, ~obligatorisk, ~verdi, ~verditekst)
 
-  expect_error(lag_regelsett(kb_mangler_varid), "Kodeboka mangler obligatoriske kolonner: 'variabel_id'.")
-  expect_error(lag_regelsett(kb_mangler_desimalar_og_varid), "Kodeboka mangler obligatoriske kolonner: 'variabel_id', 'desimalar'.")
+  expect_error(lag_regelsett(kb_mangler_varid),
+    regexp = "Kodeboka mangler obligatoriske kolonner: 'variabel_id'."
+  )
+  expect_error(lag_regelsett(kb_mangler_desimalar_og_varid),
+    regexp = "Kodeboka mangler obligatoriske kolonner: 'variabel_id', 'desimalar'."
+  )
 })
 
 # Test 2 Feilmedling hvis KB mangler verdier for variabeltype eller variabel_id
-test_that("Funksjonen stopper og rapporterer en feilmelding hvis kodeboka mangler verdier for variabel_id eller variabel_type.", {
+test_that(paste0(
+  "Funksjonen stopper og rapporterer en feilmelding hvis kodeboka mangler ",
+  "verdier for variabel_id eller variabel_type."
+), {
   kb_feil = tribble(
     ~variabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
     "pasid", "tekst", NA, NA, TRUE, NA, NA, NA,

@@ -10,7 +10,12 @@ test_that("Gjev ut rett resultat for vektor med tal", {
 })
 
 test_that("Gjev ut rett resultat for vektor med datoar", {
-  expect_identical(kjed_ord(Sys.Date() + 1:4), paste0(Sys.Date() + 1, ", ", Sys.Date() + 2, ", ", Sys.Date() + 3, " og ", Sys.Date() + 4))
+  expect_identical(kjed_ord(Sys.Date() + 1:4),
+    expected = paste0(
+      Sys.Date() + 1, ", ", Sys.Date() + 2, ", ",
+      Sys.Date() + 3, " og ", Sys.Date() + 4
+    )
+  )
 })
 
 test_that("Gjev ut rett resultat med valt «skiljeteikn»-argument", {

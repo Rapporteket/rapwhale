@@ -340,7 +340,10 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis
 
 test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen
           innholder feil variabeltyper", {
-  feilmelding_kolonneformat = "'delskala' og 'variabel' må være tekstvariabler og 'verdi' og 'koeffisient' må være numeriske"
+  feilmelding_kolonneformat = paste0(
+    "'delskala' og 'variabel' må være tekstvariabler ",
+    "og 'verdi' og 'koeffisient' må være numeriske"
+  )
 
   skaaringstabell_ugyldig_verdi_kolonne = skaaringstabell_eks
   skaaringstabell_ugyldig_verdi_kolonne$verdi = as.character(
@@ -643,10 +646,13 @@ test_that("oppsummer_ugyldige_verdier() presenterer korrekte feilverdier
   )
 })
 
-test_that("oppsummer_ugyldige_verdier() gir ut det samme uavhengig av
-          rekkefølgen til radene i datarammen", {
+test_that(paste0(
+  "oppsummer_ugyldige_verdier() gir ut det samme uavhengig av ",
+  "rekkefølgen til radene i datarammen"
+), {
   ugyldighetstabell_2_feil_samme_variabel_annen_radrekkefolge = ugyldighetstabell_2_feil_samme_variabel
-  ugyldighetstabell_2_feil_samme_variabel_annen_radrekkefolge = ugyldighetstabell_2_feil_samme_variabel_annen_radrekkefolge[c(2, 1, 3), ]
+  ugyldighetstabell_2_feil_samme_variabel_annen_radrekkefolge =
+    ugyldighetstabell_2_feil_samme_variabel_annen_radrekkefolge[c(2, 1, 3), ]
   expect_identical(
     oppsummer_ugyldige_verdier(ugyldighetstabell_2_feil_samme_variabel),
     oppsummer_ugyldige_verdier(ugyldighetstabell_2_feil_samme_variabel_annen_radrekkefolge)

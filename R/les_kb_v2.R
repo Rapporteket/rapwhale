@@ -550,7 +550,11 @@ valider_kb_skjema = function(kodebok) {
     mangler_kategori = setdiff(skjema_id, skjema_id_kategori)
 
     if (length(mangler_kategori) > 0) {
-      stop(paste0("Alle skjema må ha tilhørende kategori hvis kategorier brukes. Følgende skjema_id mangler kategori:\n", mangler_kategori))
+      stop(
+        "Alle skjema må ha tilhørende kategori hvis kategorier brukes. ",
+        "Følgende skjema_id mangler kategori:\n",
+        mangler_kategori
+      )
     }
 
     # Sjekker at alle skjema har kategori i første rad
@@ -685,7 +689,11 @@ valider_kb_variabler = function(kodebok) {
     pull(variabel_id)
 
   if (length(feil_boolsk) > 0) {
-    stop("Boolske variabler kan ikke ha Obligatorisk = 'nei' og Unik = 'ja'\nVariabel: ", str_c(feil_boolsk, collapse = ", "))
+    stop(
+      "Boolske variabler kan ikke ha Obligatorisk = 'nei' og ",
+      "Unik = 'ja'\nVariabel: ",
+      str_c(feil_boolsk, collapse = ", ")
+    )
   }
 
   # sjekke diverse ting med kategoriske variabler
@@ -742,7 +750,11 @@ valider_kb_variabler = function(kodebok) {
   )
 
   if (nrow(feil_info_numerisk) > 0) {
-    stop("Numeriske variabler kan ikke ha informasjon i kolonnene:\nverdi, verditekst, min_dato, maks_dato, min_rimeleg_dato, maks_rimeleg_dato")
+    stop(
+      "Numeriske variabler kan ikke ha informasjon i kolonnene:\n",
+      "verdi, verditekst, min_dato, maks_dato, ",
+      "min_rimeleg_dato, maks_rimeleg_dato"
+    )
   }
 
   feil_info_tekst = filter(
@@ -773,8 +785,12 @@ kommentar_rimeleg, utrekningsformel, logikk")
   )
 
   if (nrow(feil_info_kategorisk) > 0) {
-    stop("Kategoriske variabler kan ikke ha informasjon i kolonnene:\n
-eining, desimaler, min, maks, min_rimeleg, maks_rimeleg, min_dato, maks_dato,min_rimeleg_dato, maks_rimeleg_dato,kommentar_rimeleg, utrekningsformel, logikk")
+    stop(
+      "Kategoriske variabler kan ikke ha informasjon i kolonnene:\n",
+      "eining, desimaler, min, maks, min_rimeleg, maks_rimeleg, min_dato, ",
+      "maks_dato,min_rimeleg_dato, maks_rimeleg_dato,kommentar_rimeleg, ",
+      "utrekningsformel, logikk"
+    )
   }
 
   # sjekke at ikke-kategoriske variabler ikke har manglende = 'ja'
@@ -805,7 +821,11 @@ eining, desimaler, min, maks, min_rimeleg, maks_rimeleg, min_dato, maks_dato,min
     pull(variabel_id)
 
   if (length(feil_relasjon) > 0) {
-    stop("Relasjon mellom minimum og maksimum verdier er ikke ivaretatt\nvariabel_id: ", str_c(feil_relasjon, collapse = ", "))
+    stop(
+      "Relasjon mellom minimum og maksimum verdier er ikke ivaretatt\n",
+      "variabel_id: ",
+      str_c(feil_relasjon, collapse = ", ")
+    )
   }
 
   # sjekke at rimeleg-verdier finnes hvis kommentar_rimeleg finnes
@@ -816,6 +836,10 @@ eining, desimaler, min, maks, min_rimeleg, maks_rimeleg, min_dato, maks_dato,min
     pull(variabel_id)
 
   if (length(kommentar_uten_verdier) > 0) {
-    stop("Kommentar_rimeleg er fylt ut, men det finnes ingen min_rimeleg eller maks_rimeleg\nvariabel_id: ", str_c(kommentar_uten_verdier, collapse = ", "))
+    stop(
+      "Kommentar_rimeleg er fylt ut, men det finnes ingen min_rimeleg ",
+      "eller maks_rimeleg\nvariabel_id: ",
+      str_c(kommentar_uten_verdier, collapse = ", ")
+    )
   }
 }

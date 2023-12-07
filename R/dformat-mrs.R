@@ -23,9 +23,14 @@
 #'
 #' Returnerer kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstaver.
 #'
-#' @param mappe_dd Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
-#' Her er en antagelse at nyeste versjon av kodeboka ligger i samme mappe som datadumpene.
-#' @param dato Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
+#' @param mappe_dd
+#' Adressa til datadump-mappa
+#' (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak).
+#' Her er en antagelse at nyeste versjon av kodeboka ligger
+#' i samme mappe som datadumpene.
+#' @param dato
+#' Datoen ein skal henta ut kodeboka for (tekststreng eller dato).
+#' Kan òg vera NULL, for å henta nyaste kodebok.
 #' @export
 les_kb_mrs = function(mappe_dd, dato = NULL) {
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
@@ -72,8 +77,10 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   # Derfor erstatter vi disse med skjemanavnene slik de er i filnavnet til datadumpene.
 
   # henter inn fil som har en kolonne for skjema_id-ene i ark-navnene,
-  # og en kolonne for skjema_id-ene i filnavnene til datadumpene, slik at vi vet hvilken som samsvarer med hvilken.
-  # Denne er laget på forhånd, manuelt, men skal alltid legges i den nyeste mappen med datadumper v/ ny innhenting av data.
+  # og en kolonne for skjema_id-ene i filnavnene til datadumpene,
+  # slik at vi vet hvilken som samsvarer med hvilken.
+  # Denne er laget på forhånd, manuelt,
+  # men skal alltid legges i den nyeste mappen med datadumper v/ ny innhenting av data.
   adresse_skjema_id = paste0(mappe_dd, dato, "\\skjema_id_kobling.csv")
 
   # Feilmelding om skjema_id_kobling ikke ligger i mappe_dd.
@@ -221,12 +228,22 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
 #'
 #' Returnerer et R-datasett for det aktuelle skjemaet.
 #'
-#' @param mappe_dd Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
-#' Antagelse ligger til grunn at nyeste kodebok ligger i samme mappe som de nyeste datadumpene.
-#' @param skjema_id ID til skjemaet ein vil henta inn (brukt i filnamnet og i kolonnen «tabell» i kodeboka)
-#' @param versjon Om datadumpen er "Prod" eller om den er fra "QA". Standardverdi er "Prod".
-#' @param dato Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
-#' @param kodebok Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
+#' @param mappe_dd
+#' Adressa til datadump-mappa
+#' (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak).
+#' Antagelse ligger til grunn at nyeste kodebok ligger i samme mappe
+#' som de nyeste datadumpene.
+#' @param skjema_id
+#' ID til skjemaet ein vil henta inn
+#' (brukt i filnamnet og i kolonnen «tabell» i kodeboka).
+#' @param versjon
+#' Om datadumpen er "Prod" eller om den er fra "QA". Standardverdi er "Prod".
+#' @param dato
+#' Datoen ein skal henta ut kodeboka for (tekststreng eller dato).
+#' Kan òg vera NULL, for å henta nyaste kodebok.
+#' @param kodebok
+#' Kodebok på kanonisk form.
+#' Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
 #' @export
 les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebok = NULL) {
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
@@ -344,7 +361,8 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
   manglar_metadata = is.na(spek_innlesing$csv_bokstav)
   ukjende_var = spek_innlesing$variabel_id[manglar_metadata]
   if (any(manglar_metadata)) {
-    # Vis ikkje åtvaringa viss det berre er snakk om den siste, namnlause, tomme kolonnen som MRS automatisk legg til alle datadumpar
+    # Vis ikkje åtvaringa viss det berre er snakk om den siste, namnlause,
+    # tomme kolonnen som MRS automatisk legg til alle datadumpar
     if (!all(ukjende_var == "")) {
       warning(
         "Manglar metadata for nokre variablar. Dei vert derfor\n",
