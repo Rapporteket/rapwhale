@@ -623,7 +623,7 @@ test_that("funksjonen gir feilmelding hvis variabel eksisterer fra før", {
 test_that("funksjonen gir feilmelding hvis ikke alle nødvendige verdier er inkludert", {
   ingen_variabeltype = tribble(
     ~skjema_id, ~skjemanavn, ~variabel_id, ~variabeletikett, ~unik, ~obligatorisk, ~desimaler,
-    "basereg", "basisregistrering", "a", "normal", "nei", "ja", NA
+    "basereg", "basisregistrering", "d", "normal", "nei", "ja", NA
   )
 
   expect_error(
