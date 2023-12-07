@@ -49,7 +49,7 @@
 #' bosted_aasane %impl% bosted_bergen
 #' @export
 impl = function(a, b) {
-  if (!is(a, "logical") | !is(b, "logical")) {
+  if (!is(a, "logical") || !is(b, "logical")) {
     stop("a og b må være logiske vektorer")
   }
 
@@ -111,7 +111,7 @@ impl = function(a, b) {
 #' er_operert %ekviv% komplikasjoner_registrert
 #' @export
 ekviv = function(a, b) {
-  if (class(a) != "logical" | class(b) != "logical") {
+  if (class(a) != "logical" || class(b) != "logical") {
     stop("a og b må være logiske vektorer")
   }
 

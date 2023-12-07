@@ -482,7 +482,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
         )
         gyldig = FALSE
       }
-    } else if (vartype == "kategorisk" & kolonnetype == "manglande") {
+    } else if (vartype == "kategorisk" && kolonnetype == "manglande") {
       # ikke ok kolonnetype, gitt variabeltypen
       ikke_ok_mangl = ikke_kat & (!is.na(kb[[kolonnetype]]) & kb[[kolonnetype]] == "ja")
 

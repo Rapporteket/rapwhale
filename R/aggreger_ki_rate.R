@@ -155,10 +155,10 @@ aggreger_ki_rate = function(d_ki_ind, alfa = 0.05, multiplikator = 1) {
   if (length(multiplikator) != 1) {
     stop("«multiplikator» må ha lengde 1")
   }
-  if (!is.numeric(alfa) | alfa <= 0 | alfa >= 1) {
+  if (!is.numeric(alfa) || alfa <= 0 || alfa >= 1) {
     stop("«alfa» må være et tall mellom 0 og 1")
   }
-  if (!is.numeric(multiplikator) | multiplikator <= 0 | is.na(multiplikator)) {
+  if (!is.numeric(multiplikator) || multiplikator <= 0 || is.na(multiplikator)) {
     stop("«multiplikator» må være et positivt tall")
   }
   if (any(group_size(d_ki_ind) == 0)) {
@@ -181,7 +181,7 @@ aggreger_ki_rate = function(d_ki_ind, alfa = 0.05, multiplikator = 1) {
   }
 
   konfint = function(antall, eksponering) {
-    if (length(antall) == 0 | length(eksponering) == 0) {
+    if (length(antall) == 0 || length(eksponering) == 0) {
       konfint_nedre = NA_real_
       konfint_ovre = NA_real_
     } else if (sum(antall) == 0) {
