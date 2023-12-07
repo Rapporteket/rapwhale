@@ -16,7 +16,7 @@
 #' men der alle uttrykk får krøllparentesar (ikkje berre multi-line).
 #'
 #' @keywords internal
-wrap_if_else_while_for_fun_in_curly_rapwhale = function(pd, indent_by = 2) {
+wrap_if_else_while_for_fun_in_curly_rapwhale = function(pd, indent_by = 2) { # nolint: object_length_linter
   key_token = NULL
 
   if (styler::is_conditional_expr(pd)) {
@@ -121,7 +121,7 @@ wrap_curly_rapwhale = function(pd,
 #' men der alle uttrykk krev krøllparentesar (ikkje berre multi-line).
 #'
 #' @keywords internal
-if_for_while_part_requires_braces_rapwhale = function(pd, key_token) {
+if_for_while_part_requires_braces_rapwhale = function(pd, key_token) { # nolint: object_length_linter
   pos_first_key_token = which(pd$token == key_token)[1]
   child = pd$child[[styler::next_non_comment(pd, pos_first_key_token)]]
   !styler::is_curly_expr(child)
