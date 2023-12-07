@@ -29,7 +29,7 @@
 #'   pattern = "^DESCRIPTION$",
 #'   full.names = TRUE, recursive = TRUE
 #' )
-#' 
+#'
 #' # Hent ut mappeadressene, og bygg og installer pakkene
 #' pakkemapper = dirname(desc_filer)
 #' bygg_og_installer_pakker(pakkemapper)

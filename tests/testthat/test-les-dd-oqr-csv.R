@@ -65,8 +65,13 @@ dd_ok_hel = tibble(
   Gammo = c(0.5, 0.12, 0.73, 1.241),
   Delto = c(1L, 5L, 3L, 2L),
   Eple = c(TRUE, FALSE, NA, TRUE),
-  Zeppelin = lubridate::dmy_hm(c("01.01.2020 17:00", "05.10.2010 15:00", "03.02.2015 13:30", "05.05.2005 17:55")),
-  Estland = lubridate::dmy("12.05.2014", "13.09.1900", "15.01.2015", "15.10.2020"),
+  Zeppelin = lubridate::dmy_hm(c(
+    "01.01.2020 17:00", "05.10.2010 15:00",
+    "03.02.2015 13:30", "05.05.2005 17:55"
+  )),
+  Estland = lubridate::dmy(
+    "12.05.2014", "13.09.1900", "15.01.2015", "15.10.2020"
+  ),
   Theeta = hms::as_hms(c("17:00:00", "14:30:00", "12:00:00", "15:05:00"))
 )
 
@@ -149,7 +154,11 @@ test_that("Funksjonen gir feilmelding hvis format tid i data ikke tilsvarer form
 })
 
 test_that("Funksjonen tolker ikke NA som manglende verdi med mindre den blir bedt om det", {
-  dd_spek = tibble(varnavn_kilde = "land", varnavn_resultat = "land", vartype = "tekst")
+  dd_spek = tibble(
+    varnavn_kilde = "land",
+    varnavn_resultat = "land",
+    vartype = "tekst"
+  )
   formatspek_na_som_manglende = formatspek_ok_hel
   formatspek_na_som_manglende$na_verdier = c("null", "NA")
 
@@ -192,8 +201,13 @@ test_that("Funksjonen fungerer som forventet når inndata er med annen tegnkodin
     Gammo = c(0.5, 0.12, 0.73, 1.241),
     Delto = c(1L, 5L, 3L, 2L),
     Eple = c(TRUE, FALSE, NA, TRUE),
-    Zeppelin = lubridate::dmy_hm(c("01.01.2020 17:00", "05.10.2010 15:00", "03.02.2015 13:30", "05.05.2005 17:55")),
-    Estland = lubridate::dmy("12.05.2014", "13.09.1900", "15.01.2015", "15.10.2020"),
+    Zeppelin = lubridate::dmy_hm(c(
+      "01.01.2020 17:00", "05.10.2010 15:00",
+      "03.02.2015 13:30", "05.05.2005 17:55"
+    )),
+    Estland = lubridate::dmy(
+      "12.05.2014", "13.09.1900", "15.01.2015", "15.10.2020"
+    ),
     Theeta = hms::as_hms(c("17:00:00", "14:30:00", "12:00:00", "15:05:00"))
   )
 
@@ -209,94 +223,94 @@ test_that("Funksjonen fungerer som forventet når inndata er med annen tegnkodin
 context("konverter_boolske")
 
 test_that("Funksjonen gir feilmelding hvis en boolsk variabel inneholder ugyldige verdier", {
-  expect_error(konverter_boolske(
-    x = c(0, 1, NA, 2),
-    boolsk_usann = 0,
-    boolsk_sann = 1
-  ),
-  "Det finnes ugyldige verdier for en boolsk variabel: 2\nMulige verdier er: 0,1,NA",
-  fixed = TRUE
+  expect_error(
+    object = konverter_boolske(c(0, 1, NA, 2),
+      boolsk_usann = 0,
+      boolsk_sann = 1
+    ),
+    regexp = "Det finnes ugyldige verdier for en boolsk variabel: 2\nMulige verdier er: 0,1,NA",
+    fixed = TRUE
   )
 
-  expect_error(konverter_boolske(
-    x = c("Tr", "Fa", "True", "False", NA),
-    boolsk_usann = "Fa",
-    boolsk_sann = "Tr"
-  ),
-  "Det finnes ugyldige verdier for en boolsk variabel: True,False\nMulige verdier er: Fa,Tr,NA",
-  fixed = TRUE
+  expect_error(
+    object = konverter_boolske(
+      x = c("Tr", "Fa", "True", "False", NA),
+      boolsk_usann = "Fa",
+      boolsk_sann = "Tr"
+    ),
+    regexp = "Det finnes ugyldige verdier for en boolsk variabel: True,False\nMulige verdier er: Fa,Tr,NA",
+    fixed = TRUE
   )
 })
 
 test_that("Funksjonen godkjenner diverse former for logiske variabler, 1/0, T/F etc", {
-  expect_equal(konverter_boolske(
-    x = c(0, 1, 1),
-    boolsk_usann = 0,
-    boolsk_sann = 1
-  ), c(FALSE, TRUE, TRUE))
+  expect_equal(konverter_boolske(c(0, 1, 1), boolsk_usann = 0, boolsk_sann = 1),
+    expected = c(FALSE, TRUE, TRUE)
+  )
   expect_equal(
-    konverter_boolske(
+    object = konverter_boolske(
       x = c("True", "Fa", NA),
       boolsk_usann = c("Fa", NA),
       boolsk_sann = c("True")
     ),
-    c(TRUE, FALSE, FALSE)
+    expected = c(TRUE, FALSE, FALSE)
   )
 })
 
 test_that("Funksjonen aksepterer flere typer True og False", {
   expect_equal(
-    konverter_boolske(
+    object = konverter_boolske(
       x = c("Tr", "Fa", "TRUE", "FA", "flips", NA),
       boolsk_usann = c("Fa", "FA", "flips"),
       boolsk_sann = c("Tr", "TRUE")
     ),
-    c(TRUE, FALSE, TRUE, FALSE, FALSE, NA)
+    expected = c(TRUE, FALSE, TRUE, FALSE, FALSE, NA)
   )
 })
 
 test_that("Funksjonen gir feilmelding om det er like verdier i boolsk_sann og boolsk_usann", {
   expect_error(
-    konverter_boolske(
+    object = konverter_boolske(
       x = c(0, 1, NA),
       boolsk_usann = c(0, NA),
       boolsk_sann = c(1, NA)
     ),
-    "boolsk_sann og boolsk_usann kan ikke inneholde samme verdier"
+    regexp = "boolsk_sann og boolsk_usann kan ikke inneholde samme verdier"
   )
 })
 
 test_that("Funksjonen gir feilmelding hvis det finnes NA-verdier som ikke er akseptert", {
-  expect_error(konverter_boolske(
-    x = c(0, 1, NA, "null"),
-    boolsk_usann = c(0),
-    boolsk_sann = c(1),
-    na_verdier = "null"
-  ),
-  "Det finnes ugyldige verdier for en boolsk variabel: NA\nMulige verdier er: 0,1,null",
-  fixed = TRUE
+  expect_error(
+    object = konverter_boolske(
+      x = c(0, 1, NA, "null"),
+      boolsk_usann = c(0),
+      boolsk_sann = c(1),
+      na_verdier = "null"
+    ),
+    regexp = "Det finnes ugyldige verdier for en boolsk variabel: NA\nMulige verdier er: 0,1,null",
+    fixed = TRUE
   )
 })
 
 test_that("Funksjonen fungerer som forventet med ulike na_verdier", {
   expect_identical(
-    konverter_boolske(
+    object = konverter_boolske(
       x = c(0, 1, NA, "null"),
       boolsk_usann = c(0),
       boolsk_sann = c(1),
       na_verdier = c(NA, "null")
     ),
-    c(FALSE, TRUE, NA, NA)
+    expected = c(FALSE, TRUE, NA, NA)
   )
 
   expect_identical(
-    konverter_boolske(
+    object = konverter_boolske(
       x = c("JA", "NEI", "NA", NA),
       boolsk_usann = c("NEI", "NA"),
       boolsk_sann = c("JA"),
       na_verdier = c(NA)
     ),
-    c(TRUE, FALSE, FALSE, NA)
+    expected = c(TRUE, FALSE, FALSE, NA)
   )
 })
 

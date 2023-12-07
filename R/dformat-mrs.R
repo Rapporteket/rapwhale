@@ -28,7 +28,6 @@
 #' @param dato Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
 #' @export
 les_kb_mrs = function(mappe_dd, dato = NULL) {
-
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
     dato = dir(mappe_dd,
@@ -117,7 +116,8 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
     "Id (Guid)", "tekst",
     "Numerisk (heltall)", "numerisk", # Men sjå bruk «desimalar» lenger nede
     "Numerisk (flyttall)", "numerisk",
-    "Tall", "numerisk")
+    "Tall", "numerisk"
+  )
 
   nye_vartypar = na.omit(setdiff(
     kb_mrs_skjema_id$Felttype,
@@ -229,7 +229,6 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
 #' @param kodebok Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
 #' @export
 les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebok = NULL) {
-
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
     dato = dir(mappe_dd, pattern = "^[0-9]{4}-[0-1][0-9]-[0-9]{2}$", full.names = FALSE) |>

@@ -3,24 +3,23 @@
 #' @description
 #' `r lifecycle::badge("experimental")`
 #'
-#' \code{les_csv_oqr()} er en spesifikk versjon av \code{les_csv_base()} som er 
+#' \code{les_csv_oqr()} er en spesifikk versjon av \code{les_csv_base()} som er
 #' tilpasset OpenQReg registerstruktur.
-#' Funksjonen tar inn argumentene adresse og spesifikasjon. Adresse angir 
-#' filplassering, mens spesifikasjon angir opprinnelige og nye variabelnavn, 
+#' Funksjonen tar inn argumentene adresse og spesifikasjon. Adresse angir
+#' filplassering, mens spesifikasjon angir opprinnelige og nye variabelnavn,
 #' samt variabeltype.
 #' Se rapwhale::spesifikasjon for eksempeloppsett for ulike innstillinger.
 #' Variabelnavn kan endres ved å inkludere en vektor med nye variabelnavn.
-#' Aksepterte variabeltyper er: tekst, desimaltall, heltall, boolsk, dato, 
+#' Aksepterte variabeltyper er: tekst, desimaltall, heltall, boolsk, dato,
 #' dato_kl og kl.
 #'
-#' @param adresse en tekststreng som angir filplassering for csv-fil som 
+#' @param adresse en tekststreng som angir filplassering for csv-fil som
 #' skal leses inn
-#' @param spesifikasjon Tibble med tre kolonner. Inneholder varnavn_kilde, 
+#' @param spesifikasjon Tibble med tre kolonner. Inneholder varnavn_kilde,
 #' varnavn_resultat og vartype.
-#' 
+#'
 #' @export
 les_csv_oqr = function(adresse, spesifikasjon) {
-
   # Kilde for disse valgene finnes foreløpig her. Vi venter på ny dokumentasjon fra HNIKT.
   # 1. - ***FJERNA-ADRESSE***
   # 2. - ***FJERNA-ADRESSE***

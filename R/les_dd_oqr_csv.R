@@ -70,7 +70,6 @@ les_varnavn = function(adresse, formatspek) {
 #'   boolsk_sann = c("Ja"), na_verdier = c(NA, "-1")
 #' )
 konverter_boolske = function(x, boolsk_usann, boolsk_sann, na_verdier = NA) {
-
   # Sjekk først at det berre er gyldige verdiar
   mulige_verdier = c(boolsk_usann, boolsk_sann, na_verdier)
   er_gyldig = (x %in% mulige_verdier)

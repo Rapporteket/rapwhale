@@ -39,11 +39,9 @@
 #'
 #' kjed_ord(c("Per", "Kari", "Ola"), og = " & ")
 #'
-#' kjed_ord(c(
-#'   "Førde", "Bergen og Voss",
-#'   "Oslo", "Stavanger"
-#' ),
-#' skiljeteikn = "; ", og = " – og til slutt "
+#' kjed_ord(c("Førde", "Bergen og Voss", "Oslo", "Stavanger"),
+#'   skiljeteikn = "; ",
+#'   og = " – og til slutt "
 #' )
 kjed_ord = function(ord, skiljeteikn = ", ", og = " og ") {
   ord = stringr::str_replace_na(ord)

@@ -119,18 +119,20 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
 
   # Legg til konfidensintervall
   konfint_robust = function(x) {
-    konf = possibly(~ regn_konfint_bin(d_sammendrag$ki_teller,
-      d_sammendrag$ki_nevner,
-      alfa
-    ),
-    otherwise = data.frame(
-      method = NA_character_,
-      x = NA_integer_,
-      n = NA_integer_,
-      mean = NA_real_,
-      lower = NA_real_,
-      upper = NA_real_
-    )
+    konf = possibly(
+      .f = \() regn_konfint_bin(
+        x = d_sammendrag$ki_teller,
+        n = d_sammendrag$ki_nevner,
+        alfa = alfa
+      ),
+      otherwise = data.frame(
+        method = NA_character_,
+        x = NA_integer_,
+        n = NA_integer_,
+        mean = NA_real_,
+        lower = NA_real_,
+        upper = NA_real_
+      )
     )
     konf(x)
   }
@@ -143,7 +145,7 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
   # (og ikke for eksempel NaN, som vi får ved 0/0)
   d_sammendrag = d_sammendrag |>
     mutate(across(c(est, konfint_nedre, konfint_ovre),
-      \(x) replace_na(x, replace = NA)
+      .fns = \(x) replace_na(x, replace = NA)
     ))
 
   d_sammendrag

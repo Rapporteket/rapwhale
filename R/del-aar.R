@@ -43,7 +43,6 @@
 #' antall_deler = 4
 #' periode_til_tidslinje(aarstall, delnummer, antall_deler)
 periode_til_tidslinje = function(aar, delnummer, antall_deler) {
-
   # Sjekk at inndata er i riktig format
   stopifnot(length(aar) == length(delnummer))
   if (any(na.omit(aar) != floor(na.omit(aar)))) {
@@ -132,7 +131,6 @@ periode_til_tidslinje = function(aar, delnummer, antall_deler) {
 #' antall_deler = 5
 #' tid_til_tidslinje(dato = dato_med_klokkeslett, antall_deler = antall_deler)
 tid_til_tidslinje = function(dato, antall_deler) {
-
   # Sjekke inndata
   if (length(antall_deler) != 1) {
     stop("antall_deler må ha lengde 1")
@@ -158,7 +156,6 @@ tid_til_tidslinje = function(dato, antall_deler) {
     if (is.null(attr(dato, "tzone"))) {
       lubridate::tz(dato) = "UTC"
     }
-
   }
 
   if (any(is.na(dato) == TRUE)) {
@@ -170,8 +167,8 @@ tid_til_tidslinje = function(dato, antall_deler) {
 
   unike_ar = unique(lubridate::year(dato))
   aar = unique(sort(c(unike_ar, endepunkt + rep(unike_ar, each = length(endepunkt)))))
-  
-  aar_midtpunkt = numeric(length = length(aar)-1)
+
+  aar_midtpunkt = numeric(length = length(aar) - 1)
   for (i in 1:length(aar_midtpunkt)) {
     aar_midtpunkt[i] = (aar[i] + aar[i + 1]) / 2
   }
@@ -181,7 +178,7 @@ tid_til_tidslinje = function(dato, antall_deler) {
     x = lubridate::decimal_date(dato),
     vec = aar, rightmost.closed = FALSE,
     left.open = FALSE
-  ) 
+  )
 
   # Returnerer koordinater
   (aar_midtpunkt[nye_pkt])

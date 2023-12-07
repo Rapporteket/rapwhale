@@ -108,7 +108,6 @@ aktiver_kvalregtema = function() {
 #' # Søylediagram med tema_kvalreg()
 #' p + tema_kvalreg()
 tema_kvalreg = function() {
-
   # ggplot2-tema for figurar
   if (!exists("skriftstorleik")) { # Skriftstorleik bør vera definert i kvar årsrapportfil
     skriftstorleik = 9

@@ -55,7 +55,8 @@ test_that("skaar_datasett() fungerer på uproblematiske inndata", {
 })
 
 # Eksempel på skåringstabell med konstantledd
-skaaringstabell_eks_flere_konstantledd = rbind(skaaringstabell_eks,
+skaaringstabell_eks_flere_konstantledd = rbind(
+  skaaringstabell_eks,
   tibble(
     delskala = c("total", "psykisk"),
     variabel = NA,
@@ -169,7 +170,6 @@ test_that("skaar_datasett() fungerer hvis man bytter om to variabelnavn", {
 
 test_that("skaar_datasett() gir ut feilmelding hvis skåringstabell,
           variabelnavn og/eller variabelverdier er ugyldige", {
-
   # Skåringstabell som har en variabel med flere rader som har samme
   # verdi innenfor samme delskala
   ugyldig_skaaringstabell = skaaringstabell_eks
@@ -296,16 +296,17 @@ test_that("sjekk_skaaringstabell() gir ingen feilmelding hvis en variabel
 test_that("sjekk_skaaringstabell() gir feilmelding hvis en rad har verdien NA
           i variabelkolonnen *uten* å ha verdien NA i verdikolonnen", {
   skaaringstabell_ugyldig_na_variabel = add_row(skaaringstabell_eks,
-      delskala = "total", variabel = NA, verdi = 10, koeffisient = 10
-    )
-  expect_error(sjekk_skaaringstabell(skaaringstabell_ugyldig_na_variabel),
-    "Kan ikke ha verdien NA i 'variabel' uten at 'verdi' også er NA"
+    delskala = "total", variabel = NA, verdi = 10, koeffisient = 10
+  )
+  expect_error(
+    object = sjekk_skaaringstabell(skaaringstabell_ugyldig_na_variabel),
+    regexp = "Kan ikke ha verdien NA i 'variabel' uten at 'verdi' også er NA"
   )
 })
 
 test_that("sjekk_skaaringstabell() gir feilmelding hvis flere rader har verdien
           NA i variabelkolonnen for *samme* delskala", {
-  skaaringstabell_ugyldig_na_variabel_dobbel = skaaringstabell_eks |> 
+  skaaringstabell_ugyldig_na_variabel_dobbel = skaaringstabell_eks |>
     rbind(tibble(
       delskala = "total", variabel = NA, verdi = NA, koeffisient = c(10, 5)
     ))
@@ -874,8 +875,8 @@ test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer i
 test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer
           hvis én delskala har konstantledd", {
   skaaringstabell_eks_ett_konstantledd = add_row(skaaringstabell_eks,
-      delskala = "total", variabel = NA, verdi = NA, koeffisient = 1
-    )
+    delskala = "total", variabel = NA, verdi = NA, koeffisient = 1
+  )
   sumskaar_tabell_ett_konstantledd = sumskaar_tabell
   sumskaar_tabell_ett_konstantledd$total =
     sumskaar_tabell_ett_konstantledd$total + 1
@@ -908,7 +909,6 @@ test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer
 context("legg_til_na_i_skaaringstabell")
 
 test_that("legg_til_na_i_skaaringstabell() fungerer", {
-
   # Original skåringstabell (merk at éi rad òg har NA-verdiar)
   skaaringstabell_orig = tribble(
     ~delskala, ~variabel, ~verdi, ~koeffisient,
@@ -951,7 +951,6 @@ test_that("legg_til_na_i_skaaringstabell() fungerer", {
 
 test_that("legg_til_na_i_skaaringstabell() overskriv ikkje eksisterande
           NA-verdiar", {
-
   # Skåringstabell med NA-verdi som skal gje ut koeffisient som *ikkje*
   # er NA
   skaaringstabell_med_na = tribble(
@@ -977,7 +976,6 @@ d_eks_inkl_sumskaar = tribble(
 
 test_that("legg_til_eller_erstatt_kolonner() fungerer hvis ingen, noen
           eller alle sumskår-kolonner finnes fra før", {
-
   # Ingen sumskår-kolonner finnes fra før
   expect_identical(
     legg_til_eller_erstatt_kolonner(

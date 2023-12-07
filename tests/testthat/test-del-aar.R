@@ -1,17 +1,25 @@
 # tester for tidslinje-funksjon:
 
-# Tester - Periode til tidslinje -----------------------------------------------------
+# Tester - Periode til tidslinje -----------------------------------------------
 
 context("periode_til_tidslinje: feilmeldinger ved ugyldige inndata")
 
 test_that("Det gis feilmelding om årstall-vektor ikke er heltallsvektor", {
-  expect_error(periode_til_tidslinje(c(2017, 2018, 2019, 2020.5), 1:4, 4), "aar må være heltall")
+  expect_error(periode_til_tidslinje(c(2017, 2018, 2019, 2020.5), 1:4, 4),
+    regexp = "aar må være heltall"
+  )
 })
 
 test_that("Det gis feilmelding ved ugyldige delnummer", {
-  expect_error(periode_til_tidslinje(2001:2004, 1:4, 3), "delnummer må være verdier i 1:3")
-  expect_error(periode_til_tidslinje(2001:2004, c(1, 1.5, 2, 3), 3), "delnummer må være verdier i 1:3")
-  expect_error(periode_til_tidslinje(2001:2004, -1:2, 12), "delnummer må være verdier i 1:12")
+  expect_error(periode_til_tidslinje(2001:2004, 1:4, 3),
+    regexp = "delnummer må være verdier i 1:3"
+  )
+  expect_error(periode_til_tidslinje(2001:2004, c(1, 1.5, 2, 3), 3),
+    regexp = "delnummer må være verdier i 1:3"
+  )
+  expect_error(periode_til_tidslinje(2001:2004, -1:2, 12),
+    regexp = "delnummer må være verdier i 1:12"
+  )
 })
 
 test_that("Det gis feilmelding hvis årstall og delnummer ikke er like lange", {
@@ -20,20 +28,30 @@ test_that("Det gis feilmelding hvis årstall og delnummer ikke er like lange", {
 })
 
 test_that("Det gis feilmelding om antall_deler ikke har lengde 1", {
-  expect_error(periode_til_tidslinje(2001:2004, 1:4, c(4, 12)), "antall_deler må ha lengde 1")
+  expect_error(periode_til_tidslinje(2001:2004, 1:4, c(4, 12)),
+    regexp = "antall_deler må ha lengde 1"
+  )
 })
 
 test_that("Det gis feilmelding om antall_deler ikke er heltallig", {
-  expect_error(periode_til_tidslinje(2001:2004, 1:4, 2.5), "antall_deler må være et heltall")
+  expect_error(periode_til_tidslinje(2001:2004, 1:4, 2.5),
+    regexp = "antall_deler må være et heltall"
+  )
 })
 
 test_that("Det gis feilmelding om antall_deler er mindre enn 1", {
-  expect_error(periode_til_tidslinje(2001:2004, 1:4, 0), "antall_deler må være >= 1")
+  expect_error(periode_til_tidslinje(2001:2004, 1:4, 0),
+    regexp = "antall_deler må være >= 1"
+  )
 })
 
 test_that("Det gis advarsel om det finnes NA-verdier i årstall eller delnummer", {
-  expect_warning(periode_til_tidslinje(c(2001, NA, 2003), 1:3, 4), "Inndata inneholder NA-verdier")
-  expect_warning(periode_til_tidslinje(2001:2003, c(1, NA, 2), 4), "Inndata inneholder NA-verdier")
+  expect_warning(periode_til_tidslinje(c(2001, NA, 2003), 1:3, 4),
+    regexp = "Inndata inneholder NA-verdier"
+  )
+  expect_warning(periode_til_tidslinje(2001:2003, c(1, NA, 2), 4),
+    regexp = "Inndata inneholder NA-verdier"
+  )
 })
 
 context("periode_til_tidslinje: Utdata")
@@ -62,33 +80,45 @@ test_that("Funksjonen fungerer med 366 deler", {
   expect_equal(periode_til_tidslinje(2019, 1, 366), 2019 + (1 / 366 / 2))
 })
 
-# Tester - tid_til_tidslinje -----------------------------------------------------
+# Tester - tid_til_tidslinje ---------------------------------------------------
 
 context("tid_til_tidslinje - feilmeldinger ved ugyldige inndata")
 
 test_that("Det gis advarsel om det finnes NA-verdier i datovektor", {
   dato_m_na = c(as.Date("2019-01-01"), NA)
-  expect_warning(tid_til_tidslinje(dato_m_na, 3), "Det finnes NA-verdier i dato-vektor")
+  expect_warning(tid_til_tidslinje(dato_m_na, 3),
+    regexp = "Det finnes NA-verdier i dato-vektor"
+  )
 })
 
 test_that("Det gis feilmelding om dato ikke er i Date-format", {
-  expect_error(tid_til_tidslinje(2001:2004, 12), "Dato-vektor er ikke i Date- eller POSIXt-format")
-  expect_error(tid_til_tidslinje(as.character(2001:2004), 12), "Dato-vektor er ikke i Date- eller POSIXt-format")
+  expect_error(tid_til_tidslinje(2001:2004, 12),
+    regexp = "Dato-vektor er ikke i Date- eller POSIXt-format"
+  )
+  expect_error(tid_til_tidslinje(as.character(2001:2004), 12),
+    regexp = "Dato-vektor er ikke i Date- eller POSIXt-format"
+  )
 })
 
 test_that("Det gis feilmelding om antall_deler ikke har lengde 1", {
   dato = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
-  expect_error(tid_til_tidslinje(dato = dato, antall_deler = c(1, 4)), "antall_deler må ha lengde 1")
+  expect_error(tid_til_tidslinje(dato = dato, antall_deler = c(1, 4)),
+    regexp = "antall_deler må ha lengde 1"
+  )
 })
 
 test_that("Det gis feilmelding om antall_deler ikke er heltallig", {
   dato = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
-  expect_error(tid_til_tidslinje(dato = dato, antall_deler = 1.5), "antall_deler må være et heltall")
+  expect_error(tid_til_tidslinje(dato = dato, antall_deler = 1.5),
+    regexp = "antall_deler må være et heltall"
+  )
 })
 
 test_that("Det gis feilmelding om antall_deler er mindre enn 1", {
   dato = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
-  expect_error(tid_til_tidslinje(dato = dato, antall_deler = 0), "antall_deler må være >= 1")
+  expect_error(tid_til_tidslinje(dato = dato, antall_deler = 0),
+    regexp = "antall_deler må være >= 1"
+  )
 })
 
 
@@ -142,9 +172,17 @@ test_that("Utdata samsvarer med forventet resultat, ", {
 })
 
 test_that("Det gis ulike resultat ved forskjellige klokkeslett", {
-  tider_tidlig = as.POSIXlt(c("2019-01-01 02:00:00", "2019-04-01 02:00:00", "2019-08-01 02:00:00", "2019-12-01 02:00:00"))
-  tider_sent = as.POSIXlt(c("2019-01-01 21:00:00", "2019-04-01 21:00:00", "2019-08-01 21:00:00", "2019-12-01 21:00:00"))
-  expect_false(any(tid_til_tidslinje(tider_tidlig, 730) == tid_til_tidslinje(tider_sent, 730)))
+  tider_tidlig = as.POSIXlt(c(
+    "2019-01-01 02:00:00", "2019-04-01 02:00:00",
+    "2019-08-01 02:00:00", "2019-12-01 02:00:00"
+  ))
+  tider_sent = as.POSIXlt(c(
+    "2019-01-01 21:00:00", "2019-04-01 21:00:00",
+    "2019-08-01 21:00:00", "2019-12-01 21:00:00"
+  ))
+  expect_false(any(
+    tid_til_tidslinje(tider_tidlig, 730) == tid_til_tidslinje(tider_sent, 730)
+  ))
 })
 
 test_that("Det taes hensyn til tidssone", {
@@ -164,7 +202,9 @@ test_that("Det taes hensyn til tidssone", {
 
   # Skal ha like intervall for norsk tidssone og UTC-tidssone
   ant_per = 365 * 24 * 2
-  expect_identical(tid_til_tidslinje(tid_norsk, ant_per), tid_til_tidslinje(tid_utc, ant_per))
+  expect_identical(tid_til_tidslinje(tid_norsk, ant_per),
+    expected = tid_til_tidslinje(tid_utc, ant_per)
+  )
 
   # Det går ett døgn mellom hvert tidspunkt, så differansen/inkrementene
   # mellom etterfølgende punkt på tidslinjene skal være konstant
@@ -180,8 +220,18 @@ test_that("Det taes hensyn til tidssone", {
 
 test_that("Utdata verdi er alltid innen det samme året som inn-dato", {
   set.seed(1234)
-  dato_diger = sample(seq(from = as.Date("2019-01-01"), to = as.Date("2025-12-31"), "days"), size = 3000, replace = TRUE)
-  expect_identical(floor(tid_til_tidslinje(dato_diger, 10000)), lubridate::year(dato_diger))
+  dato_diger = sample(
+    x = seq(
+      from = as.Date("2019-01-01"),
+      to = as.Date("2025-12-31"),
+      by = "days"
+    ),
+    size = 3000,
+    replace = TRUE
+  )
+  expect_identical(floor(tid_til_tidslinje(dato_diger, 10000)),
+    expected = lubridate::year(dato_diger)
+  )
 })
 
 test_that("Avstand mellom ut-verdier er symmetrisk fordelt", {
@@ -198,42 +248,86 @@ test_that("Avstand mellom ut-verdier er symmetrisk fordelt", {
 })
 
 test_that("Vi får samme resultat med dato-vektor uten klokkeslett, og dato vektor med klokkeslett = 12:00", {
-  dato_klokke = as.POSIXlt(c("2019-01-01 12:00:00", "2019-04-01 12:00:00", "2019-08-01 12:00:00", "2019-12-01 12:00:00"))
-  dato_u_klokke = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
-  expect_equal(tid_til_tidslinje(dato_u_klokke, 366), tid_til_tidslinje(dato_klokke, 366))
-  expect_equal(tid_til_tidslinje(dato_u_klokke, 3000), tid_til_tidslinje(dato_klokke, 3000))
-  expect_equal(tid_til_tidslinje(dato_u_klokke, 3), tid_til_tidslinje(dato_klokke, 3))
-  expect_equal(tid_til_tidslinje(dato_u_klokke, 4), tid_til_tidslinje(dato_klokke, 4))
+  dato_klokke = as.POSIXlt(c(
+    "2019-01-01 12:00:00", "2019-04-01 12:00:00",
+    "2019-08-01 12:00:00", "2019-12-01 12:00:00"
+  ))
+  dato_u_klokke = as.Date(c(
+    "2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"
+  ))
+  expect_equal(tid_til_tidslinje(dato_u_klokke, 366),
+    expected = tid_til_tidslinje(dato_klokke, 366)
+  )
+  expect_equal(tid_til_tidslinje(dato_u_klokke, 3000),
+    expected = tid_til_tidslinje(dato_klokke, 3000)
+  )
+  expect_equal(tid_til_tidslinje(dato_u_klokke, 3),
+    expected = tid_til_tidslinje(dato_klokke, 3)
+  )
+  expect_equal(tid_til_tidslinje(dato_u_klokke, 4),
+    expected = tid_til_tidslinje(dato_klokke, 4)
+  )
 })
 
 test_that("Vi får ønsket utverdi når dato er i POSIXct-format med klokkeslett", {
-  dato_ct_med_klokke = as.POSIXct(c("2019-01-01 12:00", "2019-04-01 12:00", "2019-08-01 12:00", "2019-12-01 12:00"))
-  dato_ct_med_klokke_diff = as.POSIXct(c("2019-01-01 02:00", "2019-04-01 02:00", "2019-08-01 02:00", "2019-12-01 02:00"))
+  dato_ct_med_klokke = as.POSIXct(c(
+    "2019-01-01 12:00", "2019-04-01 12:00",
+    "2019-08-01 12:00", "2019-12-01 12:00"
+  ))
+  dato_ct_med_klokke_diff = as.POSIXct(c(
+    "2019-01-01 02:00", "2019-04-01 02:00",
+    "2019-08-01 02:00", "2019-12-01 02:00"
+  ))
   dato_Date = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
 
-  expect_identical(tid_til_tidslinje(dato_ct_med_klokke, 500), tid_til_tidslinje(dato_Date, 500))
-  expect_true(any(tid_til_tidslinje(dato_ct_med_klokke_diff, 500) != tid_til_tidslinje(dato_ct_med_klokke, 500)))
+  expect_identical(tid_til_tidslinje(dato_ct_med_klokke, 500),
+    expected = tid_til_tidslinje(dato_Date, 500)
+  )
+  expect_true(any(
+    tid_til_tidslinje(dato_ct_med_klokke_diff, 500) !=
+      tid_til_tidslinje(dato_ct_med_klokke, 500)
+  ))
 })
 
 test_that("Vi får ønsket utverdi når dato er i POSIXlt-format med klokkeslett", {
-  dato_lt_med_klokke = as.POSIXlt(c("2019-01-01 12:00", "2019-04-01 12:00", "2019-08-01 12:00", "2019-12-01 12:00"))
-  dato_lt_med_klokke_diff = as.POSIXlt(c("2019-01-01 02:00", "2019-04-01 02:00", "2019-08-01 02:00", "2019-12-01 02:00"))
-  dato_lt_med_klokke_midnatt = as.POSIXlt(c("2019-01-01 00:00:00", "2019-05-31 13:00:00", "2019-07-01 00:00:00", "2019-12-01 12:00:00"),
+  dato_lt_med_klokke = as.POSIXlt(c(
+    "2019-01-01 12:00", "2019-04-01 12:00",
+    "2019-08-01 12:00", "2019-12-01 12:00"
+  ))
+  dato_lt_med_klokke_diff = as.POSIXlt(c(
+    "2019-01-01 02:00", "2019-04-01 02:00",
+    "2019-08-01 02:00", "2019-12-01 02:00"
+  ))
+  dato_lt_med_klokke_midnatt = as.POSIXlt(
+    c(
+      "2019-01-01 00:00:00", "2019-05-31 13:00:00",
+      "2019-07-01 00:00:00", "2019-12-01 12:00:00"
+    ),
     tz = "UTC"
   )
   dato_Date = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
 
-  expect_identical(tid_til_tidslinje(dato_lt_med_klokke, 5), tid_til_tidslinje(dato_Date, 5))
-  expect_true(any(tid_til_tidslinje(dato_lt_med_klokke_diff, 500) != tid_til_tidslinje(dato_Date, 500)))
-  expect_identical(tid_til_tidslinje(dato_lt_med_klokke_midnatt, 500), c(2019.001, 2019.413,2019.495, 2019.917))
+  expect_identical(tid_til_tidslinje(dato_lt_med_klokke, 5),
+    expected = tid_til_tidslinje(dato_Date, 5)
+  )
+  expect_true(any(
+    tid_til_tidslinje(dato_lt_med_klokke_diff, 500) !=
+      tid_til_tidslinje(dato_Date, 500)
+  ))
+  expect_identical(tid_til_tidslinje(dato_lt_med_klokke_midnatt, 500),
+    expected = c(2019.001, 2019.413, 2019.495, 2019.917)
+  )
 })
 
 test_that("Vi får ønsket utverdi når dato og tid er like over nyttår (01:00:00)", {
   dato_nyttaar = as.POSIXlt(c(
-    "2019-12-31 23:59:00", "2020-01-01 00:00:01", "2020-01-01 00:00:15", "2020-01-01 00:00:30",
-    "2020-01-01 00:00:45", "2020-01-01 01:00:00", "2020-01-01 05:00:00"
+    "2019-12-31 23:59:00", "2020-01-01 00:00:01", "2020-01-01 00:00:15",
+    "2020-01-01 00:00:30", "2020-01-01 00:00:45", "2020-01-01 01:00:00",
+    "2020-01-01 05:00:00"
   ))
-  forventet_ut = c(2019.875, 2020.125, 2020.125, 2020.125, 2020.125, 2020.125, 2020.125)
+  forventet_ut = c(
+    2019.875, 2020.125, 2020.125, 2020.125, 2020.125, 2020.125, 2020.125
+  )
   expect_identical(tid_til_tidslinje(dato_nyttaar, 4), forventet_ut)
 })
 
@@ -251,11 +345,28 @@ test_that("Funksjonen fungerer med kun én del", {
 })
 
 test_that("Funksjonen fungerer ved ikke-etterfølgende årstall", {
-  expect_identical(tid_til_tidslinje(dato = as.POSIXlt(c(
-    "2019-12-31 23:59:00", "2020-01-01 00:00:01", "2020-12-31 23:59:59", "2022-01-01 00:00:01")), 500),
-    c(2019.999, 2020.001, 2020.999, 2022.001))
-  expect_identical(tid_til_tidslinje(dato = as.Date(c("2000-01-01", "2022-01-01", "2022-12-31", "2014-01-01")), 2), 
-                   c(2000.25, 2022.25, 2022.75, 2014.25))
-  expect_equal(tid_til_tidslinje(dato = as.Date(c("2000-01-01", "2019-01-11", "2020-12-31", "2022-01-21")), 52), 
-               c(2000.009615, 2019.028846, 2020.990385, 2022.048077))
+  expect_identical(
+    object = tid_til_tidslinje(
+      dato = as.POSIXlt(c(
+        "2019-12-31 23:59:00", "2020-01-01 00:00:01",
+        "2020-12-31 23:59:59", "2022-01-01 00:00:01"
+      )),
+      antall_deler = 500
+    ),
+    expected = c(2019.999, 2020.001, 2020.999, 2022.001)
+  )
+  expect_identical(
+    object = tid_til_tidslinje(
+      dato = as.Date(c("2000-01-01", "2022-01-01", "2022-12-31", "2014-01-01")),
+      antall_deler = 2
+    ),
+    expected = c(2000.25, 2022.25, 2022.75, 2014.25)
+  )
+  expect_equal(
+    object = tid_til_tidslinje(
+      dato = as.Date(c("2000-01-01", "2019-01-11", "2020-12-31", "2022-01-21")),
+      antall_deler = 52
+    ),
+    expected = c(2000.009615, 2019.028846, 2020.990385, 2022.048077)
+  )
 })

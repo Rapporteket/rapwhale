@@ -733,7 +733,8 @@ valider_kb_variabler = function(kodebok) {
   }
 
   # sjekker at variabler ikke har informasjon i kolonner som ikke er relevant for variabeltypen:
-  feil_info_numerisk = filter(kodebok,
+  feil_info_numerisk = filter(
+    kodebok,
     variabeltype == "numerisk",
     !is.na(verdi) | !is.na(verditekst) |
       !is.na(min_dato) | !is.na(maks_dato) |
@@ -744,7 +745,8 @@ valider_kb_variabler = function(kodebok) {
     stop("Numeriske variabler kan ikke ha informasjon i kolonnene:\nverdi, verditekst, min_dato, maks_dato, min_rimeleg_dato, maks_rimeleg_dato")
   }
 
-  feil_info_tekst = filter(kodebok,
+  feil_info_tekst = filter(
+    kodebok,
     variabeltype == "tekst",
     !is.na(verdi) | !is.na(verditekst) | !is.na(desimaler) | !is.na(eining) |
       !is.na(min) | !is.na(maks) | !is.na(min_rimeleg) |
@@ -760,7 +762,8 @@ maks_rimeleg, min_dato, maks_dato, min_rimeleg_dato, maks_rimeleg_dato,
 kommentar_rimeleg, utrekningsformel, logikk")
   }
 
-  feil_info_kategorisk = filter(kodebok,
+  feil_info_kategorisk = filter(
+    kodebok,
     variabeltype == "kategorisk",
     !is.na(eining) | !is.na(desimaler) | !is.na(min) | !is.na(maks) |
       !is.na(min_rimeleg) | !is.na(maks_rimeleg) | !is.na(min_dato) |

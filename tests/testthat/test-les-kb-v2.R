@@ -1,4 +1,3 @@
-
 # Kodebok-eksempel og tom kodebok for bruk i tester
 {
   # Lager en tom kodebok for å lettere kunne bygge kb for ulike tester.
@@ -429,7 +428,8 @@ test_that("funksjonen gir forventet verdi for obligatorisk", {
     underspoersmaal = "nei"
   )
 
-  kb_oblig_ok_ja = filter(kb_obligatorisk,
+  kb_oblig_ok_ja = filter(
+    kb_obligatorisk,
     obligatorisk == "ja", aktiveringsspoersmaal == "ja"
   )
 
@@ -439,7 +439,8 @@ test_that("funksjonen gir forventet verdi for obligatorisk", {
     underspoersmaal = "nei"
   )
 
-  kb_oblig_ok_nei = filter(kb_obligatorisk,
+  kb_oblig_ok_nei = filter(
+    kb_obligatorisk,
     obligatorisk == "ja", aktiveringsspoersmaal == "nei"
   )
 
@@ -449,7 +450,8 @@ test_that("funksjonen gir forventet verdi for obligatorisk", {
     underspoersmaal = "nei"
   )
 
-  kb_oblig_ok_nei_2 = filter(kb_obligatorisk,
+  kb_oblig_ok_nei_2 = filter(
+    kb_obligatorisk,
     obligatorisk == "nei",
     aktiveringsspoersmaal == "ja"
   )
@@ -594,24 +596,27 @@ test_that("funksjonen gir feilmelding hvis variabel eksisterer fra før", {
     "basereg", "basisregistrering", "a", "tekst", "normal", "nei", "ja", NA
   )
 
-  expect_error(legg_til_variabler_kb(kb_legg_til_base,
-    skjema = "basereg",
-    variabler = duplikat_variabel
-  ),
-  error = "Variabelen:\n 'a' finnes i skjema fra før"
+  expect_error(
+    object = legg_til_variabler_kb(kb_legg_til_base,
+      skjema = "basereg",
+      variabler = duplikat_variabel
+    ),
+    error = "Variabelen:\n 'a' finnes i skjema fra før"
   )
 })
+
 test_that("funksjonen gir feilmelding hvis ikke alle nødvendige verdier er inkludert", {
   ingen_variabeltype = tribble(
     ~skjema_id, ~skjemanavn, ~variabel_id, ~variabeletikett, ~unik, ~obligatorisk, ~desimaler,
     "basereg", "basisregistrering", "a", "normal", "nei", "ja", NA
   )
 
-  expect_error(legg_til_variabler_kb(kb_legg_til_base,
-    skjema = "basereg",
-    variabler = ingen_variabeltype
-  ),
-  error = "Det mangler kolonner for nye variabler:\n variabeltype"
+  expect_error(
+    object = legg_til_variabler_kb(kb_legg_til_base,
+      skjema = "basereg",
+      variabler = ingen_variabeltype
+    ),
+    error = "Det mangler kolonner for nye variabler:\n variabeltype"
   )
 })
 
