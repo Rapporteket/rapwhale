@@ -17,17 +17,17 @@
 #' scales::show_col(unlist(farger))
 farger_kvalreg = function() {
   # Dei offisielle fargene
-  colPrim = c(
+  col_prim = c(
     "#000059", "#084594", "#2171b5",
     "#4292c6", "#6baed6", "#c6dbef"
   ) # Primærfarge (mørk til lys)
-  colNoyt = c("#4D4D4D", "#737373", "#A6A6A6", "#DADADA") # Nøytralfarge
-  colKontr = "#FF7260" # Kontrastfarge
+  col_noyt = c("#4D4D4D", "#737373", "#A6A6A6", "#DADADA") # Nøytralfarge
+  col_kontr = "#FF7260" # Kontrastfarge
 
   farger = list(
-    "farger_hoved" = colPrim,
-    "farger_noyt" = colNoyt,
-    "farger_kontr" = colKontr
+    "farger_hoved" = col_prim,
+    "farger_noyt" = col_noyt,
+    "farger_kontr" = col_kontr
   )
   farger
 }

@@ -468,25 +468,25 @@ test_that("funksjonen gir forventet verdi for obligatorisk", {
 })
 
 test_that("funksjonen gir feilmelding hvis obligatorisk, aktiveringsspoersmaal eller underspoersmaal er NA", {
-  kb_oblig_NA = add_row(kb_tom_mellom,
+  kb_oblig_na = add_row(kb_tom_mellom,
     variabeltype = "Listevariabel",
     aktiveringsspoersmaal = "nei",
     underspoersmaal = "nei"
   )
-  kb_aktiv_NA = add_row(kb_tom_mellom,
+  kb_aktiv_na = add_row(kb_tom_mellom,
     variabeltype = "Listevariabel",
     obligatorisk = "ja",
     underspoersmaal = "nei"
   )
-  kb_under_NA = add_row(kb_tom_mellom,
+  kb_under_na = add_row(kb_tom_mellom,
     variabeltype = "Listevariabel",
     obligatorisk = "ja",
     aktiveringsspoersmaal = "nei"
   )
 
-  expect_error(valider_oqr_kb(kb_oblig_NA))
-  expect_error(valider_oqr_kb(kb_aktiv_NA))
-  expect_error(valider_oqr_kb(kb_under_NA))
+  expect_error(valider_oqr_kb(kb_oblig_na))
+  expect_error(valider_oqr_kb(kb_aktiv_na))
+  expect_error(valider_oqr_kb(kb_under_na))
 })
 
 context("velg_standardkolonner")

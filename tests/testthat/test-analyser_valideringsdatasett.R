@@ -62,14 +62,14 @@ test_that("Gjev ut valideringsdatasettet med rett ekstrakolonne også om inndata
 })
 
 test_that("Skal stoppa med feilmelding dersom samanliknaren gjev ut NA-verdiar", {
-  samanliknar_lag_NA = function(verdi1, verdi2, varnamn) {
+  samanliknar_lag_na = function(verdi1, verdi2, varnamn) {
     return(rep(NA, length(verdi1)))
   }
-  feilmelding_NA = "NA-verdiar frå samanliknaren"
+  feilmelding_na = "NA-verdiar frå samanliknaren"
 
   expect_error(
-    analyser_valideringsdatasett(d_vld_gyldig, samanliknar_lag_NA),
-    feilmelding_NA
+    analyser_valideringsdatasett(d_vld_gyldig, samanliknar_lag_na),
+    feilmelding_na
   )
 })
 

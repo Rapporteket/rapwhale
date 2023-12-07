@@ -33,9 +33,9 @@ utviklingsnivaa = function(mappe = "man") {
   funksjonar_namn = str_replace(funksjonar, "\\.Rd", "()")
 
   # Les inn linjene i hjelpefilene
-  parse_Rd_mapper = purrr::as_mapper(\(x) tools::parse_Rd(x, permissive = TRUE))
+  parse_rd_mapper = purrr::as_mapper(\(x) tools::parse_Rd(x, permissive = TRUE))
   funksjonsadresser = paste0(mappe, "/", funksjonar)
-  funksjonar_parsed = map(funksjonsadresser, parse_Rd_mapper)
+  funksjonar_parsed = map(funksjonsadresser, parse_rd_mapper)
 
   # Hent utviklingsnivå for en funksjon
   hent_nivaa = function(funksjon_rd) {
