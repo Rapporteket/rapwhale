@@ -188,7 +188,10 @@ regn_konfint_bin = function(x, n, alfa = 0.05) {
 #' mtcars |>
 #'   group_by(am) |>
 #'   summarise(regn_konfint_univar(mpg))
-regn_konfint_univar = function(x, bootstrap = FALSE, konf_niva = 0.95, R = 9999) {
+regn_konfint_univar = function(x,
+                               bootstrap = FALSE,
+                               konf_niva = 0.95,
+                               R = 9999) { # nolint: object_name_linter
   # Fjern eventuelle NA-verdier
   x = x[!is.na(x)]
 
