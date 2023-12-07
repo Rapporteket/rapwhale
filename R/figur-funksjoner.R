@@ -61,30 +61,30 @@ flytt_opp = function(y, tekst, hoyde = .015) {
 lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab = NULL,
                          angle = TRUE, konfint = TRUE, point_size = 2) {
   grafdel = list()
-  colPrim = farger_kvalreg()$farger_hoved
+  col_prim = farger_kvalreg()$farger_hoved
 
   # Legg ev. til referanselinje(r)
   if (!is.null(refline)) {
     if (is.null(refline_df)) {
-      grafdel = append(grafdel, list(ggplot2::geom_hline(yintercept = refline, col = colPrim[6], linewidth = 2)))
+      grafdel = append(grafdel, list(ggplot2::geom_hline(yintercept = refline, col = col_prim[6], linewidth = 2)))
     } else {
       grafdel = append(grafdel, list(ggplot2::geom_hline(
         data = refline_df,
         mapping = ggplot2::aes_string(yintercept = refline),
-        col = colPrim[6], linewidth = 2
+        col = col_prim[6], linewidth = 2
       )))
     }
   }
   # Legg ev. til konfidensintervall (bak alt anna)
   if (konfint) {
-    grafdel = append(grafdel, ggplot2::geom_linerange(linewidth = .5, colour = colPrim[5]))
+    grafdel = append(grafdel, ggplot2::geom_linerange(linewidth = .5, colour = col_prim[5]))
   }
   # Legg til resten
   grafdel = append(
     grafdel,
     list(
-      ggplot2::geom_line(colour = colPrim[3], linewidth = 1), # Linjer over tid
-      ggplot2::geom_point(size = point_size, colour = colPrim[2]), # Punkt
+      ggplot2::geom_line(colour = col_prim[3], linewidth = 1), # Linjer over tid
+      ggplot2::geom_point(size = point_size, colour = col_prim[2]), # Punkt
       xlab(xlab),
       ylab(ylab),
       fjern_x = fjern_x()

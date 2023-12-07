@@ -278,10 +278,10 @@ test_that("Vi får ønsket utverdi når dato er i POSIXct-format med klokkeslett
     "2019-01-01 02:00", "2019-04-01 02:00",
     "2019-08-01 02:00", "2019-12-01 02:00"
   ))
-  dato_Date = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
+  dato_date = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
 
   expect_identical(tid_til_tidslinje(dato_ct_med_klokke, 500),
-    expected = tid_til_tidslinje(dato_Date, 500)
+    expected = tid_til_tidslinje(dato_date, 500)
   )
   expect_true(any(
     tid_til_tidslinje(dato_ct_med_klokke_diff, 500) !=
@@ -305,14 +305,14 @@ test_that("Vi får ønsket utverdi når dato er i POSIXlt-format med klokkeslett
     ),
     tz = "UTC"
   )
-  dato_Date = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
+  dato_date = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
 
   expect_identical(tid_til_tidslinje(dato_lt_med_klokke, 5),
-    expected = tid_til_tidslinje(dato_Date, 5)
+    expected = tid_til_tidslinje(dato_date, 5)
   )
   expect_true(any(
     tid_til_tidslinje(dato_lt_med_klokke_diff, 500) !=
-      tid_til_tidslinje(dato_Date, 500)
+      tid_til_tidslinje(dato_date, 500)
   ))
   expect_identical(tid_til_tidslinje(dato_lt_med_klokke_midnatt, 500),
     expected = c(2019.001, 2019.413, 2019.495, 2019.917)

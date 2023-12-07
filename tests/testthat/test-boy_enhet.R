@@ -70,14 +70,14 @@ test_that(
 )
 
 test_that("Gir feilmelding ved inndata av NA-verdi", {
-  feilmelding_NA_verdi = "Inndata «x» inneholder minst én NA-verdi"
+  feilmelding_na_verdi = "Inndata «x» inneholder minst én NA-verdi"
   expect_error(
     boy_enhet(NA_integer_, "operasjon", "operasjoner"),
-    feilmelding_NA_verdi
+    feilmelding_na_verdi
   )
   expect_error(
     boy_enhet(c(1, NA), "operasjon", "operasjoner"),
-    feilmelding_NA_verdi
+    feilmelding_na_verdi
   )
 })
 
