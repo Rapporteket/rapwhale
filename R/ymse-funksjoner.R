@@ -21,8 +21,7 @@
 #' R tillater variabelnavn uten bokstaver,
 #' for eksempel "._.".
 #' Det gir ikke mening å skrive et slikt variabelnavn i "snake_case".
-#' Derfor tillater
-# `normaliser_varnamn()`
+#' Derfor tillater [normaliser_varnamn()]
 #' kun variabelnavn som inneholder minst en bokstav.
 #'
 #' @param x Tekststreng med variabelnavn som skal konverteres.
