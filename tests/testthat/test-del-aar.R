@@ -319,7 +319,7 @@ test_that("Vi får ønsket utverdi når dato er i POSIXlt-format med klokkeslett
   )
 })
 
-test_that("Vi får ønsket utverdi når dato og tid er like over nyttår (01:00:00)", {
+test_that("Vi får ønsket utverdi når dato og tid er like rundt nyttår", {
   dato_nyttaar = as.POSIXlt(c(
     "2019-12-31 23:59:00", "2020-01-01 00:00:01", "2020-01-01 00:00:15",
     "2020-01-01 00:00:30", "2020-01-01 00:00:45", "2020-01-01 01:00:00",
