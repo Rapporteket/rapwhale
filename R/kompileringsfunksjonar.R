@@ -155,9 +155,9 @@ kompiler_tex = function(adresse, maksiter = 5, vis_feilmeldingar = TRUE) {
       break
     } else {
       cat("Treng rekompilering ...\n")
-      # vis_loggfeil()
       # Er typisk så mange åtvaringar viss me treng rekompilering
-      # at det er betre å ikkje visa dei
+      # at det er betre å ikkje visa dei,
+      # så me køyrer ikkje vis_loggfeil() her.
     }
   }
   pdf_adressse = str_replace(adresse, ".tex$", ".pdf")

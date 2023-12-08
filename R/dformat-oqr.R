@@ -572,14 +572,3 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
   # Returner datasettet
   d
 }
-
-
-# Eksempel på bruk  -----------------------------------------------------------
-
-# # Les inn eksempeldata
-# mappe_dd = "***FJERNA-ADRESSE***"
-# kb = les_kb_oqr(mappe_dd, reg_id = "AblaNor")
-# d = les_dd_oqr(mappe_dd, reg_id = "AblaNor", skjema_id = "basereg", kodebok = kb) # Ev. utelat «kb»-argumentet
-# d = les_dd_oqr(mappe_dd, reg_id = "AblaNor", skjema_id = "gkv", kodebok = kb) # Ev. utelat «kb»-argumentet
-# d = les_dd_oqr(mappe_dd, reg_id = "AblaNor", skjema_id = "pros", kodebok = kb) # Ev. utelat «kb»-argumentet
-# d = les_dd_oqr(mappe_dd, reg_id = "AblaNor", skjema_id = "rand12", kodebok = kb) # Ev. utelat «kb»-argumentet
