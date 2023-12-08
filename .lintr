@@ -5,3 +5,6 @@ linters: linters_with_defaults(
     line_length_linter(120),
     object_length_linter(40)
   )
+exclusions: list(
+    "tests/testthat/rapwhale-style"
+  )

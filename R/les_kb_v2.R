@@ -418,7 +418,7 @@ tildel_unike_skjemanavn_fra_skjema_id = function(kb_std) {
   for (i in seq_along(kod_id)) {
     kandidatar = c(komb$namn[komb$id == kod_id[i]], kod_id[i])
     kandidatar = setdiff(kandidatar, kod_namn) # Fjern allereie brukte skjemanamn
-    kod_namn[i] = kandidatar[1] # Bruk første *ledige* (vil alltid vera ein, utanom det patologiske tilfelle der skjemanamna er lik skjema-ID-ane, men ikkje med 1-1-samsvar)
+    kod_namn[i] = kandidatar[1] # Bruk første *ledige* (vil alltid vera ein, utanom det patologiske tilfelle der skjemanamna er lik skjema-ID-ane, men ikkje med 1-1-samsvar) # nolint: line_length_linter.
   }
   if (any(is.na(kod_namn))) {
     stop(error = "Det finnes overlappende skjemanavn og skjema_id, og det er ikke 1-1 forhold mellom navnene")
@@ -488,7 +488,7 @@ legg_til_variabler_kb = function(kb_std, ekstra_data) {
 #' @keywords internal
 valider_kodebok = function(kodebok) {
   # Planlagt struktur
-  # valider_kb_struktur(kodebok)
+  # valider_kb_struktur(kodebok) # nolint: commented_code_linter.
   valider_kb_skjema(kodebok)
   valider_kb_kolonner(kodebok)
   valider_kb_variabler(kodebok)

@@ -73,7 +73,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
       type = col_character(),
       listeverdier = col_character(),
       listetekst = col_character(),
-      normalintervall_start_numerisk = col_character(), # Sjå merknad nedanfor om årsaka til denne og dei tre neste må vera tekst
+      normalintervall_start_numerisk = col_character(), # Sjå merknad nedanfor om årsaka til denne og dei tre neste må vera tekst # nolint: line_length_linter.
       normalintervall_slutt_numerisk = col_character(),
       maksintervall_start_numerisk = col_character(),
       maksintervall_slutt_numerisk = col_character(),
@@ -287,17 +287,19 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
     for (i in seq_along(kod_id)) {
       kandidatar = c(komb$namn[komb$id == kod_id[i]], kod_id[i])
       kandidatar = setdiff(kandidatar, kod_namn) # Fjern allereie brukte skjemanamn
-      kod_namn[i] = kandidatar[1] # Bruk første *ledige* (vil alltid vera ein, utanom det patologiske tilfelle der skjemanamna er lik skjema-ID-ane, men ikkje med 1-1-samsvar)
+      kod_namn[i] = kandidatar[1] # Bruk første *ledige* (vil alltid vera ein, utanom det patologiske tilfelle der skjemanamna er lik skjema-ID-ane, men ikkje med 1-1-samsvar) # nolint: line_length_linter.
     }
 
     # Bruk omkodingstabellen til gje ut rett namn på alle ID-ane
     kod_namn[match(ids, kod_id)]
   }
+  # nolint start commented_code_linter.
   # # Eksempel (og test)
   # ids   = c("pasreg",  "basereg", "basereg","pasreg",   "op",       "op",       "ev",       "basereg")
   # namn  = c("Pasient", "Basis",   "Basis",  "Opskjema", "Pasient",  "Opskjema", "Opskjema", "Basis")
   # fasit = c("Pasient", "Basis",   "Basis",  "Pasient",  "Opskjema", "Opskjema", "ev",       "Basis")
   # stopifnot(identical(fasit, tabell_id_til_skjemanamn(ids, namn)))
+  # nolint end
 
   # Fiksa oppgitt skjemanamn til noko som er unikt for kvar
   # skjema-ID (= tabell-ID)
@@ -519,8 +521,10 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
     str_detect(x, "^-?[0-9]+(\\.[0-9]+)?$")
   }
   ## Ev. kjapp test på at funksjonen fungerer som han skal
+  # nolint start: commented_code_linter.
   # stopifnot(all(er_tal(c("-3", "0", "1", "997", "3.14", "-3.14", "0.7"))))
   # stopifnot(all(!er_tal(c("a", "2B", "F42.7", "-x", "1e-7", "3.", ".7")))) # Ev. godta "3." og .7"?
+  # nolint end
 
   # Finn dei kategoriske variablane som har berre numeriske verdiar ...
   vars_num = kb_akt |>

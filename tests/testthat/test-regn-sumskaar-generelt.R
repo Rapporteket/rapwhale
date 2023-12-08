@@ -1,5 +1,10 @@
 # Testing av generelle sumskårfunksjonar -------------------------------
 
+# FIXME Denne fila har mange lange objektnamn.
+# Ta eventuelt ein runde for å retta på dette.
+# Legg førebels til unntak i lintr for å unngå klagar.
+# nolint start: object_length_linter.
+
 # Eksempel på gyldig skåringstabell
 skaaringstabell_eks = tribble(
   ~delskala, ~variabel, ~verdi, ~koeffisient,
@@ -1056,3 +1061,5 @@ test_that("legg_til_eller_erstatt_kolonner() gir advarsel hvis en eller
     )
   ))
 })
+
+# nolint end
