@@ -126,10 +126,12 @@ test_that("Fungerer òg viss inndataelementa er lik dei som inngår i utdata", {
 
 # Test av faktorar der det finst nivå som ikkje er brukte i
 # inndatavektoren. Basert på løysingsforslag som var omtrent slikt:
+# nolint start: commented_code_linter.
 #   x_fak = as.factor(x)
 #   nye = sample.int(length(unique(x))) + startnr - 1
 #   levels(x_fak) = nye # Gjev feilmelding eller feil svar
 #   as.integer(as.character(x_fak))
+# nolint end
 test_that("Anonymisering av faktorar med ubrukte nivå eller NA fungerer òg", {
   pas_id_ekstra = factor(c("d", "a"),
     levels = c("b", "a", "c", "d")
@@ -175,7 +177,7 @@ test_that("Gjev rett svar når det er 1 unikt element", {
 })
 
 # Test som feila når funksjonen var implementert som
-# as.numeric(factor(pas_id, levels = sample(unique(pas_id)))) - 1 + startnr
+# as.numeric(factor(pas_id, levels = sample(unique(pas_id)))) - 1 + startnr # nolint: commented_code_linter.
 # (men fungerer viss pass_id er tekst vektor)
 test_that("Gjev rett svar når det er 1 unikt element og dette er tal", {
   expect_identical(anonymiser(c(4321, 4321, 4321)), rep(1001L, 3))

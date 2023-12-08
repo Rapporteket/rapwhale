@@ -70,6 +70,7 @@ test_that("Funksjonen stopper og rapporterer en feilmelding hvis kategoriske var
 
 #  Skal være mulig å ha bruke KB på ikke vårt standardformat, med å si at f.eks "min" heter "min_verdi" eller andre.
 
+# nolint start: commented_code_linter.
 # test_that("Skal kunne navngi enkeltkolonner i KB.", {
 #
 #   kb_annet_navn = tribble(
@@ -84,3 +85,4 @@ test_that("Funksjonen stopper og rapporterer en feilmelding hvis kategoriske var
 #   expect_identical(lag_regelsett(kb_annet_navn), lag_regelsett(kb))
 # }
 # )
+# nolint end

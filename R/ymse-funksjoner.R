@@ -285,7 +285,7 @@ lag_tab_latex = function(dataframe, label, caption, wide = FALSE, ...) {
   #
   #        Kan bruka følgjande kodesnutt for å sjekka om feilen
   #        er retta:
-  #          latex(head(iris, 0), file="", numeric.dollar=FALSE)
+  #          latex(head(iris, 0), file="", numeric.dollar=FALSE) # nolint commented_code_linter.
   #        (skal gje tabell, ikkje feilmelding)
   if (nrow(dataframe) == 0) {
     tabell = paste0(
