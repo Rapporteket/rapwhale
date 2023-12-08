@@ -101,9 +101,6 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
     )
   kb_kanonisk
 }
-# kan teste at funksjonen funker med koden under
-# mappe = "***FJERNA-ADRESSE***"
-# kb = les_kb_checkware(mappe)
 
 
 #---------------------------------lag datadump checkware------------------------
@@ -365,16 +362,3 @@ les_dd_checkware = function(mappe_dd,
   # returner dataene
   d
 }
-
-
-# sjekk at funksjonen funker med rehabiliteringsregisteret som eksempel
-# mappe = "***FJERNA-ADRESSE***"
-# d_barthel = les_dd_checkware(mappe, skjema_id = "barthel")
-# d_moca = les_dd_checkware(mappe, skjema = "moca")
-# d_mrs = les_dd_checkware(mappe, "mrs")
-# d_nihss = les_dd_checkware(mappe, "nihss")
-# d_tis = les_dd_checkware(mappe, "tis")
-# d_legeinn = les_dd_checkware(mappe, "legeinn")
-# d_legeut = les_dd_checkware(mappe, "legeut")
-# d_sykinn = les_dd_checkware(mappe, "sykinn")
-# d_sykut = les_dd_checkware(mappe, "sykut")

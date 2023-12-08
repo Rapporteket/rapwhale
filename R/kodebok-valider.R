@@ -686,18 +686,3 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   }
   gyldig
 }
-
-
-
-# Eksempel på bruk --------------------------------------------------------
-
-# # Eksempeldata for testing
-# mappe = "h:/kvalreg/ablasjonsregisteret/"
-# kb_test = readxl::read_excel(paste0(mappe,"kodebok-utkast.xlsx"), sheet = 1)
-#
-# # Lesing frå Excel gjev ikkje automatisk rett variabeltype
-# # til alle kolonnar, så fiks dette manuelt
-# kb_test$verdi = as.character(kb_test$verdi)
-# kb_test$desimalar = as.integer(kb_test$desimalar)
-#
-# kb_er_gyldig(kb_test)

@@ -456,23 +456,3 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
   # Returner datasettet
   d
 }
-
-# Eksempel  -----------------------------------------------------------
-
-# # Les inn eksempeldata
-# mappe = "***FJERNA-ADRESSE***"
-# filnamn_kb = "Kodebok NorArtritt-fiksa.xlsx"
-# ark_kb = "Inklusjonskjema. Skjemaversjon "
-# filnamn_dd = "datadumper\\2017-05-18\\DataDump_Inklusjonskjema_2017-05-18.csv"
-# adresse_kb = paste0(mappe, filnamn_kb)
-# adresse_dd = paste0(mappe, filnamn_dd)
-#
-# # Les inn (ei fane i) Excel-kodeboka
-# kb_mrs = read_excel(adresse_kb, sheet = ark_kb)
-# kb_standard = kb_mrs_til_standard(kb_mrs)
-#
-# # Les inn datadump
-# d = les_dd_mrs(adresse_dd, kb_standard)
-#
-# # Sjå nøyare på eventuelle importproblem
-# problems(d)
