@@ -17,7 +17,7 @@ formatspek_ok_hel = list(
 test_that("Funksjonen leser inn en variabel selv om den ikke har navn", {
   forventet_uten_navn = c("alfa", "beta", "", "delta", "echo", "")
   expect_identical(les_varnavn(
-    adresse = "dd_kolonne_uten_navn.csv",
+    adresse = test_path("testdata", "dd_kolonne_uten_navn.csv"),
     formatspek = formatspek_ok_hel
   ), forventet_uten_navn)
 })
@@ -93,7 +93,7 @@ specs_dd_ok_hel = tribble(
 # Gir forventet format for ulike variabeltyper.
 test_that("Funksjonen leser inn datasett og gir ut forventet format", {
   expect_equivalent(les_csv_base(
-    adresse = "dd_ok_hel.csv",
+    adresse = test_path("testdata", "dd_ok_hel.csv"),
     spesifikasjon = specs_dd_ok_hel,
     formatspek = formatspek_ok_hel
   ), dd_ok_hel)
@@ -101,7 +101,7 @@ test_that("Funksjonen leser inn datasett og gir ut forventet format", {
 
 test_that("Funksjonen håndterer NA for alle variabeltyper", {
   expect_equivalent(les_csv_base(
-    adresse = "dd_ok_hel_na.csv",
+    adresse = test_path("testdata", "dd_ok_hel_na.csv"),
     spesifikasjon = specs_dd_ok_hel,
     formatspek = formatspek_ok_hel
   ), dd_ok_hel_na)
@@ -164,7 +164,7 @@ test_that("Funksjonen tolker ikke NA som manglende verdi med mindre den blir bed
 
   expect_equal(
     les_csv_base(
-      adresse = "dd_na_som_vanlig_verdi.csv",
+      adresse = test_path("testdata", "dd_na_som_vanlig_verdi.csv"),
       spesifikasjon = dd_spek,
       formatspek = formatspek_ok_hel
     )$land,
@@ -173,7 +173,7 @@ test_that("Funksjonen tolker ikke NA som manglende verdi med mindre den blir bed
 
   expect_equal(
     les_csv_base(
-      adresse = "dd_na_som_vanlig_verdi.csv",
+      adresse = test_path("testdata", "dd_na_som_vanlig_verdi.csv"),
       spesifikasjon = dd_spek,
       formatspek = formatspek_na_som_manglende
     )$land,
@@ -213,7 +213,7 @@ test_that("Funksjonen fungerer som forventet når inndata er med annen tegnkodin
 
 
   expect_equivalent(les_csv_base(
-    adresse = "dd_ok_hel_windows_1252.csv",
+    adresse = test_path("testdata", "dd_ok_hel_windows_1252.csv"),
     spesifikasjon = specs_dd_ok_hel,
     formatspek = formatspek_alt_tegnkoding
   ), dd_ok_hel_win1252)
