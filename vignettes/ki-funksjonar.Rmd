@@ -53,7 +53,7 @@ d_reg = tibble::tribble(
   27L, "kvinne", 29, "A", "2018-07-28", "2019-07-02",
   28L, "mann", 78, "B", "2017-06-26", "2019-06-11",
   29L, "mann", 45, "B", "2018-03-19", NA
-) %>%
+) |>
   mutate(
     kjonn = factor(kjonn),
     sjukehus = factor(sjukehus),
@@ -166,7 +166,7 @@ For eksempelet ovanfor kan KI-funksjonen sjå slik ut:
 
 ```{r def-ki-funk-1aar-oppf}
 ki_oppf_innan_1_aar = function(d_reg, dato_datasett) {
-  d_reg %>%
+  d_reg |>
     mutate(
       dagar_sidan_op = difftime(!!dato_datasett, dato_operasjon, units = "days"),
       dagar_til_oppf = difftime(dato_oppfolging, dato_operasjon, units = "days"),
@@ -179,7 +179,7 @@ ki_oppf_innan_1_aar = function(d_reg, dato_datasett) {
 Køyrer me funksjonen på datasettet, får me:
 
 ```{r}
-ki_oppf_innan_1_aar(d_reg, dato_datasett = Sys.Date()) %>%
+ki_oppf_innan_1_aar(d_reg, dato_datasett = Sys.Date()) |>
   print(width = Inf)
 ```
 
@@ -218,8 +218,8 @@ Det gjer ein enkelt med ein aggregeringsfunksjon. For binomiske/proporsjonsbaser
 KI-funksjonar er dette `aggreger_ki_prop()`:
 
 ```{r}
-d_reg %>%
-  ki_oppf_innan_1_aar(dato_datasett = Sys.Date()) %>%
+d_reg |>
+  ki_oppf_innan_1_aar(dato_datasett = Sys.Date()) |>
   aggreger_ki_prop()
 ```
 
@@ -260,7 +260,7 @@ Det fiksar rammeverket for oss. La oss første laga eit objekt
 med inndata på individnivå.
 
 ```{r}
-d_oppf1 = d_reg %>%
+d_oppf1 = d_reg |>
   ki_oppf_innan_1_aar(dato_datasett = Sys.Date())
 ```
 
@@ -269,8 +269,8 @@ treng me berre gruppera `d_oppf1` på vanleg vis før
 me køyrer aggregeringsfunksjonen:
 
 ```{r}
-d_oppf1 %>%
-  group_by(sjukehus) %>%
+d_oppf1 |>
+  group_by(sjukehus) |>
   aggreger_ki_prop()
 ```
 
@@ -294,11 +294,11 @@ og reknar ut indikatoren på nytt, med to ulike verdiar for `.drop`:
 
 ```{r}
 d_oppf1_utan_b = filter(d_oppf1, sjukehus != "B")
-d_oppf1_utan_b %>%
-  group_by(sjukehus, .drop = TRUE) %>% # Standardverdi
+d_oppf1_utan_b |>
+  group_by(sjukehus, .drop = TRUE) |> # Standardverdi
   aggreger_ki_prop()
-d_oppf1_utan_b %>%
-  group_by(sjukehus, .drop = FALSE) %>%
+d_oppf1_utan_b |>
+  group_by(sjukehus, .drop = FALSE) |>
   aggreger_ki_prop()
 ```
 
@@ -329,7 +329,7 @@ ki_oppf_innan_normtid = function(d_reg, dato_datasett, oppf_aar, slingringsmonn_
   nedre_grense = oppf_maal - slingringsmonn_dagar
   ovre_grense = oppf_maal + slingringsmonn_dagar
 
-  d_reg %>%
+  d_reg |>
     mutate(
       dagar_sidan_op = difftime(!!dato_datasett, dato_operasjon, units = "days"),
       dagar_til_oppf = difftime(dato_oppfolging, dato_operasjon, units = "days"),
@@ -346,17 +346,17 @@ Her er eksempel på bruk:
 
 ```{r}
 # Oppfølging innan 1 år ± 30 dagar
-d_reg %>%
-  ki_oppf_innan_normtid(dato_datasett = Sys.Date(), oppf_aar = 1) %>%
+d_reg |>
+  ki_oppf_innan_normtid(dato_datasett = Sys.Date(), oppf_aar = 1) |>
   aggreger_ki_prop()
 
 # Oppfølging innan 2 år ± 60 dagar, gruppert på sjukehus
-d_reg %>%
+d_reg |>
   ki_oppf_innan_normtid(
     dato_datasett = Sys.Date(),
     oppf_aar = 2, slingringsmonn_dagar = 60
-  ) %>%
-  group_by(sjukehus) %>%
+  ) |>
+  group_by(sjukehus) |>
   aggreger_ki_prop()
 ```
 
@@ -378,8 +378,8 @@ ki_oppf_innan_2_aar = function(d_reg) {
 Me brukar dei nydefinerte funksjonane som vanlege KI-funksjonar:
 
 ```{r}
-d_reg %>%
-  ki_oppf_innan_1_aar() %>%
+d_reg |>
+  ki_oppf_innan_1_aar() |>
   aggreger_ki_prop()
 ```
 
@@ -417,13 +417,13 @@ sjå slik ut:
 ```{r, echo=FALSE, results='hide'}
 d_oper = select(d_reg, pas_id, kjonn, alder, sjukehus, dato_operasjon)
 d_oppf_orig = select(d_reg, pas_id, dato_oppfolging)
-d_oppf = d_oppf_orig %>%
+d_oppf = d_oppf_orig |>
   bind_rows(
     mutate(filter(d_oppf_orig, pas_id == 11), dato_oppfolging = dato_oppfolging + 320),
     mutate(filter(d_oppf_orig, pas_id == 28), dato_oppfolging = dato_oppfolging - 360),
     mutate(filter(d_oppf_orig, pas_id == 28), dato_oppfolging = dato_oppfolging + 130)
-  ) %>%
-  filter(!is.na(dato_oppfolging)) %>%
+  ) |>
+  filter(!is.na(dato_oppfolging)) |>
   arrange(pas_id, dato_oppfolging)
 ```
 
@@ -445,11 +445,11 @@ ki_oppf_innan_normtid = function(d_oper, d_oppf, dato_datasett, oppf_aar, slingr
   ovre_grense = oppf_maal + slingringsmonn_dagar
 
   # For kvar operasjon, legg til info om eventuelle oppfølgingar
-  d_reg = d_oper %>%
+  d_reg = d_oper |>
     left_join(d_oppf, by = "pas_id", relationship = "one-to-many")
 
   # For kvar oppfølging, rekn ut kriterievariablar
-  d_ki_per_oppf = d_reg %>%
+  d_ki_per_oppf = d_reg |>
     mutate(
       dagar_sidan_op = difftime(!!dato_datasett, dato_operasjon, units = "days"),
       dagar_til_oppf = difftime(dato_oppfolging, dato_operasjon, units = "days"),
@@ -459,10 +459,10 @@ ki_oppf_innan_normtid = function(d_oper, d_oppf, dato_datasett, oppf_aar, slingr
     )
 
   # For kvar operasjon som *burde* vore følgt opp no, rekn ut kriterievariablar
-  d_ki = d_ki_per_oppf %>%
-    filter(ki_krit_nevner) %>%
-    group_by(!!!syms(names(d_oper)), ki_krit_nevner) %>%
-    summarise(ki_krit_teller = any(ki_krit_teller)) %>%
+  d_ki = d_ki_per_oppf |>
+    filter(ki_krit_nevner) |>
+    group_by(!!!syms(names(d_oper)), ki_krit_nevner) |>
+    summarise(ki_krit_teller = any(ki_krit_teller)) |>
     ungroup()
 
   # Returner datasett med indikatorvariablar
@@ -497,10 +497,10 @@ d_oppf1
 
 # Rekn ut sjølve kvalitetsindikatoren,
 # både totalt og stratifisert på kjønn
-d_oppf1 %>%
+d_oppf1 |>
   aggreger_ki_prop()
-d_oppf1 %>%
-  group_by(kjonn) %>%
+d_oppf1 |>
+  group_by(kjonn) |>
   aggreger_ki_prop()
 ```
 
@@ -549,8 +549,8 @@ Høge verdiar er negativt, og verdiar frå 48 mmol/mol indikerer diabetes.
 Her er eksempeldata:
 
 ```{r, echo = FALSE}
-d_reg_kont = d_reg %>%
-  select(pas_id, kjonn, alder, sjukehus) %>%
+d_reg_kont = d_reg |>
+  select(pas_id, kjonn, alder, sjukehus) |>
   mutate(hb1ac = c(26.1, NA, 53.8, NA, 65.2, 49.8))
 ```
 
@@ -563,7 +563,7 @@ så KI-funksjonen vert svært enkelt:
 
 ```{r}
 ki_hb1ac = function(d_reg) {
-  d_reg %>%
+  d_reg |>
     mutate(
       ki_x = hb1ac,
       ki_aktuell = !is.na(hb1ac)
@@ -580,16 +580,16 @@ for utrekning av gjennomsnittsverdiar, `aggreger_ki_snitt()`:
 
 ```{r}
 # Rekn ut kvalitetsindikatoren
-d_hba1c = d_reg_kont %>%
+d_hba1c = d_reg_kont |>
   ki_hb1ac()
 
 # Snittverdiar for heile registeret
-d_hba1c %>%
+d_hba1c |>
   aggreger_ki_snitt()
 
 # Snittverdiar fordelt på sjukehus
-d_hba1c %>%
-  group_by(sjukehus) %>%
+d_hba1c |>
+  group_by(sjukehus) |>
   aggreger_ki_snitt()
 ```
 
@@ -645,8 +645,8 @@ og `ki_antall` og `ki_eksponering` må vera eit heiltal (ikkje `NA`) dersom
 Eit eksempel kan vera antall infeksjonar hos pasienter per liggedøgn.
 
 ```{r, echo = FALSE}
-d_reg_rate = d_reg %>%
-  select(pas_id, kjonn, alder, sjukehus) %>%
+d_reg_rate = d_reg |>
+  select(pas_id, kjonn, alder, sjukehus) |>
   mutate(
     infeksjonar = c(0, NA, 2, NA, 1, 2),
     liggedogn = c(10, NA, 8, 11, 7, 11)
@@ -662,7 +662,7 @@ så KI-funksjonen vert svært enkelt:
 
 ```{r}
 ki_infeksjonar = function(d_reg) {
-  d_reg %>%
+  d_reg |>
     mutate(
       ki_antall = infeksjonar,
       ki_eksponering = liggedogn,
@@ -678,21 +678,21 @@ Aggregering av ratedata kan gjøres ved å anvende `aggreger_ki_rate()`:
 
 ```{r}
 # Rekn ut kvalitetsindikatoren
-d_infeksjonar = d_reg_rate %>%
+d_infeksjonar = d_reg_rate |>
   ki_infeksjonar()
 
 # Rateverdiar for heile registeret
-d_infeksjonar %>%
+d_infeksjonar |>
   aggreger_ki_rate()
 
 # Rateverdiar fordelt på sjukehus
-d_infeksjonar %>%
-  group_by(sjukehus) %>%
+d_infeksjonar |>
+  group_by(sjukehus) |>
   aggreger_ki_rate()
 
 # Rateverdiar per uke
-d_infeksjonar %>%
-  group_by(sjukehus) %>%
+d_infeksjonar |>
+  group_by(sjukehus) |>
   aggreger_ki_rate(multiplikator = 7)
 ```
 
