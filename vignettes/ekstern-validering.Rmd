@@ -30,8 +30,8 @@ suppressPackageStartupMessages({
 
 ```{r kable-format, include = FALSE}
 lag_kable = function(d, full_width = FALSE, ...) {
-  d %>%
-    kbl() %>%
+  d |>
+    kbl() |>
     kable_styling("hover", full_width = full_width, ...)
 }
 ```
@@ -172,7 +172,7 @@ d_vld
 Til å samanlikna verdiane brukar me `analyser_valideringsdatasett()`:
 
 ```{r samanlikning}
-d_samanlikna = d_vld %>%
+d_samanlikna = d_vld |>
   analyser_valideringsdatasett()
 ```
 
@@ -217,7 +217,7 @@ både totalt og stratifisert på éin eller fleire variablar.
 Total korrektheit reknar me ut direkte med `aggreger_ki_prop()`:
 
 ```{r aggregering total}
-d_samanlikna %>%
+d_samanlikna |>
   aggreger_ki_prop()
 ```
 
@@ -239,8 +239,8 @@ Nokre variablar er gjerne oftare korrekt registrerte enn andre.
 Me kan lett få ut stratifisert statistikk ved å bruka `group_by()`:
 
 ```{r aggregering per-variabel}
-d_samanlikna %>%
-  group_by(vld_varnamn) %>%
+d_samanlikna |>
+  group_by(vld_varnamn) |>
   aggreger_ki_prop()
 ```
 
@@ -257,14 +257,14 @@ med figur:
 
 ```{r, fig.width=5}
 # Rekn ut korrektheit per variabel
-d_korrektheit = d_vld %>%
-  analyser_valideringsdatasett() %>%
-  group_by(vld_varnamn) %>%
+d_korrektheit = d_vld |>
+  analyser_valideringsdatasett() |>
+  group_by(vld_varnamn) |>
   aggreger_ki_prop()
 
 # Eventuelt sorter for å få finare grafar og tabellar
-d_korrektheit_sortert = d_korrektheit %>%
-  arrange(est) %>%
+d_korrektheit_sortert = d_korrektheit |>
+  arrange(est) |>
   mutate(varnamn_sortert = forcats::fct_inorder(vld_varnamn))
 # Brukte her arrange() for at resultatet lett skal kunna brukast
 # i tabellar òg. Skal me berre laga grafar, kunne me heller bruka
@@ -356,7 +356,7 @@ d_vld = lag_valideringsdatasett(d_reg, indvars = c("pasid", "dato_inn"))
 ```
 
 ```{r eksempel valideringsdatasett, echo = FALSE}
-d_vld %>%
+d_vld |>
   lag_kable()
 ```
 
@@ -421,11 +421,11 @@ tilfeldig rekkjefølgje på pasientane (som er viktig for validiteten)
 
 ```{r}
 set.seed(1) # For reproduserbare «tilfeldige» trekkingar
-d_vld_utval_samla = d_vld_utval %>%
-  group_by(pasid, dato_inn) %>% # Ev. bruk nest_by()
-  nest() %>%
-  ungroup() %>% # Nødvendig for slice_sample()
-  slice_sample(prop = 1) %>%
+d_vld_utval_samla = d_vld_utval |>
+  group_by(pasid, dato_inn) |> # Ev. bruk nest_by()
+  nest() |>
+  ungroup() |> # Nødvendig for slice_sample()
+  slice_sample(prop = 1) |>
   unnest(data)
 d_vld_utval_samla
 ```
@@ -448,7 +448,7 @@ frå det opphavlege datasettet:
 
 ```{r}
 var_rekkjefolgje = names(d_reg_full)
-d_vld_utval %>%
+d_vld_utval |>
   arrange(match(vld_varnamn, !!var_rekkjefolgje))
 ```
 
@@ -467,12 +467,12 @@ kan me gjera det slik:
 set.seed(1) # For reproduserbare «tilfeldige» trekkingar
 n_forlop = 5 # Talet på forløp
 n_var = 2 # Talet på variablar per forløp
-d_vld_utval = d_vld_enkel %>%
-  group_by(pasid, dato_inn) %>%
-  slice_sample(n = n_var) %>%
-  nest() %>%
-  ungroup() %>% # Nødvendig for slice_sample()
-  slice_sample(n = n_forlop) %>%
+d_vld_utval = d_vld_enkel |>
+  group_by(pasid, dato_inn) |>
+  slice_sample(n = n_var) |>
+  nest() |>
+  ungroup() |> # Nødvendig for slice_sample()
+  slice_sample(n = n_forlop) |>
   unnest(data)
 print(d_vld_utval, n = Inf) # 10 rader
 ```
@@ -490,7 +490,7 @@ eit allereie laga valideringsdatasett,
 kan me fjerna dei slik:
 
 ```{r fjern variabel}
-d_vld %>%
+d_vld |>
   filter(!str_detect(vld_varnamn, "^biverk"))
 ```
 
@@ -511,18 +511,18 @@ slik at det vert lettare å finna pasienten i pasientjournalen.)
 
 ```{r fjern rader med logikk}
 # Koplar tabellen med kjønn på valideringsdatasettet
-d_vld_med_kjonn = d_vld %>%
+d_vld_med_kjonn = d_vld |>
   left_join(d_pas, by = "pasid", relationship = "many-to-one")
 
 # Filtrerer vekk rader som gjeld graviditet for «ikkje-kvinner» (inkl. NA-kjønn)
-d_vld_med_kjonn %>%
+d_vld_med_kjonn |>
   filter(!(vld_varnamn == "gravid" & kjonn != "kvinne"))
 ```
 
 Logikken kan sjølvsagt skrivast på mange (ekvivalente) måtar, for eksempel:
 
 ```{r}
-d_vld_med_kjonn %>%
+d_vld_med_kjonn |>
   filter(vld_varnamn != "gravid" | kjonn == "kvinne")
 ```
 
@@ -535,7 +535,7 @@ I vårt eksempel er logikken «viss me ser på gravidvariabelen,
 så må det vera for ei kvinne»:
 
 ```{r}
-d_vld_med_kjonn %>%
+d_vld_med_kjonn |>
   filter(impl(vld_varnamn == "gravid", kjonn == "kvinne"))
 ```
 
@@ -559,19 +559,19 @@ og så fjernar me dei radene som ikkje skal vera med:
 ```{r}
 # Først eit utkast til valideringsdatasett, to variablar per forløp
 set.seed(1)
-d_vld_utval_utkast = d_vld %>%
-  group_by(pasid, dato_inn) %>%
+d_vld_utval_utkast = d_vld |>
+  group_by(pasid, dato_inn) |>
   slice_sample(n = 2)
 
 # Legg til info om hovud-biverknadsvariabel og filtrer på denne
 d_reg_biverk = select(d_reg, pasid, dato_inn, biverk)
 varnamn_undervar = c("biverk_hovud", "biverk_mage", "biverk_fot")
-d_vld_utval_endeleg = d_vld_utval_utkast %>%
+d_vld_utval_endeleg = d_vld_utval_utkast |>
   left_join(d_reg_biverk,
     by = c("pasid", "dato_inn"),
     relationship = "many-to-one"
-  ) %>%
-  group_by(pasid, dato_inn) %>%
+  ) |>
+  group_by(pasid, dato_inn) |>
   filter(impl(vld_varnamn %in% !!varnamn_undervar, biverk))
 
 # Talet på observasjonar i datasetta
@@ -606,8 +606,8 @@ varnamn_biverk = c("biverk", "biverk_hovud", "biverk_mage", "biverk_fot")
 indeksvar = quos(pasid, dato_inn)
 
 set.seed(57)
-d_vld_utval_utkast = d_vld_enkel %>%
-  group_by(!!!indeksvar) %>%
+d_vld_utval_utkast = d_vld_enkel |>
+  group_by(!!!indeksvar) |>
   mutate(inkluder = row_number() %in% sample(row_number(), 2)) # To verdiar per forløp
 filter(d_vld_utval_utkast, inkluder)
 
@@ -624,13 +624,13 @@ oppdater_inklusjonsstatus = function(inkluder, vld_varnamn, varnamn_gruppe) {
 }
 
 # Ta med alle biverknadsrader dersom minst éi er teken med (per forløp)
-d_vld_utval_utkast = d_vld_utval_utkast %>%
-  group_by(!!!indeksvar) %>%
+d_vld_utval_utkast = d_vld_utval_utkast |>
+  group_by(!!!indeksvar) |>
   mutate(inkluder = oppdater_inklusjonsstatus(inkluder, vld_varnamn, !!varnamn_biverk))
 
 # Fjern alle ikkje-inkluderte rader
-d_vld_utval_endeleg = d_vld_utval_utkast %>%
-  filter(inkluder) %>%
+d_vld_utval_endeleg = d_vld_utval_utkast |>
+  filter(inkluder) |>
   select(-inkluder)
 print(d_vld_utval_endeleg, n = Inf)
 ```
@@ -707,7 +707,7 @@ per sjukehus og lagra desse datasetta i separate filer:
 
 ```{r eval=FALSE}
 # Hekt på sjukehusnamn
-d_vld_med_sjukehus = d_vld %>%
+d_vld_med_sjukehus = d_vld |>
   left_join(d_forlopsinfo,
     by = c("pasid", "dato_inn"),
     relationship = "many-to-one"
@@ -715,7 +715,7 @@ d_vld_med_sjukehus = d_vld %>%
 
 # Generer maskinvennlege filadresser
 library(snakecase)
-d_vld_med_sjukehus = d_vld_med_sjukehus %>%
+d_vld_med_sjukehus = d_vld_med_sjukehus |>
   mutate(
     filnamn = paste0(to_any_case(sjukehus, transliterations = "Latin-ASCII"), ".sav"),
     filadresse = paste0(mappe_vld, filnamn)
@@ -723,8 +723,8 @@ d_vld_med_sjukehus = d_vld_med_sjukehus %>%
 
 # Del opp datasettet i eitt per sjukehus/filamn,
 # og lagra dei som separate filer
-d_vld_med_sjukehus %>%
-  split(.$filadresse) %>%
+d_vld_med_sjukehus |>
+  split(.$filadresse) |>
   iwalk(write_sav)
 ```
 
@@ -796,7 +796,7 @@ Me plukkar `r n_plukk` tilfeldige målingar.
 Då vert forventa tal på trekte målingar per sjukehus om lag:
 
 ```{r, echo = FALSE}
-d_sjukehus2 = d_sjukehus %>%
+d_sjukehus2 = d_sjukehus |>
   mutate(
     Målingar = Pasientar * n_var,
     Trekte = round(Målingar * n_plukk / sum(Målingar))
@@ -817,7 +817,7 @@ kan me heller bruka ein samplingsmetode
 der me plukkar ut like mange målingar per sjukehus:
 
 ```{r, echo = FALSE}
-d_sjukehus3 = d_sjukehus2 %>%
+d_sjukehus3 = d_sjukehus2 |>
   mutate(Trekte = 33)
 lag_kable(d_sjukehus3)
 ```
@@ -830,7 +830,7 @@ Estimata kan me bruka for å samanlikna sjukehusa
 Då får me for eksempel:
 
 ```{r, echo = FALSE}
-d_sjukehus4 = d_sjukehus3 %>%
+d_sjukehus4 = d_sjukehus3 |>
   mutate(
     Trekte = 33,
     Korrekte = c(13, 25, 31),
@@ -870,8 +870,8 @@ eller dersom alle sjukehusa er like store
 vekta etter talet på *målingar* som er gjorde per sjukehus:
 
 ```{r, echo = FALSE}
-d_sjukehus5 = d_sjukehus4 %>%
-  select(-Pasientar) %>%
+d_sjukehus5 = d_sjukehus4 |>
+  select(-Pasientar) |>
   mutate(`Del målingar` = Målingar / sum(Målingar))
 n_bra_estimat = sum(d_sjukehus5$`Del korrekte` * d_sjukehus5$`Del målingar`)
 d_sjukehus5$`Del målingar` = round(d_sjukehus5$`Del målingar`, 3)
