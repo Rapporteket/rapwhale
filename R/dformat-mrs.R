@@ -1,19 +1,5 @@
 # Lesing/tolking av det elendige kodebokformatet til MRS :(
 
-# Lag standardisert kodebok -----------------------------------------------
-
-# Gjer om MRS-kodebok til kodebok på normalform
-#
-# Inndata:
-#   mappe_dd: Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
-#             Her er en antagelse at nyeste versjon av kodeboka ligger i samme mappe som datadumpene
-#   dato:     Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
-#
-# Utdata: kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar
-
-
-# Roxygen dokumentasjon
-
 #' Konverter MRS-kodebok til standardformat
 #'
 #' @description
@@ -179,34 +165,6 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   # Returner standardisert kodebok
   kb_kanonisk
 }
-
-# Les datadump frå MRS-register -------------------------------------------
-
-# Les inn MRS-data frå gitt skjema ved hjelp av kodebok.
-# Kodeboka vert brukt til å gje alle variablane rett format
-# (tal, tekst, dato, boolske/logiske verdiar osv.) og til å
-# sikra at datadumpen er i samsvar med kodeboka.
-#
-# Som standard treng ein ikkje oppgje kodebok; ho vert automatisk henta inn.
-# Men dersom ein skal lesa inn mange skjema, er det lurare å lesa inn
-# kodeboka separat først, for at ting skal gå raskare (innlesing og validering
-# av kodeboka kan ta litt tid). Det er òg nødvendig å gjera det slik dersom
-# ein har kodeboka frå ei anna kjelde eller viss ein vil bruka ei modifisert
-# kodebok (generelt farleg!).
-#
-# Inndata:
-#   mappe_dd:  Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
-#              Antagelse ligger til grunn at nyeste kodebok ligger i samme mappe som de nyeste datadumpene.
-#   skjema_id: ID til skjemaet ein vil henta inn (brukt i filnamnet og i kolonnen «tabell» i kodeboka)
-#   versjon:   Om datadumpen er "Prod" eller om den er fra "QA". Standardverdi er "Prod".
-#   dato:      Datoen ein skal henta ut kodeboka for (tekststreng eller dato). Kan òg vera NULL, for å henta nyaste kodebok.
-#   kodebok:   Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
-#
-# Utdata:
-#   R-datasett for det aktuelle skjemaet
-
-
-# Roxygen dokumentasjon
 
 #' Les datadump fra MRS-register
 #'
