@@ -195,7 +195,7 @@ beregn_kompletthet_datasett = function(data) {
   variabel = names(data)
   d_na = tibble()
 
-  for (i in 1:length(variabel)) {
+  for (i in seq_along(variabel)) {
     d = beregn_kompletthet(data[variabel[i]], variabel[i])
 
 
@@ -282,7 +282,7 @@ erstatt_ukjent_for_datasett = function(data, ukjent_datasett) {
       ) |>
       pull()), otherwise = NULL)
 
-  for (i in 1:ncol(data)) {
+  for (i in seq_len(ncol(data))) {
     variabel_i = names(data)[i]
     na_vektor_i = hjelpefunksjon_na_vektor(
       ukjent_datasett,
