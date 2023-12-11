@@ -247,12 +247,13 @@ les_dd_checkware = function(mappe_dd, skjema_id, kontekst = c("T0", "T1", "T2"),
 
   # vi bruker case_when for å få inn csv_bokstav for variablene
   # som har variabeltyper avhengig av visse kriterier (per dags dato bare om kategoriske er heltall eller tekst)
-  kb_skjema = kb_skjema %>%
-    mutate(csv_bokstav = case_when(
+  kb_skjema = mutate(kb_skjema,
+    csv_bokstav = case_when(
       variabeltype == "kategorisk" & verdi_type == "heiltal" ~ "i",
       variabeltype == "kategorisk" & verdi_type == "tekst" ~ "c",
       TRUE ~ csv_bokstav
-    ))
+    )
+  )
 
   # henter ut variabelnavn og variabeltype
   var_info = kb_skjema |>
