@@ -400,9 +400,9 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
     pull(variabel_id)
   d = d |>
     mutate(across(all_of(tid_var),
-      .fns = \(dato_kl_vektor) readr::parse_datetime(dato_kl_vektor,
-        format = "%d.%m.%Y %H:%M:%S"
-      )
+      .fns = \(dato_kl_vektor) {
+        readr::parse_datetime(dato_kl_vektor, format = "%d.%m.%Y %H:%M:%S")
+      }
     ))
 
   # Fila har (ved ein feil) ekstra semikolon på slutten, som fører

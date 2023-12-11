@@ -123,11 +123,13 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
   # Legg til konfidensintervall
   konfint_robust = function() {
     konf = possibly(
-      .f = \() regn_konfint_bin(
-        x = d_sammendrag$ki_teller,
-        n = d_sammendrag$ki_nevner,
-        alfa = alfa
-      ),
+      .f = \() {
+        regn_konfint_bin(
+          x = d_sammendrag$ki_teller,
+          n = d_sammendrag$ki_nevner,
+          alfa = alfa
+        )
+      },
       otherwise = data.frame(
         method = NA_character_,
         x = NA_integer_,

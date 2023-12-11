@@ -321,9 +321,9 @@ les_dd_checkware = function(mappe_dd,
     distinct(variabel_id) |>
     pull("variabel_id")
   d = mutate(d, across(all_of(dato_kl_var),
-    .fns = \(dato_kl_vektor) readr::parse_datetime(dato_kl_vektor,
-      format = "%Y-%m-%d %H:%M:%S"
-    )
+    .fns = \(dato_kl_vektor) {
+      readr::parse_datetime(dato_kl_vektor, format = "%Y-%m-%d %H:%M:%S")
+    }
   ))
 
   # I CheckWare vert boolske verdiar koda som "1" for sann og NA for usann.
