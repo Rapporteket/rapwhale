@@ -197,21 +197,25 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
   #        https://github.com/tidyverse/readr/issues/642 er fiksa
   varnavn_dato_kl = spesifikasjon$varnavn_resultat[spesifikasjon$vartype == "dato_kl"]
   d = mutate(d, across(all_of(varnavn_dato_kl),
-    .fns = \(dato_kl_vektor) readr::stop_for_problems(
-      readr::parse_datetime(dato_kl_vektor,
-        format = formatspek$dato_kl,
-        na = formatspek$na_verdier
+    .fns = \(dato_kl_vektor) {
+      readr::stop_for_problems(
+        readr::parse_datetime(dato_kl_vektor,
+          format = formatspek$dato_kl,
+          na = formatspek$na_verdier
+        )
       )
-    )
+    }
   ))
 
   # Konverter boolske
   varnavn_boolske = spesifikasjon$varnavn_resultat[spesifikasjon$vartype == "boolsk"]
   d = mutate(d, across(all_of(varnavn_boolske),
-    .fns = \(x) konverter_boolske(x,
-      boolsk_usann = formatspek$boolsk_usann,
-      boolsk_sann = formatspek$boolsk_sann
-    )
+    .fns = \(x) {
+      konverter_boolske(x,
+        boolsk_usann = formatspek$boolsk_usann,
+        boolsk_sann = formatspek$boolsk_sann
+      )
+    }
   ))
 
   d
