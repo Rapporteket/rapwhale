@@ -128,7 +128,8 @@ indentifiserer ei *måling* (med to verdiar, éin intern og éin ekstern):
 
 ```{r eksempel format, echo = FALSE}
 d_vld = tibble::tribble(
-  ~pasid, ~dato_inn, ~vld_varnamn, ~vld_vartype, ~vld_verdi_intern_dato, ~vld_verdi_ekstern_dato, ~vld_verdi_intern_tal, ~vld_verdi_ekstern_tal,
+  ~pasid, ~dato_inn, ~vld_varnamn, ~vld_vartype, ~vld_verdi_intern_dato,
+  ~vld_verdi_ekstern_dato, ~vld_verdi_intern_tal, ~vld_verdi_ekstern_tal,
   5, as.Date("2020-06-07"), "vekt", "tal", NA, NA, 78, 78,
   5, as.Date("2020-06-07"), "dato_ut", "dato", as.Date("2020-06-15"), as.Date("2020-06-15"), NA, NA,
   5, as.Date("2020-12-13"), "vekt", "tal", NA, NA, NA, NA,
