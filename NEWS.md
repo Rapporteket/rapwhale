@@ -1,3 +1,66 @@
+# rapwhale versjon 0.6.0
+
+## Samandrag
+
+(Berre førebels forslag basert på Karl sine endringar.
+Skriv gjerne heilt om når me resten av endringsloggen
+er fylt ut.)
+Den største endringa i denne versjonen er
+strengare kvalitetskontroll.
+Me har sett opp fleire automatiske testar
+som vert automatisk køyrde før me gjer endringar.
+Desse har òg avdekt fleire mindre feil og manglar
+som me har retta opp.
+
+Det er òg noko nytt som krev endringar i *dokkar* kode.
+Alt dette kan de lesa meir om nedanfor.
+
+
+## Endringar i utviklingsnvå
+
+Desse funksjonane er nye:
+
+- `foo()`:
+  Funksjon for ...
+  Utvida forklaring.
+
+
+## Nytt som krev endringar i *din* kode
+
+- Pakken er no avhengig av R-pakkane `tidyselect`, `withr`
+  og `checkmate`,
+  så du må ha desse installerte.
+- Du treng no R versjon 4.1.0 eller nyare for å bruka rapwhale-pakken.
+  Grunnen er at me har gått over til det nye R-røyret `|>`
+  i staden for magrittr-røyret `%>%`.
+  Det nye røyret vert brukt i all koden vår og i eksempla i hjelpefilene.
+  Dette krev strengt tatt ikkje endringar i din kode,
+  men me tilrår at du òg går over til det nye røyret.
+  Grunngjeving:
+  https://r4ds.hadley.nz/data-transform.html#sec-the-pipe
+  Les eventuelt meir om forskjellane mellom dei to røyra:
+  https://www.tidyverse.org/blog/2023/04/base-vs-magrittr-pipe/
+
+
+## Ny funksjonalitet
+
+- Pakken er no kompatibel med den framtidige R versjon 4.4.0.
+
+
+## Feil retta opp
+
+- `foo()` hadde ...
+
+
+## Forbetringar
+
+Det er generelle forbetringar i kodekvaliteten,
+det er lagt til fleire automatiske testar,
+og dokumentasjonen og feilmeldingar til fleire funksjonar
+er forbetra.
+
+
+
 # rapwhale versjon 0.5.0
 
 ## Samandrag
