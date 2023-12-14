@@ -138,7 +138,10 @@ kb_eksempel = tibble(
   antall_tegn = c(11L, NA_integer_, 11L, 4L),
   lovlige_tegn = c(
     "1234567890", NA_character_,
-    "aAáÁbBcCdDðÐeEéÉfFgGhHiIíÍjJkKlLmMnNoOóÓpPqQrRsStTuUvúÚVwWxXyYýÝzZþÞæÆøØåÅäÄöÖñÑéÉ-ü ÜáÁ´_/,.- + 1234567890ØøÜüß@_-!%:;?", # nolint: line_length_linter.
+    paste0(
+      "aAáÁbBcCdDðÐeEéÉfFgGhHiIíÍjJkKlLmMnNoOóÓpPqQrRsStTuUvúÚVwWxXyYýÝzZ",
+      "þÞæÆøØåÅäÄöÖñÑéÉ-ü ÜáÁ´_/,.- + 1234567890ØøÜüß@_-!%:;?"
+    ),
     NA_character_
   ),
   desimaler = c(NA_integer_, NA_integer_, NA_integer_, 0L),
