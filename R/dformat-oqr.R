@@ -73,7 +73,8 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
       type = col_character(),
       listeverdier = col_character(),
       listetekst = col_character(),
-      normalintervall_start_numerisk = col_character(), # Sjå merknad nedanfor om årsaka til denne og dei tre neste må vera tekst # nolint: line_length_linter.
+      # Sjå merknad nedanfor om årsaka til denne og dei tre neste må vera tekst
+      normalintervall_start_numerisk = col_character(),
       normalintervall_slutt_numerisk = col_character(),
       maksintervall_start_numerisk = col_character(),
       maksintervall_slutt_numerisk = col_character(),
@@ -287,7 +288,10 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
     for (i in seq_along(kod_id)) {
       kandidatar = c(komb$namn[komb$id == kod_id[i]], kod_id[i])
       kandidatar = setdiff(kandidatar, kod_namn) # Fjern allereie brukte skjemanamn
-      kod_namn[i] = kandidatar[1] # Bruk første *ledige* (vil alltid vera ein, utanom det patologiske tilfelle der skjemanamna er lik skjema-ID-ane, men ikkje med 1-1-samsvar) # nolint: line_length_linter.
+      # Bruk første *ledige* (vil alltid vera ein,
+      # utanom det patologiske tilfelle der skjemanamna er lik skjema-ID-ane,
+      # men ikkje med 1-1-samsvar)
+      kod_namn[i] = kandidatar[1]
     }
 
     # Bruk omkodingstabellen til gje ut rett namn på alle ID-ane
