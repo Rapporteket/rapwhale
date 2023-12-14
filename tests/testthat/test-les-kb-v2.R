@@ -119,8 +119,7 @@ kb_tom_std = tibble(
 
 # kb_eksempel er de fire første linjene fra AblaNor kodebok.
 # Den inkluderer de kolonnene vi ønsker ut, og riktig kolonnetype for alle kolonner.
-kb_eksempel = data.frame(
-  stringsAsFactors = FALSE,
+kb_eksempel = tibble(
   skjemanavn = c("Personopplysninger", "Personopplysninger", "Personopplysninger", "Basisskjema"),
   navn_i_rapporteket = c(NA_character_, NA_character_, NA_character_, NA_character_),
   ledetekst = c("PID", "Dato for innhenting av opplysninger", "Fødselsnummer", "Årstall for debut arytmi"),
@@ -171,7 +170,6 @@ kb_eksempel = data.frame(
     "Angi årstall for debut arytmi"
   )
 )
-kb_eksempel = as_tibble(kb_eksempel)
 
 # les_kb_oqr_v2 -----------------------------------------------------------
 context("les_kb_oqr_v2")
