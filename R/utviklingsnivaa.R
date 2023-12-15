@@ -33,7 +33,9 @@ utviklingsnivaa = function(mappe = "man") {
   funksjonar_namn = str_replace(funksjonar, "\\.Rd", "()")
 
   # Les inn linjene i hjelpefilene
-  parse_rd_mapper = \(x) tools::parse_Rd(x, permissive = TRUE)
+  parse_rd_mapper = function(x) {
+    tools::parse_Rd(x, permissive = TRUE)
+  }
   funksjonsadresser = paste0(mappe, "/", funksjonar)
   funksjonar_parsed = map(funksjonsadresser, parse_rd_mapper)
 
