@@ -48,7 +48,6 @@
 #' @importFrom ggplot2 theme_light
 #' @importFrom ggplot2 theme_set
 #' @importFrom ggplot2 update_geom_defaults
-#' @importFrom magrittr %>%
 #' @importFrom methods as
 #' @importFrom methods is
 #' @importFrom purrr map
