@@ -29,7 +29,6 @@ Imports:
     dplyr (>= 1.1.1),
     tidyr,
     knitr,
-    magrittr,
     purrr,
     tibble,
     rlang,
