@@ -630,7 +630,7 @@ test_that("funksjonen gir feilmelding hvis ikke alle nødvendige verdier er inkl
     object = legg_til_variabler_kb(kb_legg_til_base,
       ekstra_data = ingen_variabeltype
     ),
-    regexp = "Det mangler kolonner for nye variabler:\n variabeltype"
+    regexp = "Det mangler kolonner for nye variabler:\nvariabeltype"
   )
 })
 
