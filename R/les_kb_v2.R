@@ -479,6 +479,19 @@ legg_til_variabler_kb = function(kb_std, ekstra_data) {
     )
   }
 
+  # Se om nødvendige kolonner finnes i ekstra_data
+  nodvendige_kolonner = c(
+    "skjema_id", "skjemanavn", "variabel_id", "variabeletikett",
+    "variabeltype", "unik", "obligatorisk", "desimaler"
+  )
+  manglende_kolonner = setdiff(nodvendige_kolonner, names(ekstra_data))
+  if (length(manglende_kolonner) > 0) {
+    stop(
+      "Det mangler kolonner for nye variabler:\n",
+      str_c(manglende_kolonner, collapse = ", ")
+    )
+  }
+
   kb_std |>
     bind_rows(ekstra_data) |>
     arrange(fct_inorder(skjema_id))
