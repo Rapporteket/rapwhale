@@ -41,13 +41,13 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
   if (!all(nodvar %in% kol)) {
     manglende_nodvar = which(!nodvar %in% kol)
     kb_mangler = nodvar[manglende_nodvar]
-    stop(paste0("Kodeboka mangler obligatoriske kolonner: ", str_c("'", kb_mangler, "'", collapse = ", "), "."))
+    stop("Kodeboka mangler obligatoriske kolonner: ", str_c("'", kb_mangler, "'", collapse = ", "), ".")
   }
 
   # Stopp hvis variabel_id eller variabeltype mangler verdi
   for (kol in c("variabel_id", "variabeltype")) {
     if (any(is.na(kodebok[[kol]]))) {
-      stop(paste0("Kodeboka har manglende verdier for variabel_id og/eller variabeltype."))
+      stop("Kodeboka har manglende verdier for variabel_id og/eller variabeltype.")
     }
   }
 
@@ -96,7 +96,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
 
   # Stopp hvis kategoriske variabler mangler verdi eller verditekst
   if (any(is.na(kb_kat$gverdi))) {
-    stop(paste0("Kategoriske variabler mangler verdier for verdi."))
+    stop("Kategoriske variabler mangler verdier for verdi.")
   }
 
   #------------------min-verdier------------------------------------------------

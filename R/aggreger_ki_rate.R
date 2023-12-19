@@ -111,20 +111,20 @@ aggreger_ki_rate = function(d_ki_ind, alfa = 0.05, multiplikator = 1) {
     is.data.frame(d_ki_ind) &&
       all(hasName(d_ki_ind, c("ki_antall", "ki_eksponering", "ki_aktuell")))
   )) {
-    stop(paste0(
+    stop(
       "Inndata må være tibble/data.frame med kolonnene «ki_antall», ",
       "«ki_eksponering» og «ki_aktuell»"
-    ))
+    )
   }
   if (!(
     is.numeric(d_ki_ind$ki_antall) &&
       is.numeric(d_ki_ind$ki_eksponering) &&
       is.logical(d_ki_ind$ki_aktuell)
   )) {
-    stop(paste0(
+    stop(
       "Kriterievariablen «ki_antall» og «ki_eksponering» må være numerisk, ",
       "mens «ki_aktuell» må være logisk"
-    ))
+    )
   }
   if (!all(d_ki_ind$ki_aktuell %in% c(TRUE, FALSE))) {
     stop("«ki_aktuell» må være TRUE eller FALSE")

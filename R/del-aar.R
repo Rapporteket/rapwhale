@@ -58,7 +58,7 @@ periode_til_tidslinje = function(aar, delnummer, antall_deler) {
     stop("antall_deler må være et heltall")
   }
   if (!all(na.omit(unique(delnummer)) %in% 1:antall_deler)) {
-    stop(paste0("delnummer må være verdier i 1:", antall_deler))
+    stop("delnummer må være verdier i 1:", antall_deler)
   }
   if (any(is.na(aar) | is.na(delnummer))) {
     warning("Inndata inneholder NA-verdier")

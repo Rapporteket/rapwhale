@@ -87,7 +87,7 @@ boy_enhet = function(x, entall, flertall, formatering = erstatt_0, ...) {
     stop("Inndata «x» inneholder ingen verdier")
   }
   if (!is.numeric(x)) {
-    stop(paste("Inndata «x» må være tall, men er:", class(x)))
+    stop("Inndata «x» må være tall, men er: ", class(x))
   }
   if (NA %in% x) {
     stop("Inndata «x» inneholder minst én NA-verdi")
@@ -98,10 +98,8 @@ boy_enhet = function(x, entall, flertall, formatering = erstatt_0, ...) {
   n_x_formatert = length(x_formatert)
   if (n_x != n_x_formatert) {
     stop(
-      paste0(
-        "Utdata fra formatering() må ha samme lengde som «x» ",
-        "(har hhv. lengde ", n_x_formatert, " og ", n_x, ")"
-      )
+      "Utdata fra formatering() må ha samme lengde som «x» ",
+      "(har hhv. lengde ", n_x_formatert, " og ", n_x, ")"
     )
   }
   enhet = if_else(x %in% c(1, -1), entall, flertall)

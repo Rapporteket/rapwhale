@@ -542,7 +542,7 @@ valider_kb_skjema = function(kodebok) {
       distinct(skjema_id, skjemanavn) |>
       filter(duplicated(skjema_id)) |>
       pull(skjema_id)
-    stop(paste0("skjema_id har ikke entydig skjemanavn\nskjema_id: ", skjema_id_duplikat))
+    stop("skjema_id har ikke entydig skjemanavn\nskjema_id: ", skjema_id_duplikat)
   }
 
   if (any(!is.na(kodebok$kategori))) {
@@ -574,7 +574,7 @@ valider_kb_skjema = function(kodebok) {
       pull(skjema_id)
 
     if (length(mangler_kat_rad_en) > 0) {
-      stop(paste0("Hvis kategorier brukes må det være oppgitt kategori i første rad for alle skjema"))
+      stop("Hvis kategorier brukes må det være oppgitt kategori i første rad for alle skjema")
     }
   }
 }
@@ -681,12 +681,12 @@ valider_kb_variabler = function(kodebok) {
     filter(antall_verditekst > 1)
 
   if (nrow(flere_verditekster) > 0) {
-    stop(error = paste0(
+    stop(error = 
       "Det finnes ",
       nrow(flere_verditekster),
       " avvik for listeverdi mellom skjema:\nVariabel: ",
       str_c(unique(flere_verditekster$variabel_id), collapse = ", ")
-    ))
+    )
   }
 
   # sjekk at boolske variabler ikke har Obligatorisk = Nei og Unik = Ja

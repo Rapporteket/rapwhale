@@ -77,15 +77,15 @@ konverter_boolske = function(x, boolsk_usann, boolsk_sann, na_verdier = NA) {
   overlapp = intersect(boolsk_usann, boolsk_sann)
 
   if (!rlang::is_empty(overlapp)) {
-    stop(error = paste0("boolsk_sann og boolsk_usann kan ikke inneholde samme verdier"))
+    stop(error = "boolsk_sann og boolsk_usann kan ikke inneholde samme verdier")
   }
   if (!all(er_gyldig)) {
     ugyldige = paste0(er_ugyldig, collapse = ",")
     mulige = paste0(mulige_verdier, collapse = ",")
-    stop(error = paste0(
+    stop(error = 
       "Det finnes ugyldige verdier for en boolsk variabel: ", ugyldige,
       "\nMulige verdier er: ", mulige
-    ))
+    )
   }
 
   # Konverterer til logisk vektor
