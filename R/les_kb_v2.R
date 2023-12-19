@@ -430,7 +430,7 @@ tildel_unike_skjemanavn_fra_skjema_id = function(kb_std) {
     kod_namn[i] = kandidatar[1]
   }
   if (any(is.na(kod_namn))) {
-    stop(error = "Det finnes overlappende skjemanavn og skjema_id, og det er ikke 1-1 forhold mellom navnene")
+    stop("Det finnes overlappende skjemanavn og skjema_id, og det er ikke 1-1 forhold mellom navnene")
   }
 
   # Bruk omkodingstabellen til gje ut rett namn på alle ID-ane
@@ -462,7 +462,7 @@ legg_til_variabler_kb = function(kb_std, ekstra_data) {
   ekstra_kol = colnames(ekstra_data)[!colnames(ekstra_data) %in% colnames(kb_std)]
   if (length(ekstra_kol) > 0) {
     stop(
-      error = "Det er kolonner i ekstra_data som ikke eksisterer i kodebok fra før:\n",
+      "Det er kolonner i ekstra_data som ikke eksisterer i kodebok fra før:\n",
       str_c(ekstra_kol, collapse = ", ")
     )
   }
@@ -474,7 +474,7 @@ legg_til_variabler_kb = function(kb_std, ekstra_data) {
   )
   if (nrow(overlapp) > 0) {
     stop(
-      error = "Variabel i ekstra_data eksisterer i skjema fra før:\n",
+      "Variabel i ekstra_data eksisterer i skjema fra før:\n",
       str_c(overlapp$variabel_id, collapse = ", ")
     )
   }
@@ -681,7 +681,7 @@ valider_kb_variabler = function(kodebok) {
     filter(antall_verditekst > 1)
 
   if (nrow(flere_verditekster) > 0) {
-    stop(error = 
+    stop(
       "Det finnes ",
       nrow(flere_verditekster),
       " avvik for listeverdi mellom skjema:\nVariabel: ",
