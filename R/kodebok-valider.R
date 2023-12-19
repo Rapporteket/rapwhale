@@ -134,10 +134,10 @@ kb_til_kanonisk_form = function(kb) {
   # (fjern òg lag betre løysing på problemet)
   ekstravars = setdiff(names(kb), c("variabel_id_checkware", std_namn))
   if (length(ekstravars) > 0) {
-    warning(paste0(
+    warning(
       "Fjernar kolonnar som ikkje skal vera med i kodeboka:\n",
       paste0(ekstravars, collapse = ", ")
-    ))
+    )
   }
   kb = select(kb, !!std_namn)
 
@@ -212,14 +212,14 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   ind = match(kb_namn, std_namn)
   forste_feil = which(diff(ind) < 0)[1]
   if (!is.na(forste_feil)) {
-    warning(paste0(
+    warning(
       "Feil rekkefølgje på kolonnar. Første feil:\n",
       "Kolonnen ",
       lag_liste(kb_namn[forste_feil]),
       " står *før* ",
       lag_liste(kb_namn[forste_feil + 1]),
       " men skal stå (ein eller annan plass) etter."
-    ))
+    )
     gyldig = FALSE
   }
 

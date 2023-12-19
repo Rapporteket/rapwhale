@@ -33,7 +33,7 @@
 #' erstatt_ukjent(data = d, variabel = "var_1", na_vektor = c(-1, 99))
 erstatt_ukjent = function(data, variabel, na_vektor) {
   if (!rlang::has_name(data, variabel)) {
-    stop(paste0("'", variabel, "' mangler i inndata"))
+    stop("'", variabel, "' mangler i inndata")
   }
 
   mutate(data, across(all_of(variabel), ~ replace(., . %in% na_vektor, NA)))
@@ -86,7 +86,7 @@ erstatt_ukjent = function(data, variabel, na_vektor) {
 #' beregn_kompletthet(data = d, variabel = "var_1")
 beregn_kompletthet = function(data, variabel) {
   if (!rlang::has_name(data, variabel)) {
-    stop(paste0("'", variabel, "' mangler i inndata"))
+    stop("'", variabel, "' mangler i inndata")
   }
 
   data_ut = data |>

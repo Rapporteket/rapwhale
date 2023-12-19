@@ -419,16 +419,16 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
   ekstra_kb = setdiff(varnamn_kb, varnamn_dd)
   ekstra_dd = setdiff(varnamn_dd, varnamn_kb)
   if (length(ekstra_kb) > 0) {
-    stop(paste0(
+    stop(
       "Desse variablane finst berre i kodeboka:\n",
       paste(ekstra_kb, collapse = ", "), "\n"
-    ))
+    )
   }
   if (length(ekstra_dd) > 0) {
-    stop(paste0(
+    stop(
       "Desse variablane finst berre i datadumpen:\n",
       paste(toupper(ekstra_dd), collapse = ", "), "\n"
-    ))
+    )
   }
 
   # dokumentasjonen til OpenQReg beskriver at kolonnene i datadumpen
