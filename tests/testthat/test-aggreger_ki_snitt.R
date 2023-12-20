@@ -44,16 +44,16 @@ test_that("Feilmelding hvis «ki_x» er missing når «ki_aktuell» er TRUE", {
   expect_error(aggreger_ki_snitt(d_x_na), feilmelding_x_na)
 })
 
-test_that("Feilmelding hvis «alfa» ikke er et tall mellom 0 og 1", {
+test_that("Feilmelding hvis «konf_niva» ikke er et tall mellom 0 og 1", {
   d_test = tibble(
     ki_x = c(15, 12, 12),
     ki_aktuell = c(TRUE, TRUE, TRUE)
   )
-  feilmelding_alfa = "«alfa» må være et tall mellom 0 og 1"
-  expect_error(aggreger_ki_snitt(d_test, alfa = 0), feilmelding_alfa)
-  expect_error(aggreger_ki_snitt(d_test, alfa = 1), feilmelding_alfa)
-  expect_error(aggreger_ki_snitt(d_test, alfa = 1.2), feilmelding_alfa)
-  expect_error(aggreger_ki_snitt(d_test, alfa = "0.1"), feilmelding_alfa)
+  feilmelding_konf_niva = "«konf_niva» må være et tall mellom 0 og 1"
+  expect_error(aggreger_ki_snitt(d_test, konf_niva = 0), feilmelding_konf_niva)
+  expect_error(aggreger_ki_snitt(d_test, konf_niva = 1), feilmelding_konf_niva)
+  expect_error(aggreger_ki_snitt(d_test, konf_niva = 1.2), feilmelding_konf_niva)
+  expect_error(aggreger_ki_snitt(d_test, konf_niva = "0.9"), feilmelding_konf_niva)
 })
 
 test_that("Forventet utdata når inndata er gruppert og ugruppert", {
@@ -77,7 +77,7 @@ test_that("Forventet utdata når inndata er gruppert og ugruppert", {
   expect_equal(aggreger_ki_snitt(d_ugruppert), d_ugruppert_ut)
 })
 
-test_that("Forventet utdata når alfa endres fra standard", {
+test_that("Forventet utdata når konf_niva endres fra standard", {
   d_test = tibble(
     sykehus = factor(c("B", "B", "B", "A", "A", "A", "A")),
     ki_x = c(1, 2, 3, 4, 5, 6, 8), ki_aktuell = rep(TRUE, 7)
@@ -87,7 +87,7 @@ test_that("Forventet utdata når alfa endres fra standard", {
     konfint_ovre = 5.91310608095156365, n_aktuell = 7L
   )
 
-  expect_equal(aggreger_ki_snitt(d_test, alfa = 0.1), d_test_ut)
+  expect_equal(aggreger_ki_snitt(d_test, konf_niva = 0.9), d_test_ut)
 })
 
 test_that("Gir alltid ut ugrupperte data", {

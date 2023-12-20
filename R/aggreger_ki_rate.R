@@ -7,11 +7,12 @@
 #' basert på et standard datasett for ratedata/Poisson-data.
 #' Gir også ut konfidensintervall for ratene.
 #'
-#' @param d_ki_ind Datasett som gitt ut av en standard KI-funksjon for
-#' ratedata.
+#' @param d_ki_ind
+#' Datasett som gitt ut av en standard KI-funksjon for ratedata.
 #' Se detaljer nedenfor.
-#' @param alfa Én minus nivået til konfidensintervallet.
-#' Standardverdi er 0.05, som tilsvarer et 95 %-konfidensintervall.
+#' @param konf_niva
+#' Konfidensnivå.
+#' Standardverdi er 0.95, som tilsvarer et 95 %-konfidensintervall.
 #' @param multiplikator Tallverdi som skal multipliseres med raten
 #' (for å vise raten per `multiplikator` enheter i utdatene).
 #'
@@ -89,7 +90,7 @@
 #' aggreger_ki_rate(d)
 #'
 #' # Eventuelt med 90 %-konfidensintervall
-#' aggreger_ki_rate(d, alfa = 0.1)
+#' aggreger_ki_rate(d, konf_niva = 0.9)
 #'
 #' # Gruppert på helseforetak, per 1000
 #' d |>
@@ -105,7 +106,21 @@
 #' d |>
 #'   group_by(helseforetak) |>
 #'   aggreger_ki_rate()
-aggreger_ki_rate = function(d_ki_ind, alfa = 0.05, multiplikator = 1) {
+aggreger_ki_rate = function(d_ki_ind, konf_niva = 0.95, multiplikator = 1, alfa = lifecycle::deprecated()) {
+  # Åtvar viss nokon brukar det utdaterte «alfa»-argumentet
+  if (lifecycle::is_present(alfa)) {
+    lifecycle::deprecate_warn(
+      when = "0.6.0",
+      what = "aggreger_ki_rate(alfa)",
+      with = "aggreger_ki_rate(konf_niva)",
+      details = paste0(
+        "`konf_niva` corresponds to 1 - `alfa`. ",
+        "`alfa` will be completely dropped in the next version."
+      )
+    )
+    konf_niva = 1 - alfa
+  }
+
   # Teste inndata
   if (!(
     is.data.frame(d_ki_ind) &&
@@ -149,14 +164,14 @@ aggreger_ki_rate = function(d_ki_ind, alfa = 0.05, multiplikator = 1) {
   )) {
     stop("«ki_eksponering» kan ikke være mindre enn eller lik 0")
   }
-  if (length(alfa) != 1) {
-    stop("«alfa» må ha lengde 1")
+  if (length(konf_niva) != 1) {
+    stop("«konf_niva» må ha lengde 1")
   }
   if (length(multiplikator) != 1) {
     stop("«multiplikator» må ha lengde 1")
   }
-  if (!is.numeric(alfa) || alfa <= 0 || alfa >= 1) {
-    stop("«alfa» må være et tall mellom 0 og 1")
+  if (!is.numeric(konf_niva) || konf_niva <= 0 || konf_niva >= 1) {
+    stop("«konf_niva» må være et tall mellom 0 og 1")
   }
   if (!is.numeric(multiplikator) || multiplikator <= 0 || is.na(multiplikator)) {
     stop("«multiplikator» må være et positivt tall")
@@ -186,7 +201,7 @@ aggreger_ki_rate = function(d_ki_ind, alfa = 0.05, multiplikator = 1) {
       konfint_ovre = NA_real_
     } else if (sum(antall) == 0) {
       konfint_nedre = 0
-      konfint_ovre = -log(alfa) / sum(eksponering)
+      konfint_ovre = -log(1 - konf_niva) / sum(eksponering)
     } else {
       konfint = glm(
         sum(antall) ~ 1,
@@ -194,7 +209,7 @@ aggreger_ki_rate = function(d_ki_ind, alfa = 0.05, multiplikator = 1) {
         offset = log(sum(eksponering))
       ) |>
         profile_funk() |>
-        confint(level = 1 - alfa) |>
+        confint(level = konf_niva) |>
         exp()
       konfint_nedre = konfint[[1]]
       konfint_ovre = konfint[[2]]

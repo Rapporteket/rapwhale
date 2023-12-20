@@ -7,11 +7,13 @@
 #' basert på et standard datasett for binomiske data / andelsdata.
 #' Gir også ut konfidensintervall for andelene.
 #'
-#' @param d_ki_ind Datasett som gitt ut av en standard KI-funksjon
-#'   for binomiske data / andelsdata / proporsjonsdata.
-#'   Se detaljer nedenfor.
-#' @param alfa Én minus nivået til konfidensintervallet.
-#'   Standardverdi er 0.05, som tilsvarer et 95 %-konfidensintervall.
+#' @param d_ki_ind
+#' Datasett som gitt ut av en standard KI-funksjon
+#' for binomiske data / andelsdata / proporsjonsdata.
+#' Se detaljer nedenfor.
+#' @param konf_niva
+#' Konfidensnivå.
+#' Standardverdi er 0.95, som tilsvarer et 95 %-konfidensintervall.
 #'
 #' @details
 #' Inndatasettet må inneholde minst de to logiske variablene
@@ -64,7 +66,7 @@
 #' aggreger_ki_prop(d)
 #'
 #' # Eventuelt med 90 %-konfidensintervall
-#' aggreger_ki_prop(d, alfa = 0.1)
+#' aggreger_ki_prop(d, konf_niva = 0.9)
 #'
 #' # Gruppert på sykehusnivå
 #' d |>
@@ -80,7 +82,21 @@
 #' d |>
 #'   group_by(sykehus) |>
 #'   aggreger_ki_prop()
-aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
+aggreger_ki_prop = function(d_ki_ind, konf_niva = 0.95, alfa = lifecycle::deprecated()) {
+  # Åtvar viss nokon brukar det utdaterte «alfa»-argumentet
+  if (lifecycle::is_present(alfa)) {
+    lifecycle::deprecate_warn(
+      when = "0.6.0",
+      what = "aggreger_ki_prop(alfa)",
+      with = "aggreger_ki_prop(konf_niva)",
+      details = paste0(
+        "`konf_niva` corresponds to 1 - `alfa`. ",
+        "`alfa` will be completely dropped in the next version."
+      )
+    )
+    konf_niva = 1 - alfa
+  }
+
   # Teste inndata
   if (!(is.data.frame(d_ki_ind) && all(hasName(d_ki_ind, c("ki_krit_teller", "ki_krit_nevner"))))) {
     stop("Inndata må være tibble/data.frame med kolonnene «ki_krit_teller» og «ki_krit_nevner»")
@@ -105,8 +121,8 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
     warning("Det finnes grupper uten observasjoner i grupperingsvariabel")
   }
 
-  if (!is.numeric(alfa) || alfa <= 0 || alfa >= 1) {
-    stop("«alfa» må være et tall mellom 0 og 1")
+  if (!is.numeric(konf_niva) || konf_niva <= 0 || konf_niva >= 1) {
+    stop("«konf_niva» må være et tall mellom 0 og 1")
   }
 
   # Beregne utdata
@@ -127,7 +143,7 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
         regn_konfint_bin(
           x = d_sammendrag$ki_teller,
           n = d_sammendrag$ki_nevner,
-          alfa = alfa
+          konf_niva = konf_niva
         )
       },
       otherwise = data.frame(
