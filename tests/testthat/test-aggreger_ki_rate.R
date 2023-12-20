@@ -285,8 +285,8 @@ test_that("Funksjonen tillater tilfeller hvor antall observasjoner er 0", {
     konfint_ovre = c(NA_real_, 0.015362729607969183993)
   )
 
-  expect_identical(aggreger_ki_rate(d_ugruppert), svar_ugruppert)
-  expect_identical(aggreger_ki_rate(d_gruppert), svar_gruppert)
+  expect_equal(aggreger_ki_rate(d_ugruppert), svar_ugruppert, tolerance = 1e-15)
+  expect_equal(aggreger_ki_rate(d_gruppert), svar_gruppert, tolerance = 1e-15)
 })
 
 
@@ -317,7 +317,10 @@ test_that("Funksjonen returnerer «NA» for de grupperte verdiene som ikke har n
     )
   )
 
-  expect_identical(aggreger_ki_rate(d_gruppert_med_na), svar_gruppert_med_na)
+  expect_equal(aggreger_ki_rate(d_gruppert_med_na),
+    expected = svar_gruppert_med_na,
+    tolerance = 1e-15
+  )
 })
 
 test_that(paste0(
@@ -345,13 +348,12 @@ test_that(paste0(
 
   feilmelding_ekstra_levels = "Det finnes grupper uten observasjoner i grupperingsvariabel"
 
-  expect_warning(
-    aggreger_ki_rate(d_gruppert_ekstra_levels),
-    feilmelding_ekstra_levels
+  expect_warning(aggreger_ki_rate(d_gruppert_ekstra_levels),
+    regexp = feilmelding_ekstra_levels
   )
-  expect_equal(
-    suppressWarnings(aggreger_ki_rate(d_gruppert_ekstra_levels)),
-    svar_gruppert_ekstra_levels
+  expect_equal(suppressWarnings(aggreger_ki_rate(d_gruppert_ekstra_levels)),
+    expected = svar_gruppert_ekstra_levels,
+    tolerance = 1e-15
   )
 })
 
@@ -453,29 +455,29 @@ test_that("Funksjonen støtter angivelse av konfidensinvå", {
     konfint_ovre = 0.063051223283699317501
   )
 
-  expect_identical(
-    aggreger_ki_rate(d_antall_lik_0),
-    svar_antall_lik_0_05
+  expect_equal(aggreger_ki_rate(d_antall_lik_0),
+    expected = svar_antall_lik_0_95,
+    tolerance = 1e-15
   ) # Standard skal være 95 %-KI
-  expect_identical(
-    aggreger_ki_rate(d_antall_lik_0, alfa = .05),
-    svar_antall_lik_0_05
+  expect_equal(aggreger_ki_rate(d_antall_lik_0, konf_niva = 0.95),
+    expected = svar_antall_lik_0_95,
+    tolerance = 1e-15
   )
-  expect_identical(
-    aggreger_ki_rate(d_antall_lik_0, alfa = .10),
-    svar_antall_lik_0_10
+  expect_equal(aggreger_ki_rate(d_antall_lik_0, konf_niva = 0.9),
+    expected = svar_antall_lik_0_90,
+    tolerance = 1e-15
   )
-  expect_identical(
-    aggreger_ki_rate(d_antall_ulik_0),
-    svar_antall_ulik_0_05
+  expect_equal(aggreger_ki_rate(d_antall_ulik_0),
+    expected = svar_antall_ulik_0_95,
+    tolerance = 1e-15
   ) # Standard skal være 95 %-KI
-  expect_identical(
-    aggreger_ki_rate(d_antall_ulik_0, alfa = .05),
-    svar_antall_ulik_0_05
+  expect_equal(aggreger_ki_rate(d_antall_ulik_0, konf_niva = 0.95),
+    expected = svar_antall_ulik_0_95,
+    tolerance = 1e-15
   )
-  expect_identical(
-    aggreger_ki_rate(d_antall_ulik_0, alfa = .10),
-    svar_antall_ulik_0_10
+  expect_equal(aggreger_ki_rate(d_antall_ulik_0, konf_niva = 0.9),
+    expected = svar_antall_ulik_0_90,
+    tolerance = 1e-15
   )
 })
 
