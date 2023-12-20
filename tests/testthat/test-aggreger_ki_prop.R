@@ -85,16 +85,24 @@ test_that(paste0(
   expect_error(aggreger_ki_prop(d_nevner_med_feil), feilmelding_nevner)
 })
 
-test_that("Feilmelding hvis alfa ikke er et tall mellom 0 og 1", {
+test_that("Feilmelding hvis konf_niva ikke er et tall mellom 0 og 1", {
   d_teller_ok = tibble(
     ki_krit_teller = c(FALSE, TRUE, FALSE),
     ki_krit_nevner = c(TRUE, TRUE, FALSE)
   )
-  feilmelding_alfa = "«alfa» må være et tall mellom 0 og 1"
-  expect_error(aggreger_ki_prop(d_teller_ok, alfa = 1.2), feilmelding_alfa)
-  expect_error(aggreger_ki_prop(d_teller_ok, alfa = 0), feilmelding_alfa)
-  expect_error(aggreger_ki_prop(d_teller_ok, alfa = 1), feilmelding_alfa)
-  expect_error(aggreger_ki_prop(d_teller_ok, alfa = "0.05"), feilmelding_alfa)
+  feilmelding_konf_niva = "«konf_niva» må være et tall mellom 0 og 1"
+  expect_error(aggreger_ki_prop(d_teller_ok, konf_niva = 1.2),
+    regexp = feilmelding_konf_niva
+  )
+  expect_error(aggreger_ki_prop(d_teller_ok, konf_niva = 0),
+    regexp = feilmelding_konf_niva
+  )
+  expect_error(aggreger_ki_prop(d_teller_ok, konf_niva = 1),
+    regexp = feilmelding_konf_niva
+  )
+  expect_error(aggreger_ki_prop(d_teller_ok, konf_niva = "0.05"),
+    regexp = feilmelding_konf_niva
+  )
 })
 
 test_that(paste0(
@@ -342,18 +350,18 @@ test_that("Funksjonen støtter angivelse av konfidensinvå", {
     ki_krit_teller = c(TRUE, FALSE, FALSE, FALSE),
     ki_krit_nevner = c(TRUE, TRUE, TRUE, FALSE)
   )
-  d_svar_05 = tibble(
+  d_svar_95 = tibble(
     est = 0.3333333333333333, ki_teller = 1L, ki_nevner = 3L,
     konfint_nedre = 0.06149194472039624, konfint_ovre = 0.7923403991979524
   )
-  d_svar_10 = tibble(
+  d_svar_90 = tibble(
     est = 0.3333333333333333, ki_teller = 1L, ki_nevner = 3L,
     konfint_nedre = 0.07826572633372843, konfint_ovre = 0.7464661317187757
   )
 
-  expect_identical(aggreger_ki_prop(d_test), d_svar_05) # Standard skal være 95 %-KI
-  expect_identical(aggreger_ki_prop(d_test, alfa = .05), d_svar_05)
-  expect_identical(aggreger_ki_prop(d_test, alfa = .10), d_svar_10)
+  expect_identical(aggreger_ki_prop(d_test), d_svar_95) # Standard skal være 95 %-KI
+  expect_identical(aggreger_ki_prop(d_test, konf_niva = 0.95), d_svar_95)
+  expect_identical(aggreger_ki_prop(d_test, konf_niva = 0.90), d_svar_90)
 })
 
 test_that("Funksjonen gjev alltid ut ugrupperte data", {

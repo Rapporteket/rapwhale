@@ -153,19 +153,19 @@ test_that("Feilmelding hvis minst en ki_eksponering er mindre enn eller lik 0", 
   expect_error(aggreger_ki_rate(d_eksponering_lik_0), feilmelding)
 })
 
-test_that("Feilmelding hvis alfa ikke er et tall mellom 0 og 1", {
+test_that("Feilmelding hvis konf_niva ikke er et tall mellom 0 og 1", {
   d_var_ok = tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
 
-  feilmelding_alfa = "«alfa» må være et tall mellom 0 og 1"
+  feilmelding_konf_niva = "«konf_niva» må være et tall mellom 0 og 1"
 
-  expect_error(aggreger_ki_rate(d_var_ok, alfa = 1.2), feilmelding_alfa)
-  expect_error(aggreger_ki_rate(d_var_ok, alfa = 0), feilmelding_alfa)
-  expect_error(aggreger_ki_rate(d_var_ok, alfa = 1), feilmelding_alfa)
-  expect_error(aggreger_ki_rate(d_var_ok, alfa = "0.05"), feilmelding_alfa)
+  expect_error(aggreger_ki_rate(d_var_ok, konf_niva = 1.2), feilmelding_konf_niva)
+  expect_error(aggreger_ki_rate(d_var_ok, konf_niva = 0), feilmelding_konf_niva)
+  expect_error(aggreger_ki_rate(d_var_ok, konf_niva = 1), feilmelding_konf_niva)
+  expect_error(aggreger_ki_rate(d_var_ok, konf_niva = "0.95"), feilmelding_konf_niva)
 })
 
 test_that("Feilmelding hvis multiplikator ikke er et positivt heltall", {
@@ -195,23 +195,23 @@ test_that("Feilmelding hvis multiplikator ikke er et positivt heltall", {
   )
 })
 
-test_that("Feilmelding hvis alfa eller multiplikator ikke har lengde 1", {
+test_that("Feilmelding hvis konf_niva eller multiplikator ikke har lengde 1", {
   d_var_ok = tibble(
     ki_antall = c(5, 2, 7),
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
 
-  feilmelding_alfa = "«alfa» må ha lengde 1"
+  feilmelding_konf_niva = "«konf_niva» må ha lengde 1"
   feilmelding_multiplikator = "«multiplikator» må ha lengde 1"
 
   expect_error(
-    aggreger_ki_rate(d_var_ok, alfa = c()),
-    feilmelding_alfa
+    aggreger_ki_rate(d_var_ok, konf_niva = c()),
+    feilmelding_konf_niva
   )
   expect_error(
-    aggreger_ki_rate(d_var_ok, alfa = c(0.05, 0.1)),
-    feilmelding_alfa
+    aggreger_ki_rate(d_var_ok, konf_niva = c(0.95, 0.9)),
+    feilmelding_konf_niva
   )
   expect_error(
     aggreger_ki_rate(d_var_ok, multiplikator = c()),
@@ -426,12 +426,12 @@ test_that("Funksjonen støtter angivelse av konfidensinvå", {
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
-  svar_antall_lik_0_05 = tibble(
+  svar_antall_lik_0_95 = tibble(
     est = 0,
     konfint_nedre = 0,
     konfint_ovre = 0.015362729607969183993
   )
-  svar_antall_lik_0_10 = tibble(
+  svar_antall_lik_0_90 = tibble(
     est = 0,
     konfint_nedre = 0,
     konfint_ovre = 0.011808128682020746503
@@ -442,12 +442,12 @@ test_that("Funksjonen støtter angivelse av konfidensinvå", {
     ki_eksponering = c(100, 95, 101),
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
-  svar_antall_ulik_0_05 = tibble(
+  svar_antall_ulik_0_95 = tibble(
     est = 7 / 195,
     konfint_nedre = 0.015422856627814649638,
     konfint_ovre = 0.069418816705480224094
   )
-  svar_antall_ulik_0_10 = tibble(
+  svar_antall_ulik_0_90 = tibble(
     est = 7 / 195,
     konfint_nedre = 0.017943117460240590177,
     konfint_ovre = 0.063051223283699317501

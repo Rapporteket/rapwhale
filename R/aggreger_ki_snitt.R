@@ -7,10 +7,13 @@
 #' basert på et standard datasett for dette.
 #' Gir også ut konfidensintervall for gjenomsnittet.
 #'
-#' @param d_ki_ind Datasett som gitt ut av en standard KI-funksjon
-#'   for numeriske/kontinuerlige data. Se detaljer nedenfor.
-#' @param alfa Én minus nivået til konfidensintervallet.
-#'   Standardverdi er 0.05, som tilsvarer et 95 %-konfidensintervall.
+#' @param d_ki_ind
+#' Datasett som gitt ut av en standard KI-funksjon
+#' for numeriske/kontinuerlige data.
+#' Se detaljer nedenfor.
+#' @param konf_niva
+#' Konfidensnivå.
+#' Standardverdi er 0.95, som tilsvarer et 95 %-konfidensintervall.
 #'
 #' @details
 #' Inndatasettet må inneholde minst de to variablene
@@ -70,7 +73,7 @@
 #' aggreger_ki_snitt(d)
 #'
 #' # Eventuelt med 90 %-konfidensintervall
-#' aggreger_ki_snitt(d, alfa = 0.1)
+#' aggreger_ki_snitt(d, konf_niva = 0.9)
 #'
 #' # Gruppert på sykehusnivå
 #' d |>
@@ -86,7 +89,21 @@
 #' d |>
 #'   group_by(sykehus) |>
 #'   aggreger_ki_snitt()
-aggreger_ki_snitt = function(d_ki_ind, alfa = 0.05) {
+aggreger_ki_snitt = function(d_ki_ind, konf_niva = 0.95, alfa = lifecycle::deprecated()) {
+  # Åtvar viss nokon brukar det utdaterte «alfa»-argumentet
+  if (lifecycle::is_present(alfa)) {
+    lifecycle::deprecate_warn(
+      when = "0.6.0",
+      what = "aggreger_ki_snitt(alfa)",
+      with = "aggreger_ki_snitt(konf_niva)",
+      details = paste0(
+        "`konf_niva` corresponds to 1 - `alfa`. ",
+        "`alfa` will be completely dropped in the next version."
+      )
+    )
+    konf_niva = 1 - alfa
+  }
+
   if (!(is.data.frame(d_ki_ind) && all(hasName(d_ki_ind, c("ki_x", "ki_aktuell"))))) {
     stop("Inndata må være tibble/data.frame med kolonnene «ki_x» og «ki_aktuell»")
   }
@@ -99,12 +116,12 @@ aggreger_ki_snitt = function(d_ki_ind, alfa = 0.05) {
   if (any(d_ki_ind$ki_aktuell & is.na(d_ki_ind$ki_x))) {
     stop("«ki_x» må være en numerisk verdi hvis «ki_aktuell» er TRUE")
   }
-  if (!is.numeric(alfa) || alfa <= 0 || alfa >= 1) {
-    stop("«alfa» må være et tall mellom 0 og 1")
+  if (!is.numeric(konf_niva) || konf_niva <= 0 || konf_niva >= 1) {
+    stop("«konf_niva» må være et tall mellom 0 og 1")
   }
 
   konfint = possibly(
-    \(x) t.test(x, conf.level = 1 - alfa)$conf.int,
+    \(x) t.test(x, conf.level = konf_niva)$conf.int,
     otherwise = c(NA_real_, NA_real_)
   )
 

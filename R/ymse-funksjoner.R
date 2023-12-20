@@ -117,8 +117,9 @@ tab = function(...) {
 #'
 #' @param x Antall suksesser i forsøket.
 #' @param n Antall uavhengige forsøk.
-#' @param alfa Én minus nivået til konfidensintervallet.
-#'   Standardverdi er 0.05, som tilsvarer et 95 %-konfidensintervall.
+#' @param konf_niva
+#' Konfidensnivå.
+#' Standardverdi er 0.95, som tilsvarer et 95 %-konfidensintervall.
 #'
 #' @return
 #' Returnerer en tibble med nedre og øvre grense for et
@@ -130,8 +131,22 @@ tab = function(...) {
 #' n_forsok = 1000
 #' n_suksess = sample.int(n_forsok, 1)
 #' regn_konfint_bin(n_suksess, n_forsok)
-regn_konfint_bin = function(x, n, alfa = 0.05) {
-  ki = binom::binom.wilson(x, n, 1 - alfa)
+regn_konfint_bin = function(x, n, konf_niva = 0.95, alfa = lifecycle::deprecated()) {
+  # Åtvar viss nokon brukar det utdaterte «alfa»-argumentet
+  if (lifecycle::is_present(alfa)) {
+    lifecycle::deprecate_warn(
+      when = "0.6.0",
+      what = "regn_konfint_bin(alfa)",
+      with = "regn_konfint_bin(konf_niva)",
+      details = paste0(
+        "`konf_niva` corresponds to 1 - `alfa`. ",
+        "`alfa` will be completely dropped in the next version."
+      )
+    )
+    konf_niva = 1 - alfa
+  }
+
+  ki = binom::binom.wilson(x, n, konf_niva)
   tibble(
     lower = pmax(0, ki$lower), # Fiks for at grensene av og til kan gå *bitte litt* utanfor [0,1]
     upper = pmin(1, ki$upper)
