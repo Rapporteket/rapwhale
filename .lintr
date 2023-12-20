@@ -4,6 +4,7 @@ linters: linters_with_defaults(
     indentation_linter = NULL,
     cyclocomp_linter = NULL,
     line_length_linter(120),
+    pipe_consistency_linter("|>"),
     object_length_linter(40)
   )
 exclusions: list(
