@@ -120,6 +120,10 @@ tab = function(...) {
 #' @param konf_niva
 #' Konfidensnivå.
 #' Standardverdi er 0.95, som tilsvarer et 95 %-konfidensintervall.
+#' @param alfa
+#' `r lifecycle::badge("deprecated")`
+#' Utdatert og erstatta av `konf_niva` (tilsvarande `1 - alfa`).
+#' Vert fjerna i neste versjon av pakken.
 #'
 #' @return
 #' Returnerer en tibble med nedre og øvre grense for et

@@ -15,6 +15,10 @@
 #' Standardverdi er 0.95, som tilsvarer et 95 %-konfidensintervall.
 #' @param multiplikator Tallverdi som skal multipliseres med raten
 #' (for å vise raten per `multiplikator` enheter i utdatene).
+#' @param alfa
+#' `r lifecycle::badge("deprecated")`
+#' Utdatert og erstatta av `konf_niva` (tilsvarande `1 - alfa`).
+#' Vert fjerna i neste versjon av pakken.
 #'
 #' @details
 #' Inndatasettet må inneholde minst de tre variablene `ki_antall`,
