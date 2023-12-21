@@ -108,21 +108,16 @@ aggreger_ki_snitt = function(d_ki_ind, konf_niva = 0.95, alfa = lifecycle::depre
     konf_niva = 1 - alfa
   }
 
-  if (!(is.data.frame(d_ki_ind) && all(hasName(d_ki_ind, c("ki_x", "ki_aktuell"))))) {
-    stop("Inndata må være tibble/data.frame med kolonnene «ki_x» og «ki_aktuell»")
-  }
-  if (any(is.na(d_ki_ind$ki_aktuell)) || (!(is.logical(d_ki_ind$ki_aktuell)))) {
-    stop("«ki_aktuell» må være TRUE eller FALSE")
-  }
-  if (!(is.numeric(d_ki_ind$ki_x))) {
-    stop("«ki_x» må være numerisk")
-  }
+  checkmate::assert_data_frame(d_ki_ind)
+  checkmate::assert_names(names(d_ki_ind),
+    must.include = c("ki_x", "ki_aktuell")
+  )
+  checkmate::assert_logical(d_ki_ind$ki_aktuell, any.missing = FALSE)
+  checkmate::assert_numeric(d_ki_ind$ki_x)
   if (any(d_ki_ind$ki_aktuell & is.na(d_ki_ind$ki_x))) {
     stop("«ki_x» må være en numerisk verdi hvis «ki_aktuell» er TRUE")
   }
-  if (!is.numeric(konf_niva) || konf_niva <= 0 || konf_niva >= 1) {
-    stop("«konf_niva» må være et tall mellom 0 og 1")
-  }
+  checkmate::assert_numeric(konf_niva, lower = 0, upper = 1)
 
   konfint = possibly(
     \(x) t.test(x, conf.level = konf_niva)$conf.int,

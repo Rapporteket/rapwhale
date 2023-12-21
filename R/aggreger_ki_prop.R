@@ -102,15 +102,12 @@ aggreger_ki_prop = function(d_ki_ind, konf_niva = 0.95, alfa = lifecycle::deprec
   }
 
   # Teste inndata
-  if (!(is.data.frame(d_ki_ind) && all(hasName(d_ki_ind, c("ki_krit_teller", "ki_krit_nevner"))))) {
-    stop("Inndata må være tibble/data.frame med kolonnene «ki_krit_teller» og «ki_krit_nevner»")
-  }
-  if (!(is.logical(d_ki_ind$ki_krit_teller) && is.logical(d_ki_ind$ki_krit_nevner))) {
-    stop("Kriterievariablene må være logiske variabler")
-  }
-  if (!all(d_ki_ind$ki_krit_nevner %in% c(TRUE, FALSE))) {
-    stop("«ki_krit_nevner» må være TRUE eller FALSE")
-  }
+  checkmate::assert_data_frame(d_ki_ind)
+  checkmate::assert_names(names(d_ki_ind),
+    must.include = c("ki_krit_teller", "ki_krit_nevner")
+  )
+  checkmate::assert_logical(d_ki_ind$ki_krit_teller)
+  checkmate::assert_logical(d_ki_ind$ki_krit_nevner, any.missing = FALSE)
   if (!all(
     (d_ki_ind$ki_krit_teller %in% c(TRUE, FALSE, NA)) &
       ((d_ki_ind$ki_krit_teller %in% c(TRUE, FALSE) & d_ki_ind$ki_krit_nevner) |
@@ -121,13 +118,8 @@ aggreger_ki_prop = function(d_ki_ind, konf_niva = 0.95, alfa = lifecycle::deprec
       "er TRUE, og FALSE eller NA hvis «ki_krit_nevner» er FALSE"
     )
   }
-  if (any(group_size(d_ki_ind) == 0)) {
-    warning("Det finnes grupper uten observasjoner i grupperingsvariabel")
-  }
-
-  if (!is.numeric(konf_niva) || konf_niva <= 0 || konf_niva >= 1) {
-    stop("«konf_niva» må være et tall mellom 0 og 1")
-  }
+  checkmate::assert_integer(group_size(d_ki_ind), lower = 1)
+  checkmate::assert_numeric(konf_niva, lower = 0, upper = 1)
 
   # Beregne utdata
   d_sammendrag = d_ki_ind |>

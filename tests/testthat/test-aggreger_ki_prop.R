@@ -9,14 +9,24 @@ test_that("Feilmelding hvis ikke tibble/data.frame med nødvendige kolonner", {
     ki_krit_nevner = c(TRUE, TRUE, TRUE)
   )
 
-  feilmelding_kol = paste0(
-    "Inndata må være tibble/data.frame med kolonnene ",
-    "«ki_krit_teller» og «ki_krit_nevner»"
+  sjekk_navn = function(d) {
+    checkmate::check_names(names(d),
+      must.include = c("ki_krit_teller", "ki_krit_nevner")
+    )
+  }
+  expect_error(aggreger_ki_prop(liste), checkmate::check_data_frame(liste))
+  expect_error(aggreger_ki_prop(d_uten_nevner),
+    regexp = sjekk_navn(d_uten_nevner),
+    fixed = TRUE
   )
-  expect_error(aggreger_ki_prop(liste), feilmelding_kol)
-  expect_error(aggreger_ki_prop(d_uten_nevner), feilmelding_kol)
-  expect_error(aggreger_ki_prop(d_uten_teller), feilmelding_kol)
-  expect_error(aggreger_ki_prop(d_uten_begge), feilmelding_kol)
+  expect_error(aggreger_ki_prop(d_uten_teller),
+    regexp = sjekk_navn(d_uten_teller),
+    fixed = TRUE
+  )
+  expect_error(aggreger_ki_prop(d_uten_begge),
+    regexp = sjekk_navn(d_uten_begge),
+    fixed = TRUE
+  )
 })
 
 # test for feil variabeltyper
@@ -47,12 +57,12 @@ test_that("Feilmelding hvis data av feil type", {
   )
 
   feilmelding = "Kriterievariablene må være logiske variabler"
-  expect_error(aggreger_ki_prop(d_feil_teller_tekst), feilmelding)
-  expect_error(aggreger_ki_prop(d_feil_nevner_tekst), feilmelding)
-  expect_error(aggreger_ki_prop(d_feil_teller_fak), feilmelding)
-  expect_error(aggreger_ki_prop(d_feil_teller_num), feilmelding)
-  expect_error(aggreger_ki_prop(d_feil_nevner_num), feilmelding)
-  expect_error(aggreger_ki_prop(d_feil_nevner_fak), feilmelding)
+  expect_error(aggreger_ki_prop(d_feil_teller_tekst), checkmate::check_logical("tekst"))
+  expect_error(aggreger_ki_prop(d_feil_nevner_tekst), checkmate::check_logical("tekst"))
+  expect_error(aggreger_ki_prop(d_feil_teller_fak), checkmate::check_logical(factor(c(1, 2, 3))))
+  expect_error(aggreger_ki_prop(d_feil_teller_num), checkmate::check_logical(c(1, 2, 3)))
+  expect_error(aggreger_ki_prop(d_feil_nevner_num), checkmate::check_logical(c(1, 2, 3)))
+  expect_error(aggreger_ki_prop(d_feil_nevner_fak), checkmate::check_logical(factor(c(1, 2, 3))))
 })
 
 test_that(paste0(
@@ -82,7 +92,7 @@ test_that(paste0(
   )
 
   feilmelding_nevner = "«ki_krit_nevner» må være TRUE eller FALSE"
-  expect_error(aggreger_ki_prop(d_nevner_med_feil), feilmelding_nevner)
+  expect_error(aggreger_ki_prop(d_nevner_med_feil), checkmate::check_logical(c(TRUE, TRUE, NA), any.missing = FALSE), fixed = TRUE)
 })
 
 test_that("Feilmelding hvis konf_niva ikke er et tall mellom 0 og 1", {
@@ -90,18 +100,17 @@ test_that("Feilmelding hvis konf_niva ikke er et tall mellom 0 og 1", {
     ki_krit_teller = c(FALSE, TRUE, FALSE),
     ki_krit_nevner = c(TRUE, TRUE, FALSE)
   )
-  feilmelding_konf_niva = "«konf_niva» må være et tall mellom 0 og 1"
   expect_error(aggreger_ki_prop(d_teller_ok, konf_niva = 1.2),
-    regexp = feilmelding_konf_niva
+    regexp = checkmate::check_numeric(1.2, lower = 0, upper = 1)
   )
   expect_error(aggreger_ki_prop(d_teller_ok, konf_niva = 0),
-    regexp = feilmelding_konf_niva
+    regexp = checkmate::check_numeric(0, lower = 0, upper = 1)
   )
   expect_error(aggreger_ki_prop(d_teller_ok, konf_niva = 1),
-    regexp = feilmelding_konf_niva
+    regexp = checkmate::check_numeric(1, lower = 0, upper = 1)
   )
   expect_error(aggreger_ki_prop(d_teller_ok, konf_niva = "0.05"),
-    regexp = feilmelding_konf_niva
+    regexp = checkmate::check_numeric("0.05", lower = 0, upper = 1)
   )
 })
 
