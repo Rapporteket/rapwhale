@@ -337,3 +337,23 @@ test_that("Returnerer forventet resultat", {
     d_test_ut_med_ukjent
   )
 })
+
+# erstatt_ukjent_for_datasett ---------------------------------------------
+context("erstatt_ukjent_for_datasett")
+
+d_test_na_ukjent = tibble::tibble(
+  pas_id = c(1L, 2L, 3L, 4L, 5L, 6L),
+  sykehus = c("HUS", "HUS", "SUS", "SUS", "SUS", "OUS"),
+  vekt = c(60L, NA_integer_, 100L, NA_integer_, NA_integer_, NA_integer_),
+  vekt_2 = c(55L, NA_integer_, NA_integer_, NA_integer_, NA_integer_, 50L),
+  hoyde = c(1.52, NA_real_, 1.89, 2.15, NA_real_, NA_real_),
+  symptom = c("svett", "klam", NA_character_, "trøtt", NA_character_, NA_character_),
+  test_logisk = c(TRUE, FALSE, NA, NA, FALSE, TRUE)
+)
+
+test_that("Returnerer forventet resultat", {
+  expect_identical(
+    erstatt_ukjent_for_datasett(d_test, ukjent_datasett),
+    d_test_na_ukjent
+  )
+})
