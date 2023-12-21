@@ -1,11 +1,16 @@
-linters: linters_with_defaults(
+linters: linters_with_tags(
+    tags = NULL,
     assignment_linter = rapwhale:::assignment_eq_linter(),
     object_usage_linter = NULL,
     indentation_linter = NULL,
     cyclocomp_linter = NULL,
     line_length_linter(120),
     pipe_consistency_linter("|>"),
-    object_length_linter(40)
+    object_length_linter(40),
+    extraction_operator_linter = NULL,
+    implicit_integer_linter = NULL,
+    nonportable_path_linter = NULL,
+    unnecessary_nested_if_linter = NULL
   )
 exclusions: list(
     "tests/testthat/rapwhale-style"
