@@ -143,10 +143,31 @@ lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab
 #' @export
 #'
 #' @examples
-#' library(tibble)
+#' d = data.frame(
+#'   dato = sample(seq.Date(
+#'                 as.Date("2021-01-01"),
+#'                 as.Date("2021-12-31"),
+#'                 by = "days"),
+#'                 1000,
+#'                 replace = TRUE),
+#'   avdeling = c(sample(x = c("HUS", "OUS", "UNN", "STA"),
+#'                     size = 1000, replace = TRUE)),
+#'   teller = sample(x = c(TRUE, FALSE),
+#'                 size = 1000, replace = TRUE, prob = c(0.7, 0.3)),
+#'   nevner = sample(x = c(TRUE, FALSE),
+#'                 size = 1000, replace = TRUE, prob = c(0.9, 0.1)),
+#'   verdi = sample(100:250, size = 1000, replace = TRUE))
 #'
-#' d = tibble(dato = as.factor(c("2021-05-05", "2021-06-06")), verdi = c(3, 4))
-#' lag_fig_shewhart(d = d, x = dato, y = verdi, figtype = "xbar")
+#' d$teller[!d$nevner] = FALSE
+#' d$verdi[!d$nevner] = NA
+#'
+#' lag_fig_shewhart(d = d, y = teller, x = dato, nevner = nevner,
+#'                  figtype = "p", gruppe = avdeling, periode = "2 months",
+#'                  x_navn = "Tidspunkt", y_navn = "Andel")
+#'
+#' lag_fig_shewhart(d = d, y = verdi, x = dato, nevner = nevner,
+#'                  figtype = "xbar", gruppe = avdeling, periode = "2 months",
+#'                  x_navn = "Tidspunkt", y_navn = "Verdi")
 lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
                             gruppe = NULL, periode = NULL, x_navn = NULL, y_navn = NULL,
                             ...) {
