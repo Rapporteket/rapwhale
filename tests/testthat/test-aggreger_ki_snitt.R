@@ -147,3 +147,13 @@ test_that("Gir NA-konfidensgrenser hvis standardavvik er 0 i en gruppe", {
 
   expect_equal(aggreger_ki_snitt(d_sd_lik_null), d_sd_lik_null_ut)
 })
+
+test_that("Bruk av alfa gjev same svar som tilsvarande konf_niva", {
+  d = tibble(
+    sykehus = factor(c("B", "B", "B", "A", "A", "A", "A")),
+    ki_x = c(1, 2, 3, 4, 5, 6, 8), ki_aktuell = rep(TRUE, 7)
+  )
+  expect_identical(suppressWarnings(aggreger_ki_snitt(d, alfa = 0.2)),
+    expected = aggreger_ki_snitt(d, konf_niva = 0.8)
+  )
+})

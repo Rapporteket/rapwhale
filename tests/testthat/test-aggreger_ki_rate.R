@@ -532,3 +532,15 @@ test_that("Funksjonen gjev ut tibble når inndata er tibble, og data.frame når 
   expect_identical(aggreger_ki_rate(d_test_tibble), svar_test_tibble)
   expect_identical(aggreger_ki_rate(d_test_df), svar_test_df)
 })
+
+
+test_that("Bruk av alfa gjev same svar som tilsvarande konf_niva", {
+  d = tibble(
+    ki_antall = c(5, 2, 7),
+    ki_eksponering = c(100, 95, 101),
+    ki_aktuell = c(TRUE, TRUE, TRUE)
+  )
+  expect_identical(suppressWarnings(aggreger_ki_rate(d, alfa = 0.2)),
+    expected = aggreger_ki_rate(d, konf_niva = 0.8)
+  )
+})
