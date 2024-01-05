@@ -392,3 +392,13 @@ test_that(paste0(
   expect_identical(aggreger_ki_prop(d_test_tibble), d_res_tibble)
   expect_identical(aggreger_ki_prop(d_test_df), d_res_df)
 })
+
+test_that("Bruk av alfa gjev same svar som tilsvarande konf_niva", {
+  d = tibble(
+    ki_krit_teller = c(TRUE, FALSE, FALSE, FALSE),
+    ki_krit_nevner = c(rep(TRUE, 4))
+  )
+  expect_identical(suppressWarnings(aggreger_ki_prop(d, alfa = 0.2)),
+    expected = aggreger_ki_prop(d, konf_niva = 0.8)
+  )
+})
