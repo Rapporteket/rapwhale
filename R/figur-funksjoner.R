@@ -146,17 +146,17 @@ lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab
 #' d = data.frame(
 #'   dato = sample(
 #'     seq.Date(
-#'       as.Date("2021-01-01"),
-#'       as.Date("2021-12-31"),
+#'       from = as.Date("2021-01-01"),
+#'       to = as.Date("2021-12-31"),
 #'       by = "days"
 #'     ),
-#'     1000,
+#'     size = 1000,
 #'     replace = TRUE
 #'   ),
-#'   avdeling = c(sample(
+#'   avdeling = sample(
 #'     x = c("HUS", "OUS", "UNN", "STA"),
 #'     size = 1000, replace = TRUE
-#'   )),
+#'   ),
 #'   teller = sample(
 #'     x = c(TRUE, FALSE),
 #'     size = 1000, replace = TRUE, prob = c(0.7, 0.3)
@@ -168,6 +168,8 @@ lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab
 #'   verdi = sample(100:250, size = 1000, replace = TRUE)
 #' )
 #'
+#' # Setter teller til FALSE og verdi til NA i de radene som nevner er FALSE
+#' # slik det ville vært for en ekte indikatorfunksjon.
 #' d$teller[!d$nevner] = FALSE
 #' d$verdi[!d$nevner] = NA
 #'
