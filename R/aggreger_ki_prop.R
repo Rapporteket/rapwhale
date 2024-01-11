@@ -1,7 +1,7 @@
 #' Regn ut kvalitetsindikator for andeler
 #'
 #' @description
-#' `r lifecycle::badge("maturing")`
+#' `r lifecycle::badge("stable")`
 #'
 #' Regner ut kvalitetsindikator for andeler (teller delt på nevner)
 #' basert på et standard datasett for binomiske data / andelsdata.
