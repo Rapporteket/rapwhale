@@ -1,7 +1,7 @@
 #' Regn ut kvalitetsindikator for gjennomsnitt
 #'
 #' @description
-#' `r lifecycle::badge("maturing")`
+#' `r lifecycle::badge("stable")`
 #'
 #' Regner ut kvalitetsindikator med gjennomsnitt av kontinuerlige data,
 #' basert på et standard datasett for dette.
