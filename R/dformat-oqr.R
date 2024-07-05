@@ -421,13 +421,13 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
   if (length(ekstra_kb) > 0) {
     stop(
       "Desse variablane finst berre i kodeboka:\n",
-      paste(ekstra_kb, collapse = ", "), "\n"
+      str_flatten_comma(ekstra_kb), "\n"
     )
   }
   if (length(ekstra_dd) > 0) {
     stop(
       "Desse variablane finst berre i datadumpen:\n",
-      paste(toupper(ekstra_dd), collapse = ", "), "\n"
+      str_flatten_comma(toupper(ekstra_dd)), "\n"
     )
   }
 

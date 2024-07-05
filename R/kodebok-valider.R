@@ -136,7 +136,7 @@ kb_til_kanonisk_form = function(kb) {
   if (length(ekstravars) > 0) {
     warning(
       "Fjernar kolonnar som ikkje skal vera med i kodeboka:\n",
-      paste0(ekstravars, collapse = ", ")
+      str_flatten_comma(ekstravars)
     )
   }
   kb = select(kb, !!std_namn)
@@ -198,7 +198,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   if (length(kol_manglar) > 0) {
     warning(
       "Kodeboka manglar kolonnar:\n",
-      paste0(kol_manglar, sep = "\n")
+      paste0(kol_manglar, collapse = "\n")
     )
     gyldig = FALSE
   }
@@ -266,7 +266,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
       format_feil |>
         as.data.frame() |>
         capture.output() |>
-        paste0(sep = "\n")
+        paste0(collapse = "\n")
     )
     gyldig = FALSE
   }
