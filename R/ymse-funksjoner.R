@@ -322,7 +322,7 @@ lag_tab_latex = function(dataframe, label, caption, wide = FALSE, ...) {
     if (wide) {
       tabell = str_replace(tabell, "^\\\\(begin|end)\\{table\\}", "\\\\\\1\\{widetable\\}") # Superrobust ... ;)
     }
-    tabell = paste0(tabell, sep = "\n")
+    tabell = paste0(tabell, "\n")
   }
 
   # Returner tabellen (eller feilmelding)
