@@ -429,7 +429,7 @@ tildel_unike_skjemanavn_fra_skjema_id = function(kb_std) {
     # men ikkje med 1-1-samsvar)
     kod_namn[i] = kandidatar[1]
   }
-  if (any(is.na(kod_namn))) {
+  if (anyNA(kod_namn)) {
     stop("Det finnes overlappende skjemanavn og skjema_id, og det er ikke 1-1 forhold mellom navnene")
   }
 
