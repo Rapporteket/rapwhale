@@ -196,7 +196,7 @@ aggreger_ki_rate = function(d_ki_ind, konf_niva = 0.95, multiplikator = 1, alfa 
   if (getRversion() >= "4.4.0") {
     profile_funk = stats::profile
   } else {
-    profile_funk = MASS:::profile.glm
+    profile_funk = MASS:::profile.glm # nolint: undesirable_operator_linter, namespace_linter
   }
 
   konfint = function(antall, eksponering) {
