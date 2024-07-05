@@ -202,11 +202,11 @@ sjekk_skaaringstabell = function(skaaringstabell) {
     stop("Kan ikke ha verdien NA i 'variabel' uten at 'verdi' også er NA")
   }
 
-  if (any(is.na(skaaringstabell$koeffisient))) {
+  if (anyNA(skaaringstabell$koeffisient)) {
     stop("Koeffisient-kolonnen i skåringstabellen kan ikke inneholde NA-verdier")
   }
 
-  if (any(is.na(skaaringstabell$delskala))) {
+  if (anyNA(skaaringstabell$delskala)) {
     stop("Delskala-kolonnen i skåringstabellen kan ikke inneholde NA-verdier")
   }
 

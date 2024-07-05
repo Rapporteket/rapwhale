@@ -46,7 +46,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
 
   # Stopp hvis variabel_id eller variabeltype mangler verdi
   for (kol in c("variabel_id", "variabeltype")) {
-    if (any(is.na(kodebok[[kol]]))) {
+    if (anyNA(kodebok[[kol]])) {
       stop("Kodeboka har manglende verdier for variabel_id og/eller variabeltype.")
     }
   }
@@ -95,7 +95,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
     select(varnamn)
 
   # Stopp hvis kategoriske variabler mangler verdi eller verditekst
-  if (any(is.na(kb_kat$gverdi))) {
+  if (anyNA(kb_kat$gverdi)) {
     stop("Kategoriske variabler mangler verdier for verdi.")
   }
 

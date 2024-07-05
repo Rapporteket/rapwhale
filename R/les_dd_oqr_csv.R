@@ -112,7 +112,7 @@ std_koltype_til_readr_koltype = function(vartype) {
   if (length(vartype) == 0) {
     return("")
   }
-  if (any(is.na(vartype))) {
+  if (anyNA(vartype)) {
     stop("Variabeltype må defineres for alle variabler")
   }
 
@@ -129,7 +129,7 @@ std_koltype_til_readr_koltype = function(vartype) {
 
   ind = match(vartype, koblingstabell$vartype)
 
-  if (any(is.na(ind))) {
+  if (anyNA(ind)) {
     vartype_mangler = paste0("'", vartype[is.na(ind)], "'", collapse = ", ")
     stop("Ukjent variabeltype: ", vartype_mangler)
   }

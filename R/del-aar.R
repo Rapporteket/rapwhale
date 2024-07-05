@@ -158,7 +158,7 @@ tid_til_tidslinje = function(dato, antall_deler) {
     }
   }
 
-  if (any(is.na(dato))) {
+  if (anyNA(dato)) {
     warning("Det finnes NA-verdier i dato-vektor")
   }
 

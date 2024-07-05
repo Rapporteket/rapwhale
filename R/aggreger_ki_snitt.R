@@ -111,7 +111,7 @@ aggreger_ki_snitt = function(d_ki_ind, konf_niva = 0.95, alfa = lifecycle::depre
   if (!(is.data.frame(d_ki_ind) && all(hasName(d_ki_ind, c("ki_x", "ki_aktuell"))))) {
     stop("Inndata må være tibble/data.frame med kolonnene «ki_x» og «ki_aktuell»")
   }
-  if (any(is.na(d_ki_ind$ki_aktuell)) || (!(is.logical(d_ki_ind$ki_aktuell)))) {
+  if (anyNA(d_ki_ind$ki_aktuell) || (!(is.logical(d_ki_ind$ki_aktuell)))) {
     stop("«ki_aktuell» må være TRUE eller FALSE")
   }
   if (!(is.numeric(d_ki_ind$ki_x))) {

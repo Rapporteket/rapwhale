@@ -74,7 +74,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
   # Stopp viss nokre av dei tre nødvendige kolonnane har ugyldige verdiar
   # eller viss dei er faktorar
   for (kol in c("variabel_id", "verdi", "verditekst")) {
-    if (any(is.na(kb[[kol]]))) {
+    if (anyNA(kb[[kol]])) {
       stop("Ugyldig kodebok. Kolonnen '", kol, "' har NA-verdi(ar).")
     }
     if (any(is.factor(kb[[kol]]))) {

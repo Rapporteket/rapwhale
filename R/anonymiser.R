@@ -67,7 +67,7 @@
 #' d_operasjon_ano
 #' d_oppfolging_ano
 lag_anonymiseringsfunksjon = function(x, startnr = 1001) {
-  if (any(is.na(x))) {
+  if (anyNA(x)) {
     warning("ID-vektoren inneheld NA-verdiar")
   }
   if (!is.atomic(x)) {
@@ -80,7 +80,7 @@ lag_anonymiseringsfunksjon = function(x, startnr = 1001) {
   til = as.integer(sample.int(length(fra)) + startnr - 1)
 
   ano_funk = function(x_utvalg) {
-    if (any(is.na(x_utvalg))) {
+    if (anyNA(x_utvalg)) {
       warning("ID-vektoren inneheld NA-verdiar")
     }
     if (!rlang::is_empty(na.omit(setdiff(x_utvalg, x)))) {
