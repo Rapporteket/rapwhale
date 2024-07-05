@@ -119,7 +119,7 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   if (length(nye_vartypar) > 0) {
     stop(
       "Kodeboka har variabeltypar me ikkje har standardnamn på: ",
-      str_c(nye_vartypar, collapse = ", ")
+      str_flatten_comma(nye_vartypar)
     )
   }
 
