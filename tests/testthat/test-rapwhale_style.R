@@ -34,7 +34,7 @@ test_that("= vert ikkje endra", {
 })
 
 test_that("<- vert ikkje endra viss 'tokens' ikkje er med i 'scope'", {
-  style_text_rapwhale_line_breaks = purrr:::partial(
+  style_text_rapwhale_line_breaks = purrr::partial(
     styler::style_text,
     style = rapwhale_style,
     scope = "line_breaks"

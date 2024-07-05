@@ -1,7 +1,7 @@
 context("farger_kvalreg")
 test_that("utdata er en liste som inneholder 3 tekstvektorer: farger_hoved,
           farger_noyt, farger_kontr", {
-  expect_length(purrr:::map_lgl(farger_kvalreg(), is.character), 3)
+  expect_length(purrr::map_lgl(farger_kvalreg(), is.character), 3)
 
   navn_vektorer = c("farger_hoved", "farger_noyt", "farger_kontr")
   expect_identical(names(farger_kvalreg()), navn_vektorer)
