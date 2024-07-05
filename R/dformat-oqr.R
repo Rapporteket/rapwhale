@@ -190,7 +190,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
   if (length(nye_vartypar) > 0) {
     stop(
       "Kodeboka har variabeltypar me ikkje støttar / har standardnamn på: ",
-      str_c(nye_vartypar, collapse = ", ")
+      str_flatten_comma(nye_vartypar)
     )
   }
 

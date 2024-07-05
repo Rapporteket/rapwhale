@@ -338,7 +338,7 @@ oqr_til_std_variabeltyper = function(kb_mellom) {
   if (length(nye_vartypar) > 0) {
     stop(
       "Kodeboka har variabeltypar me ikkje støttar / har standardnamn på:\n",
-      str_c(nye_vartypar, collapse = ", ")
+      str_flatten_comma(nye_vartypar)
     )
   }
 
@@ -463,7 +463,7 @@ legg_til_variabler_kb = function(kb_std, ekstra_data) {
   if (length(ekstra_kol) > 0) {
     stop(
       "Det er kolonner i ekstra_data som ikke eksisterer i kodebok fra før:\n",
-      str_c(ekstra_kol, collapse = ", ")
+      str_flatten_comma(ekstra_kol)
     )
   }
 
@@ -475,7 +475,7 @@ legg_til_variabler_kb = function(kb_std, ekstra_data) {
   if (nrow(overlapp) > 0) {
     stop(
       "Variabel i ekstra_data eksisterer i skjema fra før:\n",
-      str_c(overlapp$variabel_id, collapse = ", ")
+      str_flatten_comma(overlapp$variabel_id)
     )
   }
 
@@ -488,7 +488,7 @@ legg_til_variabler_kb = function(kb_std, ekstra_data) {
   if (length(manglende_kolonner) > 0) {
     stop(
       "Det mangler kolonner for nye variabler:\n",
-      str_c(manglende_kolonner, collapse = ", ")
+      str_flatten_comma(manglende_kolonner)
     )
   }
 
@@ -615,7 +615,7 @@ valider_kb_kolonner = function(kodebok) {
   if (length(ny_vartype) > 0) {
     stop(
       "Det finnes variabeltyper som ikke er støttet:\n",
-      str_c(ny_vartype, collapse = ", ")
+      str_flatten_comma(ny_vartype)
     )
   }
 
@@ -649,7 +649,7 @@ valider_kb_kolonner = function(kodebok) {
   )]
 
   if (length(ugyldig_varnavn > 0)) {
-    stop("Det finnes ugyldige variabelnavn:\n", str_c(ugyldig_varnavn, collapse = ", "))
+    stop("Det finnes ugyldige variabelnavn:\n", str_flatten_comma(ugyldig_varnavn))
   }
 }
 
@@ -672,7 +672,7 @@ valider_kb_variabler = function(kodebok) {
     pull(variabel_id)
 
   if (length(ulike_vartyper) > 0) {
-    stop("Variabler må ha entydige variabeltyper:\n", str_c(ulike_vartyper, collapse = ", "))
+    stop("Variabler må ha entydige variabeltyper:\n", str_flatten_comma(ulike_vartyper))
   }
 
   # sjekk at variabeletiketter er entydige
@@ -683,7 +683,7 @@ valider_kb_variabler = function(kodebok) {
     pull(variabel_id)
 
   if (length(ulike_variabeletiketter > 0)) {
-    stop("En variabel kan ikke ha flere ulike variabeletiketter:\n", str_c(ulike_variabeletiketter, collapse = ", "))
+    stop("En variabel kan ikke ha flere ulike variabeletiketter:\n", str_flatten_comma(ulike_variabeletiketter))
   }
 
   # sjekk at kategoriske variabler har tilsvarende verditekst for hver verdi på tvers av skjema
@@ -698,7 +698,7 @@ valider_kb_variabler = function(kodebok) {
       "Det finnes ",
       nrow(flere_verditekster),
       " avvik for listeverdi mellom skjema:\nVariabel: ",
-      str_c(unique(flere_verditekster$variabel_id), collapse = ", ")
+      str_flatten_comma(unique(flere_verditekster$variabel_id))
     )
   }
 
@@ -714,7 +714,7 @@ valider_kb_variabler = function(kodebok) {
     stop(
       "Boolske variabler kan ikke ha Obligatorisk = 'nei' og ",
       "Unik = 'ja'\nVariabel: ",
-      str_c(feil_boolsk, collapse = ", ")
+      str_flatten_comma(feil_boolsk)
     )
   }
 
@@ -744,21 +744,21 @@ valider_kb_variabler = function(kodebok) {
   if (length(duplikat_verdi > 0)) {
     stop(
       "Kategoriske variabler må ha unike verdier\nVariabel: ",
-      str_c(duplikat_verdi, collapse = ", ")
+      str_flatten_comma(duplikat_verdi)
     )
   }
 
   if (length(na_verdi) > 0) {
     stop(
       "Kategoriske variabler kan ikke ha NA som verdi\nVariabel: ",
-      str_c(na_verdi, collapse = ", ")
+      str_flatten_comma(na_verdi)
     )
   }
 
   if (length(antall_alternativ) > 0) {
     stop(
       "Kategoriske variabler må ha minst to svaralternativ\nVariabel: ",
-      str_c(antall_alternativ, collapse = ", ")
+      str_flatten_comma(antall_alternativ)
     )
   }
 
@@ -826,7 +826,7 @@ kommentar_rimeleg, utrekningsformel, logikk")
   if (length(ikke_kat_manglande) > 0) {
     stop(
       "Ikke-kategoriske variabler kan ikke ha manglende = 'ja'\nvariabel_id: ",
-      str_c(ikke_kat_manglande, collapse = ", ")
+      str_flatten_comma(ikke_kat_manglande)
     )
   }
 
@@ -846,7 +846,7 @@ kommentar_rimeleg, utrekningsformel, logikk")
     stop(
       "Relasjon mellom minimum og maksimum verdier er ikke ivaretatt\n",
       "variabel_id: ",
-      str_c(feil_relasjon, collapse = ", ")
+      str_flatten_comma(feil_relasjon)
     )
   }
 
@@ -861,7 +861,7 @@ kommentar_rimeleg, utrekningsformel, logikk")
     stop(
       "Kommentar_rimeleg er fylt ut, men det finnes ingen min_rimeleg ",
       "eller maks_rimeleg\nvariabel_id: ",
-      str_c(kommentar_uten_verdier, collapse = ", ")
+      str_flatten_comma(kommentar_uten_verdier)
     )
   }
 }
