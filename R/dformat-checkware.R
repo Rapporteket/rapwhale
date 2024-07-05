@@ -335,7 +335,7 @@ les_dd_checkware = function(mappe_dd,
   cw_til_boolsk = function(x) {
     if (skjema_id == "treatments") { # treatments skjema har boolske variabler kodet som true/false,
       # i motsetning til alle andre skjema. treatments er felles for alle registre.
-      if_else(x == "false", FALSE, TRUE)
+      x != "false"
     } else {
       stopifnot(all(x %in% c("1", NA)))
       !is.na(x)
