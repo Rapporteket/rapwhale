@@ -236,7 +236,7 @@ sjekk_skaaringstabell = function(skaaringstabell) {
 #' @return `NULL` (usynlig).
 sjekk_variabelnavn = function(d, variabelnavn) {
   var_mangler = unique(variabelnavn[!(variabelnavn %in% names(d))])
-  var_mangler_tekst = paste0(var_mangler, collapse = ", ")
+  var_mangler_tekst = str_flatten_comma(var_mangler)
   if (length(var_mangler) > 0) {
     stop("Mangler kolonner: ", var_mangler_tekst)
   }
@@ -377,7 +377,7 @@ oppsummer_ugyldige_verdier = function(d_ugyldige) {
   if (nrow(d_ugyldige) > 0) {
     oppsummert = d_ugyldige |>
       group_by(variabel) |>
-      summarise(feil_verdier = paste0(feilverdi, collapse = ", ")) |>
+      summarise(feil_verdier = str_flatten_comma(feilverdi)) |>
       summarise(feil_variabler_verdier = paste0(variabel, ": ",
         feil_verdier,
         collapse = "\n"
@@ -564,7 +564,7 @@ legg_til_na_i_skaaringstabell = function(skaaringstabell) {
 #' @return Originalt datasett med ekstra kolonner lagt til / erstattet.
 legg_til_eller_erstatt_kolonner = function(d_orig, d_ekstrakol) {
   navn_finst = intersect(names(d_ekstrakol), names(d_orig))
-  navn_finst_tekst = paste0(navn_finst, collapse = ", ")
+  navn_finst_tekst = str_flatten_comma(navn_finst)
 
   if (length(navn_finst) > 0) {
     warning(
