@@ -32,7 +32,7 @@ wrap_if_else_while_for_fun_in_curly_rapwhale = function(pd, indent_by = 2) { # n
   if (length(key_token) > 0) {
     pd = pd |>
       wrap_curly_rapwhale(indent_by,
-        space_after = ifelse(styler:::contains_else_expr(pd), 1, 0),
+        space_after = as.numeric(styler:::contains_else_expr(pd)),
         key_token = key_token
       )
   }
