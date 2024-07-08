@@ -78,8 +78,9 @@
 #' ) # Mest negativt svar på alle enkeltspørsmål
 #' skaar_rand12(d_eks, algoritme = "farivar_2007_oblique")
 #' @export
-skaar_rand12 = function(d, variabelnavn = NULL,
+skaar_rand12 = function(d,
                         algoritme,
+                        variabelnavn = NULL,
                         godta_manglende = TRUE) {
   stopifnot(algoritme == "farivar_2007_oblique")
 

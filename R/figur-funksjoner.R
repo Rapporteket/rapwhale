@@ -174,17 +174,17 @@ lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab
 #' d$verdi[!d$nevner] = NA
 #'
 #' lag_fig_shewhart(
-#'   d = d, y = teller, x = dato, nevner = nevner,
-#'   figtype = "p", gruppe = avdeling, periode = "2 months",
+#'   d = d, y = teller, x = dato, figtype = "p",
+#'   nevner = nevner, gruppe = avdeling, periode = "2 months",
 #'   x_navn = "Tidspunkt", y_navn = "Andel"
 #' )
 #'
 #' lag_fig_shewhart(
-#'   d = d, y = verdi, x = dato, nevner = nevner,
-#'   figtype = "xbar", gruppe = avdeling, periode = "2 months",
+#'   d = d, y = verdi, x = dato, figtype = "xbar",
+#'   nevner = nevner, gruppe = avdeling, periode = "2 months",
 #'   x_navn = "Tidspunkt", y_navn = "Verdi"
 #' )
-lag_fig_shewhart = function(d, y, x, nevner = NULL, figtype, tittel = NULL,
+lag_fig_shewhart = function(d, y, x, figtype, nevner = NULL, tittel = NULL,
                             gruppe = NULL, periode = NULL, x_navn = NULL, y_navn = NULL,
                             ...) {
   # definerer alle kolonner som skal være tilgjengelig inni datasettet (d)
