@@ -24,21 +24,18 @@ kompiler_rnw = function(adresse) {
   cat(paste0(basename(adresse), " (knitr): "))
   tex_adresse = str_replace(adresse, ".Rnw", ".tex")
 
-  # Byt arbeidsmappe slik at all output kjem på rett plass
-  old_wd = setwd(dirname(adresse))
-
-  knit_res = try(
-    callr::r(
-      function(...) {
-        knitr::knit(..., quiet = TRUE, envir = globalenv())
-      },
-      args = list(input = adresse)
-    ),
-    silent = TRUE
-  )
-
-  # Byt tilbake til gamal arbeidsmappe
-  setwd(old_wd)
+  # Køyr i mappa til fila slik at all output kjem på rett plass
+  withr::with_dir(dirname(adresse), {
+    knit_res = try(
+      callr::r(
+        function(...) {
+          knitr::knit(..., quiet = TRUE, envir = globalenv())
+        },
+        args = list(input = adresse)
+      ),
+      silent = TRUE
+    )
+  })
 
   knit_ok = !inherits(knit_res, "try-error")
   if (knit_ok) {
@@ -88,35 +85,31 @@ kompiler_tex = function(adresse, maksiter = 5, vis_feilmeldingar = TRUE) {
 
     # Vis åtvaringar når dei skjer
     # (for eksempel viss PDF-fila er låst for skriving)
-    old_opts = options(warn = 1)
+    withr::with_options(list(warn = 1), {
+      # Køyr i rapportmappa
+      withr::with_dir(dirname(adresse), {
+        processx::run(
+          "lualatex",
+          args = c(
+            "--interaction=nonstopmode", "--halt-on-error", "--file-line-error",
+            adresse
+          ),
+          stdout = NULL
+        )
 
-    # Byt arbeidsmappe til rapportmappa
-    old_wd = setwd(dirname(adresse))
+        # Loggen me får ut på kommandolinja har ikkje eit format me lett kan bruka.
+        # Les derfor heller inn den *lagra* loggfila (som har fint format på grunn
+        # av bruken av «--file-line-error»-argumentet).
+        loggfil = str_replace(adresse, ".tex$", ".log")
+        logg = read_lines(loggfil)
 
-    processx::run(
-      "lualatex",
-      args = c(
-        "--interaction=nonstopmode", "--halt-on-error", "--file-line-error",
-        adresse
-      ),
-      stdout = NULL
-    )
-
-    # Loggen me får ut på kommandolinja har ikkje eit format me lett kan bruka.
-    # Les derfor heller inn den *lagra* loggfila (som har fint format på grunn
-    # av bruken av «--file-line-error»-argumentet).
-    loggfil = str_replace(adresse, ".tex$", ".log")
-    logg = read_lines(loggfil)
-
-    # Loggteksten har linjelengd på 80 teikn, som kan bli delt midt i ei
-    # feilmelding (til og med midt inni eit ord!). Det gjer det vanskelegare
-    # å automatisk finna spesifikke feilmeldingar. Lagar derfor ein versjon
-    # der loggen er éin long tekst utan linjeskift.
-    logg1l = str_c(logg, collapse = "")
-
-    # Byt tilbake til gamle instillingar
-    options(old_opts)
-    setwd(old_wd)
+        # Loggteksten har linjelengd på 80 teikn, som kan bli delt midt i ei
+        # feilmelding (til og med midt inni eit ord!). Det gjer det vanskelegare
+        # å automatisk finna spesifikke feilmeldingar. Lagar derfor ein versjon
+        # der loggen er éin long tekst utan linjeskift.
+        logg1l = str_c(logg, collapse = "")
+      })
+    })
 
     feil = str_detect(logg1l, stringr::fixed("no output PDF file produced"))
     ferdig = !str_detect(logg1l, "run LaTeX again|Rerun to|Rerun LaTeX")
