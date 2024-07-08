@@ -21,8 +21,8 @@ knitr::opts_chunk$set(
 
 ```{r pakkelasting, include = FALSE}
 suppressPackageStartupMessages({
-  library(dplyr)
-  library(rapwhale)
+  library(dplyr) # nolint: undesirable_function_linter.
+  library(rapwhale) # nolint: undesirable_function_linter.
 })
 ```
 

@@ -22,9 +22,11 @@ knitr::opts_chunk$set(
 
 ```{r pakkelasting, include = FALSE}
 suppressPackageStartupMessages({
+  # nolint start: undesirable_function_linter.
   library(rapwhale)
   library(tidyverse)
   library(kableExtra)
+  # nolint end
 })
 ```
 
@@ -256,7 +258,8 @@ Til slutt kan me visa statistikken i fine tabellar og figurar.
 Her er eit komplett eksempel på bruk av eit valideringsdatasett,
 med figur:
 
-```{r, fig.width=5}
+```{r, fig.width=5, echo=2:30}
+# nolint start: undesirable_function_linter.
 # Rekn ut korrektheit per variabel
 d_korrektheit = d_vld |>
   analyser_valideringsdatasett() |>
@@ -286,6 +289,7 @@ ggplot(
   ggtitle("Korrektheit for utvalde variablar") +
   xlab("Korrekt") +
   ylab(NULL)
+# nolint end
 ```
 
 Her kan (og bør) me sjølvsagt finpussa figuren for å gjera
@@ -706,7 +710,8 @@ vil han for eksempel gjera om `"Helse Førde"` til `"helse_forde"`.)
 Til slutt er det berre å dela opp valideringsdatasettet i eitt datasett
 per sjukehus og lagra desse datasetta i separate filer:
 
-```{r eval=FALSE}
+```{r eval=FALSE, echo=2:21}
+# nolint start: undesirable_function_linter.
 # Hekt på sjukehusnamn
 d_vld_med_sjukehus = d_vld |>
   left_join(d_forlopsinfo,
@@ -727,6 +732,7 @@ d_vld_med_sjukehus = d_vld_med_sjukehus |>
 d_vld_med_sjukehus |>
   split(.$filadresse) |>
   iwalk(write_sav)
+# nolint end
 ```
 
 Me kan bruka tilsvarande metodikk viss me vil ha éi fil
