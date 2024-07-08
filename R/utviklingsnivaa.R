@@ -30,7 +30,7 @@ utviklingsnivaa = function(mappe = "man") {
   funksjonar = list.files(mappe, pattern = "\\.Rd$")
 
   # Lag vektor med funksjonsnamn
-  funksjonar_namn = str_replace(funksjonar, "\\.Rd", "()")
+  funksjonar_namn = str_replace(funksjonar, stringr::fixed(".Rd"), "()")
 
   # Les inn linjene i hjelpefilene
   parse_rd_mapper = function(x) {

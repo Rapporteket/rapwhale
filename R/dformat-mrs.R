@@ -132,11 +132,11 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
       variabeltype = vartype_mrs_standard$type_standard[match(Felttype, vartype_mrs_standard$type_mrs)],
       obligatorisk = "nei",
       verdi = as.integer(str_split(`Mulige verdier`,
-        pattern = " = ",
+        pattern = stringr::fixed(" = "),
         simplify = TRUE
       )[, 1]),
       verditekst = str_split(`Mulige verdier`,
-        pattern = " = ",
+        pattern = stringr::fixed(" = "),
         simplify = TRUE
       )[, 2],
       desimalar = ifelse(Felttype == "Numerisk (heltall)",
