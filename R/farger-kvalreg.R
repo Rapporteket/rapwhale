@@ -25,9 +25,9 @@ farger_kvalreg = function() {
   col_kontr = "#FF7260" # Kontrastfarge
 
   farger = list(
-    "farger_hoved" = col_prim,
-    "farger_noyt" = col_noyt,
-    "farger_kontr" = col_kontr
+    farger_hoved = col_prim,
+    farger_noyt = col_noyt,
+    farger_kontr = col_kontr
   )
   farger
 }

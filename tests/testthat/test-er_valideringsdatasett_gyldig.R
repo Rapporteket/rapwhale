@@ -85,9 +85,9 @@ test_that("Gyldige inndata vert rekna som gyldige sjølv om «vld_varnamn» og �
   class(d_vld_med_label$vld_vartype) = c("haven_labelled", "character")
   attr(d_vld_med_label$vld_vartype, "label") = "Variabeltype"
   attr(d_vld_med_label$vld_vartype, "labels") = c(
-    "Heiltal og desimaltal" = "tal",
-    "Datoar" = "dato",
-    "Boolske verdiar" = "logisk"
+    `Heiltal og desimaltal` = "tal",
+    Datoar = "dato",
+    `Boolske verdiar` = "logisk"
   )
 
   expect_true(er_valideringsdatasett_gyldig(d_vld_med_label))

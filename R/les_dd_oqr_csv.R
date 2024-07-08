@@ -256,16 +256,16 @@ lag_formatspek = function(skilletegn, desimaltegn, dato, klokkeslett, dato_kl,
   stopifnot(rlang::is_empty(intersect(boolsk_sann, boolsk_usann)))
 
   formatspek = list(
-    "skilletegn" = skilletegn,
-    "desimaltegn" = desimaltegn,
-    "dato" = dato,
-    "klokkeslett" = klokkeslett,
-    "dato_kl" = dato_kl,
-    "tidssone" = tidssone,
-    "tegnkoding" = tegnkoding,
-    "boolsk_sann" = boolsk_sann,
-    "boolsk_usann" = boolsk_usann,
-    "na_verdier" = na_verdier
+    skilletegn = skilletegn,
+    desimaltegn = desimaltegn,
+    dato = dato,
+    klokkeslett = klokkeslett,
+    dato_kl = dato_kl,
+    tidssone = tidssone,
+    tegnkoding = tegnkoding,
+    boolsk_sann = boolsk_sann,
+    boolsk_usann = boolsk_usann,
+    na_verdier = na_verdier
   )
 
   formatspek
