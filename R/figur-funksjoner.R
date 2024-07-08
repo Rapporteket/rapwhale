@@ -13,7 +13,7 @@
 #' @param tekst teksten i tekstane (berre brukt til å telja kor mange linjer det er).
 #' @param hoyde høgda kvar linje tekst tar opp (i grafkoordinatar)
 #' @export
-flytt_opp = function(y, tekst, hoyde = .015) {
+flytt_opp = function(y, tekst, hoyde = 0.015) {
   tekst_ny = tekst[order(y)]
   y = y[order(y)]
   linjer = tekst_ny |>
@@ -77,7 +77,7 @@ lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab
   }
   # Legg ev. til konfidensintervall (bak alt anna)
   if (konfint) {
-    grafdel = append(grafdel, ggplot2::geom_linerange(linewidth = .5, colour = col_prim[5]))
+    grafdel = append(grafdel, ggplot2::geom_linerange(linewidth = 0.5, colour = col_prim[5]))
   }
   # Legg til resten
   grafdel = append(

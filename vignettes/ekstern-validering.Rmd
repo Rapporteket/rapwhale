@@ -386,7 +386,7 @@ slice_sample(d_vld_enkel, n = 10)
 Eller ti prosent av datasettet:
 
 ```{r}
-slice_sample(d_vld_enkel, prop = .1)
+slice_sample(d_vld_enkel, prop = 0.1)
 ```
 
 I nokre tilfelle kan me ikkje garantera tid til å
