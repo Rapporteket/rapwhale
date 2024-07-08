@@ -65,7 +65,7 @@ lag_valideringsdatasett = function(d_reg, indvars) {
   }
 
   prim_nokkel = select(d_reg, all_of(indvars))
-  if (any(duplicated(prim_nokkel))) {
+  if (anyDuplicated(prim_nokkel) > 0) {
     stop("Indeksvariablane identifiserer ikkje alle radene unikt")
   }
 
@@ -81,7 +81,7 @@ lag_valideringsdatasett = function(d_reg, indvars) {
   )
   d_vartypar_distinct = distinct(d_vartypar)
 
-  if (any(duplicated(d_vartypar_distinct$vartypar_sammenlagt))) {
+  if (anyDuplicated(d_vartypar_distinct$vartypar_sammenlagt) > 0) {
     stop("Samanslåing av klassane til dei ulike variabeltypane gjev ikkje eintydige resultat")
   }
 

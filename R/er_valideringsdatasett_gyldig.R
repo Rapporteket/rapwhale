@@ -176,7 +176,7 @@ er_valideringsdatasett_gyldig = function(d_vld) {
 
   # Kvar kombinasjon av verdiar til indekskolonnane (dvs. til vld_varnamn
   # eller variablar som ikkje startar med «vld_») skal vera unike
-  if (any(duplicated(d_vld[kolnamn_indekskol]))) {
+  if (anyDuplicated(d_vld[kolnamn_indekskol]) > 0) {
     return(FALSE)
   }
 

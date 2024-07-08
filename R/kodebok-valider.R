@@ -302,7 +302,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   sjekk_dup = function(kb, idkol) {
     idkol = rlang::quo_name(rlang::enquo(idkol))
     ids = rle(kb[[idkol]])$values
-    if (any(duplicated(ids))) {
+    if (anyDuplicated(ids) > 0) {
       warning(
         "Duplikate verdiar i ", lag_liste(idkol), ":\n",
         lag_liste(unique(ids[duplicated(ids)])),
