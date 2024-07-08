@@ -17,7 +17,7 @@ flytt_opp = function(y, tekst, hoyde = .015) {
   tekst_ny = tekst[order(y)]
   y = y[order(y)]
   linjer = tekst_ny |>
-    str_split("\n") |>
+    str_split(stringr::fixed("\n")) |>
     sapply(length)
   nedre = y - linjer * hoyde / 2
   ovre = y + linjer * hoyde / 2
