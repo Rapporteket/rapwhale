@@ -36,7 +36,7 @@ utviklingsnivaa = function(mappe = "man") {
   parse_rd_mapper = function(x) {
     tools::parse_Rd(x, permissive = TRUE)
   }
-  funksjonsadresser = paste0(mappe, "/", funksjonar)
+  funksjonsadresser = file.path(mappe, funksjonar)
   funksjonar_parsed = map(funksjonsadresser, parse_rd_mapper)
 
   # Hent utviklingsnivå for en funksjon

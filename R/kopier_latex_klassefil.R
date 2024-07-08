@@ -38,7 +38,7 @@
 kopier_latex_klassefil = function(texmappe = NULL) {
   if (is.null(texmappe)) {
     texmappe_rot = system2("kpsewhich", "-var-value=TEXMFHOME", stdout = TRUE)
-    texmappe = paste0(texmappe_rot, "/tex/latex/kvalreg/")
+    texmappe = file.path(texmappe_rot, "tex", "latex", "kvalreg")
   }
 
   dir.create(texmappe, showWarnings = FALSE, recursive = TRUE)

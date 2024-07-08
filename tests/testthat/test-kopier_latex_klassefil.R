@@ -1,5 +1,5 @@
 tempmappe = tempdir()
-klassefil_adresse = paste0(tempmappe, "/kvalreg-rapport.cls")
+klassefil_adresse = file.path(tempmappe, "kvalreg-rapport.cls")
 
 test_that("Gjev ut adressa til mappa det kopierast til (usynleg)", {
   adresse = expect_invisible(kopier_latex_klassefil(tempmappe))
