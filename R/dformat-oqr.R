@@ -297,7 +297,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
     # Bruk omkodingstabellen til gje ut rett namn på alle ID-ane
     kod_namn[match(ids, kod_id)]
   }
-  # nolint start commented_code_linter.
+  # nolint start: commented_code_linter.
   # # Eksempel (og test)
   # ids   = c("pasreg",  "basereg", "basereg","pasreg",   "op",       "op",       "ev",       "basereg")
   # namn  = c("Pasient", "Basis",   "Basis",  "Opskjema", "Pasient",  "Opskjema", "Opskjema", "Basis")

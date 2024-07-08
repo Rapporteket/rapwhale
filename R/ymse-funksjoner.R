@@ -209,7 +209,7 @@ regn_konfint_bin = function(x, n, konf_niva = 0.95, alfa = lifecycle::deprecated
 regn_konfint_univar = function(x,
                                bootstrap = FALSE,
                                konf_niva = 0.95,
-                               R = 9999) { # nolint: object_name_linter
+                               R = 9999) { # nolint: object_name_linter.
   # Fjern eventuelle NA-verdier
   x = x[!is.na(x)]
 
