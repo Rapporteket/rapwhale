@@ -282,7 +282,7 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
     stop("Inndata må være tibble/data.frame og inneholde kolonnene 'variabel' og 'verdi'")
   }
 
-  if (!all(sapply(d, is.numeric))) {
+  if (!all(map_lgl(d, is.numeric))) {
     stop("Datasettet inneholder verdier som ikke er numeriske")
   }
 
