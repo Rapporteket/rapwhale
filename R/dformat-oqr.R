@@ -545,10 +545,10 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
   oqr_boolsk_til_boolsk = function(x) {
     # Sjekk først at det berre er gyldige verdiar
     er_gyldig = (x %in% c("0", "1")) | is.na(x)
-    if (!all(er_gyldig)) {
-      stop("Finst ugyldige verdiar i boolsk variabel (skal vera 0, 1 eller NA)")
-    } else {
+    if (all(er_gyldig)) {
       x == 1 # Gjer om til boolsk variabel
+    } else {
+      stop("Finst ugyldige verdiar i boolsk variabel (skal vera 0, 1 eller NA)")
     }
   }
   vars_boolsk = spek_innlesing$variabel_id[spek_innlesing$variabeltype == "boolsk"]

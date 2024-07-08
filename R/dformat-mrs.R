@@ -371,15 +371,15 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
     # og nokre har "False" og "True"
     # (og me ventar på at nye artar skal dukka opp ...)
     er_gyldig = (x %in% c("-1", "0", "1", "False", "True")) | is.na(x)
-    if (!all(er_gyldig)) {
-      stop("Finst ugyldige verdiar i boolske variablar (skal vera '-1', 'False', '1' eller 'True' eller mangla)")
-    } else {
+    if (all(er_gyldig)) {
       # Usann er koda som "0" eller som "False",
       # mens sann er koda som "1" eller "True",
       # mens manglande verdi er koda som
       # "-1" eller tom verdi.
       x[(x == "-1") | (x == "")] = NA
       (x == "1") | (x == "True") # Testen i er_gyldig() sikrar at alt som ikkje er sant, er usant
+    } else {
+      stop("Finst ugyldige verdiar i boolske variablar (skal vera '-1', 'False', '1' eller 'True' eller mangla)")
     }
   }
 
