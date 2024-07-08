@@ -61,8 +61,10 @@
 #' fnr_er_gyldig(nummer, gyldige_typar = c("FNR", "H"))
 fnr_er_gyldig = function(nummer,
                          gyldige_typar = c("FNR", "H", "D", "FH")) {
-  stopifnot(all(gyldige_typar %in% c("FNR", "H", "D", "FH")))
-  stopifnot(is.character(nummer))
+  stopifnot(
+    all(gyldige_typar %in% c("FNR", "H", "D", "FH")),
+    is.character(nummer)
+  )
 
   gyldig = logical(length(nummer))
 

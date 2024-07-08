@@ -245,15 +245,17 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
 lag_formatspek = function(skilletegn, desimaltegn, dato, klokkeslett, dato_kl,
                           tidssone, tegnkoding, boolsk_sann, boolsk_usann,
                           na_verdier) {
-  stopifnot(is.character(skilletegn) && nchar(skilletegn) == 1)
-  stopifnot(is.character(desimaltegn) && nchar(desimaltegn) == 1)
-  stopifnot(desimaltegn %in% c(",", "."))
-  stopifnot(is.character(dato))
-  stopifnot(is.character(klokkeslett))
-  stopifnot(is.character(dato_kl))
-  stopifnot(is.character(tidssone))
-  stopifnot(is.character(tegnkoding))
-  stopifnot(rlang::is_empty(intersect(boolsk_sann, boolsk_usann)))
+  stopifnot(
+    is.character(skilletegn) && nchar(skilletegn) == 1,
+    is.character(desimaltegn) && nchar(desimaltegn) == 1,
+    desimaltegn %in% c(",", "."),
+    is.character(dato),
+    is.character(klokkeslett),
+    is.character(dato_kl),
+    is.character(tidssone),
+    is.character(tegnkoding),
+    rlang::is_empty(intersect(boolsk_sann, boolsk_usann))
+  )
 
   formatspek = list(
     skilletegn = skilletegn,
