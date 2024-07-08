@@ -74,7 +74,7 @@ lag_valideringsdatasett = function(d_reg, indvars) {
   d_vartypar = tibble(
     vartypar = map(d_reg[datavars], class) |>
       unname(),
-    vartypar_sammenlagt = map_chr(vartypar, \(x) paste(x, collapse = "_"))
+    vartypar_sammenlagt = map_chr(vartypar, \(x) paste0(x, collapse = "_"))
   )
   d_vartypar_distinct = distinct(d_vartypar)
 
