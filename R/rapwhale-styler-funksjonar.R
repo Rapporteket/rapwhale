@@ -70,8 +70,8 @@ wrap_if_else_while_for_fun_in_curly_rapwhale = function(pd, indent_by = 2) { # n
 #' @keywords internal
 wrap_curly_rapwhale = function(pd,
                                indent_by,
-                               space_after = 1,
-                               key_token) {
+                               key_token,
+                               space_after = 1) {
   to_be_wrapped_expr_with_child = styler::next_non_comment(
     pd,
     which(pd$token == key_token)[1]
