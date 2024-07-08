@@ -89,7 +89,7 @@ les_kb_mrs = function(mappe_dd, dato = NULL) {
   # legger til "riktige" skjema_id
   kb_mrs_skjema_id = kb_mrs |>
     left_join(d_skjema_id,
-      by = c("skjema_id" = "skjema_id_kodebok"),
+      by = join_by(skjema_id == skjema_id_kodebok),
       relationship = "many-to-many"
     ) |>
     mutate(skjema_id = skjema_id_datadump) |>
