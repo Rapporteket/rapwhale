@@ -462,7 +462,7 @@ finn_type_idnummer = function(nummer) {
 #' feiltastet_fodselsnummer = "15076600565"
 #' fnr_foresla(feiltastet_fodselsnummer)
 fnr_foresla = function(x) {
-  stopifnot(length(x) == 1 && is.character(x) && nchar(x) == 11)
+  stopifnot(length(x) == 1, is.character(x), nchar(x) == 11)
 
   # Bytt ut einskildsiffer med eit (vilkårleg) anna
   moglege_fnr_1 = paste0(
