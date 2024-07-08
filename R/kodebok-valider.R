@@ -315,7 +315,8 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   sjekk_dup(kb, skjemanamn)
 
   kb_per_skjema = split(kb, kb$skjema_id)
-  walk(kb_per_skjema, \(kb) sjekk_dup(kb, variabel_id)) # Skal vera unik, men det held at det berre er innanfor skjema
+  # Skal vera unik, men det held at det berre er innanfor skjema
+  walk(kb_per_skjema, \(kb) sjekk_dup(kb, variabel_id)) # nolint: unnecessary_lambda_linter.
 
   # Sjekk at valt variabel berre har éin verdi innanfor kvar gruppe
   sjekk_ikkjevar = function(df, gruppe, varid) {
@@ -344,11 +345,11 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   # tvers av skjema.)
   sjekk_ikkjevar(kb, variabel_id, variabeltype)
 
-  walk(kb_per_skjema, \(kb) sjekk_ikkjevar(kb, variabel_id, variabeletikett))
-  walk(kb_per_skjema, \(kb) sjekk_ikkjevar(kb, variabel_id, forklaring))
+  walk(kb_per_skjema, \(kb) sjekk_ikkjevar(kb, variabel_id, variabeletikett)) # nolint: unnecessary_lambda_linter.
+  walk(kb_per_skjema, \(kb) sjekk_ikkjevar(kb, variabel_id, forklaring)) # nolint: unnecessary_lambda_linter.
   sjekk_ikkjevar(kb, variabel_id, unik)
 
-  walk(kb_per_skjema, \(kb) sjekk_ikkjevar(kb, variabel_id, obligatorisk))
+  walk(kb_per_skjema, \(kb) sjekk_ikkjevar(kb, variabel_id, obligatorisk)) # nolint: unnecessary_lambda_linter.
   sjekk_ikkjevar(kb, variabel_id, kategori) # Variablar kan ikkje kryssa kategori- eller skjemagrenser
 
   # Sjekk at alle verdiar for kategoriske variablar er unike og ingen er NA
