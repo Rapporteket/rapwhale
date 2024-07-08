@@ -15,7 +15,7 @@
 #' @export
 flytt_opp = function(y, tekst, hoyde = 0.015) {
   tekst_ny = tekst[order(y)]
-  y = y[order(y)]
+  y = sort(y, na.last = TRUE)
   linjer = tekst_ny |>
     str_split(stringr::fixed("\n")) |>
     sapply(length)
