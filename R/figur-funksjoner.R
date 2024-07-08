@@ -18,7 +18,7 @@ flytt_opp = function(y, tekst, hoyde = 0.015) {
   y = sort(y, na.last = TRUE)
   linjer = tekst_ny |>
     str_split(stringr::fixed("\n")) |>
-    sapply(length)
+    lengths()
   nedre = y - linjer * hoyde / 2
   ovre = y + linjer * hoyde / 2
   for (i in 2:length(y)) {
