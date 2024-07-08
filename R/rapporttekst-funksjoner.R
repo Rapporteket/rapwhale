@@ -125,7 +125,7 @@ num = function(x, desimalar = NULL) {
 #'   scale_x_continuous(labels = akse_prosent_format()) +
 #'   scale_y_continuous(labels = akse_prosent_format(antall_desimaler = 0))
 akse_prosent_format = function(antall_desimaler = 1,
-                               decimal.mark = ",", # nolint: object_name_linter
+                               decimal.mark = ",", # nolint: object_name_linter.
                                ...) {
   accuracy = 1 / (10^antall_desimaler)
 
@@ -165,8 +165,8 @@ akse_prosent_format = function(antall_desimaler = 1,
 #'   scale_x_continuous(labels = akse_tall_format(antall_desimaler = 0)) +
 #'   scale_y_continuous(labels = akse_prosent_format(antall_desimaler = 1))
 akse_tall_format = function(antall_desimaler = 2,
-                            decimal.mark = ",", # nolint: object_name_linter
-                            big.mark = " ", # nolint: object_name_linter
+                            decimal.mark = ",", # nolint: object_name_linter.
+                            big.mark = " ", # nolint: object_name_linter.
                             ...) {
   accuracy = 1 / (10^antall_desimaler)
 
