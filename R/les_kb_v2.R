@@ -706,7 +706,8 @@ valider_kb_variabler = function(kodebok) {
   feil_boolsk = kodebok |>
     filter(
       variabeltype == "boolsk",
-      obligatorisk == "nei" & unik == "ja"
+      obligatorisk == "nei",
+      unik == "ja"
     ) |>
     pull(variabel_id)
 
@@ -852,9 +853,13 @@ kommentar_rimeleg, utrekningsformel, logikk")
 
   # sjekke at rimeleg-verdier finnes hvis kommentar_rimeleg finnes
   kommentar_uten_verdier = kodebok |>
-    filter(!is.na(kommentar_rimeleg) &
-      (is.na(min_rimeleg) & is.na(maks_rimeleg) &
-        is.na(min_rimeleg_dato) & is.na(maks_rimeleg_dato))) |>
+    filter(
+      !is.na(kommentar_rimeleg),
+      is.na(min_rimeleg),
+      is.na(maks_rimeleg),
+      is.na(min_rimeleg_dato),
+      is.na(maks_rimeleg_dato)
+    ) |>
     pull(variabel_id)
 
   if (length(kommentar_uten_verdier) > 0) {
