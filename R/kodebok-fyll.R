@@ -155,7 +155,7 @@ kb_fyll = function(df, kb, ..., .suffiks = "_tekst") {
 
     # Stopp viss verdi- eller verditekst-variablane har dupliserte verdiar
     for (kol in c("verdi", "verditekst")) {
-      if (any(duplicated(koder[[kol]]))) {
+      if (anyDuplicated(koder[[kol]]) > 0) {
         stop("Ugyldig kodebok. Variabelen '", vnamn, "' har dupliserte verdiar i kolonnen '", kol, "'.")
       }
     }
