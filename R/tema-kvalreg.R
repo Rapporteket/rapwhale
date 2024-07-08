@@ -71,12 +71,12 @@ aktiver_kvalregtema = function() {
     skde_bla_seks
   )
 
-  options(
+  options( # nolint: undesirable_function_linter.
     ggplot2.discrete.colour = skde_bla_liste,
     ggplot2.discrete.fill = skde_bla_liste
   )
 
-  options(
+  options( # nolint: undesirable_function_linter.
     qic.signalcol = kontrastfarge,
     qic.linecol = skde_bla,
     qic.targetcol = skde_lysebla
