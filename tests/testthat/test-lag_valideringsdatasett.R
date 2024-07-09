@@ -47,7 +47,7 @@ test_that("Gjev ut datasett med rette kolonnar", {
 })
 
 test_that("Gjev ut datasett med rette kolonnar viss inndata har 0 rader", {
-  d_reg_tom = d_reg[c(), ]
+  d_reg_tom = d_reg[NULL, ]
   d_vld_tom = lag_valideringsdatasett(d_reg_tom, indvars)
   d_tom_kolonnar = tibble(
     pasid = numeric(),

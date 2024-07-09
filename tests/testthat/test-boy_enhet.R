@@ -5,7 +5,7 @@ test_that("Gir feilmelding ved ingen inndata", {
     feilmelding_ingen_inndata
   )
   expect_error(
-    boy_enhet(c(), "operasjon", "operasjoner"),
+    boy_enhet(numeric(), "operasjon", "operasjoner"),
     feilmelding_ingen_inndata
   )
 })

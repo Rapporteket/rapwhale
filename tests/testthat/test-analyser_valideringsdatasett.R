@@ -54,7 +54,7 @@ test_that("Gjev ut valideringsdatasettet med info i ekstrakolonne om verdiane
 })
 
 test_that("Gjev ut valideringsdatasettet med rett ekstrakolonne også om inndata har 0 rader", {
-  d_vld_tom = d_vld_gyldig[c(), ]
+  d_vld_tom = d_vld_gyldig[NULL, ]
   expect_identical(
     analyser_valideringsdatasett(d_vld_tom),
     bind_cols(d_vld_tom, ki_krit_teller = logical(), ki_krit_nevner = logical())

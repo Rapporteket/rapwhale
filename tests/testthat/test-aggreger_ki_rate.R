@@ -206,7 +206,7 @@ test_that("Feilmelding hvis konf_niva eller multiplikator ikke har lengde 1", {
   feilmelding_multiplikator = "«multiplikator» må ha lengde 1"
 
   expect_error(
-    aggreger_ki_rate(d_var_ok, konf_niva = c()),
+    aggreger_ki_rate(d_var_ok, konf_niva = NULL),
     feilmelding_konf_niva
   )
   expect_error(
@@ -214,7 +214,7 @@ test_that("Feilmelding hvis konf_niva eller multiplikator ikke har lengde 1", {
     feilmelding_konf_niva
   )
   expect_error(
-    aggreger_ki_rate(d_var_ok, multiplikator = c()),
+    aggreger_ki_rate(d_var_ok, multiplikator = NULL),
     feilmelding_multiplikator
   )
   expect_error(

@@ -252,7 +252,7 @@ test_that("Funksjonen godkjenner diverse former for logiske variabler, 1/0, T/F 
     object = konverter_boolske(
       x = c("True", "Fa", NA),
       boolsk_usann = c("Fa", NA),
-      boolsk_sann = c("True")
+      boolsk_sann = "True"
     ),
     expected = c(TRUE, FALSE, FALSE)
   )
@@ -284,8 +284,8 @@ test_that("Funksjonen gir feilmelding hvis det finnes NA-verdier som ikke er aks
   expect_error(
     object = konverter_boolske(
       x = c(0, 1, NA, "null"),
-      boolsk_usann = c(0),
-      boolsk_sann = c(1),
+      boolsk_usann = 0,
+      boolsk_sann = 1,
       na_verdier = "null"
     ),
     regexp = "Det finnes ugyldige verdier for en boolsk variabel: NA\nMulige verdier er: 0,1,null",
@@ -297,8 +297,8 @@ test_that("Funksjonen fungerer som forventet med ulike na_verdier", {
   expect_identical(
     object = konverter_boolske(
       x = c(0, 1, NA, "null"),
-      boolsk_usann = c(0),
-      boolsk_sann = c(1),
+      boolsk_usann = 0,
+      boolsk_sann = 1,
       na_verdier = c(NA, "null")
     ),
     expected = c(FALSE, TRUE, NA, NA)
@@ -308,8 +308,8 @@ test_that("Funksjonen fungerer som forventet med ulike na_verdier", {
     object = konverter_boolske(
       x = c("JA", "NEI", "NA", NA),
       boolsk_usann = c("NEI", "NA"),
-      boolsk_sann = c("JA"),
-      na_verdier = c(NA)
+      boolsk_sann = "JA",
+      na_verdier = NA
     ),
     expected = c(TRUE, FALSE, FALSE, NA)
   )
