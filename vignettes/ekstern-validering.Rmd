@@ -494,9 +494,11 @@ Viss me for eksempel ikkje vil ha med biverknadsvariablane i
 eit allereie laga valideringsdatasett,
 kan me fjerna dei slik:
 
-```{r fjern variabel}
+```{r fjern variabel, echo=2:3}
+# nolint start: fixed_regex_linter.
 d_vld |>
   filter(str_starts(vld_varnamn, "biverk", negate = TRUE))
+# nolint end
 ```
 
 
