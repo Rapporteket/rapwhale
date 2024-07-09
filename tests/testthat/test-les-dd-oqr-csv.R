@@ -162,7 +162,7 @@ test_that("Funksjonen tolker ikke NA som manglende verdi med mindre den blir bed
   formatspek_na_som_manglende = formatspek_ok_hel
   formatspek_na_som_manglende$na_verdier = c("null", "NA")
 
-  expect_equal(
+  expect_identical(
     les_csv_base(
       adresse = test_path("testdata", "dd_na_som_vanlig_verdi.csv"),
       spesifikasjon = dd_spek,
@@ -171,7 +171,7 @@ test_that("Funksjonen tolker ikke NA som manglende verdi med mindre den blir bed
     c("NO", "SV", "NA", "GB")
   )
 
-  expect_equal(
+  expect_identical(
     les_csv_base(
       adresse = test_path("testdata", "dd_na_som_vanlig_verdi.csv"),
       spesifikasjon = dd_spek,
@@ -244,10 +244,11 @@ test_that("Funksjonen gir feilmelding hvis en boolsk variabel inneholder ugyldig
 })
 
 test_that("Funksjonen godkjenner diverse former for logiske variabler, 1/0, T/F etc", {
-  expect_equal(konverter_boolske(c(0, 1, 1), boolsk_usann = 0, boolsk_sann = 1),
+  expect_identical(
+    object = konverter_boolske(c(0, 1, 1), boolsk_usann = 0, boolsk_sann = 1),
     expected = c(FALSE, TRUE, TRUE)
   )
-  expect_equal(
+  expect_identical(
     object = konverter_boolske(
       x = c("True", "Fa", NA),
       boolsk_usann = c("Fa", NA),
@@ -258,7 +259,7 @@ test_that("Funksjonen godkjenner diverse former for logiske variabler, 1/0, T/F 
 })
 
 test_that("Funksjonen aksepterer flere typer True og False", {
-  expect_equal(
+  expect_identical(
     object = konverter_boolske(
       x = c("Tr", "Fa", "TRUE", "FA", "flips", NA),
       boolsk_usann = c("Fa", "FA", "flips"),

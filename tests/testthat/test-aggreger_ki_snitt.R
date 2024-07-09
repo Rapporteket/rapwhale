@@ -67,14 +67,14 @@ test_that("Forventet utdata når inndata er gruppert og ugruppert", {
     est = c(5.5, 2), konfint_nedre = c(3.4457397432394785, -0.48413771175032977),
     konfint_ovre = c(7.5542602567605206, 4.48413771175032938), n_aktuell = c(4L, 3L)
   )
-  expect_equal(aggreger_ki_snitt(d_gruppert), d_gruppert_ut)
+  expect_identical(aggreger_ki_snitt(d_gruppert), d_gruppert_ut)
 
   d_ugruppert = ungroup(d_gruppert)
   d_ugruppert_ut = tibble(
     est = 4, konfint_nedre = 2.0021048397085996,
     konfint_ovre = 5.9978951602913995, n_aktuell = 7L
   )
-  expect_equal(aggreger_ki_snitt(d_ugruppert), d_ugruppert_ut)
+  expect_identical(aggreger_ki_snitt(d_ugruppert), d_ugruppert_ut)
 })
 
 test_that("Forventet utdata når konf_niva endres fra standard", {
@@ -87,7 +87,7 @@ test_that("Forventet utdata når konf_niva endres fra standard", {
     konfint_ovre = 5.91310608095156365, n_aktuell = 7L
   )
 
-  expect_equal(aggreger_ki_snitt(d_test, konf_niva = 0.9), d_test_ut)
+  expect_identical(aggreger_ki_snitt(d_test, konf_niva = 0.9), d_test_ut)
 })
 
 test_that("Gir alltid ut ugrupperte data", {
@@ -113,7 +113,7 @@ test_that("Gir ut NA-konfidensgrenser hvis det kun er ett individ i en gruppe", 
     est = c(5, 2), konfint_nedre = c(NA_real_, -0.48413771175032977),
     konfint_ovre = c(NA_real_, 4.48413771175032938), n_aktuell = c(1L, 3L)
   )
-  expect_equal(aggreger_ki_snitt(d_gruppe_alene), d_gruppe_alene_ut)
+  expect_identical(aggreger_ki_snitt(d_gruppe_alene), d_gruppe_alene_ut)
 })
 
 test_that("Gir NA-konfidensgrenser/-estimat hvis en gruppe bare har FALSE «ki_aktuell»", {
@@ -127,7 +127,7 @@ test_that("Gir NA-konfidensgrenser/-estimat hvis en gruppe bare har FALSE «ki_a
     est = c(2, NA_real_), konfint_nedre = c(-0.48413771175032977, NA_real_),
     konfint_ovre = c(4.48413771175032938, NA_real_), n_aktuell = c(3L, 0L)
   )
-  expect_equal(aggreger_ki_snitt(d_gruppe_tom), d_gruppe_tom_ut)
+  expect_identical(aggreger_ki_snitt(d_gruppe_tom), d_gruppe_tom_ut)
 })
 
 test_that("Gir NA-konfidensgrenser hvis standardavvik er 0 i en gruppe", {
@@ -145,7 +145,7 @@ test_that("Gir NA-konfidensgrenser hvis standardavvik er 0 i en gruppe", {
     n_aktuell = c(3L, 3L)
   )
 
-  expect_equal(aggreger_ki_snitt(d_sd_lik_null), d_sd_lik_null_ut)
+  expect_identical(aggreger_ki_snitt(d_sd_lik_null), d_sd_lik_null_ut)
 })
 
 test_that("Bruk av alfa gjev same svar som tilsvarande konf_niva", {

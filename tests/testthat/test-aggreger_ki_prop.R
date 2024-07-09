@@ -212,7 +212,7 @@ test_that(paste0(
     ki_teller = rep(0L, 4),
     ki_nevner = c(0L, 3L, 0L, 0L),
     konfint_nedre = c(NA, 0, NA, NA),
-    konfint_ovre = c(NA, 0.561497031755045, NA, NA)
+    konfint_ovre = c(NA, 0.561497031755045394874, NA, NA)
   )
 
   feilmelding_ekstra_levels = paste0(
@@ -222,7 +222,7 @@ test_that(paste0(
     aggreger_ki_prop(d_gruppert_ekstra_levels),
     feilmelding_ekstra_levels
   )
-  expect_equal(
+  expect_identical(
     suppressWarnings(aggreger_ki_prop(d_gruppert_ekstra_levels)),
     d_svar_gruppert_ekstra_levels
   )

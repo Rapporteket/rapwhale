@@ -61,23 +61,26 @@ test_that("Utdata samsvarer med forventet resultat.", {
   kvart = c(1, 2, 3, 4, 1)
   mnd = c(1, 7, 2, 12, 1)
   forvent = c(2019.125, 2019.375, 2019.625, 2019.875, 2020.125)
-  forvent12 = c(2019 + (1 / 12) * mnd[1:4] - 1 / 24, 2020 + 1 / 24)
+  forvent12 = c(
+    2019.0416666666667, 2019.5416666666667, 2019.125,
+    2019.9583333333333, 2020.0416666666667
+  )
   expect_identical(periode_til_tidslinje(aar, kvart, 4), forvent)
-  expect_equal(periode_til_tidslinje(aar, mnd, 12), forvent12)
+  expect_identical(periode_til_tidslinje(aar, mnd, 12), forvent12)
 })
 
 context("periode_til_tidslinje: Grensetilfeller")
 
 test_that("Funksjonen fungerer med kun ett årstall", {
-  expect_equal(periode_til_tidslinje(2019, 1, 4), 2019.125)
+  expect_identical(periode_til_tidslinje(2019, 1, 4), 2019.125)
 })
 
 test_that("Funksjonen fungerer med kun én del", {
-  expect_equal(periode_til_tidslinje(2019, 1, 1), 2019.5)
+  expect_identical(periode_til_tidslinje(2019, 1, 1), 2019.5)
 })
 
 test_that("Funksjonen fungerer med 366 deler", {
-  expect_equal(periode_til_tidslinje(2019, 1, 366), 2019 + (1 / 366 / 2))
+  expect_identical(periode_til_tidslinje(2019, 1, 366), 2019 + (1 / 366 / 2))
 })
 
 # Tester - tid_til_tidslinje ---------------------------------------------------
@@ -255,16 +258,16 @@ test_that("Vi får samme resultat med dato-vektor uten klokkeslett, og dato vekt
   dato_u_klokke = as.Date(c(
     "2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"
   ))
-  expect_equal(tid_til_tidslinje(dato_u_klokke, 366),
+  expect_identical(tid_til_tidslinje(dato_u_klokke, 366),
     expected = tid_til_tidslinje(dato_klokke, 366)
   )
-  expect_equal(tid_til_tidslinje(dato_u_klokke, 3000),
+  expect_identical(tid_til_tidslinje(dato_u_klokke, 3000),
     expected = tid_til_tidslinje(dato_klokke, 3000)
   )
-  expect_equal(tid_til_tidslinje(dato_u_klokke, 3),
+  expect_identical(tid_til_tidslinje(dato_u_klokke, 3),
     expected = tid_til_tidslinje(dato_klokke, 3)
   )
-  expect_equal(tid_til_tidslinje(dato_u_klokke, 4),
+  expect_identical(tid_til_tidslinje(dato_u_klokke, 4),
     expected = tid_til_tidslinje(dato_klokke, 4)
   )
 })
@@ -336,12 +339,14 @@ context("tid_til_tidslinje - Grensetilfeller")
 
 test_that("Funksjonen fungerer med kun én datoverdi", {
   dato = as.Date("2019-01-01")
-  expect_equal(tid_til_tidslinje(dato, 4), 2019.125)
+  expect_identical(tid_til_tidslinje(dato, 4), 2019.125)
 })
 
 test_that("Funksjonen fungerer med kun én del", {
   dato = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
-  expect_equal(tid_til_tidslinje(dato, 1), c(2019.5, 2019.5, 2019.5, 2019.5))
+  expect_identical(tid_til_tidslinje(dato, 1),
+    expected = c(2019.5, 2019.5, 2019.5, 2019.5)
+  )
 })
 
 test_that("Funksjonen fungerer ved ikke-etterfølgende årstall", {
@@ -362,11 +367,14 @@ test_that("Funksjonen fungerer ved ikke-etterfølgende årstall", {
     ),
     expected = c(2000.25, 2022.25, 2022.75, 2014.25)
   )
-  expect_equal(
+  expect_identical(
     object = tid_til_tidslinje(
       dato = as.Date(c("2000-01-01", "2019-01-11", "2020-12-31", "2022-01-21")),
       antall_deler = 52
     ),
-    expected = c(2000.009615, 2019.028846, 2020.990385, 2022.048077)
+    expected = c(
+      2000.0096153846152447, 2019.0288461538461888,
+      2020.9903846153847553, 2022.0480769230769056
+    )
   )
 })

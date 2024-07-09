@@ -154,8 +154,8 @@ test_that(paste0(
   # er snakk om same variabel)
   d_fylt = suppressWarnings(kb_fyll(d, kb[-6, ]))
   expect_true(is.na(d_fylt$med_tekst[2]))
-  expect_equal(as.character(d_fylt$med_tekst[1]), "Ibux")
-  expect_equal(as.character(d_fylt$med_tekst[3]), "Antibac")
+  expect_identical(as.character(d_fylt$med_tekst[1]), "Ibux")
+  expect_identical(as.character(d_fylt$med_tekst[3]), "Antibac")
 })
 
 test_that("Ikkje åtvaring eller feilmelding viss datasettet inneheld NA-verdiar", {
