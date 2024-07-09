@@ -46,14 +46,14 @@ test_that("Returnerer TRUE på gyldige valideringsdatasett", {
 })
 
 test_that("Valideringsdatasett med 0 rader vert rekna som gyldige (viss resten er gyldig)", {
-  d_null_rader = d_vld_gyldig[c(), ]
+  d_null_rader = d_vld_gyldig[NULL, ]
   expect_true(er_valideringsdatasett_gyldig(d_null_rader))
   expect_true(er_valideringsdatasett_gyldig(as.data.frame(d_null_rader)))
 
   # Skal faktisk vera lov å ikkje ha nokon verdikolonnar
   # (dersom me har null rader)
   d_null_rader_null_verdikol = d_vld_gyldig[
-    c(),
+    NULL,
     c("pasid", "dato_inn", "kjonn", "sjukehus", "vld_varnamn", "vld_vartype")
   ]
   expect_true(er_valideringsdatasett_gyldig(d_null_rader_null_verdikol))

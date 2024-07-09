@@ -85,7 +85,7 @@ test_that("Fungerer uavhengig av hvilken datatype 'variabel' er", {
 
 test_that("Fungerer med grupperte inndata og ugrupperte inndata", {
   data_ut_ugruppert = tibble(
-    pas_id = c(1L:6L),
+    pas_id = 1L:6L,
     sykehus = c(
       "HUS", "HUS", "SVG",
       "SVG", "SVG", "OUS"
@@ -98,7 +98,7 @@ test_that("Fungerer med grupperte inndata og ugrupperte inndata", {
   )
 
   data_ut_gruppert = tibble(
-    pas_id = c(1L:6L),
+    pas_id = 1L:6L,
     sykehus = c(
       "HUS", "HUS", "SVG",
       "SVG", "SVG", "OUS"
