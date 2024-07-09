@@ -60,7 +60,7 @@ normaliser_varnamn = function(x) {
     stop(feilmelding)
   }
 
-  teikn = str_split(x, "") # Splitt i enkeltteikn
+  teikn = str_split(x, "") # nolint fixed_regex_linter. Splitt i enkeltteikn
 
   # Putt inn _ før alle store bokstavar (utanom første teikn i strengen)
   teikn = map(teikn, \(x) str_replace_all(x, "([[:upper:]])", "_\\1")) # nolint: unnecessary_lambda_linter.
