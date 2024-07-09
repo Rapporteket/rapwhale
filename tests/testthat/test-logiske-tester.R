@@ -31,47 +31,35 @@ test_that("impl() fungerer som forventet for inndata med lengde 0", {
 })
 
 test_that("impl() gir kun ut TRUE ved gyldig datasett", {
-  expect_identical(
-    all(impl(
-      d_gyldig_eks$bosted_bydel == "Tjuvholmen",
-      d_gyldig_eks$bosted_by == "Oslo"
-    )),
-    TRUE
-  )
+  expect_true(all(impl(
+    d_gyldig_eks$bosted_bydel == "Tjuvholmen",
+    d_gyldig_eks$bosted_by == "Oslo"
+  )))
 })
 
 test_that("impl() gir ut en eller flere FALSE ved ugyldig datasett", {
   d_ugyldig_eks = d_gyldig_eks
   d_ugyldig_eks$bosted_bydel[1] = "Tjuvholmen"
-  expect_identical(
-    all(impl(
-      d_ugyldig_eks$bosted_bydel == "Tjuvholmen",
-      d_ugyldig_eks$bosted_by == "Oslo"
-    )),
-    FALSE
-  )
+  expect_false(all(impl(
+    d_ugyldig_eks$bosted_bydel == "Tjuvholmen",
+    d_ugyldig_eks$bosted_by == "Oslo"
+  )))
 })
 
 test_that("impl() gir ut en eller flere FALSE ved feil implikasjoner", {
-  expect_identical(
-    all(impl(
-      d_gyldig_eks$bosted_bydel == "Tjuvholmen",
-      d_gyldig_eks$bosted_by == "Bergen"
-    )),
-    FALSE
-  )
+  expect_false(all(impl(
+    d_gyldig_eks$bosted_bydel == "Tjuvholmen",
+    d_gyldig_eks$bosted_by == "Bergen"
+  )))
 })
 
 test_that("impl() gir aldri ut NA", {
   d_ugyldig_na_eks = d_gyldig_eks
   d_ugyldig_na_eks[1, ] = NA
-  expect_identical(
-    all(impl(
-      d_ugyldig_na_eks$bosted_bydel == "Tjuvholmen",
-      d_ugyldig_na_eks$bosted_by == "Oslo"
-    )),
-    TRUE
-  )
+  expect_true(all(impl(
+    d_ugyldig_na_eks$bosted_bydel == "Tjuvholmen",
+    d_ugyldig_na_eks$bosted_by == "Oslo"
+  )))
 })
 
 test_that("impl() gir ut rett verdi for alle kombinasjoner av TRUE, FALSE og NA", {
@@ -117,47 +105,35 @@ test_that("ekviv() fungerer som forventet for inndata med lengde 0", {
 })
 
 test_that("ekviv() gir kun ut TRUE ved gyldig datasett", {
-  expect_identical(
-    all(ekviv(
-      d_gyldig_eks$operert == "Ja",
-      !is.na(d_gyldig_eks$komplikasjoner)
-    )),
-    TRUE
-  )
+  expect_true(all(ekviv(
+    d_gyldig_eks$operert == "Ja",
+    !is.na(d_gyldig_eks$komplikasjoner)
+  )))
 })
 
 test_that("ekviv() gir ut en eller flere FALSE ved ugyldig datasett", {
   d_ugyldig_eks = d_gyldig_eks
   d_ugyldig_eks$komplikasjoner[1] = NA
-  expect_identical(
-    all(ekviv(
-      d_ugyldig_eks$operert == "Ja",
-      !is.na(d_ugyldig_eks$komplikasjoner)
-    )),
-    FALSE
-  )
+  expect_false(all(ekviv(
+    d_ugyldig_eks$operert == "Ja",
+    !is.na(d_ugyldig_eks$komplikasjoner)
+  )))
 })
 
 test_that("ekviv() gir ut en eller flere FALSE ved feil ekvivalering", {
-  expect_identical(
-    all(ekviv(
-      d_gyldig_eks$bosted_bydel == "Tjuvholmen",
-      d_gyldig_eks$bosted_by == "Oslo"
-    )),
-    FALSE
-  )
+  expect_false(all(ekviv(
+    d_gyldig_eks$bosted_bydel == "Tjuvholmen",
+    d_gyldig_eks$bosted_by == "Oslo"
+  )))
 })
 
 test_that("ekviv() gir aldri ut NA", {
   d_ugyldig_na_eks = d_gyldig_eks
   d_ugyldig_na_eks[1, ] = NA
-  expect_identical(
-    all(ekviv(
-      d_ugyldig_na_eks$operert == "Ja",
-      !is.na(d_ugyldig_na_eks$komplikasjoner)
-    )),
-    TRUE
-  )
+  expect_true(all(ekviv(
+    d_ugyldig_na_eks$operert == "Ja",
+    !is.na(d_ugyldig_na_eks$komplikasjoner)
+  )))
 })
 
 test_that("ekviv() gir ut rett verdi for alle kombinasjoner av TRUE, FALSE og NA", {
