@@ -413,7 +413,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   }
 
   # Test på eining. Eining kan ikkje vera tom ("") (men kan vera NA)
-  if (any(kb$eining %in% "")) {
+  if (any(kb$eining == "", na.rm = TRUE)) {
     tom_eining = kb |>
       filter(eining == "") |>
       pull(variabel_id) |>
