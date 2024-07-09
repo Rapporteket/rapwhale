@@ -340,7 +340,7 @@ test_that(paste0(
     konfint_nedre = c(NA_real_, 0, NA_real_, NA_real_),
     konfint_ovre = c(
       NA_real_,
-      0.010120717140385104144,
+      0.010120717140385100674,
       NA_real_,
       NA_real_
     )
@@ -351,9 +351,8 @@ test_that(paste0(
   expect_warning(aggreger_ki_rate(d_gruppert_ekstra_levels),
     regexp = feilmelding_ekstra_levels
   )
-  expect_equal(suppressWarnings(aggreger_ki_rate(d_gruppert_ekstra_levels)),
-    expected = svar_gruppert_ekstra_levels,
-    tolerance = 1e-15
+  expect_identical(suppressWarnings(aggreger_ki_rate(d_gruppert_ekstra_levels)),
+    expected = svar_gruppert_ekstra_levels
   )
 })
 

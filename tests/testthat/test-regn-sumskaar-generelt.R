@@ -52,10 +52,11 @@ d_gyldig_ut = add_column(d_gyldig_inn,
 
 test_that("skaar_datasett() fungerer på uproblematiske inndata", {
   expect_equal(
-    skaar_datasett(d_gyldig_inn,
+    object = skaar_datasett(d_gyldig_inn,
       skaaringstabell = skaaringstabell_eks
     ),
-    d_gyldig_ut
+    expected = d_gyldig_ut,
+    tolerance = testthat_tolerance()
   )
 })
 
@@ -77,29 +78,32 @@ d_gyldig_ut_konstantledd = add_column(d_gyldig_inn,
 
 test_that("skaar_datasett() fungerer med skåringstabell med konstantledd", {
   expect_equal(
-    skaar_datasett(d_gyldig_inn,
+    object = skaar_datasett(d_gyldig_inn,
       skaaringstabell = skaaringstabell_eks_flere_konstantledd
     ),
-    d_gyldig_ut_konstantledd
+    expected = d_gyldig_ut_konstantledd,
+    tolerance = testthat_tolerance()
   )
 })
 
 test_that("skaar_datasett() fungerer riktig hvis inndatasett er gruppert", {
   expect_equal(
-    skaar_datasett(group_by(d_gyldig_inn, kjonn),
+    object = skaar_datasett(group_by(d_gyldig_inn, kjonn),
       skaaringstabell = skaaringstabell_eks
     ),
-    group_by(d_gyldig_ut, kjonn)
-  ) # Skal bevara grupperinga i utdataa
+    expected = group_by(d_gyldig_ut, kjonn), # Skal bevara grupperinga i utdataa
+    tolerance = testthat_tolerance()
+  )
 })
 
 test_that("skaar_datasett() fungerer riktig hvis skåringstabellen er gruppert", {
   expect_equal(
-    skaar_datasett(d_gyldig_inn,
+    object = skaar_datasett(d_gyldig_inn,
       skaaringstabell =
         group_by(skaaringstabell_eks, verdi)
     ),
-    d_gyldig_ut
+    expected = d_gyldig_ut,
+    tolerance = testthat_tolerance()
   )
 })
 
@@ -128,9 +132,9 @@ test_that("skaar_datasett() fungerer hvis en av de to sumskår-kolonnene
     )
   )
 
-  expect_equal(
-    d_ut_funksjon,
-    d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit
+  expect_equal(d_ut_funksjon,
+    expected = d_ut_1_erstattet_og_1_ekstra_sumskaar_fasit,
+    tolerance = testthat_tolerance()
   )
 })
 
@@ -154,7 +158,7 @@ test_that("skaar_datasett() fungerer hvis man oppgir variabelnavn", {
   )
   d_gyldig_ut = rename(d_gyldig_ut, fysisk1 = fys1, psykisk2 = psyk2)
 
-  expect_equal(d_ut_funksjon, d_gyldig_ut)
+  expect_equal(d_ut_funksjon, d_gyldig_ut, tolerance = testthat_tolerance())
 })
 
 test_that("skaar_datasett() fungerer hvis man bytter om to variabelnavn", {
@@ -170,7 +174,7 @@ test_that("skaar_datasett() fungerer hvis man bytter om to variabelnavn", {
   )
   d_gyldig_ut = rename(d_gyldig_ut, fys1 = fys2, fys2 = fys1)
 
-  expect_equal(d_ut_funksjon, d_gyldig_ut)
+  expect_equal(d_ut_funksjon, d_gyldig_ut, tolerance = testthat_tolerance())
 })
 
 test_that("skaar_datasett() gir ut feilmelding hvis skåringstabell,
@@ -696,11 +700,12 @@ sumskaar_tabell = tribble(
 test_that("skaar_datasett_uten_validering() regner ut korrekt sumskår
           hvis alle verdiene finnes i skåringstabellen", {
   expect_equal(
-    skaar_datasett_uten_validering(
+    object = skaar_datasett_uten_validering(
       d_gyldig_alle_verdier,
       skaaringstabell_eks
     ),
-    sumskaar_tabell
+    expected = sumskaar_tabell,
+    tolerance = testthat_tolerance()
   )
 })
 
@@ -728,9 +733,9 @@ sumskaar_na_tabell = tribble(
 
 test_that("skaar_datasett_uten_validering() gir ut NA som sumskår ved
           NA-verdier uten tilknyttet koeffisient", {
-  expect_equal(
-    skaar_datasett_uten_validering(d_na, skaaringstabell_eks),
-    sumskaar_na_tabell
+  expect_equal(skaar_datasett_uten_validering(d_na, skaaringstabell_eks),
+    expected = sumskaar_na_tabell,
+    tolerance = testthat_tolerance()
   )
 })
 
@@ -759,11 +764,12 @@ sumskaar_1_besvarelse_bare_na_tabell = tribble(
 test_that("skaar_datasett_uten_validering() gir ut riktig sumskår hvis 1
           av besvarelselse har NA-verdier på alle spørsmål", {
   expect_equal(
-    skaar_datasett_uten_validering(
+    object = skaar_datasett_uten_validering(
       d_1_besvarelse_bare_na,
       skaaringstabell_eks
     ),
-    sumskaar_1_besvarelse_bare_na_tabell
+    expected = sumskaar_1_besvarelse_bare_na_tabell,
+    tolerance = testthat_tolerance()
   )
 })
 
@@ -792,11 +798,11 @@ sumskaar_alle_besvarelser_bare_na_tabell = tribble(
 test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer
           hvis alle besvarelsene har NA-verdier på alle spørsmål", {
   expect_identical(
-    skaar_datasett_uten_validering(
+    object = skaar_datasett_uten_validering(
       d_alle_besvarelser_bare_na,
       skaaringstabell_eks
     ),
-    sumskaar_alle_besvarelser_bare_na_tabell
+    expected = sumskaar_alle_besvarelser_bare_na_tabell
   )
 })
 
@@ -818,11 +824,11 @@ sumskaar_1_besvarelse_tabell = tribble(
 test_that("skaar_datasett_uten_validering() regner ut korrekt sumskår
           ved bare 1 besvarelse", {
   expect_identical(
-    skaar_datasett_uten_validering(
+    object = skaar_datasett_uten_validering(
       d_1_besvarelse,
       skaaringstabell_eks
     ),
-    sumskaar_1_besvarelse_tabell
+    expected = sumskaar_1_besvarelse_tabell
   )
 })
 
@@ -831,11 +837,11 @@ test_that("skaar_datasett_uten_validering() gir ut 0-rads resultat med
   d_0_besvarelser = d_gyldig_alle_verdier[0, ]
   sumskaar_0_besvarelser = tibble(total = double(), psykisk = double())
   expect_identical(
-    skaar_datasett_uten_validering(
+    object = skaar_datasett_uten_validering(
       d_0_besvarelser,
       skaaringstabell_eks
     ),
-    sumskaar_0_besvarelser
+    expected = sumskaar_0_besvarelser
   )
 })
 
@@ -876,10 +882,11 @@ test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer i
   )
 
   expect_equal(
-    skaar_datasett_uten_validering(d_enkelt_eks_inn,
+    object = skaar_datasett_uten_validering(d_enkelt_eks_inn,
       skaaringstabell = skaaringstabell_flere_delskalaer
     ),
-    d_enkelt_eks_ut
+    expected = d_enkelt_eks_ut,
+    tolerance = testthat_tolerance()
   )
 })
 
@@ -892,11 +899,12 @@ test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer
   sumskaar_tabell_ett_konstantledd$total =
     sumskaar_tabell_ett_konstantledd$total + 1
   expect_equal(
-    skaar_datasett_uten_validering(
+    object = skaar_datasett_uten_validering(
       d_gyldig_alle_verdier,
       skaaringstabell_eks_ett_konstantledd
     ),
-    sumskaar_tabell_ett_konstantledd
+    expected = sumskaar_tabell_ett_konstantledd,
+    tolerance = testthat_tolerance()
   )
 })
 
@@ -908,11 +916,12 @@ test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer
   sumskaar_tabell_flere_konstantledd$psykisk =
     sumskaar_tabell_flere_konstantledd$psykisk + 5
   expect_equal(
-    skaar_datasett_uten_validering(
+    object = skaar_datasett_uten_validering(
       d_gyldig_alle_verdier,
       skaaringstabell_eks_flere_konstantledd
     ),
-    sumskaar_tabell_flere_konstantledd
+    expected = sumskaar_tabell_flere_konstantledd,
+    tolerance = testthat_tolerance()
   )
 })
 
