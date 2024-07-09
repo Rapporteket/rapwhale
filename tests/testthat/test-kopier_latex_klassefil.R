@@ -12,5 +12,5 @@ test_that("LaTeX-klassefila vert kopiert til rett mappe", {
 
 test_that("Den kopierte fila har storleik større enn 0", {
   klassefil_info = file.info(klassefil_adresse)
-  expect_true(klassefil_info$size > 0)
+  expect_gt(klassefil_info$size, 0)
 })
