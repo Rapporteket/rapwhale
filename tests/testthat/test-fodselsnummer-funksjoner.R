@@ -121,8 +121,8 @@ test_that("er_gyldig_fnr_dato() gjev forventa resultat", {
 })
 
 test_that("er_gyldig_fnr_dato() fungerer òg med vektorar av lengd 1", {
-  expect_identical(er_gyldig_fnr_dato("010101"), TRUE)
-  expect_identical(er_gyldig_fnr_dato("320101"), FALSE)
+  expect_true(er_gyldig_fnr_dato("010101"))
+  expect_false(er_gyldig_fnr_dato("320101"))
 })
 
 test_that("er_gyldig_fnr_dato() fungerer òg med vektorar av lengd 0", {
@@ -161,8 +161,8 @@ test_that("er_gyldig_f_nummer() gjev forventa resultat", {
 })
 
 test_that("er_gyldig_f_nummer() fungerer òg med vektorar av lengd 1", {
-  expect_identical(er_gyldig_f_nummer("15076500565"), TRUE)
-  expect_identical(er_gyldig_f_nummer("15076500561"), FALSE)
+  expect_true(er_gyldig_f_nummer("15076500565"))
+  expect_false(er_gyldig_f_nummer("15076500561"))
 })
 
 test_that("er_gyldig_f_nummer() fungerer òg med vektorar av lengd 0", {
@@ -197,8 +197,8 @@ test_that("er_gyldig_d_nummer() gjev forventa resultat", {
 })
 
 test_that("er_gyldig_d_nummer() fungerer òg med vektorar av lengd 1", {
-  expect_identical(er_gyldig_d_nummer("70019950032"), TRUE)
-  expect_identical(er_gyldig_d_nummer("70019950033"), FALSE)
+  expect_true(er_gyldig_d_nummer("70019950032"))
+  expect_false(er_gyldig_d_nummer("70019950033"))
 })
 
 test_that("er_gyldig_d_nummer() fungerer òg med vektorar av lengd 0", {
@@ -229,8 +229,8 @@ test_that("er_gyldig_h_nummer() gjev forventa resultat", {
 })
 
 test_that("er_gyldig_h_nummer() fungerer òg med vektorar av lengd 1", {
-  expect_identical(er_gyldig_h_nummer("01410199935"), TRUE)
-  expect_identical(er_gyldig_h_nummer("01410199936"), FALSE)
+  expect_true(er_gyldig_h_nummer("01410199935"))
+  expect_false(er_gyldig_h_nummer("01410199936"))
 })
 
 test_that("er_gyldig_h_nummer() fungerer òg med vektorar av lengd 0", {
@@ -262,8 +262,8 @@ test_that("er_gyldig_fh_nummer() gjev forventa resultat", {
 })
 
 test_that("er_gyldig_fh_nummer() fungerer òg med vektorar av lengd 1", {
-  expect_identical(er_gyldig_fh_nummer("88888888831"), TRUE)
-  expect_identical(er_gyldig_fh_nummer("88888888832"), FALSE)
+  expect_true(er_gyldig_fh_nummer("88888888831"))
+  expect_false(er_gyldig_fh_nummer("88888888832"))
 })
 
 test_that("er_gyldig_fh_nummer() fungerer òg med vektorar av lengd 0", {
