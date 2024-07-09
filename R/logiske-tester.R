@@ -111,7 +111,7 @@ impl = function(a, b) {
 #' er_operert %ekviv% komplikasjoner_registrert
 #' @export
 ekviv = function(a, b) {
-  if (!is.logical(a) || !is.logical(b)) {
+  if (!(is.logical(a) && is.logical(b))) {
     stop("a og b må være logiske vektorer")
   }
 
