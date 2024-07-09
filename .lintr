@@ -13,5 +13,9 @@ linters: linters_with_tags(
     unnecessary_nested_if_linter = NULL
   )
 exclusions: list(
-    "tests/testthat/rapwhale-style"
+    "tests/testthat/rapwhale-style",
+    "tests/testthat.R" = list(
+        undesirable_function_linter = Inf,
+        unused_import_linter = Inf
+    )
   )
