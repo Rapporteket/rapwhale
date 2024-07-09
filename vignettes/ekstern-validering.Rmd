@@ -669,7 +669,8 @@ valideringsdatasettet vårt til SPSS-format.
 For å lagra valideringsdatasettet som SPSS-format kan me bruka `write_sav()` 
 frå `haven`-pakken:
 
-```{r eval=FALSE}
+```{r eval=FALSE, echo=2:11}
+# nolint start: absolute_path_linter.
 # Definerer mappe og filnamn for lagring
 mappe_vld = "h:\\valideringsdata\\"
 filnamn = "valideringsdatasett.sav"
@@ -680,6 +681,7 @@ dir.create(mappe_vld, showWarnings = FALSE, recursive = TRUE)
 
 # Lagra valideringsdatasett på SPSS-format
 haven::write_sav(d_vld, filadresse)
+# nolint end
 ```
 
 For lesing av ferdigredigerte valideringsfiler
