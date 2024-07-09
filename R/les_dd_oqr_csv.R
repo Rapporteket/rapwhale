@@ -173,7 +173,7 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
   kolnavn_spek = spesifikasjon$varnavn_kilde
   testthat::expect_identical(sort(kolnavn_fil), sort(kolnavn_spek))
   radnr = match(kolnavn_fil, kolnavn_spek)
-  stopifnot(all(!is.na(radnr)))
+  stopifnot(!anyNA(radnr))
   spesifikasjon = spesifikasjon[radnr, ]
 
   d = read_delim(adresse,

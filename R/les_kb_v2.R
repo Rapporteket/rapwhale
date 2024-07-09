@@ -363,7 +363,7 @@ oqr_til_std_variabeltyper = function(kb_mellom) {
 #'
 #' @keywords internal
 sjekk_obligatorisk = function(kb_mellom) {
-  stopifnot(all(!(is.na(kb_mellom$obligatorisk) |
+  stopifnot(!any((is.na(kb_mellom$obligatorisk) |
     is.na(kb_mellom$aktiveringsspoersmaal) |
     is.na(kb_mellom$underspoersmaal))))
 
@@ -558,7 +558,7 @@ valider_kb_skjema = function(kodebok) {
     stop("skjema_id har ikke entydig skjemanavn\nskjema_id: ", skjema_id_duplikat)
   }
 
-  if (any(!is.na(kodebok$kategori))) {
+  if (!all(is.na(kodebok$kategori))) {
     # Sjekker om alle skjema har minst én kategori
     skjema_id = kodebok |>
       distinct(skjema_id) |>
@@ -624,15 +624,15 @@ valider_kb_kolonner = function(kodebok) {
 
   # sjekk at kolonnene obligatorisk, unik og manglende kun
   # inneholder "ja" eller "nei".
-  if (any(!kodebok$obligatorisk %in% c("ja", "nei")) ||
-    any(!kodebok$unik %in% c("ja", "nei")) ||
-    any(!kodebok$manglande %in% c("ja", "nei"))) {
+  if (!all(kodebok$obligatorisk %in% c("ja", "nei")) ||
+    !all(kodebok$unik %in% c("ja", "nei")) ||
+    !all(kodebok$manglande %in% c("ja", "nei"))) {
     stop("Kolonnene obligatorisk, unik og manglande kan bare inneholde 'ja' eller 'nei'")
   }
 
   # sjekk at desimaler er positivt heltall hvis det er inkludert
   stopifnot(is.integer(kodebok$desimaler))
-  if (any(!is.na(kodebok$desimaler))) {
+  if (!all(is.na(kodebok$desimaler))) {
     if (any(kodebok$desimaler < 0L, na.rm = TRUE)) {
       stop("Desimalkolonnen må være et ikke-negativt heltall")
     }

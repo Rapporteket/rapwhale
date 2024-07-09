@@ -533,7 +533,7 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
 legg_til_na_i_skaaringstabell = function(skaaringstabell) {
   # Legg til NA-rad viss det ikkje finst frå før
   legg_til_na_rad = function(df) {
-    if (all(!is.na(df$verdi))) {
+    if (!anyNA(df$verdi)) {
       df = add_row(df, verdi = NA, koeffisient = NA)
     }
     df
