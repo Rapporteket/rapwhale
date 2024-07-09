@@ -65,7 +65,8 @@ normaliser_varnamn = function(x) {
   # Putt inn _ før alle store bokstavar (utanom første teikn i strengen)
   teikn = map(teikn, \(x) str_replace_all(x, "([[:upper:]])", "_\\1")) # nolint: unnecessary_lambda_linter.
 
-  varnavn = map_chr(teikn, \(x) paste0(x, collapse = "")) |> # nolint: unnecessary_lambda_linter. Slå saman til lange strengar igjen
+  # Slå saman til lange strengar igjen
+  varnavn = map_chr(teikn, \(x) paste0(x, collapse = "")) |> # nolint: unnecessary_lambda_linter.
     str_replace_all("[\\._ ]+", "_") |> # Erstatt etterfølgjande punktum, mellomrom og/eller _ med éin _,
     str_replace_all("^_|_$", "") |> # Fjern ev. _ på starten og slutten av strengane
     tolower() # Gjer om til små bokstavar
