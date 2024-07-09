@@ -199,7 +199,7 @@ test_that("Sjekkar at viss «vld_vartype» er lik x, så må for alle y != x
     tibble(
       pasid = 101, vld_varnamn = "vekt", vld_vartype = "tal",
       vld_verdi_intern_tal = 76, vld_verdi_ekstern_tal = 76,
-      vld_verdi_intern_logisk = as.logical(NA),
+      vld_verdi_intern_logisk = NA,
       vld_verdi_ekstern_logisk = TRUE
     )
   ))
