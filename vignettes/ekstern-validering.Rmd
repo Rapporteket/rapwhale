@@ -496,7 +496,7 @@ kan me fjerna dei slik:
 
 ```{r fjern variabel}
 d_vld |>
-  filter(!str_detect(vld_varnamn, "^biverk"))
+  filter(str_starts(vld_varnamn, "biverk", negate = TRUE))
 ```
 
 
