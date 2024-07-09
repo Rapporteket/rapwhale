@@ -648,7 +648,7 @@ valider_kb_kolonner = function(kodebok) {
     pattern = "^[a-zæøå]([0-9a-z_æøå]*[0-9a-zæøå])?$", negate = TRUE
   )]
 
-  if (length(ugyldig_varnavn > 0)) {
+  if (length(ugyldig_varnavn) > 0) {
     stop("Det finnes ugyldige variabelnavn:\n", str_flatten_comma(ugyldig_varnavn))
   }
 }
@@ -682,7 +682,7 @@ valider_kb_variabler = function(kodebok) {
     filter(antall_ulike > 1) |>
     pull(variabel_id)
 
-  if (length(ulike_variabeletiketter > 0)) {
+  if (length(ulike_variabeletiketter) > 0) {
     stop("En variabel kan ikke ha flere ulike variabeletiketter:\n", str_flatten_comma(ulike_variabeletiketter))
   }
 
@@ -742,7 +742,7 @@ valider_kb_variabler = function(kodebok) {
     filter(antall_alternativ < 2) |>
     pull(variabel_id)
 
-  if (length(duplikat_verdi > 0)) {
+  if (length(duplikat_verdi) > 0) {
     stop(
       "Kategoriske variabler må ha unike verdier\nVariabel: ",
       str_flatten_comma(duplikat_verdi)
