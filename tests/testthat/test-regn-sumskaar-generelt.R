@@ -864,7 +864,7 @@ test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer i
     "c", "fys", 1, 0.35,
     "c", "fys", 2, -0.08,
     "c", "psyk", 1, 0.55,
-    "c", "psyk", 2, -0.01,
+    "c", "psyk", 2, -0.01
   )
 
   d_enkelt_eks_inn = tribble(
