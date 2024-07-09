@@ -358,7 +358,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
 
   verdi_ok = map_lgl(kb_kat_nest$data, \(kb_var) (!any(duplicated(kb_var$verdi) | is.na(kb_var$verdi))))
 
-  if (any(!verdi_ok)) {
+  if (!all(verdi_ok)) {
     warning(
       advar_tekst, " dupliserte 'verdi'-ar eller NA som 'verdi':\n",
       lag_liste(kb_kat_nest$variabel_id[!verdi_ok])
@@ -369,7 +369,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   # Sjekk at kategoriske variablar har minst *to* svaralternativ
   verdi_ok = map_lgl(kb_kat_nest$data, \(kb_var) nrow(kb_var) >= 2)
 
-  if (any(!verdi_ok)) {
+  if (!all(verdi_ok)) {
     warning(
       advar_tekst, " færre enn to svaralternativ:\n",
       lag_liste(kb_kat_nest$variabel_id[!verdi_ok])
@@ -381,10 +381,10 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   # men viss ein brukar det, skal alle skjema ha minst éin kategori),
   # sjekk at alle skjema startar med ei kategorioverskrift
   # (me sjekkar tidlegare oppe at desse er unike innanfor variabel_id)
-  if (any(!is.na(kb$kategori))) {
+  if (!all(is.na(kb$kategori))) {
     kb_skjema = nest(kb, data = -skjema_id)
     har_kat = map_lgl(kb_skjema$data, \(kb_skjema) (!is.na(kb_skjema$kategori[1])) & (kb_skjema$kategori[1] != ""))
-    if (any(!har_kat)) {
+    if (!all(har_kat)) {
       warning(
         "Nokre skjema manglar kategorioverskrift (i førsterader):\n",
         lag_liste(kb_skjema$skjema_id[!har_kat])
@@ -400,7 +400,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
     "numerisk", "kategorisk", "boolsk", "dato", "dato_kl", "kl",
     "utrekna", "tekst", "tekst*", "fritekst"
   )
-  if (any(!kb$variabeltype %in% gyldige_vartyper)) {
+  if (!all(kb$variabeltype %in% gyldige_vartyper)) {
     ugyldig_vartyp = kb |>
       filter(!variabeltype %in% gyldige_vartyper) |>
       pull(variabel_id) |>
@@ -536,7 +536,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
 
     # Tester at observasjoner fra objektet over er "False".
     # Gir advarsel hvis testen ikke oppfyller dette.
-    if (any(!er_ja_nei)) {
+    if (!all(er_ja_nei)) {
       ugyldig_ja_nei = kb |>
         filter(!er_ja_nei) |>
         pull(variabel_id) |>
@@ -675,7 +675,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
     }
 
     # Returner info om alle variabelnavnene er gyldige
-    all(!ugyldig)
+    !any(ugyldig)
   }
 
   # Sjekk at alle variabelnavn er gyldig (dersom brukeren vil sjekke dette)
