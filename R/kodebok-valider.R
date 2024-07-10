@@ -308,7 +308,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
         lag_liste(unique(ids[duplicated(ids)])),
         "\n(Men merk at seinare duplikatar kan vera følgjefeil av første.)"
       )
-      gyldig <<- FALSE # nolint: assignment_linter.
+      gyldig <<- FALSE
     }
   }
   sjekk_dup(kb, skjema_id)
@@ -331,7 +331,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
         "Varierande/inkonsistente '", varid_tekst, "'-verdiar for desse '", gruppe_tekst, "'-verdiane:\n",
         lag_liste(df_grupper[[gruppe_tekst]][ikkjeunike])
       )
-      gyldig <<- FALSE # nolint: assignment_linter.
+      gyldig <<- FALSE
     }
   }
 
