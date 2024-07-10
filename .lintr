@@ -11,6 +11,7 @@ linters: linters_with_tags(
     implicit_integer_linter = NULL,
     nonportable_path_linter = NULL,
     unnecessary_nested_if_linter = NULL,
+    todo_comment_linter = NULL,
     undesirable_operator_linter(
         op = list("<-" = "Use =, not <-, for assignment.")
     )
