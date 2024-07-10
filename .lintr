@@ -1,6 +1,6 @@
 linters: linters_with_tags(
     tags = NULL,
-    assignment_linter = rapwhale:::assignment_eq_linter(),
+    assignment_linter = NULL,
     object_usage_linter = NULL,
     indentation_linter = NULL,
     cyclocomp_linter = NULL,
@@ -10,7 +10,10 @@ linters: linters_with_tags(
     extraction_operator_linter = NULL,
     implicit_integer_linter = NULL,
     nonportable_path_linter = NULL,
-    unnecessary_nested_if_linter = NULL
+    unnecessary_nested_if_linter = NULL,
+    undesirable_operator_linter(
+        op = list("<-" = "Use =, not <-, for assignment.")
+    )
   )
 exclusions: list(
     "tests/testthat/rapwhale-style",
