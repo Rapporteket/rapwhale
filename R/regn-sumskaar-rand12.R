@@ -15,17 +15,17 @@
 #'     `rand_4b`, `rand_5`, `rand_6a`, `rand_6b`, `rand_6c` og `rand_7`
 #'     (se `variabelnavn`).
 #'     Se detaljer nedenfor for informasjon om koding.
+#' @param algoritme Algoritme for skåring av spørreskjemaet.
+#'     Foreløpig er det bare mulig å velge `"farivar_2007_oblique"`,
+#'     som gir sumskårer basert på en korrelert (skrå/«oblique»)
+#'     faktormodell som definert i
+#'     \insertCite{Farivar2007;textual}{rapwhale}.
 #' @param variabelnavn Hvis `d` ikke bruker standard variabelnavn,
 #'     kan du her oppgi kobling mellom standard variabelnavn (se ovenfor)
 #'     og de brukte variabelnavnene. Bruk syntaksen
 #'     `c(std_navn_1 = "brukt_navn_1", std_navn_2 = "brukt_navn_2")`.
 #'     Navnekobling trenger kun oppgis for de variablene som ikke har
 #'     standardnavn. Sett til `NULL` hvis alle har standardnavn.
-#' @param algoritme Algoritme for skåring av spørreskjemaet.
-#'     Foreløpig er det bare mulig å velge `"farivar_2007_oblique"`,
-#'     som gir sumskårer basert på en korrelert (skrå/«oblique»)
-#'     faktormodell som definert i
-#'     \insertCite{Farivar2007;textual}{rapwhale}.
 #' @param godta_manglende Skal manglende verdier (`NA`-verdier) i
 #'     spørreskjema-variablene i `d` godtas (som standard nei)? Hvis
 #'     ikke, blir det gitt ut en feilmelding om det finnes manglende
