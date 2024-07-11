@@ -50,7 +50,8 @@ d_inn_inkl_sumskaarer = tibble(d_inn_eks, d_sumskaarer_oblique)
 
 test_that("skaar_rand12() gir ut det originale datasettet inkludert
           riktig utregnede sumskårer hvis sumskårer ikke finnes fra før", {
-  expect_equal(skaar_rand12(d_inn_eks,
+  expect_equal(
+    object = skaar_rand12(d_inn_eks,
       algoritme = "farivar_2007_oblique",
       godta_manglende = TRUE
     ),
@@ -64,7 +65,8 @@ test_that("skaar_rand12() gir ut det originale datasettet inkludert
   d_inn_inkl_feil_sumskaarer = d_inn_inkl_sumskaarer
   d_inn_inkl_feil_sumskaarer$rand12_pcs = 1
 
-  expect_equal(suppressWarnings(skaar_rand12(d_inn_inkl_feil_sumskaarer,
+  expect_equal(
+    object = suppressWarnings(skaar_rand12(d_inn_inkl_feil_sumskaarer,
       algoritme = "farivar_2007_oblique",
       godta_manglende = TRUE
     )),
@@ -84,7 +86,8 @@ test_that("skaar_rand12() fungerer hvis man oppgir variabelnavn", {
     d_sumskaarer_oblique
   )
 
-  expect_equal(skaar_rand12(d_inn_eks_feil_varnavn,
+  expect_equal(
+    object = skaar_rand12(d_inn_eks_feil_varnavn,
       algoritme = "farivar_2007_oblique",
       variabelnavn = c(
         rand_1 = "g_h_1",
