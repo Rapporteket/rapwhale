@@ -5,6 +5,9 @@ on:
   pull_request:
     branches: [ "main" ]
     paths: ["R/**", "tests/**"]
+  workflow_dispatch:
+    branches: [ "main" ]
+    paths: ["R/**", "tests/**"]
 
 name: test-coverage
 
