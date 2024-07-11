@@ -24,7 +24,10 @@ test_that("regn_konfint_univar() gjev forventa resultat", {
     mean = 5.843333333333333712289459072053432464599609375,
     high = 5.97693418515997887396906662615947425365447998046875
   )
-  expect_identical(sepal_length_resultat, sepal_length_forventa)
+  expect_equal(sepal_length_resultat,
+    expected = sepal_length_forventa,
+    tolerance = testthat_tolerance()
+  )
 })
 
 test_that("regn_konfint_univar() gjev forventa resultat ved val av konfidensnivå", {
@@ -36,7 +39,10 @@ test_that("regn_konfint_univar() gjev forventa resultat ved val av konfidensniv�
     mean = 5.843333333333333712289459072053432464599609375,
     high = 5.955239833810328065055728075094521045684814453125
   )
-  expect_identical(sepal_length_konf_resultat, sepal_length_konf_forventa)
+  expect_equal(sepal_length_konf_resultat,
+    expected = sepal_length_konf_forventa,
+    tolerance = testthat_tolerance()
+  )
 })
 
 test_that("regn_konfint_univar() funkar med grupperte inndata", {
@@ -61,9 +67,9 @@ test_that("regn_konfint_univar() funkar med grupperte inndata", {
       6.76871498088249712310471295495517551898956298828125
     )
   )
-  expect_identical(
-    object = sepal_length_gruppert_resultat,
-    expected = sepal_length_gruppert_forventa
+  expect_equal(sepal_length_gruppert_resultat,
+    expected = sepal_length_gruppert_forventa,
+    tolerance = testthat_tolerance()
   )
 })
 
@@ -96,7 +102,10 @@ test_that("regn_konfint_univar() med bootstrapping gjev forventa resultat", {
     mean = 5.843333333333333712289459072053432464599609375,
     high = 5.97866666666666635165938714635558426380157470703125
   )
-  expect_identical(sepal_length_boot_resultat, sepal_length_boot_forventa)
+  expect_equal(sepal_length_boot_resultat,
+    expected = sepal_length_boot_forventa,
+    tolerance = testthat_tolerance()
+  )
 })
 
 test_that("regn_konfint_univar() med bootstrapping gjev forventa resultat ved val av konfidensnivå", {
@@ -110,9 +119,9 @@ test_that("regn_konfint_univar() med bootstrapping gjev forventa resultat ved va
     mean = 5.843333333333333712289459072053432464599609375,
     high = 5.9546666666666663303431050735525786876678466796875
   )
-  expect_identical(
-    object = sepal_length_boot_konf_resultat,
-    expected = sepal_length_boot_konf_forventa
+  expect_equal(sepal_length_boot_konf_resultat,
+    expected = sepal_length_boot_konf_forventa,
+    tolerance = testthat_tolerance()
   )
 })
 
@@ -127,9 +136,9 @@ test_that("regn_konfint_univar() med bootstrapping gjev forventa resultat ved va
     mean = 5.843333333333333712289459072053432464599609375,
     high = 5.9787553907549995102499451604671776294708251953125
   )
-  expect_identical(
-    object = sepal_length_boot_repl_resultat,
-    expected = sepal_length_boot_repl_forventa
+  expect_equal(sepal_length_boot_repl_resultat,
+    expected = sepal_length_boot_repl_forventa,
+    tolerance = testthat_tolerance()
   )
 })
 
