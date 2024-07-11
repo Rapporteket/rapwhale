@@ -55,13 +55,13 @@ wrap_if_else_while_for_fun_in_curly_rapwhale = function(pd, indent_by = 2) { # n
 #' @param indent_by
 #' The amount of spaces used to indent an expression in curly braces.
 #' Used for unindention.
-#' @param space_after
-#' How many spaces should be inserted after the closing brace.
 #' @param key_token
 #' The token that comes right before the token that contains the expression
 #' to be wrapped (ignoring comments).
 #' For if and while loops, this is the closing "')'",
 #' for a for-loop it's "forcond".
+#' @param space_after
+#' How many spaces should be inserted after the closing brace.
 #'
 #' @details
 #' Lik [styler::wrap_multiline_curly],

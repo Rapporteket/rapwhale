@@ -119,11 +119,11 @@ lag_fig_linje = function(refline = NULL, refline_df = NULL, xlab = "\uc5r", ylab
 #' Vektor med tal som skal plottast på y-aksen (teljar).
 #' @param x
 #' Vektor med verdiar som skal plottast på x-aksen, ofte datoar.
-#' @param nevner
-#' Vektor med undergruppestorleikar (nemnar).
 #' @param figtype
 #' Tekstvektor med kva type diagram som skal lagast. Sjå [qicharts2::qic()]
 #' for tilgjengelege typar.
+#' @param nevner
+#' Vektor med undergruppestorleikar (nemnar).
 #' @param tittel
 #' Tekstvektor med tittel på plottet.
 #' @param gruppe
