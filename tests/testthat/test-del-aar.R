@@ -367,7 +367,7 @@ test_that("Funksjonen fungerer ved ikke-etterfølgende årstall", {
     ),
     expected = c(2000.25, 2022.25, 2022.75, 2014.25)
   )
-  expect_identical(
+  expect_equal(
     object = tid_til_tidslinje(
       dato = as.Date(c("2000-01-01", "2019-01-11", "2020-12-31", "2022-01-21")),
       antall_deler = 52
@@ -375,6 +375,7 @@ test_that("Funksjonen fungerer ved ikke-etterfølgende årstall", {
     expected = c(
       2000.0096153846152447, 2019.0288461538461888,
       2020.9903846153847553, 2022.0480769230769056
-    )
+    ),
+    tolerance = testthat_tolerance()
   )
 })

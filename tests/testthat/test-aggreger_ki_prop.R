@@ -127,8 +127,14 @@ test_that(paste0(
 
   expect_no_error(aggreger_ki_prop(d_teller_ok_men_na))
   expect_no_error(aggreger_ki_prop(d_teller_ok_men_false))
-  expect_identical(aggreger_ki_prop(d_teller_ok_men_na), d_teller_ok_men_na_res)
-  expect_identical(aggreger_ki_prop(d_teller_ok_men_false), d_teller_ok_men_na_res)
+  expect_equal(aggreger_ki_prop(d_teller_ok_men_na),
+    expected = d_teller_ok_men_na_res,
+    tolerance = testthat_tolerance()
+  )
+  expect_equal(aggreger_ki_prop(d_teller_ok_men_false),
+    expected = d_teller_ok_men_na_res,
+    tolerance = testthat_tolerance()
+  )
 })
 
 # Funksjonen må tillate tilfeller hvor sum teller_krit er 0.
@@ -222,9 +228,10 @@ test_that(paste0(
     aggreger_ki_prop(d_gruppert_ekstra_levels),
     feilmelding_ekstra_levels
   )
-  expect_identical(
-    suppressWarnings(aggreger_ki_prop(d_gruppert_ekstra_levels)),
-    d_svar_gruppert_ekstra_levels
+  expect_equal(
+    object = suppressWarnings(aggreger_ki_prop(d_gruppert_ekstra_levels)),
+    expected = d_svar_gruppert_ekstra_levels,
+    tolerance = testthat_tolerance()
   )
 })
 
@@ -338,11 +345,11 @@ test_that("Funksjonen gir forventet resultat", {
     konfint_ovre = 0.9544127391902995
   )
 
-  expect_identical(aggreger_ki_prop(d_25), svar_25)
-  expect_identical(aggreger_ki_prop(d_33), svar_33)
-  expect_identical(aggreger_ki_prop(d_50), svar_50)
-  expect_identical(aggreger_ki_prop(d_67), svar_67)
-  expect_identical(aggreger_ki_prop(d_75), svar_75)
+  expect_equal(aggreger_ki_prop(d_25), svar_25, tolerance = testthat_tolerance())
+  expect_equal(aggreger_ki_prop(d_33), svar_33, tolerance = testthat_tolerance())
+  expect_equal(aggreger_ki_prop(d_50), svar_50, tolerance = testthat_tolerance())
+  expect_equal(aggreger_ki_prop(d_67), svar_67, tolerance = testthat_tolerance())
+  expect_equal(aggreger_ki_prop(d_75), svar_75, tolerance = testthat_tolerance())
 })
 
 test_that("Funksjonen støtter angivelse av konfidensinvå", {

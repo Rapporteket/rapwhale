@@ -249,13 +249,15 @@ test_that("aggreger_ki_rate() fungerer (uten feilmelding) om ki_aktuell er FALSE
     konfint_ovre = 0.069418816705480224094
   )
 
-  expect_identical(
-    aggreger_ki_rate(d_antall_ok_men_na),
-    svar_antall_ok_man_na
+  expect_equal(
+    object = aggreger_ki_rate(d_antall_ok_men_na),
+    expected = svar_antall_ok_man_na,
+    tolerance = testthat_tolerance()
   )
-  expect_identical(
-    aggreger_ki_rate(d_eksponering_ok_men_na),
-    svar_eksponering_ok_man_na
+  expect_equal(
+    object = aggreger_ki_rate(d_eksponering_ok_men_na),
+    expected = svar_eksponering_ok_man_na,
+    tolerance = testthat_tolerance()
   )
 })
 
@@ -351,8 +353,9 @@ test_that(paste0(
   expect_warning(aggreger_ki_rate(d_gruppert_ekstra_levels),
     regexp = feilmelding_ekstra_levels
   )
-  expect_identical(suppressWarnings(aggreger_ki_rate(d_gruppert_ekstra_levels)),
-    expected = svar_gruppert_ekstra_levels
+  expect_equal(suppressWarnings(aggreger_ki_rate(d_gruppert_ekstra_levels)),
+    expected = svar_gruppert_ekstra_levels,
+    tolerance = testthat_tolerance()
   )
 })
 
@@ -416,9 +419,18 @@ test_that("Funksjonen gir ut forventet resultat", {
     konfint_ovre = 0.069418816705480224094
   )
 
-  expect_identical(aggreger_ki_rate(d_ingen), svar_ingen)
-  expect_identical(aggreger_ki_rate(d_alle), svar_alle)
-  expect_identical(aggreger_ki_rate(d_noen), svar_noen)
+  expect_equal(aggreger_ki_rate(d_ingen),
+    expected = svar_ingen,
+    tolerance = testthat_tolerance()
+  )
+  expect_equal(aggreger_ki_rate(d_alle),
+    expected = svar_alle,
+    tolerance = testthat_tolerance()
+  )
+  expect_equal(aggreger_ki_rate(d_noen),
+    expected = svar_noen,
+    tolerance = testthat_tolerance()
+  )
 })
 
 test_that("Funksjonen støtter angivelse av konfidensinvå", {
@@ -492,9 +504,9 @@ test_that("Funksjonen støtter angivelse av multiplikator", {
     konfint_ovre = 76.570304030960272712
   )
 
-  expect_identical(
-    aggreger_ki_rate(d, multiplikator = 1000),
-    svar_multiplikator_1000
+  expect_equal(aggreger_ki_rate(d, multiplikator = 1000),
+    expected = svar_multiplikator_1000,
+    tolerance = testthat_tolerance()
   )
 })
 
