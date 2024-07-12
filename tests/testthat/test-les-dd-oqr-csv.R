@@ -1,5 +1,4 @@
 # Håndtering av inndata fra datadump eller spesifikasjon ---------------------
-context("les_varnavn")
 
 formatspek_ok_hel = list(
   skilletegn = ";",
@@ -23,7 +22,6 @@ test_that("Funksjonen leser inn en variabel selv om den ikke har navn", {
 })
 
 # std_koltype_til_readr_koltype -------------------------------------------
-context("std_koltype_til_readr_koltype")
 
 test_that("Gir riktig bokstavkode for alle mulige (gyldige) variabeltyper", {
   expect_identical(
@@ -56,7 +54,6 @@ test_that("Gir feilmelding ved ugyldige variabeltyper", {
 })
 
 # les_csv_base ------------------------------------------------------------
-context("les_csv_base")
 
 # Forventet resultat av å lese inn dd_ok_hel
 dd_ok_hel = tibble(
@@ -220,7 +217,6 @@ test_that("Funksjonen fungerer som forventet når inndata er med annen tegnkodin
 })
 
 # Konvertering av variabeltyper -------------------------------------------
-context("konverter_boolske")
 
 test_that("Funksjonen gir feilmelding hvis en boolsk variabel inneholder ugyldige verdier", {
   expect_error(
@@ -315,7 +311,6 @@ test_that("Funksjonen fungerer som forventet med ulike na_verdier", {
   )
 })
 
-context("konverter_dato_kl")
 
 test_that("les_csv_base gir feilmelding hvis format på dato_kl i formatspek og data ikke er enige", {
   specs_dato_kl = specs_dd_ok_hel[specs_dd_ok_hel$vartype == "dato_kl", ]
@@ -337,7 +332,6 @@ test_that("les_csv_base gir feilmelding hvis format på dato_kl i formatspek og 
 })
 
 # lag_formatspek ----------------------------------------------------------
-context("lag_formatspek")
 
 test_that("lag_formatspek() fungerer med riktig inndata", {
   formatspek_ok = list(

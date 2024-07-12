@@ -31,8 +31,6 @@ skaaringstabell_eks = tribble(
 )
 
 
-context("skaar_datasett")
-
 # Eksempel på inndata som inkluderer både basisvariabler og
 # spørreskjema-variabler
 d_gyldig_inn = tribble(
@@ -202,8 +200,6 @@ test_that("skaar_datasett() gir ut feilmelding hvis skåringstabell,
   ))
 })
 
-
-context("sjekk_skaaringstabell")
 
 test_that("sjekk_skaaringstabell() gir ingen feilmelding hvis
           skåringstabellen er gyldig", {
@@ -384,8 +380,6 @@ test_that("sjekk_skaaringstabell() gir feilmelding hvis skåringstabellen
 })
 
 
-context("sjekk_variabelnavn")
-
 test_that("sjekk_variabelnavn() gjev inga feilmelding for gyldige
           datasett", {
   d = datasets::iris
@@ -429,8 +423,6 @@ test_that("sjekk_variabelnavn() gjev feilmelding viss variablar
   )
 })
 
-
-context("sjekk_variabelverdier")
 
 # Ved å benytte den overordnede funksjonen skaar_datasett() vil alle
 # variabler i datasettet som ikke finnes i skåringstabellen bli filtrert
@@ -542,8 +534,6 @@ test_that("sjekk_variabelverdier() gjev feilmelding for datasett med
 })
 
 
-context("finn_ugyldige_verdier")
-
 verditabell = data.frame(
   variabel = c(rep("kjonn", 2), rep("livskvalitet", 3)),
   verdi = c(1, 2, 0, 5, 10)
@@ -621,8 +611,6 @@ test_that("finn_ugyldige_verdier() håndterer NA som ugyldig
 
 
 
-context("oppsummer_ugyldige_verdier")
-
 # Eksempel-ugyldighetstabell
 ugyldighetstabell_2_feil_samme_variabel = tibble(
   radnr = c(1L, 2L, 3L),
@@ -668,8 +656,6 @@ test_that(paste0(
   )
 })
 
-
-context("skaar_datasett_uten_validering")
 
 # Eksempeldata som bare inneholder verdier som finnes i skåringstabellen
 # (datasettet inneholder alle mulige verdier for hver variabel minst en
@@ -926,8 +912,6 @@ test_that("skaar_datasett_uten_validering() gir ut riktige sumskårer
 })
 
 
-context("legg_til_na_i_skaaringstabell")
-
 test_that("legg_til_na_i_skaaringstabell() fungerer", {
   # Original skåringstabell (merk at éi rad òg har NA-verdiar)
   skaaringstabell_orig = tribble(
@@ -986,8 +970,6 @@ test_that("legg_til_na_i_skaaringstabell() overskriv ikkje eksisterande
   )
 })
 
-
-context("legg_til_eller_erstatt_kolonner")
 
 d_eks_inkl_sumskaar = tribble(
   ~pas_id, ~fys, ~psyk, ~dato, ~sumskaar_total, ~sumskaar_psykisk,

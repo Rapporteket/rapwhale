@@ -1,5 +1,4 @@
 # Erstatt_ukjent ----------------------------------------------------------
-context("Erstatt_ukjent")
 
 # Baseobjekter for testdata
 data_inn = tibble(
@@ -156,7 +155,6 @@ test_that("Gjør ingenting hvis inndata mangler verdier fra na_vektor", {
 
 
 # Beregn_kompletthet ------------------------------------------------------
-context("Beregn_kompletthet")
 
 test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {
   data_uten_var = select(data_inn, -var_1)
@@ -203,7 +201,6 @@ test_that("Gir feilmelding hvis variabel ikke er tekststreng", {
 
 
 # Beregn_kompletthet_med_ukjent -------------------------------------------
-context("Beregn_kompletthet_med_ukjent")
 
 test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {
   data_uten_var_1 = select(data_inn, -var_1)
@@ -274,7 +271,6 @@ test_that("Gir feilmelding hvis variabel ikke er tekststreng", {
 })
 
 # beregn_kompletthet_datasett ---------------------------------------------
-context("beregn_kompletthet_datasett")
 
 d_test = tibble(
   pas_id = c(1L, 2L, 3L, 4L, 5L, 6L),
@@ -330,7 +326,6 @@ test_that("Returnerer forventet resultat", {
 })
 
 # beregn_kompletthet_datasett_med_ukjent ----------------------------------
-context("beregn_kompletthet_datasett_med_ukjent")
 test_that("Returnerer forventet resultat", {
   expect_identical(
     beregn_kompletthet_datasett_med_ukjent(data = d_test, ukjent_datasett = ukjent_datasett),

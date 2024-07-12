@@ -14,8 +14,6 @@ d_gyldig_eks = tribble(
 a = rep(c(TRUE, FALSE, NA), each = 3)
 b = rep(c(TRUE, FALSE, NA), 3)
 
-context("impl")
-
 test_that("impl() gir feilmelding hvis a eller b ikke er logiske vektorer", {
   feilmelding = "a og b må være logiske vektorer"
   expect_error(impl(1, TRUE), feilmelding)
@@ -88,7 +86,6 @@ test_that("Infiks-versjonen %impl% er identisk impl()", {
   expect_identical(`%impl%`, impl)
 })
 
-context("ekviv")
 
 test_that("ekviv() gir feilmelding hvis a eller b ikke er logiske vektorer", {
   feilmelding = "a og b må være logiske vektorer"

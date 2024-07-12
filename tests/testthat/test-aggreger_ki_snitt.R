@@ -1,7 +1,5 @@
 # Aggregering - Beregn snitt -------------------------------------------------------
 
-context("aggreger_ki_snitt")
-
 test_that("Feilmelding hvis ikke tibble/data.frame med nødvendige kolonner", {
   d_uten_aktuell = tibble(foo = 1:3, ki_x = rep(TRUE, 3))
   d_uten_x = tibble(foo = 1:3, ki_aktuell = rep(TRUE, 3))

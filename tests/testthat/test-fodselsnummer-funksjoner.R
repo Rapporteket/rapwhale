@@ -1,5 +1,3 @@
-context("fnr_er_gyldig()")
-
 nummer = c(
   "15076500565", # Gyldig F-nummer
   "70019950032", # Gyldig D-nummer
@@ -80,8 +78,6 @@ test_that("fnr_er_gyldig() gjev ikkje feilmeldingar (men rett svar) dersom innda
 
 
 
-context("er_syntaktisk_fnr()")
-
 test_that("er_syntaktisk_fnr(NA_character_) returnerer FALSE", {
   expect_false(er_syntaktisk_fnr(NA_character_))
 })
@@ -106,8 +102,6 @@ test_that("er_syntaktisk_fnr() fungerer òg med vektorar av lengd 0", {
 
 
 
-context("er_gyldig_fnr_dato()")
-
 test_that("er_gyldig_fnr_dato() gjev forventa resultat", {
   datoar = c(
     "010101", "170527", "311299",
@@ -130,9 +124,6 @@ test_that("er_gyldig_fnr_dato() fungerer òg med vektorar av lengd 0", {
 })
 
 
-
-
-context("er_gyldig_f_nummer()")
 
 # Dei gyldige fødselsnummera o.l. er ikkje reelle,
 # men henta frå dokumentet «Testaktører»
@@ -171,8 +162,6 @@ test_that("er_gyldig_f_nummer() fungerer òg med vektorar av lengd 0", {
 
 
 
-context("er_gyldig_d_nummer()")
-
 test_that("er_gyldig_d_nummer() gjev forventa resultat", {
   dnr_gyldige = c(
     "70019950032", # Henta frå testaktørar, resten er laga manuelt
@@ -207,8 +196,6 @@ test_that("er_gyldig_d_nummer() fungerer òg med vektorar av lengd 0", {
 
 
 
-context("er_gyldig_h_nummer()")
-
 test_that("er_gyldig_h_nummer() gjev forventa resultat", {
   hnr_gyldige = c("01410199935", "01510199983")
   hnr_ugyldige = c(
@@ -238,8 +225,6 @@ test_that("er_gyldig_h_nummer() fungerer òg med vektorar av lengd 0", {
 })
 
 
-
-context("er_gyldig_fh_nummer()")
 
 test_that("er_gyldig_fh_nummer() gjev forventa resultat", {
   fhnr_gyldige = c("88888888831", "99999999928", "80102030404")
@@ -272,8 +257,6 @@ test_that("er_gyldig_fh_nummer() fungerer òg med vektorar av lengd 0", {
 
 
 
-context("er_fnr_sjekksum_korrekt()")
-
 test_that("er_fnr_sjekksum_korrekt() gjev forventa resultat", {
   nummer_gyldige = c("12345678911", "15076500565")
   nummer_ugyldige = c("12345678922", "15076500511")
@@ -297,8 +280,6 @@ test_that("er_fnr_sjekksum_korrekt() fungerer òg med vektorar av lengd 0", {
 })
 
 
-
-context("finn_type_idnummer()")
 
 test_that("finn_type_idnummer() gjev rette verdiar for alle (støtta) typar ID-nummer", {
   fasit = c("FNR", "D", "H", "FH", NA_character_)
@@ -326,8 +307,6 @@ test_that("finn_type_idnummer() gjev feilmelding viss inn-nummera ikkje er av ty
   expect_error(fnr_er_gyldig(as.numeric(nummer)))
 })
 
-
-context("fnr_foresla()")
 
 test_that("Gir feilmelding om inndata har lengde ulik 1", {
   flere_fnr = c("15076500565", "15076500566")
