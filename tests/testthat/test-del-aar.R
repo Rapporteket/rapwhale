@@ -2,8 +2,6 @@
 
 # Tester - Periode til tidslinje -----------------------------------------------
 
-context("periode_til_tidslinje: feilmeldinger ved ugyldige inndata")
-
 test_that("Det gis feilmelding om årstall-vektor ikke er heltallsvektor", {
   expect_error(periode_til_tidslinje(c(2017, 2018, 2019, 2020.5), 1:4, 4),
     regexp = "aar må være heltall"
@@ -54,8 +52,6 @@ test_that("Det gis advarsel om det finnes NA-verdier i årstall eller delnummer"
   )
 })
 
-context("periode_til_tidslinje: Utdata")
-
 test_that("Utdata samsvarer med forventet resultat.", {
   aar = c(rep(2019, 4), 2020)
   kvart = c(1, 2, 3, 4, 1)
@@ -68,8 +64,6 @@ test_that("Utdata samsvarer med forventet resultat.", {
   expect_identical(periode_til_tidslinje(aar, kvart, 4), forvent)
   expect_identical(periode_til_tidslinje(aar, mnd, 12), forvent12)
 })
-
-context("periode_til_tidslinje: Grensetilfeller")
 
 test_that("Funksjonen fungerer med kun ett årstall", {
   expect_identical(periode_til_tidslinje(2019, 1, 4), 2019.125)
@@ -84,8 +78,6 @@ test_that("Funksjonen fungerer med 366 deler", {
 })
 
 # Tester - tid_til_tidslinje ---------------------------------------------------
-
-context("tid_til_tidslinje - feilmeldinger ved ugyldige inndata")
 
 test_that("Det gis advarsel om det finnes NA-verdier i datovektor", {
   dato_m_na = c(as.Date("2019-01-01"), NA)
@@ -123,9 +115,6 @@ test_that("Det gis feilmelding om antall_deler er mindre enn 1", {
     regexp = "antall_deler må være >= 1"
   )
 })
-
-
-context("tid_til_tidslinje - Utdata")
 
 test_that("Utdata samsvarer med forventet resultat, ", {
   dato = as.Date(c(
@@ -333,9 +322,6 @@ test_that("Vi får ønsket utverdi når dato og tid er like rundt nyttår", {
   )
   expect_identical(tid_til_tidslinje(dato_nyttaar, 4), forventet_ut)
 })
-
-
-context("tid_til_tidslinje - Grensetilfeller")
 
 test_that("Funksjonen fungerer med kun én datoverdi", {
   dato = as.Date("2019-01-01")

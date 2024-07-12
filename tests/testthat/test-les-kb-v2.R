@@ -175,16 +175,14 @@ kb_eksempel = tibble(
 )
 
 # les_kb_oqr_v2 -----------------------------------------------------------
-context("les_kb_oqr_v2")
+
 # les_kb_oqr_base --------------------------------------------------------------
-context("les_kb_oqr_base")
 
 test_that("Funksjonen leser inn kodebok og returnerer kolonner med forventet format", {
   expect_equivalent(les_kb_oqr_base(test_path("testdata", "oqr_kodebok.csv")), kb_eksempel)
 })
 
 # konverter_tekst() -----------------------------------------------------
-context("konverter_tekst")
 
 test_that("funksjonen håndterer konvertering til desimaltall", {
   tekst_til_tall_punktum = c("1.2", "1.3")
@@ -323,7 +321,6 @@ test_that("funksjonen gir feilmelding om inndata ikke er en tekstvektor", {
 })
 
 # kb_oqr_base_til_std -----------------------------------------------------
-context("kb_oqr_base_til_std")
 
 test_that("funksjonen fjerner duplikate variabler i samme tabell, men godtar duplikat i ulike tabeller", {
   kb_duplikate_variabler = add_row(kb_tom,
@@ -369,7 +366,6 @@ test_that("funksjonen fjerner duplikate variabler i samme tabell, men godtar dup
   expect_identical(kb_oqr_base_til_std(kb_duplikate_variabler), kb_duplikat_resultat)
 })
 # Utvid_statusvariabel() ----------------------------------------------------------
-context("utvid_statusvariabel")
 
 test_that("funksjonen godtar flere statusvariabler når de er i ulike tabeller", {
   kb_flere_status_ok = add_row(kb_tom_mellom,
@@ -404,8 +400,6 @@ test_that("funksjonen gir feilmelding hvis det er flere statusvariabler i samme 
 
 # valider_oqr_kb ----------------------------------------------------------
 
-context("oqr_til_std_variabeltyper")
-
 test_that("funksjonen returnerer riktige navn for variabeltype etter konvertering", {
   kb_ok_navn = add_row(kb_tom_mellom,
     variabeltype = c(
@@ -436,7 +430,6 @@ test_that("funksjonen gir feilmelding ved ukjente variabeltyper", {
   )
 })
 
-context("sjekk_obligatorisk")
 test_that("funksjonen gir forventet verdi for obligatorisk", {
   kb_obligatorisk = add_row(kb_tom_mellom,
     obligatorisk = c("ja", "ja", "nei", "nei"),
@@ -505,7 +498,6 @@ test_that("funksjonen gir feilmelding hvis obligatorisk, aktiveringsspoersmaal e
   expect_error(valider_oqr_kb(kb_under_na))
 })
 
-context("velg_standardkolonner")
 test_that("funksjonen fungerer som forventet med riktig input og ekstra kolonner", {
   kb_ekstra = kb_tom_mellom |>
     add_column(
@@ -525,7 +517,6 @@ test_that("funksjonen gir feilmelding hvis kolonne ikke finnes i inndata", {
   expect_error(velg_standardkolonner(kb_manglende))
 })
 
-context("tildel_unike_skjemanavn_fra_skjema_id")
 
 test_that("funksjonen gir forventede skjemanavn", {
   kb_skjemanavn = add_row(kb_tom_std,
@@ -566,7 +557,6 @@ test_that("funksjonen gir feilmelding hvis skjemanavn og skjema_id er overlappen
 })
 
 # legg_til_variabler_kb ---------------------------------------------------
-context("legg_til_variabler_kb")
 
 kb_legg_til_base = add_row(kb_tom_std,
   skjema_id = c(rep("basereg", 3), "pasreg"),
@@ -680,7 +670,6 @@ test_that("funksjonen gir feilmelding om du prøver å legge til en variabel som
 
 
 # valider_kodebok ---------------------------------------------------------
-context("valider_kodebok")
 
 # Deler valider kodebok opp i ulike grupper som vil inneholde egne funksjoner.
 # Tenker 3 eller 4 nivå.
@@ -691,7 +680,7 @@ context("valider_kodebok")
 
 
 # Valider_kb_struktur ---------------------------------------------
-context("valider kb_struktur")
+
 # KB-struktur: (Alle disse er kanskje sånne som kan forventes å være OK basert på les_kb_*-funksjonene)
 # Sjekke at standardkolonner er inkludert
 # Sjekke rekkefølge for standard kolonner
@@ -702,7 +691,7 @@ context("valider kb_struktur")
 
 
 # Valider_kb_skjema -----------------------------------------------
-context("valider kb_skjema")
+
 # skjema-nivå:
 
 # Sjekke at skjemanavn er unikt innenfor skjemaid
@@ -756,7 +745,7 @@ test_that("funksjonen gir feilmelding hvis kategorier brukes,
 
 
 # Valider_kb_kolonner ---------------------------------------------
-context("valider kb_kolonner")
+
 # Sjekke at alle variabeltyper er kjent og akseptert
 test_that("funksjonen gir feilmelding hvis det finnes variabeltyper som ikke er i standardsett", {
   kb_ny_vartype = add_row(kb_tom_std,
@@ -857,7 +846,6 @@ test_that(paste0(
 })
 
 # Valider_kb_variabler --------------------------------------------
-context("valider kb_variabler")
 
 # Variabelnivå:
 test_that("funksjonen gir feilmelding hvis en variabel har flere variabeltyper", {

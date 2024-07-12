@@ -2,8 +2,6 @@
 
 # lager fiktivt datasett som inneholder
 # en del feil som skal oppdages i valider_datadump-funksjonen
-context("Datadump er gyldig")
-
 d = tribble(
   ~pasid, ~kjonn, ~alder, ~vekt, ~frisk,
   11, 0, 16.23, 30, TRUE,
@@ -14,7 +12,6 @@ d = tribble(
 )
 
 # lager en fiktiv kodebok som hører til det fiktive datasettet
-
 kb = tribble(
   ~variabel_id, ~variabeltype, ~min, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
   "pasid", "tekst", NA, NA, TRUE, NA, NA, NA,

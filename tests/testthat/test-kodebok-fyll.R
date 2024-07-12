@@ -1,5 +1,4 @@
 # Testar for kb_fyll()-funksjonen, jf. kravspekken
-context("Kodebok fyll")
 
 # Eksempeldatasett
 d = tribble(
@@ -37,7 +36,6 @@ niv_gensp = kb |>
 # Ymse testar basert på kravspek ------------------------------------------
 
 # Først det grunnleggjande
-context("Grunnleggjande funksjonalitet")
 
 # Side 4
 test_that("Enkel bruk utan nokon argument fungerer (side 4)", {
@@ -111,7 +109,6 @@ test_that("Variablar med faktornivå i spesiell rekkjefølgje fungerer", {
 
 
 # Gje feilmelding og åtvaringar der det trengst
-context("Feilmeldingar og åtvaringar")
 
 test_that("Feilmelding ved bruk av variabel med implisitt namn som ikkje finst i kodeboka (side 7)", {
   expect_error(kb_fyll(d, kb, kjonn, test), "Variabel finst ikkje i kodeboka: 'test'")
@@ -254,7 +251,6 @@ test_that("Kodebokkolonnar lagra som faktorar vert oppdaga (og straffa!)", {
 
 
 # Handter suffiks
-context("Støtte for sjølvvalt suffiks")
 
 test_that("Val av suffiks fungerer (side 11)", {
   d_fylt = tribble(
@@ -305,7 +301,6 @@ test_that("Overskriving av variablar ved *ikkje-tomt* suffiks gjev også åtvari
 
 
 # Grensetilfelle og småplukk
-context("Grensetilfelle og småplukk")
 
 test_that("Variabelkolonnar som står heilt først eller sist i datasettet fungerer òg", {
   d2 = select(d, kjonn, med)
