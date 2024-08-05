@@ -2,7 +2,8 @@ Package: rapwhale
 Type: Package
 Title: Ymse verktøy for arbeid med kvalitetsregisterdata
 Version: 0.5.0.999
-Authors@R: c(person("Karl Ove", "Hufthammer",
+Authors@R: if (file.exists('DESCRIPTION') && !file.exists('man')) roxygen2::roxygenize('.');
+           c(person("Karl Ove", "Hufthammer",
              email = "karl.ove.hufthammer@helse-bergen.no", role = c("aut", "cph", "cre"),
              comment = c(ORCID = "0000-0003-3170-9496")),
              person("Per Erik", "Haugedal",
