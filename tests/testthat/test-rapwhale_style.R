@@ -15,7 +15,8 @@ test_that("<- vert gjort om til =", {
     dry = "on",
     write_tree = FALSE
   ) |>
-    expect_no_warning()
+    expect_no_warning() |>
+    expect_message("left_assign-in.R was identical to left_assign-out.R")
 })
 
 test_that("= vert ikkje endra", {
@@ -26,7 +27,8 @@ test_that("= vert ikkje endra", {
     dry = "on",
     write_tree = FALSE
   ) |>
-    expect_no_warning()
+    expect_no_warning() |>
+    expect_message("equals-in.R was identical to equals-out.R")
 })
 
 test_that("<- vert ikkje endra viss 'tokens' ikkje er med i 'scope'", {
@@ -43,7 +45,10 @@ test_that("<- vert ikkje endra viss 'tokens' ikkje er med i 'scope'", {
     dry = "on",
     write_tree = FALSE
   ) |>
-    expect_no_warning()
+    expect_no_warning() |>
+    expect_message(
+      "unchanged_token-in.R was identical to unchanged_token-out.R"
+    )
 })
 
 test_that("Single-line if, else, while, for og function får krøllparentesar", {
@@ -54,7 +59,22 @@ test_that("Single-line if, else, while, for og function får krøllparentesar", 
     dry = "on",
     write_tree = FALSE
   ) |>
-    expect_no_warning()
+    expect_no_warning() |>
+    expect_message(
+      "single_line_else-in.R was identical to single_line_else-out.R"
+    ) |>
+    expect_message(
+      "single_line_for-in.R was identical to single_line_for-out.R"
+    ) |>
+    expect_message(
+      "single_line_function-in.R was identical to single_line_function-out.R"
+    ) |>
+    expect_message(
+      "single_line_if-in.R was identical to single_line_if-out.R"
+    ) |>
+    expect_message(
+      "single_line_while-in.R was identical to single_line_while-out.R"
+    )
 })
 
 test_that("Korte røyr får òg linjeskift", {
@@ -65,5 +85,6 @@ test_that("Korte røyr får òg linjeskift", {
     dry = "on",
     write_tree = FALSE
   ) |>
-    expect_no_warning()
+    expect_no_warning() |>
+    expect_message("short_pipes-in.R was identical to short_pipes-out.R")
 })
