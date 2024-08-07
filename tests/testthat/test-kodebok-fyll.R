@@ -276,8 +276,9 @@ test_that("Tomt suffiks fungerer (og gjev åtvaring) (side 12)", {
       med = factor(med, levels = niv_med)
     )
   expect_identical(suppressWarnings(kb_fyll(d, kb, .suffiks = "")), d_fylt)
-  expect_warning(kb_fyll(d, kb, .suffiks = ""), "Overskriv variabel: 'kjonn'")
-  expect_warning(kb_fyll(d, kb, .suffiks = ""), "Overskriv variabel: 'med'")
+  kb_fyll(d, kb, .suffiks = "") |>
+    expect_warning("Overskriv variabel: 'kjonn'") |>
+    expect_warning("Overskriv variabel: 'med'")
 })
 
 test_that("Overskriving av variablar ved *ikkje-tomt* suffiks gjev også åtvaring (men fungerer)", {

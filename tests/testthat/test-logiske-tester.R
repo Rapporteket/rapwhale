@@ -149,8 +149,24 @@ test_that("ekviv() fungerer som forventet for ulike lenger av a og b", {
 })
 
 test_that("ekviv() gir advarsel hvis lengdene av a og b er ulike, og den ene ikke er et multiplum av den andre", {
-  expect_warning(ekviv(c(TRUE, FALSE), rep(TRUE, 3)))
-  expect_warning(ekviv(rep(TRUE, 3), c(TRUE, FALSE)))
+  ekviv(c(TRUE, FALSE), rep(TRUE, 3)) |>
+    expect_warning(
+      "longer object length is not a multiple of shorter object length"
+    ) |>
+    # Åtvaringa kjem to gonger, sidan ekviv() køyrer impl() to gonger,
+    # og i testthat versjon 3 må alle åtvaringar testast eksplisitt
+    expect_warning(
+      "longer object length is not a multiple of shorter object length"
+    )
+  ekviv(rep(TRUE, 3), c(TRUE, FALSE)) |>
+    expect_warning(
+      "longer object length is not a multiple of shorter object length"
+    ) |>
+    # Åtvaringa kjem to gonger, sidan ekviv() køyrer impl() to gonger,
+    # og i testthat versjon 3 må alle åtvaringar testast eksplisitt
+    expect_warning(
+      "longer object length is not a multiple of shorter object length"
+    )
 })
 
 test_that("ekviv(a, b) gir samme resultat som ekviv(b, a)", {

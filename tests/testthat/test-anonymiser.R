@@ -206,7 +206,11 @@ test_that("Gjev rett svar når det er mange (unike/ikkje-unike) element", {
 x_med_na = c("p1", "p2", NA, "p1", NA)
 
 test_that("Gjev åtvaring (men ikkje feilmelding) ved NA-verdiar", {
-  expect_warning(anonymiser(x_med_na), "ID-vektoren inneheld NA-verdiar", fixed = TRUE)
+  anonymiser(x_med_na) |>
+    expect_warning("ID-vektoren inneheld NA-verdiar", fixed = TRUE) |>
+    # Funksjonen gjev åtvaringa to gonger, fyrst når han lagar
+    # anonymiseringsfunksjonen, og så når han køyrer han
+    expect_warning("ID-vektoren inneheld NA-verdiar", fixed = TRUE)
   expect_no_error(suppressWarnings(anonymiser(x_med_na)))
 })
 
