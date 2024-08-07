@@ -8,29 +8,25 @@ style_text_rapwhale = purrr::partial(styler::style_text, style = rapwhale_style)
 
 test_that("<- vert gjort om til =", {
   # <<- og := skal ikkje gjerast om
-  expect_warning(
-    styler:::test_collection(
-      "rapwhale-style",
-      "^left_assign",
-      transformer = style_text_rapwhale,
-      dry = "on",
-      write_tree = FALSE
-    ),
-    NA
-  )
+  styler:::test_collection(
+    "rapwhale-style",
+    "^left_assign",
+    transformer = style_text_rapwhale,
+    dry = "on",
+    write_tree = FALSE
+  ) |>
+    expect_no_warning()
 })
 
 test_that("= vert ikkje endra", {
-  expect_warning(
-    styler:::test_collection(
-      "rapwhale-style",
-      "^equals",
-      transformer = style_text_rapwhale,
-      dry = "on",
-      write_tree = FALSE
-    ),
-    NA
-  )
+  styler:::test_collection(
+    "rapwhale-style",
+    "^equals",
+    transformer = style_text_rapwhale,
+    dry = "on",
+    write_tree = FALSE
+  ) |>
+    expect_no_warning()
 })
 
 test_that("<- vert ikkje endra viss 'tokens' ikkje er med i 'scope'", {
@@ -40,40 +36,34 @@ test_that("<- vert ikkje endra viss 'tokens' ikkje er med i 'scope'", {
     scope = "line_breaks"
   )
 
-  expect_warning(
-    styler:::test_collection(
-      "rapwhale-style",
-      "^unchanged_token",
-      transformer = style_text_rapwhale_line_breaks,
-      dry = "on",
-      write_tree = FALSE
-    ),
-    NA
-  )
+  styler:::test_collection(
+    "rapwhale-style",
+    "^unchanged_token",
+    transformer = style_text_rapwhale_line_breaks,
+    dry = "on",
+    write_tree = FALSE
+  ) |>
+    expect_no_warning()
 })
 
 test_that("Single-line if, else, while, for og function får krøllparentesar", {
-  expect_warning(
-    styler:::test_collection(
-      "rapwhale-style",
-      "^single_line_",
-      transformer = style_text_rapwhale,
-      dry = "on",
-      write_tree = FALSE
-    ),
-    NA
-  )
+  styler:::test_collection(
+    "rapwhale-style",
+    "^single_line_",
+    transformer = style_text_rapwhale,
+    dry = "on",
+    write_tree = FALSE
+  ) |>
+    expect_no_warning()
 })
 
 test_that("Korte røyr får òg linjeskift", {
-  expect_warning(
-    styler:::test_collection(
-      "rapwhale-style",
-      "^short_pipes",
-      transformer = style_text_rapwhale,
-      dry = "on",
-      write_tree = FALSE
-    ),
-    NA
-  )
+  styler:::test_collection(
+    "rapwhale-style",
+    "^short_pipes",
+    transformer = style_text_rapwhale,
+    dry = "on",
+    write_tree = FALSE
+  ) |>
+    expect_no_warning()
 })
