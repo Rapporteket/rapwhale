@@ -55,8 +55,7 @@ test_that("Gir ut riktig resultat for vektor-verdi inndata", {
   )
 })
 
-test_that(
-  "Gir ut riktig resultat for inndata som inneholder desimaltall",
+test_that("Gir ut riktig resultat for inndata som inneholder desimaltall", {
   expect_identical(
     boy_enhet(
       c(1.1, 4.0, 1.0, 1.001, 1000.99999),
@@ -67,7 +66,7 @@ test_that(
       "1000.99999 millioner"
     )
   )
-)
+})
 
 test_that("Gir feilmelding ved inndata av NA-verdi", {
   feilmelding_na_verdi = "Inndata «x» inneholder minst én NA-verdi"
