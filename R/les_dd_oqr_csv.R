@@ -21,7 +21,8 @@ les_varnavn = function(adresse, formatspek) {
     n_max = 1,
     col_names = FALSE,
     na = formatspek$na_verdier,
-    locale = locale(encoding = formatspek$tegnkoding)
+    locale = locale(encoding = formatspek$tegnkoding),
+    show_col_types = FALSE
   ) |>
     unlist(use.names = FALSE) |>
     replace_na("")
