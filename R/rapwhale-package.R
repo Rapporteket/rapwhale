@@ -21,6 +21,7 @@
 #' @importFrom dplyr group_vars
 #' @importFrom dplyr groups
 #' @importFrom dplyr if_else
+#' @importFrom dplyr join_by
 #' @importFrom dplyr last
 #' @importFrom dplyr left_join
 #' @importFrom dplyr mutate

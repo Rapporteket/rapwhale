@@ -378,7 +378,7 @@ beregn_kompletthet_datasett_med_ukjent = function(data, ukjent_datasett) {
     )
 
   data_ut = d_na |>
-    left_join(d_na_ukjent) |>
+    left_join(d_na_ukjent, by = join_by(variabel, totalt_antall)) |>
     arrange(desc(totalt_antall))
 
   data_ut
