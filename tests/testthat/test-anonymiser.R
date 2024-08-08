@@ -35,7 +35,7 @@ test_that("Skal gje feilmelding ved ukjende ID-ar (utenom NA-ID-ar)", {
   # dersom alle dei nye (ukjende) verdiane berre er NA-verdiar,
   # berre åtvaring om det finst NA-verdiar
   expect_no_error(suppressWarnings(anonymiser_mittreg(c(pas_ids, NA))))
-  expect_warning(anonymiser_mittreg(c(pas_ids, NA)), "ID-vektoren inneheld NA-verdiar", all = TRUE)
+  expect_warning(anonymiser_mittreg(c(pas_ids, NA)), "ID-vektoren inneheld NA-verdiar")
 })
 
 test_that("ID-ar som finst i fleire skjema får like anonymiserte ID-ar på tvers av skjemaa", {
