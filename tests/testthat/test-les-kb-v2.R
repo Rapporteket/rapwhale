@@ -179,7 +179,8 @@ kb_eksempel = tibble(
 # les_kb_oqr_base --------------------------------------------------------------
 
 test_that("Funksjonen leser inn kodebok og returnerer kolonner med forventet format", {
-  expect_equivalent(les_kb_oqr_base(test_path("testdata", "oqr_kodebok.csv")), kb_eksempel)
+  les_kb_oqr_base(test_path("testdata", "oqr_kodebok.csv")) |>
+    expect_identical(kb_eksempel)
 })
 
 # konverter_tekst() -----------------------------------------------------
