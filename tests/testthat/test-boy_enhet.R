@@ -39,7 +39,7 @@ test_that("Gir ut riktig resultat for ikke-standard formateringsfunksjon", {
     "-1.2 millioner"
   )
   expect_identical(
-    boy_enhet(1, "pasient", "pasienter", \(x) ifelse(x == 1, "én", x)),
+    boy_enhet(1, "pasient", "pasienter", function(x) ifelse(x == 1, "én", x)),
     "én pasient"
   )
 })
@@ -100,7 +100,7 @@ test_that("Gir feilmelding ved ugyldig type inndata", {
 test_that("Gir feilmelding hvis utdata fra formatering() ikke har rett lengde", {
   expect_error(boy_enhet(
     1:3, "operasjon", "operasjoner",
-    formatering = \(x) x[1]
+    formatering = function(x) x[1]
   ),
   paste0(
     "Utdata fra formatering() må ha samme lengde som «x» ",

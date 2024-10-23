@@ -147,7 +147,7 @@ aggreger_ki_prop = function(d_ki_ind, alfa = 0.05) {
   # (og ikke for eksempel NaN, som vi får ved 0/0)
   d_sammendrag = d_sammendrag %>%
     mutate(across(c(est, konfint_nedre, konfint_ovre),
-      \(x) tidyr::replace_na(x, replace = NA)
+      function(x) tidyr::replace_na(x, replace = NA)
     ))
 
   d_sammendrag
