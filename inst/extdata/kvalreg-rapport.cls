@@ -404,7 +404,11 @@
 \DeclareRobustCommand{\tittel}[1]{%
   \DeclareRobustCommand{\@tittel}{#1}%
 }
-\DeclareRobustCommand{\@undertittel}{med plan for forbedringstiltak}%
+\ifkvalreg@nynorsk
+  \DeclareRobustCommand{\@undertittel}{med plan for forbetringstiltak}%
+\else
+  \DeclareRobustCommand{\@undertittel}{med plan for forbedringstiltak}%
+\fi
 \DeclareRobustCommand{\undertittel}[1]{%
   \DeclareRobustCommand{\@undertittel}{#1}%
 }
