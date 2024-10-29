@@ -154,7 +154,7 @@
 %   Overskrifter: Calibri
 %   Programkode: Consolas
 % I brødtekst og vanlege overskrifter brukar me *proporsjonale* renessansetal
-\setmainfont[Ligatures=TeX, Numbers={Proportional,Lowercase}]{Cambria} % Problem med Fractions=On
+\setmainfont[Ligatures=TeX, Numbers={Proportional,Lowercase}, ItalicFont=cambriai.ttf, BoldFont=cambriab.ttf, BoldItalicFont=cambriaz.ttf]{Cambria.ttc} % Problem med Fractions=On
 \setsansfont[Ligatures=TeX, Numbers={Proportional,Lowercase}]{Calibri}
 \setmonofont[Scale=MatchLowercase]{Consolas}
 \setmathfont{Cambria Math}
