@@ -1,7 +1,7 @@
 
 # Hovedfunksjon ---------------------------------------------------------
 
-#' mrs5_hent_kodebok
+#' Hent mrs5-kodebok
 #' 
 #' @description
 #' Henter inn kodebok for registre på MRS5 fra `filsti`. 
@@ -12,27 +12,39 @@
 #' @param skjemanavn Tekststreng med skjemanavn som skal leses inn slik det er 
 #' navngitt i kodebok. Hvis `skjemanavn = NULL` hentes kodebok for alle skjema inn. 
 #' @return
-#' Listeobjekt som inneholder kb_kodebok, kb_kategoriske og kb_regler. 
+#' Listeobjekt som inneholder tibblene kb_kodebok, kb_kategoriske og kb_regler. 
 #' @export
 #'
 #' @examples
+#' # Hente kodebok for alle skjema og få ut på kanonisk format
+#' kb_register = mrs5_hent_kodebok(filst = "/sti//til//kodebokfil", skjemanavn = NULL)
+#' 
+#' # Hente for et enkelt skjema 
+#' kb_innleggelse = mrs5_hent_kodebok(filst = "/sti//til//kodebokfil", skjemanavn = "Innleggelse")
 mrs5_hent_kodebok = function(filsti, skjemanavn = NULL) {
   
-  # Primærfunksjon som kaller på alle nødvendige hjelpefunksjoner for å 
-  # lese inn data, konvertere til kanonisk og levere kanonisk kodebok. 
-  
-  # Kaller funksjoner for hvert skjema i ´skjemanavn´. 
-  
-  # mrs5_parse_kodebok
-  # mrs5_konverter_til_kanonisk
-  
-  # Retunerer liste kb med tibblene 
-  # kodebok, kategoriske og regler + metadata-attributter
 } 
 
 # Parse rådata -------------------------------------------------------------
 
-mrs5_parse_kodebok = function(filsti) { 
+#' Leser inn kodebokfil på rådata-format
+#' 
+#' Kaller nødvendige hjelpefunksjoner for å lese inn de ulike skjema som finnes 
+#' i mrs5-kodebok. Tar inn filsti som argument og returnerer en liste med 
+#' kanonisk kodebok for alle skjema inkludert i skjemanavn. 
+#'
+#' @param filsti Tekststreng som angir filsti til kodebok.  
+#' @param skjemanavn Tekststreng med skjemanavn som skal leses inn slik det er 
+#' navngitt i kodebok. Hvis `skjemanavn = NULL` hentes kodebok for alle skjema inn. 
+#'
+#' @return
+#' Listeobjekt med rådataversjon av alle skjema i kodeboken for skjema inkludert 
+#' i `skjemanavn`. 
+#' 
+#' @export
+#'
+#' @examples
+mrs5_parse_kodebok = function(filsti, skjemanavn) { 
   
   # Kaller på hjelpefunksjoner for å lese inn de enkelte delene av kodeboken.  
   
@@ -44,25 +56,105 @@ mrs5_parse_kodebok = function(filsti) {
   # Returnerer 
   }
 
+#' mrs5_parse_fanenavn
+#' 
+#' Funksjon for å hente fanenavn og returnere som en tekststreng. 
+#' Er nok bedre å bruke `readxl::excel_sheets()` her, men beholder 
+#' denne som en placeholder intil videre. 
+#'
+#' @param filsti 
+#'
+#' @return
+#' Tekstvektor som inneholder alle fanenavn fra kodeboken. 
+#' @export
+#'
+#' @examples
 mrs5_parse_fanenavn = function(filsti) {
   
   # Gir ut en tekstvektor med alle fanenavn slik de er lagret i kodebok 
   # fra filsti
 }
 
+#' les inn generelt fane for skjema
+#' 
+#' @description
+#' Leser inn hovedfane for `skjemanavn` fra MRS5-kodebok. 
+#' 
+#' @param filsti Plassering av kodebokfil på disk. 
+#' @param skjemanavn Navn på skjema slik det er gitt i kodebok.
+#'
+#' @return
+#' Returnerer en tibble med rådataversjon av generelt-fane for `skjemanavn`
+#' fra kodebok. 
+#' @export
+#'
+#' @examples
+#' # Les inn rådataversjon av generelt-fane for skjemanavn fra kodebok
+#' kb_raa = mrs5_parse_kodebok_skjema(filsti = "path/to/file/, skjemanavn = "skjema")
 mrs5_parse_kodebok_skjema = function(filsti, skjemanavn) {
   
   # Funksjon for å hente inn rådata fra fane '1 - Skjemanavn'. 
 }
 
+#' les inn felter for skjema fra kodebok
+#'
+#' @description
+#' Leser inn rådataversjon av felter-fane for `skjemanavn` fra MRS5-kodebok. 
+#' 
+#' @param filsti Plassering av kodebokfil på disk.
+#' @param skjemanavn Navn på skjema slik det er gitt i kodebok.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' # Les inn rådataversjon av felter-fane for skjemanavn fra kodebok
+#' kb_felter_raa = mrs5_parse_kodebok_felter(filsti = "path/to/file/, skjemanavn = "skjema")
 mrs5_parse_kodebok_felter = function(filsti, skjemanavn) {
   
   # Funksjon for å hente inn rådata fra fane '2 Skjemanavn-felter'. 
 }
 
+#' Les inn regler fane for skjema
+#' 
+#' @description
+#' Leser in rådataversjon av regler-fane for `skjemanavn` fra MRS5-kodebok. 
+#'
+#' @param filsti Plassering av kodebokfil på disk.
+#' @param skjemanavn Navn på skjema slik det er gitt i kodebok.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' #' # Les inn rådataversjon av regler-fane for skjemanavn fra kodebok
+#' kb_regler_raa = mrs5_parse_kodebok_regler(filsti = "path/to/file/, skjemanavn = "skjema")
 mrs5_parse_kodebok_regler = function(filsti, skjemanavn){
   
   # Funksjon for å hente inn rådata fra fane '3 Skjemanavn-regler'. 
+}
+
+
+# Hjelpefunksjoner for Parse ----------------------------------------------
+
+#' Kombinere innleste skjema
+#' 
+#' Tar inn utdata fra parse-funksjonene og samler alle skjema i tibbles.
+#' Utdata er en liste på samme format som kanonisk kodebok men med rådata.
+#' 
+#' @param parsed_generelt utdata fra mrs5_parse_kodebbk_skjema. 
+#' @param parsed_felter utdata fra mrs5_parse_kodebok_felter.
+#' @param parsed_regler utdata fra mrs5_parse_kodebok_regler. 
+#'
+#' @return
+#' Liste med tibblene kodebok_raa_generelt, kodebok_raa_felter, kodebok_raa_regler. 
+#' @export
+#'
+#' @examples
+#' # Kombiner rådata
+#' mrs5_kombiner_parsed(parsed_generelt = kb_raa_generelt, parsed_felter = kb_raa_felter, parsed_regler = kb_raa_regler)
+mrs5_kombiner_parsed = function(parsed_generelt, parsed_felter, parsef_regler) {
+  
 }
 
 # Konverter til kanonisk --------------------------------------------------
