@@ -129,7 +129,7 @@ test_that("Gir forventet resultat", {
   )
   
   # Teste henting av info for ett enkelt skjema
-  expect_no_error(
+  expect_identical(
     mrs5_parse_kodebok_skjema(
       filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.csv"),
       skjemanavn = "Testskjema"
@@ -138,7 +138,7 @@ test_that("Gir forventet resultat", {
   )
   
   # Teste henting av info for alle skjema
-  expect_no_error(
+  expect_identical(
     mrs5_parse_kodebok_skjema(
       filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.csv"),
       skjemanavn = NULL
