@@ -153,7 +153,7 @@ mrs5_parse_kodebok_regler = function(filsti, skjemanavn){
 #' @examples
 #' # Kombiner rådata
 #' mrs5_kombiner_parsed(parsed_generelt = kb_raa_generelt, parsed_felter = kb_raa_felter, parsed_regler = kb_raa_regler)
-mrs5_kombiner_parsed = function(parsed_generelt, parsed_felter, parsef_regler) {
+mrs5_kombiner_parsed = function(parsed_generelt, parsed_felter, parsed_regler) {
   
 }
 
