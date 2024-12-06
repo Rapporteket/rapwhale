@@ -162,6 +162,17 @@ test_that("typekontroll_skjemanavn", {
   
 })
 
+test_that("Gir feilmelding hvis skjemanavn ikke eksisterer i kodebok", {
+  feilmelding_feil_skjemanavn = "Skjemanavn finnes ikke i kodebok"
+  
+  expect_error(
+    mrs5_parse_kodebok_felter(
+      filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_skjema_ok.csv"),
+      skjemanavn = "feil navn"
+    ),
+    feilmelding_feil_skjemanavn
+  )
+})
 # Utdata 
 
 
@@ -220,6 +231,18 @@ test_that("typekontroll_skjemanavn", {
     feilmelding_feil_type_skjemanavn
   )
   
+})
+
+test_that("Gir feilmelding hvis skjemanavn ikke eksisterer i kodebok", {
+  feilmelding_feil_skjemanavn = "Skjemanavn finnes ikke i kodebok"
+  
+  expect_error(
+    mrs5_parse_kodebok_regler(
+      filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_skjema_ok.csv"),
+      skjemanavn = "feil navn"
+    ),
+    feilmelding_feil_skjemanavn
+  )
 })
 # mrs5_kombiner_parsed ----------------------------------------------------
 
