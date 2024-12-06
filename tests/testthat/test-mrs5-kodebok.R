@@ -168,7 +168,59 @@ test_that("typekontroll_skjemanavn", {
 
 
 # mrs5_parse_kodebok_regler -----------------------------------------------
+test_that("typekontroll filsti", {
+  
+  feilmelding_feil_type_filsti = "Filsti må være en tekststreng"
+  
+  expect_error(
+    mrs5_parse_kodebok_regler(
+      filsti = 2L, 
+      skjemanavn = NULL
+    ),
+    feilmelding_feil_type_filsti)
+  
+  expect_error(
+    mrs5_parse_kodebok_regler(
+      filsti = 2.5, 
+      skjemanavn = NULL
+    ), 
+    feilmelding_feil_type_filsti)
+  
+  expect_error(
+    mrs5_parse_kodebok_regler(
+      skjemanavn = NULL
+    ), 
+    feilmelding_feil_type_filsti)
+  
+  expect_error(
+    mrs5_parse_kodebok_regler(
+      filsti = TRUE, 
+      skjemanavn = NULL
+    ), 
+    feilmelding_feil_type_filsti)
+})
 
+test_that("typekontroll_skjemanavn", {
+  
+  feilmelding_feil_type_skjemanavn = "skjemanavn må være NULL eller en tekst-vektor"
+  
+  expect_error(
+    mrs5_parse_kodebok_regler(
+      filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_skjema_ok.csv"), 
+      skjemanavn = 1
+    ), 
+    feilmelding_feil_type_skjemanavn
+  )
+  
+  expect_error(
+    mrs5_parse_kodebok_regler(
+      filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_skjema_ok.csv"), 
+      skjemanavn = TRUE
+    ), 
+    feilmelding_feil_type_skjemanavn
+  )
+  
+})
 # mrs5_kombiner_parsed ----------------------------------------------------
 
 
