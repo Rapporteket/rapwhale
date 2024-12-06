@@ -165,16 +165,16 @@ mrs5_konverter_til_kanonisk = function() {
 # Hjelpefunksjoner kanonisk -----------------------------------------------
 
 # metadata
-mrs5_hent_metadata = function() {
+mrs5_hent_metadata = function(filsti, skjemanavn) {
   # henter metainfo og versjonslogg
 }
 
-mrs5_hent_versjonslogg = function() {
+mrs5_hent_versjonslogg = function(filsti, skjemanavn) {
   # Trekke ut dato og versjonsnummer. 
   # Legge som attributt til kodebok
 }
 
-mrs5_hent_metainfo = function(){
+mrs5_hent_metainfo = function(filsti, skjemanavn) {
   # Trekke ut aktuell info fra hovedliste. 
   # Antall felter, Antall regler, Skjemadato-kilde, aldersberegning-kilde, 
 }
