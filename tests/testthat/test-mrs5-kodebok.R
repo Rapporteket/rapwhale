@@ -3,7 +3,6 @@
 
 # Parse-funksjoner --------------------------------------------------------
 
-
 # mrs5_parse_kodebok ------------------------------------------------------
 
 # mrs5_parse_kodebok_skjema -----------------------------------------------
@@ -173,10 +172,6 @@ test_that("Gir feilmelding hvis skjemanavn ikke eksisterer i kodebok", {
     feilmelding_feil_skjemanavn
   )
 })
-# Utdata 
-
-
-
 
 # mrs5_parse_kodebok_regler -----------------------------------------------
 test_that("typekontroll filsti", {
@@ -246,10 +241,23 @@ test_that("Gir feilmelding hvis skjemanavn ikke eksisterer i kodebok", {
 })
 # mrs5_kombiner_parsed ----------------------------------------------------
 
+# test_that("Gir forventet utdata for ulikt antall skjema", {
+#   
+#   # Ett skjema navngitt
+#   
+#   # Flere skjema 
+#   
+# })
 
 # Hjelpefunksjoner for parse ----------------------------------------------
 
-# mrs5_hent_metadata
+# mrs5_hent_versjonslogg --------------------------------------------------
+
+# mrs5_hent_metainfo ------------------------------------------------------
+
+# Konverter til kanonisk --------------------------------------------------
+
+# mrs5_hent_metadata -----------------------------------------------------
 
 # Forventet utdata
 kb_skjema_raa_ett_skjema = list(
@@ -300,15 +308,11 @@ test_that("Gir forventet feilmelding ved feil format på kodebok", {
     feilmelding_feil_struktur)
 })
 
-# Konverter til kanonisk --------------------------------------------------
-
 
 # Hjelpefunksjoner kanonisk -----------------------------------------------
 
 
 # Validering --------------------------------------------------------------
-
-
 
 kb_skjema_raa_flere_skjema = list(
   versjonslogg = tibble::tibble(
