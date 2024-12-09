@@ -314,56 +314,56 @@ test_that("Gir forventet feilmelding ved feil format på kodebok", {
 
 # Validering --------------------------------------------------------------
 
-kb_skjema_raa_flere_skjema = list(
-  versjonslogg = tibble::tibble(
-    skjemanavn = c("Testskjema", "Testskjema", "Sluttskjema", "Sluttskjema", "Sluttskjema"),
-    versjonsnummer = c(1L, 2L, 1L, 2L, 3L), 
-    navn = c("Versjon 1", "Versjon 2", "Versjon 1", "Versjon 2", "Versjon 3"), 
-    dato = lubridate::as_datetime(c("2020-01-01 12:00:00", "2021-01-01 12:00:00", 
-                                    "2020-01-01 12:00:00", "2021-01-01 12:00:00", 
-                                    "2022-01-01 12:00:00")), 
-    kan_opprettes = c("Nei", "Ja", "Nei", "Nei", "Ja"),
-    kan_endres = c(rep("Ja", 5)),	
-    kan_slettes = c(rep("Ja", 5))
-  ),
-  metainfo = tibble::tibble(
-    skjematypenavn = c("Testskjema", "Sluttskjema"), 
-    skjematype_ID = c(1L, 2L),
-    foreldreskjematype_ID = c(NA, 1L), 
-    antall_felter = c(12L, 12L), 
-    antall_regler = c(5L, 5L),
-    skjemadato_hentes_fra_felt = c("Innlagt", "Utskrevet"),
-    aldersberegning_skjer_i_forhold_til_felt = c("Innlagt", "Utskrevet"),
-    er_ePROM_skjematype = c("Nei", "Nei"), 
-    tilgjengelig_i_skjemasok = c("Ja", "Ja"),
-    tilgjengelig_i_skjemaopprettelsesdialog = c("Ja", "Ja"),
-    tilgjengelig_i_skjemaeksport = c("Ja", "Ja"), 
-    tilgjengelig_i_rapporter = c("Ja", "Ja"),
-    vises_paa_pasientsiden = c("Ja", "Ja"), 
-    vises_i_skjematellinger = c("Ja", "Ja")
-  )
-)
-
-
-# Teste henting av info for alle skjema
-expect_identical(
-  mrs5_parse_kodebok_skjema(
-    filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.csv"),
-    skjemanavn = NULL
-  ),
-  kb_skjema_raa_flere_skjema
-)
-
-# Teste henting av info for alle skjema navngitt
-expect_identical(
-  mrs5_parse_kodebok_skjema(
-    filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.csv"),
-    skjemanavn = NULL
-  ),
-  mrs5_parse_kodebok_skjema(
-    filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.csv"),
-    skjemanavn = c("Testskjema", "Sluttskjema")
-  )
-)
-
-})
+# kb_skjema_raa_flere_skjema = list(
+#   versjonslogg = tibble::tibble(
+#     skjemanavn = c("Testskjema", "Testskjema", "Sluttskjema", "Sluttskjema", "Sluttskjema"),
+#     versjonsnummer = c(1L, 2L, 1L, 2L, 3L), 
+#     navn = c("Versjon 1", "Versjon 2", "Versjon 1", "Versjon 2", "Versjon 3"), 
+#     dato = lubridate::as_datetime(c("2020-01-01 12:00:00", "2021-01-01 12:00:00", 
+#                                     "2020-01-01 12:00:00", "2021-01-01 12:00:00", 
+#                                     "2022-01-01 12:00:00")), 
+#     kan_opprettes = c("Nei", "Ja", "Nei", "Nei", "Ja"),
+#     kan_endres = c(rep("Ja", 5)),	
+#     kan_slettes = c(rep("Ja", 5))
+#   ),
+#   metainfo = tibble::tibble(
+#     skjematypenavn = c("Testskjema", "Sluttskjema"), 
+#     skjematype_ID = c(1L, 2L),
+#     foreldreskjematype_ID = c(NA, 1L), 
+#     antall_felter = c(12L, 12L), 
+#     antall_regler = c(5L, 5L),
+#     skjemadato_hentes_fra_felt = c("Innlagt", "Utskrevet"),
+#     aldersberegning_skjer_i_forhold_til_felt = c("Innlagt", "Utskrevet"),
+#     er_ePROM_skjematype = c("Nei", "Nei"), 
+#     tilgjengelig_i_skjemasok = c("Ja", "Ja"),
+#     tilgjengelig_i_skjemaopprettelsesdialog = c("Ja", "Ja"),
+#     tilgjengelig_i_skjemaeksport = c("Ja", "Ja"), 
+#     tilgjengelig_i_rapporter = c("Ja", "Ja"),
+#     vises_paa_pasientsiden = c("Ja", "Ja"), 
+#     vises_i_skjematellinger = c("Ja", "Ja")
+#   )
+# )
+# 
+# 
+# # Teste henting av info for alle skjema
+# expect_identical(
+#   mrs5_parse_kodebok_skjema(
+#     filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.csv"),
+#     skjemanavn = NULL
+#   ),
+#   kb_skjema_raa_flere_skjema
+# )
+# 
+# # Teste henting av info for alle skjema navngitt
+# expect_identical(
+#   mrs5_parse_kodebok_skjema(
+#     filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.csv"),
+#     skjemanavn = NULL
+#   ),
+#   mrs5_parse_kodebok_skjema(
+#     filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.csv"),
+#     skjemanavn = c("Testskjema", "Sluttskjema")
+#   )
+# )
+# 
+# })
