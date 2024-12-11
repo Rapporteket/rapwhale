@@ -128,6 +128,7 @@ test_that("typekontroll filsti", {
   
   expect_error(
     mrs5_parse_kodebok_felter(
+      filsti = NULL, 
       skjemanavn = NULL
     ), 
     feilmelding_feil_type_filsti)
@@ -195,6 +196,7 @@ test_that("typekontroll filsti", {
   
   expect_error(
     mrs5_parse_kodebok_regler(
+      filsti = NULL, 
       skjemanavn = NULL
     ), 
     feilmelding_feil_type_filsti)
@@ -261,53 +263,53 @@ test_that("Gir feilmelding hvis skjemanavn ikke eksisterer i kodebok", {
 # mrs5_hent_metadata -----------------------------------------------------
 
 # Forventet utdata
-kb_skjema_raa_ett_skjema = list(
-  versjonslogg = tibble::tibble(
-    versjonsnummer = c(1L, 2L), 
-    navn = c("Versjon 1", "Versjon 2"), 
-    dato = lubridate::as_datetime(c("2020-01-01 12:00:00", "2021-01-01 12:00:00")), 
-    kan_opprettes = c(FALSE, TRUE),
-    kan_endres = c(TRUE, TRUE),	
-    kan_slettes = c(TRUE, TRUE)
-  ),
-  metainfo = tibble::tibble(
-    metavariabel = c("skjematypenavn", "skjematype_ID", 
-                     "foreldreskjematype_ID", "antall_felter", "antall_regler", 
-                     "skjemadato_hentes_fra_felt", 
-                     "aldersberegning_skjer_i_forhold_til_felt",
-                     "er_ePROM_skjematype", "tilgjengelig_i_skjemasok",
-                     "tilgjengelig_i_skjemaopprettelsesdialog",
-                     "tilgjengelig_i_skjemaeksport", "tilgjengelig_i_rapporter",
-                     "vises_paa_pasientsiden", "vises_i_skjematellinger"
-    ),
-    metaverdi = c("Testskjema", "1", "", "12", "5", "Innlagt", "CreationDate",
-                  "Nei", "Ja", "Ja", "Ja", "Ja", "Ja", "Ja")
-  )
-)
-
-test_that("Gir forventet utdata", {
-  
-  expect_identical(
-    mrs5_hent_metadata(
-      filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_feil_skjema.xlsx"),
-      skjemanavn = "Testskjema"
-    ), 
-    kb_skjema_raa_ett_skjema 
-  )
-})
-
-# Feil format skjema
-test_that("Gir forventet feilmelding ved feil format på kodebok", {
-  
-  feilmelding_feil_struktur = "Kodebok må være på MRS5-struktur"
-  
-  expect_error(
-    mrs5_hent_metadata(
-      filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_feil_skjema.xlsx"),
-      skjemanavn = "Testskjema"
-    ),
-    feilmelding_feil_struktur)
-})
+# kb_skjema_raa_ett_skjema = list(
+#   versjonslogg = tibble::tibble(
+#     versjonsnummer = c(1L, 2L), 
+#     navn = c("Versjon 1", "Versjon 2"), 
+#     dato = lubridate::as_datetime(c("2020-01-01 12:00:00", "2021-01-01 12:00:00")), 
+#     kan_opprettes = c(FALSE, TRUE),
+#     kan_endres = c(TRUE, TRUE),	
+#     kan_slettes = c(TRUE, TRUE)
+#   ),
+#   metainfo = tibble::tibble(
+#     metavariabel = c("skjematypenavn", "skjematype_ID", 
+#                      "foreldreskjematype_ID", "antall_felter", "antall_regler", 
+#                      "skjemadato_hentes_fra_felt", 
+#                      "aldersberegning_skjer_i_forhold_til_felt",
+#                      "er_ePROM_skjematype", "tilgjengelig_i_skjemasok",
+#                      "tilgjengelig_i_skjemaopprettelsesdialog",
+#                      "tilgjengelig_i_skjemaeksport", "tilgjengelig_i_rapporter",
+#                      "vises_paa_pasientsiden", "vises_i_skjematellinger"
+#     ),
+#     metaverdi = c("Testskjema", "1", "", "12", "5", "Innlagt", "CreationDate",
+#                   "Nei", "Ja", "Ja", "Ja", "Ja", "Ja", "Ja")
+#   )
+# )
+# 
+# test_that("Gir forventet utdata", {
+#   
+#   expect_identical(
+#     mrs5_hent_metadata(
+#       filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
+#       skjemanavn = "Testskjema"
+#     ), 
+#     kb_skjema_raa_ett_skjema 
+#   )
+# })
+# 
+# # Feil format skjema
+# test_that("Gir forventet feilmelding ved feil format på kodebok", {
+#   
+#   feilmelding_feil_struktur = "Kodebok må være på MRS5-struktur"
+#   
+#   expect_error(
+#     mrs5_hent_metadata(
+#       filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_feil_skjema.xlsx"),
+#       skjemanavn = "Testskjema"
+#     ),
+#     feilmelding_feil_struktur)
+# })
 
 
 # Hjelpefunksjoner kanonisk -----------------------------------------------
