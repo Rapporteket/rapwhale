@@ -145,7 +145,37 @@ mrs5_parse_kodebok_skjema = function(filsti, skjemanavn) {
 #' kb_felter_raa = mrs5_parse_kodebok_felter(filsti = "path/to/file/, skjemanavn = "skjema")
 mrs5_parse_kodebok_felter = function(filsti, skjemanavn) {
   
-  # Funksjon for å hente inn rådata fra fane '2 Skjemanavn-felter'. 
+  # kontrollerer argumenter
+  assertthat::assert_that(assertthat::is.string(filsti),
+                          msg = "Filsti må være en tekststreng"
+  )
+  
+  stopifnot(file.exists(filsti))
+  fanenavn = readxl::excel_sheets(filsti)
+  
+  assertthat::assert_that(assertthat::is.string(skjemanavn),
+                          msg = "skjemanavn må være NULL eller en tekst-vektor"
+  )
+  
+  skjemanavn_aktuelt = fanenavn[stringr::str_detect(
+    fanenavn,
+    pattern = paste0(
+      skjemanavn,
+      "-felter$"
+    )
+  )]
+  
+  if (length(skjemanavn_aktuelt) != 1) {
+    stop("Skjemanavn finnes ikke i kodebok") 
+  }
+  
+  d_skjemanavn = suppressMessages(readxl::read_xlsx(filsti,
+                                                    sheet = skjemanavn_aktuelt,
+                                                    col_names = FALSE,
+                                                    col_types = "text"
+  ))
+  
+  return(d_skjemanavn)
 }
 
 #' Les inn regler fane for skjema
@@ -164,9 +194,38 @@ mrs5_parse_kodebok_felter = function(filsti, skjemanavn) {
 #' kb_regler_raa = mrs5_parse_kodebok_regler(filsti = "path/to/file/, skjemanavn = "skjema")
 mrs5_parse_kodebok_regler = function(filsti, skjemanavn){
   
-  # Funksjon for å hente inn rådata fra fane '3 Skjemanavn-regler'. 
+  # kontrollerer argumenter
+  assertthat::assert_that(assertthat::is.string(filsti),
+                          msg = "Filsti må være en tekststreng"
+  )
+  
+  stopifnot(file.exists(filsti))
+  fanenavn = readxl::excel_sheets(filsti)
+  
+  assertthat::assert_that(assertthat::is.string(skjemanavn),
+                          msg = "skjemanavn må være NULL eller en tekst-vektor"
+  )
+  
+  skjemanavn_aktuelt = fanenavn[stringr::str_detect(
+    fanenavn,
+    pattern = paste0(
+      skjemanavn,
+      "-regler$"
+    )
+  )]
+  
+  if (length(skjemanavn_aktuelt) != 1) {
+    stop("Skjemanavn finnes ikke i kodebok") 
+  }
+  
+  d_skjemanavn = suppressMessages(readxl::read_xlsx(filsti,
+                                                    sheet = skjemanavn_aktuelt,
+                                                    col_names = FALSE,
+                                                    col_types = "text"
+  ))
+  
+  return(d_skjemanavn)
 }
-
 
 # Hjelpefunksjoner for Parse ----------------------------------------------
 
