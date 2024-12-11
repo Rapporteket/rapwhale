@@ -96,7 +96,37 @@ mrs5_parse_fanenavn = function(filsti) {
 #' kb_raa = mrs5_parse_kodebok_skjema(filsti = "path/to/file/, skjemanavn = "skjema")
 mrs5_parse_kodebok_skjema = function(filsti, skjemanavn) {
   
-  # Funksjon for å hente inn rådata fra fane '1 - Skjemanavn'. 
+  # kontrollerer argumenter
+  assertthat::assert_that(assertthat::is.string(filsti),
+    msg = "Filsti må være en tekststreng"
+  )
+  
+  stopifnot(file.exists(filsti))
+  fanenavn = readxl::excel_sheets(filsti)
+
+  assertthat::assert_that(assertthat::is.string(skjemanavn),
+    msg = "skjemanavn må være NULL eller en tekst-vektor"
+  )
+
+  skjemanavn_aktuelt = fanenavn[stringr::str_detect(
+    fanenavn,
+    pattern = paste0(
+      skjemanavn,
+      "$"
+    )
+  )]
+
+  if (length(skjemanavn_aktuelt) != 1) {
+    stop("Skjemanavn finnes ikke i kodebok") 
+  }
+
+  d_skjemanavn = suppressMessages(readxl::read_xlsx(filsti,
+    sheet = skjemanavn_aktuelt,
+    col_names = FALSE,
+    col_types = "text"
+  ))
+
+  return(d_skjemanavn)
 }
 
 #' les inn felter for skjema fra kodebok
