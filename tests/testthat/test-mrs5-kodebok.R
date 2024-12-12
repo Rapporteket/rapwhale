@@ -175,6 +175,63 @@ test_that("Gir feilmelding hvis skjemanavn ikke eksisterer i kodebok", {
   )
 })
 
+# Utdata
+test_that("Gir forventet resultat", {
+  
+  kb_felter_raa = tibble::tibble(
+    Variabelnavn = c("PasientGUID", "Skjematype", "UnitId", "PatientAge", 
+                     "Hoyde", "CreationDate", "Innlagt", "FormStatus", 
+                     "PatientGender", "HoydeUkjent", "VektUkjent"),
+    Visningstekst = c("PasientGUID", "Skjematype", "UnitId", "PatientAge", 
+                      "Høyde (cm)", "Opprettet", "Innlagt", "FormStatus", 
+                      "PatientGender", "Høyde ukjent", "Vekt ukjent"),
+    `Unik teknisk referanse` = c("PatientInRegistryGuid", "FormTypeName", 
+                                 "UnitId", "PatientAge", "Hoyde", "CreationDate", 
+                                 "Innlagt", "FormStatus", "PatientGender", 
+                                 "HoydeUkjent", "VektUkjent"),
+    `Mulige verdier` = c(NA, NA, NA, NA, NA, NA, NA, 
+                         "0 = Ingen, 1 = Kladd, 2 = Ferdigstilt, 4 = Slettet, 5 = Returnert", 
+                         "0 = Ukjent, 1 = Mann, 2 = Kvinne", NA, NA),
+    Felttype = c("String", "String", "Number", "Number", "Number", "DateTime", 
+                 "DateTime", "Enum", "Enum", "Bool", "Bool"),
+    Kodeverk = c(rep(NA_character_, 11)), 
+    Kjernefelt = c("Ja", "Ja", "Ja", "Ja", "Nei", "Ja", "Ja", 
+                   "Ja", "Ja", "Nei", "Nei"),
+    Identifiserbar = c("Nei", "Nei", "Nei", "Nei", NA, "Nei", 
+                       "Nei", "Nei", "Nei", NA, NA),
+    `Gyldig fra og med skjemaversjon` = c(1, 1, 1, 1, 10, 1, 
+                                         1, 1, 1, 10, 10),
+    `Fjernet fra og med skjemaversjon` = c(rep(NA_character_, 11)),
+    `Tillat kun positive verdier` = c(rep(NA_character_, 11)),
+    Hjelpetekst = c(rep(NA_character_)),
+    `Skal vises i registeruttrekk` = c(rep("Ja", 11)),
+    `Skal eksporteres til Hap Helsedata` =  c(rep("Ja", 11)),
+    `Gammelt navn` = c(rep(NA_character_)),
+    Beskrivelse = c("GUID til pasienten, ulik lokalt og nasjonalt", 
+                    "Navnet til skjematypen", 
+                    "ID til enheten som skjemaet er opprettet på", 
+                    "PatientAge blir kalkulert ved (hver) skjemalagring. Den beregnes ut i fra hva skjematypen har definert som PropertyForAgeCalculation. Er ikke denne definert, brukes opprettelsesdatoen på skjemaet.", 
+                    NA, "Dato og tidspunkt skjemaet ble opprettet", 
+                    "Dato og tidspunkt pasienten ble innlagt", "Skjemaets status", 
+                    "Pasientens kjønn gitt fra Personregisteret", NA, NA),
+    `Patientvennlig term` = c(rep(NA_character_, 11)),
+    Tema = c(rep(NA_character_, 11)),
+    Kommentar = c(rep(NA_character_, 11)),
+    `Intern kommentar` = c(rep(NA_character_, 11)),
+    Feltkilde = c("Calculated", "Calculated", "Calculated", "Calculated", 
+                  "DirectFromForm", "Calculated", "DirectFromForm", 
+                  "Calculated", "Calculated", "DirectFromForm", 
+                  "DirectFromForm")
+  )
+  
+  expect_identical(
+    mrs5_parse_kodebok_felter(
+      filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
+      skjemanavn = "Testskjema"
+    ),
+    kb_felter_raa
+  )
+})
 # mrs5_parse_kodebok_regler -----------------------------------------------
 test_that("typekontroll filsti", {
   
@@ -242,6 +299,11 @@ test_that("Gir feilmelding hvis skjemanavn ikke eksisterer i kodebok", {
     feilmelding_feil_skjemanavn
   )
 })
+
+# Utdata
+# test_that("Gir forventet resultat", {
+#   
+# })
 # mrs5_kombiner_parsed ----------------------------------------------------
 
 # test_that("Gir forventet utdata for ulikt antall skjema", {
