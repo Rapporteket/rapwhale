@@ -301,9 +301,41 @@ test_that("Gir feilmelding hvis skjemanavn ikke eksisterer i kodebok", {
 })
 
 # Utdata
-# test_that("Gir forventet resultat", {
-#   
-# })
+test_that("Gir forventet resultat", {
+
+  kb_regler_raa = tibble::tibble(
+    Id = c("1000", "1008", "1005", "1058", "1011"),
+    Eiertype = c("Field", "Field", "Field", "Field", "Field"),
+    Eier  = c("Innlagt", "Innlagt", "Innlagt", "HoydeUkjent", "Innlagt"),
+    Regeltype = c("105", "107", "109", "42", "100"),
+    `Regeltype navn` = c("Påkrevd", "Er større enn eller lik gitt verdi", 
+                       "Er mindre enn eller lik gitt verdi", "Skjul hvis", 
+                       "Registerspesifikk validering"), 
+    Melding = c("Feltet må besvares.", 
+                "Feltet må være større enn eller lik 01.01.2020 00:00:00", 
+                "Feltet må være mindre enn eller lik 16.04.2024 10:59:26", 
+                "Feltet er skjult hvis: Feltet (Hoyde) må besvares.", 
+                "Innleggelsesdato kan ikke være senere enn CreationDate."),
+    Forklaring = c("Feltet (Innlagt) må besvares.", 
+                   "Feltet (Innlagt) må være større enn eller lik 01.01.2020 00:00:00.", 
+                   "Feltet (Innlagt) må være mindre enn eller lik 16.04.2024 10:59:26.", 
+                   "Feltet (HoydeUkjent) er skjult hvis: Feltet (Hoyde) må besvares.", 
+                   "Innleggelsesdato kan ikke være senere enn CreationDate."),
+    `Gyldig fra og med skjemaversjon` = c("0", "0", "0", "0", "0"),
+    `Fjernet fra og med skjemaversjon` = c(rep(NA_character_, 5)),
+    Sammenligningsverdi = c(NA, "43831", "45398.457943530098", NA, NA),
+    Konsekvens = c("Error", "Error", "Error", "Info", "Error")
+    )
+  
+  expect_identical(
+    mrs5_parse_kodebok_regler(
+      filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
+      skjemanavn = "Testskjema"
+    ),
+    kb_regler_raa 
+  )
+  
+})
 # mrs5_kombiner_parsed ----------------------------------------------------
 
 # test_that("Gir forventet utdata for ulikt antall skjema", {
