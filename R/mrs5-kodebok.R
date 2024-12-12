@@ -220,7 +220,7 @@ mrs5_parse_kodebok_regler = function(filsti, skjemanavn){
   
   d_skjemanavn = suppressMessages(readxl::read_xlsx(filsti,
                                                     sheet = skjemanavn_aktuelt,
-                                                    col_names = FALSE,
+                                                    col_names = TRUE,
                                                     col_types = "text"
   ))
   
