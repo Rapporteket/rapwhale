@@ -2,6 +2,15 @@
 # Hovedfunksjon ---------------------------------------------------------
 
 
+# Fixme's -----------------------------------------------------------------
+
+# FIXME - Legge eksempelfiler i inst-mappe for å ha eksempler som virker for 
+# funksjoner som leser inn filer. 
+# FIXME - Oppdatere docs for funksjonene punktet over gjelder. 
+#   - mrs5_hent_kodebok, 
+# FIXME - Konverter til kanonisk funksjonalitet 
+# FIXME - Fikse import av nødvendige funsjoner og fjerne :: 
+
 # Hent mrs5-kodebok -------------------------------------------------------
 
 #' Hent mrs5-kodebok
