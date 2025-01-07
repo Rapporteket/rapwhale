@@ -5,7 +5,7 @@
 
 # mrs5_parse_kodebok ------------------------------------------------------
 
-# mrs5_parse_kodebok_skjema -----------------------------------------------
+# mrs5_parse_kodebok_meta -----------------------------------------------
 
 # Argumenter
 test_that("typekontroll filsti", {
@@ -13,28 +13,28 @@ test_that("typekontroll filsti", {
   feilmelding_feil_type_filsti = "Filsti må være en tekststreng"
 
   expect_error(
-    mrs5_parse_kodebok_skjema(
+    mrs5_parse_kodebok_meta(
       filsti = 2L, 
       skjemanavn = NULL
     ),
     feilmelding_feil_type_filsti)
   
   expect_error(
-    mrs5_parse_kodebok_skjema(
+    mrs5_parse_kodebok_meta(
       filsti = 2.5, 
       skjemanavn = NULL
     ), 
     feilmelding_feil_type_filsti)
   
   expect_error(
-    mrs5_parse_kodebok_skjema(
+    mrs5_parse_kodebok_meta(
       filsti = NULL, 
       skjemanavn = NULL
     ), 
     feilmelding_feil_type_filsti)
   
   expect_error(
-    mrs5_parse_kodebok_skjema(
+    mrs5_parse_kodebok_meta(
       filsti = TRUE, 
       skjemanavn = NULL
     ), 
@@ -46,7 +46,7 @@ test_that("typekontroll_skjemanavn", {
   feilmelding_feil_type_skjemanavn = "skjemanavn må være NULL eller en tekst-vektor"
 
   expect_error(
-    mrs5_parse_kodebok_skjema(
+    mrs5_parse_kodebok_meta(
       filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"), 
       skjemanavn = 1
     ), 
@@ -54,7 +54,7 @@ test_that("typekontroll_skjemanavn", {
     )
   
   expect_error(
-    mrs5_parse_kodebok_skjema(
+    mrs5_parse_kodebok_meta(
       filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"), 
       skjemanavn = TRUE
     ), 
@@ -67,7 +67,7 @@ test_that("Gir feilmelding hvis skjemanavn ikke eksisterer i kodebok", {
 feilmelding_feil_skjemanavn = "Skjemanavn finnes ikke i kodebok"
 
 expect_error(
-  mrs5_parse_kodebok_skjema(
+  mrs5_parse_kodebok_meta(
     filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
     skjemanavn = "feil navn"
   ),
@@ -97,7 +97,7 @@ test_that("Gir forventet resultat", {
 
   # Teste henting av info for ett enkelt skjema
   expect_identical(
-    mrs5_parse_kodebok_skjema(
+    mrs5_parse_kodebok_meta(
       filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
       skjemanavn = "Testskjema"
     ),
@@ -395,7 +395,7 @@ test_that("Hent_versjonslogg gir forventet utdata", {
 
   expect_identical(
     mrs5_hent_versjonslogg(
-      parsed_generelt = mrs5_parse_kodebok_skjema(
+      parsed_generelt = mrs5_parse_kodebok_meta(
         filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
         skjemanavn = "Testskjema"
       )
@@ -409,7 +409,7 @@ test_that("Hent_metainfo gir forventet utdata", {
   
   expect_identical(
     mrs5_hent_metainfo(
-      parsed_generelt = mrs5_parse_kodebok_skjema(
+      parsed_generelt = mrs5_parse_kodebok_meta(
         filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
         skjemanavn = "Testskjema"
       )
@@ -473,7 +473,7 @@ test_that("Gir ut forventet resultat", {
 # 
 # # Teste henting av info for alle skjema
 # expect_identical(
-#   mrs5_parse_kodebok_skjema(
+#   mrs5_parse_kodebok_meta(
 #     filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
 #     skjemanavn = NULL
 #   ),
@@ -482,11 +482,11 @@ test_that("Gir ut forventet resultat", {
 # 
 # # Teste henting av info for alle skjema navngitt
 # expect_identical(
-#   mrs5_parse_kodebok_skjema(
+#   mrs5_parse_kodebok_meta(
 #     filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
 #     skjemanavn = NULL
 #   ),
-#   mrs5_parse_kodebok_skjema(
+#   mrs5_parse_kodebok_meta(
 #     filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
 #     skjemanavn = c("Testskjema", "Sluttskjema")
 #   )
