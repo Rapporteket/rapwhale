@@ -37,6 +37,44 @@ mrs5_hent_kodebok = function(filsti, skjemanavn = NULL) {
   
 } 
 
+#' Lag skjemanavn-vektor
+#' 
+#' @description
+#' Sjekker om `skjemanavn` er en gyldig tekst-vektor hvis oppgitt. Hvis det ikke
+#' er gitt en tekstvektor som argument hentes alle skjemanavn fra kodebok 
+#' funnet på `filsti`. 
+#' 
+#'
+#' @param filsti Plassering av kodebok
+#' @param skjemanavn Tekstvektor med skjemanavn som skal hentes ut eller `NULL`. 
+#'
+#' @return
+#' Returnerer tekstvektor med aktuelle skjemanavn. 
+#' @export
+#'
+#' @examples
+#' # Lager vektor med skjemanavn
+#' mrs5_trekk_ut_skjemanavn(filsti = "filsti/til/fil.xlsx", 
+#'                          skjemanavn = NULL)
+mrs5_trekk_ut_skjemanavn = function(filsti, skjemanavn) {
+
+  if(is.character(skjemanavn)) {
+    skjemanavn_ut = skjemanavn
+  }
+  
+  else if(is.null(skjemanavn)) {
+    
+    fanenavn = readxl::excel_sheets(filsti)
+    fanenavn_unike_skjema = fanenavn[seq(2, length(fanenavn), by = 3)]
+    
+    skjemanavn_ut = stringr::str_remove(fanenavn_unike_skjema, pattern = "\\d+\\-")
+    
+  } else {
+    stop("skjemanavn må være NULL eller en tekstvektor.")
+  }
+  
+  return(skjemanavn_ut)
+}
 # Parse rådata -------------------------------------------------------------
 
 #' Leser inn kodebokfil på rådata-format
