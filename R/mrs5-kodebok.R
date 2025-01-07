@@ -318,17 +318,37 @@ mrs5_hent_metadata = function(filsti, skjemanavn) {
 #' Henter versjonslogg fra generelt-fane for `skjemanavn`.  
 #' 
 #'
-#' @param filsti Plassering av kodebokfil på disk.
-#' @param skjemanavn Navn på skjema slik det er gitt i kodebok.
+#' @param parsed_generelt rådataversjon av generelt-fane fra kodebok. 
 #'
 #' @return
 #' Returnerer tibble med versjonslogg for `skjemanavn`. 
 #' @export
 #'
 #' @examples
-mrs5_hent_versjonslogg = function(filsti, skjemanavn) {
+mrs5_hent_versjonslogg = function(parsed_generelt) {
 
-  }
+  assertthat::assert_that(is.data.frame(parsed_generelt))
+  
+  skjemanavn = parsed_generelt[[1,2]]
+  
+  # finne NA-rad for å splitte metainfo og versjonslogg
+  na_rad = parsed_generelt |> 
+    dplyr::mutate(radnr = dplyr::row_number()) |> 
+    dplyr::filter(is.na(...1)) |> 
+    dplyr::pull(radnr)  
+  
+  # eProm-skjema har en ekstra tabell i skjemanavn-fane 
+  siste_rad = dplyr::if_else(length(na_rad) == 1, 
+                             nrow(parsed_generelt), 
+                             na_rad[2])
+  
+  d_versjonslogg = parsed_generelt[seq(na_rad[1]+1, siste_rad, 1), ] |> 
+    janitor::row_to_names(row_number = 1) |> 
+    janitor::clean_names() |> 
+    tibble::add_column("Skjemanavn" = skjemanavn, .before = 1)
+  
+  return(d_versjonslogg)
+}
 
 #' Henter ut metainfo for skjema
 #' 
