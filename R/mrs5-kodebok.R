@@ -292,26 +292,6 @@ mrs5_konverter_til_kanonisk = function() {
 
 # Hent metadata -----------------------------------------------------------
 
-#' Legger til metadata for kodebok
-#'
-#' @description
-#' Hjelpefunksjon for bruk i konvertering fra rådata til kanonisk kodebok. 
-#' Kaller på hjelpefunksjoner for å hente ut metadata for `skjemanavn`
-#' fra kodebok. Disse legges til kodebok som en attributt med navn 
-#' `versjonslogg` og `metainfo`. 
-#' 
-#' @param filsti Plassering av kodebokfil på disk.
-#' @param skjemanavn Navn på skjema slik det er gitt i kodebok.
-#'
-#' @return
-#' Legger til attributtene `versjonslogg` og `metainfo` til liste med kanonisk 
-#' kodebok. 
-#' @export
-#'
-#' @examples
-mrs5_hent_metadata = function(filsti, skjemanavn) {
-}
-
 #' Henter ut versjonslogg for skjema
 #' 
 #' @description
