@@ -1,7 +1,3 @@
-
-# Hovedfunksjon ---------------------------------------------------------
-
-
 # Fixme's -----------------------------------------------------------------
 
 # FIXME - Legge eksempelfiler i inst-mappe for å ha eksempler som virker for 
@@ -16,16 +12,20 @@
 
 # Hent mrs5-kodebok -------------------------------------------------------
 
-#' Hent mrs5-kodebok
+
+# Parse rådata -------------------------------------------------------------
+
+#' Les inn kodebok
 #' 
 #' @description
 #' Henter inn kodebok for registre på MRS5 fra `filsti`. 
-#' Kaller på de nødvendige hjelpefunksjonene for å lese data, og 
-#' lagre data på kanonisk format. 
+#' Kaller på de nødvendige hjelpefunksjonene for å lese inn rådataversjon 
+#' av kodebok.
 #'
 #' @param filsti Tekststreng som angir filsti til kodebok.  
-#' @param skjemanavn Tekststreng med skjemanavn som skal leses inn slik det er 
+#' @param skjemanavn Tekststreng med skjemanavn som skal leses inn slik de er 
 #' navngitt i kodebok. Hvis `skjemanavn = NULL` hentes kodebok for alle skjema inn. 
+
 #' @return
 #' Listeobjekt som inneholder tibblene kb_kodebok, kb_kategoriske og kb_regler. 
 #' @export
@@ -37,7 +37,7 @@
 #' # Hente for et enkelt skjema 
 #' kb_innleggelse = mrs5_hent_kodebok(filst = "/sti//til//kodebokfil", skjemanavn = "Innleggelse")
 mrs5_parse_kodebok = function(filsti, skjemanavn = NULL) {
-
+  
   kodebok_raa = list(
     "versjonslogg" = list(),
     "metainfo" = list(),
@@ -48,7 +48,7 @@ mrs5_parse_kodebok = function(filsti, skjemanavn = NULL) {
   skjemanavn = mrs5_trekk_ut_skjemanavn(filsti, skjemanavn)
   
   for(skjema in skjemanavn) {
-   
+    
     d_parsed_kodebok = mrs5_parse_kodebok_skjema(filsti = filsti, skjemanavn = skjema)
     
     kodebok_raa[["versjonslogg"]][[skjema]] = d_parsed_kodebok[["versjonslogg"]] 
@@ -61,48 +61,7 @@ mrs5_parse_kodebok = function(filsti, skjemanavn = NULL) {
   return(kodebok_raa)
 } 
 
-#' Lag skjemanavn-vektor
-#' 
-#' @description
-#' Sjekker om `skjemanavn` er en gyldig tekst-vektor hvis oppgitt. Hvis det ikke
-#' er gitt en tekstvektor som argument hentes alle skjemanavn fra kodebok 
-#' funnet på `filsti`. 
-#' 
-#'
-#' @param filsti Plassering av kodebok
-#' @param skjemanavn Tekstvektor med skjemanavn som skal hentes ut eller `NULL`. 
-#'
-#' @return
-#' Returnerer tekstvektor med aktuelle skjemanavn. 
-#' @export
-#'
-#' @examples
-#' # Lager vektor med skjemanavn
-#' mrs5_trekk_ut_skjemanavn(filsti = "filsti/til/fil.xlsx", 
-#'                          skjemanavn = NULL)
-mrs5_trekk_ut_skjemanavn = function(filsti, skjemanavn) {
-
-  if(is.character(skjemanavn)) {
-    skjemanavn_ut = skjemanavn
-  }
-  
-  else if(is.null(skjemanavn)) {
-    
-    fanenavn = readxl::excel_sheets(filsti)
-    fanenavn_unike_skjema = fanenavn[seq(2, length(fanenavn), by = 3)]
-    
-    skjemanavn_ut = stringr::str_remove(fanenavn_unike_skjema, pattern = "\\d+\\-")
-    
-  } else {
-    stop("skjemanavn må være NULL eller en tekstvektor.")
-  }
-  
-  return(skjemanavn_ut)
-}
-
-# Parse rådata -------------------------------------------------------------
-
-#' Leser inn kodebokfil på rådata-format
+#' Leser inn generelt-fane for et skjema
 #' 
 #' Kaller nødvendige hjelpefunksjoner for å lese inn de ulike fanene som finnes 
 #' i kodebok for `skjemanavn`. 
@@ -283,15 +242,43 @@ mrs5_parse_kodebok_regler = function(filsti, skjemanavn){
 
 # Hjelpefunksjoner for Parse ----------------------------------------------
 
-# Konverter til kanonisk --------------------------------------------------
-
-mrs5_konverter_til_kanonisk = function() {
+#' Lag skjemanavn-vektor
+#' 
+#' @description
+#' Sjekker om `skjemanavn` er en gyldig tekst-vektor hvis oppgitt. Hvis det ikke
+#' er gitt en tekstvektor som argument hentes alle skjemanavn fra kodebok 
+#' funnet på `filsti`. 
+#' 
+#' @param filsti Plassering av kodebok
+#' @param skjemanavn Tekstvektor med skjemanavn som skal hentes ut eller `NULL`. 
+#'
+#' @return
+#' Returnerer tekstvektor med aktuelle skjemanavn. 
+#' @export
+#'
+#' @examples
+#' # Lager vektor med skjemanavn
+#' mrs5_trekk_ut_skjemanavn(filsti = "filsti/til/fil.xlsx", 
+#'                          skjemanavn = NULL)
+mrs5_trekk_ut_skjemanavn = function(filsti, skjemanavn) {
+  
+  if(is.character(skjemanavn)) {
+    skjemanavn_ut = skjemanavn
+  }
+  
+  else if(is.null(skjemanavn)) {
+    
+    fanenavn = readxl::excel_sheets(filsti)
+    fanenavn_unike_skjema = fanenavn[seq(2, length(fanenavn), by = 3)]
+    
+    skjemanavn_ut = stringr::str_remove(fanenavn_unike_skjema, pattern = "\\d+\\-")
+    
+  } else {
+    stop("skjemanavn må være NULL eller en tekstvektor.")
+  }
+  
+  return(skjemanavn_ut)
 }
-
-# Hjelpefunksjoner kanonisk -----------------------------------------------
-
-
-# Hent metadata -----------------------------------------------------------
 
 #' Henter ut versjonslogg for skjema
 #' 
@@ -307,7 +294,7 @@ mrs5_konverter_til_kanonisk = function() {
 #'
 #' @examples
 mrs5_hent_versjonslogg = function(parsed_generelt) {
-
+  
   assertthat::assert_that(is.data.frame(parsed_generelt))
   
   skjemanavn = parsed_generelt[[1,2]]
@@ -344,9 +331,9 @@ mrs5_hent_versjonslogg = function(parsed_generelt) {
 #'
 #' @examples
 mrs5_hent_metainfo = function(parsed_generelt) {
-
+  
   assertthat::assert_that(is.data.frame(parsed_generelt))
- 
+  
   # finne NA-rad 
   na_rad = parsed_generelt |> 
     dplyr::mutate(radnr = dplyr::row_number()) |> 
@@ -359,12 +346,18 @@ mrs5_hent_metainfo = function(parsed_generelt) {
     dplyr::slice_head(n = na_rad-1) |> 
     dplyr::rename("metavariabel" = ...1, "metaverdi" = ...2) |> 
     tidyr::pivot_wider(names_from = "metavariabel", 
-                values_from = "metaverdi") |> 
+                       values_from = "metaverdi") |> 
     janitor::clean_names()
   
   return(d_metainfo)
 }
 
+# Konverter til kanonisk --------------------------------------------------
+
+mrs5_konverter_til_kanonisk = function() {
+}
+
+# Hjelpefunksjoner kanonisk -----------------------------------------------
 
 # kodebok
 mrs5_lag_kanonisk_kb = function() {
