@@ -106,23 +106,6 @@ mrs5_parse_kodebok = function(filsti, skjemanavn) {
   # Returnerer 
   }
 
-#' mrs5_parse_fanenavn
-#' 
-#' Funksjon for å hente fanenavn og returnere som en tekststreng. 
-#' Er nok bedre å bruke `readxl::excel_sheets()` her, men beholder 
-#' denne som en placeholder intil videre. 
-#'
-#' @param filsti 
-#'
-#' @return
-#' Tekstvektor som inneholder alle fanenavn fra kodeboken. 
-#' @export
-#'
-#' @examples
-mrs5_parse_fanenavn = function(filsti) {
-  
-  # Gir ut en tekstvektor med alle fanenavn slik de er lagret i kodebok 
-  # fra filsti
 }
 
 #' les inn generelt fane for skjema
