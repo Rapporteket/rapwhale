@@ -262,26 +262,6 @@ mrs5_parse_kodebok_regler = function(filsti, skjemanavn){
 
 # Hjelpefunksjoner for Parse ----------------------------------------------
 
-#' Kombinere innleste skjema
-#' 
-#' Tar inn utdata fra parse-funksjonene og samler alle skjema i tibbles.
-#' Utdata er en liste på samme format som kanonisk kodebok men med rådata.
-#' 
-#' @param parsed_generelt utdata fra mrs5_parse_kodebbk_skjema. 
-#' @param parsed_felter utdata fra mrs5_parse_kodebok_felter.
-#' @param parsed_regler utdata fra mrs5_parse_kodebok_regler. 
-#'
-#' @return
-#' Liste med tibblene kodebok_raa_generelt, kodebok_raa_felter, kodebok_raa_regler. 
-#' @export
-#'
-#' @examples
-#' # Kombiner rådata
-#' mrs5_kombiner_parsed(parsed_generelt = kb_raa_generelt, parsed_felter = kb_raa_felter, parsed_regler = kb_raa_regler)
-mrs5_kombiner_parsed = function(parsed_generelt, parsed_felter, parsed_regler) {
-  
-}
-
 # Konverter til kanonisk --------------------------------------------------
 
 mrs5_konverter_til_kanonisk = function() {
