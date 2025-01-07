@@ -10,6 +10,9 @@
 #   - mrs5_hent_kodebok, 
 # FIXME - Konverter til kanonisk funksjonalitet 
 # FIXME - Fikse import av nødvendige funsjoner og fjerne :: 
+# FIXME - Legg inn kontroll av skjemanavn-argument i mrs5_trekk_ut_skjemanavn 
+# FIXME - Legg til test for at skjemanavn er korrekt skrevet i mrs5_trekk_ut_skjemanavn
+# FIXME - Oppdatere docs for å reflektere hvilke funksjoner som kan lese flere skjema. 
 
 # Hent mrs5-kodebok -------------------------------------------------------
 
