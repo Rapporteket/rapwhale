@@ -31,13 +31,34 @@
 #' @export
 #'
 #' @examples
-#' # Hente kodebok for alle skjema og få ut på kanonisk format
+#' # Hente kodebok for alle skjema
 #' kb_register = mrs5_hent_kodebok(filst = "/sti//til//kodebokfil", skjemanavn = NULL)
 #' 
 #' # Hente for et enkelt skjema 
 #' kb_innleggelse = mrs5_hent_kodebok(filst = "/sti//til//kodebokfil", skjemanavn = "Innleggelse")
-mrs5_hent_kodebok = function(filsti, skjemanavn = NULL) {
+mrs5_parse_kodebok = function(filsti, skjemanavn = NULL) {
+
+  kodebok_raa = list(
+    "versjonslogg" = list(),
+    "metainfo" = list(),
+    "felter" = list(),
+    "regler" = list()
+  )
   
+  skjemanavn = mrs5_trekk_ut_skjemanavn(filsti, skjemanavn)
+  
+  for(skjema in skjemanavn) {
+   
+    d_parsed_kodebok = mrs5_parse_kodebok_skjema(filsti = filsti, skjemanavn = skjema)
+    
+    kodebok_raa[["versjonslogg"]][[skjema]] = d_parsed_kodebok[["versjonslogg"]] 
+    kodebok_raa[["metainfo"]][[skjema]] = d_parsed_kodebok[["metainfo"]]
+    kodebok_raa[["felter"]][[skjema]] = d_parsed_kodebok[["felter"]]
+    kodebok_raa[["regler"]][[skjema]] = d_parsed_kodebok[["regler"]]
+    
+  }
+  
+  return(kodebok_raa)
 } 
 
 #' Lag skjemanavn-vektor
@@ -78,38 +99,43 @@ mrs5_trekk_ut_skjemanavn = function(filsti, skjemanavn) {
   
   return(skjemanavn_ut)
 }
+
 # Parse rådata -------------------------------------------------------------
 
 #' Leser inn kodebokfil på rådata-format
 #' 
-#' Kaller nødvendige hjelpefunksjoner for å lese inn de ulike skjema som finnes 
-#' i mrs5-kodebok. Tar inn filsti som argument og returnerer en liste med 
-#' kanonisk kodebok for alle skjema inkludert i skjemanavn. 
+#' Kaller nødvendige hjelpefunksjoner for å lese inn de ulike fanene som finnes 
+#' i kodebok for `skjemanavn`. 
 #'
 #' @param filsti Tekststreng som angir filsti til kodebok.  
 #' @param skjemanavn Tekststreng med skjemanavn som skal leses inn slik det er 
-#' navngitt i kodebok. Hvis `skjemanavn = NULL` hentes kodebok for alle skjema inn. 
+#' navngitt i kodebok. 
 #'
 #' @return
-#' Listeobjekt med rådataversjon av alle skjema i kodeboken for skjema inkludert 
-#' i `skjemanavn`. 
+#' Listeobjekt med rådataversjon av metainfo, versjonslogg, felter og regler 
+#' for `skjemanavn`. 
 #' 
 #' @export
 #'
 #' @examples
-mrs5_parse_kodebok = function(filsti, skjemanavn) { 
+#' kb_eksempel = mrs5_parse_kodebok_skjema(filsti = "sti/til/fil", skjemanavn = "Testskjema")
+mrs5_parse_kodebok_skjema = function(filsti, skjemanavn) { 
   
-  # Kaller på hjelpefunksjoner for å lese inn de enkelte delene av kodeboken.  
+  d_skjema = mrs5_parse_kodebok_meta(filsti, skjemanavn)
+  d_versjonslogg = mrs5_hent_versjonslogg(d_skjema)
+  d_metainfo = mrs5_hent_metainfo(d_skjema)
+  d_felter = mrs5_parse_kodebok_felter(filsti, skjemanavn)
+  d_regler = mrs5_parse_kodebok_regler(filsti, skjemanavn)
   
-  # mrs5_parse_fanenavn()
-  # mrs5_parse_kodebok_skjema()
-  # mrs5_parse_kodebok_felter()
-  # mrs5_parse_kodebok_regler()
-  
-  # Returnerer 
-  }
-
+  return(
+    list("versjonslogg" = d_versjonslogg, 
+         "metainfo" =  d_metainfo, 
+         "felter" = d_felter, 
+         "regler" = d_regler
+         )
+  )
 }
+
 
 #' les inn generelt fane for skjema
 #' 
@@ -126,8 +152,8 @@ mrs5_parse_kodebok = function(filsti, skjemanavn) {
 #'
 #' @examples
 #' # Les inn rådataversjon av generelt-fane for skjemanavn fra kodebok
-#' kb_raa = mrs5_parse_kodebok_skjema(filsti = "path/to/file/, skjemanavn = "skjema")
-mrs5_parse_kodebok_skjema = function(filsti, skjemanavn) {
+#' kb_raa = mrs5_parse_kodebok_meta(filsti = "path/to/file/, skjemanavn = "skjema")
+mrs5_parse_kodebok_meta = function(filsti, skjemanavn) {
   
   # kontrollerer argumenter
   assertthat::assert_that(assertthat::is.string(filsti),
@@ -137,20 +163,19 @@ mrs5_parse_kodebok_skjema = function(filsti, skjemanavn) {
   stopifnot(file.exists(filsti))
   fanenavn = readxl::excel_sheets(filsti)
 
-  assertthat::assert_that(assertthat::is.string(skjemanavn),
+  assertthat::assert_that(assertthat::is.string(skjemanavn) | is.null(skjemanavn),
     msg = "skjemanavn må være NULL eller en tekst-vektor"
   )
 
+  # Henter aktuelt skjemanavn på en teit måte for å håndtere skjemanavn med parentes i navnet
   skjemanavn_aktuelt = fanenavn[stringr::str_detect(
     fanenavn,
-    pattern = paste0(
-      skjemanavn,
-      "$"
-    )
-  )]
-
-  if (length(skjemanavn_aktuelt) != 1) {
-    stop("Skjemanavn finnes ikke i kodebok") 
+    pattern = stringr::fixed(skjemanavn)
+  )][1] 
+    
+  #if (length(skjemanavn_aktuelt) != 1) {
+  if (is.na(skjemanavn_aktuelt)) {
+    stop("Skjemanavn finnes ikke i kodebok") # FIXME - Bedre feilmeldingstekst. Flere mulige avvik?
   }
 
   d_skjemanavn = suppressMessages(readxl::read_xlsx(filsti,
@@ -192,13 +217,10 @@ mrs5_parse_kodebok_felter = function(filsti, skjemanavn) {
   
   skjemanavn_aktuelt = fanenavn[stringr::str_detect(
     fanenavn,
-    pattern = paste0(
-      skjemanavn,
-      "-felter$"
-    )
-  )]
+    pattern = stringr::fixed(skjemanavn)
+  )][2]
   
-  if (length(skjemanavn_aktuelt) != 1) {
+  if (is.na(skjemanavn_aktuelt)) {
     stop("Skjemanavn finnes ikke i kodebok") 
   }
   
@@ -206,7 +228,8 @@ mrs5_parse_kodebok_felter = function(filsti, skjemanavn) {
                                                     sheet = skjemanavn_aktuelt,
                                                     col_names = TRUE,
                                                     col_types = "text"
-  ))
+  )) |> 
+    tibble::add_column("Skjemanavn" = skjemanavn, .before = 1)
   
   return(d_skjemanavn)
 }
@@ -241,13 +264,10 @@ mrs5_parse_kodebok_regler = function(filsti, skjemanavn){
   
   skjemanavn_aktuelt = fanenavn[stringr::str_detect(
     fanenavn,
-    pattern = paste0(
-      skjemanavn,
-      "-regler$"
-    )
-  )]
+    pattern = stringr::fixed(skjemanavn)
+  )][3]
   
-  if (length(skjemanavn_aktuelt) != 1) {
+  if (is.na(skjemanavn_aktuelt)) {
     stop("Skjemanavn finnes ikke i kodebok") 
   }
   
@@ -255,7 +275,8 @@ mrs5_parse_kodebok_regler = function(filsti, skjemanavn){
                                                     sheet = skjemanavn_aktuelt,
                                                     col_names = TRUE,
                                                     col_types = "text"
-  ))
+  )) |> 
+    tibble::add_column("Skjemanavn" = skjemanavn, .before = 1)
   
   return(d_skjemanavn)
 }
