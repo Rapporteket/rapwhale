@@ -335,18 +335,34 @@ mrs5_hent_versjonslogg = function(filsti, skjemanavn) {
 #' @description
 #' Henter metainfo fra generelt-fane for `skjemanavn`. 
 #' 
-#' 
-#' @param filsti Plassering av kodebokfil på disk.
-#' @param skjemanavn Navn på skjema slik det er gitt i kodebok.
+#' @param parsed_generelt rådataversjon av generelt-fane fra kodebok. 
 #'
 #' @return
 #' Returnerer tibble med metainfo for `skjemanavn`. 
 #' @export
 #'
 #' @examples
-mrs5_hent_metainfo = function(filsti, skjemanavn) {
+mrs5_hent_metainfo = function(parsed_generelt) {
 
-  }
+  assertthat::assert_that(is.data.frame(parsed_generelt))
+ 
+  # finne NA-rad 
+  na_rad = parsed_generelt |> 
+    dplyr::mutate(radnr = dplyr::row_number()) |> 
+    dplyr::filter(is.na(...1)) |> dplyr::pull(radnr)  
+  
+  na_rad = na_rad[1]
+  
+  d_metainfo = parsed_generelt |> 
+    dplyr::select(...1, ...2) |> 
+    dplyr::slice_head(n = na_rad-1) |> 
+    dplyr::rename("metavariabel" = ...1, "metaverdi" = ...2) |> 
+    tidyr::pivot_wider(names_from = "metavariabel", 
+                values_from = "metaverdi") |> 
+    janitor::clean_names()
+  
+  return(d_metainfo)
+}
 
 
 # kodebok
@@ -436,3 +452,4 @@ mrs5_valider_kodebok_kategorisk = function(kodebok_kategorisk) {
 mrs5_valider_kodebok_regler = function(kodebok_regler) {
   
 }
+
