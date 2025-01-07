@@ -179,6 +179,7 @@ test_that("Gir feilmelding hvis skjemanavn ikke eksisterer i kodebok", {
 test_that("Gir forventet resultat", {
   
   kb_felter_raa = tibble::tibble(
+    Skjemanavn = c(rep("Testskjema", 11)), 
     Variabelnavn = c("PasientGUID", "Skjematype", "UnitId", "PatientAge", 
                      "Hoyde", "CreationDate", "Innlagt", "FormStatus", 
                      "PatientGender", "Hoyde", "HoydeUkjent"),
@@ -304,6 +305,7 @@ test_that("Gir feilmelding hvis skjemanavn ikke eksisterer i kodebok", {
 test_that("Gir forventet resultat", {
 
   kb_regler_raa = tibble::tibble(
+    Skjemanavn = rep("Testskjema", 5),
     Id = c("1000", "1008", "1005", "1058", "1011"),
     Eiertype = c("Field", "Field", "Field", "Field", "Field"),
     Eier  = c("Innlagt", "Innlagt", "Innlagt", "HoydeUkjent", "Innlagt"),
@@ -338,76 +340,103 @@ test_that("Gir forventet resultat", {
 })
 # mrs5_kombiner_parsed ----------------------------------------------------
 
-# test_that("Gir forventet utdata for ulikt antall skjema", {
-#   
-#   # Ett skjema navngitt
-#   
-#   # Flere skjema 
-#   
-# })
+# typekontroll
+test_that("Gir forventet feilmelding hvis inndata er feil type", {
+  
+})
+
+test_that("Gir forventet utdata", {
+
+})
 
 # Hjelpefunksjoner for parse ----------------------------------------------
 
-# mrs5_hent_versjonslogg --------------------------------------------------
+# mrs5_trekk_ut_skjemanavn ------------------------------------------------
 
-# mrs5_hent_metainfo ------------------------------------------------------
 
 # Konverter til kanonisk --------------------------------------------------
 
 # mrs5_hent_metadata -----------------------------------------------------
 
 # Forventet utdata
-# kb_skjema_raa_ett_skjema = list(
-#   versjonslogg = tibble::tibble(
-#     versjonsnummer = c(1L, 2L), 
-#     navn = c("Versjon 1", "Versjon 2"), 
-#     dato = lubridate::as_datetime(c("2020-01-01 12:00:00", "2021-01-01 12:00:00")), 
-#     kan_opprettes = c(FALSE, TRUE),
-#     kan_endres = c(TRUE, TRUE),	
-#     kan_slettes = c(TRUE, TRUE)
-#   ),
-#   metainfo = tibble::tibble(
-#     metavariabel = c("skjematypenavn", "skjematype_ID", 
-#                      "foreldreskjematype_ID", "antall_felter", "antall_regler", 
-#                      "skjemadato_hentes_fra_felt", 
-#                      "aldersberegning_skjer_i_forhold_til_felt",
-#                      "er_ePROM_skjematype", "tilgjengelig_i_skjemasok",
-#                      "tilgjengelig_i_skjemaopprettelsesdialog",
-#                      "tilgjengelig_i_skjemaeksport", "tilgjengelig_i_rapporter",
-#                      "vises_paa_pasientsiden", "vises_i_skjematellinger"
-#     ),
-#     metaverdi = c("Testskjema", "1", "", "12", "5", "Innlagt", "CreationDate",
-#                   "Nei", "Ja", "Ja", "Ja", "Ja", "Ja", "Ja")
-#   )
-# )
-# 
-# test_that("Gir forventet utdata", {
-#   
-#   expect_identical(
-#     mrs5_hent_metadata(
-#       filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
-#       skjemanavn = "Testskjema"
-#     ), 
-#     kb_skjema_raa_ett_skjema 
-#   )
-# })
-# 
-# # Feil format skjema
-# test_that("Gir forventet feilmelding ved feil format på kodebok", {
-#   
-#   feilmelding_feil_struktur = "Kodebok må være på MRS5-struktur"
-#   
-#   expect_error(
-#     mrs5_hent_metadata(
-#       filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_feil_skjema.xlsx"),
-#       skjemanavn = "Testskjema"
-#     ),
-#     feilmelding_feil_struktur)
-# })
+kb_raa_test = list(
+  versjonslogg = tibble::tibble(
+    Skjemanavn = c("Testskjema", "Testskjema"),
+    versjonsnummer = c("1", "2"),
+    navn = c("Versjon 1", "Versjon 2"),
+    dato = c("01.03.2020 12:00", "01.05.2021 12:00"),
+    kan_opprettes = c("Nei", "Ja"),
+    kan_endres = c("Ja", "Ja"),
+    kan_slettes = c("Ja", "Ja")
+  ),
+  metainfo = tibble::tibble(
+    metavariabel = c("skjematypenavn", "skjematype_ID",
+                     "foreldreskjematype_ID", "antall_felter", "antall_regler",
+                     "skjemadato_hentes_fra_felt",
+                     "aldersberegning_skjer_i_forhold_til_felt",
+                     "er_ePROM_skjematype", "tilgjengelig_i_skjemasok",
+                     "tilgjengelig_i_skjemaopprettelsesdialog",
+                     "tilgjengelig_i_skjemaeksport", "tilgjengelig_i_rapporter",
+                     "vises_pa_pasientsiden", "vises_i_skjematellinger"
+    ),
+    metaverdi = c("Testskjema", "1", NA_character_, "11", "5", "Innlagt", "CreationDate",
+                  "Nei", "Ja", "Ja", "Ja", "Ja", "Ja", "Ja")
+  )
+)
 
+kb_test_versjonslogg = kb_raa_test[['versjonslogg']]
+
+kb_test_metainfo = kb_raa_test[['metainfo']] |> 
+  tidyr::pivot_wider(names_from = "metavariabel", 
+                     values_from = "metaverdi") |> 
+  janitor::clean_names()
+
+test_that("Hent_versjonslogg gir forventet utdata", {
+
+  expect_identical(
+    mrs5_hent_versjonslogg(
+      parsed_generelt = mrs5_parse_kodebok_skjema(
+        filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
+        skjemanavn = "Testskjema"
+      )
+    ),
+    kb_test_versjonslogg
+  )
+})
+
+
+test_that("Hent_metainfo gir forventet utdata", {
+  
+  expect_identical(
+    mrs5_hent_metainfo(
+      parsed_generelt = mrs5_parse_kodebok_skjema(
+        filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
+        skjemanavn = "Testskjema"
+      )
+    ),
+    kb_test_metainfo
+  )
+})
+
+# mrs5_hent_versjonslogg --------------------------------------------------
+
+# Typekontroll
+test_that("Feilmelding hvis inndata ikke er tibble", {
+  
+})
+
+test_that("Feilmelding hvis inndata ikke er riktig strukturert", {
+  
+})
+
+# Utdata 
+test_that("Gir ut forventet resultat", {
+  
+})
+
+# mrs5_hent_metainfo ------------------------------------------------------
 
 # Hjelpefunksjoner kanonisk -----------------------------------------------
-
 
 # Validering --------------------------------------------------------------
 
