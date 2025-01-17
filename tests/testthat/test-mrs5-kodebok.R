@@ -338,16 +338,6 @@ test_that("Gir forventet resultat", {
   )
   
 })
-# mrs5_kombiner_parsed ----------------------------------------------------
-
-# typekontroll
-test_that("Gir forventet feilmelding hvis inndata er feil type", {
-  
-})
-
-test_that("Gir forventet utdata", {
-
-})
 
 # Hjelpefunksjoner for parse ----------------------------------------------
 
