@@ -280,6 +280,25 @@ mrs5_trekk_ut_skjemanavn = function(filsti, skjemanavn) {
   return(skjemanavn_ut)
 }
 
+#' Typekontroll for argumenter til mrs5_parsefunksjon
+#' 
+#' @description
+#' Typekontroll for argumenter som brukes i mrs5-parsefunksjoner. 
+#' Ikke ment å kalles direkte, men brukes for å kontrollere argumenter 
+#' og gi fornuftige feilmeldinger hvis det er problemer med argumentene. 
+#' 
+#' @param filsti tekststreng som indikerer plassering av kodebok. 
+#' @param skjemanavn en tekst-vektor med skjemanavn som skal leses inn. Hvis 
+#' `NULL` leses alle skjema fra kodeboken inn. 
+#'
+#' @return
+#' Returnerer ingenting hvis argumentene passerer kontroll. Hvis ikke returneres 
+#' en feilmelding. 
+#'  
+#' @export
+mrs5_kontroller_argumenter = function(filsti, skjemanavn) {
+  
+}
 #' Henter ut versjonslogg for skjema
 #' 
 #' @description
