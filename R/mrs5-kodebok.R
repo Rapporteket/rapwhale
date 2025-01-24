@@ -18,9 +18,8 @@
 #' Les inn kodebok
 #' 
 #' @description
-#' Henter inn kodebok for registre på MRS5 fra `filsti`. 
-#' Kaller på de nødvendige hjelpefunksjonene for å lese inn rådataversjon 
-#' av kodebok.
+#' Leser inn rådata fra aktuelle `skjemanavn` fra MRS5-kodebok funnet på `filsti`. 
+#' Kaller nødvendige hjelpefunksjoner for å lese inn de ulike fanene og objektene.  
 #'
 #' @param filsti Tekststreng som angir filsti til kodebok.  
 #' @param skjemanavn Tekststreng med skjemanavn som skal leses inn slik de er 
@@ -35,7 +34,7 @@
 #'    \item regler
 #'    }
 #'    
-#'  For hvert skjema som leses inn lages det en tibble i de aktuelle listene. 
+#'  Hvert skjema som leses inn får en tibble i hver liste. 
 #'  
 #' @export
 #'
@@ -60,7 +59,7 @@ mrs5_parse_kodebok = function(filsti, skjemanavn = NULL) {
     
     d_parsed_kodebok = mrs5_parse_kodebok_skjema(filsti = filsti, skjemanavn = skjema)
     
-    # hent skjemanavn for det aktuelle fanenavnet
+    # hent skjemanavn for det aktuelle fanenavnet for å navngi tibbles i listene
     skjemanavn_cased = skjemakobling$skjemanavn[skjemakobling$fanenavn == skjema]
 
     kodebok_raa[["versjonslogg"]][[skjemanavn_cased]] = d_parsed_kodebok[["versjonslogg"]]
