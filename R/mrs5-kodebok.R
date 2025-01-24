@@ -72,29 +72,29 @@ mrs5_parse_kodebok = function(filsti, skjemanavn = NULL) {
   return(kodebok_raa)
 } 
 
-#' Leser inn generelt-fane for et skjema
+#' Les inn skjema fra kodebok
 #' 
-#' Kaller nødvendige hjelpefunksjoner for å lese inn de ulike fanene som finnes 
-#' i kodebok for `skjemanavn`. 
+#' Leser inn og lagrer alle aktuelle faner og objekter for ett `skjemanavn`
+#' i MRS5-kodebok funnet på `filsti`. 
+#' Denne funksjonen er ikke ment å kalles direkte. 
 #'
 #' @param filsti Tekststreng som angir filsti til kodebok.  
 #' @param skjemanavn Tekststreng med skjemanavn som skal leses inn slik det er 
 #' navngitt i kodebok. 
 #'
 #' @return
-#' Listeobjekt med rådataversjon av metainfo, versjonslogg, felter og regler 
-#' for `skjemanavn`. 
+#' Listeobjekt med tibbles som inneholder rådataversjon av metainfo, 
+#' versjonslogg, felter og regler for `skjemanavn`. 
 #' 
-#' @export
-#'
-#' @examples
-#' kb_eksempel = mrs5_parse_kodebok_skjema(filsti = "sti/til/fil", skjemanavn = "Testskjema")
+#' @keywords internal
 mrs5_parse_kodebok_skjema = function(filsti, skjemanavn) { 
   
   d_skjema = mrs5_parse_kodebok_meta(filsti, skjemanavn)
   d_versjonslogg = mrs5_hent_versjonslogg(d_skjema)
   d_metainfo = mrs5_hent_metainfo(d_skjema)
+  
   d_felter = mrs5_parse_kodebok_felter(filsti, skjemanavn)
+  
   d_regler = mrs5_parse_kodebok_regler(filsti, skjemanavn)
   
   return(
