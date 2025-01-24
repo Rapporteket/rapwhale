@@ -254,28 +254,28 @@ kb_slutt_metainfo = kb_metadata_raa[['kb_metadata_slutt']][['metainfo']] |>
 } # Metainfo 
 {
 d_forventet_ett_skjema = list(
-  "versjonslogg" = list("Testskjema" = kb_metadata_raa[['kb_metadata_test']][['versjonslogg']]),
-  "metainfo" = list("Testskjema" = kb_test_metainfo),
-  "felter" = list("Testskjema" = kb_felter_raa[['kb_test_felter_raa']]),
-  "regler" = list("Testskjema" = kb_regler_raa[['kb_test_regler_raa']])
+  "versjonslogg" = list("testskjema" = kb_metadata_raa[['kb_metadata_test']][['versjonslogg']]),
+  "metainfo" = list("testskjema" = kb_test_metainfo),
+  "felter" = list("testskjema" = kb_felter_raa[['kb_test_felter_raa']]),
+  "regler" = list("testskjema" = kb_regler_raa[['kb_test_regler_raa']])
 ) 
 
 d_forventet_skjema_NULL = list(
-  "versjonslogg" = list("Testskjema" = kb_metadata_raa[['kb_metadata_test']][['versjonslogg']],
-                        "Sluttskjema" = kb_metadata_raa[['kb_metadata_slutt']][['versjonslogg']]),
-  "metainfo" = list("Testskjema" = kb_test_metainfo,
-                    "Sluttskjema" = kb_slutt_metainfo),
-  "felter" = list("Testskjema" = kb_felter_raa[['kb_test_felter_raa']],
-                  "Sluttskjema" = kb_felter_raa[['kb_slutt_felter_raa']]),
-  "regler" = list("Testskjema" = kb_regler_raa[['kb_test_regler_raa']],
-                  "Sluttskjema" = kb_regler_raa[['kb_slutt_regler_raa']])
+  "versjonslogg" = list("testskjema" = kb_metadata_raa[['kb_metadata_test']][['versjonslogg']],
+                        "sluttskjema" = kb_metadata_raa[['kb_metadata_slutt']][['versjonslogg']]),
+  "metainfo" = list("testskjema" = kb_test_metainfo,
+                    "sluttskjema" = kb_slutt_metainfo),
+  "felter" = list("testskjema" = kb_felter_raa[['kb_test_felter_raa']],
+                  "sluttskjema" = kb_felter_raa[['kb_slutt_felter_raa']]),
+  "regler" = list("testskjema" = kb_regler_raa[['kb_test_regler_raa']],
+                  "sluttskjema" = kb_regler_raa[['kb_slutt_regler_raa']])
 )
 } # Forventet output
 
 # Feilmeldinger
 feilmelding_feil_type_filsti = "Filsti må være en tekststreng"
-feilmelding_feil_type_skjemanavn = "skjemanavn må være NULL eller en tekst-vektor"
-feilmelding_feil_skjemanavn = "Skjemanavn finnes ikke i kodebok"
+feilmelding_feil_type_skjemanavn = "Skjemanavn må være NULL eller en tekst-vektor"
+feilmelding_feil_skjemanavn_feil_navn = "Skjemanavn: «feil navn» finnes ikke i kodebok"
 
 # Parse-funksjoner --------------------------------------------------------
 
@@ -300,69 +300,6 @@ expect_identical(mrs5_parse_kodebok(filsti = test_path("testdata/mrs5-kodebok", 
 # 
 # mrs5_parse_kodebok_meta -----------------------------------------------
 
-# Argumenter
-test_that("typekontroll filsti", {
-  
-  expect_error(
-    mrs5_parse_kodebok_meta(
-      filsti = 2L, 
-      skjemanavn = NULL
-    ),
-    feilmelding_feil_type_filsti)
-  
-  expect_error(
-    mrs5_parse_kodebok_meta(
-      filsti = 2.5, 
-      skjemanavn = NULL
-    ), 
-    feilmelding_feil_type_filsti)
-  
-  expect_error(
-    mrs5_parse_kodebok_meta(
-      filsti = NULL, 
-      skjemanavn = NULL
-    ), 
-    feilmelding_feil_type_filsti)
-  
-  expect_error(
-    mrs5_parse_kodebok_meta(
-      filsti = TRUE, 
-      skjemanavn = NULL
-    ), 
-    feilmelding_feil_type_filsti)
-})
-
-test_that("typekontroll_skjemanavn", {
-  
-  expect_error(
-    mrs5_parse_kodebok_meta(
-      filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"), 
-      skjemanavn = 1
-    ), 
-    feilmelding_feil_type_skjemanavn
-    )
-  
-  expect_error(
-    mrs5_parse_kodebok_meta(
-      filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"), 
-      skjemanavn = TRUE
-    ), 
-    feilmelding_feil_type_skjemanavn
-  )
-  
-})
-
-test_that("Gir feilmelding hvis skjemanavn ikke eksisterer i kodebok", {
-
-expect_error(
-  mrs5_parse_kodebok_meta(
-    filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
-    skjemanavn = "feil navn"
-  ),
-  feilmelding_feil_skjemanavn
-)
-})
-
 # Utdata
 test_that("Gir forventet resultat", {
   
@@ -371,7 +308,7 @@ test_that("Gir forventet resultat", {
   expect_identical(
     mrs5_parse_kodebok_meta(
       filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
-      skjemanavn = "Testskjema"
+      skjemanavn = "1-Testskjema"
     ),
     kb_meta_raa[['kb_test_meta_raa']]
   )
@@ -379,143 +316,19 @@ test_that("Gir forventet resultat", {
   
 # mrs5_parse_kodebok_felter -----------------------------------------------
 
-# Argumenter 
-test_that("typekontroll filsti", {
-  
-  expect_error(
-    mrs5_parse_kodebok_felter(
-      filsti = 2L, 
-      skjemanavn = NULL
-    ),
-    feilmelding_feil_type_filsti)
-  
-  expect_error(
-    mrs5_parse_kodebok_felter(
-      filsti = 2.5, 
-      skjemanavn = NULL
-    ), 
-    feilmelding_feil_type_filsti)
-  
-  expect_error(
-    mrs5_parse_kodebok_felter(
-      filsti = NULL, 
-      skjemanavn = NULL
-    ), 
-    feilmelding_feil_type_filsti)
-  
-  expect_error(
-    mrs5_parse_kodebok_felter(
-      filsti = TRUE, 
-      skjemanavn = NULL
-    ), 
-    feilmelding_feil_type_filsti)
-})
-
-test_that("typekontroll_skjemanavn", {
-  
-  expect_error(
-    mrs5_parse_kodebok_felter(
-      filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"), 
-      skjemanavn = 1
-    ), 
-    feilmelding_feil_type_skjemanavn
-  )
-  
-  expect_error(
-    mrs5_parse_kodebok_felter(
-      filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"), 
-      skjemanavn = TRUE
-    ), 
-    feilmelding_feil_type_skjemanavn
-  )
-  
-})
-
-test_that("Gir feilmelding hvis skjemanavn ikke eksisterer i kodebok", {
-
-  expect_error(
-    mrs5_parse_kodebok_felter(
-      filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
-      skjemanavn = "feil navn"
-    ),
-    feilmelding_feil_skjemanavn
-  )
-})
-
 # Utdata
 test_that("Gir forventet resultat", {
   
   expect_identical(
     mrs5_parse_kodebok_felter(
       filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
-      skjemanavn = "Testskjema"
+      skjemanavn = "1-Testskjema"
     ),
     kb_felter_raa[['kb_test_felter_raa']]
   )
 })
 
 # mrs5_parse_kodebok_regler -----------------------------------------------
-test_that("typekontroll filsti", {
-  
-  expect_error(
-    mrs5_parse_kodebok_regler(
-      filsti = 2L, 
-      skjemanavn = NULL
-    ),
-    feilmelding_feil_type_filsti)
-  
-  expect_error(
-    mrs5_parse_kodebok_regler(
-      filsti = 2.5, 
-      skjemanavn = NULL
-    ), 
-    feilmelding_feil_type_filsti)
-  
-  expect_error(
-    mrs5_parse_kodebok_regler(
-      filsti = NULL, 
-      skjemanavn = NULL
-    ), 
-    feilmelding_feil_type_filsti)
-  
-  expect_error(
-    mrs5_parse_kodebok_regler(
-      filsti = TRUE, 
-      skjemanavn = NULL
-    ), 
-    feilmelding_feil_type_filsti)
-})
-
-test_that("typekontroll_skjemanavn", {
-  
-  expect_error(
-    mrs5_parse_kodebok_regler(
-      filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"), 
-      skjemanavn = 1
-    ), 
-    feilmelding_feil_type_skjemanavn
-  )
-  
-  expect_error(
-    mrs5_parse_kodebok_regler(
-      filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"), 
-      skjemanavn = TRUE
-    ), 
-    feilmelding_feil_type_skjemanavn
-  )
-  
-})
-
-test_that("Gir feilmelding hvis skjemanavn ikke eksisterer i kodebok", {
-  
-  expect_error(
-    mrs5_parse_kodebok_regler(
-      filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
-      skjemanavn = "feil navn"
-    ),
-    feilmelding_feil_skjemanavn
-  )
-})
 
 # Utdata
 test_that("Gir forventet resultat", {
@@ -523,7 +336,7 @@ test_that("Gir forventet resultat", {
   expect_identical(
     mrs5_parse_kodebok_regler(
       filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
-      skjemanavn = "Testskjema"
+      skjemanavn = "1-Testskjema"
     ),
     kb_regler_raa[['kb_test_regler_raa']]
   )
@@ -533,6 +346,85 @@ test_that("Gir forventet resultat", {
 # Hjelpefunksjoner for parse ----------------------------------------------
 
 # mrs5_trekk_ut_skjemanavn ------------------------------------------------
+
+# mrs5_kontroller_argumenter ----------------------------------------------
+
+# filsti 
+# Test for feil filtype
+# Test for feil variabeltype 
+# Test for feil filsti 
+
+test_that("typekontroll filsti", {
+  
+  expect_error(
+    mrs5_kontroller_argumenter(
+      filsti = 2L, 
+      skjemanavn = NULL
+    ),
+    feilmelding_feil_type_filsti)
+  
+  expect_error(
+    mrs5_kontroller_argumenter(
+      filsti = 2.5, 
+      skjemanavn = NULL
+    ), 
+    feilmelding_feil_type_filsti)
+  
+  expect_error(
+    mrs5_kontroller_argumenter(
+      filsti = NULL, 
+      skjemanavn = NULL
+    ), 
+    feilmelding_feil_type_filsti)
+  
+  expect_error(
+    mrs5_kontroller_argumenter(
+      filsti = TRUE, 
+      skjemanavn = NULL
+    ), 
+    feilmelding_feil_type_filsti)
+})
+
+# skjemanavn 
+# Test for variabeltype 
+test_that("typekontroll_skjemanavn", {
+  
+  expect_error(
+    mrs5_kontroller_argumenter(
+      filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"), 
+      skjemanavn = 1
+    ), 
+    feilmelding_feil_type_skjemanavn
+  )
+  
+  expect_error(
+    mrs5_kontroller_argumenter(
+      filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"), 
+      skjemanavn = TRUE
+    ), 
+    feilmelding_feil_type_skjemanavn
+  )
+  
+})
+
+# skjemanavn innhold 
+# Test med ett feil navn 
+# Test med to feile navn 
+# Test med korrekt navn og feil case 
+# Test med flere korrekte navn 
+# test med korrekt navn, men oppgitt to ganger - Vil at det kun skal leses inn en versjon 
+
+test_that("Gir feilmelding hvis skjemanavn ikke eksisterer i kodebok", {
+  
+  expect_error(
+    mrs5_kontroller_argumenter(
+      filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
+      skjemanavn = "feil navn"
+    ),
+    feilmelding_feil_skjemanavn_feil_navn
+  )
+})
+
 
 # Konverter til kanonisk --------------------------------------------------
 
@@ -546,7 +438,7 @@ test_that("Hent_versjonslogg gir forventet utdata", {
     mrs5_hent_versjonslogg(
       parsed_generelt = mrs5_parse_kodebok_meta(
         filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
-        skjemanavn = "Testskjema"
+        skjemanavn = "1-Testskjema"
       )
     ),
     kb_metadata_raa[['kb_metadata_test']][['versjonslogg']]
@@ -559,7 +451,7 @@ test_that("Hent_metainfo gir forventet utdata", {
     mrs5_hent_metainfo(
       parsed_generelt = mrs5_parse_kodebok_meta(
         filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
-        skjemanavn = "Testskjema"
+        skjemanavn = "1-Testskjema"
       )
     ),
     kb_test_metainfo
