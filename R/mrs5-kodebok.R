@@ -123,29 +123,6 @@ mrs5_parse_kodebok_skjema = function(filsti, skjemanavn) {
 #' @keywords internal
 mrs5_parse_kodebok_meta = function(filsti, skjemanavn) {
   
-  # # kontrollerer argumenter
-  # assertthat::assert_that(assertthat::is.string(filsti),
-  #   msg = "Filsti må være en tekststreng"
-  # )
-  # 
-  # stopifnot(file.exists(filsti))
-  #fanenavn = readxl::excel_sheets(filsti)
-  # 
-  # assertthat::assert_that(assertthat::is.string(skjemanavn) | is.null(skjemanavn),
-  #   msg = "skjemanavn må være NULL eller en tekst-vektor"
-  # )
-
-  # Henter aktuelt skjemanavn på en teit måte for å håndtere skjemanavn med parentes i navnet
-  # skjemanavn_aktuelt = fanenavn[stringr::str_detect(
-  #   fanenavn,
-  #   pattern = stringr::fixed(skjemanavn)
-  # )][1] 
-    
-  #if (length(skjemanavn_aktuelt) != 1) {
-  # if (is.na(skjemanavn_aktuelt)) {
-  #   stop("Skjemanavn finnes ikke i kodebok") # FIXME - Bedre feilmeldingstekst. Flere mulige avvik?
-  # }
-
   d_skjemanavn = suppressMessages(readxl::read_xlsx(filsti,
     sheet = skjemanavn,
     col_names = FALSE,
@@ -169,27 +146,6 @@ mrs5_parse_kodebok_meta = function(filsti, skjemanavn) {
 #'
 #' @keywords internal
 mrs5_parse_kodebok_felter = function(filsti, skjemanavn) {
-  
-  # kontrollerer argumenter
-  # assertthat::assert_that(assertthat::is.string(filsti),
-  #                         msg = "Filsti må være en tekststreng"
-  # )
-  # 
-  # stopifnot(file.exists(filsti))
-  # fanenavn = readxl::excel_sheets(filsti)
-  # 
-  # assertthat::assert_that(assertthat::is.string(skjemanavn),
-  #                         msg = "skjemanavn må være NULL eller en tekst-vektor"
-  # )
-  # 
-  # # skjemanavn_aktuelt = fanenavn[stringr::str_detect(
-  # #   fanenavn,
-  # #   pattern = stringr::fixed(skjemanavn)
-  # # )][2]
-  # 
-  # if (is.na(skjemanavn_aktuelt)) {
-  #   stop("Skjemanavn finnes ikke i kodebok") 
-  # }
   
   d_skjemanavn = suppressMessages(readxl::read_xlsx(filsti,
                                                     sheet = paste0(skjemanavn,"-felter"),
@@ -216,26 +172,6 @@ mrs5_parse_kodebok_felter = function(filsti, skjemanavn) {
 #'
 #' @keywords internal
 mrs5_parse_kodebok_regler = function(filsti, skjemanavn){
-  
-  # # kontrollerer filsti
-  # assertthat::assert_that(assertthat::is.string(filsti),
-  #                         msg = "Filsti må være en tekststreng"
-  #                         )
-  # assertthat::assert_that(assertthat::has_extension(filsti, ext = "xlsx"), 
-  #                         msg = "Kodebok må være en .xlsx-fil"
-  #                         )
-  # assertthat::assert_that(assertthat::is.readable(filsti), 
-  #                         msg = paste0("Finner ikke kodebok på: ", filsti)
-  # )
-
-  # # Kontrollere skjemanavn  
-  # assertthat::assert_that((assertthat::is.string(skjemanavn) | is.null(skjemanavn)),
-  #                         msg = "skjemanavn må være NULL eller en tekst-vektor"
-  # )
-  
-  # if (is.na(skjemanavn_aktuelt)) {
-  #   stop("Skjemanavn finnes ikke i kodebok") 
-  # }
   
   d_skjemanavn = suppressMessages(readxl::read_xlsx(filsti,
                                                     sheet = paste0(skjemanavn, "-regler"),
