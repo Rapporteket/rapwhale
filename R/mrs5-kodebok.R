@@ -249,24 +249,21 @@ mrs5_parse_kodebok_regler = function(filsti, skjemanavn){
 
 # Hjelpefunksjoner for Parse ----------------------------------------------
 
-#' Lag skjemanavn-vektor
+#' Lag skjemakobling
 #' 
 #' @description
 #' Sjekker om `skjemanavn` er en gyldig tekst-vektor hvis oppgitt. Hvis det ikke
 #' er gitt en tekstvektor som argument hentes alle skjemanavn fra kodebok 
 #' funnet på `filsti`. 
 #' 
-#' @param filsti Plassering av kodebok
-#' @param skjemanavn Tekstvektor med skjemanavn som skal hentes ut eller `NULL`. 
+#' @param filsti Tekststreng som angir filsti til kodebok.  
+#' @param skjemanavn Tekststreng med skjemanavn som skal leses inn.
 #'
 #' @return
-#' Returnerer tekstvektor med aktuelle skjemanavn. 
-#' @export
+#' Returnerer en tibble med fanenavn fra kodebok og menneskevennlige skjemanavn
+#' for de samme fanene.  
 #'
-#' @examples
-#' # Lager vektor med skjemanavn
-#' mrs5_trekk_ut_skjemanavn(filsti = "filsti/til/fil.xlsx", 
-#'                          skjemanavn = NULL)
+#' @keywords internal
 mrs5_trekk_ut_skjemanavn = function(filsti, skjemanavn) {
  
  mrs5_kontroller_argumenter(filsti, skjemanavn)
