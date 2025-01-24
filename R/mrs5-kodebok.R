@@ -364,16 +364,16 @@ mrs5_les_skjemanavn = function(filsti) {
 #' Henter ut versjonslogg for skjema
 #' 
 #' @description
-#' Henter versjonslogg fra generelt-fane for `skjemanavn`.  
-#' 
+#' Henter versjonslogg fra generelt-fane for `skjemanavn`.
+#' Inndata må være rådataversjon av generelt-fane for `skjemanavn`
+#' hentet ut med mrs5_parse_kodebok_meta.  
 #'
 #' @param parsed_generelt rådataversjon av generelt-fane fra kodebok. 
 #'
 #' @return
 #' Returnerer tibble med versjonslogg for `skjemanavn`. 
-#' @export
 #'
-#' @examples
+#' @keywords internal
 mrs5_hent_versjonslogg = function(parsed_generelt) {
   
   assertthat::assert_that(is.data.frame(parsed_generelt))
@@ -403,6 +403,8 @@ mrs5_hent_versjonslogg = function(parsed_generelt) {
 #' 
 #' @description
 #' Henter metainfo fra generelt-fane for `skjemanavn`. 
+#' Inndata må være rådataversjon av generelt-fane for `skjemanavn`
+#' hentet ut med mrs5_parse_kodebok_meta.  
 #' 
 #' @param parsed_generelt rådataversjon av generelt-fane fra kodebok. 
 #'
