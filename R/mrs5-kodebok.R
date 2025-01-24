@@ -155,20 +155,19 @@ mrs5_parse_kodebok_meta = function(filsti, skjemanavn) {
   return(d_skjemanavn)
 }
 
-#' les inn felter for skjema fra kodebok
+#' les inn felter for skjema
 #'
 #' @description
-#' Leser inn rådataversjon av felter-fane for `skjemanavn` fra MRS5-kodebok. 
+#' Leser inn rådataversjon av 'felter-fane' for `skjemanavn` fra MRS5-kodebok. 
+#' Denne fanen inneholder informasjon om variablene i det aktuelle `skjemanavn`.
+#' Funksjonen er ikke ment å kalles direkte. 
 #' 
-#' @param filsti Plassering av kodebokfil på disk.
-#' @param skjemanavn Navn på skjema slik det er gitt i kodebok.
+#' @param filsti Tekststreng som angir filsti til kodebok.  
+#' @param skjemanavn Tekststreng med skjemanavn som skal leses inn.
 #'
 #' @return
-#' @export
 #'
-#' @examples
-#' # Les inn rådataversjon av felter-fane for skjemanavn fra kodebok
-#' kb_felter_raa = mrs5_parse_kodebok_felter(filsti = "path/to/file/, skjemanavn = "skjema")
+#' @keywords internal
 mrs5_parse_kodebok_felter = function(filsti, skjemanavn) {
   
   # kontrollerer argumenter
