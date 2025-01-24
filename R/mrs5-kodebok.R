@@ -27,15 +27,24 @@
 #' navngitt i kodebok. Hvis `skjemanavn = NULL` hentes kodebok for alle skjema inn. 
 
 #' @return
-#' Listeobjekt som inneholder tibblene kb_kodebok, kb_kategoriske og kb_regler. 
+#' Listeobjekt som inneholder listene:
+#' \itemize{
+#'    \item versjonslogg
+#'    \item metainfo 
+#'    \item felter 
+#'    \item regler
+#'    }
+#'    
+#'  For hvert skjema som leses inn lages det en tibble i de aktuelle listene. 
+#'  
 #' @export
 #'
 #' @examples
-#' # Hente kodebok for alle skjema
-#' kb_register = mrs5_hent_kodebok(filst = "/sti//til//kodebokfil", skjemanavn = NULL)
+#' # lese inn rådata for alle skjema i kodebok
+#' kb_register = mrs5_parse_kodebok(filst = "/sti//til//kodebokfil", skjemanavn = NULL)
 #' 
-#' # Hente for et enkelt skjema 
-#' kb_innleggelse = mrs5_hent_kodebok(filst = "/sti//til//kodebokfil", skjemanavn = "Innleggelse")
+#' # Hente rådata for et enkelt skjema 
+#' kb_innleggelse = mrs5_parse_kodebok(filst = "/sti//til//kodebokfil", skjemanavn = "Innleggelse")
 mrs5_parse_kodebok = function(filsti, skjemanavn = NULL) {
   
   kodebok_raa = list(
