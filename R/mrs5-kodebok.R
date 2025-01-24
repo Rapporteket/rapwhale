@@ -280,12 +280,14 @@ mrs5_trekk_ut_skjemanavn = function(filsti, skjemanavn) {
   }
 
 
-#' Typekontroll for argumenter til mrs5_parsefunksjon
+#' Typekontroll for argumenter til mrs5_parse-funksjoner
 #' 
 #' @description
 #' Typekontroll for argumenter som brukes i mrs5-parsefunksjoner. 
 #' Ikke ment å kalles direkte, men brukes for å kontrollere argumenter 
 #' og gi fornuftige feilmeldinger hvis det er problemer med argumentene. 
+#' 
+#' Sjekker også at skjemanavn som oppgis faktisk finnes i kodebok
 #' 
 #' @param filsti tekststreng som indikerer plassering av kodebok. 
 #' @param skjemanavn en tekst-vektor med skjemanavn som skal leses inn. Hvis 
@@ -295,8 +297,9 @@ mrs5_trekk_ut_skjemanavn = function(filsti, skjemanavn) {
 #' Returnerer TRUE hvis argumentene passerer kontroll. Hvis ikke returneres 
 #' aktuell feilmelding. 
 #'  
-#' @export
+#' @keywords internal
 mrs5_kontroller_argumenter = function(filsti, skjemanavn) {
+  
   # kontrollerer filsti
   assertthat::assert_that(assertthat::is.string(filsti),
     msg = "Filsti må være en tekststreng"
@@ -332,29 +335,28 @@ mrs5_kontroller_argumenter = function(filsti, skjemanavn) {
 #' Les inn fanenavn for mrs5-kodebok
 #' 
 #' @description
-#' Henter inn fanenavn for en MRS5-kodebok og returnerer de unike 
-#' skjemanavn som finnes i kodeboken. MRS5-kodebok inneholder tre faner for 
-#' hvert skjema med strukturen:  
-#' 1-skjemanavn,  1-skjemanavn-felter, 1-skjemanavn-regler. 
-#' Funksjonen trekker ut unike skjemanavn fra 1-skjemanavn, osv. 
-#' 
+#' Henter inn fanenavn for en MRS5-kodebok og returnerer et koblingsskjema 
+#' med fanenavn og menneskevennlig navn for de unike skjema som finnes i kodebok.  
 #'
-#' @param filsti filplassering av kodebok. 
+#' @param filsti tekststreng som indikerer plassering av kodebok.  
 #'
 #' @return
-#' Returnerer en tibble med variablene fanenavn og fanenavn_unike.
+#' Returnerer en tibble med variablene fanenavn og skjemanavn.
 #' Fanenavn inneholder fanenavn slik de er i kodebok, 
-#' fanenavn_unike inneholder menneskevennlig versjon som for eksempel 
+#' skjemanavn inneholder menneskevennlig versjon som for eksempel 
 #' "testskjema" for fanenavn "1-Testskjema".
 #' 
 #' @export
 #'
 #' @examples
+#' # henter skjemanavn fra kodebok
+#' skjemanavn = mrs5_les_skjemanavn(filsti = "sti//til//kodebok.xlsx)
 mrs5_les_skjemanavn = function(filsti) {
-  
-navn_fra_kb = tibble::tibble(fanenavn = readxl::excel_sheets(filsti)) |> 
-  mutate(skjemanavn = stringr::str_remove(stringr::str_to_lower(fanenavn), pattern = "\\d+\\-")) |> 
-  slice(seq(2, length(skjemanavn), by = 3))
+  navn_fra_kb = tibble::tibble(fanenavn = readxl::excel_sheets(filsti)) |>
+    mutate(skjemanavn = stringr::str_remove(stringr::str_to_lower(fanenavn),
+      pattern = "\\d+\\-"
+    )) |>
+    slice(seq(2, length(skjemanavn), by = 3))
 
   return(navn_fra_kb)
 }
