@@ -79,8 +79,7 @@ mrs5_parse_kodebok = function(filsti, skjemanavn = NULL) {
 #' Denne funksjonen er ikke ment å kalles direkte. 
 #'
 #' @param filsti Tekststreng som angir filsti til kodebok.  
-#' @param skjemanavn Tekststreng med skjemanavn som skal leses inn slik det er 
-#' navngitt i kodebok. 
+#' @param skjemanavn Tekststreng med skjemanavn som skal leses inn. 
 #'
 #' @return
 #' Listeobjekt med tibbles som inneholder rådataversjon av metainfo, 
@@ -107,22 +106,21 @@ mrs5_parse_kodebok_skjema = function(filsti, skjemanavn) {
 }
 
 
-#' les inn generelt fane for skjema
+#' les inn hovedfane for skjema
 #' 
 #' @description
-#' Leser inn hovedfane for `skjemanavn` fra MRS5-kodebok. 
+#' Leser inn hovedfane for `skjemanavn` fra MRS5-kodebok. Dette skjemaet 
+#' inneholder metadata for det aktuelle skjemaet.  
+#' Funksjonen er ikke ment å kalles direkte. 
 #' 
-#' @param filsti Plassering av kodebokfil på disk. 
-#' @param skjemanavn Navn på skjema slik det er gitt i kodebok.
+#' @param filsti Tekststreng som angir filsti til kodebok.  
+#' @param skjemanavn Tekststreng med skjemanavn som skal leses inn.
 #'
 #' @return
 #' Returnerer en tibble med rådataversjon av generelt-fane for `skjemanavn`
 #' fra kodebok. 
-#' @export
-#'
-#' @examples
-#' # Les inn rådataversjon av generelt-fane for skjemanavn fra kodebok
-#' kb_raa = mrs5_parse_kodebok_meta(filsti = "path/to/file/, skjemanavn = "skjema")
+#' 
+#' @keywords internal
 mrs5_parse_kodebok_meta = function(filsti, skjemanavn) {
   
   # # kontrollerer argumenter
