@@ -405,6 +405,20 @@ test_that("typekontroll_skjemanavn", {
     feilmelding_feil_type_skjemanavn
   )
   
+  expect_true(
+    mrs5_kontroller_argumenter(
+      filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"), 
+      skjemanavn = NULL
+    )
+  ) 
+  
+  expect_true(
+    mrs5_kontroller_argumenter(
+      filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"), 
+      skjemanavn = "Testskjema"
+    )
+  )
+  
 })
 
 # skjemanavn innhold 
