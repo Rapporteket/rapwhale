@@ -1,3 +1,5 @@
+
+
 # Fixme's -----------------------------------------------------------------
 
 # FIXME - Legge eksempelfiler i inst-mappe for å ha eksempler som virker for 
@@ -5,7 +7,6 @@
 # FIXME - Oppdatere docs for funksjonene punktet over gjelder. 
 #   - mrs5_hent_kodebok, 
 # FIXME - Konverter til kanonisk funksjonalitet 
-# FIXME - Fikse import av nødvendige funsjoner og fjerne :: 
 # FIXME - Legg inn kontroll av skjemanavn-argument i mrs5_trekk_ut_skjemanavn 
 # FIXME - Legg til test for at skjemanavn er korrekt skrevet i mrs5_trekk_ut_skjemanavn
 
@@ -122,7 +123,7 @@ mrs5_parse_kodebok_skjema = function(filsti, skjemanavn) {
 #' @keywords internal
 mrs5_parse_kodebok_meta = function(filsti, skjemanavn) {
   
-  d_skjemanavn = suppressMessages(readxl::read_xlsx(filsti,
+  d_skjemanavn = suppressMessages(read_xlsx(filsti,
     sheet = skjemanavn,
     col_names = FALSE,
     col_types = "text"
@@ -146,12 +147,12 @@ mrs5_parse_kodebok_meta = function(filsti, skjemanavn) {
 #' @keywords internal
 mrs5_parse_kodebok_felter = function(filsti, skjemanavn) {
   
-  d_skjemanavn = suppressMessages(readxl::read_xlsx(filsti,
+  d_skjemanavn = suppressMessages(read_xlsx(filsti,
                                                     sheet = paste0(skjemanavn,"-felter"),
                                                     col_names = TRUE,
                                                     col_types = "text"
   )) |> 
-    tibble::add_column("Skjemanavn" = stringr::str_remove(skjemanavn, "\\d\\-"), .before = 1)
+    add_column("Skjemanavn" = str_remove(skjemanavn, "\\d\\-"), .before = 1)
   
   return(d_skjemanavn)
 }
@@ -172,12 +173,12 @@ mrs5_parse_kodebok_felter = function(filsti, skjemanavn) {
 #' @keywords internal
 mrs5_parse_kodebok_regler = function(filsti, skjemanavn){
   
-  d_skjemanavn = suppressMessages(readxl::read_xlsx(filsti,
+  d_skjemanavn = suppressMessages(read_xlsx(filsti,
                                                     sheet = paste0(skjemanavn, "-regler"),
                                                     col_names = TRUE,
                                                     col_types = "text"
   )) |> 
-    tibble::add_column("Skjemanavn" = stringr::str_remove(skjemanavn, "\\d\\-"), .before = 1)
+    add_column("Skjemanavn" = str_remove(skjemanavn, "\\d\\-"), .before = 1)
   
   return(d_skjemanavn)
 }
@@ -209,7 +210,7 @@ mrs5_trekk_ut_skjemanavn = function(filsti, skjemanavn) {
     skjema_ut = skjemakobling
   } else (
         skjema_ut = skjemakobling[which(
-          skjemakobling$skjemanavn %in% stringr::str_to_lower(skjemanavn)),] 
+          skjemakobling$skjemanavn %in% str_to_lower(skjemanavn)),] 
     )
   return(skjema_ut)
   }
@@ -236,31 +237,31 @@ mrs5_trekk_ut_skjemanavn = function(filsti, skjemanavn) {
 mrs5_kontroller_argumenter = function(filsti, skjemanavn) {
   
   # kontrollerer filsti
-  assertthat::assert_that(assertthat::is.string(filsti),
+  assert_that(is.string(filsti),
     msg = "Filsti må være en tekststreng"
   )
-  assertthat::assert_that(assertthat::has_extension(filsti, ext = "xlsx"),
+  assert_that(has_extension(filsti, ext = "xlsx"),
     msg = "Kodebok må være en .xlsx-fil"
   )
-  assertthat::assert_that(assertthat::is.readable(filsti),
+  assert_that(is.readable(filsti),
     msg = paste0("Finner ikke kodebok på ", filsti)
   )
 
   # Kontrollere skjemanavn
-  assertthat::assert_that((is.character(skjemanavn) | is.null(skjemanavn)),
+  assert_that((is.character(skjemanavn) | is.null(skjemanavn)),
     msg = "Skjemanavn må være NULL eller en tekst-vektor"
   )
 
   # kontroll at skjemanavn finnes i kodebok
   skjemanavn_kobling = mrs5_les_skjemanavn(filsti)
 
-  skjemanavn_lowercase = stringr::str_to_lower(skjemanavn)
+  skjemanavn_lowercase = str_to_lower(skjemanavn)
   
-  assertthat::assert_that(
+  assert_that(
     all(skjemanavn_lowercase %in% skjemanavn_kobling$skjemanavn),
     msg = paste0(
       "Skjemanavn: ",
-      stringr::str_c("«", skjemanavn_lowercase[which(!skjemanavn_lowercase %in% skjemanavn_kobling$skjemanavn)], "»",
+      str_c("«", skjemanavn_lowercase[which(!skjemanavn_lowercase %in% skjemanavn_kobling$skjemanavn)], "»",
         collapse = ", "
       ), " finnes ikke i kodebok"
     )
@@ -287,8 +288,8 @@ mrs5_kontroller_argumenter = function(filsti, skjemanavn) {
 #' # henter skjemanavn fra kodebok
 #' skjemanavn = mrs5_les_skjemanavn(filsti = "sti//til//kodebok.xlsx)
 mrs5_les_skjemanavn = function(filsti) {
-  navn_fra_kb = tibble::tibble(fanenavn = readxl::excel_sheets(filsti)) |>
-    mutate(skjemanavn = stringr::str_remove(stringr::str_to_lower(fanenavn),
+  navn_fra_kb = tibble(fanenavn = excel_sheets(filsti)) |>
+    mutate(skjemanavn = str_remove(str_to_lower(fanenavn),
       pattern = "\\d+\\-"
     )) |>
     slice(seq(2, length(skjemanavn), by = 3))
@@ -311,25 +312,25 @@ mrs5_les_skjemanavn = function(filsti) {
 #' @keywords internal
 mrs5_hent_versjonslogg = function(parsed_generelt) {
   
-  assertthat::assert_that(is.data.frame(parsed_generelt))
+  assert_that(is.data.frame(parsed_generelt))
   
   skjemanavn = parsed_generelt[[1,2]]
   
   # finne NA-rad for å splitte metainfo og versjonslogg
   na_rad = parsed_generelt |> 
-    dplyr::mutate(radnr = dplyr::row_number()) |> 
-    dplyr::filter(is.na(...1)) |> 
-    dplyr::pull(radnr)  
+    mutate(radnr = row_number()) |> 
+    filter(is.na(...1)) |> 
+    pull(radnr)  
   
   # eProm-skjema har en ekstra tabell i skjemanavn-fane 
-  siste_rad = dplyr::if_else(length(na_rad) == 1, 
+  siste_rad = if_else(length(na_rad) == 1, 
                              nrow(parsed_generelt), 
                              na_rad[2])
   
   d_versjonslogg = parsed_generelt[seq(na_rad[1]+1, siste_rad, 1), ] |> 
-    janitor::row_to_names(row_number = 1) |> 
-    janitor::clean_names() |> 
-    tibble::add_column("Skjemanavn" = skjemanavn, .before = 1)
+    row_to_names(row_number = 1) |> 
+    clean_names() |> 
+    add_column("Skjemanavn" = skjemanavn, .before = 1)
   
   return(d_versjonslogg)
 }
@@ -350,22 +351,23 @@ mrs5_hent_versjonslogg = function(parsed_generelt) {
 #' @examples
 mrs5_hent_metainfo = function(parsed_generelt) {
   
-  assertthat::assert_that(is.data.frame(parsed_generelt))
+  assert_that(is.data.frame(parsed_generelt))
   
   # finne NA-rad 
   na_rad = parsed_generelt |> 
-    dplyr::mutate(radnr = dplyr::row_number()) |> 
-    dplyr::filter(is.na(...1)) |> dplyr::pull(radnr)  
+    mutate(radnr = row_number()) |> 
+    filter(is.na(...1)) |> 
+    pull(radnr)  
   
   na_rad = na_rad[1]
   
   d_metainfo = parsed_generelt |> 
-    dplyr::select(...1, ...2) |> 
-    dplyr::slice_head(n = na_rad-1) |> 
-    dplyr::rename("metavariabel" = ...1, "metaverdi" = ...2) |> 
-    tidyr::pivot_wider(names_from = "metavariabel", 
-                       values_from = "metaverdi") |> 
-    janitor::clean_names()
+    select(...1, ...2) |> 
+    slice_head(n = na_rad-1) |> 
+    rename("metavariabel" = ...1, "metaverdi" = ...2) |> 
+    pivot_wider(names_from = "metavariabel", 
+                values_from = "metaverdi") |> 
+    clean_names()
   
   return(d_metainfo)
 }
