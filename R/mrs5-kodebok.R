@@ -2,10 +2,6 @@
 
 # Fixme's -----------------------------------------------------------------
 
-# FIXME - Legge eksempelfiler i inst-mappe for å ha eksempler som virker for 
-# funksjoner som leser inn filer. 
-# FIXME - Oppdatere docs for funksjonene punktet over gjelder. 
-#   - mrs5_hent_kodebok, 
 # FIXME - Konverter til kanonisk funksjonalitet 
 # FIXME - Legg inn kontroll av skjemanavn-argument i mrs5_trekk_ut_skjemanavn 
 # FIXME - Legg til test for at skjemanavn er korrekt skrevet i mrs5_trekk_ut_skjemanavn
@@ -39,11 +35,14 @@
 #' @export
 #'
 #' @examples
-#' # lese inn rådata for alle skjema i kodebok
-#' kb_register = mrs5_parse_kodebok(filst = "/sti//til//kodebokfil", skjemanavn = NULL)
+#' # Filsti til eksempeldata 
+#' filsti_eksempel = system.file("extdata", "eksempelkodebok.xlsx", package = "rapwhale")
+#' 
+#' # Hente rådata for alle skjema i kodebok
+#' kb_register = mrs5_parse_kodebok(filsti = filsti_eksempel, skjemanavn = NULL)
 #' 
 #' # Hente rådata for et enkelt skjema 
-#' kb_innleggelse = mrs5_parse_kodebok(filst = "/sti//til//kodebokfil", skjemanavn = "Innleggelse")
+#' kb_testskjema = mrs5_parse_kodebok(filsti = filsti_eksempel, skjemanavn = "testskjema")
 mrs5_parse_kodebok = function(filsti, skjemanavn = NULL) {
   
   kodebok_raa = list(
@@ -143,6 +142,8 @@ mrs5_parse_kodebok_meta = function(filsti, skjemanavn) {
 #' @param skjemanavn Tekststreng med skjemanavn som skal leses inn.
 #'
 #' @return
+#' Returnerer en tibble med rådataversjon av felter-fane for `skjemanavn` 
+#' fra kodebok. 
 #'
 #' @keywords internal
 mrs5_parse_kodebok_felter = function(filsti, skjemanavn) {
@@ -169,6 +170,8 @@ mrs5_parse_kodebok_felter = function(filsti, skjemanavn) {
 #' @param skjemanavn Tekststreng med skjemanavn som skal leses inn.
 #'
 #' @return
+#' Returnerer en tibble med rådataversjon av regler-fane for `skjemanavn` 
+#' fra kodebok. 
 #'
 #' @keywords internal
 mrs5_parse_kodebok_regler = function(filsti, skjemanavn){
@@ -285,8 +288,11 @@ mrs5_kontroller_argumenter = function(filsti, skjemanavn) {
 #' @export
 #'
 #' @examples
+#' # Filsti til eksempelkodebok
+#' filsti_eksempelkodebok = system.file("extdata", "eksempelkodebok.xlsx", package = "rapwhale")
+#' 
 #' # henter skjemanavn fra kodebok
-#' skjemanavn = mrs5_les_skjemanavn(filsti = "sti//til//kodebok.xlsx)
+#' skjemanavn = mrs5_les_skjemanavn(filsti = filsti_eksempelkodebok)
 mrs5_les_skjemanavn = function(filsti) {
   navn_fra_kb = tibble(fanenavn = excel_sheets(filsti)) |>
     mutate(skjemanavn = str_remove(str_to_lower(fanenavn),
@@ -346,9 +352,8 @@ mrs5_hent_versjonslogg = function(parsed_generelt) {
 #'
 #' @return
 #' Returnerer tibble med metainfo for `skjemanavn`. 
-#' @export
-#'
-#' @examples
+#' 
+#' @keywords internal
 mrs5_hent_metainfo = function(parsed_generelt) {
   
   assert_that(is.data.frame(parsed_generelt))
