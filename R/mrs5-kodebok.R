@@ -379,38 +379,106 @@ mrs5_konverter_til_kanonisk = function(kb_parsed_raa) {
 
 # Hjelpefunksjoner kanonisk -----------------------------------------------
 
-# kodebok
+#' Lag fine kolonnenavn
+#' 
+#' @description 
+#' Hjelpefunksjon som vasker kolonnenavn i tabeller hentet ut fra MRS5-kodebok. 
+#'
+#' @param d datasett hvor kolonnenavn skal vaskes. 
+#'
+#' @returns
+#' Returnerer samme datasett som er gitt som inndata, med vaskede kolonnenavn. 
+#' Beholder æ, ø o å, men tar bort hermetegn og andre symboler. Erstatter 
+#' mellomrom med understrek. 
+#' @export
+#'
+#' @examples
+#' 
+#' data = tibble(Skjemanavn = c("Skjema 1", "Skjema 2"), 
+#'              `"Kan slettes"` = c("Ja", "Ja"))
+#'              
+#' data_forenklet = mrs5_lag_fine_kolonnenavn(data)
+mrs5_lag_fine_kolonnenavn = function(d) {
+  
+  janitor::clean_names(d, replace = c(
+    `'` = "",
+    `"` = "",
+    `%` = "_percent_",
+    `#` = "_number_",
+    `å` = "å",
+    `æ` = "æ",
+    `ø` = "ø"
+  ))
+}
+
+
+#' Konverter rådata til kanonisk kodebok
+#'
+#' @description Tar inn kodebok på rådataformat slik det produseres av funksjonen
+#' `mrs5_parse_kodebok()`. 
+#' Leverer ut kodebok på kanonisk format, det vil si en liste som inneholder 
+#' tre tibbles, Kodebok, Kategoriske og Regler. 
+#'
+#' @param kb_parsed_raa Kodebok på rådataformat produsert av `mrs5_parse_kodebok()`
+#'
+#' @returns
+#' @export
+#'
+#' @examples
 mrs5_lag_kanonisk_kb = function(kb_parsed_raa) {
-  # Tar inn rådataversjon fra mrs5_parse_kodebok_felter og returnerer
-  # kb[[kodebok]] på kanonisk format.
-}
-
-###
-mrs5_lag_skjema_id = function(kb_parsed_raa) {
-  # Henter ut skjemanavn og genererer maskinlesbar skjema_id.
-  skjema_id = janitor::make_clean_names(names(kb_parsed_raa_panda$versjonslogg),
-    replace = c(
-      `'` = "",
-      `"` = "",
-      `%` = "_percent_",
-      `#` = "_number_",
-      `å` = "aa",
-      `æ` = "ae",
-      `ø` = "oe"
-    )
+  
+  d_alle_versjonslogg = bind_rows(kb_parsed_raa[["versjonslogg"]], .id = "kilde") |> mrs5_lag_fine_kolonnenavn()
+  d_alle_metainfo = bind_rows(kb_parsed_raa[["metainfo"]], .id = "kilde") |> mrs5_lag_fine_kolonnenavn()
+  d_alle_felter = bind_rows(kb_parsed_raa[["felter"]], .id = "kilde") |> mrs5_lag_fine_kolonnenavn()
+  d_alle_regler = bind_rows(kb_parsed_raa[["regler"]], .id = "kilde") |> mrs5_lag_fine_kolonnenavn()
+  
+  Kodebok = d_alle_felter |> 
+    filter(is.na(fjernet_fra_og_med_skjemaversjon),
+           !is.na(variabelnavn)) |> 
+    mutate(
+    skjema_id = skjemanavn, 
+    skjemanavn = skjemanavn, 
+    variabel_id = variabelnavn, 
+    variabeletikett = visningstekst, 
+    hjelpetekst = hjelpetekst, 
+    variabeltype = koblingsliste_vartyper$kanonisk[match(felttype, rapwhale::koblingsliste_vartyper$MRS5)], 
+    obligatorisk = kjernefelt == "Ja", 
+    desimaler = NA_integer_,  
+    regler = paste0(skjemanavn, variabelnavn) %in% unique(paste0(d_alle_regler$skjemanavn, d_alle_regler$eier))
+    ) |> 
+    select(skjema_id, skjemanavn, variabel_id, variabeletikett, hjelpetekst, 
+           variabeltype, obligatorisk, desimaler, regler)
+  
+  Kategoriske = Kodebok |> 
+    filter(variabeltype == "kategorisk", 
+           !is.na(variabel_id)) |>
+    distinct(skjema_id, variabel_id) |> 
+    left_join(d_alle_felter |> 
+                select(variabelnavn, skjemanavn, mulige_verdier), 
+              by = c("variabel_id" = "variabelnavn", "skjema_id" = "skjemanavn")) |> 
+    tidyr::separate_rows(mulige_verdier, 
+                  sep = ",\\s*(?=[-]?\\d+\\s*=)") |> 
+    mutate(mulige_verdier = str_remove_all(mulige_verdier, pattern = "[\\n]")) |> 
+    tidyr::separate_wider_regex(
+      cols = mulige_verdier, 
+      patterns = c(verdi = "[-]?\\d+", 
+                   "\\s*=\\s*",
+                   verditekst = "(?:.*)$")
+    ) |> 
+    select(skjema_id, variabel_id, verdi, verditekst) |> 
+    add_column(manglande = FALSE)
+  
+  Regler = d_alle_regler |> 
+    filter(eiertype == "Field") |> 
+    select(skjemanavn, eier, forklaring)
+  
+  kodebok_kanonisk = list(
+    "Kodebok" = Kodebok, 
+    "Kategoriske" = Kategoriske, 
+    "Regler" = Regler
   )
-
-  return(skjema_id)
-}
-
-mrs5_kanonisk_variabeltype = function() {
-  # Konverter variabeltype til internt navn.
-
-  # lage datasett med kolonne for alle kilder + kanonisk og legge i rapwhale?
-}
-
-mrs5_definer_obligatorisk = function() {
-  # Definer hvilke variabler som er obligatorisk å fylle ut.
+  
+  return(kodebok_kanonisk)
 }
 
 mrs5_identifiser_variabler_med_regler = function() {
