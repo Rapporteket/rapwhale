@@ -432,6 +432,11 @@ mrs5_lag_kanonisk_kb = function(kb_parsed_raa) {
   d_alle_felter = bind_rows(kb_parsed_raa[["felter"]], .id = "kilde") |> mrs5_lag_fine_kolonnenavn()
   d_alle_regler = bind_rows(kb_parsed_raa[["regler"]], .id = "kilde") |> mrs5_lag_fine_kolonnenavn()
   
+  
+  Regler = d_alle_regler |> 
+    filter(eiertype == "Field") |> 
+    select(skjemanavn, eier, forklaring)
+  
   Kodebok = d_alle_felter |> 
     filter(is.na(fjernet_fra_og_med_skjemaversjon),
            !is.na(variabelnavn)) |> 
@@ -444,7 +449,7 @@ mrs5_lag_kanonisk_kb = function(kb_parsed_raa) {
     variabeltype = koblingsliste_vartyper$kanonisk[match(felttype, rapwhale::koblingsliste_vartyper$MRS5)], 
     obligatorisk = kjernefelt == "Ja", 
     desimaler = NA_integer_,  
-    regler = paste0(skjemanavn, variabelnavn) %in% unique(paste0(d_alle_regler$skjemanavn, d_alle_regler$eier))
+    regler = paste0(skjemanavn, variabelnavn) %in% unique(paste0(Regler$skjemanavn, Regler$eier))
     ) |> 
     select(skjema_id, skjemanavn, variabel_id, variabeletikett, hjelpetekst, 
            variabeltype, obligatorisk, desimaler, regler)
@@ -468,9 +473,7 @@ mrs5_lag_kanonisk_kb = function(kb_parsed_raa) {
     select(skjema_id, variabel_id, verdi, verditekst) |> 
     add_column(manglande = FALSE)
   
-  Regler = d_alle_regler |> 
-    filter(eiertype == "Field") |> 
-    select(skjemanavn, eier, forklaring)
+  
   
   kodebok_kanonisk = list(
     "Kodebok" = Kodebok, 
