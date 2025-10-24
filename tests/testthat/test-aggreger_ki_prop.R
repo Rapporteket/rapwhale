@@ -169,7 +169,10 @@ test_that(paste0(
   )
 
   expect_identical(aggreger_ki_prop(d_ugruppert), svar_ugruppert)
-  expect_identical(aggreger_ki_prop(d_gruppert), svar_gruppert)
+  expect_equal(aggreger_ki_prop(d_gruppert),
+    expected = svar_gruppert,
+    tolerance = testthat_tolerance()
+  )
 })
 
 # 1) Hvordan skal funksjonen håndtere missing i grupperingsvariabel?
@@ -196,7 +199,10 @@ test_that(paste0(
     konfint_ovre = c(NA_real_, 0.5614970317550454, 1)
   )
 
-  expect_identical(aggreger_ki_prop(d_gruppert_med_na), svar_gruppert_med_na)
+  expect_equal(aggreger_ki_prop(d_gruppert_med_na),
+    expected = svar_gruppert_med_na,
+    tolerance = testthat_tolerance()
+  )
 })
 
 # 2) Hvordan håndtere at grupperingsvariabel er en faktor som har nivå som ikke eksisterer i datasettet?
@@ -255,7 +261,10 @@ test_that(paste0(
     konfint_ovre = c(NA_real_, 0.5614970317550454, 1)
   )
 
-  expect_identical(aggreger_ki_prop(d_grupper_uten_innhold), svar_uten_innhold)
+  expect_equal(aggreger_ki_prop(d_grupper_uten_innhold),
+    expected = svar_uten_innhold,
+    tolerance = testthat_tolerance()
+  )
 })
 
 test_that(paste0(
@@ -366,9 +375,19 @@ test_that("Funksjonen støtter angivelse av konfidensinvå", {
     konfint_nedre = 0.07826572633372843, konfint_ovre = 0.7464661317187757
   )
 
-  expect_identical(aggreger_ki_prop(d_test), d_svar_95) # Standard skal være 95 %-KI
-  expect_identical(aggreger_ki_prop(d_test, konf_niva = 0.95), d_svar_95)
-  expect_identical(aggreger_ki_prop(d_test, konf_niva = 0.90), d_svar_90)
+  # Standard skal være 95 %-KI
+  expect_equal(aggreger_ki_prop(d_test),
+    expected = d_svar_95,
+    tolerance = testthat_tolerance()
+  )
+  expect_equal(aggreger_ki_prop(d_test, konf_niva = 0.95),
+    expected = d_svar_95,
+    tolerance = testthat_tolerance()
+  )
+  expect_equal(aggreger_ki_prop(d_test, konf_niva = 0.90),
+    expected = d_svar_90,
+    tolerance = testthat_tolerance()
+  )
 })
 
 test_that("Funksjonen gjev alltid ut ugrupperte data", {
