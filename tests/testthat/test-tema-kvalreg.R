@@ -6,15 +6,13 @@ test_that("aktiver_kvalregtema() set tema_kvalreg() som ggplot2-tema", {
 })
 
 test_that("aktiver_kvalregtema() set ynskja standardverdiar for ggplot2-geom", {
-  geom_point_standard = ggplot2:::check_subclass("point", "Geom")$default_aes
-  geom_line_standard = ggplot2:::check_subclass("line", "Geom")$default_aes
-  geom_linerange_standard = ggplot2:::check_subclass("linerange",
-    subclass = "Geom"
-  )$default_aes
-  geom_hline_standard = ggplot2:::check_subclass("hline", "Geom")$default_aes
-  geom_vline_standard = ggplot2:::check_subclass("vline", "Geom")$default_aes
-  geom_bar_standard = ggplot2:::check_subclass("bar", "Geom")$default_aes
-  geom_col_standard = ggplot2:::check_subclass("col", "Geom")$default_aes
+  geom_point_standard = ggplot2::get_geom_defaults("point")
+  geom_line_standard = ggplot2::get_geom_defaults("line")
+  geom_linerange_standard = ggplot2::get_geom_defaults("linerange")
+  geom_hline_standard = ggplot2::get_geom_defaults("hline")
+  geom_vline_standard = ggplot2::get_geom_defaults("vline")
+  geom_bar_standard = ggplot2::get_geom_defaults("bar")
+  geom_col_standard = ggplot2::get_geom_defaults("col")
 
   expect_identical(geom_point_standard$size, 2)
   expect_identical(geom_point_standard$colour, "#2171b5")
