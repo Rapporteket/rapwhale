@@ -126,10 +126,12 @@ rapwhale_style = function(
     add_line_break_after_pipe_rapwhale
 
   # Tillat maks tre blanke linjer på rad
-  temp_style$line_break$set_line_breaks_between_top_level_exprs = function(pd, allowed_blank_lines = maks_blanke_linjer) {
-    styler:::set_line_breaks_between_top_level_exprs(pd,
-      allowed_blank_lines = allowed_blank_lines
-    )
+  temp_style$line_break$set_line_breaks_between_top_level_exprs = if (strict) {
+    function(pd, allowed_blank_lines = maks_blanke_linjer) {
+      styler:::set_line_breaks_between_top_level_exprs(pd,
+        allowed_blank_lines = allowed_blank_lines
+      )
+    }
   }
 
   temp_style
