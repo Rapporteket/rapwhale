@@ -28,6 +28,9 @@
 #' @param math_token_spacing
 #' Ei liste over parametrar som definerar mellomrom i kring matematiske teikn,
 #' føremålstenleg laga med [styler::specify_math_token_spacing()].
+#' @param maks_blanke_linjer
+#' Eit heiltal med høgste tal på blanke linjer på rad som er tillatne i koden.
+#' Standard er 3.
 #'
 #' @details
 #' Rapwhale-kodestilen er lik Tidyverse-stilen [styler::tidyverse_style()],
