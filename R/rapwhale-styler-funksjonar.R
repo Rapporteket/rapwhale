@@ -12,7 +12,7 @@
 #' Used for unindention.
 #'
 #' @details
-#' Lik [styler::wrap_if_else_while_for_fun_multi_line_in_curly],
+#' Lik [styler::wrap_if_else_while_for_function_multi_line_in_curly],
 #' men der alle uttrykk får krøllparentesar (ikkje berre multi-line).
 #'
 #' @keywords internal
