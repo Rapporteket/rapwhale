@@ -84,7 +84,8 @@ rapwhale_style = function(
     indent_by = 2,
     start_comments_with_one_space = FALSE,
     reindention = styler::tidyverse_reindention(),
-    math_token_spacing = styler::tidyverse_math_token_spacing()) {
+    math_token_spacing = styler::tidyverse_math_token_spacing(),
+    maks_blanke_linjer = 3L) {
   # Ta utgangspunkt i tidyverse-stilen
   temp_style = styler::tidyverse_style(
     scope = scope, strict = strict, indent_by = indent_by,
@@ -119,6 +120,13 @@ rapwhale_style = function(
   # Alltid linjeskift etter røyr, også med berre eitt røyr
   temp_style$line_break$add_line_break_after_pipe =
     add_line_break_after_pipe_rapwhale
+
+  # Tillat maks tre blanke linjer på rad
+  temp_style$line_break$set_line_breaks_between_top_level_exprs = function(pd, allowed_blank_lines = maks_blanke_linjer) {
+    styler:::set_line_breaks_between_top_level_exprs(pd,
+      allowed_blank_lines = allowed_blank_lines
+    )
+  }
 
   temp_style
 }
