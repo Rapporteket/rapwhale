@@ -1,11 +1,45 @@
 # Fixme's -----------------------------------------------------------------
 
-# FIXME - Konverter til kanonisk funksjonalitet
-# FIXME - Legg inn kontroll av skjemanavn-argument i mrs5_trekk_ut_skjemanavn
-# FIXME - Legg til test for at skjemanavn er korrekt skrevet i mrs5_trekk_ut_skjemanavn
-
 # Hent mrs5-kodebok -------------------------------------------------------
 
+#' Hent inn kodebok
+#' 
+#' @description
+#' Leser inn kodebok på mrs5-struktur fra angitt filsti. 
+#' skjemanavn angir hvilket skjema som skal leses inn. Hvis skjemanavn = `NULL`
+#' leses alle skjema inn. 
+#'
+#' @param filsti Plassering av kodebok på disk. Forventer .xlsx-format. 
+#' @param skjemanavn Navn på skjema som skal leses inn. Hvis skjemanavn = `NULL`
+#' leses alle skjema inn. 
+#'
+#' @returns
+#' Listeobjekt med tre navngitte tibbler; `Kodebok`, `Kategoriske` og `Regler` 
+#' som inneholder informasjon om variabler i de innleste skjema. 
+#' 
+#' @export
+#'
+#' @examples
+#' # Filsti til eksempeldata
+#' filsti_eksempel = system.file("extdata", "eksempelkodebok.xlsx", package = "rapwhale")
+#' 
+#' # Les inn alle skjema 
+#' mrs5_hent_kodebok(filsti = filsti_eksempel, skjemanavn = NULL)
+#' 
+#' # Les inn spesifikt skjema 
+#' mrs5_hent_kodebok(filsti = filsti_eksempel, skjemanavn = "Testskjema")
+mrs5_hent_kodebok = function(filsti, skjemanavn = NULL, valider = FALSE) {
+
+    kb_parsed = mrs5_parse_kodebok(filsti, skjemanavn)
+    
+    kb_kanonisk = mrs5_lag_kanonisk_kb(kb_parsed)
+    
+    if(valider) {
+      rapwhale:::valider_kanonisk_kodebok(kb_kanonisk)
+      }
+    
+    return(kb_kanonisk)
+}    
 
 # Parse rådata -------------------------------------------------------------
 
@@ -55,7 +89,7 @@ mrs5_parse_kodebok = function(filsti, skjemanavn = NULL) {
     d_parsed_kodebok = mrs5_parse_kodebok_skjema(filsti = filsti, skjemanavn = skjema)
 
     # hent skjemanavn for det aktuelle fanenavnet for å navngi tibbles i listene
-    skjemanavn_cased = skjemakobling$skjemanavn[skjemakobling$fanenavn == skjema]
+    skjemanavn_cased = skjemakobling$navn_i_fane[skjemakobling$fanenavn == skjema]
 
     kodebok_raa[["versjonslogg"]][[skjemanavn_cased]] = d_parsed_kodebok[["versjonslogg"]]
     kodebok_raa[["metainfo"]][[skjemanavn_cased]] = d_parsed_kodebok[["metainfo"]]
@@ -116,6 +150,9 @@ mrs5_parse_kodebok_skjema = function(filsti, skjemanavn) {
 #'
 #' @keywords internal
 mrs5_parse_kodebok_meta = function(filsti, skjemanavn) {
+  
+  # FIXME - Gjør robust for å fange opp eventuelle endringer i struktur 
+  # Assert at alle forventede felter eksisterer i kolonne 1
   d_skjemanavn = suppressMessages(read_xlsx(filsti,
     sheet = skjemanavn,
     col_names = FALSE,
@@ -290,7 +327,8 @@ mrs5_les_skjemanavn = function(filsti) {
   navn_fra_kb = tibble(fanenavn = excel_sheets(filsti)) |>
     mutate(skjemanavn = str_remove(str_to_lower(fanenavn),
       pattern = "\\d+\\-"
-    )) |>
+    ),
+    navn_i_fane = str_remove(fanenavn, pattern = "\\d\\-")) |>
     slice(seq(2, length(skjemanavn), by = 3))
 
   return(navn_fra_kb)
@@ -371,12 +409,6 @@ mrs5_hent_metainfo = function(parsed_generelt) {
   return(d_metainfo)
 }
 
-# Konverter til kanonisk --------------------------------------------------
-
-mrs5_konverter_til_kanonisk = function(kb_parsed_raa) {
-  mrs5_lag_kanonisk_kb()
-}
-
 # Hjelpefunksjoner kanonisk -----------------------------------------------
 
 #' Lag fine kolonnenavn
@@ -427,11 +459,17 @@ mrs5_lag_fine_kolonnenavn = function(d) {
 #' @examples
 mrs5_lag_kanonisk_kb = function(kb_parsed_raa) {
   
+  # FIXME - Legge inn kontroll for endringer i kjernefelt, sånn at ikke alle 
+  # obligatoriske blir FALSE hvis de feks endrer til boolske verdier. 
+  
   d_alle_versjonslogg = bind_rows(kb_parsed_raa[["versjonslogg"]], .id = "kilde") |> mrs5_lag_fine_kolonnenavn()
   d_alle_metainfo = bind_rows(kb_parsed_raa[["metainfo"]], .id = "kilde") |> mrs5_lag_fine_kolonnenavn()
   d_alle_felter = bind_rows(kb_parsed_raa[["felter"]], .id = "kilde") |> mrs5_lag_fine_kolonnenavn()
   d_alle_regler = bind_rows(kb_parsed_raa[["regler"]], .id = "kilde") |> mrs5_lag_fine_kolonnenavn()
   
+  # Trekk ut menneskevennlig skjemanavn 
+  skjemakobling = d_alle_metainfo |> 
+    select(kilde, skjematypenavn)
   
   Regler = d_alle_regler |> 
     filter(eiertype == "Field") |> 
@@ -441,8 +479,8 @@ mrs5_lag_kanonisk_kb = function(kb_parsed_raa) {
     filter(is.na(fjernet_fra_og_med_skjemaversjon),
            !is.na(variabelnavn)) |> 
     mutate(
-    skjema_id = skjemanavn, 
-    skjemanavn = skjemanavn, 
+    skjema_id = kilde, 
+    skjemanavn = skjemakobling$skjematypenavn[match(kilde, skjemakobling$kilde)],  
     variabel_id = variabelnavn, 
     variabeletikett = visningstekst, 
     hjelpetekst = hjelpetekst, 
@@ -482,63 +520,4 @@ mrs5_lag_kanonisk_kb = function(kb_parsed_raa) {
   )
   
   return(kodebok_kanonisk)
-}
-
-mrs5_identifiser_variabler_med_regler = function() {
-  # Definer hvilke variabler som har regler tilknyttet.
-}
-
-# kategoriske
-mrs5_lag_kanonisk_kategorisk = function() {
-  # Tar inn rådataversjon fra mrs5_parse_kodebok_felter og returnerer
-  # kb[[kategoriske]] på kanonisk format.
-}
-
-###
-mrs5_ekspander_kategoriske = function() {
-  # Fylle ut kb_kategorisk med alle verdi/verditekst-kombinasjoner.
-}
-
-mrs5_definer_manglende = function() {
-  # Definere hvilke verdier/verditekster som skal regnes som manglande.
-}
-
-# regler
-mrs5_lag_kanonisk_regler = function() {
-  # Tar inn rådataversjon fra mrs5_parse_kodebok_regler og returnerer
-  # kb[[regler]] på kanonisk format.
-}
-
-###
-mrs5_definer_regeltype = function() {}
-
-mrs5_definer_målvariabel = function() {}
-
-mrs5_trekk_ut_regelverdi = function() {}
-
-mrs5_trekk_ut_feilmelding = function() {}
-
-mrs5_returner_manglende_regler = function() {
-  # Gir ut en oversikt over regler som ikke kunne konverteres
-}
-
-# Validering --------------------------------------------------------------
-mrs5_valider_kodebok = function(kodebok_kanonisk) {
-  # Tar inn kodebok på kanonisk format og kaller på valideringsregler vha
-  # hjelpefunksjoner for å validere de ulike kodebok-seksjonene.
-
-  # Kaller på mrs5_valider_kodebok_kb, kategorisk og regler.
-}
-
-###
-mrs5_valider_kodebok_kb = function(kodebok_felter) {
-  # Valideringsregler for kodebok_felter.
-}
-
-mrs5_valider_kodebok_kategorisk = function(kodebok_kategorisk) {
-
-}
-
-mrs5_valider_kodebok_regler = function(kodebok_regler) {
-
 }
