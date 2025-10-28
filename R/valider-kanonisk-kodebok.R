@@ -61,7 +61,7 @@ valider_kanonisk_skjema = function(kodebok) {
                     !is.na(kodebok$Kodebok$variabeltype) &
                     !is.na(kodebok$Kodebok$obligatorisk) & 
                     !is.na(kodebok$Kodebok$regler)), 
-              msg = "Alle obligatoriske variabler må være fylt ut")
+              msg = "Alle obligatoriske variabler må være fylt ut.")
 }
 
 #' 
@@ -90,10 +90,10 @@ valider_kanonisk_kolonner = function(kodebok) {
               )
   
   # sjekk at obligatorisk og regler kolonne er boolske
-  assert_that(is.flag(all(kodebok$Kodebok$obligatorisk)),
+  assert_that(is.flag(all(kodebok$Kodebok$obligatorisk)) && all(!is.na(kodebok$Kodebok$obligatorisk)),
               msg = "'obligatorisk' må være TRUE eller FALSE.")
               
-  assert_that(is.flag(all(kodebok$Kodebok$regler)),
+  assert_that(is.flag(all(kodebok$Kodebok$regler)) && all(!is.na(kodebok$Kodebok$regler)),
               msg = "'regler' må være TRUE eller FALSE.")
 
   # sjekk at desimaler er positivt heltall hvis det er inkludert
@@ -106,12 +106,11 @@ valider_kanonisk_kolonner = function(kodebok) {
                                                    pattern = "^[a-zA-Zæøå](\\w+)$", negate = TRUE)]
 
   assert_that(length(ugyldig_varnavn) == 0,
-              msg = paste0("Variabelnavn: '", 
+              msg = paste0("Variabel_id: '", 
                            kjed_ord(unique(ugyldig_varnavn,
                                            skiljeteikn = "', '", 
                                            og = "' og '")
-                                    ), "' er ikke gyldig. Variabelnavn må kun 
-                           inneholde bokstaver, tall og '_'. Kan ikke starte med et tall.")
+                                    ), "' er ikke gyldig. Variabelnavn må kun inneholde bokstaver, tall og '_'. Kan ikke starte med et tall.")
               )
   }
 

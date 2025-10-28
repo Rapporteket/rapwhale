@@ -52,9 +52,7 @@ kb_ukjent_variabeltype = purrr::modify_at(kb_kanonisk, "Kodebok", ~ bind_rows(
   )
 ))
 
-kb_feil_regler = purrr::modify_at(kb_kanonisk, 
-                                  "Kodebok", 
-                                  ~ mutate(.x, regler = as.character(regler))) |> 
+kb_feil_regler = kb_kanonisk |> 
   purrr::modify_at("Kodebok", 
                    ~ bind_rows(
                      .x, 
@@ -67,14 +65,27 @@ kb_feil_regler = purrr::modify_at(kb_kanonisk,
                        variabeltype = "tekst",
                        obligatorisk = FALSE,
                        desimaler = NA,
-                       regler = "Nei"
+                       regler = NA
                      )
                    ))
 
-kb_feil_obligatorisk = purrr::modify_at(kb_kanonisk, 
-                                        "Kodebok", 
-                                        ~ mutate(.x, 
-                                                 obligatorisk = as.character(obligatorisk)))
+kb_feil_obligatorisk = kb_kanonisk |> 
+  purrr::modify_at("Kodebok", 
+                   ~ bind_rows(
+                     .x, 
+                     tibble(
+                       skjema_id = "Testskjema",
+                       skjemanavn = "Testskjema",
+                       variabel_id = "Genserfarge",
+                       variabeletikett = "farge på genser",
+                       hjelpetekst = NA,
+                       variabeltype = "tekst",
+                       obligatorisk = NA,
+                       desimaler = NA,
+                       regler = TRUE
+                     )
+                   ))
+
 
 kb_feil_desimaler = purrr::modify_at(kb_kanonisk, "Kodebok", ~ bind_rows(
   .x,
@@ -99,7 +110,7 @@ kb_ugyldig_varnavn = purrr::modify_at(kb_kanonisk, "Kodebok", ~ bind_rows(
     variabel_id = "2grads_forbrenning",
     variabeletikett = "okei",
     hjelpetekst = NA,
-    variabeltype = "logisk",
+    variabeltype = "boolsk",
     obligatorisk = FALSE,
     desimaler = NA,
     regler = FALSE
@@ -111,7 +122,7 @@ test_that("Funksjonen gir forventet tilbakemelding", {
   
   val_feil_skjema = "Skjema_id kan bare ha ett unikt tilhørende skjemanavn."
   val_feil_variabel = "En variabel må være unikt definert innenfor et skjema."
-  val_feil_obligatorisk = "Alle obligatoriske variabler må være fylt ut"
+  val_feil_obligatorisk = "Alle obligatoriske variabler må være fylt ut."
   
   expect_silent(valider_kanonisk_skjema(kb_kanonisk))
   expect_error(valider_kanonisk_skjema(kb_flere_skjemanavn), 
@@ -130,8 +141,8 @@ test_that("Funksjonen gir forventet tilbakemelding", {
   val_feil_regler = "'regler' må være TRUE eller FALSE"
   val_feil_obligatorisk = "'obligatorisk' må være TRUE eller FALSE"
   val_feil_desimaler = "Desimaler må være ikke-negative heltall."
-  val_ugyldig_varnavn = "Variabelnavn: '' er ikke gyldig. 
-  Variabelnavn må kun inneholde bokstaver, tall og '_'. Kan ikke starte med et tall."
+  
+  val_ugyldig_varnavn = "Variabel_id: '2grads_forbrenning' er ikke gyldig. Variabelnavn må kun inneholde bokstaver, tall og '_'. Kan ikke starte med et tall."
 
 
   expect_error(
