@@ -7,14 +7,14 @@
 
 koblingsliste_vartyper =
   tibble::tribble(
-    ~Kanonisk, ~MRS5, ~OQR, ~Beskrivelse,
-    "tekst", "String", "tekst", "En tekststreng",
-    "kategorisk", "Enum", NA_character_, "En kategorisk variabel som kan ha én verdi fra et sett verdier. Hver mulige verdi har en tilhørende verditekst.",
-    "numerisk", "Number", NA_character_, "En tallverdi. For numeriske variabler kan antall desimaler defineres.",
-    "boolsk", "Bool", NA_character_, "TRUE/FALSE variabel. Ofte vist som en avkryssningsboks.",
-    "dato", NA_character_, NA_character_, "Datoverdi, Inkluderer dag, måned og år. Dato konverteres til formatet YYYY-MM-DD.",
-    "dato_kl", "DateTime", NA_character_, "Tidspunktverdi. Inkluderer dag, måned, år, og klokkeslett. Konverteres til formatet YYYY-MM-DD HH:MM:SS.",
-    "kl", NA_character_, NA_character_, "Klokkeslettverdi, Oppgir tidspunkt av døgnet."
+    ~Kanonisk, ~MRS5, ~OQR, ~readr,  ~Beskrivelse,
+    "tekst", "String", "tekst", "c", "En tekststreng",
+    "kategorisk", "Enum", NA_character_, "c", "En kategorisk variabel som kan ha én verdi fra et sett verdier. Hver mulige verdi har en tilhørende verditekst.",
+    "numerisk", "Number", NA_character_, "n", "En tallverdi. For numeriske variabler kan antall desimaler defineres.",
+    "boolsk", "Bool", NA_character_, "l", "TRUE/FALSE variabel. Ofte vist som en avkryssningsboks.",
+    "dato", NA_character_, NA_character_, "D", "Datoverdi, Inkluderer dag, måned og år. Dato konverteres til formatet YYYY-MM-DD.",
+    "dato_kl", "DateTime", NA_character_, "T", "Tidspunktverdi. Inkluderer dag, måned, år, og klokkeslett. Konverteres til formatet YYYY-MM-DD HH:MM:SS.",
+    "kl", NA_character_, NA_character_, "t", "Klokkeslettverdi, Oppgir tidspunkt av døgnet."
   )
 
 
