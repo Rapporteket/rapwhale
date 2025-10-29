@@ -11,9 +11,9 @@ koblingsliste_vartyper =
     "tekst", "String", "tekst", "c", "En tekststreng",
     "kategorisk", "Enum", NA_character_, "c", "En kategorisk variabel som kan ha én verdi fra et sett verdier. Hver mulige verdi har en tilhørende verditekst.",
     "numerisk", "Number", NA_character_, "n", "En tallverdi. For numeriske variabler kan antall desimaler defineres.",
-    "boolsk", "Bool", NA_character_, "l", "TRUE/FALSE variabel. Ofte vist som en avkryssningsboks.",
+    "boolsk", "Bool", NA_character_, "c", "TRUE/FALSE variabel. Ofte vist som en avkryssningsboks.",
     "dato", NA_character_, NA_character_, "D", "Datoverdi, Inkluderer dag, måned og år. Dato konverteres til formatet YYYY-MM-DD.",
-    "dato_kl", "DateTime", NA_character_, "T", "Tidspunktverdi. Inkluderer dag, måned, år, og klokkeslett. Konverteres til formatet YYYY-MM-DD HH:MM:SS.",
+    "dato_kl", "DateTime", NA_character_, "c", "Tidspunktverdi. Inkluderer dag, måned, år, og klokkeslett. Konverteres til formatet YYYY-MM-DD HH:MM:SS.",
     "kl", NA_character_, NA_character_, "t", "Klokkeslettverdi, Oppgir tidspunkt av døgnet."
   )
 

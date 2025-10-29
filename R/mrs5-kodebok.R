@@ -484,7 +484,7 @@ mrs5_lag_kanonisk_kb = function(kb_parsed_raa) {
     variabel_id = variabelnavn, 
     variabeletikett = visningstekst, 
     hjelpetekst = hjelpetekst, 
-    variabeltype = koblingsliste_vartyper$kanonisk[match(felttype, rapwhale::koblingsliste_vartyper$MRS5)], 
+    variabeltype = koblingsliste_vartyper$Kanonisk[match(felttype, rapwhale::koblingsliste_vartyper$MRS5)], 
     obligatorisk = kjernefelt == "Ja", 
     desimaler = NA_integer_,  
     regler = paste0(skjemanavn, variabelnavn) %in% unique(paste0(Regler$skjemanavn, Regler$eier))
