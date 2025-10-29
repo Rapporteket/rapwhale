@@ -31,6 +31,14 @@ mrs5_les_datadump = function(filsti, kb, skjemanavn = NULL) {
 #' mrs5_konverter_til_logisk(eksempel)
 mrs5_konverter_til_logisk = function(x) {
   
+  assert_that(is.character(x) | is.logical(x),
+              msg = "Inndata må være en tekst-vektor.")
+  assert_that(all(x %in% c("-1", "0", "1", "False", "True", "TRUE", "FALSE", "", NA)),
+              msg = "Forventet inndata er en av: '-1', '0', '1', 'True', 'False', 'TRUE', 'FALSE'.")
+  
+  x[(x == "-1") | (x == "")] = NA
+  (x == "1") | (x == "True") | (x == "TRUE")
+  
 }
 
 
