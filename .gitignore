@@ -2,6 +2,4 @@
 .Rhistory
 .RData
 .Ruserdata
-/NAMESPACE
-/man/*.Rd
 /vignettes/*.R
