@@ -34,3 +34,71 @@ test_that("Funksjonen returnerer forventet resultat", {
   expect_equal(mrs5_konverter_til_logisk(test_logisk), test_ok_res)
   
 })
+
+
+# mrs5_håndter_dato_kl ----------------------------------------------------
+
+# typekontroll
+test_feil_type = c(2L, 3L)
+feilmelding_feil_type = "Inndata må være en tekst-vektor."
+
+# dato dmy
+dato_punktum_dmy = "12.01.2024"
+dato_strek_dmy = "12-01-2024"
+dato_tekst_dmy = "12. jan, 2024"
+
+# dato ymd
+dato_punktum_ymd = "2024.01.12"
+dato_strek_ymd = "2024-01-12"
+dato_tekst_ymd = "2024, jan 12"
+
+# dato_kl_dmy
+dato_kl_punktum_dmy = "12.01.2024 12:00"
+dato_kl_strek_dmy = "12-01-2024 12:00"
+dato_kl_tekst_dmy = "12. jan, 2024 12:00"
+
+# dato_kl ymd
+dato_kl_punktum_ymd = "2024.01.12 12:00"
+dato_kl_strek_ymd = "2024-01-12 12:00"
+dato_kl_tekst_ymd = "2024, jan 12 12:00"
+
+dato_all_na = rep(NA_character_, 5)
+dato_all_na_not = c(dato_all_na, "01-01-2024")
+dato_kl_all_na_not = c(dato_all_na, "01-01-2024 12:00")
+
+dato_res = as.POSIXct("2024-01-12", tz = "UTC")
+dato_kl_res = as.POSIXct("2024-01-12 12:00:00", tz = "UTC")
+
+feilmelding_dato = "Klarte ikke å finne dato med forventet format: 'YYYY.MM.DD'."
+feilmelding_dato_kl = "Klarte ikke å finne dato-klokkeslett med forventet format: 'YYYY.MM.DD HH:MM'."
+
+# Gir forventet resultat
+test_that("Funksjonen gir forventet resultat", {
+  # dato
+  expect_equal(mrs5_håndter_dato_kl(dato_punktum_dmy), dato_res)
+  expect_equal(mrs5_håndter_dato_kl(dato_strek_dmy), dato_res)
+  expect_equal(mrs5_håndter_dato_kl(dato_tekst_dmy), dato_res)
+
+  # dato_kl
+  expect_equal(mrs5_håndter_dato_kl(dato_kl_punktum_dmy), dato_kl_res)
+  expect_equal(mrs5_håndter_dato_kl(dato_kl_strek_dmy), dato_kl_res)
+  expect_equal(mrs5_håndter_dato_kl(dato_kl_tekst_dmy), dato_kl_res)
+})
+
+test_that("Funksjonen gir forventet feilmelding ved feil dato-format", {
+  # Feil format dato ymd 
+  expect_error(mrs5_håndter_dato_kl(dato_punktum_ymd), feilmelding_dato)
+  expect_error(mrs5_håndter_dato_kl(dato_strek_ymd), feilmelding_dato)
+  expect_error(mrs5_håndter_dato_kl(dato_tekst_ymd), feilmelding_dato)
+
+  # Feil format dato_kl ymd
+  expect_error(mrs5_håndter_dato_kl(dato_kl_punktum_ymd), feilmelding_dato_kl)
+  expect_error(mrs5_håndter_dato_kl(dato_kl_strek_ymd), feilmelding_dato_kl)
+  expect_error(mrs5_håndter_dato_kl(dato_kl_tekst_ymd), feilmelding_dato_kl)
+})
+
+test_that("Funksjonen gir forventet feilmelding ved feil dataformat", {
+  # Feil type
+  expect_error(mrs5_håndter_dato_kl(test_feil_type), feilmelding_feil_type)
+})
+
