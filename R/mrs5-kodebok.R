@@ -30,6 +30,15 @@
 #' mrs5_hent_kodebok(filsti = filsti_eksempel, skjemanavn = "Testskjema")
 mrs5_hent_kodebok = function(filsti, skjemanavn = NULL, valider = FALSE) {
 
+  # FIXME - Legge til sjekk for lesetilgjengelighet av kb-fil.
+  
+  # # Sjekke at fil er tilgjengelig for å lese inn
+  #   assert_that(file.exists(filsti), 
+  #               msg = "Finner ikke fil på angitt filsti")
+  #   
+  #   assert_that(isOpen(file(filsti, open = "r")), 
+  #               msg = "Filen er åpen i et annet program og kan ikke leses inn.")
+  
     kb_parsed = mrs5_parse_kodebok(filsti, skjemanavn)
     
     kb_kanonisk = mrs5_lag_kanonisk_kb(kb_parsed)
