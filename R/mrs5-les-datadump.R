@@ -53,7 +53,8 @@ mrs5_les_datadump = function(filsti, kb_skjema) {
     rename_with(~ paste0("mrs_", .x, recycle0 = TRUE), .cols = all_of(vars_uten_kodebok))
 }
 
-# Funksjon som skal sjekke om datovariabler er dato / dato_kl eller / kl:
+
+# Hjelpefunksjoner --------------------------------------------------------
 
 #' Konverter tekstvektor til boolsk
 #'
@@ -135,49 +136,27 @@ mrs5_håndter_dato_kl = function(x) {
   }
 }
 
+mrs5_velg_identifikator = function() {
+  
+  # Ta inn fnr eller pasientguid og returnere anonymisert PID. 
+  # Bruke PID i rapporter og analyse for å gjøre rapporter mulig å kjøre 
+  # uavhengig av hvilken datadump man bruker. 
+  # 
+}
 
-# read_csv2
-# Kontroller kb-argument
-# Hvis liste - ok, -> Anta at det er gyldig kb ?
-# Hvis tekststreng - Les inn kodebok
-# Hvis NULL - anta at den ligger i samme mappe som filsti ?
+mrs5_samle_filnavn = function(filsti_kb) {
+  # Forventninger:
+  # Alle filer som skal leses inn ligger i samme mappe
+  # - Kodebok + alle aktuelle datadumper
+  # Alle datadumper kan gjenkjennes basert på filnavn og fanenavn i kodebok
+  # Alle datadumper inneholder kun data fra det aktuelle skjema.
 
-# Håndtering av flere skjema?
-# - Forventning om at hvert skjema er lastet ned som enkeltsående tabell?
-# - Hva gjør vi hvis det er flere skjema i en datadump?
-# Skal det håndteres automatisk av funksjonen?
-# - Skal den alltid gi ut separate objekter for hvert skjema?
+  # Denne funksjonen vil da trekke ut alle aktuelle filer basert på navn
+  # Oppgir filsti for kodebok (fullstendig)
+  # Trekker ut mappe derfra og kobler filnavn mot skjema.
 
-
-# MRS5 - Alternativer ved nedlastning
-
-# - Standard skjemadump:
-# Må ha identifiserbare skjema.
-
-# Kan velge om enum-variabler skal leveres som tall eller visningstekst.
-# Funksjonen må ta høyde for begge deler.
-# Trenger kanskje en kb_fyll_baklengs-funksjon for å levere alt som tall.
-
-# Kopiering av data fra hovedskjema til underskjema. Kan fylle ut automatisk eller ikke
-
-# Slå sammen eller ikke slå sammen variabler med samme navn fra ulike skjema.
-# Problematisk i tilfeller med ulik variabelbetydning slik som feks ICD10_1 er hos NIPAR.
-
-# Fjerning av tomme kolonner
-# Åpne for at ikke alle variabler trenger å være i datadump.
-
-# mrs5_velg_identifikator = function(kb_skjema, d_skjema) {
-# }
-#' #
-# mrs5_samle_filnavn = function(filsti_kb) {
-#' #
-#   # Forventning om at alle skjema og kodebok ligger samlet i samme mappe.
-#' #
-#   # Henter kodebok
-#   mrs5_
-#   # Henter ut skjemanavn
-#   # Søker i mappe etter filer som inneholder skjemanavn
-#   # returnerer tibble med skjemanavn og filsti til skjema.
-#' #
-#   # FIXME - Legge denne inn i standard-funksjon for å håndtere filnavn
-# }
+  # Bruker denne funksjonen i feks. les_data_nipar() som da leser inn alle
+  # aktuelle skjema.
+  # FIXME - Må flyttes og bytte navn til noe generelt da denne kan være 
+  # grei for OQR-registre også 
+}
