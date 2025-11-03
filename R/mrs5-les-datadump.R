@@ -86,3 +86,34 @@ mrs5_håndter_dato_kl = function(x) {
 }
 
 
+# Konverter boolske for MRS5
+#' Konverter boolske variabler til ekte boolean. 
+#' 
+#' @description
+#' I MRS5 er boolske variabler kodet som 1 for TRUE og 0 for FALSE. 
+#' Funksjonen tar inn en vektor med variabler som er spesifisert som boolske 
+#' i kanonisk kodebok, og konverterer tekstverdier til ekte boolean. 
+#' 
+#' Foreløpig er vi kun kjent med tilfeller hvor disse verdiene er kodet som 1 og
+#' 0, men tidligere har det vært andre versjoner også, så funksjonen må kanskje 
+#' utvides for å også dekke disse. 
+#' 
+#' Konverterer nå: 
+#' \itemize{
+#'    \item 1, True til TRUE
+#'    \item 0, False til FALSE
+#'    \item -1, "" til NA
+#'    }
+#' 
+#' Funksjonen er tenkt kjørt som del av innlesning av datadump, så den stiller 
+#' ganske strenge krav til inndata. 
+#'
+#' @param d Datadump for aktuelt skjema. 
+#' @param kb  Kodebok for aktuelt skjema.
+#'
+#' @returns
+#' returnerer `d` hvor variabler spesifisert i kodebok som boolske er 
+#' konvertert til ekte boolske variabler. 
+#'
+#' @examples
+#' mrs5_konverter_boolske(d, kb)
