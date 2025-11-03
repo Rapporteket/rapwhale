@@ -56,4 +56,33 @@ mrs5_konverter_til_logisk = function(x) {
 #'
 #'@keywords internal
 mrs5_håndter_dato_kl = function(x) {
+  
+  assert_that(is.character(x), msg = "Inndata må være en tekst-vektor.")
+  
+  if(any(str_detect(x, ":"), na.rm =TRUE)) {
+    
+    withCallingHandlers(
+    parse_date_time(x, orders = "dmy HM"), 
+    warning = function(w) {
+      msg = conditionMessage(w)
+      if (identical(msg, "All formats failed to parse. No formats found.")) {
+        stop("Klarte ikke å finne dato-klokkeslett med forventet format: 'YYYY.MM.DD HH:MM'.", call. = FALSE)
+    
+      }
+    }
+    )
+    } else {
+      withCallingHandlers(
+      parse_date_time(x, orders = "dmy"), 
+      warning = function(w) {
+        msg = conditionMessage(w)
+        if(identical(msg, "All formats failed to parse. No formats found.")) {
+          stop("Klarte ikke å finne dato med forventet format: 'YYYY.MM.DD'.", call. = FALSE)
+     
+        }
+      }
+      )
+    }
+}
+
 
