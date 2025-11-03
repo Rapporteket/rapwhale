@@ -41,4 +41,19 @@ mrs5_konverter_til_logisk = function(x) {
   
 }
 
+#' Håndtere dato/dato-kl variabler fra MRS5
+#' 
+#' I MRS finens det ingen skille mellom hva som er en dato og hva som er 
+#' dato-klokkeslett. Disse variablene leses inn som tekst og konverteres her
+#' til henholdsvis Date eller POSIXct avhengig av om det finnes klokkeslett i 
+#' variabelen. 
+#' 
+#'
+#' @param x Variabel som skal konverteres til dato eller dato_klokkeslett. 
+#'
+#' @returns
+#' Variabel konvertert til Date eller POSIXct-format. 
+#'
+#'@keywords internal
+mrs5_håndter_dato_kl = function(x) {
 
