@@ -115,7 +115,7 @@ mrs5_parse_kodebok = function(filsti, skjemanavn = NULL) {
 #'
 #' @keywords internal
 mrs5_parse_kodebok_skjema = function(filsti, skjemanavn) {
-  d_skjema = mrs5_parse_kodebok_meta(filsti, skjemanavn)
+  d_skjema = mrs5_parse_kodebok_skjema_meta(filsti, skjemanavn)
   d_versjonslogg = mrs5_hent_versjonslogg(d_skjema)
   d_metainfo = mrs5_hent_metainfo(d_skjema)
 
@@ -149,7 +149,7 @@ mrs5_parse_kodebok_skjema = function(filsti, skjemanavn) {
 #' fra kodebok.
 #'
 #' @keywords internal
-mrs5_parse_kodebok_meta = function(filsti, skjemanavn) {
+mrs5_parse_kodebok_skjema_meta = function(filsti, skjemanavn) {
   
   # FIXME - Gjør robust for å fange opp eventuelle endringer i struktur 
   # Assert at alle forventede felter eksisterer i kolonne 1
@@ -339,7 +339,7 @@ mrs5_les_skjemanavn = function(filsti) {
 #' @description
 #' Henter versjonslogg fra generelt-fane for `skjemanavn`.
 #' Inndata må være rådataversjon av generelt-fane for `skjemanavn`
-#' hentet ut med mrs5_parse_kodebok_meta.
+#' hentet ut med mrs5_parse_kodebok_skjema_meta.
 #'
 #' @param parsed_generelt rådataversjon av generelt-fane fra kodebok.
 #'
@@ -377,7 +377,7 @@ mrs5_hent_versjonslogg = function(parsed_generelt) {
 #' @description
 #' Henter metainfo fra generelt-fane for `skjemanavn`.
 #' Inndata må være rådataversjon av generelt-fane for `skjemanavn`
-#' hentet ut med mrs5_parse_kodebok_meta.
+#' hentet ut med mrs5_parse_kodebok_skjema_meta.
 #'
 #' @param parsed_generelt rådataversjon av generelt-fane fra kodebok.
 #'
@@ -461,6 +461,8 @@ mrs5_lag_kanonisk_kb = function(kb_parsed_raa) {
   
   # FIXME - Legge inn kontroll for endringer i kjernefelt, sånn at ikke alle 
   # obligatoriske blir FALSE hvis de feks endrer til boolske verdier. 
+  # FIXME - Legge relevante metadata til kanonisk kb som args. 
+  # - Trenger hvertfall opprettet dato fra metainfo
   
   d_alle_versjonslogg = bind_rows(kb_parsed_raa[["versjonslogg"]], .id = "kilde") |> mrs5_lag_fine_kolonnenavn()
   d_alle_metainfo = bind_rows(kb_parsed_raa[["metainfo"]], .id = "kilde") |> mrs5_lag_fine_kolonnenavn()

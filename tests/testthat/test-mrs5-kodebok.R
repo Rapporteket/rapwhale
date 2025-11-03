@@ -298,7 +298,7 @@ expect_identical(mrs5_parse_kodebok(filsti = test_path("testdata/mrs5-kodebok", 
 
 # Teste at funksjonen fungerer.
 # 
-# mrs5_parse_kodebok_meta -----------------------------------------------
+# mrs5_parse_kodebok_skjema_meta -----------------------------------------------
 
 # Utdata
 test_that("Gir forventet resultat", {
@@ -306,7 +306,7 @@ test_that("Gir forventet resultat", {
   
   # Teste henting av info for ett enkelt skjema
   expect_identical(
-    mrs5_parse_kodebok_meta(
+    mrs5_parse_kodebok_skjema_meta(
       filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
       skjemanavn = "1-Testskjema"
     ),
@@ -450,7 +450,7 @@ test_that("Hent_versjonslogg gir forventet utdata", {
 
   expect_identical(
     mrs5_hent_versjonslogg(
-      parsed_generelt = mrs5_parse_kodebok_meta(
+      parsed_generelt = mrs5_parse_kodebok_skjema_meta(
         filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
         skjemanavn = "1-Testskjema"
       )
@@ -463,7 +463,7 @@ test_that("Hent_metainfo gir forventet utdata", {
   
   expect_identical(
     mrs5_hent_metainfo(
-      parsed_generelt = mrs5_parse_kodebok_meta(
+      parsed_generelt = mrs5_parse_kodebok_skjema_meta(
         filsti = test_path("testdata/mrs5-kodebok", "parse_kodebok_ok.xlsx"),
         skjemanavn = "1-Testskjema"
       )
