@@ -113,9 +113,29 @@ mrs5_konverter_til_logisk = function(x) {
 mrs5_håndter_dato_kl = function(x) {
   assert_that(is.character(x), msg = "Inndata må være en tekst-vektor.")
 
+  # Forventet format
+  format = "ymd"
+
+  # Sjekker ti første reelle datoer for format
+  if (
+    suppressWarnings(
+      all(
+        is.na(
+          str_extract(x[!is.na(x)][1:10],
+            pattern = "^[^ ]*"
+          ) |>
+            parse_date_time(orders = "ymd")
+        )
+      )
+    )
+  ) {
+    format = "dmy"
+  }
+
+  # Leser inn som dato_kl hvis det finnes ':' i streng.
   if (any(str_detect(x, ":"), na.rm = TRUE)) {
     withCallingHandlers(
-      parse_date_time(x, orders = "dmy HM"),
+      parse_date_time(x, orders = paste0(format, " HM")),
       warning = function(w) {
         msg = conditionMessage(w)
         if (identical(msg, "All formats failed to parse. No formats found.")) {
@@ -125,7 +145,7 @@ mrs5_håndter_dato_kl = function(x) {
     )
   } else {
     withCallingHandlers(
-      parse_date_time(x, orders = "dmy"),
+      parse_date_time(x, orders = format),
       warning = function(w) {
         msg = conditionMessage(w)
         if (identical(msg, "All formats failed to parse. No formats found.")) {

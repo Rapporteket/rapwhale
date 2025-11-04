@@ -89,6 +89,7 @@
 #' @importFrom stats t.test
 #' @importFrom stringr str_c
 #' @importFrom stringr str_detect
+#' @importFrom stringr str_extract
 #' @importFrom stringr str_flatten_comma
 #' @importFrom stringr str_remove
 #' @importFrom stringr str_remove_all
