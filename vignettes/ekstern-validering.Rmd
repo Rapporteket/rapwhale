@@ -56,10 +56,10 @@ metodikk – for *ekstern validering* av registerdata. Målet med denne
 har vore å gjera det enklare, raskare og sikrare å gjennomføra ekstern
 validering av høg kvalitet.
 
-*Ekstern validering* går her ut på å finna ut om dataa i registeret er 
-lik dataa i ein gitt gullstandard, typisk ein pasientjournal.
+*Ekstern validering* går her ut på å finna ut om data i registeret er 
+lik data i ein gitt gullstandard, typisk ein pasientjournal.
 For meir informasjon, sjå
-[SKDE sin artikkel om korrektheit](https://www.kvalitetsregistre.no/korrekthet).
+[Nasjonalt servicemiljø for medisinske kvalitetsregistre sin informasjonsside om korrektheit](https://www.kvalitetsregistre.no/datakvalitet/datakvalitetsdimensjoner/#korrekthet) og [Veileder i datakvalitet](https://www.kvalitetsregistre.no/4a4b92/siteassets/dokumenter/datakvalitet/veileder-i-datakvalitet-2025.docx). 
 
 Me har laga eit standardisert format for valideringsdata og
 eit sett R-funksjonar for å analysera og laga datasett på dette formatet.
