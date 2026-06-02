@@ -161,12 +161,12 @@
 
 % Skriftstil med ikkje-proporsjonale tal, for brødtekst,
 % for eksempel for bruk til sidetal i innhaldslista
-\newfontfamily\mainupropskrift[Ligatures=TeX,Numbers={Monospaced,Lowercase}]{Cambria}
+\newfontfamily\mainupropskrift[Ligatures=TeX,Numbers={Monospaced,Lowercase},ItalicFont=cambriai.ttf,BoldFont=cambriab.ttf,BoldItalicFont=cambriaz.ttf]{Cambria.ttc}
 
 % Bruk proporsjonale tabelltal for overskrifter, då det ser best ut
 % (sjå for eksempel botnen på 1-tal)
 \newfontfamily\altskrift[Ligatures=TeX,Numbers={Proportional,Uppercase}]{Calibri}
-\newfontfamily\lettskrift[Ligatures=TeX,Numbers={Proportional,Uppercase}]{Calibri Light}
+\newfontfamily\lettskrift[Ligatures=TeX,Numbers={Proportional,Uppercase},ItalicFont=calibrili.ttf]{calibril.ttf}
 
 % Skrift for teikn som ikkje finst i standardskriftene
 \newfontfamily\uniskrift[Scale=MatchLowercase]{DejaVu Sans}
