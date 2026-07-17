@@ -619,17 +619,6 @@
 % heimesida til register, vist på baksida av rapportar)
 \RequirePackage{qrcode}
 
-% La R-kjeldekode (og utdata frå køyring av denne) dekka heile sidebreidda
-\iffalse
-\AtBeginEnvironment{knitrout}{%
-\begin{adjustwidth}{\margjuster}{0pt}%
-  \setlength\columnwidth{\breitekst}%
-  \setlength\linewidth{\breitekst}%
-  \setlength\hsize{\breitekst}%
-}
-\AtEndEnvironment{knitrout}{\end{adjustwidth}}
-\fi
-
 % Ein figur som dekker heile breidda
 \newenvironment{widefigure}[1][htbp]{
   \begin{figure}[#1]
