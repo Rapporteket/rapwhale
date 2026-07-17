@@ -2,8 +2,8 @@
 \ProvidesClass{kvalreg-rapport}[2022/05/23 Rapportar for kvalitetsregister]
 
 % Krev bruk av LuaLaTeX
-\RequirePackage{ifluatex}
-\ifluatex
+\RequirePackage{iftex}
+\ifLuaTeX
   \else
   \ClassError{kvalreg-rapport}{%
   Dokument ikkje kompilert med lualatex.\MessageBreak%
