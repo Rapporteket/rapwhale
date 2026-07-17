@@ -77,7 +77,7 @@
 % https://www.regjeringen.no/no/tema/helse-og-omsorg/sykehus/styringsdokumenter1/nasjonalt-profilprogram-for-helseforetak/id650208/
 % https://www.regjeringen.no/contentassets/575f7de1edeb42fca6a952d3ca5f3260/4804-designmanual2011-web.pdf
 \definecolor{MorkBlaCol}{cmyk}{1,.69,0,.11} % PMS 287 (mørk blå)
-\definecolor{LysBlaCol}{cmyk}{.44,.19,0,0}  % PMS 287 (lys blå)
+\definecolor{LysBlaCol}{cmyk}{.44,.19,0,0}  % PMS 282 (lys blå)
 
 % Tilleggsfargar, som er halvoffisielle, henta frå
 % https://unn.no/om-oss/profilhandboka#fargepalett
