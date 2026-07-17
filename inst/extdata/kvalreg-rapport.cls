@@ -278,7 +278,7 @@
 \setlength{\breitekst}{\stockwidth-\smalmarg-2in+2\marginparsep} % Tekstbreidda viss me har smal marg på begge sider
 \newcommand{\brukbreimarg}{% Bruk brei marg som standard
   \setlength{\evensidemargin}{\breimarg}%
-  \setlength{\evensidemargin}{\breimarg}%
+  \setlength{\oddsidemargin}{\breimarg}%
 }
 \brukbreimarg
 
