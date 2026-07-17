@@ -541,11 +541,33 @@
 \let\oldurl\url
 \renewrobustcmd{\url}[1]{\textcolor{PrimCol}{\oldurl{#1}}}
 
-% cleverref finst ikkje på nynorsk enno, så bruk bokmål mellombels (fixme)
+% cleveref finst ikkje på nynorsk enno, så me lastar bokmålsversjonen
+% og overstyrer namna med nynorskformer sjølv (fleire kan leggjast
+% til med \crefname/\Crefname etter behov)
 \ifkvalreg@british
   \RequirePackage[nameinlink,noabbrev,capitalise,english]{cleveref}
 \else
   \RequirePackage[nameinlink,norsk]{cleveref}
+  \ifkvalreg@nynorsk
+    \crefname{figure}{figur}{figurane}
+    \Crefname{figure}{Figur}{Figurane}
+    \crefname{table}{tabell}{tabellane}
+    \Crefname{table}{Tabell}{Tabellane}
+    \crefname{equation}{likning}{likningane}
+    \Crefname{equation}{Likning}{Likningane}
+    \crefname{chapter}{kapittel}{kapitla}
+    \Crefname{chapter}{Kapittel}{Kapitla}
+    \crefname{section}{avsnitt}{avsnitta}
+    \Crefname{section}{Avsnitt}{Avsnitta}
+    \crefname{subsection}{avsnitt}{avsnitta}
+    \Crefname{subsection}{Avsnitt}{Avsnitta}
+    \crefname{appendix}{vedlegg}{vedlegga}
+    \Crefname{appendix}{Vedlegg}{Vedlegga}
+    \crefname{footnote}{fotnote}{fotnotane}
+    \Crefname{footnote}{Fotnote}{Fotnotane}
+    \crefname{item}{punkt}{punkta}
+    \Crefname{item}{Punkt}{Punkta}
+  \fi
 \fi
 
 % Kommando for å skriva prosentteiknet, med rett avstand før
