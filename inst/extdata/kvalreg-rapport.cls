@@ -644,8 +644,12 @@
 % viss ei avsnittsformatering er for dårleg.
 \sloppy
 
-% Støtte for autogenerert eksempeltekst (nyttig ved testing)
-\RequirePackage{lipsum}
+% Støtte for autogenerert eksempeltekst (nyttig ved testing).
+% Vert berre lasta i utkastmodus; dokument som treng lipsum
+% i endeleg versjon, kan lasta pakken sjølve.
+\ifkvalreg@draft
+  \RequirePackage{lipsum}
+\fi
 
 % Gjev veldig tydeleg melding om at ein har gjort noko
 % frykteleg gale dersom ein brukar å bruka \underline-kommandoen
