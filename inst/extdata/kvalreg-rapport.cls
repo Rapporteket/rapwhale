@@ -28,23 +28,27 @@
 \DeclareOption{nynorsk}{\kvalreg@nynorsktrue\kvalreg@bokmalfalse}
 \DeclareOption{bokmal}{\kvalreg@nynorskfalse\kvalreg@bokmaltrue}
 \DeclareOption{british}{\kvalreg@britishtrue\kvalreg@bokmalfalse}
-\ProcessOptions\relax
 
 % Støtte for utkast (raskare kompilering + UTKAST-vassmerke)
-% Me baserer oss på memoir-klassen
 \newif\ifkvalreg@final \kvalreg@finalfalse
 \newif\ifkvalreg@draft \kvalreg@drafttrue
 \DeclareOption{final}{\kvalreg@finaltrue\kvalreg@draftfalse}
 \DeclareOption{draft}{\kvalreg@finalfalse\kvalreg@drafttrue}
+
+% Send alle andre (ukjende) val vidare til memoir-klassen
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{memoir}}
-   \ifkvalreg@nynorsk
-     \PassOptionsToClass{a4paper,11pt,twoside,openany,nynorsk}{memoir}
-   \else\ifkvalreg@bokmal
-     \PassOptionsToClass{a4paper,11pt,twoside,openany,norsk}{memoir}
-   \else\ifkvalreg@british
-     \PassOptionsToClass{a4paper,11pt,twoside,openany,british}{memoir}
-   \fi\fi\fi
-   \ProcessOptions\relax
+
+% Handsam alle vala (berre éin gong -- alle vala er no deklarerte)
+\ProcessOptions\relax
+
+% Me baserer oss på memoir-klassen, med språkval ut frå klassevala over
+\ifkvalreg@nynorsk
+  \PassOptionsToClass{a4paper,11pt,twoside,openany,nynorsk}{memoir}
+\else\ifkvalreg@bokmal
+  \PassOptionsToClass{a4paper,11pt,twoside,openany,norsk}{memoir}
+\else\ifkvalreg@british
+  \PassOptionsToClass{a4paper,11pt,twoside,openany,british}{memoir}
+\fi\fi\fi
 \LoadClass{memoir}
 
 % Brukar LuaLaTeX, så for språkstøtte må me lasta
