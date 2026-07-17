@@ -31,12 +31,11 @@
 \ProcessOptions\relax
 
 % Støtte for utkast (raskare kompilering + UTKAST-vassmerke)
-\newif\iffinal \finalfalse
-\newif\ifdraft \drafttrue
-\DeclareOption{final}{\finaltrue\draftfalse}
-\DeclareOption{draft}{\finalfalse\drafttrue}
-
 % Me baserer oss på memoir-klassen
+\newif\ifkvalreg@final \kvalreg@finalfalse
+\newif\ifkvalreg@draft \kvalreg@drafttrue
+\DeclareOption{final}{\kvalreg@finaltrue\kvalreg@draftfalse}
+\DeclareOption{draft}{\kvalreg@finalfalse\kvalreg@drafttrue}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{memoir}}
    \ifkvalreg@nynorsk
      \PassOptionsToClass{a4paper,11pt,twoside,openany,nynorsk}{memoir}
@@ -294,7 +293,7 @@
 % \RequirePackage{fixltx2e} % Ikkje lenger nødvendig i TeXLive 2015 og seinare
 
 % Lag minst mulig PDF-fil (berre mogleg med LuaLaTex)
-\iffinal
+\ifkvalreg@final
   \pdfvariable compresslevel=9
   \pdfvariable minorversion=5
   \pdfvariable objcompresslevel=3
@@ -365,14 +364,14 @@
 \makeoddfoot{plain}{}{}{\thepage}
 
 % I utkastmodus, vis tid for kompilering i toppmargen
-\ifdraft
+\ifkvalreg@draft
   \RequirePackage{clock}
   \makeevenhead{plain}{\hspace*{\margjuster}\today~-- \texttime}{}{}
   \makeoddhead{plain}{}{}{\today~-- \texttime}
 \fi
 
 % I utkastmodus, vis strek viss ting kjem utanfor margen
-\ifdraft
+\ifkvalreg@draft
   \setlength\overfullrule{5pt}
 \fi
 
@@ -624,7 +623,7 @@
 }
 
 % Legg ev. til UTKAST-vassmerke
-\ifdraft
+\ifkvalreg@draft
   \RequirePackage{draftwatermark}
   \ifkvalreg@british
     \SetWatermarkText{DRAFT}
