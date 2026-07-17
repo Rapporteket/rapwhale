@@ -317,7 +317,7 @@
 % La tabelloverskrifter ha farga tekst, med mindre linjeavstand
 % og ikkje blokkjustert. Og la linje to og nedover ha innrykk.
 % Vert ikkje brukt, sidan me lastar caption-pakken etterpå,
-% men lar det stå i tilfelle me vil gå vekk frå caption/subfig
+% men lar det stå i tilfelle me vil gå vekk frå caption/subcaption
 % på eit seinare tidspunkt.
 \captionnamefont{\sffamily\color{PrimCol}\scshape}%
 \captiontitlefont{\linespread{1}\sffamily\color{PrimCol}}%
@@ -326,6 +326,8 @@
 
 % Støtte for delfigurar slik knitr lagar dei, då knitr
 % dessverre ikkje støttar memoir-metoden (over).
+% Me brukar subcaption-pakken, som er etterfølgjaren til
+% den forelda subfig-pakken.
 %
 % Når me lastar caption-pakken, gjev memoir-pakken 
 % ei åtvaring (men seier i grunnen at alt vil gå bra).
@@ -335,7 +337,8 @@
 \WarningFilter*{memoir}{For the caption package to function properly with memoir}
 \RequirePackage[format=hang,justification=raggedright,%
             font={sf,color=PrimCol},labelfont=sc]{caption}
-\RequirePackage[font={sf,color=PrimCol},labelfont=sf]{subfig}
+\RequirePackage{subcaption}
+\captionsetup[sub]{font={sf,color=PrimCol},labelfont=sf}
 \setFloatSpacing{1}
 % Avsnittet «10.13 The class versus the caption package (and its friends)»
 % i memoir-manualen
