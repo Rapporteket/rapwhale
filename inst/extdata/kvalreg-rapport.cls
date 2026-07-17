@@ -376,10 +376,6 @@
   \setlength\overfullrule{5pt}
 \fi
 
-\RequirePackage{layout}
-\title{Norsk kvalitetsregister for leppe-kjeve-ganespalte}
-\author{Karl Ove Hufthammer}
-
 % Bruk tomme sider for alle Part-sider
 \pagestyle{plain}
 \aliaspagestyle{part}{empty}
