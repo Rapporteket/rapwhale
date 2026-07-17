@@ -664,11 +664,14 @@
 \fi
 
 
-% Godta (til nød) dårleg avsnittsformatering. Merk at dette ikkje
-% *fører* til dårleg avsnittsformatering; formateringa er framleis optimal.
-% Men ein slepp å få ein stygg strek i margen (bokstavleg talt)
+% Godta (til nød) dårleg avsnittsformatering. Me brukar
+% \emergencystretch i staden for \sloppy, sidan \sloppy gjev
+% synleg dårlegare ordmellomrom sjølv i avsnitt som elles
+% kunne vore formaterte fint. \emergencystretch vert berre
+% brukt når formateringa elles ville feila, og ein slepp
+% dessutan å få ein stygg strek i margen (bokstavleg talt)
 % viss ei avsnittsformatering er for dårleg.
-\sloppy
+\setlength{\emergencystretch}{1.5em}
 
 % Støtte for autogenerert eksempeltekst (nyttig ved testing).
 % Vert berre lasta i utkastmodus; dokument som treng lipsum
