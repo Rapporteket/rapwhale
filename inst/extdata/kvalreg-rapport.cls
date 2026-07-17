@@ -530,7 +530,6 @@
                     filecolor=PrimCol,%
                     colorlinks=true,%
 					unicode=true,
-					linktoc=all,
 					pdfpagemode=UseOutlines, bookmarksopen=true,
 					pdfpagelayout=OneColumn, pdfview=FitH, pdfstartview=Fit,
           pdfescapeform=true,bookmarksnumbered=true]{hyperref}
