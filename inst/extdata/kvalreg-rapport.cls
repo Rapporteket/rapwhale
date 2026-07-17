@@ -699,8 +699,8 @@
 %
 % Inspirert av løysinga her, men med nokre endringar:
 % http://tex.stackexchange.com/a/150840/8540
+\newwrite\introfil
 \newcommand{\introtekst}[1]{%
-   \newwrite\introfil
    \immediate\openout\introfil=introtekst.tex
    \immediate\write\introfil{\unexpanded{#1}}
    \immediate\closeout\introfil
