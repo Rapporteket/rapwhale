@@ -255,7 +255,7 @@
 \RequirePackage{calc}
 
 % Støtte for å skriva ut verdiar til lengder
-\usepackage{printlen}
+\RequirePackage{printlen}
 \uselengthunit{cm}
 
 
@@ -333,9 +333,9 @@
 % er irriterande, so me gøymer ho.
 \RequirePackage{silence}
 \WarningFilter*{memoir}{For the caption package to function properly with memoir}
-\usepackage[format=hang,justification=raggedright,%
+\RequirePackage[format=hang,justification=raggedright,%
             font={sf,color=PrimCol},labelfont=sc]{caption}
-\usepackage[font={sf,color=PrimCol},labelfont=sf]{subfig}
+\RequirePackage[font={sf,color=PrimCol},labelfont=sf]{subfig}
 \setFloatSpacing{1}
 % Avsnittet «10.13 The class versus the caption package (and its friends)»
 % i memoir-manualen
@@ -349,7 +349,7 @@
 \AfterEndEnvironment{tabular}{\hfill\null}
 
 % Støtte for tabellar som går over fleire sider
-\usepackage{longtable}
+\RequirePackage{longtable}
 
 % Mykje betre avsnittsformatering, ved å strekka bitte litt på bokstavane
 % (Før tok dette veldig lang tid, og vart berre brukt \iffinal,
@@ -605,7 +605,7 @@
 
 % Legg ev. til UTKAST-vassmerke
 \ifdraft
-  \usepackage{draftwatermark}
+  \RequirePackage{draftwatermark}
   \ifkvalreg@british
     \SetWatermarkText{DRAFT}
   \else
@@ -622,7 +622,7 @@
 \sloppy
 
 % Støtte for autogenerert eksempeltekst (nyttig ved testing)
-\usepackage{lipsum}
+\RequirePackage{lipsum}
 
 % Gjev veldig tydeleg melding om at ein har gjort noko
 % frykteleg gale dersom ein brukar å bruka \underline-kommandoen
