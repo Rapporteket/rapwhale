@@ -157,19 +157,46 @@
 %   Overskrifter: Calibri
 %   Programkode: Consolas
 % I brødtekst og vanlege overskrifter brukar me *proporsjonale* renessansetal
-\setmainfont[Ligatures=TeX, Numbers={Proportional,Lowercase}, ItalicFont=cambriai.ttf, BoldFont=cambriab.ttf, BoldItalicFont=cambriaz.ttf]{Cambria.ttc} % Problem med Fractions=On
-\setsansfont[Ligatures=TeX, Numbers={Proportional,Lowercase}]{Calibri}
-\setmonofont[Scale=MatchLowercase]{Consolas}
-\setmathfont{Cambria Math}
+%
+% Skriftene er Microsoft-skrifter, og finst ikkje nødvendigvis på alle
+% system. Dersom dei manglar, fell me tilbake på metrisk kompatible,
+% frie skrifter frå TeX Live (Caladea ≈ Cambria, Carlito ≈ Calibri,
+% DejaVu Sans Mono ≈ Consolas, Latin Modern Math for matte).
+\newif\ifkvalreg@msskrifter
+\IfFontExistsTF{Cambria.ttc}{\kvalreg@msskriftertrue}{\kvalreg@msskrifterfalse}
+\ifkvalreg@msskrifter
+  \setmainfont[Ligatures=TeX, Numbers={Proportional,Lowercase}, ItalicFont=cambriai.ttf, BoldFont=cambriab.ttf, BoldItalicFont=cambriaz.ttf]{Cambria.ttc} % Problem med Fractions=On
+  \setsansfont[Ligatures=TeX, Numbers={Proportional,Lowercase}]{Calibri}
+  \setmonofont[Scale=MatchLowercase]{Consolas}
+  \setmathfont{Cambria Math}
 
-% Skriftstil med ikkje-proporsjonale tal, for brødtekst,
-% for eksempel for bruk til sidetal i innhaldslista
-\newfontfamily\mainupropskrift[Ligatures=TeX,Numbers={Monospaced,Lowercase},ItalicFont=cambriai.ttf,BoldFont=cambriab.ttf,BoldItalicFont=cambriaz.ttf]{Cambria.ttc}
+  % Skriftstil med ikkje-proporsjonale tal, for brødtekst,
+  % for eksempel for bruk til sidetal i innhaldslista
+  \newfontfamily\mainupropskrift[Ligatures=TeX,Numbers={Monospaced,Lowercase},ItalicFont=cambriai.ttf,BoldFont=cambriab.ttf,BoldItalicFont=cambriaz.ttf]{Cambria.ttc}
 
-% Bruk proporsjonale tabelltal for overskrifter, då det ser best ut
-% (sjå for eksempel botnen på 1-tal)
-\newfontfamily\altskrift[Ligatures=TeX,Numbers={Proportional,Uppercase}]{Calibri}
-\newfontfamily\lettskrift[Ligatures=TeX,Numbers={Proportional,Uppercase},ItalicFont=calibrili.ttf]{calibril.ttf}
+  % Bruk proporsjonale tabelltal for overskrifter, då det ser best ut
+  % (sjå for eksempel botnen på 1-tal)
+  \newfontfamily\altskrift[Ligatures=TeX,Numbers={Proportional,Uppercase}]{Calibri}
+  \newfontfamily\lettskrift[Ligatures=TeX,Numbers={Proportional,Uppercase},ItalicFont=calibrili.ttf]{calibril.ttf}
+
+  % Bruk *ikkje-proporsjonale* renessansetal i alle tabellar
+  % (sjølve aktiveringa skjer lenger nede)
+  \newfontfamily\tablefont[Numbers={Monospaced,Lowercase}]{Calibri}
+\else
+  \ClassWarningNoLine{kvalreg-rapport}{%
+    Fann ikkje Cambria/Calibri/Consolas.\MessageBreak%
+    Brukar frie erstatningsskrifter\MessageBreak%
+    (Caladea, Carlito, DejaVu Sans Mono)}
+  \setmainfont[Ligatures=TeX, Numbers={Proportional,Lowercase}]{Caladea}
+  \setsansfont[Ligatures=TeX, Numbers={Proportional,Lowercase}]{Carlito}
+  \setmonofont[Scale=MatchLowercase]{DejaVu Sans Mono}
+  \setmathfont{Latin Modern Math}
+  \newfontfamily\mainupropskrift[Ligatures=TeX,Numbers={Monospaced,Lowercase}]{Caladea}
+  \newfontfamily\altskrift[Ligatures=TeX,Numbers={Proportional,Uppercase}]{Carlito}
+  % Carlito finst ikkje i «Light»-variant, så \lettskrift = vanleg Carlito
+  \newfontfamily\lettskrift[Ligatures=TeX,Numbers={Proportional,Uppercase}]{Carlito}
+  \newfontfamily\tablefont[Numbers={Monospaced,Lowercase}]{Carlito}
+\fi
 
 % Skrift for teikn som ikkje finst i standardskriftene
 \newfontfamily\uniskrift[Scale=MatchLowercase]{DejaVu Sans}
@@ -314,7 +341,6 @@
 
 
 % Bruk *ikkje-proporsjonale* renessansetal i alle tabellar
-\newfontfamily\tablefont[Numbers={Monospaced,Lowercase}]{Calibri}
 \AtBeginEnvironment{tabular}{\tablefont}%
 
 % La tabelloverskrifter ha farga tekst, med mindre linjeavstand
