@@ -1,6 +1,11 @@
 tempmappe = tempdir()
 klassefil_adresse = file.path(tempmappe, "kvalreg-rapport.cls")
 
+test_that("Fila kvalreg-rapport.cls finst", {
+  adresse = system.file("extdata", "kvalreg-rapport.cls", package = "rapwhale")
+  expect_true(file.exists(adresse))
+})
+
 test_that("Gjev ut adressa til mappa det kopierast til (usynleg)", {
   adresse = expect_invisible(kopier_latex_klassefil(tempmappe))
   expect_identical(adresse, tempmappe)
