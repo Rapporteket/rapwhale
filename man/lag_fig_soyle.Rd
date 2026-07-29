@@ -17,7 +17,7 @@ For prosent, bruk \code{\link[=lag_fig_soyle_prosent]{lag_fig_soyle_prosent()}}.
 \item{flip}{Logisk variabel som seier om plottet skal flippast. Standard verdi = \code{TRUE}.}
 
 \item{...}{Ekstra argument som vert gjeve vidare til \code{\link[=lag_fig_soyle_grunnplott]{lag_fig_soyle_grunnplott()}}
-(og så vidare igjen til \code{\link[ggplot2:geom_bar]{ggplot2::geom_col()}}).}
+(og så vidare igjen til \code{\link[ggplot2:geom_col]{ggplot2::geom_col()}}).}
 }
 \value{
 Eit søylediagram som ggplot-objekt.

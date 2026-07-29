@@ -37,7 +37,7 @@ mellom kvart element, utanom dei to siste, som vert kjeda saman med \code{og}
 Resultatet vert returnert som ein tekststreng med eitt element.
 
 Funksjonen handterar ulike typar inndata, som tekst, tal, dato
-og andre typar objekt der \code{\link[base:character]{base::as.character()}} er definert.
+og andre typar objekt der \code{\link[base:as.character]{base::as.character()}} er definert.
 Manglande verdiar vert gjort om til teksten \code{"NA"}.
 }
 \examples{

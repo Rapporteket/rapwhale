@@ -33,10 +33,10 @@ ikkje finst, men ikkje endrast noko viss det finst fleire. Sjå Examples'.}
 (sjå \code{\link[styler:start_comments_with_space]{styler::start_comments_with_space()}}).}
 
 \item{reindention}{Ei liste over parametrar for regex re-innrykk, mest føremålstenleg laga med
-\code{\link[styler:reindention]{styler::specify_reindention()}}.}
+\code{\link[styler:specify_reindention]{styler::specify_reindention()}}.}
 
 \item{math_token_spacing}{Ei liste over parametrar som definerar mellomrom i kring matematiske teikn,
-føremålstenleg laga med \code{\link[styler:math_token_spacing]{styler::specify_math_token_spacing()}}.}
+føremålstenleg laga med \code{\link[styler:specify_math_token_spacing]{styler::specify_math_token_spacing()}}.}
 
 \item{maks_blanke_linjer}{Eit heiltal med høgste tal på blanke linjer på rad som er tillatne i koden.
 Standard er 3.}
