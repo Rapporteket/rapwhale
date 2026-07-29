@@ -15,7 +15,7 @@ lag_fig_soyle_grunnplott(d, x, y, flip = TRUE, ...)
 
 \item{flip}{Logisk variabel som seier om plottet skal flippast. Standard verdi = \code{TRUE}.}
 
-\item{...}{Ekstra argument som vert gjeve vidare til \code{\link[ggplot2:geom_bar]{ggplot2::geom_col()}}.}
+\item{...}{Ekstra argument som vert gjeve vidare til \code{\link[ggplot2:geom_col]{ggplot2::geom_col()}}.}
 }
 \value{
 Eit søylediagram som ggplot-objekt.

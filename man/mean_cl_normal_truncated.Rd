@@ -12,19 +12,19 @@ mean_cl_normal_truncated(ymin = NA, ymax = NA)
 \item{ymax}{Øvre grense for konfidensintervall. Standard verdi \code{NA}.}
 }
 \value{
-Ein funksjon tilsvarande \code{\link[ggplot2:hmisc]{ggplot2::mean_cl_normal()}}, men der grensene for
+Ein funksjon tilsvarande \code{\link[ggplot2:mean_cl_normal]{ggplot2::mean_cl_normal()}}, men der grensene for
 konfidensintervallet vert trunkerte
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
 Lagar ein statistisk samandragsfunksjon tilsvarande
-\code{\link[ggplot2:hmisc]{ggplot2::mean_cl_normal()}} der grensene for konfidensintervallet
+\code{\link[ggplot2:mean_cl_normal]{ggplot2::mean_cl_normal()}} der grensene for konfidensintervallet
 vert trunkerte.
 }
 \details{
 Tek inn ei nedre grense \code{ymin} og ei øvre grense \code{ymax} og gjev ut ein
-funksjon tilsvarande \code{\link[ggplot2:hmisc]{ggplot2::mean_cl_normal()}} der grensene for
+funksjon tilsvarande \code{\link[ggplot2:mean_cl_normal]{ggplot2::mean_cl_normal()}} der grensene for
 konfidensintervallet er trunkerte til desse verdiane.
 
 Dersom \code{ymin} og/eller \code{ymax} er \code{NA}, vert ikkje tilhøyrande grenser

@@ -6,9 +6,6 @@
 \usage{
 valider_kb_struktur(kodebok)
 }
-\arguments{
-\item{kodebok}{}
-}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
