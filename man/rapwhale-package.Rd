@@ -9,11 +9,12 @@
 En rekke funksjoner til nytte i kvalitetsregisterarbeid. Inkluderer bl.a. funksjoner for å validere gyldigheten til kodebøker og gyldigheten til datadumper (gitt informasjon i kodebok), og funksjoner for å hente inn data fra ulike utviklere av innregistreringsløsninger ved hjelp av utviklerens kodebok.
 }
 \author{
-\strong{Maintainer}: Karl Ove Hufthammer \email{karl.ove.hufthammer@helse-bergen.no} (\href{https://orcid.org/0000-0003-3170-9496}{ORCID}) [copyright holder]
+\strong{Maintainer}: Per Erik Haugedal \email{per.erik.haugedal@helse-bergen.no} [copyright holder]
 
 Authors:
 \itemize{
   \item Per Erik Haugedal \email{per.erik.haugedal@helse-bergen.no} [copyright holder]
+  \item Karl Ove Hufthammer \email{karl.ove.hufthammer@helse-bergen.no} (\href{https://orcid.org/0000-0003-3170-9496}{ORCID}) [copyright holder]
   \item Endre Kvåle Evjen \email{endre.kvale.evjen@helse-bergen.no} [copyright holder]
   \item Arnlaug Høgås Skjæveland \email{arnlaug.hogas.skjeveland@helse-bergen.no} [contributor]
   \item Sergio Carracedo Huroz \email{sergio.carracedo.huroz@helse-bergen.no} [contributor]
