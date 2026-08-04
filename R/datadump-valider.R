@@ -108,7 +108,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
 
   # lager tom liste som vi fyller reglene i
   l_min_maks = list()
-  
+
   # FIXME "~" er lagt til for å unngå uendelig loop i ruler::expose() dersom
   # gverdi er negativ (https://github.com/Rapporteket/rapwhale/pull/85).
   # Koden kan endres tilbake når dette er fikset i ruler-pakken (se åpen issue:
