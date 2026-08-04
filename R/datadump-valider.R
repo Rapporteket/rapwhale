@@ -115,7 +115,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
         alist(df = ),
         rlang::expr(mutate(df,
           across(all_of(varnamn),
-            .fns = ruler::rules(min_ok = (. >= !!gverdi) | is.na(.))
+            .fns = ruler::rules(min_ok = ~ (. >= !!gverdi) | is.na(.))
           ),
           .keep = "none"
         ))
@@ -135,7 +135,7 @@ lag_regelsett = function(kodebok, oblig = TRUE, rekkefolge = TRUE) {
         alist(df = ),
         rlang::expr(mutate(df,
           across(all_of(varnamn),
-            .fns = ruler::rules(maks_ok = (. <= !!gverdi) | is.na(.))
+            .fns = ruler::rules(maks_ok = ~ (. <= !!gverdi) | is.na(.))
           ),
           .keep = "none"
         ))
