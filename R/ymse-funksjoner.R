@@ -295,18 +295,27 @@ regn_konfint_univar = function(x,
 #' )
 #' cat(cars_top_mpg_tab)
 lag_tab_latex = function(dataframe, label, caption, wide = FALSE, ...) {
-  # Viss dataramma ikkje har nokon radar, bryt latex()-funksjonen
-  # heilt saman dersom numeric.dollar er FALSE (og det er FALSE
-  # me *vil* ha, for å få rett formatering av tal).
+  # Tomme tabellar vert handterte for seg. Det er to grunnar til det:
   #
-  # fixme: Feilen er meldt inn til forfattaren av Hmisc-pakken
-  #        i januar 2018, og er lovd retta. Fjern derfor følgjande
-  #        if()-test når dette er retta og Hmisc-pakken er oppdatert.
+  # 1. Ein tabell utan rader i ein årsrapport tyder som regel at noko
+  # er gale med dataa. Då *vil* me ha ei tydeleg åtvaring i
+  # rapporten i staden for ein tom tabell.
   #
-  #        Kan bruka følgjande kodesnutt for å sjekka om feilen
-  #        er retta:
-  #          latex(head(iris, 0), file="", numeric.dollar=FALSE) # nolint commented_code_linter.
-  #        (skal gje tabell, ikkje feilmelding)
+  # 2. Hmisc::latex() handterer uansett ikkje datarammer utan rader:
+  # - med numeric.dollar = FALSE (som me vil ha, for å få rett
+  # formatering av tal) bryt han saman med feilmeldinga
+  # «length of 'dimnames' [2] not equal to array extent»
+  # - med numeric.dollar = TRUE lagar han stilt ein tabell med
+  # ei ekstra, tom rad («$$» i kvar celle)
+  #
+  # Feilen vart meld til forfattaren av Hmisc i januar 2018, men er
+  # framleis ikkje retta (kontrollert i Hmisc 5.3-0, august 2026).
+  # Sjekk eventuelt med:
+  # latex(head(iris, 0), file = "", numeric.dollar = FALSE) # nolint commented_code_linter.
+  # (skal gje tabell, ikkje feilmelding)
+  #
+  # Punkt 1 gjeld uavhengig av punkt 2, så if()-testen skal stå
+  # sjølv om Hmisc ein gong vert retta.
   if (nrow(dataframe) == 0) {
     tabell = paste0(
       "\\begin{table}[htbp]\n",
