@@ -2,9 +2,6 @@
 
 ## Samandrag
 
-(Berre førebels forslag basert på Karl sine endringar.
-Skriv gjerne heilt om når me resten av endringsloggen
-er fylt ut.)
 Den største endringa i denne versjonen er
 strengare kvalitetskontroll.
 Me har sett opp fleire automatiske testar
