@@ -73,6 +73,7 @@
 #' @importFrom stats sd
 #' @importFrom stats setNames
 #' @importFrom stats t.test
+#' @importFrom stringr fixed
 #' @importFrom stringr str_c
 #' @importFrom stringr str_detect
 #' @importFrom stringr str_flatten_comma
