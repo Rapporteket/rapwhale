@@ -16,7 +16,7 @@ Det er òg noko nytt som krev endringar i *dokkar* kode.
 Alt dette kan de lesa meir om nedanfor.
 
 
-## Endringar i utviklingsnvå
+## Endringar i utviklingsnivå
 
 Desse funksjonane er nye:
 
@@ -113,7 +113,7 @@ Det er òg noko nytt som krev endringar i *dokkar* kode.
 Alt dette kan de lesa meir om nedanfor.
 
 
-## Endringar i utviklingsnvå
+## Endringar i utviklingsnivå
 
 Denne funksjonen er ny:
 
@@ -271,7 +271,7 @@ Elles er det fleire endringar som krev endringar i *din* kode.
 Sjå eige punkt om det nedanfor.
 
 
-## Endringar i utviklingsnvå
+## Endringar i utviklingsnivå
 
 Desse funksjonane er nye:
 
