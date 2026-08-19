@@ -48,7 +48,6 @@ Imports:
     lintr (>= 3.0.0),
     styler (>= 1.8.1),
     Hmisc,
-    MASS,
     boot,
     tidyselect,
     methods,
