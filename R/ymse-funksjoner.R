@@ -317,10 +317,10 @@ lag_tab_latex = function(dataframe, label, caption, wide = FALSE, ...) {
   # Punkt 1 gjeld uavhengig av punkt 2, så if()-testen skal stå
   # sjølv om Hmisc ein gong vert retta.
   if (nrow(dataframe) == 0) {
-    tabell = paste0(
-      "\\begin{table}[htbp]\n",
-      "\\caption{", caption, "\\label{", label, "}}\n",
-      "{\\color{errorcolor}(Tabellen har 0 rader. Her må noko vera gale!)}\n",
+    tabell = c(
+      "\\begin{table}[htbp]",
+      paste0("\\caption{", caption, "\\label{", label, "}}"),
+      "{\\color{errorcolor}(Tabellen har 0 rader. Her må noko vera gale!)}",
       "\\end{table}"
     )
   } else {
