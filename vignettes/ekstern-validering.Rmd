@@ -201,7 +201,9 @@ på 4 (kg), måling av høgd skal ha eit slingringsmonn på 2 (cm),
 men operasjonsdatoen må vera heilt nøyaktig.
 Dette kan ein få til ved å laga eigne *samanliknarfunksjonar*
 (argumentet `samanliknar`).
-Sjå meir om samanliknarfunksjonar i avsnitt **fixme**.
+Sjå hjelpesida til `analyser_valideringsdatasett()`
+for krava til slike funksjonar,
+og `samanlikn_identisk()` for eit eksempel.
 
 
 
@@ -211,7 +213,7 @@ Som vist ovanfor, legg `analyser_valideringsdatasett()` til *to* kolonnar,
 `ki_krit_teller`, som me alt har sett på,
 og `ki_krit_nevner`, som er `TRUE` for alle radene.
 I praksis lagar me ein altså eit formelt kvalitetsindikator-datasett
-(sjå **fixme: lenkje til vignett om kvalitetsindikatorar**),
+(sjå vignetten [Kvalitetsindikatorfunksjonar](ki-funksjonar.html)),
 noko som gjer at me kan bruka `aggreger_ki_prop()`
 for å rekna ut korrektheitstatistikk,
 både totalt og stratifisert på éin eller fleire variablar.
