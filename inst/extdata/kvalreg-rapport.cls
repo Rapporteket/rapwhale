@@ -95,6 +95,9 @@
 \definecolor{LysSkifergraCol}{cmyk}{.44,.28,.25,.06} % PMS 7543 (lys skifergrå)
 \definecolor{MorkSjoGronCol}{cmyk}{.95,.32,.79,.26}     % PMS 342 (mørk sjøgrøn)
 
+% Farge for feilmeldingar i rapportar (jf. lag_tab_latex() i rapwhale)
+\colorlet{errorcolor}{SkarpRaudCol}
+
 % Bruk ulike type fargar på ulike typar dokument
 \newcommand{\doktypeverdi}{arsrapport}%
 \newcommand{\doktype}[1]{%
