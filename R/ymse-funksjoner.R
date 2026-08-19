@@ -329,14 +329,16 @@ lag_tab_latex = function(dataframe, label, caption, wide = FALSE, ...) {
       label = label, caption = caption, rowname = NULL,
       where = "htbp", booktabs = TRUE, numeric.dollar = FALSE, ...
     ))
-    if (wide) {
-      tabell = str_replace(tabell, "^\\\\(begin|end)\\{table\\}", "\\\\\\1\\{widetable\\}") # Superrobust ... ;)
-    }
-    tabell = paste0(tabell, "\n")
+  }
+
+  # Gjeld begge greinene ovanfor, slik at ein tom tabell oppfører seg
+  # likt ein vanleg tabell både med omsyn til «wide» og returformat
+  if (wide) {
+    tabell = str_replace(tabell, "^\\\\(begin|end)\\{table\\}", "\\\\\\1\\{widetable\\}") # Superrobust ... ;)
   }
 
   # Returner tabellen (eller feilmelding)
-  tabell
+  paste0(tabell, "\n")
 }
 
 #' Lag statistisk samandragsfunksjon med trunkerte grenser for konfidensintervall
