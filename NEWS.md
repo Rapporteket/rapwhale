@@ -30,8 +30,18 @@ Desse funksjonane er nye:
 - Pakken er no avhengig av R-pakkane `tidyselect`, `withr`
   og `checkmate`,
   så du må ha desse installerte.
-- Du treng no R versjon 4.1.0 eller nyare for å bruka rapwhale-pakken.
-  Grunnen er at me har gått over til det nye R-røyret `|>`
+- Du treng no R versjon 4.4 eller nyare for å bruka rapwhale-pakken.
+  Grunnen er at `profile()`- og `confint()`-metodane
+  for `"glm"`-objekt vart flytta
+  frå MASS-pakken til stats-pakken i R 4.4.0,
+  og me brukar no desse direkte frå stats.
+  Dette krev ikkje endringar i din eigen kode,
+  men du må ha ein ny nok R-versjon installert.
+  (Tidlegare kravde me R versjon 4.1.0 eller nyare.)
+- rapwhale er ikkje lenger avhengig av MASS-pakken,
+  så denne treng du ikkje lenger ha installert
+  (med mindre du brukar han til noko anna).
+- Me har gått over til det nye R-røyret `|>`
   i staden for magrittr-røyret `%>%`.
   Det nye røyret vert brukt i all koden vår og i eksempla i hjelpefilene.
   Dette krev strengt tatt ikkje endringar i din kode,
@@ -44,7 +54,7 @@ Desse funksjonane er nye:
 
 ## Ny funksjonalitet
 
-- Pakken er no kompatibel med den framtidige R versjon 4.4.0.
+- `foo()` har fått ...
 
 
 ## Feil retta opp
@@ -58,6 +68,15 @@ Det er generelle forbetringar i kodekvaliteten,
 det er lagt til fleire automatiske testar,
 og dokumentasjonen og feilmeldingar til fleire funksjonar
 er forbetra.
+
+For å støtta R-versjonar eldre enn 4.4.0
+måtte `aggreger_ki_rate()` tidlegare kalla
+den interne funksjonen `profile.glm()` i MASS-pakken
+ved bruk av `:::`-operatoren.
+Sidan me no krev R versjon 4.4 eller nyare,
+brukar me `stats::profile()` på vanleg måte,
+og både denne omvegen og MASS-avhengnaden er fjerna.
+Utrekningane er uendra.
 
 
 
