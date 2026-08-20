@@ -148,8 +148,8 @@ kb_til_kanonisk_form = function(kb) {
 # Funksjon som går gjennom en rekke tester for om en kodebok er gyldig
 # Tar imot en kodebok på glissen form, som er på fagsenterets standardform.
 # Argument:
-#   sjekk_varnamn: Skal variabelnavn også sjekkes for gyldighet (bare små bokstaver, _ og siffer)
-#             ...: Andre argument som skal videresendes til intern funksjon varnamn_er_gyldig()
+# sjekk_varnamn: Skal variabelnavn også sjekkes for gyldighet (bare små bokstaver, _ og siffer)
+# ...: Andre argument som skal videresendes til intern funksjon varnamn_er_gyldig()
 
 
 #' Tester om kodebok er gyldig
@@ -176,7 +176,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   # Antar i utgangspunktet at kodeboken er gyldig
   gyldig = TRUE
 
-  #------------------------------------------------Tester på glissen KB-------------------------------------------
+  # -----------------------------------------------Tester på glissen KB-------------------------------------------
 
   # Kjed saman tekststrengar og formater enkeltelement med '-teikn rundt seg
   lag_liste = function(x) {
@@ -271,7 +271,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
     gyldig = FALSE
   }
 
-  #------------------------------------------------Objekter---------------------------------
+  # -----------------------------------------------Objekter---------------------------------
   # I vidare testar føreset me at kodeboka er på ikkje-glissen form,
   # dvs. at skjema_id, variabel_id og sånt er gjentatt nedover.
   # Viss ho er ikkje på den forma, ordnar me det sjølv. :)
@@ -294,7 +294,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   advar_tekst = paste0("Ein eller fleire variablar har")
 
 
-  #------------------------------------------------Tester på ikkje-glissen KB-------------------------------------------
+  # -----------------------------------------------Tester på ikkje-glissen KB-------------------------------------------
 
   # Sjekk at me ikkje har duplikate skjema-ID-ar, skjemanamn eller variabel-ID-ar,
   # dvs. at alle unike verdiar kjem samanhengande nedover, utan nokre hòl
@@ -425,7 +425,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
     gyldig = FALSE
   }
 
-  #-----------------------------------------------------Sjekk Gyldig Vartype-----------------------------------------
+  # ----------------------------------------------------Sjekk Gyldig Vartype-----------------------------------------
   # Funksjon som sjekker om en eller flere variabler i kodeboka
   # har en variabeltype som er ugyldig gitt
   # at variabelen har en verdi for en kolonne som kun gjelder andre variabeltyper
@@ -628,7 +628,7 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
     gyldig = FALSE
   }
 
-  #--------------------------------------- valider variabelnamn-------------------------------------------------
+  # -------------------------------------- valider variabelnamn-------------------------------------------------
 
   # Viser og returnerer dei ugyldige variabelnamna
   # Viss «skjemaprefiks» er sann, må òg namna vera
@@ -639,9 +639,9 @@ kb_er_gyldig = function(kb_glissen, sjekk_varnamn = TRUE, ...) {
   # og ei blanding av små og store bokstavar vert godtatt.
   varnamn_er_gyldig = function(varnamn, skjemaprefiks = FALSE, fald_bokstavar = FALSE) {
     # Reglar:
-    #   Må starta med a-z (ikkje siffer)
-    #   Kan elles innhalda bokstavane a-z, siffera 0-9 og
-    #   teiknet _, men kan ikkje avsluttast med _.
+    # Må starta med a-z (ikkje siffer)
+    # Kan elles innhalda bokstavane a-z, siffera 0-9 og
+    # teiknet _, men kan ikkje avsluttast med _.
     reg_ok = "^[a-z]([0-9a-z_]*[0-9a-z])?$"
     varnamn = varnamn[varnamn != ""] # Sjå vekk frå tomme namn ...
 

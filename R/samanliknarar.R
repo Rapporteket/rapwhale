@@ -10,7 +10,7 @@
 #' @param verdi1 Vektor med verdiar av valfri type.
 #' @param verdi2 Vektor med verdiar av same type som `verdi1`.
 #' @param varnamn Vektor med namn på variablane som skal samanliknast.
-#'   Må ha same lengd som `verdi1` og `verdi2` eller vera `NULL`.
+#' Må ha same lengd som `verdi1` og `verdi2` eller vera `NULL`.
 #'
 #' @details
 #' Funksjonen samanliknar verdiane i `verdi1` og `verdi2` elementvis og
@@ -23,8 +23,8 @@
 #' med [analyser_valideringsdatasett()].
 #'
 #' @return Logisk vektor som elementvis seier om `verdi1` er identisk
-#'   med `verdi2` (`TRUE`) eller ikkje (`FALSE`). Vil aldri innehalda
-#'   `NA`-verdiar.
+#' med `verdi2` (`TRUE`) eller ikkje (`FALSE`). Vil aldri innehalda
+#' `NA`-verdiar.
 #' @export
 #'
 #' @examples

@@ -8,7 +8,7 @@
 #'
 #' @param ord Ein vektor med dei elementa som skal kjedast saman.
 #' @param skiljeteikn Skiljeteikn som skal brukast mellom alle
-#'   elementa (utanom dei to siste).
+#' elementa (utanom dei to siste).
 #' @param og Tekst som skal setjast inn mellom dei to siste elementa.
 #'
 #' @details
@@ -28,7 +28,7 @@
 #' Manglande verdiar vert gjort om til teksten `"NA"`.
 #'
 #' @return Ein tekststreng med eitt element,
-#'   der alle elementa frå `ord` er kjeda saman.
+#' der alle elementa frå `ord` er kjeda saman.
 #'
 #' @export
 #'

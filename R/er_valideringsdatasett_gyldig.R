@@ -41,7 +41,7 @@
 #' dei som er nemnde ovanfor (`vld_` er eit reservert prefiks).
 #'
 #' @return `TRUE` dersom datasettet er gyldig og `FALSE` dersom det
-#'         ikkje er det.
+#' ikkje er det.
 #' @export
 #'
 #' @examples
@@ -154,8 +154,8 @@ er_valideringsdatasett_gyldig = function(d_vld) {
   # For kvar unike verdi x av vld_vartype så skal det finnast ein
   # variabel vld_verdi_intern_x og vld_verdi_ekstern_x
   # (Obs: Dessverre litt kodeduplisering for tidlegare test på kolonnenamn,
-  #       men kan ikkje enkelt bruka generell funksjon, sidan
-  #       me skal returnera FALSE ved feil, men ikkje returnera elles.)
+  # men kan ikkje enkelt bruka generell funksjon, sidan
+  # me skal returnera FALSE ved feil, men ikkje returnera elles.)
   vartypar_som_skal_finnast = unique(d_vld$vld_vartype)
   kolnamn_som_skal_finnast = lag_kolnamn_verdikol(vartypar_som_skal_finnast)
   verdikol_finst = kolnamn_som_skal_finnast %in% kolnamn_verdikol
