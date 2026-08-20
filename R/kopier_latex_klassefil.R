@@ -7,8 +7,8 @@
 #' TeX Live-mappa eller anna gjeven mappe.
 #'
 #' @param texmappe Adressa til mappa som LaTeX-klassefila skal kopierast
-#'                 til. Viss `NULL` (standard), vert fila kopiert til
-#'                 ei høveleg undermappe i TeX Live-mappa.
+#' til. Viss `NULL` (standard), vert fila kopiert til
+#' ei høveleg undermappe i TeX Live-mappa.
 #'
 #' @details
 #' Dersom `texmappe` er `NULL`,

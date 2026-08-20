@@ -7,7 +7,7 @@
 #'
 #' @param x Numerisk vektor.
 #' @param nullverdi Verdi (typisk tall eller tekst)
-#'   som skal erstatte `x`-elementer lik 0.
+#' som skal erstatte `x`-elementer lik 0.
 #'
 #' @details
 #' Alle verdier nøyaktig lik 0

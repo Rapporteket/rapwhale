@@ -9,17 +9,17 @@
 # formatet til OQR, dvs. dokumentet «KG-Klokeboken-100418-1349-11.pdf».
 #
 # Inndata:
-#   mappe_dd: Adressa til datadump-mappa
-#             (som inneheld éi undermappe,
-#             med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
-#   reg_id:   ID som identifiserer registeret og er prefiks til alle filnamna
-#   dato:     Datoen ein skal henta ut kodeboka for (tekststreng eller dato).
-#             Kan òg vera NULL, for å henta nyaste kodebok.
-#   valider_kb: Skal kodeboka automatisk validerast?
-#             Ho må då vera gyldig for at ein skal få noko ut.
+# mappe_dd: Adressa til datadump-mappa
+# (som inneheld éi undermappe,
+# med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
+# reg_id:   ID som identifiserer registeret og er prefiks til alle filnamna
+# dato:     Datoen ein skal henta ut kodeboka for (tekststreng eller dato).
+# Kan òg vera NULL, for å henta nyaste kodebok.
+# valider_kb: Skal kodeboka automatisk validerast?
+# Ho må då vera gyldig for at ein skal få noko ut.
 #
 # Utdata:
-#   kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar
+# kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar
 
 
 # Roxygen dokumentasjon
@@ -110,11 +110,11 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
 
   # Gjer om kodeboka til vårt *standardiserte* format
   # (Det finst ikkje heilt ei 1-til-1-kopling, men me
-  #  gjer so godt me kan, og set verdiar til NA der
-  #  det ikkje finst nokon tilsvarande.)
+  # gjer so godt me kan, og set verdiar til NA der
+  # det ikkje finst nokon tilsvarande.)
   #
   # fixme: Vårt kodebokformat bør nok oppdaterast til
-  #        å støtta min- og maks-verdiar for datoar òg.
+  # å støtta min- og maks-verdiar for datoar òg.
   kodebok = kodebok_oqr_format |>
     mutate(
       skjema_id = tabell,
@@ -557,8 +557,8 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
 
   # Gjer eventuelle tidsvariablar om til ekte tidsvariablar
   # Fixme: Nødvendig pga. https://github.com/tidyverse/readr/issues/642
-  #        Fjern når denne feilen er fiksa (rett då òg fixme-en
-  #        lenger oppe som også handlar om dette)
+  # Fjern når denne feilen er fiksa (rett då òg fixme-en
+  # lenger oppe som også handlar om dette)
   vars_datokl = spek_innlesing$variabel_id[spek_innlesing$variabeltype == "dato_kl"]
   d = d |>
     mutate(across(all_of(vars_datokl),

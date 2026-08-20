@@ -9,27 +9,27 @@
 #' verdiene/besvarelsene er gyldige.
 #'
 #' @param d Dataramme/tibble som inneholder
-#'     spørreskjema-variabler + eventuelt andre variabler.
-#'     Variabelnavnene for de tolv spørsmålene skal i utgangspunktet være
-#'     `rand_1`, `rand_2a`, `rand_2b`, `rand_3a`, `rand_3b`, `rand_4a`,
-#'     `rand_4b`, `rand_5`, `rand_6a`, `rand_6b`, `rand_6c` og `rand_7`
-#'     (se `variabelnavn`).
-#'     Se detaljer nedenfor for informasjon om koding.
+#' spørreskjema-variabler + eventuelt andre variabler.
+#' Variabelnavnene for de tolv spørsmålene skal i utgangspunktet være
+#' `rand_1`, `rand_2a`, `rand_2b`, `rand_3a`, `rand_3b`, `rand_4a`,
+#' `rand_4b`, `rand_5`, `rand_6a`, `rand_6b`, `rand_6c` og `rand_7`
+#' (se `variabelnavn`).
+#' Se detaljer nedenfor for informasjon om koding.
 #' @param algoritme Algoritme for skåring av spørreskjemaet.
-#'     Foreløpig er det bare mulig å velge `"farivar_2007_oblique"`,
-#'     som gir sumskårer basert på en korrelert (skrå/«oblique»)
-#'     faktormodell som definert i
-#'     \insertCite{Farivar2007;textual}{rapwhale}.
+#' Foreløpig er det bare mulig å velge `"farivar_2007_oblique"`,
+#' som gir sumskårer basert på en korrelert (skrå/«oblique»)
+#' faktormodell som definert i
+#' \insertCite{Farivar2007;textual}{rapwhale}.
 #' @param variabelnavn Hvis `d` ikke bruker standard variabelnavn,
-#'     kan du her oppgi kobling mellom standard variabelnavn (se ovenfor)
-#'     og de brukte variabelnavnene. Bruk syntaksen
-#'     `c(std_navn_1 = "brukt_navn_1", std_navn_2 = "brukt_navn_2")`.
-#'     Navnekobling trenger kun oppgis for de variablene som ikke har
-#'     standardnavn. Sett til `NULL` hvis alle har standardnavn.
+#' kan du her oppgi kobling mellom standard variabelnavn (se ovenfor)
+#' og de brukte variabelnavnene. Bruk syntaksen
+#' `c(std_navn_1 = "brukt_navn_1", std_navn_2 = "brukt_navn_2")`.
+#' Navnekobling trenger kun oppgis for de variablene som ikke har
+#' standardnavn. Sett til `NULL` hvis alle har standardnavn.
 #' @param godta_manglende Skal manglende verdier (`NA`-verdier) i
-#'     spørreskjema-variablene i `d` godtas (som standard nei)? Hvis
-#'     ikke, blir det gitt ut en feilmelding om det finnes manglende
-#'     verdier.
+#' spørreskjema-variablene i `d` godtas (som standard nei)? Hvis
+#' ikke, blir det gitt ut en feilmelding om det finnes manglende
+#' verdier.
 #'
 #' @details
 #' Funksjonen regner ut både fysisk og psykisk sumskår (PCS og MCS)
@@ -58,12 +58,12 @@
 #' \insertAllCited{}
 #'
 #' @return Datasett likt `d`, men med sumskårene `rand12_pcs` og
-#'   `rand12_mcs` lagt til, eventuelt erstattet. Sumskår-kolonnene blir
-#'   i utgangspunktet lagt til på slutten av `d`.
-#'   Hvis `d` imidlertid alt innholder en variabel med
-#'   navnet `rand12_pcs` eller `rand12_mcs`, blir denne denne stående
-#'   der den er, men overskrevet med nyutregnet sumskår. Det blir i så
-#'   fall gitt ut en advarsel.
+#' `rand12_mcs` lagt til, eventuelt erstattet. Sumskår-kolonnene blir
+#' i utgangspunktet lagt til på slutten av `d`.
+#' Hvis `d` imidlertid alt innholder en variabel med
+#' navnet `rand12_pcs` eller `rand12_mcs`, blir denne denne stående
+#' der den er, men overskrevet med nyutregnet sumskår. Det blir i så
+#' fall gitt ut en advarsel.
 #' @examples
 #' library(tibble)
 #'

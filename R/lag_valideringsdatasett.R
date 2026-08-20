@@ -31,7 +31,7 @@
 #' verdiane i `vld_verdi_intern_x`.
 #'
 #' @return Valideringsdatasett som er klart til å fyllast ut med og sjekkast
-#'         opp mot data frå ein gullstandard (typisk pasientjournal).
+#' opp mot data frå ein gullstandard (typisk pasientjournal).
 #'
 #' @export
 #'

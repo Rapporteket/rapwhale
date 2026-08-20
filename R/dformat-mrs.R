@@ -270,26 +270,26 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
 
   # Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
   # fixme: Kategorisk er ein litt vrien variant. *Oftast* er han
-  #        tal, men me kan risikera at han er tekst òg. Ei løysing er å
-  #        alltid lesa han inn som tekst, men det er ikkje ei *god* løysing.
-  #        Når han er koda som tal, er det ofte betre å handsama han som tal.
-  #        Det ser betre ut, og det mogleggjer å bruka operatorar som < og >=
-  #        (eks. komplikasjonsgrad < 5) (men "10" er som kjent < "2"!).
-  #        Og for spørjeskjema er gjerne skåringskodane lagt inn som talkodar,
-  #        slik at det er fint om me kan skriva for eksempel sp1 + sp2 + ...
-  #        for å få ein sumskår).
+  # tal, men me kan risikera at han er tekst òg. Ei løysing er å
+  # alltid lesa han inn som tekst, men det er ikkje ei *god* løysing.
+  # Når han er koda som tal, er det ofte betre å handsama han som tal.
+  # Det ser betre ut, og det mogleggjer å bruka operatorar som < og >=
+  # (eks. komplikasjonsgrad < 5) (men "10" er som kjent < "2"!).
+  # Og for spørjeskjema er gjerne skåringskodane lagt inn som talkodar,
+  # slik at det er fint om me kan skriva for eksempel sp1 + sp2 + ...
+  # for å få ein sumskår).
   #
-  #        Så den *rette* måten å handtera dette på er å lesa inn kategoriske
-  #        verdiar som tal dersom dei moglege *verdiane* i kodeboka alle er tal
-  #        og som tekst elles.
+  # Så den *rette* måten å handtera dette på er å lesa inn kategoriske
+  # verdiar som tal dersom dei moglege *verdiane* i kodeboka alle er tal
+  # og som tekst elles.
   #
-  #        Det kunne vera aktuelt å dela opp i kategorisk_numerisk og
-  #        kategorisk_tekst i vår kanoniske kodebok, men det ville komplisera
-  #        annan kode som brukar kodebøkene (eks.kb_fyll()), så det bør me nok
-  #        helst ikkje gjera.
+  # Det kunne vera aktuelt å dela opp i kategorisk_numerisk og
+  # kategorisk_tekst i vår kanoniske kodebok, men det ville komplisera
+  # annan kode som brukar kodebøkene (eks.kb_fyll()), så det bør me nok
+  # helst ikkje gjera.
   #
-  #        Programmeringsmessig blir anbefalt løysing litt komplisert,
-  #        men det skal me få til!
+  # Programmeringsmessig blir anbefalt løysing litt komplisert,
+  # men det skal me få til!
   spek_csv_mrs = tribble(
     ~variabeltype, ~csv_bokstav,
     "kategorisk", "i",
@@ -346,23 +346,23 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
   )
 
   # Fixme: For kategoriske variablar er det ei spesiell koding av manglande
-  #        verdiar (typisk tyder -1 manglande verdi). Gjer om desse verdiane
-  #        til ekte NA-verdiar. Bruk det som er markert som «manglande = ja»
-  #        i kodeboka (på kanonisk form) for å finna ut kva verdiar som
-  #        skal tolkast som NA.
+  # verdiar (typisk tyder -1 manglande verdi). Gjer om desse verdiane
+  # til ekte NA-verdiar. Bruk det som er markert som «manglande = ja»
+  # i kodeboka (på kanonisk form) for å finna ut kva verdiar som
+  # skal tolkast som NA.
 
   # Gjer om boolske variablar til ekte boolske variablar
   #
   # Fixme: Her må MRS retta opp, slik at me berre treng forhalda oss til
-  #        eitt sett verdiar, eks. "False" og "True" (og tom verdi for NA).
-  #        Det er stor risiko for feil dersom me må godta 5 ulike verdiar
-  #        (og plutseleg tyder gjerne -1 ja i staden for NA for eit register ...).
-  #        Oppdater koden til å berre støtta dette.
+  # eitt sett verdiar, eks. "False" og "True" (og tom verdi for NA).
+  # Det er stor risiko for feil dersom me må godta 5 ulike verdiar
+  # (og plutseleg tyder gjerne -1 ja i staden for NA for eit register ...).
+  # Oppdater koden til å berre støtta dette.
   #
-  #        Eventuelt (viss MRS som vanleg brukar åresvis på å få ting retta
-  #        opp for alle registera), gjer det mogleg å spesifisera ved
-  #        funksjonskallet kva verdiar som skal tolkast til kva boolske verdiar.
-  #        Eks: boolske_verdiar = list(`FALSE` = "0", `TRUE` = "1", `NA` = c("", "-1", NA)) # nolint: commented_code_linter, line_length_linter.
+  # Eventuelt (viss MRS som vanleg brukar åresvis på å få ting retta
+  # opp for alle registera), gjer det mogleg å spesifisera ved
+  # funksjonskallet kva verdiar som skal tolkast til kva boolske verdiar.
+  # Eks: boolske_verdiar = list(`FALSE` = "0", `TRUE` = "1", `NA` = c("", "-1", NA)) # nolint: commented_code_linter, line_length_linter.
   #
   mrs_boolsk_til_boolsk = function(x) {
     # Sjekk først at det berre er gyldige verdiar
@@ -393,8 +393,8 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
 
   # Gjer om tidsvariablar til ekte tidsvariablar
   # Fixme: Nødvendig pga. https://github.com/tidyverse/readr/issues/642
-  #        Fjern når denne feilen er fiksa (rett då òg fixme-en
-  #        lenger oppe som også handlar om dette)
+  # Fjern når denne feilen er fiksa (rett då òg fixme-en
+  # lenger oppe som også handlar om dette)
   tid_var = spek_innlesing |>
     filter(variabeltype == "dato_kl") |>
     pull(variabel_id)
