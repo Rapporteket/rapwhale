@@ -48,7 +48,7 @@
 #' kolonner:
 #' \item{est}{Kvalitetsindikatoren, dvs. estimert andel (`ki_teller`/`ki_nevner`).}
 #' \item{ki_teller}{Telleren i indikatoren (antall sanne `ki_krit_teller`
-#'                  der `ki_krit_nevner` er sann).}
+#' der `ki_krit_nevner` er sann).}
 #' \item{ki_nevner}{Nevneren i indikatoren (antall sanne `ki_krit_nevner`).}
 #' \item{konf_int_nedre}{Nedre konfidensgrense for `est`.}
 #' \item{konf_int_ovre}{Øvre konfidensgrense for `est`.}

@@ -15,8 +15,8 @@
 #'
 #'
 #' @return Tibble med kolonnane `funksjon` og `utviklingsnivaa` som gjev ein
-#'         oversikt over utviklingsnivåa til alle funksjonane som har
-#'         hjelpefil i `mappe`.
+#' oversikt over utviklingsnivåa til alle funksjonane som har
+#' hjelpefil i `mappe`.
 #' @export
 #'
 #' @examples

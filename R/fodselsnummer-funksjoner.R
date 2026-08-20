@@ -11,32 +11,32 @@
 #'
 #' @param nummer Tekstvektor med nummer som skal sjekkast.
 #' @param gyldige_typar Tekstvektor med kva nummertypar verdiane
-#'  i `nummer` skal sjekkast mot. Må vera éin eller fleire av
-#'  `c("FNR", "H", "D", "FH")`.
-#'  Som standard vert nummera sjekka mot alle desse.
+#' i `nummer` skal sjekkast mot. Må vera éin eller fleire av
+#' `c("FNR", "H", "D", "FH")`.
+#' Som standard vert nummera sjekka mot alle desse.
 #'
 #' @details
 #' Dei moglege verdiane i `gyldige_typar` tyder:
 #' - `"FNR"`: Fødselsnummer.
-#'   Vanleg ellevesifra fødselsnummer
-#'   som inneheld fødselsdato (seks siffer) etterfølgd av personnummer
-#'   (fem siffer, der dei to siste er sjekksiffer).
+#' Vanleg ellevesifra fødselsnummer
+#' som inneheld fødselsdato (seks siffer) etterfølgd av personnummer
+#' (fem siffer, der dei to siste er sjekksiffer).
 #' - `"D"`: D-nummer.
-#'   Ellevesifra nummer,
-#'   som fødselsnummer,
-#'   men modifisert ved at det er lagt til 4 på det fyrste sifferet.
+#' Ellevesifra nummer,
+#' som fødselsnummer,
+#' men modifisert ved at det er lagt til 4 på det fyrste sifferet.
 #' - `"H"`: H-nummer (hjelpenummer).
-#'   Ellevesifra nummer,
-#'   som fødselsnummer,
-#'   men modifisert ved at det er lagt til 4 på det tredje sifferet.
+#' Ellevesifra nummer,
+#' som fødselsnummer,
+#' men modifisert ved at det er lagt til 4 på det tredje sifferet.
 #' - `"FH"`: FH-nummer (felles hjelpenummer).
-#'   Ellevesifra nummer der fyrste siffer er 8 eller 9,
-#'   dei neste åtte siffera er tilfeldige,
-#'   og dei to siste er kontrollsiffer.
+#' Ellevesifra nummer der fyrste siffer er 8 eller 9,
+#' dei neste åtte siffera er tilfeldige,
+#' og dei to siste er kontrollsiffer.
 #'
 #' Du kan lesa meir om dei ulike nummertypane på desse nettsidene:
-#'   - \href{https://no.wikipedia.org/wiki/F%C3%B8dselsnummer}{Wikipedia: Fødselsnummer}
-#'   - \href{https://lovas.info/2013/12/01/identitetsnummer-i-norge/}{Identitetsnummer i Norge}
+#' - \href{https://no.wikipedia.org/wiki/F%C3%B8dselsnummer}{Wikipedia: Fødselsnummer}
+#' - \href{https://lovas.info/2013/12/01/identitetsnummer-i-norge/}{Identitetsnummer i Norge}
 #'
 #' @return Logisk vektor med `TRUE` eller `FALSE` for kvart element
 #' i `nummer`, alt ettersom det høvesvis er eit gyldige nummer

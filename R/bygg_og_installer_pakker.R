@@ -8,7 +8,7 @@
 #' @param pakkemapper Tekstvektor med mappeadresser til R-pakker.
 #' @param installer Logisk variabel. Skal pakkene installeres (som standard ja).
 #' @param stille Logisk variabel. Skal det kun gis ut oppsummerte advarsler og
-#'     feilmeldinger (som standard ja)?
+#' feilmeldinger (som standard ja)?
 #'
 #' @details
 #' For hver mappeadresse i `pakkemapper` bygges først pakkedokumentasjonen

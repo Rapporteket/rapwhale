@@ -7,8 +7,8 @@
 #' verdiar i eit valideringsdatasett er «like» eller ikkje.
 #'
 #' @param d_vld Valideringsdatasett (dataramme/tibble). Sjå
-#'   [er_valideringsdatasett_gyldig()] for definisjonen på eit (gyldig)
-#'   valideringsdatasett. Det vert automatisk testa at datasettet er gyldig.
+#' [er_valideringsdatasett_gyldig()] for definisjonen på eit (gyldig)
+#' valideringsdatasett. Det vert automatisk testa at datasettet er gyldig.
 #' @param samanliknar Samanliknarfunksjon. Standard er [samanlikn_identisk()].
 #'
 #' @details
@@ -39,10 +39,10 @@
 #' temperaturmålingar målt i Celsius.
 #'
 #' @return Opphavleg datasett, men med to ekstra kolonnar lagd til -
-#'         `ki_krit_teller` som er `TRUE` for kvar rad der verdiane som
-#'         skal samanliknast, er «like» i følgje `samanliknar`, og `FALSE` for
-#'         kvar rad der dei ikkje er det, og `ki_krit_nevner` som er `TRUE` for
-#'         alle rader.
+#' `ki_krit_teller` som er `TRUE` for kvar rad der verdiane som
+#' skal samanliknast, er «like» i følgje `samanliknar`, og `FALSE` for
+#' kvar rad der dei ikkje er det, og `ki_krit_nevner` som er `TRUE` for
+#' alle rader.
 #' @export
 #'
 #' @examples

@@ -48,7 +48,7 @@ les_varnavn = function(adresse, formatspek) {
 #' beskriver hva som skal regnes som TRUE, FALSE og NA.
 #'
 #' @return
-#'   En vektor som kun inneholder TRUE, FALSE eller NA.
+#' En vektor som kun inneholder TRUE, FALSE eller NA.
 #'
 #' @export
 #'
@@ -195,7 +195,7 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
 
   # Konverter dato_kl
   # fixme: Fjern denne og oppdater std_koltype_til_readr_koltype() når
-  #        https://github.com/tidyverse/readr/issues/642 er fiksa
+  # https://github.com/tidyverse/readr/issues/642 er fiksa
   varnavn_dato_kl = spesifikasjon$varnavn_resultat[spesifikasjon$vartype == "dato_kl"]
   d = mutate(d, across(all_of(varnavn_dato_kl),
     .fns = \(dato_kl_vektor) {

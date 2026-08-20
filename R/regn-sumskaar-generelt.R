@@ -8,26 +8,26 @@
 #' skåringstabellen.
 #'
 #' @param d Dataramme/tibble som inneholder spørreskjema-variabler +
-#'     eventuelt andre variabler. Spørreskjema-variablene må være
-#'     numeriske.
+#' eventuelt andre variabler. Spørreskjema-variablene må være
+#' numeriske.
 #' @param skaaringstabell Dataramme/tibble som sier hvordan
-#'     `d` skal skåres. Må ha fire kolonner,
-#'     `delskala` (tekst), `variabel` (tekst), `verdi` (numerisk) og
-#'     `koeffisient` (numerisk), og det kan bare finnes én rad
-#'     per kombinasjon av `delskala`, `variabel` og `verdi`.
-#'     Se detaljer nedenfor.
+#' `d` skal skåres. Må ha fire kolonner,
+#' `delskala` (tekst), `variabel` (tekst), `verdi` (numerisk) og
+#' `koeffisient` (numerisk), og det kan bare finnes én rad
+#' per kombinasjon av `delskala`, `variabel` og `verdi`.
+#' Se detaljer nedenfor.
 #' @param variabelnavn Navn på variabler i datasettet som ikke er
-#'     identiske med de standardiserte navnene i skåringstabellen. Bruk
-#'     syntaksen
-#'     `c(std_navn_1 = "dd_navn_1", std_navn_2 = "dd_navn_2")`.
-#'     Nye navn trenger kun oppgis for spørreskjema-variabler som har
-#'     avvikende navn fra skåringstabellen. Hvis `NULL`, blir
-#'     det antatt at alle navnene er i samsvar med skåringstabellen.
+#' identiske med de standardiserte navnene i skåringstabellen. Bruk
+#' syntaksen
+#' `c(std_navn_1 = "dd_navn_1", std_navn_2 = "dd_navn_2")`.
+#' Nye navn trenger kun oppgis for spørreskjema-variabler som har
+#' avvikende navn fra skåringstabellen. Hvis `NULL`, blir
+#' det antatt at alle navnene er i samsvar med skåringstabellen.
 #' @param godta_manglende Skal manglende verdier (`NA`-verdier) i
-#'     spørreskjema-variablene i `d` godtas (som standard nei)?
-#'     Hvis ikke, blir det gitt ut
-#'     en feilmelding om det finnes manglende verdier.
-#'     Se detaljer nedenfor.
+#' spørreskjema-variablene i `d` godtas (som standard nei)?
+#' Hvis ikke, blir det gitt ut
+#' en feilmelding om det finnes manglende verdier.
+#' Se detaljer nedenfor.
 #'
 #' @details
 #' Funksjonen regner ut vektede sumskårer ved hjelp av en skåringstabell.
@@ -65,11 +65,11 @@
 #' samsvar med skåringstabellen eller dersom skåringstabellen er ugyldig.
 #'
 #' @return Datasett likt `d`, men med sumskår(er) lagt til, eventuelt
-#'   erstattet. Nye sumskår-kolonner blir i utgangspunktet lagt til på
-#'   slutten av av `d`, i samme rekkefølge som i `skaaringstabell$delskala`.
-#'   Hvis `d` imidlertid alt innholder en variabel med samme navn som en
-#'   `delskala`, blir denne denne stående der den er, men overskrevet med
-#'   nyutregnet sumskår. Det blir i så fall gitt ut en advarsel.
+#' erstattet. Nye sumskår-kolonner blir i utgangspunktet lagt til på
+#' slutten av av `d`, i samme rekkefølge som i `skaaringstabell$delskala`.
+#' Hvis `d` imidlertid alt innholder en variabel med samme navn som en
+#' `delskala`, blir denne denne stående der den er, men overskrevet med
+#' nyutregnet sumskår. Det blir i så fall gitt ut en advarsel.
 #' @export
 #'
 #' @examples
@@ -224,7 +224,7 @@ sjekk_skaaringstabell = function(skaaringstabell) {
 #'
 #' @param d Dataramme/tibble.
 #' @param variabelnavn Vektor med variabelnavn (som skal sjekkes om
-#'     finnes i `d`).
+#' finnes i `d`).
 #'
 #' @details
 #' Gir feilmelding hvis `d` ikke inneholder alle variabelnavnene
@@ -252,16 +252,16 @@ sjekk_variabelnavn = function(d, variabelnavn) {
 #' hvilke variabler.
 #'
 #' @param d Dataramme/tibble som kun inneholder kolonner med identiske
-#'     navn som i `verditabell$variabel`.
+#' navn som i `verditabell$variabel`.
 #' @param verditabell Dataramme/tibble med to kolonner (`variabel`
-#'     og `verdi`) som sier hvilke verdier som er gyldige for hvilke
-#'     variabler. Variabel-kolonnen må være av typen tekst og
-#'     verdi-kolonnen må være numerisk.
+#' og `verdi`) som sier hvilke verdier som er gyldige for hvilke
+#' variabler. Variabel-kolonnen må være av typen tekst og
+#' verdi-kolonnen må være numerisk.
 #' @param godta_manglende Skal manglende verdier i
-#'     i `d` godtas (standard `FALSE`)?
-#'     Hvis ikke, blir det gitt ut
-#'     en feilmelding dersom det finnes manglende verdier (`NA`-verdier)
-#'     som ikke har tilhørende oppføring i `verditabell`.
+#' i `d` godtas (standard `FALSE`)?
+#' Hvis ikke, blir det gitt ut
+#' en feilmelding dersom det finnes manglende verdier (`NA`-verdier)
+#' som ikke har tilhørende oppføring i `verditabell`.
 #'
 #' @details
 #' Gir feilmelding hvis `d` inneholder en verdi som ikke har
@@ -307,13 +307,13 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 #' basert på en oversikt over mulige gyldige verdier.
 #'
 #' @param d Dataramme/tibble som kun inneholder kolonner med identiske
-#'     navn som i `verditabell$variabel`. Alle kolonnene må inneholde
-#'     numeriske verdier.
+#' navn som i `verditabell$variabel`. Alle kolonnene må inneholde
+#' numeriske verdier.
 #' @param verditabell Dataramme/tibble med to kolonner,
-#'     `variabel` og `verdi`,
-#'     som sier hvilke verdier som er gyldige for hvilke
-#'     variabler. Kolonnen `variabel` må være av typen tekst og
-#'     `verdi` må være numerisk.
+#' `variabel` og `verdi`,
+#' som sier hvilke verdier som er gyldige for hvilke
+#' variabler. Kolonnen `variabel` må være av typen tekst og
+#' `verdi` må være numerisk.
 #'
 #' @details
 #' Blir brukt av [sjekk_variabelverdier()], men kan også
@@ -329,11 +329,11 @@ sjekk_variabelverdier = function(d, verditabell, godta_manglende) {
 #' @keywords internal
 #'
 #' @return Tibble med én rad for hver ugyldige verdi i `d`.
-#'     Inneholder tre kolonner, `radnr`, `variabel` og `feilverdi`,
-#'     som tilsvarer radnummer, kolonnenavn og celleverdi i `d`.
-#'     Radene er sortert etter radnummer og så kolonnerekkefølge i `d`.
-#'     Hvis `d` ikke inneholder noen ugyldige verdier, vil tibble-en ha
-#'     null rader.
+#' Inneholder tre kolonner, `radnr`, `variabel` og `feilverdi`,
+#' som tilsvarer radnummer, kolonnenavn og celleverdi i `d`.
+#' Radene er sortert etter radnummer og så kolonnerekkefølge i `d`.
+#' Hvis `d` ikke inneholder noen ugyldige verdier, vil tibble-en ha
+#' null rader.
 #'
 #' @seealso [sjekk_variabelverdier()], [oppsummer_ugyldige_verdier()]
 #'
@@ -365,14 +365,14 @@ finn_ugyldige_verdier = function(d, verditabell) {
 #' [finn_ugyldige_verdier()].
 #'
 #' @param d_ugyldige Tibble på formatet gitt ut av
-#'     [finn_ugyldige_verdier()].
+#' [finn_ugyldige_verdier()].
 #'
 #' @keywords internal
 #'
 #' @return Tekststreng som inneholder variabelnavn og tilhørende
-#'     feilverdier (sortert alfabetisk etter variabelnavn og så
-#'     rekkefølge i `d_ugyldige$radnr`). Hvis det ikke finnes ugyldige
-#'     verdier, returneres tekststrengen `"Alle verdiene er gyldige"`.
+#' feilverdier (sortert alfabetisk etter variabelnavn og så
+#' rekkefølge i `d_ugyldige$radnr`). Hvis det ikke finnes ugyldige
+#' verdier, returneres tekststrengen `"Alle verdiene er gyldige"`.
 oppsummer_ugyldige_verdier = function(d_ugyldige) {
   if (nrow(d_ugyldige) > 0) {
     oppsummert = d_ugyldige |>
@@ -403,8 +403,8 @@ oppsummer_ugyldige_verdier = function(d_ugyldige) {
 #' gir ut en dataramme/tibble som bare inneholder sumskårene.
 #'
 #' @param d Dataramme/tibble som inneholder kun kolonner med identiske
-#'     navn som i `skaaringstabell$variabel`. Alle kolonnene må
-#'     inneholde numeriske verdier.
+#' navn som i `skaaringstabell$variabel`. Alle kolonnene må
+#' inneholde numeriske verdier.
 #' @inheritParams skaar_datasett
 #'
 #' @details
@@ -413,11 +413,11 @@ oppsummer_ugyldige_verdier = function(d_ugyldige) {
 #' Forskjellen fra den funksjonen er at:
 #'
 #' - `d` skal *bare* inneholde variablene nevnt i `skaaringstabell$variabel`
-#'   (ikke ekstravariabler)
+#' (ikke ekstravariabler)
 #' - `d` *må* være i samsvar med `skaaringstabell`
 #' - `skaaringstabell` *må* være gyldig
 #' - utdata fra funksjonen inneholder bare sumskårene, ikke de opphavlige
-#'   variablene
+#' variablene
 #'
 #' Ved bruk av den overordnede funksjonen
 #' [skaar_datasett()] kalles denne funksjonen på etter at
@@ -434,11 +434,11 @@ oppsummer_ugyldige_verdier = function(d_ugyldige) {
 #' @keywords internal
 #'
 #' @return Tibble som inneholder én eller flere kolonner med
-#'     sumskårer. Rekkefølgen på sumskår-kolonnene bestemmes av
-#'     rekkefølgen i `skaaringstabell$delskala`, og rekkefølgen på radene
-#'     er lik som i `d`. Hvis en variabel i `d` har `NA-verdier` uten
-#'     tilhørende koeffisient i skåringstabellen, blir sumskåren(e) for
-#'     tilhørende delskala(er) satt lik `NA`.
+#' sumskårer. Rekkefølgen på sumskår-kolonnene bestemmes av
+#' rekkefølgen i `skaaringstabell$delskala`, og rekkefølgen på radene
+#' er lik som i `d`. Hvis en variabel i `d` har `NA-verdier` uten
+#' tilhørende koeffisient i skåringstabellen, blir sumskåren(e) for
+#' tilhørende delskala(er) satt lik `NA`.
 skaar_datasett_uten_validering = function(d, skaaringstabell) {
   # Gjer om til éi rad per svar, med ein person-ID
   # som seier kva rad svaret opphavleg kom frå
@@ -514,7 +514,7 @@ skaar_datasett_uten_validering = function(d, skaaringstabell) {
 #' lettare skåring av datasett som har manglande verdiar.
 #'
 #' @param skaaringstabell Vanleg skåringstabell. Sjå definisjon
-#'   i [skaar_datasett()].
+#' i [skaar_datasett()].
 #'
 #' @details
 #' For kvar eksisterande kombinasjon av `delskala` og `variabel` vert
@@ -553,7 +553,7 @@ legg_til_na_i_skaaringstabell = function(skaaringstabell) {
 #'
 #' @param d_orig Originalt datasett (dataramme/tibble).
 #' @param d_ekstrakol Dataramme/tibble som inneholder én eller flere
-#'     kolonner og samme antall rader som `d_orig`.
+#' kolonner og samme antall rader som `d_orig`.
 #'
 #' @details
 #' Variabler som finnes i `d_orig` fra før blir erstattet (med advarsel),

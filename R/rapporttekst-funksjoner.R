@@ -50,8 +50,8 @@
 #' men funksjonaliteten vil vera lik.
 #'
 #' @note Viss `desimalar` er oppgjeve,
-#'   vert det alltid vist *nøyaktig* så mange desimalar,
-#'   sjølv om dei siste vert 0.
+#' vert det alltid vist *nøyaktig* så mange desimalar,
+#' sjølv om dei siste vert 0.
 #'
 #' @return
 #' Vektor med LaTeX-kode.
@@ -97,8 +97,8 @@ num = function(x, desimalar = NULL) {
 ### Prosent med norsk stavemåte i aksenotasjoner
 
 # fixme: Bør rydda opp i prosentfunksjonane slik at dei alle
-#        tar same argument og elles er meir gjennomtenkte
-#        (krev gjerne endringar i filene som brukar dei).
+# tar same argument og elles er meir gjennomtenkte
+# (krev gjerne endringar i filene som brukar dei).
 
 #' Formater akse med prosentformat
 #'

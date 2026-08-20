@@ -87,7 +87,7 @@ impl = function(a, b) {
 #' detaljer.
 #'
 #' @return Logisk vektor som elementvis sier om `a = TRUE` er ekvivalent
-#'         med `b = TRUE`.
+#' med `b = TRUE`.
 #' @examples
 #' library(tibble)
 #'

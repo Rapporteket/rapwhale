@@ -137,10 +137,10 @@ test_that("Utdata samsvarer med forventet resultat, ", {
   # Ved en 4-deling av året er grensene for hvert intervall [0,250,500,750,1)
   # Decimal_date for dato over *gitt* klokkeslett 12:00 er:
   # (.0014 .2479,
-  #  .2507, .4945, .4973,
-  #  .5000, .7466, .7493,
-  #  .9986,
-  #  2020.000)
+  # .2507, .4945, .4973,
+  # .5000, .7466, .7493,
+  # .9986,
+  # 2020.000)
   # slik at forventet utverdi stemmer.
 
   # Vi ønsker at nedre grense for intervallet inkluderes i et intervall, mens den øvre grensen ikke inkluderes.
