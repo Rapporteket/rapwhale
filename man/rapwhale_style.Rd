@@ -8,7 +8,7 @@ rapwhale_style(
   scope = "tokens",
   strict = TRUE,
   indent_by = 2,
-  start_comments_with_one_space = FALSE,
+  start_comments_with_one_space = TRUE,
   reindention = styler::tidyverse_reindention(),
   math_token_spacing = styler::tidyverse_math_token_spacing(),
   maks_blanke_linjer = 3L
@@ -29,7 +29,8 @@ ikkje finst, men ikkje endrast noko viss det finst fleire. Sjå Examples'.}
 
 \item{indent_by}{Kor mange mellomrom med innrykk skal setjast inn etter operatorar som \code{(}.}
 
-\item{start_comments_with_one_space}{Skal kommentarar starta med berre eitt mellomrom
+\item{start_comments_with_one_space}{Skal kommentarar starta med berre eitt mellomrom etter \verb{#}-teiknet?
+Standard er \code{TRUE}.
 (sjå \code{\link[styler:start_comments_with_space]{styler::start_comments_with_space()}}).}
 
 \item{reindention}{Ei liste over parametrar for regex re-innrykk, mest føremålstenleg laga med
