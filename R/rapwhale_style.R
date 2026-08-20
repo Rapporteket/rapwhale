@@ -20,7 +20,8 @@
 #' @param indent_by
 #' Kor mange mellomrom med innrykk skal setjast inn etter operatorar som `(`.
 #' @param start_comments_with_one_space
-#' Skal kommentarar starta med berre eitt mellomrom
+#' Skal kommentarar starta med berre eitt mellomrom etter `#`-teiknet?
+#' Standard er `TRUE`.
 #' (sjå [styler::start_comments_with_space()]).
 #' @param reindention
 #' Ei liste over parametrar for regex re-innrykk, mest føremålstenleg laga med
@@ -85,7 +86,7 @@ rapwhale_style = function(
   scope = "tokens",
   strict = TRUE,
   indent_by = 2,
-  start_comments_with_one_space = FALSE,
+  start_comments_with_one_space = TRUE,
   reindention = styler::tidyverse_reindention(),
   math_token_spacing = styler::tidyverse_math_token_spacing(),
   maks_blanke_linjer = 3L
