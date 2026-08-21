@@ -111,7 +111,7 @@ kompiler_tex = function(adresse, maksiter = 5, vis_feilmeldingar = TRUE) {
       })
     })
 
-    feil = str_detect(logg1l, stringr::fixed("no output PDF file produced"))
+    feil = str_detect(logg1l, fixed("no output PDF file produced"))
     ferdig = !str_detect(logg1l, "run LaTeX again|Rerun to|Rerun LaTeX")
 
     # Skil loggen inn i separate «loggmeldingar», som me definerer
@@ -128,7 +128,7 @@ kompiler_tex = function(adresse, maksiter = 5, vis_feilmeldingar = TRUE) {
         cat(
           "Åtvaringar/feil: ",
           # Innrykk på alle linjer
-          str_c("  ", str_replace_all(logg_akt, stringr::fixed("\n"), "\n  ")),
+          str_c("  ", str_replace_all(logg_akt, fixed("\n"), "\n  ")),
           sep = "\n"
         )
       }
