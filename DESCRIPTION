@@ -39,7 +39,7 @@ Imports:
     Hmisc,
     knitr,
     lifecycle,
-    lintr (>= 3.0.0),
+    lintr (>= 3.4.0),
     lubridate,
     methods,
     purrr,
