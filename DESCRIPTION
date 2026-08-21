@@ -45,7 +45,7 @@ Imports:
     scales (>= 1.1.1),
     qicharts2,
     Rdpack,
-    lintr (>= 3.0.0),
+    lintr (>= 3.4.0),
     styler (>= 1.8.1),
     Hmisc,
     boot,
