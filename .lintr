@@ -1,6 +1,6 @@
 linters: linters_with_tags(
     tags = NULL,
-    assignment_linter = NULL,
+    assignment_linter(operator = c("=", "<<-")),
     object_usage_linter = NULL,
     indentation_linter = NULL,
     cyclocomp_linter = NULL,
@@ -11,9 +11,7 @@ linters: linters_with_tags(
     nonportable_path_linter = NULL,
     unnecessary_nested_if_linter = NULL,
     todo_comment_linter = NULL,
-    undesirable_operator_linter(
-        op = list("<-" = "Use =, not <-, for assignment.")
-    ),
+    undesirable_operator_linter = NULL,
     undesirable_function_linter(
       fun = modify_defaults(
         defaults = default_undesirable_functions,
