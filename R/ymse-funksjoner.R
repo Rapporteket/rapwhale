@@ -60,7 +60,7 @@ normaliser_varnamn = function(x) {
     stop(feilmelding)
   }
 
-  teikn = str_split(x, "") # nolint fixed_regex_linter. Splitt i enkeltteikn
+  teikn = str_split(x, "") # nolint: fixed_regex_linter. Splitt i enkeltteikn
 
   # Putt inn _ før alle store bokstavar (utanom første teikn i strengen)
   teikn = map(teikn, \(x) str_replace_all(x, "([[:upper:]])", "_\\1")) # nolint: unnecessary_lambda_linter.
@@ -311,7 +311,7 @@ lag_tab_latex = function(dataframe, label, caption, wide = FALSE, ...) {
   # Feilen vart meld til forfattaren av Hmisc i januar 2018, men er
   # framleis ikkje retta (kontrollert i Hmisc 5.3-0, august 2026).
   # Sjekk eventuelt med:
-  # latex(head(iris, 0), file = "", numeric.dollar = FALSE) # nolint commented_code_linter.
+  # latex(head(iris, 0), file = "", numeric.dollar = FALSE) # nolint: commented_code_linter.
   # (skal gje tabell, ikkje feilmelding)
   #
   # Punkt 1 gjeld uavhengig av punkt 2, så if()-testen skal stå
