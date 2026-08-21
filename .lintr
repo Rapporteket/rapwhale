@@ -5,7 +5,6 @@ linters: linters_with_tags(
     indentation_linter = NULL,
     cyclocomp_linter = NULL,
     line_length_linter(120),
-    pipe_consistency_linter("|>"),
     object_length_linter(40),
     extraction_operator_linter = NULL,
     implicit_integer_linter = NULL,
