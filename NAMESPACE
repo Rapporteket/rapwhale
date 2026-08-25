@@ -27,6 +27,7 @@ export(expand_soyle_str_fig)
 export(farge_morkare)
 export(farger_kvalreg)
 export(finn_type_idnummer)
+export(fixme_stil_linter)
 export(fjern_x)
 export(fjern_x_ticks)
 export(fjern_y)
@@ -162,6 +163,7 @@ importFrom(stats,
 )
 importFrom(stringr,
   fixed,
+  regex,
   str_c,
   str_detect,
   str_flatten_comma,
