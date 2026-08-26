@@ -1,77 +1,75 @@
-Package: rapwhale
 Type: Package
+Package: rapwhale
 Title: Ymse verktøy for arbeid med kvalitetsregisterdata
 Version: 0.5.1.999
-Authors@R: c(person("Karl Ove", "Hufthammer",
-             email = "karl.ove.hufthammer@helse-bergen.no", role = c("aut", "cph"),
-             comment = c(ORCID = "0000-0003-3170-9496")),
-             person("Per Erik", "Haugedal",
-             email = "per.erik.haugedal@helse-bergen.no", role = c("aut", "cph", "cre")),
-             person("Endre Kvåle", "Evjen",
-             email = "endre.kvale.evjen@helse-bergen.no", role = c("aut", "cph")),
-             person("Arnlaug Høgås", "Skjæveland",
-             email = "arnlaug.hogas.skjeveland@helse-bergen.no", role = c("aut", "ctb")),
-             person("Sergio Carracedo", "Huroz",
-             email = "sergio.carracedo.huroz@helse-bergen.no", role = c("aut", "ctb")),
-             person("Tobias Våge", "Henriksen",
-             role = c("aut", "cph")),
-             person("Stian Tufte", "Veisene",
-             role = c("aut", "cph")),
-             person("Lena Kristin", "Bache-Mathiesen",
-             email = "lenakba22@gmail.com", role = c("aut", "cph")))
-Description: En rekke funksjoner til nytte i kvalitetsregisterarbeid. Inkluderer bl.a. 
-             funksjoner for å validere gyldigheten til kodebøker og gyldigheten til datadumper (gitt informasjon i kodebok),
-             og funksjoner for å hente inn data fra ulike utviklere av innregistreringsløsninger ved hjelp av utviklerens kodebok.
+Authors@R: c(
+    person("Karl Ove", "Hufthammer", , "karl.ove.hufthammer@helse-bergen.no", role = c("aut", "cph"),
+           comment = c(ORCID = "0000-0003-3170-9496")),
+    person("Per Erik", "Haugedal", , "per.erik.haugedal@helse-bergen.no", role = c("aut", "cph", "cre")),
+    person("Endre Kvåle", "Evjen", , "endre.kvale.evjen@helse-bergen.no", role = c("aut", "cph")),
+    person("Arnlaug Høgås", "Skjæveland", , "arnlaug.hogas.skjeveland@helse-bergen.no", role = c("aut", "ctb")),
+    person("Sergio Carracedo", "Huroz", , "sergio.carracedo.huroz@helse-bergen.no", role = c("aut", "ctb")),
+    person("Tobias Våge", "Henriksen", role = c("aut", "cph")),
+    person("Stian Tufte", "Veisene", role = c("aut", "cph")),
+    person("Lena Kristin", "Bache-Mathiesen", , "lenakba22@gmail.com", role = c("aut", "cph"))
+  )
+Description: En rekke funksjoner til nytte i kvalitetsregisterarbeid.
+    Inkluderer bl.a.  funksjoner for å validere gyldigheten til kodebøker
+    og gyldigheten til datadumper (gitt informasjon i kodebok), og
+    funksjoner for å hente inn data fra ulike utviklere av
+    innregistreringsløsninger ved hjelp av utviklerens kodebok.
+License: GPL (>= 3) + file LICENSE
 URL: https://github.com/Rapporteket/rapwhale,
     https://rapporteket.github.io/rapwhale/
 BugReports: https://github.com/Rapporteket/rapwhale/issues
-License: GPL (>= 3) + file LICENSE
-Encoding: UTF-8
-LazyData: TRUE
+Depends:
+    R (>= 4.4)
 Imports:
-    dplyr (>= 1.1.1),
-    tidyr,
-    knitr,
-    purrr,
-    tibble,
-    rlang,
-    ruler,
-    ggplot2,
-    lubridate,
-    stringr,
-    readxl,
-    readr,
-    forcats,
-    glue,
-    colorspace,
     binom,
-    scales (>= 1.1.1),
+    boot,
+    checkmate (>= 1.7.0),
+    colorspace,
+    dplyr (>= 1.1.1),
+    forcats,
+    ggplot2,
+    glue,
+    Hmisc,
+    knitr,
+    lifecycle,
+    lintr (>= 3.0.0),
+    lubridate,
+    methods,
+    purrr,
     qicharts2,
     Rdpack,
-    lintr (>= 3.0.0),
+    readr,
+    readxl,
+    rlang,
+    ruler,
+    scales (>= 1.1.1),
+    stringr,
     styler (>= 1.8.1),
-    Hmisc,
-    boot,
-    tidyselect,
-    methods,
-    checkmate (>= 1.7.0),
-    lifecycle
-RdMacros: Rdpack
-Roxygen: list(markdown = TRUE)
-Suggests: 
-    rmarkdown,
-    kableExtra,
-    tidyverse,
-    hms,
-    testthat (>= 3.0.0),
-    devtools,
-    processx,
+    tibble,
+    tidyr,
+    tidyselect
+Suggests:
     callr,
+    devtools,
+    hms,
+    kableExtra,
     pkgload,
+    processx,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    tidyverse,
     withr
-VignetteBuilder: knitr
-Depends: 
-    R (>= 4.4)
+VignetteBuilder:
+    knitr
+RdMacros:
+    Rdpack
+Config/roxygen2/version: 8.1.0
 Config/testthat/edition: 3
 Config/testthat/parallel: true
-Config/roxygen2/version: 8.1.0
+Encoding: UTF-8
+LazyData: TRUE
+Roxygen: list(markdown = TRUE)
