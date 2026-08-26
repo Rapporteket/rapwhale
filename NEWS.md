@@ -9,6 +9,9 @@ som vert automatisk køyrde før me gjer endringar.
 Desse har òg avdekt fleire mindre feil og manglar
 som me har retta opp.
 
+Dokumentasjonen er no publisert som nettstad på
+<https://rapporteket.github.io/rapwhale/>.
+
 Det er òg noko nytt som krev endringar i *dokkar* kode.
 Alt dette kan de lesa meir om nedanfor.
 
