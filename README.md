@@ -129,7 +129,7 @@ Dei kan lesast i R med for eksempel
 
 Endringar mellom versjonane,
 inkludert dei som krev endringar i din eigen kode,
-er lista i [NEWS.md](https://rapporteket.github.io/rapwhale/news/index.html).
+er lista i [endringsloggen](https://rapporteket.github.io/rapwhale/news/index.html).
 
 ## Hjelp og spørsmål
 
