@@ -5,6 +5,7 @@
 [![Kodestil](https://github.com/Rapporteket/rapwhale/actions/workflows/style.yaml/badge.svg)](https://github.com/Rapporteket/rapwhale/actions/workflows/style.yaml)
 [![Testdekning](https://codecov.io/gh/Rapporteket/rapwhale/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Rapporteket/rapwhale)
 [![Lisens: GPL v3](https://img.shields.io/badge/lisens-GPL--3-blue.svg)](LICENSE)
+[![Dokumentasjon](https://github.com/Rapporteket/rapwhale/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/Rapporteket/rapwhale/actions/workflows/pkgdown.yaml)
 <!-- badges: end -->
 
 **Ymse verktøy for arbeid med kvalitetsregisterdata.**
