@@ -1,0 +1,7 @@
+url: https://rapporteket.github.io/rapwhale/
+
+# Nettstadet er på nynorsk, jf. dokumentasjonen elles i pakken
+lang: nn
+
+template:
+  bootstrap: 5
