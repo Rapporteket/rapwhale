@@ -114,14 +114,14 @@ Bruk helst stabile funksjonar i produksjonskode.
 
 Lengre bruksrettleiingar ligg som vignettar:
 
-- [Kvalitetsindikatorfunksjonar](vignettes/ki-funksjonar.Rmd) —
+- [Kvalitetsindikatorfunksjonar](https://rapporteket.github.io/rapwhale/articles/ki-funksjonar.html) —
   rammeverket for utrekning av kvalitetsindikatorar, med gjennomgåtte eksempel
-- [Ekstern validering](vignettes/ekstern-validering.Rmd) —
+- [Ekstern validering](https://rapporteket.github.io/rapwhale/articles/ekstern-validering.html) —
   samanlikning av registerdata med ei ekstern datakjelde
-- [Bruksdokumentasjon for skåring av RAND-12/SF-12](vignettes/dokumentasjon-rand-12.Rmd)
-- [Utviklingsnivå for funksjonar](vignettes/utviklingsniva.Rmd) —
+- [Bruksdokumentasjon for skåring av RAND-12/SF-12](https://rapporteket.github.io/rapwhale/articles/dokumentasjon-rand-12.html)
+- [Utviklingsnivå for funksjonar](https://rapporteket.github.io/rapwhale/articles/utviklingsniva.html) —
   kva skilta på hjelpesidene tyder
-- [Bruk av styler og lintr](vignettes/bruk-av-styler-og-linter.Rmd) —
+- [Bruk av styler og lintr](https://rapporteket.github.io/rapwhale/articles/bruk-av-styler-og-linter.html) —
   den felles kodestilen vår, og korleis du fylgjer han
 
 Dei kan lesast i R med for eksempel
@@ -129,7 +129,7 @@ Dei kan lesast i R med for eksempel
 
 Endringar mellom versjonane,
 inkludert dei som krev endringar i din eigen kode,
-er lista i [NEWS.md](NEWS.md).
+er lista i [NEWS.md](https://rapporteket.github.io/rapwhale/news/index.html).
 
 ## Hjelp og spørsmål
 
