@@ -3,14 +3,17 @@ Package: rapwhale
 Title: Ymse verktøy for arbeid med kvalitetsregisterdata
 Version: 0.5.1.999
 Authors@R: c(
-    person("Karl Ove", "Hufthammer", , "karl.ove.hufthammer@helse-bergen.no", role = c("aut", "cph"),
-           comment = c(ORCID = "0000-0003-3170-9496")),
     person("Per Erik", "Haugedal", , "per.erik.haugedal@helse-bergen.no", role = c("aut", "cph", "cre")),
     person("Endre Kvåle", "Evjen", , "endre.kvale.evjen@helse-bergen.no", role = c("aut", "cph")),
-    person("Arnlaug Høgås", "Skjæveland", , "arnlaug.hogas.skjeveland@helse-bergen.no", role = c("aut", "ctb")),
     person("Sergio Carracedo", "Huroz", , "sergio.carracedo.huroz@helse-bergen.no", role = c("aut", "ctb")),
+    person("Ørjan Skaar", "Løseth", , "orjan.loseth.skaar@helse-bergen.no", role = c("aut", "ctb")),
+    person("Stian", "Tornaas", , "stian.tornaas@helse-bergen.no", role = c("aut", "ctb")),
+    person("Louise Bruland", "Bjerrum", , "louise.bruland.bjerrum@helse-bergen.no", role = c("aut", "ctb")),
+    person("Arnlaug Høgås", "Skjæveland", , "arnlaug.hogas.skjeveland@helse-bergen.no", role = c("aut", "ctb")),
     person("Tobias Våge", "Henriksen", role = c("aut", "cph")),
     person("Stian Tufte", "Veisene", role = c("aut", "cph")),
+    person("Karl Ove", "Hufthammer", , "karl.ove.hufthammer@helse-bergen.no", role = c("aut", "cph"),
+           comment = c(ORCID = "0000-0003-3170-9496")),
     person("Lena Kristin", "Bache-Mathiesen", , "lenakba22@gmail.com", role = c("aut", "cph"))
   )
 Description: En rekke funksjoner til nytte i kvalitetsregisterarbeid.
