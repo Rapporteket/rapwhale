@@ -8,18 +8,30 @@
 \description{
 En rekke funksjoner til nytte i kvalitetsregisterarbeid. Inkluderer bl.a. funksjoner for å validere gyldigheten til kodebøker og gyldigheten til datadumper (gitt informasjon i kodebok), og funksjoner for å hente inn data fra ulike utviklere av innregistreringsløsninger ved hjelp av utviklerens kodebok.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/Rapporteket/rapwhale}
+  \item \url{https://rapporteket.github.io/rapwhale/}
+  \item Report bugs at \url{https://github.com/Rapporteket/rapwhale/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Per Erik Haugedal \email{per.erik.haugedal@helse-bergen.no} [copyright holder]
 
 Authors:
 \itemize{
   \item Per Erik Haugedal \email{per.erik.haugedal@helse-bergen.no} [copyright holder]
-  \item Karl Ove Hufthammer \email{karl.ove.hufthammer@helse-bergen.no} (\href{https://orcid.org/0000-0003-3170-9496}{ORCID}) [copyright holder]
   \item Endre Kvåle Evjen \email{endre.kvale.evjen@helse-bergen.no} [copyright holder]
-  \item Arnlaug Høgås Skjæveland \email{arnlaug.hogas.skjeveland@helse-bergen.no} [contributor]
   \item Sergio Carracedo Huroz \email{sergio.carracedo.huroz@helse-bergen.no} [contributor]
+  \item Ørjan Skaar Løseth \email{orjan.loseth.skaar@helse-bergen.no} [contributor]
+  \item Stian Tornaas \email{stian.tornaas@helse-bergen.no} [contributor]
+  \item Louise Bruland Bjerrum \email{louise.bruland.bjerrum@helse-bergen.no} [contributor]
+  \item Arnlaug Høgås Skjæveland \email{arnlaug.hogas.skjeveland@helse-bergen.no} [contributor]
   \item Tobias Våge Henriksen [copyright holder]
   \item Stian Tufte Veisene [copyright holder]
+  \item Karl Ove Hufthammer \email{karl.ove.hufthammer@helse-bergen.no} (\href{https://orcid.org/0000-0003-3170-9496}{ORCID}) [copyright holder]
   \item Lena Kristin Bache-Mathiesen \email{lenakba22@gmail.com} [copyright holder]
 }
 
