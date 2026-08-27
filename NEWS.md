@@ -1,4 +1,4 @@
-# rapwhale versjon 0.6.0
+# rapwhale 0.6.0
 
 ## Samandrag
 
@@ -80,7 +80,7 @@ Utrekningane er uendra.
 
 
 
-# rapwhale versjon 0.5.0
+# rapwhale 0.5.0
 
 ## Samandrag
 
@@ -242,7 +242,7 @@ Fleire funksjonar har fått:
 
 
 
-# rapwhale versjon 0.4.0
+# rapwhale 0.4.0
 
 ## Samandrag
 
@@ -438,7 +438,7 @@ Mange funksjonar har fått:
   
 
 
-# rapwhale versjon 0.3.3 (og tidlegare)
+# rapwhale 0.3.3 (og tidlegare)
 
 Me har ikkje skrive endringslogg for rapwhale versjon 0.3.3
 eller tidlegare versjonar.
