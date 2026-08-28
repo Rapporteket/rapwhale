@@ -37,7 +37,9 @@
 #' )
 #' @export
 fixme_stil_linter = function() {
-  lintr::Linter(sjekk_fixme_stil)
+  # Kommentarar høyrer til fila som heilskap, ikkje til enkeltuttrykk,
+  # så linteren skal berre kallast på filnivå.
+  lintr::Linter(sjekk_fixme_stil, linter_level = "file")
 }
 
 #' Sjekk skrivemåten av FIXME-markørar
@@ -45,18 +47,16 @@ fixme_stil_linter = function() {
 #' Hjelpefunksjon for [fixme_stil_linter()].
 #'
 #' @param source_expression
-#' Uttrykk frå lintr, slik linterfunksjonar får det.
+#' Uttrykk frå lintr, på filnivå.
+#' [fixme_stil_linter()] registrerer funksjonen med
+#' `linter_level = "file"`, så lintr kallar han berre med
+#' uttrykk som har `full_parsed_content` for heile fila.
 #'
 #' @return
 #' Ei liste med [lintr::Lint()]-objekt, eventuelt tom.
 #'
 #' @keywords internal
 sjekk_fixme_stil = function(source_expression) {
-  # Kommentarar høyrer til fila som heilskap, ikkje til enkeltuttrykk.
-  if (!lintr::is_lint_level(source_expression, "file")) {
-    return(list())
-  }
-
   parsetabell = source_expression$full_parsed_content
   kommentar = parsetabell[parsetabell$token == "COMMENT", , drop = FALSE]
   if (nrow(kommentar) == 0) {

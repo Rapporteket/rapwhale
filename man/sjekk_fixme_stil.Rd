@@ -7,7 +7,10 @@
 sjekk_fixme_stil(source_expression)
 }
 \arguments{
-\item{source_expression}{Uttrykk frå lintr, slik linterfunksjonar får det.}
+\item{source_expression}{Uttrykk frå lintr, på filnivå.
+\code{\link[=fixme_stil_linter]{fixme_stil_linter()}} registrerer funksjonen med
+\code{linter_level = "file"}, så lintr kallar han berre med
+uttrykk som har \code{full_parsed_content} for heile fila.}
 }
 \value{
 Ei liste med \code{\link[lintr:Lint]{lintr::Lint()}}-objekt, eventuelt tom.
