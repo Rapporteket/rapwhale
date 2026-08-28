@@ -68,18 +68,47 @@ sjekk_fixme_stil = function(source_expression) {
   # Merk at linteren føreset eit UTF-8-lokale: utan det skriv parsaren
   # om «å» til teiknfølgja <U+00E5>, og då lagar «>» ei falsk ordgrense
   # framfor markøren.
-  er_fixme = str_detect(kommentar$text, regex("\\bfixme\\b", ignore_case = TRUE))
-  er_rett = str_detect(kommentar$text, "\\bFIXME\\b")
-  ugyldige = which(er_fixme & !er_rett)
+  er_fixme_markorar = str_locate_all(kommentar$text, regex("\\bfixme\\b", ignore_case = TRUE))
+
+  # Posisjonen til den første markøren i kommentaren som ikkje alt er
+  # skriven med store bokstavar, eller NA om kommentaren er i orden.
+  # Ein rett markør skal ikkje skjula ein feil markør seinare i same
+  # kommentaren.
+  finn_forste_feil = function(radnr) {
+    posisjon = er_fixme_markorar[[radnr]]
+    skrivemate = str_sub(kommentar$text[radnr], posisjon[, "start"], posisjon[, "end"])
+    feil = which(skrivemate != "FIXME")
+    if (length(feil) == 0) {
+      NA_integer_
+    } else {
+      posisjon[feil[1], "start"]
+    }
+  }
+  forste_feil = map_int(seq_len(nrow(kommentar)), finn_forste_feil)
+  ugyldige = which(!is.na(forste_feil))
 
   lag_lint = function(radnr) {
+    linjenummer = kommentar$line1[radnr]
+    linje = source_expression$file_lines[[linjenummer]]
+
+    # Kolonnane i parsetabellen er byteposisjonar, medan lintr::Lint()
+    # ventar teiknposisjonar. Ein kommentar går alltid ut linja, så me
+    # finn starten hans ved å telja teikn bakfrå i staden for å bruka
+    # col1. Elles ville kolonnen peika for langt til høgre på linjer med
+    # æ, ø og å, og Lint() ville stoppa med feil dersom byteposisjonen
+    # kom forbi nchar(linje) + 1.
+    kommentarstart = nchar(linje) - nchar(kommentar$text[radnr]) + 1L
+    kolonne = kommentarstart + forste_feil[radnr] - 1L
+
     lintr::Lint(
       filename = source_expression$filename,
-      line_number = kommentar$line1[radnr],
-      column_number = kommentar$col1[radnr],
+      line_number = linjenummer,
+      column_number = kolonne,
       type = "style",
       message = "Skriv FIXME med store bokstavar, jf. kodestilguiden.",
-      line = source_expression$file_lines[[kommentar$line1[radnr]]]
+      line = linje,
+      # «fixme» er alltid fem teikn, så me kan streka under heile markøren.
+      ranges = list(c(kolonne, kolonne + 4L))
     )
   }
   map(ugyldige, lag_lint)
