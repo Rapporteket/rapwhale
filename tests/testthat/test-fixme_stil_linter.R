@@ -119,3 +119,43 @@ test_that("fixme_stil_linter() gjev rett linjenummer", {
     linters = fixme_stil_linter()
   )
 })
+
+# Kolonnen skal peika på sjølve markøren, ikkje på #-teiknet
+test_that("fixme_stil_linter() peikar på markøren", {
+  lintr::expect_lint(
+    content = "x = 1 # fixme: rett dette",
+    checks = list(list(feilmelding, column_number = 9L)),
+    linters = fixme_stil_linter()
+  )
+  lintr::expect_lint(
+    content = "x = 1 # Bokstavane read_csv() brukar (fixme: utvid)",
+    checks = list(list(feilmelding, column_number = 39L)),
+    linters = fixme_stil_linter()
+  )
+})
+
+# Kolonnane i parsetabellen er byteposisjonar, så norske bokstavar
+# tidlegare på linja ville elles skubba markøren for langt til høgre.
+# Med nok av dei kom kolonnen forbi nchar(linje) + 1, og lintr::Lint()
+# stoppa med feil.
+test_that("fixme_stil_linter() gjev rett kolonne på linjer med æ, ø og å", {
+  lintr::expect_lint(
+    content = "x = \u00e5\u00e5\u00e5 # fixme",
+    checks = list(list(feilmelding, column_number = 11L)),
+    linters = fixme_stil_linter()
+  )
+  lintr::expect_lint(
+    content = "x = \"\u00e5\u00e5\u00e5\u00e5\u00e5\u00e5\u00e5\u00e5\u00e5\u00e5bcd\" # fixme",
+    checks = list(list(feilmelding, column_number = 23L)),
+    linters = fixme_stil_linter()
+  )
+})
+
+# Ein rett markør skal ikkje skjula ein feil markør i same kommentaren
+test_that("fixme_stil_linter() ser feil markør saman med rett markør", {
+  lintr::expect_lint(
+    content = "x = 1 # FIXME: rydd opp i fixme-en under",
+    checks = list(list(feilmelding, column_number = 27L)),
+    linters = fixme_stil_linter()
+  )
+})
