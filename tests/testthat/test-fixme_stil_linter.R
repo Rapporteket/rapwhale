@@ -115,7 +115,7 @@ test_that("fixme_stil_linter() gjev rett linjenummer", {
   kode = "x = 1\ny = 2 # fixme: rett dette\nz = 3"
   lintr::expect_lint(
     content = kode,
-    checks = list(list(feilmelding, line_number = 2L)),
+    checks = list(feilmelding, line_number = 2L),
     linters = fixme_stil_linter()
   )
 })
@@ -124,12 +124,12 @@ test_that("fixme_stil_linter() gjev rett linjenummer", {
 test_that("fixme_stil_linter() peikar på markøren", {
   lintr::expect_lint(
     content = "x = 1 # fixme: rett dette",
-    checks = list(list(feilmelding, column_number = 9L)),
+    checks = list(feilmelding, column_number = 9L),
     linters = fixme_stil_linter()
   )
   lintr::expect_lint(
     content = "x = 1 # Bokstavane read_csv() brukar (fixme: utvid)",
-    checks = list(list(feilmelding, column_number = 39L)),
+    checks = list(feilmelding, column_number = 39L),
     linters = fixme_stil_linter()
   )
 })
@@ -141,12 +141,12 @@ test_that("fixme_stil_linter() peikar på markøren", {
 test_that("fixme_stil_linter() gjev rett kolonne på linjer med æ, ø og å", {
   lintr::expect_lint(
     content = "x = \u00e5\u00e5\u00e5 # fixme",
-    checks = list(list(feilmelding, column_number = 11L)),
+    checks = list(feilmelding, column_number = 11L),
     linters = fixme_stil_linter()
   )
   lintr::expect_lint(
     content = "x = \"\u00e5\u00e5\u00e5\u00e5\u00e5\u00e5\u00e5\u00e5\u00e5\u00e5bcd\" # fixme",
-    checks = list(list(feilmelding, column_number = 23L)),
+    checks = list(feilmelding, column_number = 23L),
     linters = fixme_stil_linter()
   )
 })
@@ -155,7 +155,7 @@ test_that("fixme_stil_linter() gjev rett kolonne på linjer med æ, ø og å", {
 test_that("fixme_stil_linter() ser feil markør saman med rett markør", {
   lintr::expect_lint(
     content = "x = 1 # FIXME: rydd opp i fixme-en under",
-    checks = list(list(feilmelding, column_number = 27L)),
+    checks = list(feilmelding, column_number = 27L),
     linters = fixme_stil_linter()
   )
 })
