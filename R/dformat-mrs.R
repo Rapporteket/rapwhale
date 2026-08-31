@@ -268,8 +268,8 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
       "numerisk_heiltal"
     ))
 
-  # Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
-  # fixme: Kategorisk er ein litt vrien variant. *Oftast* er han
+  # Forkortingsbokstavane som read_csv() brukar (FIXME: utvide med fleire)
+  # FIXME: Kategorisk er ein litt vrien variant. *Oftast* er han
   # tal, men me kan risikera at han er tekst òg. Ei løysing er å
   # alltid lesa han inn som tekst, men det er ikkje ei *god* løysing.
   # Når han er koda som tal, er det ofte betre å handsama han som tal.
@@ -295,7 +295,7 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
     "kategorisk", "i",
     "tekst", "c",
     "boolsk", "c", # Sjå konvertering nedanfor
-    "dato_kl", "c", # Mellombels, jf. https://github.com/tidyverse/readr/issues/642 (fixme til "T" når denne er fiksa)
+    "dato_kl", "c", # Mellombels, jf. https://github.com/tidyverse/readr/issues/642 (FIXME til "T" når denne er fiksa)
     "dato", "D",
     "numerisk", "d",
     "numerisk_heiltal", "i"
@@ -345,7 +345,7 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
     locale = lokale_mrs
   )
 
-  # Fixme: For kategoriske variablar er det ei spesiell koding av manglande
+  # FIXME: For kategoriske variablar er det ei spesiell koding av manglande
   # verdiar (typisk tyder -1 manglande verdi). Gjer om desse verdiane
   # til ekte NA-verdiar. Bruk det som er markert som «manglande = ja»
   # i kodeboka (på kanonisk form) for å finna ut kva verdiar som
@@ -353,7 +353,7 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
 
   # Gjer om boolske variablar til ekte boolske variablar
   #
-  # Fixme: Her må MRS retta opp, slik at me berre treng forhalda oss til
+  # FIXME: Her må MRS retta opp, slik at me berre treng forhalda oss til
   # eitt sett verdiar, eks. "False" og "True" (og tom verdi for NA).
   # Det er stor risiko for feil dersom me må godta 5 ulike verdiar
   # (og plutseleg tyder gjerne -1 ja i staden for NA for eit register ...).
@@ -384,7 +384,7 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
   }
 
   # datadumpen har ikke alle variablene som er nevnt i kodeboka, så vi filtrerer dem bort
-  # fixme! disse må være med når vi får dem i datadumpen
+  # FIXME disse må være med når vi får dem i datadumpen
   boolske_var = spek_innlesing |>
     filter(variabeltype == "boolsk") |>
     pull(variabel_id)
@@ -392,8 +392,8 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
     mutate(across(all_of(boolske_var), mrs_boolsk_til_boolsk))
 
   # Gjer om tidsvariablar til ekte tidsvariablar
-  # Fixme: Nødvendig pga. https://github.com/tidyverse/readr/issues/642
-  # Fjern når denne feilen er fiksa (rett då òg fixme-en
+  # FIXME: Nødvendig pga. https://github.com/tidyverse/readr/issues/642
+  # Fjern når denne feilen er fiksa (rett då òg FIXME-en
   # lenger oppe som også handlar om dette)
   tid_var = spek_innlesing |>
     filter(variabeltype == "dato_kl") |>
@@ -408,7 +408,7 @@ les_dd_mrs = function(mappe_dd, skjema_id, versjon = "Prod", dato = NULL, kodebo
   # Fila har (ved ein feil) ekstra semikolon på slutten, som fører
   # til ekstra kolonne som har tomt namn (men får prefikset mrs_).
   # Fjern denne kolonnen.
-  # Fixme: Få HEMIT til å fiksa problemet i fila
+  # FIXME: Få HEMIT til å fiksa problemet i fila
   d$mrs_ = NULL
 
   # Returner datasettet

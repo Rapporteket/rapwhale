@@ -194,7 +194,7 @@ les_csv_base = function(adresse, spesifikasjon, formatspek) {
   readr::stop_for_problems(d)
 
   # Konverter dato_kl
-  # fixme: Fjern denne og oppdater std_koltype_til_readr_koltype() når
+  # FIXME: Fjern denne og oppdater std_koltype_til_readr_koltype() når
   # https://github.com/tidyverse/readr/issues/642 er fiksa
   varnavn_dato_kl = spesifikasjon$varnavn_resultat[spesifikasjon$vartype == "dato_kl"]
   d = mutate(d, across(all_of(varnavn_dato_kl),

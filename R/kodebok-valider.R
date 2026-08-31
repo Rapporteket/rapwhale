@@ -2,9 +2,9 @@
 
 # Gjer kodeboka om til kanonisk form, dvs. slik at
 # implisitte verdiar er fylde ut.
-# fixme! funksjonen mangler å ta inn den nye variabelen nokkel
+# FIXME funksjonen mangler å ta inn den nye variabelen nokkel
 # (per i dag blir den kastet ut av kodeboka)
-# fixme! funksjonen håndterer ikke ekstra variabler
+# FIXME funksjonen håndterer ikke ekstra variabler
 # som f.eks variabel_id_checkware.
 # Når man er på det,
 # bør funksjonen heller ha en option hvor man kan skrive inn kolonner
@@ -129,7 +129,7 @@ kb_til_kanonisk_form = function(kb) {
     "min", "maks", "min_rimeleg", "maks_rimeleg", "kommentar_rimeleg",
     "utrekningsformel", "logikk", "kommentar"
   )
-  # fixme: "variabel_id_checkware" er mellombels løysing berre
+  # FIXME "variabel_id_checkware" er mellombels løysing berre
   # for å kunna støtta CheckWare-datasett
   # (fjern òg lag betre løysing på problemet)
   ekstravars = setdiff(names(kb), c("variabel_id_checkware", std_namn))
