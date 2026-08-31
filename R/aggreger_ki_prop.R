@@ -150,7 +150,7 @@ aggreger_ki_prop = function(d_ki_ind, konf_niva = 0.95, alfa = lifecycle::deprec
           konf_niva = konf_niva
         )
       },
-      otherwise = data.frame(
+      otherwise = tibble(
         method = NA_character_,
         x = NA_integer_,
         n = NA_integer_,
