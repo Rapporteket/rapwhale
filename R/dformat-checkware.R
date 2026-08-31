@@ -5,23 +5,16 @@
 # Les inn OQR-kodebok på dokumentert format og
 # gjer om til vårt standardformat (kanonisk form)
 
-# Inndata:
-# mappe_dd: Adressa til datadump-mappa
-# (som inneheld éi undermappe,
-# med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
-# reg_id:   ID som identifiserer registeret og er prefiks til alle filnamna
-# dato:     Datoen ein skal henta ut kodeboka for (tekststreng eller dato).
+# Argument:
+# - mappe_dd: Adressa til datadump-mappa (som inneheld éi undermappe, med namn
+# på forma ÅÅÅÅ-MM-DD, for kvart uttak). Her er det gitt at nyaste kodebok ligg
+# i same mappa som dei nedhenta datadumpane.
+# - dato: Datoen ein skal henta ut kodeboka for (tekststreng eller dato).
 # Kan òg vera NULL, for å henta nyaste kodebok.
+# - valider_kb: Skal kodeboka validerast med kb_er_gyldig() (TRUE/FALSE)? Standard er TRUE.
 #
 # Utdata:
-# kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar
-#
-# Argumenter:
-# mappe_dd: Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
-# Her er det gitt at nyeste kodebok legges i samme mappe som nedhentede datadumper
-# dato: hvis man ønsker å hente kodebok fra en spesifikk dato. Hvis ikke hentes dette fra nyeste dato. Default til NULL.
-# validering: Om man ønsker å validere kodeboka ja/nei (TRUE/FALSE).
-# Hvis man ønsker å ikke validere kodebok med kb_er_gyldig, kan man sette denne til FALSE. Default er TRUE.
+# - Kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar.
 
 
 # Roxygen dokumentasjon
@@ -126,19 +119,22 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
 # funksjonen sjekker at datadumpen er gyldig, med dd_er_gyldig() funksjonen fra datadump-valider skriptet
 # krever pakkene tidyverse, magrittr og readxl
 #
-# Argumenter:
-# mappe_dd:  Adressa til datadump-mappa (som inneheld éi undermappe, med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
-# skjema_id: ID til skjemaet ein vil henta inn (brukt i filnamnet til datadumpen og i kolonnen «skjema_id» i kodeboka)
-# dato:      Datoen ein skal henta ut kodeboka for (tekststreng eller dato).
+# Argument:
+# - mappe_dd: Adressa til datadump-mappa (som inneheld éi undermappe, med namn
+# på forma ÅÅÅÅ-MM-DD, for kvart uttak)
+# - skjema_id: ID til skjemaet ein vil henta inn (brukt i filnamnet til
+# datadumpen og i kolonnen «skjema_id» i kodeboka)
+# - kontekst: Kva kontekstar (måletidspunkt) ein vil henta inn
+# - dato: Datoen ein skal henta ut kodeboka for (tekststreng eller dato).
 # Kan òg vera NULL, for å henta nyaste kodebok.
-# kb:        Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
-# valider_dd: Om man ønsker å validere datadumpen ja/nei (TRUE/FALSE).
-# Hvis man ønsker å ikke validere datadump med dd_er_gyldig, kan man sette denne til FALSE. Default er TRUE.
-# valider_kb: Om man ønsker å validere kodeboka ja/nei (TRUE/FALSE).
-# Hvis man ønsker å ikke validere kodebok med kb_er_gyldig, kan man sette denne til FALSE. Default er TRUE.
+# - kodebok: Kodebok på kanonisk form. Kan òg vera NULL, og då vert kodeboka automatisk henta inn.
+# - valider_dd: Skal datadumpen validerast med dd_er_gyldig() (TRUE/FALSE)? Standard er TRUE.
+# - valider_kb: Skal kodeboka validerast med kb_er_gyldig() (TRUE/FALSE)? Standard er TRUE.
+#
 # Utdata:
-# R-datasett for det aktuelle skjemaet, med variabelnamn gjort om til ønnskede, tilsvarende verdier funnet i kodeboka.
-# (I stedet for Q1, Q2, Q3 osv. som CheckWare ofte oppgir)
+# - R-datasett for det aktuelle skjemaet, med variabelnamn gjort om til dei
+# tilsvarande verdiane i kodeboka (i staden for Q1, Q2, Q3 osv. som CheckWare
+# ofte oppgjev).
 
 
 # Roxygen dokumentasjon

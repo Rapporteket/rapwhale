@@ -8,18 +8,16 @@
 # Denne funksjonen er laga basert på den offisielle dokumentasjonen på kodebok-
 # formatet til OQR, dvs. dokumentet «KG-Klokeboken-100418-1349-11.pdf».
 #
-# Inndata:
-# mappe_dd: Adressa til datadump-mappa
-# (som inneheld éi undermappe,
-# med namn på forma ÅÅÅÅ-MM-DD, for kvart uttak)
-# reg_id:   ID som identifiserer registeret og er prefiks til alle filnamna
-# dato:     Datoen ein skal henta ut kodeboka for (tekststreng eller dato).
+# Argument:
+# - mappe_dd: Adressa til datadump-mappa (som inneheld éi undermappe, med namn
+# på forma ÅÅÅÅ-MM-DD, for kvart uttak)
+# - reg_id: ID som identifiserer registeret og er prefiks til alle filnamna
+# - dato: Datoen ein skal henta ut kodeboka for (tekststreng eller dato).
 # Kan òg vera NULL, for å henta nyaste kodebok.
-# valider_kb: Skal kodeboka automatisk validerast?
-# Ho må då vera gyldig for at ein skal få noko ut.
+# - valider_kb: Skal kodeboka automatisk validerast? Ho må då vera gyldig for at ein skal få noko ut.
 #
 # Utdata:
-# kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar
+# - Kodeboka på standardformat (kanonisk form), med variabelnamn gjort om til små bokstavar.
 
 
 # Roxygen dokumentasjon

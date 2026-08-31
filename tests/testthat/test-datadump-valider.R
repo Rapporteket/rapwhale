@@ -67,19 +67,20 @@ test_that("Funksjonen stopper og rapporterer en feilmelding hvis kategoriske var
 
 # Skal være mulig å ha bruke KB på ikke vårt standardformat, med å si at f.eks "min" heter "min_verdi" eller andre.
 
+# styler: off
 # nolint start: commented_code_linter.
 # test_that("Skal kunne navngi enkeltkolonner i KB.", {
 #
-# kb_annet_navn = tribble(
-# ~variabel_id, ~variabeltype, ~min_verdi, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
-# "pasid", "tekst", NA, NA, TRUE, NA, NA, NA,
-# "alder", "numerisk", 18,  NA, TRUE,       0,     NA,         NA,
-# "vekt", "numerisk", 45, 200, TRUE,        0, NA, NA,
-# "kjonn", "kategorisk", NA, NA, TRUE, NA, 0, "kvinne",
-# "kjonn", "kategorisk", NA, NA, TRUE, NA, 1, "mann",
-# "frisk", "boolsk", NA, NA, TRUE, NA, NA, NA
-# )
-# expect_identical(lag_regelsett(kb_annet_navn), lag_regelsett(kb))
-# }
-# )
+#   kb_annet_navn = tribble(
+#     ~variabel_id, ~variabeltype, ~min_verdi, ~maks, ~obligatorisk, ~desimalar, ~verdi, ~verditekst,
+#     "pasid", "tekst", NA, NA, TRUE, NA, NA, NA,
+#     "alder", "numerisk", 18, NA, TRUE, 0, NA, NA,
+#     "vekt", "numerisk", 45, 200, TRUE, 0, NA, NA,
+#     "kjonn", "kategorisk", NA, NA, TRUE, NA, 0, "kvinne",
+#     "kjonn", "kategorisk", NA, NA, TRUE, NA, 1, "mann",
+#     "frisk", "boolsk", NA, NA, TRUE, NA, NA, NA
+#   )
+#   expect_identical(lag_regelsett(kb_annet_navn), lag_regelsett(kb))
+# })
 # nolint end
+# styler: on
