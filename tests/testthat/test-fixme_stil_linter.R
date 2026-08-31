@@ -158,4 +158,10 @@ test_that("fixme_stil_linter() ser feil markør saman med rett markør", {
     checks = list(feilmelding, column_number = 27L),
     linters = fixme_stil_linter()
   )
+  # Rekkjefylgja skal ikkje ha noko å seia
+  lintr::expect_lint(
+    content = "x = 1 # fixme: rett dette, jf. FIXME over",
+    checks = list(feilmelding, column_number = 9L),
+    linters = fixme_stil_linter()
+  )
 })
