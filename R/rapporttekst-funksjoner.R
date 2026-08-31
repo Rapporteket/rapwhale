@@ -96,7 +96,7 @@ num = function(x, desimalar = NULL) {
 }
 ### Prosent med norsk stavemåte i aksenotasjoner
 
-# fixme: Bør rydda opp i prosentfunksjonane slik at dei alle
+# FIXME: Bør rydda opp i prosentfunksjonane slik at dei alle
 # tar same argument og elles er meir gjennomtenkte
 # (krev gjerne endringar i filene som brukar dei).
 

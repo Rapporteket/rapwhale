@@ -45,7 +45,7 @@
 #' Skal kodeboka automatisk validerast?
 #' Ho må då vera gyldig for at ein skal få noko ut.
 #' @export
-les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixme: Validering av kodebok?
+les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # FIXME: Validering av kodebok?
 
   # Bruk siste tilgjengelege kodebok dersom ein ikkje har valt dato
   if (is.null(dato)) {
@@ -111,7 +111,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
   # gjer so godt me kan, og set verdiar til NA der
   # det ikkje finst nokon tilsvarande.)
   #
-  # fixme: Vårt kodebokformat bør nok oppdaterast til
+  # FIXME: Vårt kodebokformat bør nok oppdaterast til
   # å støtta min- og maks-verdiar for datoar òg.
   kodebok = kodebok_oqr_format |>
     mutate(
@@ -236,7 +236,7 @@ les_kb_oqr = function(mappe_dd, reg_id, dato = NULL, valider_kb = TRUE) { # fixm
     mutate(skjema_kb = map(skjema_kb, legg_til_ekstravar)) |>
     unnest(cols = c(skjema_kb))
 
-  # fixme: Sjekk at verdiane til variablane faktiske er *like* på alle tabellane
+  # FIXME: Sjekk at verdiane til variablane faktiske er *like* på alle tabellane
   # Det er ein føresetnad for at det nedanfor skal fungera. Viss for eksempel
   # operasjonstype «1» tyder ABC på operasjonsskjema men CDE på oppfølgingsskjemaet,
   # kan variabelen ikkje brukast, då han har tvetyding definisjon.
@@ -450,13 +450,13 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
   kb_info = kodebok |>
     distinct(variabel_id, .keep_all = TRUE)
 
-  # Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
+  # Forkortingsbokstavane som read_csv() brukar (FIXME: utvide med fleire)
   spek_csv_oqr = tribble(
     ~variabeltype, ~csv_bokstav,
     "kategorisk", "c", # Sjå kommentar nedanfor
     "tekst", "c",
     "boolsk", "c", # Sjå konvertering nedanfor
-    "dato_kl", "c", # Mellombels, jf. https://github.com/tidyverse/readr/issues/642 (fixme til "T" når denne er fiksa)
+    "dato_kl", "c", # Mellombels, jf. https://github.com/tidyverse/readr/issues/642 (FIXME til "T" når denne er fiksa)
     "numerisk", "d",
     "dato", "D",
     "kl", "t"
@@ -554,8 +554,8 @@ les_dd_oqr = function(mappe_dd, reg_id, skjema_id, status = 1, dato = NULL, kode
     mutate(across(all_of(vars_boolsk), oqr_boolsk_til_boolsk))
 
   # Gjer eventuelle tidsvariablar om til ekte tidsvariablar
-  # Fixme: Nødvendig pga. https://github.com/tidyverse/readr/issues/642
-  # Fjern når denne feilen er fiksa (rett då òg fixme-en
+  # FIXME: Nødvendig pga. https://github.com/tidyverse/readr/issues/642
+  # Fjern når denne feilen er fiksa (rett då òg FIXME-en
   # lenger oppe som også handlar om dette)
   vars_datokl = spek_innlesing$variabel_id[spek_innlesing$variabeltype == "dato_kl"]
   d = d |>

@@ -24,8 +24,8 @@ les_csv_oqr = function(adresse, spesifikasjon) {
   # 1. - ***FJERNA-ADRESSE***
   # 2. - ***FJERNA-ADRESSE***
 
-  # !fixme - Oppdatere kilde når ny dokumentasjon kommer fra HNIKT.
-  # !fixme - Lage funksjon for å generere formatspek
+  # FIXME - Oppdatere kilde når ny dokumentasjon kommer fra HNIKT.
+  # FIXME - Lage funksjon for å generere formatspek
   formatspek_oqr = lag_formatspek(
     skilletegn = ";", # (1)
     desimaltegn = ",", # (1) Skal være "." i følge dokumentasjon

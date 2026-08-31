@@ -56,7 +56,7 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
   # kodebok-kolonnetyper som skal brukes når man henter inn kodeboka
   # Noen ganger har kodeboka tomme kolonner, og kolonnetypen må defineres på forhånd uansett
   # Kodeboka er laget i excel, og dessverre må disse per i dag defineres manuelt
-  # fixme! automatiser ved automatisert kodebok.
+  # FIXME automatiser ved automatisert kodebok.
   # Excel har heller ikke så mange, presise variabeltyper
   # I standardrekkefølgen på kolonner til Fagsenterets standard kodebokformat skal de 15 første kolonnene
   # skjema_id, skjema_namn, kategori, innleiing, varibel_id_checkware, variabel_id, variabeletikett, forklaring,
@@ -81,7 +81,7 @@ les_kb_checkware = function(mappe_dd, dato = NULL, valider_kb = TRUE) {
   # gjør om kodeboka til kanonisk form
   kb_kanonisk = kb_til_kanonisk_form(kb)
 
-  # fixme! kb_kanonisk støtter ikke andre kolonner utenom standardkolonnene,
+  # FIXME kb_kanonisk støtter ikke andre kolonner utenom standardkolonnene,
   # derfor left_joiner vi variabel_id_checkware tilbake inn. Fix når kb_til_kanonisk er oppdatert.
   variabel_id_checkware = kb |>
     fill(skjema_id) |>
@@ -233,12 +233,12 @@ les_dd_checkware = function(mappe_dd,
     )
   )
 
-  # Forkortingsbokstavane som read_csv() brukar (fixme: utvide med fleire)
+  # Forkortingsbokstavane som read_csv() brukar (FIXME: utvide med fleire)
   spek_csv_checkware = tribble(
     ~variabeltype, ~csv_bokstav,
     "tekst", "c",
     "boolsk", "c", # Sjå konvertering nedanfor
-    "dato_kl", "c", # Mellombels, jf. https://github.com/tidyverse/readr/issues/642 (!fixme til "T" når denne er fiksa)
+    "dato_kl", "c", # Mellombels, jf. https://github.com/tidyverse/readr/issues/642 (FIXME til "T" når denne er fiksa)
     "dato", "D",
     "numerisk", "d",
     "numerisk_heiltal", "i"
@@ -311,7 +311,7 @@ les_dd_checkware = function(mappe_dd,
 
   # siden datetime blir hentet inn som character
   # fikser vi disse til å være datetime her
-  # (jf. https://github.com/tidyverse/readr/issues/642 (!fixme til "T" når denne er fiksa))
+  # (jf. https://github.com/tidyverse/readr/issues/642 (FIXME til "T" når denne er fiksa))
   dato_kl_var = kb_skjema |>
     filter(variabeltype == "dato_kl") |>
     distinct(variabel_id) |>
