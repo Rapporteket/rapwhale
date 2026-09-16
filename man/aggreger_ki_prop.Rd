@@ -25,8 +25,8 @@ kolonner:
 \item{ki_teller}{Telleren i indikatoren (antall sanne \code{ki_krit_teller}
 der \code{ki_krit_nevner} er sann).}
 \item{ki_nevner}{Nevneren i indikatoren (antall sanne \code{ki_krit_nevner}).}
-\item{konf_int_nedre}{Nedre konfidensgrense for \code{est}.}
-\item{konf_int_ovre}{Øvre konfidensgrense for \code{est}.}
+\item{konfint_nedre}{Nedre konfidensgrense for \code{est}.}
+\item{konfint_ovre}{Øvre konfidensgrense for \code{est}.}
 I tillegg vil det være kolonner for alle grupperingsvariablene.
 }
 \description{
