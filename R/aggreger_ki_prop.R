@@ -50,8 +50,8 @@
 #' \item{ki_teller}{Telleren i indikatoren (antall sanne `ki_krit_teller`
 #' der `ki_krit_nevner` er sann).}
 #' \item{ki_nevner}{Nevneren i indikatoren (antall sanne `ki_krit_nevner`).}
-#' \item{konf_int_nedre}{Nedre konfidensgrense for `est`.}
-#' \item{konf_int_ovre}{Øvre konfidensgrense for `est`.}
+#' \item{konfint_nedre}{Nedre konfidensgrense for `est`.}
+#' \item{konfint_ovre}{Øvre konfidensgrense for `est`.}
 #' I tillegg vil det være kolonner for alle grupperingsvariablene.
 #' @export
 #' @examples
