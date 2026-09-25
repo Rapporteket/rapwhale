@@ -4,6 +4,7 @@ on:
   pull_request:
     branches: [main]
     paths: ["**.[rR]", "**.[qrR]md", "**.[rR]markdown", "**.[rR]nw", "**.[rR]profile"]
+  workflow_call:
 
 name: lint-changed-files
 
