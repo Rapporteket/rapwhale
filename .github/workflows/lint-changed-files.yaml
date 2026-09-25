@@ -42,6 +42,12 @@ jobs:
       - name: Install package
         run: R CMD INSTALL .
 
+      - name: Use standard lintr config if the repository has none
+        run: |
+          if [ ! -f .lintr ]; then
+            echo 'linters: rapwhale::rapwhale_linters()' > .lintr
+          fi
+
       - name: Extract and lint files changed by this PR
         run: |
           files <- gh::gh("GET https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files")
