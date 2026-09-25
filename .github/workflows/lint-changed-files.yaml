@@ -19,12 +19,15 @@ jobs:
         with:
           use-public-rspm: true
 
+      # rapwhale trengst for rapwhale_linters() i .lintr-filene.
+      # I rapwhale sjølv vert pakken installert frå PR-en lenger nede.
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: |
             any::gh
             any::lintr
             any::purrr
+            ${{ github.repository != 'Rapporteket/rapwhale' && 'github::Rapporteket/rapwhale' || '' }}
           needs: check
 
       - name: Document
