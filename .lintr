@@ -1,30 +1,4 @@
-linters: all_linters(
-    assignment_linter(operator = c("=", "<<-")),
-    object_usage_linter = NULL,
-    indentation_linter = NULL,
-    cyclocomp_linter = NULL,
-    line_length_linter(120),
-    object_length_linter(40),
-    implicit_integer_linter = NULL,
-    nonportable_path_linter = NULL,
-    todo_comment_linter = NULL,
-    undesirable_operator_linter = NULL,
-    undesirable_function_linter(
-      fun = modify_defaults(
-        defaults = default_undesirable_functions,
-        "data.frame" = "use tibble() instead",
-        "rbind"      = "use bind_rows() instead",
-        "subset"     = "use filter() instead",
-        "lapply"     = "use map() instead",
-        "ifelse"     = "use if_else() instead",
-        "merge"      = "use left_join()/inner_join() instead",
-        "substr"     = "use str_sub() instead",
-        "toupper"    = "use str_to_upper() instead",
-        "tolower"    = "use str_to_lower() instead"
-      )
-    ),
-    rapwhale::fixme_stil_linter()
-  )
+linters: rapwhale::rapwhale_linters()
 exclusions: list(
     "tests/testthat/rapwhale-style",
     "R/fixme_stil_linter.R" = list(
