@@ -20,6 +20,11 @@ Alt dette kan de lesa meir om nedanfor.
 
 Desse funksjonane er nye:
 
+- `rapwhale_linters()`:
+  Gjev linterane som svarar til kodestilguiden vår.
+  Andre pakkar på Rapporteket kan bruka same lintr-reglar
+  ved å skriva `linters: rapwhale::rapwhale_linters()` i `.lintr`-fila si,
+  og eventuelle unntak kan leggjast til som argument.
 - `foo()`:
   Funksjon for ...
   Utvida forklaring.
