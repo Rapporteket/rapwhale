@@ -24,9 +24,9 @@
 #'
 #' ```
 #' linters: rapwhale::rapwhale_linters(
-#'     line_length_linter(100),
-#'     undesirable_function_linter = NULL
-#'   )
+#' line_length_linter(100),
+#' undesirable_function_linter = NULL
+#' )
 #' ```
 #'
 #' @param ...
@@ -68,14 +68,14 @@ rapwhale_linters = function(...) {
       fun = lintr::modify_defaults(
         defaults = lintr::default_undesirable_functions,
         data.frame = "use tibble() instead",
-        rbind      = "use bind_rows() instead",
-        subset     = "use filter() instead",
-        lapply     = "use map() instead",
-        ifelse     = "use if_else() instead",
-        merge      = "use left_join()/inner_join() instead",
-        substr     = "use str_sub() instead",
-        toupper    = "use str_to_upper() instead",
-        tolower    = "use str_to_lower() instead"
+        rbind = "use bind_rows() instead",
+        subset = "use filter() instead",
+        lapply = "use map() instead",
+        ifelse = "use if_else() instead",
+        merge = "use left_join()/inner_join() instead",
+        substr = "use str_sub() instead",
+        toupper = "use str_to_upper() instead",
+        tolower = "use str_to_lower() instead"
       )
     ),
     fixme_stil_linter()
