@@ -42,6 +42,8 @@ test_that("rapwhale_linters() tillèt at linterar vert overstyrte", {
 })
 
 test_that("rapwhale_linters() tillèt at linterar vert lagde til", {
-  ekstra = lintr::Linter(function(source_expression) list(), name = "ekstra_linter")
+  ekstra = lintr::Linter(function(source_expression) {
+    list()
+  }, name = "ekstra_linter")
   expect_true("ekstra_linter" %in% names(rapwhale_linters(ekstra_linter = ekstra)))
 })
