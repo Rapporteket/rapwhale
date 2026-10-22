@@ -38,9 +38,9 @@ kan ein leggja dei til som argument,
 slik at det går tydeleg fram kva som er annleis:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{linters: rapwhale::rapwhale_linters(
-line_length_linter(100),
-undesirable_function_linter = NULL
-)
+    line_length_linter(100),
+    undesirable_function_linter = NULL
+  )
 }\if{html}{\out{</div>}}
 }
 \examples{
