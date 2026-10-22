@@ -22,12 +22,14 @@
 #' kan ein leggja dei til som argument,
 #' slik at det går tydeleg fram kva som er annleis:
 #'
+# styler: off
 #' ```
 #' linters: rapwhale::rapwhale_linters(
-#' line_length_linter(100),
-#' undesirable_function_linter = NULL
-#' )
+#'     line_length_linter(100),
+#'     undesirable_function_linter = NULL
+#'   )
 #' ```
+# styler: on
 #'
 #' @param ...
 #' Linterar som skal leggjast til eller erstatta standardlinterane,
