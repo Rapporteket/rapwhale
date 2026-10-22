@@ -41,6 +41,15 @@ test_that("rapwhale_linters() tillèt at linterar vert overstyrte", {
   lintr::expect_no_lint(strrep("a", 90), rapwhale_linters()[["line_length_linter"]])
 })
 
+test_that("rapwhale_linters() åtvarar når ein slår av ein linter som ikkje finst", {
+  # Med ein skrivefeil i namnet har unntaket ingen verknad,
+  # så brukaren må få vita det.
+  expect_warning(
+    rapwhale_linters(feilstava_linter = NULL),
+    "feilstava_linter"
+  )
+})
+
 test_that("rapwhale_linters() tillèt at linterar vert lagde til", {
   ekstra = lintr::Linter(function(source_expression) {
     list()
