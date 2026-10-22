@@ -20,12 +20,16 @@ jobs:
         with:
           use-public-rspm: true
 
+      # rapwhale trengst for rapwhale_linters() i .lintr-filene.
+      # I rapwhale sjølv vert pakken installert frå PR-en lenger nede.
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: |
             any::gh
             any::lintr
             any::purrr
+            any::roxygen2
+            ${{ github.repository != 'Rapporteket/rapwhale' && 'github::Rapporteket/rapwhale' || '' }}
           needs: check
 
       - name: Document
@@ -39,6 +43,12 @@ jobs:
 
       - name: Install package
         run: R CMD INSTALL .
+
+      - name: Use standard lintr config if the repository has none
+        run: |
+          if [ ! -f .lintr ]; then
+            echo 'linters: rapwhale::rapwhale_linters()' > .lintr
+          fi
 
       - name: Extract and lint files changed by this PR
         run: |
