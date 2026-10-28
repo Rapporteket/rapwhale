@@ -5,3 +5,8 @@ lang: nn
 
 template:
   bootstrap: 5
+  # PNG ved deling av lenkjer, sidan mange tenester ikkje viser SVG
+  opengraph:
+    image:
+      src: man/figures/logo.png
+      alt: Logoen til rapwhale, ein kval med eit stolpediagram
