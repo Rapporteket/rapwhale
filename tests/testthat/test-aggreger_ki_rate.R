@@ -73,15 +73,15 @@ test_that("Feilmelding hvis data av feil type", {
     "mens «ki_aktuell» må være logisk"
   )
 
-  expect_error(aggreger_ki_rate(d_feil_antall_tekst, feilmelding))
-  expect_error(aggreger_ki_rate(d_feil_eksponering_tekst, feilmelding))
-  expect_error(aggreger_ki_rate(d_feil_aktuell_tekst, feilmelding))
-  expect_error(aggreger_ki_rate(d_feil_antall_fak, feilmelding))
-  expect_error(aggreger_ki_rate(d_feil_eksponering_fak, feilmelding))
-  expect_error(aggreger_ki_rate(d_feil_aktuell_fak, feilmelding))
-  expect_error(aggreger_ki_rate(d_feil_antall_log, feilmelding))
-  expect_error(aggreger_ki_rate(d_feil_eksponering_log, feilmelding))
-  expect_error(aggreger_ki_rate(d_feil_aktuell_num, feilmelding))
+  expect_error(aggreger_ki_rate(d_feil_antall_tekst), feilmelding)
+  expect_error(aggreger_ki_rate(d_feil_eksponering_tekst), feilmelding)
+  expect_error(aggreger_ki_rate(d_feil_aktuell_tekst), feilmelding)
+  expect_error(aggreger_ki_rate(d_feil_antall_fak), feilmelding)
+  expect_error(aggreger_ki_rate(d_feil_eksponering_fak), feilmelding)
+  expect_error(aggreger_ki_rate(d_feil_aktuell_fak), feilmelding)
+  expect_error(aggreger_ki_rate(d_feil_antall_log), feilmelding)
+  expect_error(aggreger_ki_rate(d_feil_eksponering_log), feilmelding)
+  expect_error(aggreger_ki_rate(d_feil_aktuell_num), feilmelding)
 })
 
 test_that("Feilmelding hvis ki_aktuell inneholder annet enn TRUE eller FALSE", {
