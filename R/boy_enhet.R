@@ -74,15 +74,8 @@
 #'   desimalar = 1
 #' )
 boy_enhet = function(x, entall, flertall, formatering = erstatt_0, ...) {
-  if (!is.character(entall) ||
-    !is.character(flertall) ||
-    length(entall) != 1 ||
-    length(flertall) != 1) {
-    stop(
-      "Argumentene «entall» og «flertall» må begge være av ",
-      "klasse «character» og lengde 1"
-    )
-  }
+  checkmate::assert_character(entall, len = 1, typed.missing = TRUE)
+  checkmate::assert_character(flertall, len = 1, typed.missing = TRUE)
   if (length(x) == 0) {
     stop("Inndata «x» inneholder ingen verdier")
   }

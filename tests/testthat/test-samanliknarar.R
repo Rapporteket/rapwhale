@@ -72,6 +72,12 @@ test_that("samanlikn_identisk() gjev feilmelding viss argumenta har ulik lengd",
   expect_error(samanlikn_identisk(verdi1 = c(74, 75), verdi2 = c(74, 75), varnamn = "foo"))
 })
 
+test_that("samanlikn_identisk() gjev feilmelding viss «varnamn» ikkje er tekst eller NULL", {
+  feilmelding = "Must be of type 'character' (or 'NULL')"
+  expect_error(samanlikn_identisk(verdi1 = 74, verdi2 = 74, varnamn = 1), feilmelding, fixed = TRUE)
+  expect_error(samanlikn_identisk(verdi1 = 74, verdi2 = 74, varnamn = NA), feilmelding, fixed = TRUE)
+})
+
 test_that("samanlikn_identisk() gjev feilmelding viss verdiane ikkje er av same type", {
   expect_error(samanlikn_identisk(verdi1 = 74, verdi2 = "74", varnamn = "foo"))
   expect_error(samanlikn_identisk(verdi1 = "74", verdi2 = 74, varnamn = "foo"))

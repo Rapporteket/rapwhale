@@ -61,13 +61,15 @@ test_that("Gir feilmelding ved ugyldig type for «x»-argumentet", {
 })
 
 test_that("Gir feilmelding ved hvis «nullverdi» ikke har nøyaktig 1 element", {
-  feilmelding_nullverdi = "«nullverdi» må ha nøyaktig 1 element"
+  feilmelding_nullverdi = "Assertion on 'nullverdi' failed: Must have length 1"
   expect_error(
     erstatt_0(0, character()),
-    feilmelding_nullverdi
+    feilmelding_nullverdi,
+    fixed = TRUE
   )
   expect_error(
     erstatt_0(0, c("ingen", "null")),
-    feilmelding_nullverdi
+    feilmelding_nullverdi,
+    fixed = TRUE
   )
 })

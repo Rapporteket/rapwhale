@@ -15,11 +15,12 @@ a = rep(c(TRUE, FALSE, NA), each = 3)
 b = rep(c(TRUE, FALSE, NA), 3)
 
 test_that("impl() gir feilmelding hvis a eller b ikke er logiske vektorer", {
-  feilmelding = "a og b må være logiske vektorer"
-  expect_error(impl(1, TRUE), feilmelding)
-  expect_error(impl(TRUE, 1), feilmelding)
-  expect_error(impl(as.numeric(a), as.numeric(b)), feilmelding)
-  expect_error(impl(as.character(a), as.character(b)), feilmelding)
+  feilmelding = "Must be of type 'logical'"
+  expect_error(impl(1, TRUE), feilmelding, fixed = TRUE)
+  expect_error(impl(TRUE, 1), feilmelding, fixed = TRUE)
+  expect_error(impl(as.numeric(a), as.numeric(b)), feilmelding, fixed = TRUE)
+  expect_error(impl(as.character(a), as.character(b)), feilmelding, fixed = TRUE)
+  expect_error(impl(NA_real_, TRUE), feilmelding, fixed = TRUE)
 })
 
 test_that("impl() fungerer som forventet for inndata med lengde 0", {
@@ -88,11 +89,12 @@ test_that("Infiks-versjonen %impl% er identisk impl()", {
 
 
 test_that("ekviv() gir feilmelding hvis a eller b ikke er logiske vektorer", {
-  feilmelding = "a og b må være logiske vektorer"
-  expect_error(ekviv(1, TRUE), feilmelding)
-  expect_error(ekviv(TRUE, 1), feilmelding)
-  expect_error(ekviv(as.numeric(a), as.numeric(b)), feilmelding)
-  expect_error(ekviv(as.character(a), as.character(b)), feilmelding)
+  feilmelding = "Must be of type 'logical'"
+  expect_error(ekviv(1, TRUE), feilmelding, fixed = TRUE)
+  expect_error(ekviv(TRUE, 1), feilmelding, fixed = TRUE)
+  expect_error(ekviv(as.numeric(a), as.numeric(b)), feilmelding, fixed = TRUE)
+  expect_error(ekviv(as.character(a), as.character(b)), feilmelding, fixed = TRUE)
+  expect_error(ekviv(NA_real_, TRUE), feilmelding, fixed = TRUE)
 })
 
 test_that("ekviv() fungerer som forventet for inndata med lengde 0", {

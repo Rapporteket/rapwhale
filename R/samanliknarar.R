@@ -44,9 +44,7 @@ samanlikn_identisk = function(verdi1, verdi2, varnamn = NULL) {
   if (!(typeof(verdi1) == typeof(verdi2))) {
     stop("«verdi1» og «verdi2» må vera av same type")
   }
-  if (!(is.character(varnamn) || is.null(varnamn))) {
-    stop("«varnamn» må vera tekstvektor eller NULL")
-  }
+  checkmate::assert_character(varnamn, null.ok = TRUE, typed.missing = TRUE)
   if (!((length(verdi1) == length(verdi2) &&
     (is.null(varnamn) || length(verdi1) == length(varnamn))
   ))) {

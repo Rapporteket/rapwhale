@@ -92,6 +92,7 @@ test_that("Gjev ut rett mengd element, og av rett type", {
 test_that("Gjev feilmelding ved feil datatypar", {
   expect_error(anonymiser(1:5, "5"))
   expect_error(anonymiser(iris))
+  expect_error(anonymiser(1:5, as.Date("2026-01-01")))
 })
 
 test_that("Anonymiserte ID-ar har startnr, startnr + 1, ...", {

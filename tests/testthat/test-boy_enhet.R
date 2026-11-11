@@ -113,17 +113,24 @@ test_that("Gir feilmelding hvis utdata fra formatering() ikke har rett lengde", 
 
 test_that("Gir feilmelding ved ugyldig type argument-verdi for 'entall'- og
           'flertall'-argumentene", {
-  feilmelding_argument = paste0(
-    "Argumentene «entall» og «flertall» må begge være av ",
-    "klasse «character» og lengde 1"
+  expect_error(boy_enhet(1, 1, "operasjoner"),
+    "Assertion on 'entall' failed",
+    fixed = TRUE
   )
-  expect_error(boy_enhet(1, 1, "operasjoner"), feilmelding_argument)
-  expect_error(boy_enhet(123, "operasjon", 123), feilmelding_argument)
+  expect_error(boy_enhet(123, "operasjon", 123),
+    "Assertion on 'flertall' failed",
+    fixed = TRUE
+  )
+  expect_error(boy_enhet(1, NA, "operasjonar"),
+    "Assertion on 'entall' failed",
+    fixed = TRUE
+  )
   expect_error(
     object = boy_enhet(c(1, 5),
       entall = c("sykepleier", "lege"),
       flertall = c("sykepleiere", "leger")
     ),
-    regexp = feilmelding_argument
+    regexp = "Assertion on 'entall' failed",
+    fixed = TRUE
   )
 })

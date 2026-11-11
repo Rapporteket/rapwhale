@@ -70,9 +70,7 @@ lag_anonymiseringsfunksjon = function(x, startnr = 1001) {
   if (anyNA(x)) {
     warning("ID-vektoren inneheld NA-verdiar")
   }
-  if (!is.atomic(x)) {
-    stop("Inndata må vera ein atomisk vektor")
-  }
+  checkmate::assert_atomic_vector(x)
   if (!is.numeric(startnr)) {
     stop("Startnummeret må vera numerisk")
   }
