@@ -15,10 +15,11 @@ data_inn_gruppert = group_by(data_inn, sykehus)
 # Inndata -----------------------------------------------------------------
 test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {
   data_uten_var = select(data_inn, -var_1)
-  feilmelding = "'var_1' mangler i inndata"
+  feilmelding = "Names must include the elements"
   expect_error(
     erstatt_ukjent(data_uten_var, variabel = "var_1", na_vektor = -1L),
-    feilmelding
+    feilmelding,
+    fixed = TRUE
   )
 })
 test_that("Feilmelding hvis na_vektor er tom", {
@@ -158,10 +159,11 @@ test_that("Gjør ingenting hvis inndata mangler verdier fra na_vektor", {
 
 test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {
   data_uten_var = select(data_inn, -var_1)
-  feilmelding = "'var_1' mangler i inndata"
+  feilmelding = "Names must include the elements"
   expect_error(
     beregn_kompletthet(data = data_uten_var, variabel = "var_1"),
-    feilmelding
+    feilmelding,
+    fixed = TRUE
   )
 })
 
@@ -204,7 +206,7 @@ test_that("Gir feilmelding hvis variabel ikke er tekststreng", {
 
 test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {
   data_uten_var_1 = select(data_inn, -var_1)
-  feilmelding = "'var_1' mangler i inndata"
+  feilmelding = "Names must include the elements"
 
   expect_error(
     beregn_kompletthet_med_ukjent(
@@ -212,7 +214,8 @@ test_that("Feilmelding hvis 'data' ikke inneholder nødvendige kolonner", {
       variabel = "var_1",
       na_vektor = c(-1)
     ),
-    feilmelding
+    feilmelding,
+    fixed = TRUE
   )
 })
 test_that("Feilmelding hvis na_vektor er tom", {
