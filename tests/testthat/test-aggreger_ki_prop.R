@@ -9,14 +9,14 @@ test_that("Feilmelding hvis ikke tibble/data.frame med nødvendige kolonner", {
     ki_krit_nevner = c(TRUE, TRUE, TRUE)
   )
 
-  feilmelding_kol = paste0(
-    "Inndata må være tibble/data.frame med kolonnene ",
-    "«ki_krit_teller» og «ki_krit_nevner»"
+  feilmelding_kol = "Names must include the elements"
+  expect_error(aggreger_ki_prop(liste),
+    "Must be of type 'data.frame'",
+    fixed = TRUE
   )
-  expect_error(aggreger_ki_prop(liste), feilmelding_kol)
-  expect_error(aggreger_ki_prop(d_uten_nevner), feilmelding_kol)
-  expect_error(aggreger_ki_prop(d_uten_teller), feilmelding_kol)
-  expect_error(aggreger_ki_prop(d_uten_begge), feilmelding_kol)
+  expect_error(aggreger_ki_prop(d_uten_nevner), feilmelding_kol, fixed = TRUE)
+  expect_error(aggreger_ki_prop(d_uten_teller), feilmelding_kol, fixed = TRUE)
+  expect_error(aggreger_ki_prop(d_uten_begge), feilmelding_kol, fixed = TRUE)
 })
 
 # test for feil variabeltyper
@@ -45,14 +45,19 @@ test_that("Feilmelding hvis data av feil type", {
     ki_krit_teller = c(FALSE, TRUE, TRUE),
     ki_krit_nevner = c(TRUE, TRUE, 2)
   )
+  d_feil_teller_na_num = tibble(
+    ki_krit_teller = c(NA_real_, NA_real_),
+    ki_krit_nevner = c(FALSE, FALSE)
+  )
 
-  feilmelding = "Kriterievariablene må være logiske variabler"
-  expect_error(aggreger_ki_prop(d_feil_teller_tekst), feilmelding)
-  expect_error(aggreger_ki_prop(d_feil_nevner_tekst), feilmelding)
-  expect_error(aggreger_ki_prop(d_feil_teller_fak), feilmelding)
-  expect_error(aggreger_ki_prop(d_feil_teller_num), feilmelding)
-  expect_error(aggreger_ki_prop(d_feil_nevner_num), feilmelding)
-  expect_error(aggreger_ki_prop(d_feil_nevner_fak), feilmelding)
+  feilmelding = "Must be of type 'logical'"
+  expect_error(aggreger_ki_prop(d_feil_teller_tekst), feilmelding, fixed = TRUE)
+  expect_error(aggreger_ki_prop(d_feil_nevner_tekst), feilmelding, fixed = TRUE)
+  expect_error(aggreger_ki_prop(d_feil_teller_fak), feilmelding, fixed = TRUE)
+  expect_error(aggreger_ki_prop(d_feil_teller_num), feilmelding, fixed = TRUE)
+  expect_error(aggreger_ki_prop(d_feil_nevner_num), feilmelding, fixed = TRUE)
+  expect_error(aggreger_ki_prop(d_feil_nevner_fak), feilmelding, fixed = TRUE)
+  expect_error(aggreger_ki_prop(d_feil_teller_na_num), feilmelding, fixed = TRUE)
 })
 
 test_that(paste0(
@@ -81,8 +86,8 @@ test_that(paste0(
     ki_krit_nevner = c(TRUE, TRUE, NA)
   )
 
-  feilmelding_nevner = "«ki_krit_nevner» må være TRUE eller FALSE"
-  expect_error(aggreger_ki_prop(d_nevner_med_feil), feilmelding_nevner)
+  feilmelding_nevner = "Assertion on 'ki_krit_nevner' failed: Contains missing values"
+  expect_error(aggreger_ki_prop(d_nevner_med_feil), feilmelding_nevner, fixed = TRUE)
 })
 
 test_that("Feilmelding hvis konf_niva ikke er et tall mellom 0 og 1", {
@@ -90,18 +95,21 @@ test_that("Feilmelding hvis konf_niva ikke er et tall mellom 0 og 1", {
     ki_krit_teller = c(FALSE, TRUE, FALSE),
     ki_krit_nevner = c(TRUE, TRUE, FALSE)
   )
-  feilmelding_konf_niva = "«konf_niva» må være et tall mellom 0 og 1"
   expect_error(aggreger_ki_prop(d_teller_ok, konf_niva = 1.2),
-    regexp = feilmelding_konf_niva
+    regexp = "All elements must be < 1",
+    fixed = TRUE
   )
   expect_error(aggreger_ki_prop(d_teller_ok, konf_niva = 0),
-    regexp = feilmelding_konf_niva
+    regexp = "All elements must be > 0",
+    fixed = TRUE
   )
   expect_error(aggreger_ki_prop(d_teller_ok, konf_niva = 1),
-    regexp = feilmelding_konf_niva
+    regexp = "All elements must be < 1",
+    fixed = TRUE
   )
   expect_error(aggreger_ki_prop(d_teller_ok, konf_niva = "0.05"),
-    regexp = feilmelding_konf_niva
+    regexp = "Must be of class 'numeric'",
+    fixed = TRUE
   )
 })
 
