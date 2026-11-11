@@ -126,15 +126,10 @@ aggreger_ki_rate = function(d_ki_ind, konf_niva = 0.95, multiplikator = 1, alfa 
   }
 
   # Teste inndata
-  if (!(
-    is.data.frame(d_ki_ind) &&
-      all(hasName(d_ki_ind, c("ki_antall", "ki_eksponering", "ki_aktuell")))
-  )) {
-    stop(
-      "Inndata må være tibble/data.frame med kolonnene «ki_antall», ",
-      "«ki_eksponering» og «ki_aktuell»"
-    )
-  }
+  checkmate::assert_data_frame(d_ki_ind)
+  checkmate::assert_names(names(d_ki_ind),
+    must.include = c("ki_antall", "ki_eksponering", "ki_aktuell")
+  )
   if (!(
     is.numeric(d_ki_ind$ki_antall) &&
       is.numeric(d_ki_ind$ki_eksponering) &&
@@ -145,9 +140,11 @@ aggreger_ki_rate = function(d_ki_ind, konf_niva = 0.95, multiplikator = 1, alfa 
       "mens «ki_aktuell» må være logisk"
     )
   }
-  if (!all(d_ki_ind$ki_aktuell %in% c(TRUE, FALSE))) {
-    stop("«ki_aktuell» må være TRUE eller FALSE")
-  }
+  checkmate::assert_logical(d_ki_ind$ki_aktuell,
+    any.missing = FALSE,
+    typed.missing = TRUE,
+    .var.name = "ki_aktuell"
+  )
   if (any(d_ki_ind$ki_aktuell & is.na(d_ki_ind$ki_antall))) {
     stop("«ki_antall» kan ikke være NA om «ki_aktuell» er TRUE")
   }
@@ -168,18 +165,8 @@ aggreger_ki_rate = function(d_ki_ind, konf_niva = 0.95, multiplikator = 1, alfa 
   )) {
     stop("«ki_eksponering» kan ikke være mindre enn eller lik 0")
   }
-  if (length(konf_niva) != 1) {
-    stop("«konf_niva» må ha lengde 1")
-  }
-  if (length(multiplikator) != 1) {
-    stop("«multiplikator» må ha lengde 1")
-  }
-  if (!is.numeric(konf_niva) || konf_niva <= 0 || konf_niva >= 1) {
-    stop("«konf_niva» må være et tall mellom 0 og 1")
-  }
-  if (!is.numeric(multiplikator) || multiplikator <= 0 || is.na(multiplikator)) {
-    stop("«multiplikator» må være et positivt tall")
-  }
+  checkmate::qassert(konf_niva, "N1(0,1)")
+  checkmate::qassert(multiplikator, "N1(0,)")
   if (any(group_size(d_ki_ind) == 0)) {
     warning("Det finnes grupper uten observasjoner i grupperingsvariabel")
   }

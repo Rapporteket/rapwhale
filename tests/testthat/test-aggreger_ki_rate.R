@@ -10,15 +10,15 @@ test_that("Feilmelding hvis ikke tibble/data.frame med nødvendige kolonner", {
     ki_aktuell = TRUE
   )
 
-  feilmelding_kol = paste0(
-    "Inndata må være tibble/data.frame med kolonnene «ki_antall», ",
-    "«ki_eksponering» og «ki_aktuell»"
-  )
+  feilmelding_kol = "Names must include the elements"
 
-  expect_error(aggreger_ki_rate(select(d, -ki_antall)), feilmelding_kol)
-  expect_error(aggreger_ki_rate(select(d, -ki_eksponering)), feilmelding_kol)
-  expect_error(aggreger_ki_rate(select(d, -ki_aktuell)), feilmelding_kol)
-  expect_error(aggreger_ki_rate(unclass(d)), feilmelding_kol)
+  expect_error(aggreger_ki_rate(select(d, -ki_antall)), feilmelding_kol, fixed = TRUE)
+  expect_error(aggreger_ki_rate(select(d, -ki_eksponering)), feilmelding_kol, fixed = TRUE)
+  expect_error(aggreger_ki_rate(select(d, -ki_aktuell)), feilmelding_kol, fixed = TRUE)
+  expect_error(aggreger_ki_rate(unclass(d)),
+    "Must be of type 'data.frame'",
+    fixed = TRUE
+  )
 })
 
 test_that("Feilmelding hvis data av feil type", {
@@ -68,6 +68,12 @@ test_that("Feilmelding hvis data av feil type", {
     ki_aktuell = c(1, 1, 0)
   )
 
+  d_feil_eksponering_dato = tibble(
+    ki_antall = c(5, 2, 7),
+    ki_eksponering = as.Date("2026-01-01") + 0:2,
+    ki_aktuell = c(TRUE, TRUE, FALSE)
+  )
+
   feilmelding = paste0(
     "Kriterievariablen «ki_antall» og «ki_eksponering» må være numerisk, ",
     "mens «ki_aktuell» må være logisk"
@@ -82,6 +88,7 @@ test_that("Feilmelding hvis data av feil type", {
   expect_error(aggreger_ki_rate(d_feil_antall_log), feilmelding)
   expect_error(aggreger_ki_rate(d_feil_eksponering_log), feilmelding)
   expect_error(aggreger_ki_rate(d_feil_aktuell_num), feilmelding)
+  expect_error(aggreger_ki_rate(d_feil_eksponering_dato), feilmelding)
 })
 
 test_that("Feilmelding hvis ki_aktuell inneholder annet enn TRUE eller FALSE", {
@@ -91,9 +98,9 @@ test_that("Feilmelding hvis ki_aktuell inneholder annet enn TRUE eller FALSE", {
     ki_aktuell = c(TRUE, NA, FALSE)
   )
 
-  feilmelding = "«ki_aktuell» må være TRUE eller FALSE"
+  feilmelding = "Assertion on 'ki_aktuell' failed: Contains missing values"
 
-  expect_error(aggreger_ki_rate(d_aktuell_ikke_ok), feilmelding)
+  expect_error(aggreger_ki_rate(d_aktuell_ikke_ok), feilmelding, fixed = TRUE)
 })
 
 test_that("Feilmelding hvis ki_antall eller ki_eksponering er missing dersom ki_aktuell er TRUE", {
@@ -160,12 +167,22 @@ test_that("Feilmelding hvis konf_niva ikke er et tall mellom 0 og 1", {
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
 
-  feilmelding_konf_niva = "«konf_niva» må være et tall mellom 0 og 1"
-
-  expect_error(aggreger_ki_rate(d_var_ok, konf_niva = 1.2), feilmelding_konf_niva)
-  expect_error(aggreger_ki_rate(d_var_ok, konf_niva = 0), feilmelding_konf_niva)
-  expect_error(aggreger_ki_rate(d_var_ok, konf_niva = 1), feilmelding_konf_niva)
-  expect_error(aggreger_ki_rate(d_var_ok, konf_niva = "0.95"), feilmelding_konf_niva)
+  expect_error(aggreger_ki_rate(d_var_ok, konf_niva = 1.2),
+    "All elements must be < 1",
+    fixed = TRUE
+  )
+  expect_error(aggreger_ki_rate(d_var_ok, konf_niva = 0),
+    "All elements must be > 0",
+    fixed = TRUE
+  )
+  expect_error(aggreger_ki_rate(d_var_ok, konf_niva = 1),
+    "All elements must be < 1",
+    fixed = TRUE
+  )
+  expect_error(aggreger_ki_rate(d_var_ok, konf_niva = "0.95"),
+    "Must be of class 'numeric'",
+    fixed = TRUE
+  )
 })
 
 test_that("Feilmelding hvis multiplikator ikke er et positivt heltall", {
@@ -175,23 +192,25 @@ test_that("Feilmelding hvis multiplikator ikke er et positivt heltall", {
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
 
-  feilmelding_multiplikator = "«multiplikator» må være et positivt tall"
-
   expect_error(
     aggreger_ki_rate(d_var_ok, multiplikator = 0),
-    feilmelding_multiplikator
+    "All elements must be > 0",
+    fixed = TRUE
   )
   expect_error(
     aggreger_ki_rate(d_var_ok, multiplikator = -1),
-    feilmelding_multiplikator
+    "All elements must be > 0",
+    fixed = TRUE
   )
   expect_error(
     aggreger_ki_rate(d_var_ok, multiplikator = NA_real_),
-    feilmelding_multiplikator
+    "May not contain missing values",
+    fixed = TRUE
   )
   expect_error(
     aggreger_ki_rate(d_var_ok, multiplikator = "1000"),
-    feilmelding_multiplikator
+    "Must be of class 'numeric'",
+    fixed = TRUE
   )
 })
 
@@ -202,24 +221,27 @@ test_that("Feilmelding hvis konf_niva eller multiplikator ikke har lengde 1", {
     ki_aktuell = c(TRUE, TRUE, FALSE)
   )
 
-  feilmelding_konf_niva = "«konf_niva» må ha lengde 1"
-  feilmelding_multiplikator = "«multiplikator» må ha lengde 1"
+  feilmelding_lengde = "but has length 2"
 
   expect_error(
     aggreger_ki_rate(d_var_ok, konf_niva = NULL),
-    feilmelding_konf_niva
+    "Must be of class 'numeric', not 'NULL'",
+    fixed = TRUE
   )
   expect_error(
     aggreger_ki_rate(d_var_ok, konf_niva = c(0.95, 0.9)),
-    feilmelding_konf_niva
+    feilmelding_lengde,
+    fixed = TRUE
   )
   expect_error(
     aggreger_ki_rate(d_var_ok, multiplikator = NULL),
-    feilmelding_multiplikator
+    "Must be of class 'numeric', not 'NULL'",
+    fixed = TRUE
   )
   expect_error(
     aggreger_ki_rate(d_var_ok, multiplikator = c(1000, 100)),
-    feilmelding_multiplikator
+    feilmelding_lengde,
+    fixed = TRUE
   )
 })
 
