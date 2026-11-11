@@ -45,18 +45,8 @@
 periode_til_tidslinje = function(aar, delnummer, antall_deler) {
   # Sjekk at inndata er i riktig format
   stopifnot(length(aar) == length(delnummer))
-  if (any(na.omit(aar) != floor(na.omit(aar)))) {
-    stop("aar må være heltall")
-  }
-  if (length(antall_deler) != 1) {
-    stop("antall_deler må ha lengde 1")
-  }
-  if (antall_deler < 1) {
-    stop("antall_deler må være >= 1")
-  }
-  if (antall_deler != floor(antall_deler)) {
-    stop("antall_deler må være et heltall")
-  }
+  checkmate::assert_integerish(aar)
+  checkmate::assert_count(antall_deler, positive = TRUE)
   if (!all(na.omit(unique(delnummer)) %in% 1:antall_deler)) {
     stop("delnummer må være verdier i 1:", antall_deler)
   }
@@ -132,15 +122,7 @@ periode_til_tidslinje = function(aar, delnummer, antall_deler) {
 #' tid_til_tidslinje(dato = dato_med_klokkeslett, antall_deler = antall_deler)
 tid_til_tidslinje = function(dato, antall_deler) {
   # Sjekke inndata
-  if (length(antall_deler) != 1) {
-    stop("antall_deler må ha lengde 1")
-  }
-  if (antall_deler < 1) {
-    stop("antall_deler må være >= 1")
-  }
-  if (antall_deler != floor(antall_deler)) {
-    stop("antall_deler må være et heltall")
-  }
+  checkmate::assert_count(antall_deler, positive = TRUE)
 
   if (!(lubridate::is.timepoint(dato))) { # Både Date og POSIXt-format er timepoint.
     stop("Dato-vektor er ikke i Date- eller POSIXt-format")

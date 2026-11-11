@@ -4,7 +4,8 @@
 
 test_that("Det gis feilmelding om årstall-vektor ikke er heltallsvektor", {
   expect_error(periode_til_tidslinje(c(2017, 2018, 2019, 2020.5), 1:4, 4),
-    regexp = "aar må være heltall"
+    regexp = "Must be of type 'integerish'",
+    fixed = TRUE
   )
 })
 
@@ -27,19 +28,22 @@ test_that("Det gis feilmelding hvis årstall og delnummer ikke er like lange", {
 
 test_that("Det gis feilmelding om antall_deler ikke har lengde 1", {
   expect_error(periode_til_tidslinje(2001:2004, 1:4, c(4, 12)),
-    regexp = "antall_deler må ha lengde 1"
+    regexp = "Must have length 1",
+    fixed = TRUE
   )
 })
 
 test_that("Det gis feilmelding om antall_deler ikke er heltallig", {
   expect_error(periode_til_tidslinje(2001:2004, 1:4, 2.5),
-    regexp = "antall_deler må være et heltall"
+    regexp = "Must be of type 'count'",
+    fixed = TRUE
   )
 })
 
 test_that("Det gis feilmelding om antall_deler er mindre enn 1", {
   expect_error(periode_til_tidslinje(2001:2004, 1:4, 0),
-    regexp = "antall_deler må være >= 1"
+    regexp = "Must be >= 1",
+    fixed = TRUE
   )
 })
 
@@ -98,21 +102,24 @@ test_that("Det gis feilmelding om dato ikke er i Date-format", {
 test_that("Det gis feilmelding om antall_deler ikke har lengde 1", {
   dato = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
   expect_error(tid_til_tidslinje(dato = dato, antall_deler = c(1, 4)),
-    regexp = "antall_deler må ha lengde 1"
+    regexp = "Must have length 1",
+    fixed = TRUE
   )
 })
 
 test_that("Det gis feilmelding om antall_deler ikke er heltallig", {
   dato = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
   expect_error(tid_til_tidslinje(dato = dato, antall_deler = 1.5),
-    regexp = "antall_deler må være et heltall"
+    regexp = "Must be of type 'count'",
+    fixed = TRUE
   )
 })
 
 test_that("Det gis feilmelding om antall_deler er mindre enn 1", {
   dato = as.Date(c("2019-01-01", "2019-04-01", "2019-08-01", "2019-12-01"))
   expect_error(tid_til_tidslinje(dato = dato, antall_deler = 0),
-    regexp = "antall_deler må være >= 1"
+    regexp = "Must be >= 1",
+    fixed = TRUE
   )
 })
 
