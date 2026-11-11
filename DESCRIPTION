@@ -30,7 +30,7 @@ Depends:
 Imports:
     binom,
     boot,
-    checkmate (>= 1.7.0),
+    checkmate (>= 2.1.0),
     colorspace,
     dplyr (>= 1.1.1),
     forcats,
