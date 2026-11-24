@@ -126,6 +126,12 @@ rapwhale_style = function(
   temp_style$line_break$add_line_break_after_pipe =
     add_line_break_after_pipe_rapwhale
 
+  # Første argument kan stå på opningslinja sjølv om ingen er namngjevne
+  if (strict) {
+    temp_style$line_break$set_line_break_after_opening_if_call_is_multi_line =
+      set_line_break_after_opening_if_call_is_multi_line_rapwhale
+  }
+
   # Tillat maks tre blanke linjer på rad
   temp_style$line_break$set_line_breaks_between_top_level_exprs = if (strict) {
     function(pd, allowed_blank_lines = maks_blanke_linjer) {
