@@ -59,6 +59,13 @@ Desse funksjonane er nye:
 
 ## Ny funksjonalitet
 
+- `rapwhale_style()` lèt no første argument stå på same linje
+  som funksjonsnamnet i funksjonskall over fleire linjer,
+  også når ingen av argumenta er namngjevne,
+  slik kodestilen vår tillèt.
+  Til dømes vert ikkje lenger `select(d,`
+  med resten av argumenta på eigne linjer
+  endra til `select(` med `d,` på neste linje.
 - `foo()` har fått ...
 
 
