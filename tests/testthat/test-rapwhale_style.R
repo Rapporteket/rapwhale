@@ -88,3 +88,15 @@ test_that("Korte røyr får òg linjeskift", {
     expect_no_warning() |>
     expect_message("short_pipes-in.R was identical to short_pipes-out.R")
 })
+
+test_that("Første argument kan stå på opningslinja utan namngjevne argument", {
+  styler:::test_collection(
+    "rapwhale-style",
+    "^first_argument",
+    transformer = style_text_rapwhale,
+    dry = "on",
+    write_tree = FALSE
+  ) |>
+    expect_no_warning() |>
+    expect_message("first_argument-in.R was identical to first_argument-out.R")
+})
