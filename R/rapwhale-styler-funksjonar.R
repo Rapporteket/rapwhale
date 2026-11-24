@@ -152,3 +152,57 @@ add_line_break_after_pipe_rapwhale = function(pd) {
   }
   pd
 }
+
+#' Set line break after opening parenthesis in multi-line calls
+#'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
+#' Legg til linjeskift etter opnande parentes i funksjonskall
+#' som går over fleire linjer.
+#'
+#' @param pd
+#' A parse table.
+#'
+#' @details
+#' Lik `styler:::set_line_break_after_opening_if_call_is_multi_line()`,
+#' med same argument som i [styler::tidyverse_style()],
+#' men der første argument får stå på same linje som funksjonsnamnet
+#' sjølv om ingen av argumenta er namngjevne,
+#' slik kodestilen vår tillèt.
+#' Til dømes får `select(d,` stå på første linje
+#' når resten av argumenta står på eigne linjer under.
+#'
+#' Dette gjeld berre når første argument står åleine på opningslinja,
+#' er på éi linje, og det er linjeskift rett etter det.
+#' Viss nokre av argumenta er namngjevne,
+#' gjeld styler sin regel,
+#' der argumenta før det første namngjevne får stå på opningslinja.
+#'
+#' @keywords internal
+set_line_break_after_opening_if_call_is_multi_line_rapwhale = function(pd) { # nolint: object_length_linter.
+  pd_ut = styler:::set_line_break_after_opening_if_call_is_multi_line(pd,
+    except_token_after = "COMMENT",
+    except_text_before = c("ifelse", "if_else"),
+    force_text_before = "switch"
+  )
+
+  if (!styler::is_function_call(pd) || any(pd$token == "EQ_SUB")) {
+    return(pd_ut)
+  }
+
+  forste_arg = 3L
+  forste_komma = which(pd$token == "','")[1L]
+  forste_arg_aleine_pa_opningslinja = !is.na(forste_komma) &&
+    forste_komma == forste_arg + 1L &&
+    nrow(pd) > forste_komma &&
+    pd$token[forste_arg] == "expr" &&
+    pd$lag_newlines[forste_arg] == 0L &&
+    pd$lag_newlines[forste_komma + 1L] > 0L &&
+    !styler:::pd_is_multi_line(pd$child[[forste_arg]])
+
+  if (forste_arg_aleine_pa_opningslinja) {
+    pd_ut$lag_newlines[forste_arg] = 0L
+  }
+  pd_ut
+}
