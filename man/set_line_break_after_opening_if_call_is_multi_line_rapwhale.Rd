@@ -7,7 +7,11 @@
 set_line_break_after_opening_if_call_is_multi_line_rapwhale(pd)
 }
 \arguments{
-\item{pd}{A parse table.}
+\item{pd}{A nested parse table for one level of nesting,
+as styler passes it to \code{line_break} transformers.}
+}
+\value{
+The parse table \code{pd}, with updated \code{lag_newlines}.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
