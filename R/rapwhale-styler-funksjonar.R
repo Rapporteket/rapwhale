@@ -162,7 +162,11 @@ add_line_break_after_pipe_rapwhale = function(pd) {
 #' som går over fleire linjer.
 #'
 #' @param pd
-#' A parse table.
+#' A nested parse table for one level of nesting,
+#' as styler passes it to `line_break` transformers.
+#'
+#' @return
+#' The parse table `pd`, with updated `lag_newlines`.
 #'
 #' @details
 #' Lik `styler:::set_line_break_after_opening_if_call_is_multi_line()`,
