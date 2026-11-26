@@ -183,7 +183,7 @@ test_that("Det taes hensyn til tidssone", {
 
   # Lager variabler for klokka 02:15 (UTC + 1) for alle dagene i 2019.
   # Men merk at *veggtid* vil variere (UTC + 1 for vintertid og UTC + 2 for sommertid).
-  tid_norsk = as.POSIXct("2019-01-01 02:15", tz = "CET") + (0:364) * 24 * 60 * 60
+  tid_norsk = as.POSIXct("2019-01-01 02:15", tz = "Europe/Oslo") + (0:364) * 24 * 60 * 60
 
   # Tilsvarende variablar for klokka 02:15 UTC.
   tid_utc = as.POSIXct("2019-01-01 02:15", tz = "UTC") + (0:364) * 24 * 60 * 60
