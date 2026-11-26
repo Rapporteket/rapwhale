@@ -92,11 +92,41 @@ test_that("Korte røyr får òg linjeskift", {
 test_that("Første argument kan stå på opningslinja utan namngjevne argument", {
   styler:::test_collection(
     "rapwhale-style",
-    "^first_argument",
+    "^first_argument_kept",
     transformer = style_text_rapwhale,
     dry = "on",
     write_tree = FALSE
   ) |>
     expect_no_warning() |>
-    expect_message("first_argument-in.R was identical to first_argument-out.R")
+    expect_message(
+      "first_argument_kept-in.R was identical to first_argument_kept-out.R"
+    )
+})
+
+test_that("Første argument vert flytta ned viss det ikkje står åleine på opningslinja", {
+  styler:::test_collection(
+    "rapwhale-style",
+    "^first_argument_moved",
+    transformer = style_text_rapwhale,
+    dry = "on",
+    write_tree = FALSE
+  ) |>
+    expect_no_warning() |>
+    expect_message(
+      "first_argument_moved-in.R was identical to first_argument_moved-out.R"
+    )
+})
+
+test_that("Andre funksjonskall vert formaterte som før", {
+  styler:::test_collection(
+    "rapwhale-style",
+    "^first_argument_as_before",
+    transformer = style_text_rapwhale,
+    dry = "on",
+    write_tree = FALSE
+  ) |>
+    expect_no_warning() |>
+    expect_message(
+      "first_argument_as_before-in.R was identical to first_argument_as_before-out.R"
+    )
 })
