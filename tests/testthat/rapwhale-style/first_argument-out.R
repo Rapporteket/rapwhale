@@ -27,10 +27,17 @@ gjer_noko(
 
 # Heller ikkje når første argument går over fleire linjer
 select(
-  c(a,
-    b
+  c(
+    a, b
   ),
   id
+)
+
+# Gjeld òg funksjonskall inne i andre funksjonskall
+list(
+  a = select(d_patient,
+    id, birth_date
+  )
 )
 
 # Kommentar etter første argument gjev linjeskift etter ( som før
@@ -43,4 +50,9 @@ select(
 switch(x,
   a = 1,
   b = 2
+)
+
+# if_else() som før, også med fleire argument på opningslinja
+if_else(x > 0, "positiv",
+  "ikkje positiv"
 )
