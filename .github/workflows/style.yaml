@@ -7,6 +7,9 @@ on:
 
 name: Sjekk kodestil
 
+permissions:
+  contents: read
+
 jobs:
   style:
     runs-on: ubuntu-latest
