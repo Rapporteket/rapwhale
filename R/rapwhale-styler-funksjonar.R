@@ -195,6 +195,7 @@ set_line_break_after_opening_if_call_is_multi_line_rapwhale = function(pd) { # n
     return(pd_ut)
   }
 
+  # Rad 1 er funksjonsnamnet og rad 2 er "(", så første argument er rad 3
   forste_arg = 3L
   forste_komma = which(pd$token == "','")[1L]
   forste_arg_aleine_pa_opningslinja = !is.na(forste_komma) &&
