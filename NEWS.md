@@ -66,11 +66,19 @@ Desse funksjonane er nye:
   Til dømes vert ikkje lenger `select(d,`
   med resten av argumenta på eigne linjer
   endra til `select(` med `d,` på neste linje.
+- GitHub-arbeidsflytane for `R CMD check`, kodestil, linting og testdekning
+  kan no brukast direkte frå andre pakkar på Rapporteket,
+  slik at alle repoa vert sjekka på same måten.
+  Sjå «Same sjekkane i andre repo» i README-fila.
 - `foo()` har fått ...
 
 
 ## Feil retta opp
 
+- `bygg_og_installer_pakker()` feila med mindre remotes-pakken var installert,
+  og gav elles ei åtvaring om at `devtools::install_local()` er utdatert.
+  Funksjonen brukar no roxygen2 og pkgbuild direkte i staden for devtools.
+  Har du devtools installert, har du alt desse pakkane.
 - `foo()` hadde ...
 
 

@@ -132,6 +132,53 @@ Endringar mellom versjonane,
 inkludert dei som krev endringar i din eigen kode,
 er lista i [endringsloggen](https://rapporteket.github.io/rapwhale/news/index.html).
 
+## Same sjekkane i andre repo
+
+GitHub-arbeidsflytane for `R CMD check`, kodestil, linting og testdekning
+kan brukast direkte frå andre pakkar,
+slik at repoa på Rapporteket vert sjekka på same måten.
+Legg for eksempel inn denne fila som `.github/workflows/rapwhale.yaml`:
+
+```yaml
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+name: Sjekkar frå rapwhale
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  R-CMD-check:
+    uses: Rapporteket/rapwhale/.github/workflows/check-standard.yaml@main
+  kodestil:
+    if: github.event_name == 'pull_request'
+    uses: Rapporteket/rapwhale/.github/workflows/style.yaml@main
+  lint:
+    if: github.event_name == 'pull_request'
+    uses: Rapporteket/rapwhale/.github/workflows/lint-changed-files.yaml@main
+  testdekning:
+    uses: Rapporteket/rapwhale/.github/workflows/coverage.yml@main
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+```
+
+- Pull requestar køyrer `R CMD check` berre på Ubuntu med siste R-versjon.
+  Push til `main` køyrer i tillegg macOS, Windows, R-devel og førre R-versjon.
+- `R CMD check` og testdekninga brukar dokumentasjonen som ligg i repoet.
+  Køyr derfor `roxygen2::roxygenise()` (eller `devtools::document()`)
+  og sjekk inn `man/` og `NAMESPACE` når du endrar roxygen-kommentarar.
+- Kodestilen vert sjekka med `rapwhale_style()`,
+  og linting med `rapwhale_linters()` viss repoet ikkje har si eiga `.lintr`-fil,
+  begge frå siste versjon av rapwhale på GitHub.
+- For å lasta opp testdekninga til Codecov
+  treng repoet vanlegvis ein `CODECOV_TOKEN`.
+  Jobben feilar ikkje om opplastinga ikkje går.
+
 ## Hjelp og spørsmål
 
 Opprett ei [sak](https://github.com/Rapporteket/rapwhale/issues)

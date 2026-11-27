@@ -5,11 +5,23 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  schedule:
+    # Kvar måndag natt, for å fanga opp endringar i R-devel og i avhengnader
+    - cron: "23 2 * * 1"
+  workflow_dispatch:
+  workflow_call:
 
 name: R-CMD-check
 
 permissions:
   contents: read
+
+# Ny push til ein PR avbryt den førre køyringa. Andre køyringar (main o.l.) får gå uforstyrra.
+# Fast gruppenamn i staden for github.workflow: når workflowen vert kalla frå
+# eit anna repo, er github.workflow namnet på den kallande workflowen.
+concurrency:
+  group: rapwhale-R-CMD-check-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
 
 jobs:
   R-CMD-check:
@@ -20,12 +32,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        config:
-          - {os: macos-latest,   r: 'release'}
-          - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
-          - {os: ubuntu-latest,   r: 'release'}
-          - {os: ubuntu-latest,   r: 'oldrel-1'}
+        # PR-ar: berre ubuntu-latest (release), for rask tilbakemelding.
+        # main, vekeleg køyring og manuell køyring: alle plattformene.
+        config: >-
+          ${{ fromJSON(github.event_name == 'pull_request' && '[
+          {"os": "ubuntu-latest",  "r": "release"}
+          ]' || '[
+          {"os": "macos-latest",   "r": "release"},
+          {"os": "windows-latest", "r": "release"},
+          {"os": "ubuntu-latest",  "r": "devel", "http-user-agent": "release"},
+          {"os": "ubuntu-latest",  "r": "release"},
+          {"os": "ubuntu-latest",  "r": "oldrel-1"}
+          ]') }}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -41,15 +59,13 @@ jobs:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
+          # Lat pak installera fleire pakkar samtidig (setup-r set Ncpus til 1 som standard)
+          Ncpus: 4
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck, any::roxygen2
-          needs: check, roxygen2
-
-      - name: Document
-        run: roxygen2::roxygenise()
-        shell: Rscript {0}
+          extra-packages: any::rcmdcheck
+          needs: check
 
       - uses: r-lib/actions/check-r-package@v2
         with:

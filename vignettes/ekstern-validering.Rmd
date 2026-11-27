@@ -24,7 +24,11 @@ knitr::opts_chunk$set(
 suppressPackageStartupMessages({
   # nolint start: undesirable_function_linter.
   library(rapwhale)
-  library(tidyverse)
+  library(dplyr)
+  library(forcats)
+  library(ggplot2)
+  library(stringr)
+  library(tidyr)
   library(kableExtra)
   # nolint end
 })

@@ -105,6 +105,7 @@
 #' @importFrom utils data
 #' @importFrom utils hasName
 #' @importFrom utils head
+#' @importFrom utils install.packages
 #' @importFrom utils packageVersion
 ## usethis namespace: end
 NULL

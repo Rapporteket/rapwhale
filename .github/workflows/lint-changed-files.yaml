@@ -12,6 +12,13 @@ permissions:
   contents: read
   pull-requests: read
 
+# Ny push til ein PR avbryt den førre køyringa. Andre køyringar (main o.l.) får gå uforstyrra.
+# Fast gruppenamn i staden for github.workflow: når workflowen vert kalla frå
+# eit anna repo, er github.workflow namnet på den kallande workflowen.
+concurrency:
+  group: rapwhale-lint-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   lint-changed-files:
     runs-on: ubuntu-latest
@@ -23,6 +30,8 @@ jobs:
       - uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
+          # Lat pak installera fleire pakkar samtidig (setup-r set Ncpus til 1 som standard)
+          Ncpus: 4
 
       # rapwhale trengst for rapwhale_linters() i .lintr-filene.
       # I rapwhale sjølv vert pakken installert frå PR-en lenger nede.
@@ -56,7 +65,11 @@ jobs:
 
       - name: Extract and lint files changed by this PR
         run: |
-          files <- gh::gh("GET https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files")
+          # .limit = Inf: utan denne gjev GitHub-API-et berre dei 30 første filene
+          files <- gh::gh(
+            "GET https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files",
+            .limit = Inf
+          )
           changed_files <- purrr::map_chr(files, "filename")
           all_files <- list.files(recursive = TRUE)
           exclusions_list <- as.list(setdiff(all_files, changed_files))
