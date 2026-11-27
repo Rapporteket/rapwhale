@@ -9,6 +9,11 @@ on:
 
 name: test-coverage
 
+# Ny push til ein PR avbryt den førre køyringa. Andre køyringar (main o.l.) får gå uforstyrra.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   test-coverage:
     runs-on: ubuntu-latest
