@@ -4,14 +4,17 @@ on:
   pull_request:
     branches: [main]
     paths: ["**.[rR]", "**.[qrR]md", "**.[rR]markdown", "**.[rR]nw", "**.[rR]profile"]
+  workflow_call:
 
 name: Sjekk kodestil
 
 permissions:
   contents: read
 
+# Ny push til ein PR avbryt den førre køyringa. Fast gruppenamn i staden for
+# github.workflow, som er namnet på den kallande workflowen når denne vert brukt frå eit anna repo.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  group: rapwhale-kodestil-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: true
 
 jobs:
@@ -28,18 +31,25 @@ jobs:
         with:
           use-public-rspm: true
 
+      # I rapwhale sjølv vert pakken dokumentert og installert frå PR-en lenger nede,
+      # og då trengst Imports-avhengnadene og roxygen2.
+      # Andre repo treng berre styler og rapwhale (for rapwhale_style()).
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::styler, any::roxygen2
+          packages: ${{ github.repository == 'Rapporteket/rapwhale' && 'deps::., any::sessioninfo' || 'any::sessioninfo' }}
+          extra-packages: |
+            any::styler
+            ${{ github.repository == 'Rapporteket/rapwhale' && 'any::roxygen2' || 'github::Rapporteket/rapwhale' }}
           needs: styler
-          # Treng berre Imports for å installera pakken og køyra styler
           dependencies: '"hard"'
 
       - name: Document
+        if: github.repository == 'Rapporteket/rapwhale'
         run: roxygen2::roxygenise()
         shell: Rscript {0}
 
       - name: Install package
+        if: github.repository == 'Rapporteket/rapwhale'
         run: R CMD INSTALL .
 
       - name: Enable styler cache
