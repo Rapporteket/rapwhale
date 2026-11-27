@@ -66,6 +66,10 @@ Desse funksjonane er nye:
   Til dømes vert ikkje lenger `select(d,`
   med resten av argumenta på eigne linjer
   endra til `select(` med `d,` på neste linje.
+- GitHub-arbeidsflytane for `R CMD check`, kodestil, linting og testdekning
+  kan no brukast direkte frå andre pakkar på Rapporteket,
+  slik at alle repoa vert sjekka på same måten.
+  Sjå «Same sjekkane i andre repo» i README-fila.
 - `foo()` har fått ...
 
 
