@@ -169,6 +169,9 @@ jobs:
 
 - Pull requestar køyrer `R CMD check` berre på Ubuntu med siste R-versjon.
   Push til `main` køyrer i tillegg macOS, Windows, R-devel og førre R-versjon.
+- `R CMD check` og testdekninga brukar dokumentasjonen som ligg i repoet.
+  Køyr derfor `roxygen2::roxygenise()` (eller `devtools::document()`)
+  og sjekk inn `man/` og `NAMESPACE` når du endrar roxygen-kommentarar.
 - Kodestilen vert sjekka med `rapwhale_style()`,
   og linting med `rapwhale_linters()` viss repoet ikkje har si eiga `.lintr`-fil,
   begge frå siste versjon av rapwhale på GitHub.
