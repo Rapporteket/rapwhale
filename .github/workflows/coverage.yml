@@ -6,12 +6,18 @@ on:
     branches: [ "main" ]
     paths: ["R/**", "tests/**"]
   workflow_dispatch:
+  workflow_call:
+    secrets:
+      CODECOV_TOKEN:
+        required: false
 
 name: test-coverage
 
 # Ny push til ein PR avbryt den førre køyringa. Andre køyringar (main o.l.) får gå uforstyrra.
+# Fast gruppenamn i staden for github.workflow: når workflowen vert kalla frå
+# eit anna repo, er github.workflow namnet på den kallande workflowen.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  group: rapwhale-test-coverage-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: true
 
 jobs:
