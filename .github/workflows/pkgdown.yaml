@@ -37,7 +37,14 @@ jobs:
           needs: website
 
       - name: Build site
-        run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
+        run: |
+          # På PR-ar vert ikkje eksempla køyrde, sidan R CMD check alt gjer det.
+          # Nettstaden som vert publisert frå main, får med eksempla.
+          pkgdown::build_site_github_pages(
+            new_process = FALSE,
+            install = FALSE,
+            examples = Sys.getenv("GITHUB_EVENT_NAME") != "pull_request"
+          )
         shell: Rscript {0}
 
       - name: Upload site as Pages artifact
