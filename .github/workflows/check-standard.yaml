@@ -67,7 +67,11 @@ jobs:
           extra-packages: any::rcmdcheck, any::roxygen2
           needs: check, roxygen2
 
+      # I rapwhale skal R CMD check testa den innsjekka dokumentasjonen,
+      # slik at utdatert dokumentasjon vert oppdaga i staden for å verta retta i det stille.
+      # Andre repo får framleis generert dokumentasjonen på nytt.
       - name: Document
+        if: github.repository != 'Rapporteket/rapwhale'
         run: roxygen2::roxygenise()
         shell: Rscript {0}
 
