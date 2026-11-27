@@ -9,6 +9,7 @@ on:
     # Kvar måndag natt, for å fanga opp endringar i R-devel og i avhengnader
     - cron: "23 2 * * 1"
   workflow_dispatch:
+  workflow_call:
 
 name: R-CMD-check
 
@@ -16,8 +17,10 @@ permissions:
   contents: read
 
 # Ny push til ein PR avbryt den førre køyringa. Andre køyringar (main o.l.) får gå uforstyrra.
+# Fast gruppenamn i staden for github.workflow: når workflowen vert kalla frå
+# eit anna repo, er github.workflow namnet på den kallande workflowen.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  group: rapwhale-R-CMD-check-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: true
 
 jobs:
