@@ -40,15 +40,22 @@ bygg_og_installer_pakker = function(pakkemapper,
   for (pakkemappe in pakkemapper) {
     pakke = basename(pakkemappe)
     cat("Dokumenter og bygg tar.gz-fil:", pakke, "\n")
-    devtools::document(pakkemappe,
-      roclets = c("rd", "collate", "namespace"),
-      quiet = stille
-    )
-    adresse_pakkefil = devtools::build(pakkemappe, quiet = stille)
+    dokumenter = function() {
+      roxygen2::roxygenise(pakkemappe,
+        roclets = c("rd", "collate", "namespace")
+      )
+    }
+    if (stille) {
+      capture.output(dokumenter())
+    } else {
+      dokumenter()
+    }
+    adresse_pakkefil = pkgbuild::build(pakkemappe, quiet = stille)
     pkgload::unload(pakke, quiet = stille)
     if (installer) {
-      devtools::install_local(adresse_pakkefil,
-        dependencies = FALSE,
+      install.packages(adresse_pakkefil,
+        repos = NULL,
+        type = "source",
         quiet = stille
       )
     }

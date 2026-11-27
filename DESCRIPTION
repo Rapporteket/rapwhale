@@ -57,13 +57,14 @@ Imports:
     tidyselect
 Suggests:
     callr,
-    devtools,
     haven,
     hms,
     kableExtra,
+    pkgbuild,
     pkgload,
     processx,
     rmarkdown,
+    roxygen2,
     testthat (>= 3.0.0),
     withr
 VignetteBuilder:
