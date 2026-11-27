@@ -75,6 +75,10 @@ Desse funksjonane er nye:
 
 ## Feil retta opp
 
+- `bygg_og_installer_pakker()` feila med mindre remotes-pakken var installert,
+  og gav elles ei åtvaring om at `devtools::install_local()` er utdatert.
+  Funksjonen brukar no roxygen2 og pkgbuild direkte i staden for devtools.
+  Har du devtools installert, har du alt desse pakkane.
 - `foo()` hadde ...
 
 
