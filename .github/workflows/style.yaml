@@ -30,8 +30,10 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::styler
+          extra-packages: any::styler, any::roxygen2
           needs: styler
+          # Treng berre Imports for å installera pakken og køyra styler
+          dependencies: '"hard"'
 
       - name: Document
         run: roxygen2::roxygenise()
