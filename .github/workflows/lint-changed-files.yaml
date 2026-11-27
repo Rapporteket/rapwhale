@@ -23,6 +23,8 @@ jobs:
       - uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
+          # Lat pak installera fleire pakkar samtidig (setup-r set Ncpus til 1 som standard)
+          Ncpus: 4
 
       # rapwhale trengst for rapwhale_linters() i .lintr-filene.
       # I rapwhale sjølv vert pakken installert frå PR-en lenger nede.

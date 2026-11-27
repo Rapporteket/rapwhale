@@ -59,6 +59,8 @@ jobs:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
+          # Lat pak installera fleire pakkar samtidig (setup-r set Ncpus til 1 som standard)
+          Ncpus: 4
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
