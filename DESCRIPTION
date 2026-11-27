@@ -58,13 +58,13 @@ Imports:
 Suggests:
     callr,
     devtools,
+    haven,
     hms,
     kableExtra,
     pkgload,
     processx,
     rmarkdown,
     testthat (>= 3.0.0),
-    tidyverse,
     withr
 VignetteBuilder:
     knitr
